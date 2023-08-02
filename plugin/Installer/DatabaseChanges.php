@@ -44,7 +44,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 39;
+	const MAX_VERSION = 40;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -287,6 +287,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 39;
 		}
 
+		if ( $dbversion == 39 ) {
+			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 40;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -377,6 +382,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
 			`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
+			`show_map` tinyint(1) NOT NULL DEFAULT '1',
 			`show_price_on_request` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)

@@ -103,6 +103,7 @@ class AdminPageEstateListSettings
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
+		$pInputModelShowMap = $pFormModelBuilder->createInputModelShowMap();
 		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDataDetailView = $pDataDetailViewHandler->getDetailView();
@@ -159,6 +160,7 @@ class AdminPageEstateListSettings
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$pFormModelLayoutDesign->addInputModel($pInputModelShowStatus);
 		$pFormModelLayoutDesign->addInputModel($pInputModelShowPriceOnRequest);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowMap);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();

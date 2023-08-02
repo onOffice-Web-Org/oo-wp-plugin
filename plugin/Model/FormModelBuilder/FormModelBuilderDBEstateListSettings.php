@@ -757,6 +757,25 @@ class FormModelBuilderDBEstateListSettings
 	 *
 	 */
 
+	public function createInputModelShowMap()
+	{
+		$labelShowMap = __('Show estate map', 'onoffice-for-wp-websites');
+
+		$pInputModelShowMap = $this->getInputModelDBFactory()->create
+		(InputModelDBFactory::INPUT_SHOW_MAP, $labelShowMap);
+		$pInputModelShowMap->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowMap->setValue($this->getValue('show_map') ?? true);
+		$pInputModelShowMap->setValuesAvailable(1);
+
+		return $pInputModelShowMap;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
 	public function createInputModelShowPriceOnRequest()
 	{
 		$labelShowPriceOnRequest = __('Show price on request', 'onoffice-for-wp-websites');
