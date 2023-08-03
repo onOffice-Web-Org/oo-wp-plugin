@@ -609,8 +609,13 @@ class Form
 
 	private function renderCaptchaScript(bool $isCaptchaRequired = false)
 	{
-		if (wp_script_is('onoffice-captchacontrol', 'registered')) {
-			echo '<script>var requiresCaptchaForm = ' . json_encode($isCaptchaRequired) . ';</script>';
+		if (get_option('onoffice-settings-captcha-sitekey', '') !== '') {
+			if ( ! wp_script_is('onoffice-captchacontrol', 'registered')) {
+				wp_register_script('onoffice-captchacontrol', plugins_url('/js/onoffice-captchacontrol.js', ONOFFICE_PLUGIN_DIR . '/index.php'), 'google-recaptcha');
+			}
+			if (wp_script_is('onoffice-captchacontrol', 'registered')) {
+				echo '<script>var requiresCaptchaForm = ' . json_encode($isCaptchaRequired) . ';</script>';
+			}
 		}
 	}
 
