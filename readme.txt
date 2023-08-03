@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.12.1 (2023-08-03) =
+
+**Fixed**
+
+* Error if "Preis auf Anfrage" is deactivated in onOffice enterprise
+
 = 4.12 (2023-08-02) =
 
 **Added**
