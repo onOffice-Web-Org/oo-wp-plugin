@@ -29,6 +29,7 @@ use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
+use onOffice\WPlugin\DataView\DataSimilarView;
 use WP_UnitTestCase;
 use function add_filter;
 use function get_option;
@@ -117,7 +118,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(39, $dbversion);
+		$this->assertEquals(41, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -181,15 +182,29 @@ class TestClassDatabaseChanges
 				'fieldname' => 'message'
 			]
 		];
+		$listViewOutput = [
+			[
+				'listview_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'default',
+			]
+		];
+		$fieldListViewConfigOutput = [
+			(object)[
+				'listview_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'preisAufAnfrage',
+			]
+		];
 		$detailPageIds = [[ "ID" => 8 ]];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(5))
+		$this->_pWPDBMock->expects($this->exactly(7))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput);
 
 		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
 			->will($this->returnValue(true));
@@ -219,15 +234,29 @@ class TestClassDatabaseChanges
 				'fieldname' => 'message'
 			]
 		];
+		$listViewOutput = [
+			[
+				'listview_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'default',
+			]
+		];
+		$fieldListViewConfigOutput = [
+			(object)[
+				'listview_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'preisAufAnfrage',
+			]
+		];
 		$detailPageIds = [[ "ID" => 8 ]];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(3))
+		$this->_pWPDBMock->expects($this->exactly(5))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput);
 
 		$this->_pWPDBMock->expects($this->once())->method('delete')
 			->will($this->returnValue(true));
@@ -242,7 +271,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(39, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(41, DatabaseChanges::MAX_VERSION);
 	}
 
 
@@ -302,6 +331,69 @@ class TestClassDatabaseChanges
 		}
 
 		return $query;
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::updateShowPriceOnRequestOptionForSimilarView
+	 */
+
+	public function testUpdateShowPriceOnRequestOptionForSimilarView(): array
+	{
+		global $wpdb;
+		$dataDetailView = new DataSimilarView();
+		$data = $dataDetailView->getFields();
+		$data[] = 'preisAufAnfrage';
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+
+		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataSimilarView();
+		$dataSimilarViewOptions->name = "onoffice-default-view";
+		$dataSimilarViewOptions->setFields($data);
+		add_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
+
+		$this->_pDbChanges->deinstall();
+		add_option('oo_plugin_db_version', '38');
+		add_filter('query', [$this, 'saveCreateQuery'], 1);
+		$this->_pDbChanges->install();
+		remove_filter('query', [$this, 'saveCreateQuery'], 1);
+
+		$pSimilarViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
+		$pDataViewSimilarEstates = $pSimilarViewOptions->getDataViewSimilarEstates();
+
+		$this->assertNotContains('preisAufAnfrage', $pDataViewSimilarEstates->getFields());
+		$this->assertEquals(true, $pDataViewSimilarEstates->getShowPriceOnRequest());
+
+		return $this->_createQueries;
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::updateShowPriceOnRequestOptionForDetailView
+	 */
+
+	public function testUpdateShowPriceOnRequestOptionForDetailView(): array
+	{
+		global $wpdb;
+		$dataDetailView = new DataDetailView();
+		$data = $dataDetailView->getFields();
+		$data[] = 'preisAufAnfrage';
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+
+		$dataDetailViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
+		$dataDetailViewOptions->name = "onoffice-default-view";
+		$dataDetailViewOptions->setFields($data);
+		update_option('onoffice-default-view', $dataDetailViewOptions);
+
+		$this->_pDbChanges->deinstall();
+		add_option('oo_plugin_db_version', '38');
+		add_filter('query', [$this, 'saveCreateQuery'], 1);
+		$this->_pDbChanges->install();
+		remove_filter('query', [$this, 'saveCreateQuery'], 1);
+
+		$pDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
+
+		$this->assertNotContains('preisAufAnfrage', $pDetailViewOptions->getFields());
+		$this->assertEquals(true, $pDetailViewOptions->getShowPriceOnRequest());
+
+		return $this->_createQueries;
 	}
 
 	/**

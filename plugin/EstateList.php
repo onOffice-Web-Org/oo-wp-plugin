@@ -332,6 +332,9 @@ class EstateList
 			];
 		}
 
+		if ($this->enableShowPriceOnRequestText()) {
+			$requestParams['data'][] = 'preisAufAnfrage';
+		}
 		if ($pListView->getName() === 'detail') {
 			if ($this->getViewRestrict()) {
 				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
@@ -488,6 +491,10 @@ class EstateList
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
 
+		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
+			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
+		}
+
 		if ( $checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption( 'onoffice-settings-title-and-description' ) == 0 ) {
 			add_action( 'wp_head', function () use ( $recordModified )
 			{
@@ -500,7 +507,26 @@ class EstateList
 			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
 		}
 
+		if($this->enableShowPriceOnRequestText()){
+			$priceFields = ['kaufpreis', 'erbpacht', 'nettokaltmiete', 'warmmiete', 'pacht', 'kaltmiete',
+							'miete_pauschal', 'saisonmiete', 'wochmietbto', 'kaufpreis_pro_qm', 'mietpreis_pro_qm'];
+			foreach ($priceFields as $priceField){
+				$this->displayTextPriceOnRequest($recordModified, $priceField);
+			}
+			unset($recordModified['preisAufAnfrage']);
+		}
+
 		return $recordModified;
+	}
+
+	/**
+	 * @param ArrayContainerEscape $recordModified
+	 * @param string $field
+	 */
+	private function displayTextPriceOnRequest($recordModified, $field){
+		if($recordModified['preisAufAnfrage'] === __("Yes", "onoffice-for-wp-websites") && !empty($recordModified[$field])) {
+			$recordModified[ $field ] = esc_html__('Price on request', 'onoffice-for-wp-websites');
+		}
 	}
 
 	public function custom_pre_get_document_title($title_parts_array, $recordModified) {
@@ -816,6 +842,18 @@ class EstateList
 	}
 
 	/**
+	 * @return bool
+	 */
+	private function getShowMapConfig(): bool
+	{
+		if ($this->_pDataView instanceof DataListView) {
+			return $this->_pDataView->getShowMap();
+		}
+
+		return false;
+	}
+
+	/**
 	 *
 	 */
 	public function resetEstateIterator()
@@ -867,6 +905,16 @@ class EstateList
 	/** @return array */
 	public function getAddressFields(): array
 		{ return $this->_pDataView->getAddressFields(); }
+
+	/** @return bool */
+	private function enableShowPriceOnRequestText()
+	{
+		if ( $this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
+			return $this->_pDataView->getShowPriceOnRequest();
+		} else {
+			return false;
+		}
+	}
 
 	/** @return EstateFiles */
 	protected function getEstateFiles()
