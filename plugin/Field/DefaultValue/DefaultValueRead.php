@@ -66,6 +66,20 @@ class DefaultValueRead
 
 	/**
 	 * @param int $formId
+	 * @param array $pFields
+	 * @return array
+	 */
+	public function readDefaultMultiValuesSingleSelect(int $formId, array $pFields): array
+	{
+		$pFieldNames = array_map(function ($field) {
+			return $field->getName();
+		}, $pFields);
+		$query = $this->createMultiBaseQuery($formId, $pFieldNames);
+		return $this->_pWPDB->get_results($query, OBJECT);
+	}
+
+	/**
+	 * @param int $formId
 	 * @param Field $pField
 	 * @return DefaultValueModelMultiselect
 	 */
@@ -151,4 +165,28 @@ class DefaultValueRead
 		return $query;
 	}
 
+	/**
+	 * @param int $formId
+	 * @param array $pFieldNames
+	 * @return string
+	 */
+	private function createMultiBaseQuery(int $formId, array $pFieldNames): string
+	{
+		$names = array_map(function ($v) {
+			return "'" . esc_sql($v) . "'";
+		}, $pFieldNames);
+		$names = implode(',', $names);
+
+		$prefix = $this->_pWPDB->prefix;
+		return "SELECT {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id,"
+				. "{$prefix}oo_plugin_fieldconfig_form_defaults_values.locale,\n"
+				. "{$prefix}oo_plugin_fieldconfig_form_defaults_values.value,\n"
+				. "{$prefix}oo_plugin_fieldconfig_form_defaults.fieldname\n"
+				. "FROM {$prefix}oo_plugin_fieldconfig_form_defaults\n"
+				. "INNER JOIN {$prefix}oo_plugin_fieldconfig_form_defaults_values\n"
+				. "ON {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id = "
+				. " {$prefix}oo_plugin_fieldconfig_form_defaults_values.defaults_id\n"
+				. "WHERE {$prefix}oo_plugin_fieldconfig_form_defaults.fieldname IN (" . $names . ") AND\n"
+				. " {$prefix}oo_plugin_fieldconfig_form_defaults.form_id = " . esc_sql($formId);
+	}
 }

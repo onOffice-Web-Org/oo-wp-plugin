@@ -44,7 +44,7 @@ class TestClassForm
 	private $_pContainer = null;
 
 	/** @var Form */
-	private $_pSubject = null;
+	private $_pSubjects = null;
 
 	/**
 	 * @throws Exception
@@ -101,11 +101,11 @@ class TestClassForm
 			->getMock();
 		$this->_pContainer->set(DefaultValueModelToOutputConverter::class, $pDefaultValueModelToOutputConverter);
 
-		$pDefaultValueModelToOutputConverter->expects($this->atLeastOnce())->method('getConvertedField')
+		$pDefaultValueModelToOutputConverter->expects($this->atLeastOnce())->method('getConvertedMultiFields')
 			->will($this->onConsecutiveCalls(['testValue'], ['testMulti1', 'testMulti2'], [['min' => 13.1, 'max' => 14.]]));
 		add_option('onoffice-settings-honeypot', true);
 
-		$this->_pSubject = new Form('testForm1', Form::TYPE_INTEREST, $this->_pContainer);
+		$this->_pSubjects = new Form('testForm1', Form::TYPE_INTEREST, $this->_pContainer);
 	}
 
 	/**
@@ -113,11 +113,13 @@ class TestClassForm
 	 */
 	public function testGetFieldValueWithDefaultValue()
 	{
-		$this->assertEquals('testValue', $this->_pSubject->getFieldValue('testFieldText'));
-		$this->assertEquals(['testMulti1', 'testMulti2'],
-			$this->_pSubject->getFieldValue('testFieldMultiSelect', true));
-		$this->assertEquals(['min' => 13.1, 'max' => 14.],
-			$this->_pSubject->getFieldValue('testRange', true));
+		foreach ($this->_pSubjects as $pSubject) {
+			$this->assertEquals('testValue', $pSubject->getFieldValue('testFieldText'));
+			$this->assertEquals(['testMulti1', 'testMulti2'],
+					$pSubject->getFieldValue('testFieldMultiSelect', true));
+			$this->assertEquals(['min' => 13.1, 'max' => 14.],
+					$pSubject->getFieldValue('testRange', true));
+		}
 	}
 
 	/**

@@ -25,6 +25,11 @@ namespace onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter;
 
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelBool;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelText;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueRead;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -92,6 +97,155 @@ class DefaultValueModelToOutputConverter
 		return [];
 	}
 
+	/**
+	 * @param int $formId
+	 * @param array $pFields
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function getConvertedMultiFields(int $formId, array $pFields): array
+	{
+		$pDataModels = [];
+		$rows = $this->_pDefaultValueReader->readDefaultMultiValuesSingleSelect($formId, $pFields);
+
+		foreach ($pFields as $pField) {
+			$rowData = array_values(array_filter($rows, function ($row) use ($pField) {
+				return $pField->getName() == $row->fieldname;
+			}));
+
+			if (count($rowData)) {
+				switch ($pField) {
+					case $pField->getIsRangeField():
+						$pDataModel = $this->createDefaultValuesNumericRange($formId, $pField, $rowData);
+						$pDataModels[ $pField->getName() ] = $pDataModel[0] ?? '';
+						$pDataModels[ $pField->getName() . '__von' ] = $pDataModel['min'] ?? '';
+						$pDataModels[ $pField->getName() . '__bis' ] = $pDataModel['max'] ?? '';
+						break;
+					case FieldTypes::isDateOrDateTime($pField->getType()) || FieldTypes::isNumericType($pField->getType()) || $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT;
+						$pDataModel = $this->createDefaultValueModelSingleSelect($formId, $pField, $rowData);
+						$pDataModels[ $pField->getName() ] = $pDataModel[0] ?? '';
+						break;
+					case $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
+						$pDataModel = $this->createDefaultValuesMultiSelect($formId, $pField, $rowData);
+						$pDataModels[ $pField->getName() ] = $pDataModel[0] ?? '';
+						$pDataModels[ $pField->getName() ] = $pDataModel;
+						break;
+					case $pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN;
+						$pDataModel = $this->createDefaultValuesBool($formId, $pField, $rowData);
+						$pDataModels[ $pField->getName() ] = $pDataModel[0] ?? '';
+						break;
+					case FieldTypes::isStringType($pField->getType());
+						$pDataModel = $this->createDefaultValuesText($formId, $pField, $rowData);
+						$pDataModels[ $pField->getName() ] = $pDataModel[0] ?? '';
+						$pDataModels[ $pField->getName() ] = ($pDataModel['native'] ?? '') ?: (array_shift($pDataModel) ?? '');
+						break;
+					case FieldTypes::isRegZusatzSearchcritTypes($pField->getType());
+						$pField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+						$pDataModel = $this->createDefaultValuesMultiSelect($formId, $pField, $rowData);
+						$pDataModels[ $pField->getName() ] = $pDataModel[0] ?? '';
+						break;
+				}
+			}
+		}
+
+		return $pDataModels;
+	}
+
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @param array $rows
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function createDefaultValuesNumericRange(int $formId, Field $pField, array $rows): array
+	{
+		$pDataModel = new DefaultValueModelNumericRange($formId, $pField);
+
+		if (count($rows) === 2) {
+			$pDataModel->setValueFrom((float) $rows[0]->value);
+			$pDataModel->setValueTo((float) $rows[1]->value);
+		}
+
+		$pConverter = $this->_pOutputConverterFactory->createForNumericRange();
+		return $pConverter->convertToRow($pDataModel);
+	}
+
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @param array $rows
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function createDefaultValueModelSingleSelect(int $formId, Field $pField, array $rows): array
+	{
+		$pDataModel = new DefaultValueModelSingleselect($formId, $pField);
+		$pDataModel->setDefaultsId($rows[0]->defaults_id ? (int) $rows[0]->defaults_id : 0);
+		$pDataModel->setValue($rows[0]->value ?? '');
+
+		$pConverter = $this->_pOutputConverterFactory->createForSingleSelect();
+		return $pConverter->convertToRow($pDataModel);
+	}
+
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @param array $rows
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function createDefaultValuesMultiSelect(int $formId, Field $pField, array $rows): array
+	{
+		$values = array_column($rows, 'value');
+		$pDataModel = new DefaultValueModelMultiselect($formId, $pField);
+		$pDataModel->setValues($values);
+
+		$pConverter = $this->_pOutputConverterFactory->createForMultiSelect();
+		return $pConverter->convertToRow($pDataModel);
+	}
+
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @param array $rows
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function createDefaultValuesBool(int $formId, Field $pField, array $rows): array
+	{
+		$pDataModel = new DefaultValueModelBool($formId, $pField);
+		$pDataModel->setDefaultsId($rows[0]->defaults_id ? (int) $rows[0]->defaults_id : 0);
+		$pDataModel->setValue(! empty($rows[0]->value) && (bool) intval($rows[0]->value));
+
+		$pConverter = $this->_pOutputConverterFactory->createForBool();
+		return $pConverter->convertToRow($pDataModel);
+	}
+
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @param array $rows
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function createDefaultValuesText(int $formId, Field $pField, array $rows): array
+	{
+		$pDataModel = new DefaultValueModelText($formId, $pField);
+
+		foreach ($rows as $pRow) {
+			$pDataModel->addValueByLocale($pRow->locale, $pRow->value);
+		}
+
+		$pConverter = $this->_pOutputConverterFactory->createForText();
+		return $pConverter->convertToRow($pDataModel);
+	}
 
 	/**
 	 *
