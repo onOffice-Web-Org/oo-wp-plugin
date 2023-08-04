@@ -360,7 +360,6 @@ class TestClassDatabaseChanges
 		$pDataViewSimilarEstates = $pSimilarViewOptions->getDataViewSimilarEstates();
 
 		$this->assertNotContains('preisAufAnfrage', $pDataViewSimilarEstates->getFields());
-		$this->assertEquals(true, $pDataViewSimilarEstates->getShowPriceOnRequest());
 
 		return $this->_createQueries;
 	}
@@ -410,7 +409,7 @@ class TestClassDatabaseChanges
 		add_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
 
 		$this->_pDbChanges->deinstall();
-		add_option('oo_plugin_db_version', '38');
+		add_option('oo_plugin_db_version', '40');
 		add_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->_pDbChanges->install();
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);

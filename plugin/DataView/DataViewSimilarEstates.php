@@ -76,7 +76,6 @@ class DataViewSimilarEstates
 	/** */
 	const FIELD_PRICE_ON_REQUEST = 'show_price_on_request';
 
-
 	/** */
 	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_estate_translated_labels';
 
