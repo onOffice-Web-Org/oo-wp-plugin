@@ -275,4 +275,25 @@ class TestClassDefaultValueRead
 			[123, ['defaults_id' => '1334', 'value' => '1'], true],
 		];
 	}
+
+	/**
+	 *
+	 * @dataProvider dataProviderSingleSelect
+	 * @param int $formId
+	 * @param int $defaultValueId
+	 * @param string $value
+	 *
+	 */
+
+	public function testReadDefaultMultiValuesSingleSelect(int $formId, int $defaultValueId, string $value)
+	{
+		$row = (object)[
+			'defaults_id' => $defaultValueId,
+			'value' => $value,
+ 		];
+		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue([$row]));
+		$pField = new Field('testField', 'testModule');
+		$pResult = $this->_pSubject->readDefaultMultiValuesSingleSelect($formId, [$pField]);
+		$this->assertEquals([$row], $pResult);
+	}
 }

@@ -119,47 +119,47 @@ class DefaultValueModelToOutputConverter
 		return $pDataModels;
 	}
 
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getConvertedMultiFieldsForAdmin(int $formId, array $pFields): array
-    {
-        $pDataModels = [];
-        $rows = $this->_pDefaultValueReader->readDefaultMultiValuesSingleSelect($formId, $pFields);
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function getConvertedMultiFieldsForAdmin(int $formId, array $pFields): array
+	{
+		$pDataModels = [];
+		$rows = $this->_pDefaultValueReader->readDefaultMultiValuesSingleSelect($formId, $pFields);
 
-        foreach ($pFields as $pField) {
-            $rowData = array_values(array_filter($rows, function ($row) use ($pField) {
-                return $pField->getName() == $row->fieldname;
-            }));
-            switch ($pField) {
-                case $pField->getIsRangeField():
-                    $pDataModel = $this->createDefaultValuesNumericRange($formId, $pField, $rowData);
-                    break;
-                case FieldTypes::isDateOrDateTime($pField->getType()):
-                case FieldTypes::isNumericType($pField->getType()):
-                case $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT:
-                    $pDataModel = $this->createDefaultValueModelSingleSelect($formId, $pField, $rowData);
-                    break;
-                case $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
-                    $pDataModel = $this->createDefaultValuesMultiSelect($formId, $pField, $rowData);
-                    break;
-                case $pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN;
-                    $pDataModel = $this->createDefaultValuesBool($formId, $pField, $rowData);
-                    break;
-                case FieldTypes::isStringType($pField->getType());
-                    $pDataModel = $this->createDefaultValuesText($formId, $pField, $rowData);
-                    break;
-                case FieldTypes::isRegZusatzSearchcritTypes($pField->getType());
-                    $pField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-                    $pDataModel = $this->createDefaultValuesMultiSelect($formId, $pField, $rowData);
-                    break;
-            }
-            if (isset($pDataModel)) $pDataModels[ $pField->getName() ] = $pDataModel;
-        }
+		foreach ($pFields as $pField) {
+			$rowData = array_values(array_filter($rows, function ($row) use ($pField) {
+				return $pField->getName() == $row->fieldname;
+			}));
+			switch ($pField) {
+				case $pField->getIsRangeField():
+					$pDataModel = $this->createDefaultValuesNumericRange($formId, $pField, $rowData);
+					break;
+				case FieldTypes::isDateOrDateTime($pField->getType()):
+				case FieldTypes::isNumericType($pField->getType()):
+				case $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT:
+					$pDataModel = $this->createDefaultValueModelSingleSelect($formId, $pField, $rowData);
+					break;
+				case $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
+					$pDataModel = $this->createDefaultValuesMultiSelect($formId, $pField, $rowData);
+					break;
+				case $pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN;
+					$pDataModel = $this->createDefaultValuesBool($formId, $pField, $rowData);
+					break;
+				case FieldTypes::isStringType($pField->getType());
+					$pDataModel = $this->createDefaultValuesText($formId, $pField, $rowData);
+					break;
+				case FieldTypes::isRegZusatzSearchcritTypes($pField->getType());
+					$pField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+					$pDataModel = $this->createDefaultValuesMultiSelect($formId, $pField, $rowData);
+					break;
+			}
+			if (isset($pDataModel)) $pDataModels[ $pField->getName() ] = $pDataModel;
+		}
 
-        return $pDataModels;
-    }
+		return $pDataModels;
+	}
 
 	/**
 	 * @param int $formId
@@ -254,78 +254,5 @@ class DefaultValueModelToOutputConverter
 
 		$pConverter = $this->_pOutputConverterFactory->createForText();
 		return $pConverter->convertToRow($pDataModel);
-	}
-
-	/**
-	 *
-	 * @param int $formId
-	 * @param Field $pField
-	 * @return array
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 *
-	 */
-
-	private function convertGeneric(int $formId, Field $pField): array
-	{
-		$pModel = $this->_pDefaultValueReader->readDefaultValuesSingleselect($formId, $pField);
-		$pConverter = $this->_pOutputConverterFactory->createForSingleSelect();
-		return $pConverter->convertToRow($pModel);
-	}
-
-	/**
-	 * @param int $formId
-	 * @param Field $pField
-	 * @return array
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	private function convertMultiSelect(int $formId, Field $pField): array
-	{
-		$pModel = $this->_pDefaultValueReader->readDefaultValuesMultiSelect($formId, $pField);
-		$pConverter = $this->_pOutputConverterFactory->createForMultiSelect();
-		return $pConverter->convertToRow($pModel);
-	}
-
-	/**
-	 * @param int $formId
-	 * @param Field $pField
-	 * @return array
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	private function convertText(int $formId, Field $pField): array
-	{
-		$pModel = $this->_pDefaultValueReader->readDefaultValuesText($formId, $pField);
-		$pConverter = $this->_pOutputConverterFactory->createForText();
-		return $pConverter->convertToRow($pModel);
-	}
-
-	/**
-	 * @param int $formId
-	 * @param Field $pField
-	 * @return array
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	private function convertNumericRange(int $formId, Field $pField): array
-	{
-		$pModel = $this->_pDefaultValueReader->readDefaultValuesNumericRange($formId, $pField);
-		$pConverter = $this->_pOutputConverterFactory->createForNumericRange();
-		return $pConverter->convertToRow($pModel);
-	}
-
-	/**
-	 * @param int $formId
-	 * @param Field $pField
-	 * @return array
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	private function convertBoolean(int $formId, Field $pField): array
-	{
-		$pModel = $this->_pDefaultValueReader->readDefaultValuesBool($formId, $pField);
-		$pConverter = $this->_pOutputConverterFactory->createForBool();
-		return $pConverter->convertToRow($pModel);
 	}
 }

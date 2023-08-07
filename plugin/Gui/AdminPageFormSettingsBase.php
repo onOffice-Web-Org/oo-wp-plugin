@@ -362,23 +362,22 @@ abstract class AdminPageFormSettingsBase
 		return $result;
 	}
 
-    /**
-     * @return array
-     * @throws DependencyException
-     * @throws NotFoundException
-     * @throws UnknownFieldException
-     */
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
 	private function readDefaultValues(): array
 	{
 		$result = [];
 		/** @var DefaultValueModelToOutputConverter $pDefaultValueConverter */
 		$pDefaultValueConverter = $this->getContainer()->get(DefaultValueModelToOutputConverter::class);
 
-        foreach (array_chunk($this->buildFieldsCollectionForCurrentForm()->getAllFields(), 100) as $pField) {
-            $pDefaultFields = $pDefaultValueConverter->getConvertedMultiFieldsForAdmin((int)$this->getListViewId(), $pField);
-            if (count($pDefaultFields)) $result = array_merge($result, $pDefaultFields);
-        }
-
+		foreach (array_chunk($this->buildFieldsCollectionForCurrentForm()->getAllFields(), 100) as $pField) {
+			$pDefaultFields = $pDefaultValueConverter->getConvertedMultiFieldsForAdmin((int) $this->getListViewId(), $pField);
+			if (count($pDefaultFields)) $result = array_merge($result, $pDefaultFields);
+		}
 		return $result;
 	}
 
