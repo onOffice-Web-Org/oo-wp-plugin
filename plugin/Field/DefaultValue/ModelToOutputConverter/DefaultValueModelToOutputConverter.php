@@ -169,6 +169,7 @@ class DefaultValueModelToOutputConverter
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
+
 	private function createDefaultValuesNumericRange(int $formId, Field $pField, array $rows): array
 	{
 		$pDataModel = new DefaultValueModelNumericRange($formId, $pField);

@@ -27,11 +27,6 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelBool;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelText;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueRead;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
 use onOffice\WPlugin\Types\Field;
@@ -119,16 +114,15 @@ class TestClassDefaultValueModelToOutputConverter extends WP_UnitTestCase
 
 
 	/**
-	 * 
+	 *
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 * 
+	 *
 	 */
 
 	public function testGetConvertedMultiFieldsForNonEmptySingleSelectField()
 	{
 		$this->_pField->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$this->_pField->setIsRangeField(false);
 		$row = [
 			(object)[
 				'defaults_id' => '13',
@@ -230,10 +224,10 @@ class TestClassDefaultValueModelToOutputConverter extends WP_UnitTestCase
 
 
 	/**
-	 * 
+	 *
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 * 
+	 *
 	 */
 
 	public function testGetConvertedMultiFieldsForRegZusatz()
@@ -302,7 +296,6 @@ class TestClassDefaultValueModelToOutputConverter extends WP_UnitTestCase
 	public function testGetConvertedMultiFieldsForAdminForNonEmptySingleSelectField()
 	{
 		$this->_pField->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$this->_pField->setIsRangeField(false);
 		$row = [
 			(object)[
 				'defaults_id' => '13',
