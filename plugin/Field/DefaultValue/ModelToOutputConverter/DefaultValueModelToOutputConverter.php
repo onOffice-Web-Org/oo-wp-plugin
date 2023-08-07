@@ -87,10 +87,10 @@ class DefaultValueModelToOutputConverter
 						$pDataModels[ $pField->getName() . '__von' ] = $pDataModel['min'] ?? '';
 						$pDataModels[ $pField->getName() . '__bis' ] = $pDataModel['max'] ?? '';
 						break;
-                    case FieldTypes::isDateOrDateTime($pField->getType()):
-                    case FieldTypes::isNumericType($pField->getType()):
-                    case $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT:
-					    $pDataModel = $this->createDefaultValueModelSingleSelect($formId, $pField, $rowData);
+					case FieldTypes::isDateOrDateTime($pField->getType()):
+					case FieldTypes::isNumericType($pField->getType()):
+					case $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT:
+						$pDataModel = $this->createDefaultValueModelSingleSelect($formId, $pField, $rowData);
 						$pDataModels[ $pField->getName() ] = $pDataModel[0] ?? '';
 						break;
 					case $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
