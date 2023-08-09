@@ -32,6 +32,7 @@ use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Template\TemplateCall;
+use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataSimilarView;
@@ -44,7 +45,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 40;
+	const MAX_VERSION = 41;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -290,6 +291,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ( $dbversion == 39 ) {
 			dbDelta($this->getCreateQueryListviews());
 			$dbversion = 40;
+		}
+
+		if ( $dbversion == 40 ) {
+			$this->updateDefaultPictureTypesForSimilarEstate();
+			$dbversion = 41;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1035,6 +1041,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 
+
+	/**
+	 *
+	 */
+	private function updateDefaultPictureTypesForSimilarEstate()
+	{
+		$pDataSimilarViewOptions = get_option('onoffice-similar-estates-settings-view');
+		if(!empty($pDataSimilarViewOptions) && empty($pDataSimilarViewOptions->getDataViewSimilarEstates()->getPictureTypes())){
+			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setPictureTypes([ImageTypes::TITLE]);
+			$this->_pWpOption->updateOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
+		}
+	}
 
 	/**
 	 * @return void
