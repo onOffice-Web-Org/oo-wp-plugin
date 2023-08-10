@@ -90,7 +90,7 @@ class DefaultValueModelToOutputConverter
 					case FieldTypes::isDateOrDateTime($pField->getType()):
 					case FieldTypes::isNumericType($pField->getType()):
 					case $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT:
-						$pDataModel = $this->createDefaultValueModelSingleSelect($formId, $pField, $rowData);
+						$pDataModel = $this->createDefaultValueSingleSelect($formId, $pField, $rowData);
 						$pDataModels[ $pField->getName() ] = $pDataModel[0] ?? '';
 						break;
 					case $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
@@ -139,7 +139,7 @@ class DefaultValueModelToOutputConverter
 				case FieldTypes::isDateOrDateTime($pField->getType()):
 				case FieldTypes::isNumericType($pField->getType()):
 				case $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT:
-					$pDataModel = $this->createDefaultValueModelSingleSelect($formId, $pField, $rowData);
+					$pDataModel = $this->createDefaultValueSingleSelect($formId, $pField, $rowData);
 					break;
 				case $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
 					$pDataModel = $this->createDefaultValuesMultiSelect($formId, $pField, $rowData);
@@ -191,7 +191,7 @@ class DefaultValueModelToOutputConverter
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	private function createDefaultValueModelSingleSelect(int $formId, Field $pField, array $rows): array
+	private function createDefaultValueSingleSelect(int $formId, Field $pField, array $rows): array
 	{
 		$pDataModel = new DefaultValueModelSingleselect($formId, $pField);
 		$pDataModel->setDefaultsId(isset($rows[0]->defaults_id) ? (int) $rows[0]->defaults_id : 0);

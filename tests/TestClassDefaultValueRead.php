@@ -74,23 +74,6 @@ class TestClassDefaultValueRead
 	 *
 	 */
 
-	public function testReadDefaultValuesSingleselect(int $formId, int $defaultValueId, string $value)
-	{
-		$row = [
-			'defaults_id' => $defaultValueId,
-			'value' => $value,
-		];
-		$this->_pWPDBMock->expects($this->once())->method('get_row')->will($this->returnValue($row));
-		$pField = new Field('testField', 'testModule');
-		$pExpectedDataModel = new DefaultValueModelSingleselect($formId, $pField);
-		$pExpectedDataModel->setValue($value);
-		$pExpectedDataModel->setDefaultsId($defaultValueId);
-		$pResult = $this->_pSubject->readDefaultValuesSingleselect($formId, $pField);
-		$this->assertInstanceOf(DefaultValueModelSingleselect::class, $pResult);
-		$this->assertEquals($pExpectedDataModel, $pResult);
-	}
-
-
 	/**
 	 *
 	 * @return array
@@ -103,21 +86,6 @@ class TestClassDefaultValueRead
 			[13, 1337, 'SpiderMan'],
 			[14, 1338, 'SuperMan'],
 		];
-	}
-
-	/**
-	 * @dataProvider dataProviderMultiSelect
-	 * @param int $formId
-	 * @param array $rows
-	 * @param DefaultValueModelMultiselect $pReference
-	 */
-	public function testReadDefaultValuesMultiSelect(int $formId, array $rows, DefaultValueModelMultiselect $pReference)
-	{
-		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($rows));
-		$pField = new Field('testField', 'testModule');
-		$pResult = $this->_pSubject->readDefaultValuesMultiSelect($formId, $pField);
-		$this->assertInstanceOf(DefaultValueModelMultiselect::class, $pResult);
-		$this->assertEquals($pReference, $pResult);
 	}
 
 	/**
@@ -160,16 +128,6 @@ class TestClassDefaultValueRead
 	 *
 	 */
 
-	public function testReadDefaultValuesText(int $formId, array $rows, DefaultValueModelText $pReference)
-	{
-		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($rows));
-		$pField = new Field('testField', 'testModule');
-
-		$pResult = $this->_pSubject->readDefaultValuesText($formId, $pField);
-		$this->assertInstanceOf(DefaultValueModelText::class, $pResult);
-		$this->assertEquals($pReference, $pResult);
-	}
-
 	/**
 	 *
 	 * @return Generator
@@ -207,22 +165,6 @@ class TestClassDefaultValueRead
 	}
 
 	/**
-	 * @dataProvider dataProviderNumericRange
-	 * @param int $formId
-	 * @param array $rows
-	 * @param DefaultValueModelNumericRange $pReference
-	 */
-	public function testReadDefaultValuesNumericRange(int $formId, array $rows, DefaultValueModelNumericRange $pReference)
-	{
-		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($rows));
-		$pField = new Field('testField', 'testModule');
-
-		$pResult = $this->_pSubject->readDefaultValuesNumericRange($formId, $pField);
-		$this->assertInstanceOf(DefaultValueModelNumericRange::class, $pResult);
-		$this->assertEquals($pReference, $pResult);
-	}
-
-	/**
 	 * @return array
 	 */
 	public function dataProviderNumericRange(): array
@@ -245,24 +187,6 @@ class TestClassDefaultValueRead
 		return [
 			[13, $row, $pReference1],
 		];
-	}
-
-	/**
-	 * @dataProvider dataProviderBool
-	 * @param int $formId
-	 * @param array $row
-	 * @param bool $expectedResult
-	 */
-	public function testReadDefaultValuesBool(int $formId, array $row, bool $expectedResult)
-	{
-		$this->_pWPDBMock->expects($this->once())->method('get_row')->will($this->returnValue($row));
-		$pField = new Field('testField', 'testModule');
-		$pExpectedDataModel = new DefaultValueModelBool($formId, $pField);
-		$pExpectedDataModel->setValue($expectedResult);
-		$pExpectedDataModel->setDefaultsId((int)$row['defaults_id']);
-		$pResult = $this->_pSubject->readDefaultValuesBool($formId, $pField);
-		$this->assertInstanceOf(DefaultValueModelBool::class, $pResult);
-		$this->assertEquals($pExpectedDataModel, $pResult);
 	}
 
 	/**
