@@ -186,6 +186,10 @@ class TestClassFormPostInterest
 				$pFieldStpAnzahl->setLabel('Stp_anzahl');
 				$pFieldsCollection->addField($pFieldStpAnzahl);
 
+				$pFieldGDPRCheckBox = new Field('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldGDPRCheckBox->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+				$pFieldsCollection->addField($pFieldGDPRCheckBox);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
@@ -231,6 +235,7 @@ class TestClassFormPostInterest
 			'krit_bemerkung_oeffentlich' => 'comment3',
 			'stp_anzahl__von' => '20.00',
 			'stp_anzahl__bis' => '40.00',
+			'gdprcheckbox' => 'y'
 		];
 
 		$pConfig = $this->getNewDataFormConfigurationInterest();
@@ -324,6 +329,7 @@ class TestClassFormPostInterest
 		$pConfig->addInput('stp_anzahl', onOfficeSDK::MODULE_SEARCHCRITERIA);
 		$pConfig->addInput('message', '');
 		$pConfig->addInput('krit_bemerkung_oeffentlich', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pConfig->addInput('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
 		$pConfig->setFormName('interestform');
 		$pConfig->setRecipient('test@my-onoffice.com');
 		$pConfig->setRequiredFields(['Vorname', 'Name', 'vermarktungsart', 'stp_anzahl']);
@@ -349,6 +355,7 @@ class TestClassFormPostInterest
 			'Name' => 'Doe',
 			'email' => 'john@doemail.com',
 			'checkDuplicate' => false,
+			'DSGVOStatus' => "speicherungzugestimmt"
 		];
 
 		$response = [
@@ -450,7 +457,8 @@ class TestClassFormPostInterest
 			'addressdata' => [
 				'Vorname' => 'John',
 				'Name' => 'Doe',
-				'Email' => 'john@doemail.com'
+				'Email' => 'john@doemail.com',
+				'DSGVOStatus' => "speicherungzugestimmt"
 			],
 			'message' => "\nSuchkriterien des Interessenten:\nVermarktungsart: Kauf\nComment: comment3\nKaufpreis (min): 200000\nKaufpreis (max): 800000\nStp_anzahl (min): 20\nStp_anzahl (max): 40",
 			'subject' => 'Interest',

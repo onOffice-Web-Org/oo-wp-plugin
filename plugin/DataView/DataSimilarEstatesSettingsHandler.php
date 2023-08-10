@@ -133,5 +133,8 @@ class DataSimilarEstatesSettingsHandler
 				$pDataViewSimilar->getCustomLabels());
 		$pDataViewSimilar->setShowPriceOnRequest
 			($row[DataViewSimilarEstates::FIELD_PRICE_ON_REQUEST] ?? false);
+		$pDataViewSimilar->setPictureTypes
+			($row[DataViewSimilarEstates::PICTURES] ??
+				$pDataViewSimilar->getPictureTypes());
 	}
 }

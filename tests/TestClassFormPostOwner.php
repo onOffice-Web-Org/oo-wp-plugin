@@ -137,6 +137,10 @@ class TestClassFormPostOwner
 				$pFieldKabelSatTv->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
 				$pFieldsCollection->addField($pFieldKabelSatTv);
 
+				$pFieldGDPRCheckBox = new Field('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldGDPRCheckBox->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+				$pFieldsCollection->addField($pFieldGDPRCheckBox);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
@@ -214,6 +218,7 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
+			'gdprcheckbox' => 'y'
 		];
 
 		$this->prepareMockerForAddressCreationSuccess();
@@ -358,6 +363,7 @@ class TestClassFormPostOwner
 			'ArtDaten' => ['Eigentümer'],
 			'phone' => '0815 234567890',
 			'checkDuplicate' => false,
+			'DSGVOStatus' => "speicherungzugestimmt"
 		];
 
 		$response = [
@@ -557,6 +563,7 @@ class TestClassFormPostOwner
 				'Name' => 'Doe',
 				'ArtDaten' => ['Eigentümer'],
 				'Telefon1' => '0815 234567890',
+				'DSGVOStatus' => "speicherungzugestimmt"
 			],
 			'estateid' => 5590,
 			'message' => 'Hello! I am interested in selling my property!',
@@ -620,6 +627,7 @@ class TestClassFormPostOwner
 		$pDataFormConfiguration->addInput('kabel_sat_tv', onOfficeSDK::MODULE_ESTATE);
 		$pDataFormConfiguration->addInput('kabel_sat_tv', onOfficeSDK::MODULE_ESTATE);
 		$pDataFormConfiguration->addInput('message', '');
+		$pDataFormConfiguration->addInput('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
 
 		$pDataFormConfiguration->setRequiredFields(['Vorname', 'Name', 'objektart']);
 

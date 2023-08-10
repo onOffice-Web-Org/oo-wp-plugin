@@ -71,9 +71,6 @@ class ScriptLoaderGenericConfigurationDefault
 				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/js/onoffice-form-preview.js', $pluginPath)))
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/js/onoffice-honeypot.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true),
 
 			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),

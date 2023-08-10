@@ -40,6 +40,9 @@ class DataSimilarView
 	/** */
 	const ENABLE_SIMILAR_ESTATES = 'enablesimilarestates';
 
+	/** */
+	const PICTURES = 'pictures';
+
 	/** @var string[] */
 	private $_fields = [
 		'Id',

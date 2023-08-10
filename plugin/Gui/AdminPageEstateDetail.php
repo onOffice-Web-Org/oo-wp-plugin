@@ -44,7 +44,6 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
 use function __;
 use function add_action;
-use function add_screen_option;
 use function do_accordion_sections;
 use function do_action;
 use function do_meta_boxes;
@@ -284,7 +283,6 @@ class AdminPageEstateDetail
 	 */
 	protected function buildForms()
 	{
-		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
 		$pFormModelBuilder = new FormModelBuilderEstateDetailSettings();
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug());
 		$this->addFormModel($pFormModel);
@@ -359,7 +357,9 @@ class AdminPageEstateDetail
 					(new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection()))));
 		$this->getContainer()->get(FieldsCollectionBuilderShort::class)
 			->addFieldsAddressEstate($pFieldsCollection);
-		$pFieldsCollection->removeFieldByModuleAndName(onOfficeSDK::MODULE_ESTATE, 'preisAufAnfrage');
+		if ($pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, 'preisAufAnfrage')) {
+			$pFieldsCollection->removeFieldByModuleAndName(onOfficeSDK::MODULE_ESTATE, 'preisAufAnfrage');
+		}
 		return $pFieldsCollection;
 	}
 
