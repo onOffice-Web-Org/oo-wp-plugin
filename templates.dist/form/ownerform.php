@@ -57,7 +57,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage = $isRequiredMessage ? '*' : '';
 	
-			$line = esc_html__('Message', 'onoffice-for-wp-websites').$additionMessage.':<br>';
+			$line = $pForm->getFieldLabel( 'message' ).$additionMessage.':<br>';
 			$line .= '<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
 		}
 		if ($table == 'address') {

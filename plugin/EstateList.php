@@ -491,6 +491,10 @@ class EstateList
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
 
+		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
+			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
+		}
+
 		if ( $checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption( 'onoffice-settings-title-and-description' ) == 0 ) {
 			add_action( 'wp_head', function () use ( $recordModified )
 			{
@@ -835,6 +839,18 @@ class EstateList
 			$result[$field]['label'] = $this->getFieldLabel($field);
 		}
 		return $result;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function getShowMapConfig(): bool
+	{
+		if ($this->_pDataView instanceof DataListView) {
+			return $this->_pDataView->getShowMap();
+		}
+
+		return false;
 	}
 
 	/**

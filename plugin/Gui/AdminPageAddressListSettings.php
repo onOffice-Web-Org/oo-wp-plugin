@@ -66,6 +66,20 @@ class AdminPageAddressListSettings
 		$this->setPageTitle(__('Edit Address List', 'onoffice-for-wp-websites'));
 	}
 
+	/**
+	 *
+	 */
+
+	public function renderContent()
+	{
+		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'empty' ) {
+			echo '<div class="notice notice-error is-dismissible"><p>'
+				. esc_html__( 'There was a problem saving the address. The Name field cannot be empty.', 'onoffice-for-wp-websites' )
+				. '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
+		parent::renderContent();
+	}
+
 
 	/**
 	 *
@@ -366,7 +380,7 @@ class AdminPageAddressListSettings
 	protected function checkFixedValues($row)
 	{
 		$table = RecordManager::TABLENAME_LIST_VIEW_ADDRESS;
-		$result = isset($row[$table]['name']) && $row[$table]['name'] != null;
+		$result = isset($row[$table]['name']) && !empty(trim($row[$table]['name']));
 
 		return $result;
 	}

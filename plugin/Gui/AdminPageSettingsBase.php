@@ -304,7 +304,7 @@ abstract class AdminPageSettingsBase
 		$row                      = $this->setFixedValues( $row );
 		$checkResult              = $this->checkFixedValues( $row );
 		$pResultObject            = new stdClass();
-		$pResultObject->result    = false;
+		$pResultObject->result    = null;
 		$pResultObject->record_id = $recordId;
 
 		$row['oo_plugin_fieldconfig_form_defaults_values']   =
@@ -322,7 +322,12 @@ abstract class AdminPageSettingsBase
 		}
 
 		$pageQuery   = str_replace( 'admin_page_', 'page=', $_POST['action'] );
-		$statusQuery = $pResultObject->result ? '&saved=true' : '&saved=false';
+		$statusQuery = '&saved=false';
+		if (is_null($pResultObject->result)) {
+			$statusQuery = '&saved=empty';
+		} else if ($pResultObject->result) {
+			$statusQuery = '&saved=true';
+		}
 		$idQuery     = $pResultObject->record_id ? '&id=' . $pResultObject->record_id : '';
 
 		if ( headers_sent() ) {
