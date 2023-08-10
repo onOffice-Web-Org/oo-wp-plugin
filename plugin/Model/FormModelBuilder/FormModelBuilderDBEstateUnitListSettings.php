@@ -98,8 +98,8 @@ class FormModelBuilderDBEstateUnitListSettings
 	}
 
 	/**
-	 * In unit list settings, the field options "Filterable", "Hidden"
-	 * and "Reduce values according to selected filter" has been removed.
+	 * In unit list settings, the field options "Show in search", "Hidden"
+	 * and "Hide empty values from onOffice enterprise" has been removed.
 	 * @param string $module
 	 * @param string $htmlType
 	 * @param bool $isShow

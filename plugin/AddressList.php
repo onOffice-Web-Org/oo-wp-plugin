@@ -58,6 +58,9 @@ class AddressList
 		'emailprivate',
 		'emailbusiness',
 		'email',
+		'faxprivate',
+		'faxbusiness',
+		'fax',
 	];
 
 	const DEFAULT_FIELDS_REPLACE = [
