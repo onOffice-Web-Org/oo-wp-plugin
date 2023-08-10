@@ -217,6 +217,7 @@ class EstateList
 		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'] []= 'vermarktungsart';
+		$estateParametersRaw['data'] []= 'preisAufAnfrage';
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
@@ -332,7 +333,7 @@ class EstateList
 			];
 		}
 
-		if ($this->enableShowPriceOnRequestText()) {
+		if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
 			$requestParams['data'][] = 'preisAufAnfrage';
 		}
 		if ($pListView->getName() === 'detail') {
@@ -507,13 +508,15 @@ class EstateList
 			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
 		}
 
-		if($this->enableShowPriceOnRequestText()){
-			$priceFields = ['kaufpreis', 'erbpacht', 'nettokaltmiete', 'warmmiete', 'pacht', 'kaltmiete',
-							'miete_pauschal', 'saisonmiete', 'wochmietbto', 'kaufpreis_pro_qm', 'mietpreis_pro_qm'];
-			foreach ($priceFields as $priceField){
-				$this->displayTextPriceOnRequest($recordModified, $priceField);
+		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
+			if ($this->enableShowPriceOnRequestText() || isset($recordModified['preisAufAnfrage'])) {
+				$priceFields = ['kaufpreis', 'erbpacht', 'nettokaltmiete', 'warmmiete', 'pacht', 'kaltmiete',
+						'miete_pauschal', 'saisonmiete', 'wochmietbto', 'kaufpreis_pro_qm', 'mietpreis_pro_qm'];
+				foreach ($priceFields as $priceField) {
+					$this->displayTextPriceOnRequest($recordModified, $priceField);
+				}
+				unset($recordModified['preisAufAnfrage']);
 			}
-			unset($recordModified['preisAufAnfrage']);
 		}
 
 		return $recordModified;
@@ -524,7 +527,7 @@ class EstateList
 	 * @param string $field
 	 */
 	private function displayTextPriceOnRequest($recordModified, $field){
-		if($recordModified['preisAufAnfrage'] === __("Yes", "onoffice-for-wp-websites") && !empty($recordModified[$field])) {
+		if (!empty($recordModified[ $field ])) {
 			$recordModified[ $field ] = esc_html__('Price on request', 'onoffice-for-wp-websites');
 		}
 	}

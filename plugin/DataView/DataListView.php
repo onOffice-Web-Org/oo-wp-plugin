@@ -70,6 +70,9 @@ class DataListView
 	/** */
 	const SORT_BY_STANDARD_VALUES = 'sortby';
 
+	/** */
+	const SHOW_PRICE_ON_REQUEST = '1';
+
 	/** @var int */
 	private $_id = null;
 
