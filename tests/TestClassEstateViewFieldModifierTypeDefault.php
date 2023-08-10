@@ -128,8 +128,6 @@ class TestClassEstateViewFieldModifierTypeDefault
 			'anotherField',
 			'moreFields',
 			'Underscore_field11',
-			'laengengrad',
-			'breitengrad',
 		];
 
 		$pEstateViewFieldModifierTypeDefault = $this->getPreconfiguredFieldModifier();
@@ -153,8 +151,6 @@ class TestClassEstateViewFieldModifierTypeDefault
 			'reserviert',
 			'verkauft',
 			'vermarktungsart',
-			'breitengrad',
-			'laengengrad',
 		];
 
 		$pEstateViewFieldModifierTypeDefault = $this->getPreconfiguredFieldModifier();
