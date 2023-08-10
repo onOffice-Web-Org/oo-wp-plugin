@@ -122,6 +122,10 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'show_price_on_request',
 		],
+		InputModelDBFactory::INPUT_SHOW_MAP => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'show_map',
+		],
 	];
 
 

@@ -305,4 +305,26 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pInputModelDB = $pInstance->createInputModelShowPriceOnRequest();
 		$this->assertEquals($pInputModelDB->getHtmlType(), InputModelOption::HTML_TYPE_CHECKBOX);
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelPictureTypes
+	 */
+	public function testCreateInputModelPictureTypes()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
+		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue'])
+			->getMock();
+		$pInstance->generate('test');
+
+		$pInputModelDB = $pInstance->createInputModelPictureTypes();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
 }

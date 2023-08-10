@@ -39,6 +39,7 @@ use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\ImageTypes;
 use function __;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
@@ -429,6 +430,41 @@ class FormModelBuilderSimilarEstateSettings
 		});
 
 		return $pInputModel;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelPictureTypes()
+	{
+		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
+		$allPictureTypes = ImageTypes::getAllImageTypesTranslated();
+
+		$pInputModelPictureTypes = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_PICTURE_TYPE, null, true);
+		$pInputModelPictureTypes->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
+		$pictureTypes = $pDataViewSimilarEstates->getPictureTypes();
+
+		if (null == $pictureTypes)
+		{
+			$pictureTypes = array(
+				'Titelbild',
+				'Foto',
+				'Foto_gross',
+				'Panorama',
+				'Grundriss',
+				'Lageplan',
+				'Epass_Skala',
+			);
+		}
+
+		$pInputModelPictureTypes->setValue($pictureTypes);
+
+		return $pInputModelPictureTypes;
 	}
 
 	/**

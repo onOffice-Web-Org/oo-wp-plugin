@@ -62,7 +62,8 @@ class TestClassDataListViewFactory
 		'sortbyuservalues' => ['kaufpreis,anzahl_zimmer'],
 		'radius' => '200',
 		'show_reference_estate' => '1',
-		'show_price_on_request' => true
+		'show_price_on_request' => true,
+		'show_map' => '1'
 	];
 
 	/**
@@ -108,6 +109,8 @@ class TestClassDataListViewFactory
 		$this->assertEquals($this->_baseRow['sortbyuservalues'], $pDataListView->getSortByUserValues());
 		$this->assertEquals($this->_baseRow['show_reference_estate'], $pDataListView->getShowReferenceEstate());
 		$this->assertEquals($this->_baseRow['show_price_on_request'], $pDataListView->getShowPriceOnRequest());
+		$this->assertEquals($this->_baseRow['show_map'], $pDataListView->getShowMap());
+
 		$pDataListView->getFilterableFields();
 	}
 }

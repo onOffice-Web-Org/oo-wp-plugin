@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.1.1
 Requires PHP: 7.3
-Stable tag: 4.11.1
+Stable tag: 4.12.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,33 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.12.1 (2023-08-03) =
+
+**Fixed**
+
+* Error if "Preis auf Anfrage" is deactivated in onOffice enterprise
+
+= 4.12 (2023-08-02) =
+
+**Added**
+
+* An option to toggle visibility of the map for each estate list.
+* 'Price on request' option to hide prices in lists and detail view.
+
+**Changed**
+
+* Renaming a notification if name of estate list, form, etc. is empty while saving.
+* Renaming the options to add fields to the search and filter.
+
+**Fixed**
+
+* The honeypot javascript is always being loaded even when disabled.
+* Customizing labels of message field in forms doesn't work.
+
+**Removed**
+
+* Faulty options for the admistration view.
 
 = 4.11.1 (2023-05-24) =
 
