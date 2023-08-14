@@ -112,16 +112,4 @@ class AdminPageFormSettingsApplicantSearch
 		$pBoolToFieldList = new BooleanValueToFieldList(new InputModelDBFactoryConfigForm, $pValues);
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_AVAILABLE_OPTIONS);
 	}
-
-	/**
-	 *
-	 */
-
-	public function doExtraEnqueues()
-	{
-		parent::doExtraEnqueues();
-		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		wp_register_script('onoffice-geofieldbox', plugins_url('/js/geofieldbox.js', $pluginPath));
-		wp_enqueue_script('onoffice-geofieldbox');
-	}
 }

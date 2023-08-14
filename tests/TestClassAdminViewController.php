@@ -87,7 +87,7 @@ class TestClassAdminViewController
 		wp_scripts()->registered = [];
 		$pAdminViewController->enqueue_ajax('admin_page_onoffice-editlistviewaddress');
 
-		$this->assertCount(2, wp_scripts()->registered);
+		$this->assertCount(3, wp_scripts()->registered);
 	}
 
 	/**

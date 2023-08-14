@@ -25,6 +25,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use Parsedown;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateTitleBuilder;
@@ -616,8 +617,8 @@ class Form
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_script('onoffice-estatetype');
 		wp_enqueue_script('onoffice-leadform');
-		wp_script_add_data('onoffice-multiselect', 'async', true);
-		wp_script_add_data('onoffice-estatetype', 'async', true);
+		wp_script_add_data('onoffice-multiselect', IncludeFileModel::LOAD_ASYNC, true);
+		wp_script_add_data('onoffice-estatetype', IncludeFileModel::LOAD_ASYNC, true);
 
 		if($type === self::TYPE_APPLICANT_SEARCH){
 			wp_register_script('onoffice-form-preview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-form-preview.js', [], '', true);

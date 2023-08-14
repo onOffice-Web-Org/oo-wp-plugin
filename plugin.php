@@ -65,6 +65,7 @@ use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
 
@@ -402,7 +403,7 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 add_filter( 'script_loader_tag', 'add_async_defer_script_attrs', 10, 2 );
 
 function add_async_defer_script_attrs( $tag, $handle ) {
-	foreach ( [ 'async', 'defer' ] as $attr ) {
+	foreach ( [ IncludeFileModel::LOAD_ASYNC, IncludeFileModel::LOAD_DEFER ] as $attr ) {
 		if ( ! wp_scripts()->get_data( $handle, $attr ) ) {
 			continue;
 		}

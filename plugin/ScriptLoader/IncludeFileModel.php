@@ -33,6 +33,10 @@ class IncludeFileModel
 
 	const TYPE_STYLE = 'style';
 
+	const LOAD_ASYNC = 'async';
+
+	const LOAD_DEFER = 'defer';
+
 	/** @var string */
 	private $_identifier = '';
 

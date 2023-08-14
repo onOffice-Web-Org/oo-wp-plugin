@@ -47,6 +47,7 @@ use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
+use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
@@ -868,7 +869,7 @@ class EstateList
 			wp_enqueue_script('onoffice-form-preview');
 			wp_enqueue_script('onoffice-custom-select');
 			wp_enqueue_script('onoffice-multiselect');
-			wp_script_add_data('onoffice-multiselect', 'async', true);
+			wp_script_add_data('onoffice-multiselect', IncludeFileModel::LOAD_ASYNC, true);
 
 			wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
 				'amount_none' => __('0 matches', 'onoffice-for-wp-websites'),
