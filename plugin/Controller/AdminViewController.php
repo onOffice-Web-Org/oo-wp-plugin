@@ -261,8 +261,6 @@ class AdminViewController
 		wp_register_script('onoffice-ajax-settings',
 			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection']);
 		wp_enqueue_script('onoffice-ajax-settings');
-		wp_enqueue_script('onoffice-geofieldbox',
-			plugins_url('/js/geofieldbox.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);
 
 		wp_localize_script('oo-sort-by-user-selection', 'onoffice_mapping_translations',
 			SortListTypes::getSortOrder());

@@ -306,9 +306,11 @@ class AdminPageEstateListSettings
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviews-name']);
 		wp_register_script('onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath));
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
+		wp_register_script('onoffice-geofieldbox', plugins_url('/js/geofieldbox.js', $pluginPath));
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
+		wp_enqueue_script('onoffice-geofieldbox');
 	}
 }

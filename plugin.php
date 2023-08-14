@@ -399,4 +399,19 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 	};
 }, 500);
 
+add_filter( 'script_loader_tag', 'add_async_defer_script_attrs', 10, 2 );
+
+function add_async_defer_script_attrs( $tag, $handle ) {
+	foreach ( [ 'async', 'defer' ] as $attr ) {
+		if ( ! wp_scripts()->get_data( $handle, $attr ) ) {
+			continue;
+		}
+		if ( ! preg_match( ":\s{$attr}[=>\s]:", $tag ) ) {
+			$tag = preg_replace( ':(?=></script>):', " $attr", $tag, 1 );
+		}
+		break;
+	}
+	return $tag;
+}
+
 return $pDI;
