@@ -403,7 +403,8 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 add_filter( 'script_loader_tag', 'add_async_defer_script_attrs', 10, 2 );
 
 function add_async_defer_script_attrs( $tag, $handle ) {
-	foreach ( [ IncludeFileModel::LOAD_ASYNC, IncludeFileModel::LOAD_DEFER ] as $attr ) {
+	$loadAttributes = [ IncludeFileModel::LOAD_ASYNC, IncludeFileModel::LOAD_DEFER ];
+	foreach ( $loadAttributes as $attr ) {
 		if ( ! wp_scripts()->get_data( $handle, $attr ) ) {
 			continue;
 		}
