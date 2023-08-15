@@ -63,9 +63,8 @@ class ScriptLoaderGenericConfigurationDefault
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true)
-				->setAsynchronous($defer),
+			->setDependencies(['jquery'])
+			->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/js/onoffice_defaultview.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
