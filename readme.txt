@@ -76,6 +76,23 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.13 (2023-08-15) =
+
+**Added**
+
+* All types of images for similar estates.
+
+**Changed**
+
+* Hide coordinates of estate if "Geo range search" is on.
+
+**Fixed**
+
+* Display of "Price on request" in custom templates.
+* Displaying the fax number in the contact details.
+* Sending estate data by email using the owner form.
+* Text of the agreed privacy policy in emails.
+
 = 4.12.1 (2023-08-03) =
 
 **Fixed**
