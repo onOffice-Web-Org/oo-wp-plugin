@@ -883,6 +883,9 @@ class EstateList
 		if($this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates){
 			wp_register_script('onoffice_defaultview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice_defaultview.js', ['jquery'], '', true);
 			wp_enqueue_script('onoffice_defaultview');
+			wp_register_script('slick', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick.js', ['jquery'], '', true);
+			wp_enqueue_script('slick');
+			wp_script_add_data('slick', IncludeFileModel::LOAD_DEFER, true);
 		}
 	}
 
