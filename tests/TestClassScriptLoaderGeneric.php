@@ -55,7 +55,7 @@ class TestClassScriptLoaderGeneric
 				$pModel1 = new IncludeFileModel(IncludeFileModel::TYPE_SCRIPT, 'script1', '/test/file.js');
 				$pModel1->setDependencies(['testdep']);
 				$pModel1->setLoadInFooter(true);
-				$pModel1->setAsynchronous('defer');
+				$pModel1->setLoadAsynchronous('defer');
 				$pModel2 = new IncludeFileModel(IncludeFileModel::TYPE_STYLE, 'style2', '/test/file.css');
 				return [$pModel1, $pModel2];
 		}));

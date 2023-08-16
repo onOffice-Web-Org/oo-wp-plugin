@@ -53,7 +53,7 @@ class IncludeFileModel
 	private $_type = '';
 
     /** @var string */
-	private $_asynchronous = '';
+	private $_loadAsynchronous = '';
 
 
 	/**
@@ -161,18 +161,18 @@ class IncludeFileModel
 	/**
 	 * @return string
 	 */
-	public function getAsynchronous(): string
+	public function getLoadAsynchronous(): string
 	{
-		return $this->_asynchronous;
+		return $this->_loadAsynchronous;
 	}
 
 	/**
 	 * @param string $loadAsynchronous
 	 * @return $this
 	 */
-	public function setAsynchronous(string $loadAsynchronous): self
+	public function setLoadAsynchronous(string $loadAsynchronous): self
 	{
-		$this->_asynchronous = $loadAsynchronous;
+		$this->_loadAsynchronous = $loadAsynchronous;
 		return $this;
 	}
 }
