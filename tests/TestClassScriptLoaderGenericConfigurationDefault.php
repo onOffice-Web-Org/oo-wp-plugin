@@ -62,7 +62,7 @@ class TestClassScriptLoaderGenericConfigurationDefault
 
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$config = $pScriptLoaderGenericConfigurationDefault->getScriptLoaderGenericConfiguration();
-		$this->assertCount(9, $config);
+		$this->assertCount(7, $config);
 		/* @var $pFileModel IncludeFileModel */
 		foreach ($config as $pFileModel) {
 			$this->assertInstanceOf(IncludeFileModel::class, $pFileModel);

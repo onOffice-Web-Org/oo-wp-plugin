@@ -132,7 +132,6 @@ class EstateList
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
 		$this->_pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
 		$this->_redirectIfOldUrl = $pContainer->get(Redirector::class);
-		$this->doExtraEnqueues();
 	}
 
 	/**
@@ -203,6 +202,7 @@ class EstateList
 
 		$this->_numEstatePages = $this->getNumEstatePages();
 		$this->resetEstateIterator();
+		$this->doExtraEnqueues();
 	}
 
 	/**
@@ -885,6 +885,10 @@ class EstateList
 			wp_enqueue_script('onoffice_defaultview');
 			wp_register_script('slick', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick.js', ['jquery'], '', true);
 			wp_enqueue_script('slick');
+			wp_register_style('slick', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick.css');
+			wp_register_style('slick-theme', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick-theme.css');
+			wp_enqueue_style('slick');
+			wp_enqueue_style('slick-theme');
 			wp_script_add_data('slick', IncludeFileModel::LOAD_DEFER, true);
 		}
 	}
