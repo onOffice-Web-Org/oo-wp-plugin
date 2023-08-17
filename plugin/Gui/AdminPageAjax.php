@@ -155,9 +155,8 @@ abstract class AdminPageAjax
 		$resultByContent = array();
 		$categories = array();
 		$listTypeUnSupported = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
-		$listFieldsUnDisplayed = ['preisAufAnfrage'];
 		foreach ($fieldnames as $key => $properties) {
-			if (in_array($properties['type'], $listTypeUnSupported) || in_array($key, $listFieldsUnDisplayed)) {
+			if (in_array($properties['type'], $listTypeUnSupported)) {
 				continue;
 			}
 			$content = $properties['content'];
