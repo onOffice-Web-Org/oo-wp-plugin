@@ -55,7 +55,7 @@ class CaptchaDataChecker
 		if ($siteKey !== '') {
 			wp_register_script('google-recaptcha', 'https://www.google.com/recaptcha/api.js');
 			wp_register_script('onoffice-captchacontrol', plugins_url
-				('/js/onoffice-captchacontrol.js', $pluginPath), 'google-recaptcha');
+				('dist/onoffice-captchacontrol.min.js', $pluginPath), 'google-recaptcha');
 
 			wp_enqueue_script('google-recaptcha');
 			wp_enqueue_script('onoffice-captchacontrol');

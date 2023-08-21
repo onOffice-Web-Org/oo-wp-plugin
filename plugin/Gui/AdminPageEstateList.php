@@ -99,14 +99,14 @@ class AdminPageEstateList
 			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice-for-wp-websites'),
 		);
 
-		wp_register_script('onoffice-bulk-actions', plugins_url('/js/onoffice-bulk-actions.js',
+		wp_register_script('onoffice-bulk-actions', plugins_url('dist/onoffice-bulk-actions.min.js',
 			ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
 
 		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
 		wp_enqueue_script('onoffice-bulk-actions');
 
 		wp_register_script( 'oo-copy-shortcode',
-			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/js/onoffice-copycode.js',
+			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-copycode.min.js',
 			[ 'jquery' ], '', true );
 		wp_enqueue_script('oo-copy-shortcode');
 	}

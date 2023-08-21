@@ -256,13 +256,13 @@ class AdminViewController
 		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
 
 		wp_register_script('oo-sort-by-user-selection',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'js/onoffice-sort-by-user-selection.js', ['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-sort-by-user-selection.min.js', ['jquery'], '', true);
 
 		wp_register_script('onoffice-ajax-settings',
-			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection']);
+			plugins_url('dist/ajax_settings.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection']);
 		wp_enqueue_script('onoffice-ajax-settings');
 		wp_enqueue_script('onoffice-geofieldbox',
-			plugins_url('/js/geofieldbox.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);
+			plugins_url('dist/geofieldbox.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);
 
 		wp_localize_script('oo-sort-by-user-selection', 'onoffice_mapping_translations',
 			SortListTypes::getSortOrder());
@@ -328,15 +328,11 @@ class AdminViewController
 
 	public function enqueueExtraJs($hook)
 	{
-		wp_register_script('update-duplicate-check-warning-option', plugins_url('js/onoffice-duplicate-check-option-update.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
+		wp_register_script('handle-notification-actions', plugins_url('dist/onoffice-handle-notification-actions.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
 			array('jquery'));
-		wp_localize_script('update-duplicate-check-warning-option', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
-		wp_enqueue_script('update-duplicate-check-warning-option');
-
-		wp_register_script('warning-active-plugin-SEO', plugins_url('js/onoffice-warning-active-plugin-seo.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
-			array('jquery'));
-		wp_localize_script('warning-active-plugin-SEO', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
-		wp_enqueue_script('warning-active-plugin-SEO');
+		wp_localize_script('handle-notification-actions', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_localize_script('handle-notification-actions', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_enqueue_script('handle-notification-actions');
 
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);
