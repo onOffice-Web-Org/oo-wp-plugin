@@ -111,7 +111,7 @@ class Favorites
 
 	static public function registerScripts() {
 		if (self::isFavorizationEnabled()) {
-			wp_register_script( 'onoffice-favorites', plugins_url( 'dist/favorites.min.js', ONOFFICE_PLUGIN_DIR ) );
+			wp_register_script( 'onoffice-favorites', plugins_url( '/dist/favorites.min.js', ONOFFICE_PLUGIN_DIR ) );
 		}
 	}
 

@@ -259,10 +259,10 @@ class AdminViewController
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-sort-by-user-selection.min.js', ['jquery'], '', true);
 
 		wp_register_script('onoffice-ajax-settings',
-			plugins_url('dist/ajax_settings.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection']);
+			plugins_url('/dist/ajax_settings.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection']);
 		wp_enqueue_script('onoffice-ajax-settings');
 		wp_enqueue_script('onoffice-geofieldbox',
-			plugins_url('dist/geofieldbox.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);
+			plugins_url('/dist/geofieldbox.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);
 
 		wp_localize_script('oo-sort-by-user-selection', 'onoffice_mapping_translations',
 			SortListTypes::getSortOrder());

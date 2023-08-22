@@ -50,28 +50,28 @@ class ScriptLoaderGenericConfigurationDefault
 		$values = [
 			(new IncludeFileModel($script, 'select2', plugins_url('/vendor/select2/select2/dist/js/select2.min.js', $pluginPath)))
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('dist/onoffice-custom-select.min.js', $pluginPath)))
+			(new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-multiselect', plugins_url('dist/onoffice-multiselect.min.js', $pluginPath)))
+			(new IncludeFileModel($script, 'onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath)))
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-leadform', plugins_url('dist/onoffice-leadform.min.js', $pluginPath)))
+			(new IncludeFileModel($script, 'onoffice-leadform', plugins_url('/dist/onoffice-leadform.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-sort-list-selector', plugins_url('dist/onoffice-sort-list-selector.min.js', $pluginPath)))
+			(new IncludeFileModel($script, 'onoffice-sort-list-selector', plugins_url('/dist/onoffice-sort-list-selector.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('dist/onoffice_defaultview.min.js', $pluginPath)))
+			(new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/dist/onoffice_defaultview.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-estatetype', plugins_url('dist/onoffice-estatetype.min.js', $pluginPath)))
+			(new IncludeFileModel($script, 'onoffice-estatetype', plugins_url('/dist/onoffice-estatetype.min.js', $pluginPath)))
 				->setDependencies(['onoffice-multiselect'])
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('dist/onoffice-form-preview.min.js', $pluginPath)))
+			(new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/dist/onoffice-form-preview.min.js', $pluginPath)))
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('dist/onoffice-honeypot.min.js', $pluginPath)))
+			(new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/dist/onoffice-honeypot.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
 
@@ -86,7 +86,7 @@ class ScriptLoaderGenericConfigurationDefault
 		$onOfficeStyleUri = $this->getStyleUriByVersion($styleVersion);
         $values []= (new IncludeFileModel($style, $styleVersion, $onOfficeStyleUri));
 		if (Favorites::isFavorizationEnabled()) {
-			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('dist/favorites.min.js', $pluginPath)))
+			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/dist/favorites.min.js', $pluginPath)))
 				->setDependencies(['jquery']);
 		}
 
