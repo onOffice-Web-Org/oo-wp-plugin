@@ -483,7 +483,7 @@ class EstateList
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
 			$this->_currentEstate['id'];
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel']
-			? $this->limit_characters($currentRecord['elements']['objekttitel'], self::DEFAULE_LIMIT_CHARACTER_TITLE) : null;
+			? $this->limit_characters($currentRecord['elements']['objekttitel'], self::DEFAULE_LIMIT_CHARACTER_TITLE) : '';
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$fieldWaehrung = $this->_pEnvironment->getFieldnames()->getFieldInformation('waehrung', onOfficeSDK::MODULE_ESTATE);
 		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung']) ) {
