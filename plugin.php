@@ -160,11 +160,11 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 		}
 	}, 1, 3);
 } else {
-	add_filter('document_title_parts', function ($title) use ($pDI){
-		$result =$pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
-		$result['title'] = limit_characters($result['title'], 60);
-		return $result;
-	}, 10, 2);
+    add_filter('document_title_parts', function ($title) use ($pDI){
+        $result =$pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
+        $result['title'] = limit_characters($result['title'], 60);
+        return $result;
+    }, 10, 2);
 }
 
 // Return title custom by custom field onOffice

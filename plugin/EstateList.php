@@ -64,9 +64,9 @@ use onOffice\WPlugin\Field\FieldParkingLot;
 class EstateList
 	implements EstateListBase
 {
-    const DEFAULE_LIMIT_CHARACTER_TITLE = 60;
+	const DEFAULE_LIMIT_CHARACTER_TITLE = 60;
 
-    const DEFAULE_LIMIT_CHARACTER_DESCRIPTION = 150;
+	const DEFAULE_LIMIT_CHARACTER_DESCRIPTION = 150;
 
 	/** @var array */
 	private $_records = [];
