@@ -401,7 +401,7 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 	};
 }, 500);
 
-function limit_characters($text, $max_length): string
+function limit_characters(string $text, int $max_length): string
 {
 	if (strlen($text) > $max_length) {
 		$result = '';
