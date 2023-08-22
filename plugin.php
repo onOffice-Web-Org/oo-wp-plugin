@@ -161,9 +161,9 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 	}, 1, 3);
 } else {
     add_filter('document_title_parts', function ($title) use ($pDI){
-        $result = $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
-        $result['title'] = limit_characters($result['title'], 60);
-        return $result;
+		$result = $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
+		$result['title'] = limit_characters($result['title'], 60);
+		return $result;
     }, 10, 2);
 }
 
@@ -401,14 +401,15 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 	};
 }, 500);
 
-function limit_characters($text, $max_length) {
-	if(strlen($text) > $max_length) {
+function limit_characters($text, $max_length): string
+{
+	if (strlen($text) > $max_length) {
 		$result = '';
 		$current_length = 0;
 		$list_words = explode(" ", $text);
 		foreach ($list_words as $word) {
 			$word_length = strlen($word) + 1;
-			if($current_length + $word_length > $max_length) {
+			if ($current_length + $word_length > $max_length) {
 				break;
 			} else {
 				$result = $result . ' ' . $word;

@@ -64,9 +64,9 @@ use onOffice\WPlugin\Field\FieldParkingLot;
 class EstateList
 	implements EstateListBase
 {
-	const DEFAULE_LIMIT_CHARACTER_TITLE = 60;
+	const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
 
-	const DEFAULE_LIMIT_CHARACTER_DESCRIPTION = 150;
+	const DEFAULT_LIMIT_CHARACTER_DESCRIPTION = 150;
 
 	/** @var array */
 	private $_records = [];
@@ -483,7 +483,7 @@ class EstateList
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
 			$this->_currentEstate['id'];
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel']
-			? $this->limit_characters($currentRecord['elements']['objekttitel'], self::DEFAULE_LIMIT_CHARACTER_TITLE) : '';
+			? $this->limit_characters($currentRecord['elements']['objekttitel'], self::DEFAULT_LIMIT_CHARACTER_TITLE) : '';
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$fieldWaehrung = $this->_pEnvironment->getFieldnames()->getFieldInformation('waehrung', onOfficeSDK::MODULE_ESTATE);
 		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung']) ) {
@@ -503,8 +503,8 @@ class EstateList
 		if ( $checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption( 'onoffice-settings-title-and-description' ) == 0 ) {
 			add_action( 'wp_head', function () use ( $recordModified )
 			{
-				echo '<meta name="description" content="'.esc_attr(isset($recordModified["objektbeschreibung"])
-					? $this->limit_characters($recordModified["objektbeschreibung"], self::DEFAULE_LIMIT_CHARACTER_DESCRIPTION) : null).'" />';
+				echo '<meta name="description" content="' . esc_attr(isset($recordModified["objektbeschreibung"])
+					? $this->limit_characters($recordModified["objektbeschreibung"], self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION) : null) . '" />';
 			} );
 		}
 		$recordModified = new ArrayContainerEscape($recordModified);
@@ -547,18 +547,19 @@ class EstateList
 
 	/**
 	 * Set limit character for SEO title & meta description
-	 * @param $text
-	 * @param $max_length
+	 * @param string $text
+	 * @param int $max_length
 	 * @return string
 	 */
-	private function limit_characters($text, $max_length) {
-		if(strlen($text) > $max_length) {
+	private function limit_characters(string $text, int $max_length): string
+	{
+		if (strlen($text) > $max_length) {
 			$result = '';
 			$current_length = 0;
 			$list_words = explode(" ", $text);
 			foreach ($list_words as $word) {
 				$word_length = strlen($word) + 1;
-				if($current_length + $word_length > $max_length) {
+				if ($current_length + $word_length > $max_length) {
 					break;
 				} else {
 					$result = $result . ' ' . $word;
@@ -568,6 +569,7 @@ class EstateList
 		} else {
 			$result = $text;
 		}
+
 		return $result;
 	}
 
