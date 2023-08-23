@@ -553,21 +553,19 @@ class EstateList
 	 */
 	private function limit_characters(string $text, int $max_length): string
 	{
-		if (strlen($text) > $max_length) {
-			$result = '';
-			$current_length = 0;
-			$list_words = explode(" ", $text);
-			foreach ($list_words as $word) {
-				$word_length = strlen($word) + 1;
-				if ($current_length + $word_length > $max_length) {
-					break;
-				} else {
-					$result = $result . ' ' . $word;
-					$current_length += $word_length;
-				}
+		if (strlen($text) <= $max_length) {
+			return $text;
+		}
+		$result = '';
+		$current_length = 0;
+		$list_words = explode(" ", $text);
+		foreach ($list_words as $word) {
+			$word_length = strlen($word) + 1;
+			if ($current_length + $word_length > $max_length) {
+				break;
 			}
-		} else {
-			$result = $text;
+			$result = $result . ' ' . $word;
+			$current_length += $word_length;
 		}
 
 		return $result;
