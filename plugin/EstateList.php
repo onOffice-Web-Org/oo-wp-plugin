@@ -64,8 +64,6 @@ use onOffice\WPlugin\Field\FieldParkingLot;
 class EstateList
 	implements EstateListBase
 {
-	const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
-
 	const DEFAULT_LIMIT_CHARACTER_DESCRIPTION = 150;
 
 	/** @var array */
@@ -482,8 +480,7 @@ class EstateList
 		$recordElements = $currentRecord['elements'];
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
 			$this->_currentEstate['id'];
-		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel']
-			? $this->limit_characters($currentRecord['elements']['objekttitel'], self::DEFAULT_LIMIT_CHARACTER_TITLE) : '';
+		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$fieldWaehrung = $this->_pEnvironment->getFieldnames()->getFieldInformation('waehrung', onOfficeSDK::MODULE_ESTATE);
 		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung']) ) {
