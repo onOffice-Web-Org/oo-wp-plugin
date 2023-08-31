@@ -61,6 +61,8 @@ class FormAddressCreator
 	/**
 	 * @param FormData $pFormData
 	 * @param bool $mergeExisting
+	 * @param string $contactType
+	 * @param int|null $estateId
 	 * @return int the new (or updated) address ID
 	 * @throws ApiClientException
 	 * @throws UnknownFieldException
