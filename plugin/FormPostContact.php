@@ -135,8 +135,10 @@ class FormPostContact
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
 		$contactType = $pFormConfig->getContactType();
+		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
+		$estateId = $pWPQuery->get('estate_id', null);
 		$addressId = $this->_pFormPostContactConfiguration->getFormAddressCreator()
-			->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType);
+			->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType, $estateId);
 
 		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
 			// No subscription for newsletter, which is ok

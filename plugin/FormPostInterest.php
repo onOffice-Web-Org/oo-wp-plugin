@@ -84,9 +84,10 @@ class FormPostInterest
 			if ( $pFormConfiguration->getCreateInterest() ) {
 				$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
 						$contactType = $pFormConfiguration->getContactType();
+				$pWPQuery = $this->_pFormPostInterestConfiguration->getWPQueryWrapper()->getWPQuery();
+				$estateId = $pWPQuery->get('estate_id', null);
 				$addressId = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
-				                                                   ->createOrCompleteAddress( $pFormData,
-					                                                   $checkduplicate, $contactType);
+						->createOrCompleteAddress( $pFormData, $checkduplicate, $contactType, $estateId);
 				$this->createSearchcriteria( $pFormData, $addressId );
 				$this->setNewsletter( $addressId );
 			}
