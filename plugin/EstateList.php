@@ -485,7 +485,7 @@ class EstateList
 		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung']) ) {
 			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung['permittedvalues']);
 		}
-		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
+		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'] ?? [];
 
 		if ($this->getShowEstateMarketingStatus()) {
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
