@@ -502,7 +502,7 @@ class EstateList
 			add_action( 'wp_head', function () use ( $recordModified )
 			{
 				echo '<meta name="description" content="' . esc_attr(isset($recordModified["objektbeschreibung"])
-					? $this->limit_characters($recordModified["objektbeschreibung"], self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION) : null) . '" />';
+					? $this->limit_characters($recordModified["objektbeschreibung"]) : null) . '" />';
 			} );
 		}
 		$recordModified = new ArrayContainerEscape($recordModified);
@@ -546,27 +546,19 @@ class EstateList
 	/**
 	 * Set limit character for SEO title & meta description
 	 * @param string $text
-	 * @param int $max_length
 	 * @return string
 	 */
-	private function limit_characters(string $text, int $max_length): string
+	private function limit_characters(string $text): string
 	{
-		if (strlen($text) <= $max_length) {
-			return $text;
-		}
-		$result = '';
-		$current_length = 0;
-		$list_words = explode(" ", $text);
-		foreach ($list_words as $word) {
-			$word_length = strlen($word) + 1;
-			if ($current_length + $word_length > $max_length) {
-				break;
+		if (strlen($text) > self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION) {
+			$shortenedText = substr($text, 0, self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION);
+			if (substr($text, self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION, 1) != ' ') {
+				$shortenedText = substr($shortenedText, 0, strrpos($shortenedText, ' '));
 			}
-			$result = $result . ' ' . $word;
-			$current_length += $word_length;
+			$text = $shortenedText;
 		}
 
-		return $result;
+		return $text;
 	}
 
 	public function getRawValues(): ArrayContainerEscape
