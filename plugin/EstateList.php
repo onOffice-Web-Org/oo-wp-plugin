@@ -544,7 +544,7 @@ class EstateList
 	}
 
 	/**
-	 * Set limit character for SEO title & meta description
+	 * Set limit character for SEO meta description
 	 * @param string $text
 	 * @return string
 	 */
