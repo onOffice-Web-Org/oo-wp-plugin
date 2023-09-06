@@ -21,7 +21,7 @@
 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 
 ?>
-<form method="post" id="onoffice-form" class="applicant">
+<form method="post" id="onoffice-form" class="oo-form oo-form-applicant">
 
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">

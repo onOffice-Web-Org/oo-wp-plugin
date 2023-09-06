@@ -1,21 +1,15 @@
 jQuery(document).ready(function ($) {
-    const formClassList = ['owner', 'applicant', 'applicantsearch', 'default'];
-    const selectedForms = getSelectedForms(formClassList);
+    const formElements = getFormsBySpecialHtmlAttribute();
 
-    handleFormSubmissions(selectedForms);
+    handleFormSubmissions(formElements);
 
-    function getSelectedForms(formClassList) {
-        const selectedForms = [];
-        formClassList.forEach((formClass) => {
-            const formSelector = `.${formClass}`;
-            const forms = document.querySelectorAll(formSelector);
-            selectedForms.push(...forms);
-        });
-        if (!selectedForms.length) {
-            const formById = document.querySelectorAll('#onoffice-form');
-            selectedForms.push(...formById);
-        }
-        return selectedForms;
+    function getFormsBySpecialHtmlAttribute() {
+        const formElements = [];
+
+        const forms = document.querySelectorAll('.oo-form, #onoffice-form');
+        formElements.push(...forms);
+
+        return formElements;
     }
 
     function handleFormSubmissions(formElements) {
