@@ -64,6 +64,8 @@ use onOffice\WPlugin\Field\FieldParkingLot;
 class EstateList
 	implements EstateListBase
 {
+	const DEFAULT_LIMIT_CHARACTER_DESCRIPTION = 150;
+
 	/** @var array */
 	private $_records = [];
 
@@ -499,7 +501,8 @@ class EstateList
 		if ( $checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption( 'onoffice-settings-title-and-description' ) == 0 ) {
 			add_action( 'wp_head', function () use ( $recordModified )
 			{
-				echo '<meta name="description" content="' . esc_attr( $recordModified["objektbeschreibung"] ?? null ) . '" />';
+				echo '<meta name="description" content="' . esc_attr(isset($recordModified["objektbeschreibung"])
+					? $this->limit_characters($recordModified["objektbeschreibung"]) : null) . '" />';
 			} );
 		}
 		$recordModified = new ArrayContainerEscape($recordModified);
@@ -540,6 +543,23 @@ class EstateList
 		return $title_parts_array;
 	}
 
+	/**
+	 * Set limit character for SEO meta description
+	 * @param string $text
+	 * @return string
+	 */
+	private function limit_characters(string $text): string
+	{
+		if (strlen($text) > self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION) {
+			$shortenedText = substr($text, 0, self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION);
+			if (substr($text, self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION, 1) != ' ') {
+				$shortenedText = substr($shortenedText, 0, strrpos($shortenedText, ' '));
+			}
+			$text = $shortenedText;
+		}
+
+		return $text;
+	}
 
 	public function getRawValues(): ArrayContainerEscape
 	{

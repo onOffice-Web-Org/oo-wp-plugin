@@ -66,6 +66,8 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
+const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
+
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
 
 $pDIBuilder = new ContainerBuilder();
@@ -161,7 +163,16 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 	}, 1, 3);
 } else {
     add_filter('document_title_parts', function ($title) use ($pDI){
-        return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
+		$result = $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
+		if (strlen($result['title']) > DEFAULT_LIMIT_CHARACTER_TITLE) {
+			$shortenedTitle = substr($result['title'], 0, DEFAULT_LIMIT_CHARACTER_TITLE);
+			if (substr($result['title'], DEFAULT_LIMIT_CHARACTER_TITLE, 1) != ' ') {
+				$shortenedTitle = substr($shortenedTitle, 0, strrpos($shortenedTitle, ' '));
+			}
+			$result['title'] = $shortenedTitle;
+		}
+
+		return $result;
     }, 10, 2);
 }
 
