@@ -1,0 +1,24 @@
+jQuery(document).ready(function ($) {
+    const formElements = document.querySelectorAll('.oo-form, #onoffice-form');
+
+    handleFormSubmissions(formElements);
+
+    function handleFormSubmissions(formElements) {
+        formElements.forEach((formElement) => {
+            let submitted = false;
+            const submitButton = $(formElement).find('.submit_button');
+
+            $(formElement).on('submit', function (event) {
+                if (submitted) {
+                    event.preventDefault();
+                } else {
+                    submitted = true;
+                }
+            });
+
+            submitButton.on('click', function () {
+                submitButton.prop('disabled', true);
+            });
+        });
+    }
+});

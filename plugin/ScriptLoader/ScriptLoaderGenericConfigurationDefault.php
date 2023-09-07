@@ -71,6 +71,9 @@ class ScriptLoaderGenericConfigurationDefault
 				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/js/onoffice-form-preview.js', $pluginPath)))
 				->setLoadInFooter(true),
+			(new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/js/onoffice-prevent-double-form-submission.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true),
 
 			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),
