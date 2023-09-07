@@ -19,22 +19,22 @@ jQuery(document).ready(function ($) {
 
     function addHoneypotToForms(formElements) {
         formElements.forEach((formElement) => {
-            var messageTextarea = $(formElement).find('textarea[name="message"]');
-            var messageInput = $(formElement).find('input[name="message"]');
+            const messageTextarea = $(formElement).find('textarea[name="message"]');
+            const messageInput = $(formElement).find('input[name="message"]');
             if (messageTextarea.length === 1) {
                 messageTextarea.attr('name', 'tmpField');
             } else if (messageInput.length === 1)  {
                 messageInput.attr('name', 'tmpField');
             }
-            var label = $('<label>').text('Message:').attr("class", "message");
-            var input = $('<input>').attr({
+            const label = $('<label>').text('Message:').attr("class", "message");
+            const input = $('<input>').attr({
                 'type': 'text',
                 'name': 'message',
                 'class': 'message'
             });
             $(formElement).prepend(input);
             $(formElement).prepend(label);
-            var originalInput = $(formElement).find('input[name="message"]');
+            const originalInput = $(formElement).find('input[name="message"]');
             originalInput.before(label, input);
         });
     };
