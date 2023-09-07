@@ -1,16 +1,7 @@
 jQuery(document).ready(function ($) {
-    const formElements = getFormsBySpecialHtmlAttribute();
+    const formElements = document.querySelectorAll('.oo-form, #onoffice-form');
 
     handleFormSubmissions(formElements);
-
-    function getFormsBySpecialHtmlAttribute() {
-        const formElements = [];
-
-        const forms = document.querySelectorAll('.oo-form, #onoffice-form');
-        formElements.push(...forms);
-
-        return formElements;
-    }
 
     function handleFormSubmissions(formElements) {
         formElements.forEach((formElement) => {
