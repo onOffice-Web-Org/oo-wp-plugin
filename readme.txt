@@ -76,6 +76,23 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.14 (2023-09-07) =
+
+**Added**
+
+* Property lists in the plugin backend are now sortable by name, template and type.
+
+**Changed**
+
+* Title tags and description tags that are too long will be shortened.
+* New address records of interested parties of a property are created with the same supervisor as the property.
+
+**Fixed**
+
+* The sending of e-mails when the send button has been pressed for several times.
+* Bug with invalid estate Ids.
+* Bug with onoffice-style.css when using a child theme.
+
 = 4.13 (2023-08-15) =
 
 **Added**
