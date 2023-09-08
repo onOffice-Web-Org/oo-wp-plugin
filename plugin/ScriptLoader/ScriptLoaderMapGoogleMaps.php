@@ -81,6 +81,6 @@ class ScriptLoaderMapGoogleMaps
 		$url = 'https://maps.googleapis.com/maps/api/js?'.http_build_query(['key' => $key]);
 		$this->_pWPScriptStyle->registerScript('google-maps', $url);
 		$this->_pWPScriptStyle->registerScript('gmapsinit',
-			plugins_url('/js/gmapsinit.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['google-maps']);
+			plugins_url('/dist/gmapsinit.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['google-maps']);
 	}
 }
