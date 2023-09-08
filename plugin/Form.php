@@ -621,9 +621,8 @@ class Form
 
 	private function typeFormToHoneyPot($type)
 	{
-		if (get_option('onoffice-settings-honeypot') == true) {
-			wp_enqueue_script('onoffice-honeypot', plugins_url('dist/onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php'), array('jquery'));
-			wp_localize_script('onoffice-honeypot', 'form', array('type' => $type));
+		if (get_option('onoffice-settings-honeypot') == true && $type !== 'applicantsearch') {
+			wp_enqueue_script('onoffice-honeypot', plugins_url('js/onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php'), array('jquery'));
 		}
 	}
 

@@ -127,7 +127,5 @@ class TestClassForm
 	{
 		$this->assertTrue(wp_script_is('onoffice-honeypot', 'enqueued'));
 		$this->assertEquals(['onoffice-honeypot'], wp_scripts()->queue);
-		$pTypeForm = wp_scripts()->get_data('onoffice-honeypot', 'data');
-		$this->assertStringContainsString('"type":"interest"', $pTypeForm);
 	}
 }

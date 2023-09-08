@@ -30,6 +30,7 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
 
 /**
@@ -53,7 +54,7 @@ class TestClassFormPostOwnerConfigurationDefault
 	{
 		$this->_pSubject = new FormPostOwnerConfigurationDefault
 			(new SDKWrapper(), new FormAddressCreator(new SDKWrapper,
-				new FieldsCollectionBuilderShort(new Container())));
+				new FieldsCollectionBuilderShort(new Container())), new WPQueryWrapper());
 	}
 
 
@@ -96,5 +97,15 @@ class TestClassFormPostOwnerConfigurationDefault
 	public function testGetFormAddressCreator()
 	{
 		$this->assertInstanceOf(FormAddressCreator::class, $this->_pSubject->getFormAddressCreator());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetWPQueryWrapper()
+	{
+		$this->assertInstanceOf(WPQueryWrapper::class, $this->_pSubject->getWPQueryWrapper());
 	}
 }
