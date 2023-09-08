@@ -46,10 +46,12 @@ class ScriptLoaderGenericConfigurationDefault
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$script = IncludeFileModel::TYPE_SCRIPT;
 		$style = IncludeFileModel::TYPE_STYLE;
+		$defer = IncludeFileModel::LOAD_DEFER;
 
 		$values = [
 			(new IncludeFileModel($script, 'select2', plugins_url('/vendor/select2/select2/dist/js/select2.min.js', $pluginPath)))
-				->setLoadInFooter(true),
+				->setLoadInFooter(true)
+				->setLoadAsynchronous($defer),
 			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)),

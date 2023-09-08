@@ -33,9 +33,9 @@ class IncludeFileModel
 
 	const TYPE_STYLE = 'style';
 
-	const LOAD_ASYNC = 'async';
-
 	const LOAD_DEFER = 'defer';
+
+	const LOAD_ASYNC = 'async';
 
 	/** @var string */
 	private $_identifier = '';
@@ -51,6 +51,9 @@ class IncludeFileModel
 
 	/** @var string */
 	private $_type = '';
+
+    /** @var string */
+	private $_loadAsynchronous = '';
 
 
 	/**
@@ -152,6 +155,24 @@ class IncludeFileModel
 	public function setLoadInFooter(bool $loadInFooter): self
 	{
 		$this->_loadInFooter = $loadInFooter;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLoadAsynchronous(): string
+	{
+		return $this->_loadAsynchronous;
+	}
+
+	/**
+	 * @param string $loadAsynchronous
+	 * @return $this
+	 */
+	public function setLoadAsynchronous(string $loadAsynchronous): self
+	{
+		$this->_loadAsynchronous = $loadAsynchronous;
 		return $this;
 	}
 }
