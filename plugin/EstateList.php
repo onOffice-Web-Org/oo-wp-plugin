@@ -884,11 +884,11 @@ class EstateList
 
 	private function doExtraEnqueues(){
 		if($this->_pDataView instanceof DataListView){
-			wp_register_script('onoffice-sort-list-selector', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-sort-list-selector.js', ['jquery'], '', true);
-			wp_register_script('onoffice-form-preview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-form-preview.js', [], '', true);
-			wp_register_script('onoffice-custom-select', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-custom-select.js', [], '', true);
-			wp_register_script('onoffice-multiselect', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-multiselect.js', [], '', true);
-			wp_register_script('onoffice-estatetype', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-estatetype.js', ['onoffice-multiselect'], '', true);
+			wp_register_script('onoffice-sort-list-selector', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-sort-list-selector.min.js', ['jquery'], '', true);
+			wp_register_script('onoffice-form-preview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-form-preview.min.js', [], '', true);
+			wp_register_script('onoffice-custom-select', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-custom-select.min.js', [], '', true);
+			wp_register_script('onoffice-multiselect', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-multiselect.min.js', [], '', true);
+			wp_register_script('onoffice-estatetype', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-estatetype.min.js', ['onoffice-multiselect'], '', true);
 			wp_enqueue_script('onoffice-sort-list-selector');
 			wp_enqueue_script('onoffice-form-preview');
 			wp_enqueue_script('onoffice-custom-select');
@@ -910,7 +910,7 @@ class EstateList
 			wp_register_script('slick', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick.js', ['jquery'], '', true);
 			wp_enqueue_script('slick');
 			wp_script_add_data('slick', IncludeFileModel::LOAD_DEFER, true);
-			wp_register_script('onoffice_defaultview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice_defaultview.js', ['jquery'], '', true);
+			wp_register_script('onoffice_defaultview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice_defaultview.min.js', ['jquery'], '', true);
 			wp_enqueue_script('onoffice_defaultview');
 			wp_register_style('slick', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick.css');
 			wp_register_style('slick-theme', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick-theme.css');
