@@ -71,6 +71,9 @@ class ScriptLoaderGenericConfigurationDefault
 				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/js/onoffice-form-preview.js', $pluginPath)))
 				->setLoadInFooter(true),
+			(new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/js/onoffice-prevent-double-form-submission.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true),
 
 			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),
@@ -114,6 +117,11 @@ class ScriptLoaderGenericConfigurationDefault
         $onofficeCssStyleFilePath = get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css';
         if (file_exists($onofficeCssStyleFilePath))
         {
+            return get_stylesheet_directory_uri() . '/onoffice-theme/templates/onoffice-style.css';
+        }
+
+        $onofficeCssStyleFilePath = get_template_directory() . '/onoffice-theme/templates/onoffice-style.css';
+        if (file_exists($onofficeCssStyleFilePath)) {
             return get_template_directory_uri() . '/onoffice-theme/templates/onoffice-style.css';
         }
 
@@ -135,6 +143,8 @@ class ScriptLoaderGenericConfigurationDefault
             . 'onoffice-personalized' );
         $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_THEME ]  = glob( get_stylesheet_directory()
             . '/onoffice-theme' );
+        $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_PARENT_THEME ] = glob( get_template_directory()
+            . '/onoffice-theme' );
 
         $defaultview = 'onoffice_defaultview';
         $newstyle = 'onoffice_style';
@@ -142,6 +152,11 @@ class ScriptLoaderGenericConfigurationDefault
         $onofficeCssStyleVersion = $defaultview;
         if ( ! empty( $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_THEME ] ) ) {
             $onofficeCssStyleVersion = ! empty( glob( get_stylesheet_directory()
+                . '/onoffice-theme/templates/onoffice-style.css' ) )
+                ? $newstyle
+                : $defaultview;
+        } elseif ( ! empty( $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_PARENT_THEME ] ) ) {
+            $onofficeCssStyleVersion = ! empty( glob( get_template_directory()
                 . '/onoffice-theme/templates/onoffice-style.css' ) )
                 ? $newstyle
                 : $defaultview;

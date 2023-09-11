@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 
 /**
  *
@@ -73,4 +74,13 @@ interface FormPostOwnerConfiguration
 	 *
 	 */
 	 public function getNewsletterAccepted(): bool;
+
+
+	/**
+	 *
+	 * @return WPQueryWrapper
+	 *
+	 */
+
+	 public function getWPQueryWrapper(): WPQueryWrapper;
 }

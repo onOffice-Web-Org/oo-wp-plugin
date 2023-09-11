@@ -61,6 +61,8 @@ class FormAddressCreator
 	/**
 	 * @param FormData $pFormData
 	 * @param bool $mergeExisting
+	 * @param string $contactType
+	 * @param int|null $estateId
 	 * @return int the new (or updated) address ID
 	 * @throws ApiClientException
 	 * @throws UnknownFieldException
@@ -68,7 +70,7 @@ class FormAddressCreator
 	 * @throws NotFoundException
 	 */
 	public function createOrCompleteAddress(
-		FormData $pFormData, bool $mergeExisting = false, string $contactType = ''): int
+		FormData $pFormData, bool $mergeExisting = false, string $contactType = '', int $estateId = null): int
 	{
 		$requestParams = $this->getAddressDataForApiCall($pFormData);
 		$requestParams['checkDuplicate'] = $mergeExisting;
@@ -82,6 +84,13 @@ class FormAddressCreator
 		if ( key_exists( 'newsletter', $requestParams ) ) {
 			unset( $requestParams['newsletter'] );
 		}
+		if (!empty($estateId)) {
+			$userName = $this->getSupervisorUsernameByEstateId($estateId);
+			if (!empty($userName)) {
+				$requestParams['Benutzer'] = $userName;
+			}
+		}
+
 		$pApiClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'address');
 		$pApiClientAction->setParameters($requestParams);
@@ -169,5 +178,62 @@ class FormAddressCreator
 			}
 		}
 		return $addressData;
+	}
+
+	/**
+	 * @param int $estateId
+	 * @return string
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getSupervisorUsernameByEstateId(int $estateId): string
+	{
+		$requestParams = [
+			'filter' => ['Id' => [['op' => '=', 'val' => $estateId]]],
+			'data' => ['benutzer'],
+		];
+
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
+		$this->_pSDKWrapper->sendRequests();
+		$result = $pApiClientAction->getResultRecords();
+
+		if (!empty($result) && isset($result[0]["elements"]["benutzer"])) {
+			$userId = $result[0]["elements"]["benutzer"];
+			return $this->getUserNameById($userId);
+		} else {
+			return '';
+		}
+	}
+
+	/**
+	 * @param string $userId
+	 * @return string
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getUserNameById(string $userId): string
+	{
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
+
+		$pApiClientAction->addRequestToQueue();
+		$this->_pSDKWrapper->sendRequests();
+		$result = $pApiClientAction->getResultRecords();
+
+		$userResult = array_values(array_filter($result, function($item) use ($userId) {
+			return $item['id'] == $userId && isset($item["elements"]["username"]);
+		}));
+
+		if (!empty($userResult)) {
+			return $userResult[0]["elements"]["username"];
+		} else {
+			return '';
+		}
 	}
 }

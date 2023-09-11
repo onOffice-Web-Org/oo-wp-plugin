@@ -28,7 +28,7 @@ use DI\ContainerBuilder;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
 use onOffice\WPlugin\Template;
-use onOffice\WPlugin\Template\TemplateCall;
+use RuntimeException;
 use WP_UnitTestCase;
 
 /**
@@ -62,7 +62,7 @@ class TestClassScriptLoaderGenericConfigurationDefault
 
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$config = $pScriptLoaderGenericConfigurationDefault->getScriptLoaderGenericConfiguration();
-		$this->assertCount(17, $config);
+		$this->assertCount(18, $config);
 		/* @var $pFileModel IncludeFileModel */
 		foreach ($config as $pFileModel) {
 			$this->assertInstanceOf(IncludeFileModel::class, $pFileModel);
@@ -98,5 +98,31 @@ class TestClassScriptLoaderGenericConfigurationDefault
 		$onofficeCssStyleVersion = $pScriptLoaderGenericConfigurationDefault->getOnOfficeStyleVersion();
 		$this->assertEquals($onofficeCssStyleVersion, 'onoffice_style');
 		$this->assertNotEmpty($onofficeCssStyleVersion);
+	}
+
+	/**
+	 *
+	 */
+	public function testGetStyleUriByVersionOnChildTheme()
+	{
+		$this->assertNotEmpty(get_stylesheet_directory());
+		$templatePath = get_stylesheet_directory().'/onoffice-theme/';
+		if (!is_dir($templatePath) &&
+			!mkdir($templatePath . '/templates/', 755, true) &&
+			!is_dir($templatePath . '/templates/'))
+		{
+			throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . '/templates/'));
+		}
+		$styleFilePath = get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css';
+		if (!file_exists($styleFilePath)) {
+			file_put_contents(get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css', 'onoffice-style.css');
+		}
+		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
+		$onofficeCssStyleVersion = $pScriptLoaderGenericConfigurationDefault->getOnOfficeStyleVersion();
+		$onofficeCssStyleFilePath = $pScriptLoaderGenericConfigurationDefault->getStyleUriByVersion($onofficeCssStyleVersion);
+
+		$this->assertEquals($onofficeCssStyleVersion, 'onoffice_style');
+		$this->assertEquals($onofficeCssStyleFilePath, get_stylesheet_directory_uri() . '/onoffice-theme/templates/onoffice-style.css');
+		unlink(get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css');
 	}
 }

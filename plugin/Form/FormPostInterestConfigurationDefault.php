@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 
 
 /**
@@ -43,23 +44,28 @@ class FormPostInterestConfigurationDefault
 	/** @var SearchcriteriaFields */
 	private $_pSearchcriteriaFields;
 
+	/** @var WPQueryWrapper */
+	private $_pWPQueryWrapper = null;
 
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param FormAddressCreator $pFormAddressCreator
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
+	 * @param WPQueryWrapper $pWPQueryWrapper
 	 *
 	 */
 
 	public function __construct(
 		SDKWrapper $pSDKWrapper,
 		FormAddressCreator $pFormAddressCreator,
-		SearchcriteriaFields $pSearchcriteriaFields)
+		SearchcriteriaFields $pSearchcriteriaFields,
+		WPQueryWrapper $pWPQueryWrapper)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pFormAddressCreator = $pFormAddressCreator;
 		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
+		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 	}
 
 
@@ -105,5 +111,17 @@ class FormPostInterestConfigurationDefault
 	public function getNewsletterAccepted(): bool
 	{
 		return filter_var( $_POST['newsletter'] ?? null, FILTER_SANITIZE_STRING ) === 'y';
+	}
+
+
+	/**
+	 *
+	 * @return WPQueryWrapper
+	 *
+	 */
+
+	public function getWPQueryWrapper(): WPQueryWrapper
+	{
+		return $this->_pWPQueryWrapper;
 	}
 }
