@@ -71,10 +71,7 @@ class ScriptLoaderGenericConfigurationDefault
 				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/dist/onoffice-form-preview.min.js', $pluginPath)))
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/dist/onoffice-honeypot.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/js/onoffice-prevent-double-form-submission.js', $pluginPath)))
+			(new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/dist/onoffice-prevent-double-form-submission.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
 
