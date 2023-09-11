@@ -84,9 +84,10 @@ class FormPostInterest
 			if ( $pFormConfiguration->getCreateInterest() ) {
 				$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
 						$contactType = $pFormConfiguration->getContactType();
+				$pWPQuery = $this->_pFormPostInterestConfiguration->getWPQueryWrapper()->getWPQuery();
+				$estateId = $pWPQuery->get('estate_id', null);
 				$addressId = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
-				                                                   ->createOrCompleteAddress( $pFormData,
-					                                                   $checkduplicate, $contactType);
+						->createOrCompleteAddress( $pFormData, $checkduplicate, $contactType, $estateId);
 				$this->createSearchcriteria( $pFormData, $addressId );
 				$this->setNewsletter( $addressId );
 			}
@@ -177,6 +178,11 @@ class FormPostInterest
 			$requestParams['addressdata']['newsletter_aktiv'] = $this->_pFormPostInterestConfiguration
 				->getNewsletterAccepted();
 		}
+		if (isset($addressData['gdprcheckbox']) && $addressData['gdprcheckbox']) {
+			$requestParams['addressdata']['DSGVOStatus'] = "speicherungzugestimmt";
+		}
+		unset($requestParams['addressdata']['gdprcheckbox']);
+
 		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
 		$pAPIClientAction = new APIClientActionGeneric
 		($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');

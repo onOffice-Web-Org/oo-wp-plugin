@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.11.1
+Version: 4.13
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -65,6 +65,8 @@ use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+
+const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
 
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
 
@@ -161,7 +163,16 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 	}, 1, 3);
 } else {
     add_filter('document_title_parts', function ($title) use ($pDI){
-        return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
+		$result = $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
+		if (strlen($result['title']) > DEFAULT_LIMIT_CHARACTER_TITLE) {
+			$shortenedTitle = substr($result['title'], 0, DEFAULT_LIMIT_CHARACTER_TITLE);
+			if (substr($result['title'], DEFAULT_LIMIT_CHARACTER_TITLE, 1) != ' ') {
+				$shortenedTitle = substr($shortenedTitle, 0, strrpos($shortenedTitle, ' '));
+			}
+			$result['title'] = $shortenedTitle;
+		}
+
+		return $result;
     }, 10, 2);
 }
 
@@ -398,12 +409,5 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 		}
 	};
 }, 500);
-
-function do_extra_enqueue_honeypot() {
-	$honeypot_enabled = get_option('onoffice-settings-honeypot');
-	wp_localize_script( 'onoffice-honeypot', 'honeypot_enabled', array(  'honeypotValue' => $honeypot_enabled ) );
-}
-
-add_action( 'wp_enqueue_scripts', 'do_extra_enqueue_honeypot' );
 
 return $pDI;

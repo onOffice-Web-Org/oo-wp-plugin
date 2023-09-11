@@ -829,6 +829,16 @@ class TestClassEstateList
 
 	/**
 	 *
+	 */
+	public function testGetShowMapConfig()
+	{
+		$this->_pEstateList->loadEstates();
+		$result = $this->_pEstateList->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP);
+		$this->assertEquals('1', $result['showGoogleMap']);
+	}
+
+	/**
+	 *
 	 * @before
 	 *
 	 */
@@ -967,6 +977,7 @@ class TestClassEstateList
 		$pDataView->setFilterableFields([GeoPosition::FIELD_GEO_POSITION]);
 		$pDataView->setShowPriceOnRequest(true);
 		$pDataView->setExpose('testExpose');
+		$pDataView->setShowMap(true);
 		return $pDataView;
 	}
 

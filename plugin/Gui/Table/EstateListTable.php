@@ -139,12 +139,26 @@ class EstateListTable extends ListTable
 		];
 
 		$hidden = ['ID', 'filterId'];
-		$sortable = [];
+		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = [$columns, $hidden, $sortable,
 			$this->get_default_primary_column_name()];
 
 		$this->fillData();
+	}
+
+	/**
+	 *
+	 */
+
+	public function get_sortable_columns()
+	{
+		$columns = array(
+			'name' => ['name', false],
+			'template' => ['template', false],
+			'list_type' => ['list_type', false],
+		);
+		return $columns;
 	}
 
 	/**

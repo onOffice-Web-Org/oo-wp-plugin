@@ -72,7 +72,7 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 		$viewFields = [GeoPosition::FIELD_GEO_POSITION, 'testField'];
 		$pViewFieldModifier = $this->generateMockObject($viewFields);
 
-		$expectedVisibleFields = ['breitengrad', 'laengengrad', 'testField'];
+		$expectedVisibleFields = ['testField'];
 		$this->assertEqualSets($expectedVisibleFields, $pViewFieldModifier->getVisibleFields());
 	}
 

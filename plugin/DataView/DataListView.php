@@ -70,6 +70,9 @@ class DataListView
 	/** */
 	const SORT_BY_STANDARD_VALUES = 'sortby';
 
+	/** */
+	const SHOW_PRICE_ON_REQUEST = '1';
+
 	/** @var int */
 	private $_id = null;
 
@@ -146,7 +149,11 @@ class DataListView
 	private $_showReferenceEstate = '0';
 
 	/** @var bool */
+	private $_showMap = false;
+
+	/** @var bool */
 	private $_showPriceOnRequest = false;
+
 
 	/**
 	 *
@@ -213,6 +220,14 @@ class DataListView
 	/** @return array */
 	public function getAddressFields(): array
 		{ return $this->_addressFields; }
+
+	/** @return bool */
+	public function getShowMap(): bool
+		{ return (bool) $this->_showMap; }
+
+	/** @param bool $showMap */
+	public function setShowMap(bool $showMap)
+		{ $this->_showMap = $showMap; }
 
 	/** @param bool $random */
 	public function setRandom(bool $random)

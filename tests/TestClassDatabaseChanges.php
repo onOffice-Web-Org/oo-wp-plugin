@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use onOffice\WPlugin\DataView\DataSimilarView;
@@ -117,7 +118,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(40, $dbversion);
+		$this->assertEquals(42, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -270,7 +271,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(40, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(42, DatabaseChanges::MAX_VERSION);
 	}
 
 
@@ -359,7 +360,6 @@ class TestClassDatabaseChanges
 		$pDataViewSimilarEstates = $pSimilarViewOptions->getDataViewSimilarEstates();
 
 		$this->assertNotContains('preisAufAnfrage', $pDataViewSimilarEstates->getFields());
-		$this->assertEquals(true, $pDataViewSimilarEstates->getShowPriceOnRequest());
 
 		return $this->_createQueries;
 	}
@@ -391,6 +391,33 @@ class TestClassDatabaseChanges
 
 		$this->assertNotContains('preisAufAnfrage', $pDetailViewOptions->getFields());
 		$this->assertEquals(true, $pDetailViewOptions->getShowPriceOnRequest());
+
+		return $this->_createQueries;
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::updateDefaultPictureTypesForSimilarEstate
+	 */
+
+	public function testUpdateDefaultPictureTypesForSimilarEstate(): array
+	{
+		global $wpdb;
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+
+		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataSimilarView();
+		$dataSimilarViewOptions->name = "onoffice-default-view";
+		add_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
+
+		$this->_pDbChanges->deinstall();
+		add_option('oo_plugin_db_version', '40');
+		add_filter('query', [$this, 'saveCreateQuery'], 1);
+		$this->_pDbChanges->install();
+		remove_filter('query', [$this, 'saveCreateQuery'], 1);
+
+		$pSimilarViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
+		$pDataViewSimilarEstates = $pSimilarViewOptions->getDataViewSimilarEstates();
+
+		$this->assertEquals([ImageTypes::TITLE], $pDataViewSimilarEstates->getPictureTypes());
 
 		return $this->_createQueries;
 	}
