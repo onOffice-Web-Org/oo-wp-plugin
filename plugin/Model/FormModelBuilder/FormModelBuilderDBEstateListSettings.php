@@ -213,7 +213,7 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Filterable', 'onoffice-for-wp-websites');
+		$label = __('Show in search', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
@@ -234,7 +234,7 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Reduce values according to selected filter', 'onoffice-for-wp-websites');
+		$label = __('Hide empty values from onOffice enterprise', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_AVAILABLE_OPTIONS;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
@@ -749,6 +749,25 @@ class FormModelBuilderDBEstateListSettings
 			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
 		});
 		return $pInputModel;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelShowMap()
+	{
+		$labelShowMap = __('Show estate map', 'onoffice-for-wp-websites');
+
+		$pInputModelShowMap = $this->getInputModelDBFactory()->create
+		(InputModelDBFactory::INPUT_SHOW_MAP, $labelShowMap);
+		$pInputModelShowMap->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowMap->setValue($this->getValue('show_map') ?? true);
+		$pInputModelShowMap->setValuesAvailable(1);
+
+		return $pInputModelShowMap;
 	}
 
 	/**

@@ -29,6 +29,7 @@ use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
 
 /**
@@ -53,7 +54,9 @@ class TestClassFormPostInterestConfigurationDefault
 		$pFieldsCollectionBuilder = new FieldsCollectionBuilderShort(new Container());
 		$this->_pSubject = new FormPostInterestConfigurationDefault(new SDKWrapper(),
 			new FormAddressCreator(new SDKWrapper, $pFieldsCollectionBuilder),
-			new SearchcriteriaFields($pFieldsCollectionBuilder));
+			new SearchcriteriaFields($pFieldsCollectionBuilder),
+			new WPQueryWrapper()
+		);
 	}
 
 
@@ -84,5 +87,15 @@ class TestClassFormPostInterestConfigurationDefault
 	public function testGetSearchcriteriaFields()
 	{
 		$this->assertInstanceOf(SearchcriteriaFields::class, $this->_pSubject->getSearchcriteriaFields());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetWPQueryWrapper()
+	{
+		$this->assertInstanceOf(WPQueryWrapper::class, $this->_pSubject->getWPQueryWrapper());
 	}
 }

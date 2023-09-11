@@ -70,6 +70,9 @@ class InputModelOptionFactorySimilarView
 	/** */
 	const KEY_TYPE = 'type';
 
+	/** */
+	const INPUT_PICTURE_TYPE = DataSimilarView::PICTURES;
+
 	/** @var string */
 	private $_optionGroup = null;
 
@@ -99,6 +102,9 @@ class InputModelOptionFactorySimilarView
 		],
 		self::INPUT_FIELD_ENABLE_SIMILAR_ESTATES => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
+		],
+		self::INPUT_PICTURE_TYPE => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
 		self::INPUT_SHOW_PRICE_ON_REQUEST => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
