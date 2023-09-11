@@ -60,14 +60,14 @@ class InputFieldSelectRenderer
 		$textHtml = '';
 		if ( ! empty( $this->getHint() ) ) {
 			if($this->getName() === "oopluginlistviews-showreferenceestate"){
-				$textHtml = '<div class="memssageReference">' . $this->getHint() . '</div>';
+				$textHtml = '<div class="memssageReference custom-message">' . $this->getHint() . '</div>';
 				echo '<script>'
 					.'if (jQuery("select[name=oopluginlistviews-showreferenceestate").val() === "0") {'
 					.  'jQuery(".memssageReference").hide();'
 					.'}';
 				echo '</script>';
 			} else {
-				$textHtml = '<div style="text-align: right">' . $this->getHint() . '</div>';
+				$textHtml = '<div style="text-align: left">' . $this->getHint() . '</div>';
 			}
 		}
 		echo '<select name="'.esc_html($this->getName()).'" '

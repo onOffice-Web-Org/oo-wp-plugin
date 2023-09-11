@@ -71,7 +71,7 @@ class InputFieldTemplateListRenderer
 		if (!$this->checkedValueIsSet()) {
 			$this->setDefaultCheckedValue();
 		}
-		echo '<div class="template-list">';
+		echo '<div class="template-list custom-template">';
 		foreach ($this->getValue() as $templateValue) {
 			$templateList = $templateValue['path'];
 			if (count($this->getValue()) > 1) {

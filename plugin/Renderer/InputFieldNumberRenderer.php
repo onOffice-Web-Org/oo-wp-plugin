@@ -54,7 +54,7 @@ class InputFieldNumberRenderer
 	{
 		$textHtml = '';
 		if ( ! empty( $this->getHint() ) ) {
-			$textHtml = '<p class="memssageRecordsPerPage">' . esc_html( $this->getHint() ) . '</p>';
+			$textHtml = '<p class="memssageRecordsPerPage custom-message">' . esc_html( $this->getHint() ) . '</p>';
 		}
 		$max = '';
 		if ( ! empty( $this->getMaxValue() ) ) {

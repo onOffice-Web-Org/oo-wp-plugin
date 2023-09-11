@@ -104,7 +104,7 @@ class InputFieldButtonAddRemoveRenderer
 
 	public function render()
 	{
-		$textHtml = ! empty( $this->getHint() ) ? '<p class="hint-text">' . $this->getHint() . '</p>' : "";
+		$textHtml = ! empty( $this->getHint() ) ? '<p class="hint-text custom-message">' . $this->getHint() . '</p>' : "";
 		$pFieldsCollection = $this->buildFieldsCollection();
 		if ( is_array( $this->getValue() ) ) {
 			foreach ( $this->getValue() as $key => $label ) {

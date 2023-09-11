@@ -38,7 +38,7 @@ class InputFieldChosenRenderer
 					.$this->renderAdditionalAttributes()
 					.' id="'.esc_html($this->getGuiId()).'"'
 					. ($this->getMultiple() ? ' multiple' : '')
-					. ' style="width: 230px;">';
+					. ' style="width: 50%;">';
 		$values = $this->getValue();
 		if (array_key_exists('group', $values)) {
 			foreach ($values['group'] as $k => $group) {

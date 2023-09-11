@@ -74,8 +74,8 @@ class InputModelRenderer
 			$pInputField = $this->createInputField($pInputModel, $pFormModel);
 			$italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
 			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON) {
-				echo '<p id="" class="wp-clearfix">';
-				echo '<label class="howto" for="'.esc_html($pInputField->getGuiId()).'">';
+				echo '<p id="" class="wp-clearfix custom-input-field">';
+				echo '<label class="howto custom-label" for="'. esc_html($pInputField->getGuiId()).'">';
 				echo $pInputModel->getLabel(). $italicText;
 				echo '</label>';
 				$pInputField->render();

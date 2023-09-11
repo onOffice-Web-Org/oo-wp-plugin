@@ -1,18 +1,3 @@
-#onoffice-ajax .metabox-holder .postbox-container .postbox p {
-	display: block;
-}
-
-#onoffice-ajax .metabox-holder .postbox-container .postbox label {
-	float: left;
-	margin-right: 12pt;
-}
-
-#onoffice-ajax .metabox-holder .postbox-container .postbox input,
-#onoffice-ajax .metabox-holder .postbox-container .postbox select {
-	float: right;
-	max-width: 230px;
-}
-
 #onoffice-ajax .metabox-holder .postbox-container .postbox .chosen-container .chosen-drop {
 	display: grid;
 }
@@ -95,23 +80,23 @@ body #onoffice-ajax span.viewusage .italic {
 .fieldsSortable {
 	float: right;
 	min-height: 320px;
-	max-width: 480px;
+	max-width: 488px;
 	background: #fff;
 	width: 50%;
 }
 
 #sortableFieldsList .menu-item-bar {
 	display: block;
-	padding-left: 5px;
+	padding-left: 12px;
 }
 
 #sortableFieldsList .menu-item-bar > .menu-item-handle {
-	max-width: 435px;
+	max-width: 430px;
 	width: 100%;
 }
 
 #sortableFieldsList .menu-item-settings {
-	max-width: 455px;
+	max-width: 440px;
 	width: 100%;
 }
 
@@ -128,7 +113,7 @@ body #onoffice-ajax span.viewusage .italic {
 #sortableFieldsList .menu-item-settings {
 	display: block;
 	position: relative;
-	margin-left: 5px;
+	margin-left: 12px;
 	background: #fff;
 	clear: both;
 }
@@ -193,11 +178,6 @@ div.fieldsSortable #sortableFieldsList div.menu-item-settings p {
 	line-height: 1em;
 }
 
-div.fieldsSortable #sortableFieldsList div.menu-item-settings p input {
-	margin-right: 10px;
-	float: right;
-}
-
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:before {
 	vertical-align: middle;
 }
@@ -213,10 +193,6 @@ div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButto
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:hover {
 	cursor: pointer;
 	color: #d43f3a;
-}
-
-div.fieldsSortable #sortableFieldsList div.menu-item-settings p label {
-	float: left;
 }
 
 body.toplevel_page_onoffice .card {
@@ -496,4 +472,159 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 		font-size: 14px;
 		white-space: nowrap;
 	}
+}
+
+/* new style */
+.oo-poststuff #viewrecordsfilter .custom-input-field,
+.oo-poststuff #viewrecordssorting .custom-input-field,
+.oo-poststuff #viewlayoutdesign .custom-input-field,
+.oo-poststuff #viewdocumenttypes p,
+.oo-poststuff #viewformspecific .custom-input-field,
+.oo-poststuff #geofields .custom-input-field,
+.oo-poststuff #sortableFieldsList .custom-input-field,
+.oo-poststuff #viewaccesscontrol .custom-input-field,
+.oo-poststuff #viewsimilarestates .custom-input-field,
+.oo-poststuff #onoffice-ajax .postbox .custom-input-field {
+	display: flex;
+	justify-content: space-between;
+}
+
+.oo-poststuff .custom-input-field input,
+.oo-poststuff .custom-input-field select,
+.oo-poststuff .custom-input-field label {
+	width: 50%;
+}
+
+.oo-poststuff .custom-input-field input[type="button"] {
+	width: auto !important;
+	float: right;
+}
+
+.oo-poststuff #sortableFieldsList .custom-input-special,
+.oo-poststuff .menu-item-settings div.multiselect > div.onoffice-multiselect-popup > label,
+.oo-poststuff .custom-language {
+	display: flex;
+}
+
+.oo-poststuff .custom-language label,
+.oo-poststuff .custom-language input {
+	width: 50%;
+}
+
+.oo-poststuff #viewrecordsfilter .custom-input-field input,
+.oo-poststuff #viewrecordssorting .custom-input-field label,
+.oo-poststuff #viewrecordssorting .custom-input-field select,
+.oo-poststuff #sortableFieldsList .custom-input-field .custom-label,
+.oo-poststuff #sortableFieldsList .custom-input-field input[type="text"],
+.oo-poststuff #sortableFieldsList .custom-input-field select {
+	width: 50%;
+}
+
+.oo-poststuff #viewrecordssorting .chosen-container-single,
+.oo-poststuff #viewrecordssorting .chosen-container-multi {
+	width: 50% !important;
+}
+
+.oo-poststuff #sortableFieldsList .custom-input-field input[type="checkbox"],
+.oo-poststuff #viewformspecific .custom-input-field input[type="checkbox"],
+.oo-poststuff .custom-input-field input[type="checkbox"] {
+	margin-left: auto;
+	width: 16px;
+	min-width: 16px;
+	max-width: 16px;
+}
+
+.oo-poststuff #viewlayoutdesign .custom-input-field input[type="radio"] {
+	width: auto;
+}
+
+.oo-poststuff #viewrecordsfilter .custom-input-field label {
+	float: none;
+	width: 50%;
+}
+
+.oo-poststuff .custom-message,
+.oo-poststuff #viewrecordsfilter .inside div {
+	text-align: left;
+}
+
+.oo-poststuff #viewdocumenttypes label,
+.oo-poststuff #viewdocumenttypes select {
+	width: 100%;
+	max-width: 230px;
+}
+
+.oo-poststuff .custom-template input[type="radio"] {
+	width: auto;
+}
+
+.oo-poststuff #viewrecordssorting .chosen-container-single .chosen-single {
+	border-color: #8c8f94;
+	box-shadow: none;
+	border-radius: 3px;
+	padding: 0 24px 0 8px;
+	min-height: 30px;
+}
+
+.oo-poststuff #sortableFieldsList .custom-input-from-to {
+	flex-wrap: wrap !important;
+}
+
+.oo-poststuff #sortableFieldsList .custom-input-from-to label,
+.oo-poststuff #sortableFieldsList .custom-input-from-to input[type="number"],
+.oo-poststuff #sortableFieldsList .custom-input-from-to input[type="text"] {
+	flex: 0 50% !important;
+	width: 100% !important;
+	margin: 0 0 10px !important;
+}
+
+.oo-poststuff .custom-input-field input[type="hidden"] {
+	display: none;
+}
+
+.oo-poststuff #listSettings {
+	box-sizing: border-box;
+}
+
+.oo-poststuff input[type=checkbox],
+.oo-poststuff input[type=radio] {
+	margin: 0;
+}
+
+.oo-poststuff .sortable-item .custom-input-field:has(div.multiselect) {
+	display: block !important;
+}
+
+.oo-poststuff .custom-input-field .onoffice-multiselect-popup label {
+	display: flex;
+	flex-direction: row-reverse;
+}
+
+.oo-poststuff .sortable-item .custom-language select,
+.oo-poststuff .sortable-item .custom-language label {
+	width: 50%;
+}
+
+.oo-poststuff #viewpicturetypes .custom-input-field {
+	display: block;
+}
+
+.oo-poststuff #viewpicturetypes .custom-input-field label {
+	float: left;
+	max-width: 50%;
+}
+
+.oo-poststuff #viewpicturetypes .custom-input-field input {
+	float: right;
+	max-width: 50%;
+}
+
+.oo-poststuff .fieldsSortable {
+	width: 49%;
+}
+
+.oo-poststuff .sortable-item .custom-input-field .multiselect span {
+	display: flex;
+	padding-right: 10px;
+	line-height: 1.5rem;
 }

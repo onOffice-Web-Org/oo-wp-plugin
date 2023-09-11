@@ -65,7 +65,6 @@ onOffice.custom_labels_input_converter = function () {
             var clone = mainInput.cloneNode(true);
             clone.id = 'customlabel-lang-' + language;
             clone.name = 'customlabel-lang[' + fieldname + '][' + language + ']';
-            clone.style.width = '100%';
             clone.style.marginLeft = '20px';
             clone.value = '';
             return clone;
@@ -99,9 +98,7 @@ onOffice.custom_labels_input_converter = function () {
 
         function generateParagraph(label, clone, deleteButton) {
             var paragraph = document.createElement('p');
-            paragraph.classList = ['wp-clearfix'];
-            paragraph.style.display = 'inline-flex';
-            paragraph.style.width = '100%';
+            paragraph.classList = ['wp-clearfix custom-language'];
             paragraph.appendChild(label);
             paragraph.appendChild(clone);
             paragraph.appendChild(deleteButton);
