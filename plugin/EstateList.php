@@ -887,12 +887,14 @@ class EstateList
 			wp_register_script('onoffice-sort-list-selector', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-sort-list-selector.js', ['jquery'], '', true);
 			wp_register_script('onoffice-form-preview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-form-preview.js', [], '', true);
 			wp_register_script('onoffice-custom-select', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-custom-select.js', [], '', true);
-			wp_register_script('onoffice-multiselect', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-multiselect.js', [], '', true);
+			wp_register_script('onoffice-estatetype', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-estatetype.js', ['onoffice-multiselect'], '', true);
 			wp_enqueue_script('onoffice-sort-list-selector');
 			wp_enqueue_script('onoffice-form-preview');
 			wp_enqueue_script('onoffice-custom-select');
 			wp_enqueue_script('onoffice-multiselect');
+			wp_enqueue_script('onoffice-estatetype');
 			wp_script_add_data('onoffice-multiselect', IncludeFileModel::LOAD_ASYNC, true);
+			wp_script_add_data('onoffice-estatetype', IncludeFileModel::LOAD_ASYNC, true);
 
 			wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
 				'amount_none' => __('0 matches', 'onoffice-for-wp-websites'),

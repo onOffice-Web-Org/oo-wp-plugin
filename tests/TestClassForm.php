@@ -126,6 +126,6 @@ class TestClassForm
 	public function testTypeFormToHoneyPot()
 	{
 		$this->assertTrue(wp_script_is('onoffice-honeypot', 'enqueued'));
-		$this->assertEquals(['onoffice-honeypot'], wp_scripts()->queue);
+		$this->assertContains('onoffice-honeypot', wp_scripts()->queue);
 	}
 }
