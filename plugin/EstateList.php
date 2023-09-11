@@ -65,6 +65,8 @@ use onOffice\WPlugin\Field\FieldParkingLot;
 class EstateList
 	implements EstateListBase
 {
+	const DEFAULT_LIMIT_CHARACTER_DESCRIPTION = 150;
+
 	/** @var array */
 	private $_records = [];
 
@@ -219,6 +221,7 @@ class EstateList
 		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'] []= 'vermarktungsart';
+		$estateParametersRaw['data'] []= 'preisAufAnfrage';
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
@@ -334,7 +337,7 @@ class EstateList
 			];
 		}
 
-		if ($this->enableShowPriceOnRequestText()) {
+		if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
 			$requestParams['data'][] = 'preisAufAnfrage';
 		}
 		if ($pListView->getName() === 'detail') {
@@ -486,7 +489,7 @@ class EstateList
 		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung']) ) {
 			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung['permittedvalues']);
 		}
-		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
+		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'] ?? [];
 
 		if ($this->getShowEstateMarketingStatus()) {
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
@@ -500,7 +503,8 @@ class EstateList
 		if ( $checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption( 'onoffice-settings-title-and-description' ) == 0 ) {
 			add_action( 'wp_head', function () use ( $recordModified )
 			{
-				echo '<meta name="description" content="' . esc_attr( $recordModified["objektbeschreibung"] ?? null ) . '" />';
+				echo '<meta name="description" content="' . esc_attr(isset($recordModified["objektbeschreibung"])
+					? $this->limit_characters($recordModified["objektbeschreibung"]) : null) . '" />';
 			} );
 		}
 		$recordModified = new ArrayContainerEscape($recordModified);
@@ -509,13 +513,15 @@ class EstateList
 			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
 		}
 
-		if($this->enableShowPriceOnRequestText()){
-			$priceFields = ['kaufpreis', 'erbpacht', 'nettokaltmiete', 'warmmiete', 'pacht', 'kaltmiete',
-							'miete_pauschal', 'saisonmiete', 'wochmietbto', 'kaufpreis_pro_qm', 'mietpreis_pro_qm'];
-			foreach ($priceFields as $priceField){
-				$this->displayTextPriceOnRequest($recordModified, $priceField);
+		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
+			if ($this->enableShowPriceOnRequestText() || isset($recordModified['preisAufAnfrage'])) {
+				$priceFields = ['kaufpreis', 'erbpacht', 'nettokaltmiete', 'warmmiete', 'pacht', 'kaltmiete',
+						'miete_pauschal', 'saisonmiete', 'wochmietbto', 'kaufpreis_pro_qm', 'mietpreis_pro_qm'];
+				foreach ($priceFields as $priceField) {
+					$this->displayTextPriceOnRequest($recordModified, $priceField);
+				}
+				unset($recordModified['preisAufAnfrage']);
 			}
-			unset($recordModified['preisAufAnfrage']);
 		}
 
 		return $recordModified;
@@ -526,7 +532,7 @@ class EstateList
 	 * @param string $field
 	 */
 	private function displayTextPriceOnRequest($recordModified, $field){
-		if($recordModified['preisAufAnfrage'] === __("Yes", "onoffice-for-wp-websites") && !empty($recordModified[$field])) {
+		if (!empty($recordModified[ $field ])) {
 			$recordModified[ $field ] = esc_html__('Price on request', 'onoffice-for-wp-websites');
 		}
 	}
@@ -539,6 +545,23 @@ class EstateList
 		return $title_parts_array;
 	}
 
+	/**
+	 * Set limit character for SEO meta description
+	 * @param string $text
+	 * @return string
+	 */
+	private function limit_characters(string $text): string
+	{
+		if (strlen($text) > self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION) {
+			$shortenedText = substr($text, 0, self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION);
+			if (substr($text, self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION, 1) != ' ') {
+				$shortenedText = substr($shortenedText, 0, strrpos($shortenedText, ' '));
+			}
+			$text = $shortenedText;
+		}
+
+		return $text;
+	}
 
 	public function getRawValues(): ArrayContainerEscape
 	{

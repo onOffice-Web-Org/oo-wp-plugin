@@ -69,6 +69,7 @@ class TemplateCall
 
 	const TEMPLATE_FOLDER_THEME = 'theme';
 
+	const TEMPLATE_FOLDER_PARENT_THEME = 'parent_theme';
 
 	/** @var array */
 	private $_templates = [];

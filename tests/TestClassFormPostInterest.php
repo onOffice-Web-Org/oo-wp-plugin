@@ -39,6 +39,7 @@ use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
 use function DI\autowire;
 use function json_decode;
@@ -209,7 +210,8 @@ class TestClassFormPostInterest
 
 			$pFormAddressCreator = new Form\FormAddressCreator($this->_pSDKWrapperMocker, $this->_pFieldsCollectionBuilderShort);
 			$pSearchcriteriaFields = new SearchcriteriaFields($this->_pFieldsCollectionBuilderShort);
-			$pFormPostInterestConfiguration = new FormPostInterestConfigurationTest($this->_pSDKWrapperMocker, $pFormAddressCreator, $pSearchcriteriaFields);
+			$pWPQueryWrapper = new WPQueryWrapper();
+			$pFormPostInterestConfiguration = new FormPostInterestConfigurationTest($this->_pSDKWrapperMocker, $pFormAddressCreator, $pSearchcriteriaFields, $pWPQueryWrapper);
 
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
 		$this->_pContainer->set(Form\FormPostConfiguration::class, autowire(FormPostConfigurationTest::class));

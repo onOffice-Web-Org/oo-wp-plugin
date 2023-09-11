@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 
 /**
  *
@@ -66,4 +67,12 @@ interface FormPostInterestConfiguration
 	 */
 
 	 public function getNewsletterAccepted(): bool;
+
+	/**
+	 *
+	 * @return WPQueryWrapper
+	 *
+	 */
+
+	public function getWPQueryWrapper(): WPQueryWrapper;
 }
