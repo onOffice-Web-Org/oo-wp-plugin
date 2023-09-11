@@ -107,7 +107,7 @@ class TestClassInputFieldSelectRenderer
 		$output = ob_get_clean();
 		$this->assertEquals('<select name="testRenderer"  id="select_1">'
 			.'<option value="johndoe" >John Doe</option><option value="konradzuse" >Konrad Zuse</option>'
-			.'</select><div style="text-align: right">test</div>', $output);
+			.'</select><div style="text-align: left">test</div>', $output);
 	}
 	/**
 	 *
@@ -123,6 +123,6 @@ class TestClassInputFieldSelectRenderer
 		$this->assertEquals('<script>if (jQuery("select[name=oopluginlistviews-showreferenceestate").val() === "0") {jQuery(".memssageReference").hide();}</script>'
 			.'<select name="oopluginlistviews-showreferenceestate"  id="select_1">'
 			.'<option value="johndoe" >John Doe</option><option value="konradzuse" >Konrad Zuse</option>'
-			.'</select><div class="memssageReference">test</div>', $output);
+			.'</select><div class="memssageReference custom-message">test</div>', $output);
 	}
 }

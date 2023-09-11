@@ -46,7 +46,7 @@ class TestClassInputTemplateListRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="template-list"></div>', $output);
+		$this->assertEquals('<div class="template-list custom-template"></div>', $output);
 	}
 
 	/**
@@ -71,7 +71,7 @@ class TestClassInputTemplateListRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="template-list"><input type="radio" name="testRenderer" '
+		$this->assertEquals('<div class="template-list custom-template"><input type="radio" name="testRenderer" '
 			.'value="abc" id="labelradio_1babc"><label for="labelradio_1babc">abc'
 			.'</label><br><p class="oo-template-folder-path">(in the folder &quot;abc&quot;)</p></div>', $output);
 	}
@@ -96,7 +96,7 @@ class TestClassInputTemplateListRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="template-list">'
+		$this->assertEquals('<div class="template-list custom-template">'
 			. '<input type="radio" name="testRenderer" value="abc" checked="checked"  id="labelradio_1babc">'
 			. '<label for="labelradio_1babc">abc</label><br><p class="oo-template-folder-path">(in the folder &quot;abc&quot;)</p></div>', $output);
 	}
@@ -128,7 +128,7 @@ class TestClassInputTemplateListRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="template-list"><details open><summary>abc</summary>'
+		$this->assertEquals('<div class="template-list custom-template"><details open><summary>abc</summary>'
 			. '<input type="radio" name="testRenderer" value="abc" checked="checked"  id="labelradio_1babc">'
 			. '<label for="labelradio_1babc">abc</label><br><p class="oo-template-folder-path">(in the folder &quot;abc&quot;)</p></details><details>'
 			. '<summary>qwe</summary><input type="radio" name="testRenderer" value="qwe" id="labelradio_1bqwe">'
@@ -168,7 +168,7 @@ class TestClassInputTemplateListRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="template-list"><details><summary>abc</summary>'
+		$this->assertEquals('<div class="template-list custom-template"><details><summary>abc</summary>'
 			.'<input type="radio" name="testRenderer" value="abc" id="labelradio_1babc">'
 			.'<label for="labelradio_1babc">abc</label><br><p class="oo-template-folder-path">(in the folder &quot;abc&quot;)</p></details><details>'
 			.'<summary>qwe</summary><input type="radio" name="testRenderer" value="qwe" id="labelradio_1bqwe">'
@@ -205,7 +205,7 @@ class TestClassInputTemplateListRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="template-list"><details><summary>abc</summary>'
+		$this->assertEquals('<div class="template-list custom-template"><details><summary>abc</summary>'
 			.'<input type="radio" name="testRenderer" value="abc" id="labelradio_1babc">'
 			.'<label for="labelradio_1babc">abc</label><br><p class="oo-template-folder-path">(in the folder &quot;abc&quot;)</p></details><details>'
 			.'<summary>qwe</summary><input type="radio" name="testRenderer" value="qwe" id="labelradio_1bqwe">'
