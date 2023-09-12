@@ -2,7 +2,7 @@
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
-Tested up to: 6.1.1
+Tested up to: 6.3.1
 Requires PHP: 7.3
 Stable tag: 4.14
 License: AGPL 3.0
