@@ -117,6 +117,7 @@ class Form
 
 		$pFormConfigFactory = $this->_pContainer->get(DataFormConfigurationFactory::class);
 		$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
+		$this->renderCaptchaScript($pFormConfig->getCaptcha());
 		$this->_pFieldsCollection = $this->buildFieldsCollectionForForm($pFieldsCollection, $type, $pFormConfig);
 		try {
 			$this->_pFormData = $pFormPost->getFormDataInstance($formName, $this->_formNo);
@@ -634,6 +635,27 @@ class Form
 				'nonce_estate' => wp_create_nonce('onoffice-estate-preview'),
 				'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),
 			]);
+		}
+	}
+
+	/**
+	 *
+	 * @param bool $isCaptchaRequired
+	 *
+	 */
+
+	private function renderCaptchaScript(bool $isCaptchaRequired = false)
+	{
+		$onofficeSettingsCaptchaSiteKey = get_option('onoffice-settings-captcha-sitekey', '');
+		if ($onofficeSettingsCaptchaSiteKey !== '') {
+			if (wp_script_is('onoffice-captchacontrol', 'registered')) {
+				echo '<script>var requiresCaptchaForm = ' . json_encode($isCaptchaRequired) . ';</script>';
+			} else {
+				wp_register_script('onoffice-captchacontrol', plugins_url('dist/onoffice-captchacontrol.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'), 'google-recaptcha');
+				add_action('wp_footer', function () use ($isCaptchaRequired) {
+					echo '<script>var requiresCaptchaForm = ' . json_encode($isCaptchaRequired) . ';</script>';
+				});
+			}
 		}
 	}
 
