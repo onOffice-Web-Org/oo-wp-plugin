@@ -669,6 +669,7 @@ class TestClassFormPostOwner
 		];
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$this->prepareMockerForContactSuccessUsingArrayInputEstate();
+		$pDataFormConfiguration->setCreateOwner(false);
 
 		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
 		$pFormData = $this->_pFormPostOwner->getFormDataInstance('test', 5);
