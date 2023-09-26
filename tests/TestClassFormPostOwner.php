@@ -668,7 +668,6 @@ class TestClassFormPostOwner
 			'bad' => ['Bidet', 'Urinal', 'Bathtub']
 		];
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
-		$pDataFormConfiguration->setCreateOwner(false);
 		$this->prepareMockerForContactSuccessUsingArrayInputEstate();
 
 		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
