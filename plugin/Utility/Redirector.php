@@ -30,11 +30,11 @@ class Redirector
 	/**
 	 * @param $estateId
 	 * @param $estateTitle
-	 *
+	 * @param $pEstateRedirection
 	 * @return bool|void
 	 */
 
-	public function redirectDetailView( $estateId, $estateTitle )
+	public function redirectDetailView( $estateId, $estateTitle, $pEstateRedirection )
 	{
 		$matches = $this->checkUrlIsMatchRule();
 		if ( empty( $matches[2] ) ) {
@@ -42,7 +42,9 @@ class Redirector
 		}
 
 		$oldUrl = $this->getCurrentLink();
-		$newUrl = $this->_wpEstateDetailUrl->getUrlWithEstateTitle( $estateId, $estateTitle, $oldUrl );
+		$sanitizeTitle = $this->_wpEstateDetailUrl->getSanitizeTitle($estateTitle);
+		$isUrlHaveTitle = strpos($oldUrl, $sanitizeTitle) !== false;
+		$newUrl = $this->_wpEstateDetailUrl->getUrlWithEstateTitle($estateId, $estateTitle, $oldUrl, $isUrlHaveTitle, $pEstateRedirection);
 
 		if ( $newUrl !== $oldUrl ) {
 			$isNewUrlValid = $this->checkNewUrlIsValid(
@@ -114,8 +116,6 @@ class Redirector
 
 	public function getCurrentLink(): string
 	{
-		global $wp;
-
-		return home_url( add_query_arg( array(), $wp->request ) );
+		return home_url($_SERVER['REQUEST_URI']);
 	}
 }

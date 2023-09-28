@@ -251,7 +251,13 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 	}
 });
 
-add_action('parse_request', function(WP $pWP) use ($pDI) {
+add_filter('oo_is_detailpage_redirection', function($value) {
+	return $value;
+});
+
+$pEstateRedirection = apply_filters('oo_is_detailpage_redirection', true);
+
+add_action('parse_request', function(WP $pWP) use ($pDI, $pEstateRedirection) {
 	$estateId = $pWP->query_vars['estate_id'] ?? '';
 	/** @var EstateIdRequestGuard $pEstateIdGuard */
 	$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
@@ -269,7 +275,7 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			include(get_query_template('404'));
 			die();
 		}
-		$pEstateIdGuard->estateDetailUrlChecker( $estateId, $pDI->get( Redirector::class ) );
+		$pEstateIdGuard->estateDetailUrlChecker( $estateId, $pDI->get( Redirector::class ), $pEstateRedirection);
 	}
 });
 
