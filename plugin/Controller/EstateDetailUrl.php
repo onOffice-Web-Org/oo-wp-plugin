@@ -116,7 +116,7 @@ class EstateDetailUrl
 	 * @param bool $pEstateRedirection
 	 * @return string
 	 */
-	public function getUrlWithEstateTitle(int $estateId, string $title = null, string $oldUrl = null, bool $isUrlHaveTitle = false, bool $pEstateRedirection): string
+	public function getUrlWithEstateTitle(int $estateId, string $title = null, string $oldUrl = null, bool $isUrlHaveTitle = false, bool $pEstateRedirection = false): string
 	{
 		$getParameters = [];
 		$urlElements   = parse_url( $oldUrl );
