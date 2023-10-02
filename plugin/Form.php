@@ -25,6 +25,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\WPlugin\Form\CaptchaHandler;
 use Parsedown;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateTitleBuilder;
@@ -609,16 +610,8 @@ class Form
 
 	private function renderCaptchaScript(bool $isCaptchaRequired = false)
 	{
-		$onofficeSettingsCaptchaSiteKey = get_option('onoffice-settings-captcha-sitekey', '');
-		if ($onofficeSettingsCaptchaSiteKey !== '') {
-			if (wp_script_is('onoffice-captchacontrol', 'registered')) {
-				echo '<script>var requiresCaptchaForm = ' . json_encode($isCaptchaRequired) . ';</script>';
-			} else {
-				wp_register_script('onoffice-captchacontrol', plugins_url('/js/onoffice-captchacontrol.js', ONOFFICE_PLUGIN_DIR . '/index.php'), 'google-recaptcha');
-				add_action('wp_footer', function () use ($isCaptchaRequired) {
-					echo '<script>var requiresCaptchaForm = ' . json_encode($isCaptchaRequired) . ';</script>';
-				});
-			}
+		if ($isCaptchaRequired) {
+			CaptchaHandler::registerScripts();
 		}
 	}
 

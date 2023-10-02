@@ -22,19 +22,17 @@ var onOffice = onOffice || {};
 	};
 })();
 
-var requiresCaptchaForm = requiresCaptchaForm || false;
 jQuery(document).ready(function ($) {
-	if (requiresCaptchaForm == true) {
-		function addRecaptchaScript() {
-			if (!$("#recaptcha-script").length) {
-				$("<script>")
-					.attr("src", "https://www.google.com/recaptcha/api.js")
-					.attr("async", false)
-					.attr("id", "recaptcha-script")
-					.appendTo("head");
-			}
+	function addRecaptchaScript() {
+		if (!$("#recaptcha-script").length) {
+			$("<script>")
+				.attr("src", "https://www.google.com/recaptcha/api.js")
+				.attr("async", false)
+				.attr("id", "recaptcha-script")
+				.appendTo("head");
 		}
-		const targetedFormElements = "#onoffice-form input, #onoffice-form textarea, #onoffice-form button, #onoffice-form";
-		$(targetedFormElements).on("focus select2:open", addRecaptchaScript);
 	}
+	const formsSelector = "#onoffice-form, .oo-form";
+	const inputSelector = "input, textarea, button";
+	$(`${formsSelector} ${inputSelector}`).on("focus select2:open", addRecaptchaScript);
 });

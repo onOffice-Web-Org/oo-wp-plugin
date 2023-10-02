@@ -47,24 +47,6 @@ class CaptchaDataChecker
 	 *
 	 */
 
-	public static function registerScripts()
-	{
-		$siteKey = get_option('onoffice-settings-captcha-sitekey', '');
-		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-
-		if ($siteKey !== '') {
-			wp_register_script('onoffice-captchacontrol', plugins_url
-				('/js/onoffice-captchacontrol.js', $pluginPath), 'google-recaptcha');
-
-			wp_enqueue_script('onoffice-captchacontrol');
-		}
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function check()
 	{
 		$token = filter_input(INPUT_POST, CaptchaHandler::RECAPTCHA_RESPONSE_PARAM);
