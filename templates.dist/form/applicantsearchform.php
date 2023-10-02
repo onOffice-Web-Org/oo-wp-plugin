@@ -39,6 +39,8 @@ $selectTypes = array(
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
 	echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
+} elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
+	echo esc_html__('Spam detected!', 'onoffice-for-wp-websites');
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */

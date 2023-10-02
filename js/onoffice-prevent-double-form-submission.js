@@ -17,7 +17,9 @@ jQuery(document).ready(function ($) {
             });
 
             submitButton.on('click', function () {
-                submitButton.prop('disabled', true);
+                if (formElement.checkValidity()) {
+                    submitButton.addClass('onoffice-unclickable-form');
+                }
             });
         });
     }
