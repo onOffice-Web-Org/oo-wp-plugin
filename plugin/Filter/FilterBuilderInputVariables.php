@@ -121,6 +121,12 @@ class FilterBuilderInputVariables
 		} elseif ($type === FieldTypes::FIELD_TYPE_TEXT ||
 			($type === FieldTypes::FIELD_TYPE_VARCHAR && $this->_fuzzySearch)) {
 			$fieldFilter []= ['op' => 'like', 'val' => '%'.$fieldValue.'%'];
+		} elseif ($type === FieldTypes::FIELD_TYPE_BOOLEAN) {
+			if ($fieldValue === true) {
+				$fieldFilter []= ['op' => '=', 'val' => 1];
+			} else {
+				$fieldFilter []= ['op' => 'in', 'val' => ['', '0']];
+			}
 		} else {
 			$fieldFilter []= ['op' => '=', 'val' => $fieldValue];
 		}
