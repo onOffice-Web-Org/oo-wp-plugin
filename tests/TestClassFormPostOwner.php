@@ -79,7 +79,7 @@ class TestClassFormPostOwner
 		$this->prepareSDKWrapperForFieldsAddressEstate();
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend'])
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend', 'addFieldsAddressEstateWithRegionValues'])
 			->setConstructorArgs([new Container])
 			->getMock();
 
