@@ -141,12 +141,6 @@ class SearchcriteriaFields
 				else {
 					$output[$pField->getLabel()] = (array_key_exists($value, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$value] : $value);
 				}
-			} elseif (FieldTypes::FIELD_TYPE_BOOLEAN === $pField->getType()) {
-				if ($value == '1') {
-					$output[$pField->getLabel()] = __('Yes', 'onoffice-for-wp-websites');
-				} else {
-					$output[$pField->getLabel()] = __('No', 'onoffice-for-wp-websites');
-				}
 			} else {
 				$output[$pField->getLabel()] = $value;
 			}
