@@ -832,5 +832,5 @@ class FormModelBuilderDBEstateListSettings
 		});
 
 		return $pInputModel;
-  }
+	}
 }

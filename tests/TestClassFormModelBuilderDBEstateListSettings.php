@@ -717,5 +717,4 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertContains('Choose Language', $values);
 		$this->assertNotContains(get_locale(), $values);
 	}
-
 }

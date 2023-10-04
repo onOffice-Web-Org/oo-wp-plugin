@@ -1161,4 +1161,5 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		return $sql;
 	}
+
 }

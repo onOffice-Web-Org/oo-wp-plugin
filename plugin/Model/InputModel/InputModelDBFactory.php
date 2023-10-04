@@ -88,7 +88,7 @@ class InputModelDBFactory
 	const INPUT_FIELD_CONFIG = 'fieldConfig';
 
 	/** */
-  const INPUT_SHOW_MAP = 'showMap';
+	const INPUT_SHOW_MAP = 'showMap';
 
 	/** */
 	const INPUT_ESTATE_DEFAULT_VALUE = 'defaultValue';
