@@ -271,7 +271,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(39, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(42, DatabaseChanges::MAX_VERSION);
 	}
 
 
