@@ -77,7 +77,13 @@ class ViewFieldModifierHandler
 
 		$newRecord = $this->_pModifier->reduceRecord($record);
 
-		$visibleFields = array_flip($this->_pModifier->getVisibleFields());
+		$visibleNameFields = $this->_pModifier->getVisibleFields();
+
+		if(!empty($newRecord['preisAufAnfrage'])){
+			$visibleNameFields[] = 'preisAufAnfrage';
+		}
+		$visibleFields = array_flip($visibleNameFields);
+
 
 		$visibleFields = array_map(
 			function($value) {	return '';},

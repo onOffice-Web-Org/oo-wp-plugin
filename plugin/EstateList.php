@@ -68,6 +68,8 @@ use onOffice\WPlugin\Field\FieldParkingLot;
 class EstateList
 	implements EstateListBase
 {
+	const DEFAULT_LIMIT_CHARACTER_DESCRIPTION = 150;
+
 	/** @var array */
 	private $_records = [];
 
@@ -221,6 +223,7 @@ class EstateList
 		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'] []= 'vermarktungsart';
+		$estateParametersRaw['data'] []= 'preisAufAnfrage';
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
@@ -336,6 +339,9 @@ class EstateList
 			];
 		}
 
+		if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
+			$requestParams['data'][] = 'preisAufAnfrage';
+		}
 		if ($pListView->getName() === 'detail') {
 			if ($this->getViewRestrict()) {
 				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
@@ -485,17 +491,22 @@ class EstateList
 		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung']) ) {
 			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung['permittedvalues']);
 		}
-		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
+		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'] ?? [];
 
 		if ($this->getShowEstateMarketingStatus()) {
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
 
+		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
+			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
+		}
+
 		if ( $checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption( 'onoffice-settings-title-and-description' ) == 0 ) {
 			add_action( 'wp_head', function () use ( $recordModified )
 			{
-				echo '<meta name="description" content="' . esc_attr( $recordModified["objektbeschreibung"] ?? null ) . '" />';
+				echo '<meta name="description" content="' . esc_attr(isset($recordModified["objektbeschreibung"])
+					? $this->limit_characters($recordModified["objektbeschreibung"]) : null) . '" />';
 			} );
 		}
 		$recordModified = new ArrayContainerEscape($recordModified);
@@ -504,7 +515,28 @@ class EstateList
 			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
 		}
 
+		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
+			if ($this->enableShowPriceOnRequestText() || isset($recordModified['preisAufAnfrage'])) {
+				$priceFields = ['kaufpreis', 'erbpacht', 'nettokaltmiete', 'warmmiete', 'pacht', 'kaltmiete',
+						'miete_pauschal', 'saisonmiete', 'wochmietbto', 'kaufpreis_pro_qm', 'mietpreis_pro_qm'];
+				foreach ($priceFields as $priceField) {
+					$this->displayTextPriceOnRequest($recordModified, $priceField);
+				}
+				unset($recordModified['preisAufAnfrage']);
+			}
+		}
+
 		return $recordModified;
+	}
+
+	/**
+	 * @param ArrayContainerEscape $recordModified
+	 * @param string $field
+	 */
+	private function displayTextPriceOnRequest($recordModified, $field){
+		if (!empty($recordModified[ $field ])) {
+			$recordModified[ $field ] = esc_html__('Price on request', 'onoffice-for-wp-websites');
+		}
 	}
 
 	public function custom_pre_get_document_title($title_parts_array, $recordModified) {
@@ -515,6 +547,23 @@ class EstateList
 		return $title_parts_array;
 	}
 
+	/**
+	 * Set limit character for SEO meta description
+	 * @param string $text
+	 * @return string
+	 */
+	private function limit_characters(string $text): string
+	{
+		if (strlen($text) > self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION) {
+			$shortenedText = substr($text, 0, self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION);
+			if (substr($text, self::DEFAULT_LIMIT_CHARACTER_DESCRIPTION, 1) != ' ') {
+				$shortenedText = substr($shortenedText, 0, strrpos($shortenedText, ' '));
+			}
+			$text = $shortenedText;
+		}
+
+		return $text;
+	}
 
 	public function getRawValues(): ArrayContainerEscape
 	{
@@ -873,6 +922,18 @@ class EstateList
 	}
 
 	/**
+	 * @return bool
+	 */
+	private function getShowMapConfig(): bool
+	{
+		if ($this->_pDataView instanceof DataListView) {
+			return $this->_pDataView->getShowMap();
+		}
+
+		return false;
+	}
+
+	/**
 	 *
 	 */
 	public function resetEstateIterator()
@@ -924,6 +985,16 @@ class EstateList
 	/** @return array */
 	public function getAddressFields(): array
 		{ return $this->_pDataView->getAddressFields(); }
+
+	/** @return bool */
+	private function enableShowPriceOnRequestText()
+	{
+		if ( $this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
+			return $this->_pDataView->getShowPriceOnRequest();
+		} else {
+			return false;
+		}
+	}
 
 	/** @return EstateFiles */
 	protected function getEstateFiles()

@@ -97,8 +97,6 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 
 		if ($pos !== false) {
 			unset($viewFields[$pos]);
-			$viewFields []= 'breitengrad';
-			$viewFields []= 'laengengrad';
 		}
 
 		return $viewFields;

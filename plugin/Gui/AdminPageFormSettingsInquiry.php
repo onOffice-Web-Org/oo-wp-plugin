@@ -51,7 +51,7 @@ class AdminPageFormSettingsInquiry
 	protected function checkFixedValues($row)
 	{
 		$table = RecordManager::TABLENAME_FORMS;
-		$resultName = isset($row[$table]['name']) && $row[$table]['name'] != null;
+		$resultName = isset($row[$table]['name']) && !empty(trim($row[$table]['name']));
 		$resultRecipient = ($row[$table]['default_recipient'] == 0 && isset($row[$table]['recipient']) && $row[$table]['recipient'] != null)
 			|| $row[$table]['default_recipient'] == 1;
 

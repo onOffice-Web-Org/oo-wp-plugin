@@ -44,7 +44,6 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
 use function __;
 use function add_action;
-use function add_screen_option;
 use function do_action;
 use function do_meta_boxes;
 use function do_settings_sections;
@@ -86,6 +85,9 @@ class AdminPageSimilarEstates
 	/** */
 	const CUSTOM_LABELS = 'customlabels';
 
+	/** */
+	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
+
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
@@ -125,8 +127,11 @@ class AdminPageSimilarEstates
 
 		echo '<div id="post-body" class="metabox-holder columns-'
 			.(1 == get_current_screen()->get_columns() ? '1' : '2').'">';
-		echo '<div class="postbox-container" id="postbox-container-2">';
+		echo '<div class="postbox-container" id="postbox-container-1">';
 		do_meta_boxes(get_current_screen()->id, 'normal', null );
+		echo '</div>';
+		echo '<div class="postbox-container" id="postbox-container-2">';
+		do_meta_boxes(get_current_screen()->id, 'side', null );
 		echo '</div>';
 		echo '<div class="clear"></div>';
 		echo '<div style="float:left;">';
@@ -169,7 +174,10 @@ class AdminPageSimilarEstates
 	private function generateMetaBoxes()
 	{
 		$pFormSimilarEstates = $this->getFormModelByGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
-		$this->createMetaBoxByForm($pFormSimilarEstates, 'normal');
+		$this->createMetaBoxByForm($pFormSimilarEstates, 'side');
+
+		$pFormPictureTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
+		$this->createMetaBoxByForm($pFormPictureTypes, 'normal');
 	}
 
 	/**
@@ -193,7 +201,6 @@ class AdminPageSimilarEstates
 	 */
 	protected function buildForms()
 	{
-		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
 		$pFormModelBuilder = new FormModelBuilderSimilarEstateSettings();
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug());
 		$this->addFormModel($pFormModel);
@@ -203,6 +210,7 @@ class AdminPageSimilarEstates
 		$pInputModelSimilarEstatesSamePostalCode = $pFormModelBuilder->createInputModelSameEstatePostalCode();
 		$pInputModelSimilarEstatesRadius = $pFormModelBuilder->createInputModelSameEstateRadius();
 		$pInputModelSimilarEstatesAmount = $pFormModelBuilder->createInputModelSameEstateAmount();
+		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
 		$pInputModelSimilarEstatesTemplate = $pFormModelBuilder->createInputModelTemplate
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE);
 		$pInputModelSimilarEstatesActivated = $pFormModelBuilder->getCheckboxEnableSimilarEstates();
@@ -218,7 +226,16 @@ class AdminPageSimilarEstates
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesRadius);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesAmount);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesTemplate);
+		$pFormModelSimilarEstates->addInputModel($pInputModelShowPriceOnRequest);
 		$this->addFormModel($pFormModelSimilarEstates);
+
+		$pInputModelSimilarEstatesPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
+		$pFormModelPictureTypes = new FormModel();
+		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
+		$pFormModelPictureTypes->setGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
+		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
+		$pFormModelPictureTypes->addInputModel($pInputModelSimilarEstatesPictureTypes);
+		$this->addFormModel($pFormModelPictureTypes);
 
 		$pFieldsCollection = $this->readAllFields();
 		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);

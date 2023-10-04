@@ -43,7 +43,6 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Record\RecordManager;
 use stdClass;
 use function __;
-use function add_screen_option;
 use function wp_enqueue_script;
 use function wp_localize_script;
 
@@ -79,7 +78,6 @@ class AdminPageEstateListSettings
 
 	protected function buildForms()
 	{
-		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
 		$pFormModelBuilder = new FormModelBuilderDBEstateListSettings();
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
 		$this->addFormModel($pFormModel);
@@ -103,6 +101,8 @@ class AdminPageEstateListSettings
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
+		$pInputModelShowMap = $pFormModelBuilder->createInputModelShowMap();
+		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDataDetailView = $pDataDetailViewHandler->getDetailView();
 		$restrictAccessControl     = $pDataDetailView->getViewRestrict();
@@ -157,6 +157,8 @@ class AdminPageEstateListSettings
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$pFormModelLayoutDesign->addInputModel($pInputModelShowStatus);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowPriceOnRequest);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowMap);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();

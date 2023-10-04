@@ -24,6 +24,7 @@ namespace onOffice\tests;
 use Closure;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use WP_UnitTestCase;
+use wpdb;
 
 /**
  *
@@ -75,5 +76,59 @@ class TestClassRecordManagerReadListViewEstate
 	{
 		$pFieldsFormSortAlphabe = $this->_pRecordManagerReadListViewEstate->getRecordsSortedAlphabetically();
 		$this->assertEquals([],$pFieldsFormSortAlphabe);
+	}
+
+	/**
+	 *
+	 */
+
+	public function testGetRecordsSortedAlphabeticallyByAttributes()
+	{
+		$_GET = [
+			'orderby' => 'name',
+			'order' => 'asc',
+			'search' => '77250'
+		];
+		$listViewConfigOutput = [
+			[
+				'listview_id' => '3',
+				'name' => 'listView-A',
+				'template' => 'oo-wp-plugin/templates.dist/estate/default.php',
+				'list_type' => 'Favorites List',
+			],
+			[
+				'listview_id' => '1',
+				'name' => 'listView-B',
+				'template' => 'oo-wp-plugin/templates.dist/estate/default.php',
+				'list_type' => 'Default',
+			],
+			[
+				'listview_id' => '2',
+				'name' => 'listView-C',
+				'template' => 'oo-wp-plugin/templates.dist/estate/default.php',
+				'list_type' => 'Default',
+			],
+		];
+
+		$pWPDB = $this->getMockBuilder(wpdb::class)
+				->disableOriginalConstructor(['testUser', 'testPassword', 'testDB', 'testHost'])
+				->setMethods(['get_results', 'get_var'])
+				->getMock();
+		$pWPDB->prefix = 'testPrefix';
+		$pWPDB->expects($this->once())
+				->method('get_results')
+				->willReturnOnConsecutiveCalls($listViewConfigOutput);
+		$pWPDB->expects($this->once())
+				->method('get_var')
+				->willReturnOnConsecutiveCalls(3);
+		$pRecordManagerReadListViewEstate = $this->getMockBuilder(RecordManagerReadListViewEstate::class)
+				->setMethods(['getWpdb'])
+				->getMock();
+
+		$pRecordManagerReadListViewEstate->method('getWpdb')->will($this->returnValue($pWPDB));
+		$pFieldsFormSortAlphabe = $pRecordManagerReadListViewEstate->getRecordsSortedAlphabetically();
+
+		$this->assertEquals(3, count($pFieldsFormSortAlphabe));
+		$this->assertEquals($listViewConfigOutput, $pFieldsFormSortAlphabe);
 	}
 }

@@ -794,19 +794,21 @@ class TestClassEstateList
 				'getAddressFields',
 				'getFilterableFields',
 				'getPageId',
-				'getViewRestrict'
+				'getViewRestrict',
+				'getShowPriceOnRequest'
 			])
 			->getMock();
 		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
 		$pDataDetailView->method('getSortby')->willReturn('Id');
 		$pDataDetailView->method('getSortorder')->willReturn('ASC');
 		$pDataDetailView->method('getFilterId')->willReturn(12);
-		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung']);
+		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'warmmiete', 'kaufpreis', 'erbpacht', 'nettokaltmiete', 'pacht', 'kaltmiete']);
 		$pDataDetailView->method('getPictureTypes')->willReturn(['Titelbild', 'Foto']);
 		$pDataDetailView->method('getAddressFields')->willReturn(['Vorname', 'Name']);
 		$pDataDetailView->method('getFilterableFields')->willReturn([GeoPosition::FIELD_GEO_POSITION]);
 		$pDataDetailView->method('getPageId')->willReturn($pWPPost->ID);
 		$pDataDetailView->method('getViewRestrict')->willReturn(true);
+		$pDataDetailView->method('getShowPriceOnRequest')->willReturn(true);
 
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
 		                               ->disableOriginalConstructor()
@@ -835,6 +837,32 @@ class TestClassEstateList
 		$this->_pEstateList->loadEstates();
 		$result = $this->_pEstateList->estateIterator();
 		$this->assertEquals('', $result['vermarktungsstatus']);
+	}
+
+
+	/**
+	 *
+	 */
+	public function testDisplayTextPriceOnRequest()
+	{
+		$this->_pEstateList->loadEstates();
+		$result = $this->_pEstateList->estateIterator();
+		$this->assertEquals('Price on request', $result['warmmiete']);
+		$this->assertEquals('Price on request', $result['kaufpreis']);
+		$this->assertEquals('Price on request', $result['erbpacht']);
+		$this->assertEquals('Price on request', $result['nettokaltmiete']);
+		$this->assertEquals('Price on request', $result['pacht']);
+		$this->assertEquals('Price on request', $result['kaltmiete']);
+	}
+
+	/**
+	 *
+	 */
+	public function testGetShowMapConfig()
+	{
+		$this->_pEstateList->loadEstates();
+		$result = $this->_pEstateList->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP);
+		$this->assertEquals('1', $result['showGoogleMap']);
 	}
 
 	/**
@@ -965,7 +993,7 @@ class TestClassEstateList
 	private function getDataView(): DataListView
 	{
 		$pDataView = new DataListView(1, 'test');
-		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung']);
+		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'warmmiete', 'kaufpreis', 'erbpacht', 'nettokaltmiete', 'pacht', 'kaltmiete']);
 		$pDataView->setSortby('Id');
 		$pDataView->setSortorder('ASC');
 		$pDataView->setFilterId(12);
@@ -975,7 +1003,9 @@ class TestClassEstateList
 		$pDataView->setShowReferenceStatus(false);
 		$pDataView->setShowReferenceEstate('0');
 		$pDataView->setFilterableFields([GeoPosition::FIELD_GEO_POSITION]);
+		$pDataView->setShowPriceOnRequest(true);
 		$pDataView->setExpose('testExpose');
+		$pDataView->setShowMap(true);
 		return $pDataView;
 	}
 
@@ -1006,6 +1036,12 @@ class TestClassEstateList
 			'objekttyp',
 			'objekttitel',
 			'objektbeschreibung',
+			'warmmiete',
+			'kaufpreis',
+			'erbpacht',
+			'nettokaltmiete',
+			'pacht',
+			'kaltmiete',
 			'virtualAddress',
 			'objektadresse_freigeben',
 			'reserviert',

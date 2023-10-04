@@ -12,7 +12,8 @@
 			"preisreduktion",
 			"courtage_frei",
 			"objekt_des_tages",
-			"vermarktungsart"
+			"vermarktungsart",
+			"preisAufAnfrage"
 		],
 		"filter": {
 			"veroeffentlichen": [
@@ -83,6 +84,7 @@
 						"objektnr_extern": "DJ636",
 						"plz": "",
 						"land": "DEU",
+						"preisAufAnfrage": "1",
 						"mainLangId": null
 					}
 				},
@@ -119,6 +121,7 @@
 						"objektnr_extern": "UT591",
 						"plz": "52068",
 						"land": "DEU",
+						"preisAufAnfrage": "0",
 						"mainLangId": null
 					}
 				},
@@ -155,6 +158,7 @@
 						"objektnr_extern": "GH203",
 						"plz": "25992",
 						"land": "DEU",
+						"preisAufAnfrage": "1",
 						"mainLangId": null
 					}
 				},
@@ -191,6 +195,7 @@
 						"objektnr_extern": "JJ142",
 						"plz": "52076",
 						"land": "DEU",
+						"preisAufAnfrage": "1",
 						"mainLangId": null
 					}
 				},
@@ -227,6 +232,7 @@
 						"objektnr_extern": "JJ108",
 						"plz": "",
 						"land": "",
+						"preisAufAnfrage": "0",
 						"mainLangId": "1071"
 					}
 				}

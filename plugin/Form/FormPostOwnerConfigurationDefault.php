@@ -26,6 +26,7 @@ namespace onOffice\WPlugin\Form;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 
 /**
  *
@@ -40,18 +41,22 @@ class FormPostOwnerConfigurationDefault
 	/** @var FormAddressCreator */
 	private $_pFormAddressCreator;
 
+	/** @var WPQueryWrapper */
+	private $_pWPQueryWrapper = null;
 
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param FormAddressCreator $pFormAddressCreator
+	 * @param WPQueryWrapper $pWPQueryWrapper
 	 *
 	 */
 
-	public function __construct(SDKWrapper $pSDKWrapper, FormAddressCreator $pFormAddressCreator)
+	public function __construct(SDKWrapper $pSDKWrapper, FormAddressCreator $pFormAddressCreator, WPQueryWrapper $pWPQueryWrapper)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pFormAddressCreator = $pFormAddressCreator;
+		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 	}
 
 
@@ -109,5 +114,17 @@ class FormPostOwnerConfigurationDefault
 	public function getNewsletterAccepted(): bool
 	{
 		return filter_var( $_POST['newsletter'] ?? null, FILTER_SANITIZE_STRING ) === 'y';
+	}
+
+
+	/**
+	 *
+	 * @return WPQueryWrapper
+	 *
+	 */
+
+	public function getWPQueryWrapper(): WPQueryWrapper
+	{
+		return $this->_pWPQueryWrapper;
 	}
 }

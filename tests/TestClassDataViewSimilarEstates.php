@@ -50,6 +50,7 @@ class TestClassDataViewSimilarEstates
 		$this->assertEquals(false, $pDataViewSimilarEstates->getSamePostalCode());
 		$this->assertEquals(10, $pDataViewSimilarEstates->getRadius());
 		$this->assertEquals(6, $pDataViewSimilarEstates->getRecordsPerPage());
+		$this->assertEquals(false, $pDataViewSimilarEstates->getShowPriceOnRequest());
 	}
 
 
@@ -70,6 +71,8 @@ class TestClassDataViewSimilarEstates
 		$this->assertTrue($pDataViewSimilarEstates->getSameMarketingMethod());
 		$pDataViewSimilarEstates->setSamePostalCode(true);
 		$this->assertTrue($pDataViewSimilarEstates->getSamePostalCode());
+		$pDataViewSimilarEstates->setShowPriceOnRequest(true);
+		$this->assertTrue($pDataViewSimilarEstates->getShowPriceOnRequest());
 		$this->assertEquals(['Id' => 'ASC'], $pDataViewSimilarEstates->getSortBy());
 		$this->assertNull($pDataViewSimilarEstates->getSortOrder());
 		$this->assertNull($pDataViewSimilarEstates->getFilterId());
@@ -101,7 +104,7 @@ class TestClassDataViewSimilarEstates
 		];
 		$this->assertEquals($expectedFields, $pDataViewSimilarEstates->getFields());
 		$this->assertEquals('SimilarEstates', $pDataViewSimilarEstates->getName());
-		$this->assertEquals([ImageTypes::TITLE], $pDataViewSimilarEstates->getPictureTypes());
+		$this->assertEquals([], $pDataViewSimilarEstates->getPictureTypes());
 		$this->assertEquals('', $pDataViewSimilarEstates->getTemplate());
 	}
 

@@ -58,7 +58,6 @@ use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use stdClass;
 use function __;
-use function add_screen_option;
 use function esc_sql;
 use function wp_enqueue_script;
 
@@ -137,7 +136,7 @@ abstract class AdminPageFormSettingsBase
 	protected function checkFixedValues($row)
 	{
 		$table = RecordManager::TABLENAME_FORMS;
-		$result = isset($row[$table]['name']) && $row[$table]['name'] != null;
+		$result = isset($row[$table]['name']) && !empty(trim($row[$table]['name']));
 
 		return $result;
 	}
@@ -420,7 +419,6 @@ abstract class AdminPageFormSettingsBase
 
 	protected function buildForms()
 	{
-		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
 		$this->_pFormModelBuilder = $this->getContainer()->get(FormModelBuilderDBForm::class);
 		$this->_pFormModelBuilder->setFormType($this->getType());
 		$pFormModel = $this->_pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
@@ -741,6 +739,12 @@ abstract class AdminPageFormSettingsBase
 			                   . 'sure the name of the form is unique.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'empty' ) {
+			echo '<div class="notice notice-error is-dismissible"><p>'
+			     . esc_html__( 'There was a problem saving the form. The Name field cannot be empty.', 'onoffice-for-wp-websites' )
+			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
+
 		do_action( 'add_meta_boxes', get_current_screen()->id, null );
 		$this->generateMetaBoxes();
 
@@ -832,7 +836,7 @@ abstract class AdminPageFormSettingsBase
 		$row                      = $this->setFixedValues( $row );
 		$checkResult              = $this->checkFixedValues( $row );
 		$pResultObject            = new stdClass();
-		$pResultObject->result    = false;
+		$pResultObject->result    = null;
 		$pResultObject->record_id = $recordId;
 
 		$row['oo_plugin_fieldconfig_form_defaults_values']   =
@@ -848,7 +852,12 @@ abstract class AdminPageFormSettingsBase
 
 		$pageQuery   = str_replace( 'admin_page_', 'page=', $_POST['action'] );
 		$typeQuery   = '&type=' . $_POST['type'];
-		$statusQuery = $pResultObject->result ? '&saved=true' : '&saved=false';
+		$statusQuery = '&saved=false';
+		if (is_null($pResultObject->result)) {
+			$statusQuery = '&saved=empty';
+		} else if ($pResultObject->result) {
+			$statusQuery = '&saved=true';
+		}
 		$idQuery     = $pResultObject->record_id ? '&id=' . $pResultObject->record_id : '';
 
 		wp_redirect( admin_url( 'admin.php?' . $pageQuery . $typeQuery . $idQuery . $statusQuery ) );

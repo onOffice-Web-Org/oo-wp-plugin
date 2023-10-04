@@ -44,7 +44,6 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
 use function __;
 use function add_action;
-use function add_screen_option;
 use function do_accordion_sections;
 use function do_action;
 use function do_meta_boxes;
@@ -284,7 +283,6 @@ class AdminPageEstateDetail
 	 */
 	protected function buildForms()
 	{
-		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
 		$pFormModelBuilder = new FormModelBuilderEstateDetailSettings();
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug());
 		$this->addFormModel($pFormModel);
@@ -292,6 +290,7 @@ class AdminPageEstateDetail
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
 		$pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
 		$pInputShowStatus = $pFormModelBuilder->createInputModelShowStatus();
+		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
@@ -299,6 +298,7 @@ class AdminPageEstateDetail
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$pFormModelLayoutDesign->addInputModel( $pInputModelShortCodeForm );
 		$pFormModelLayoutDesign->addInputModel($pInputShowStatus);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowPriceOnRequest);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
