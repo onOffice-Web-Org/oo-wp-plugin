@@ -125,6 +125,133 @@ abstract class ListTable extends WP_List_Table
 		return $pItem->{$columnName};
 	}
 
+	protected function handlePageShortcodeRecord(array $records, array $recordsDetectLanguagePage)
+	{
+		$outputArray = [];
+		foreach ($recordsDetectLanguagePage as $item) {
+			$embed_shortcode_form_page_id = $item->embed_shortcode_form_page_id;
+			$translate = $item->locale;
+			$outputArray[$embed_shortcode_form_page_id] = $translate;
+		}
+
+		$local = get_locale();
+		if (empty($records)) {
+			return [];
+		}
+
+		$recordHandled = [];
+		$multilingualPluginActive = $this->getMultilingualPluginActive();
+		if (count($multilingualPluginActive) > 0) {
+			$current_language = icl_get_current_language();
+			foreach ($records as $record) {
+				$recordHandled[] = $this->processRecordMultilingualPlugin($record, $current_language);
+			}
+		} else {
+			foreach ($records as $record) {
+				$recordHandled[] = $this->processRecord($record, $local, $outputArray);
+			}
+		}
+
+		return $recordHandled;
+	}
+
+	private function processRecordMultilingualPlugin($record, $current_language)
+	{
+		if (!empty($record->page_shortcode)) {
+			$listPageID = explode(',', $record->page_shortcode);
+			$listPageTest = [];
+			foreach ($listPageID as $pageID) {
+				$pageTitle = get_the_title((int)$pageID);
+				$listPageTest[$pageID] = $pageTitle;
+			}
+
+			$filtered_list = [];
+				if (defined('ICL_SITEPRESS_VERSION')) {
+					$translatedPageIDs = [];
+					foreach ($listPageTest as $pageID => $pageTitle) {
+						$type = apply_filters('wpml_element_type', get_post_type($pageID));
+						$trid = apply_filters('wpml_element_trid', false, $pageID, $type);
+						$translations = apply_filters('wpml_get_element_translations', array(), $trid, $type);
+						$translatedPageIDs = array_merge($translatedPageIDs, array_values($translations));
+					}
+					$list = array_unique($translatedPageIDs, SORT_REGULAR);
+
+					foreach ($list as $page) {
+						$is_duplicate = false;
+						foreach ($filtered_list as $filtered_page) {
+							if ($page->post_title == $filtered_page->post_title && $page->language_code != $current_language) {
+								$is_duplicate = true;
+								break;
+							}
+						}
+
+						if (!$is_duplicate && $page->language_code === $current_language) {
+							$filtered_list[] = $page;
+						}
+					}
+				}
+			$filteredPageIDs = [];
+			foreach ($filtered_list as $item) {
+				if (isset($item->element_id)) {
+					$filteredPageIDs[] = $item->element_id;
+				}
+			}
+
+			$filteredPageIDsStr = implode(',', $filteredPageIDs);
+			$record->page_shortcode = $filteredPageIDsStr;
+		}
+		return $record;
+	}
+
+	private function processRecord($record, $local, $outputArray)
+	{
+		if (!empty($record->page_shortcode)) {
+			$listPageID = explode(',', $record->page_shortcode);
+			$listPageTest = [];
+	
+			foreach ($listPageID as $pageID) {
+				$pageTitle = get_the_title((int) $pageID);
+				$listPageTest[$pageID] = $pageTitle;
+			}
+	
+			$filteredPageIDs = [];
+	
+			foreach ($listPageTest as $pageID => $pageTitle) {
+				if ($local !== $outputArray[$pageID] && !in_array($pageID, $filteredPageIDs) && $outputArray[$pageID] !== null) {
+					$filteredPageIDs[] = $pageID;
+				}
+			}
+	
+			foreach ($filteredPageIDs as $filteredPageID) {
+				$key = array_search($filteredPageID, $listPageID);
+				if ($key !== false) {
+					unset($listPageID[$key]);
+				}
+			}
+	
+			$filteredPageIDsStr = implode(',', $listPageID);
+			$record->page_shortcode = $filteredPageIDsStr;
+		}
+	
+		return $record;
+	}
+
+	private function getMultilingualPluginActive()
+	{
+		$listMultilingualPluginActive = [];
+
+		$listMultilingualPlugin = [
+			"sitepress-multilingual-cms/sitepress.php",
+		];
+
+		foreach ($listMultilingualPlugin as $plugin) {
+			if (in_array($plugin ,get_option("active_plugins"))) {
+				array_push($listMultilingualPluginActive,$plugin);
+			}
+		}
+
+		return $listMultilingualPluginActive;
+	}
 
 	/**
 	 *

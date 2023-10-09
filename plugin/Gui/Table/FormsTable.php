@@ -104,7 +104,8 @@ class FormsTable
 		}
 
 		$pRecord = $pRecordRead->getRecordsSortedAlphabetically();
-		$pRecord = $this->handleRecord($pRecord);
+		$pRecordPage = $this->handlePageShortcodeRecord($pRecord, $pRecordRead->getRecordsTranslate());
+		$pRecord = $this->handleRecord($pRecordPage);
 		$this->setItems($pRecord);
 		$itemsCount = $pRecordRead->getCountOverall();
 

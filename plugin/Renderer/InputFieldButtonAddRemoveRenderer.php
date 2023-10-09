@@ -99,6 +99,20 @@ class InputFieldButtonAddRemoveRenderer
 	}
 
 	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 */
+
+	private function getTypes(string $module, $key, FieldsCollection $pFieldsCollection)
+	{
+		try {
+			return $pFieldsCollection->getFieldByModuleAndName($module, $key)->getType();
+		} catch (UnknownFieldException $pEx) {
+			return '';
+		}
+	}
+
+
+	/**
 	 *
 	 */
 
@@ -109,6 +123,7 @@ class InputFieldButtonAddRemoveRenderer
 		if ( is_array( $this->getValue() ) ) {
 			foreach ( $this->getValue() as $key => $label ) {
 				$module = empty($this->getOoModule()) ? $this->getModule($key, $pFieldsCollection) : $this->getOoModule();
+				$types = $this->getTypes($module, $key, $pFieldsCollection);
 				if (!__String::getNew($module)->isEmpty()) {
 					$this->addAdditionalAttribute('data-onoffice-module', $module);
 				}
@@ -125,7 +140,7 @@ class InputFieldButtonAddRemoveRenderer
 				     . 'data-onoffice-category="' . esc_attr( $this->getLabel() ) . '"'
 				     . 'id="' . esc_html( $inputId ) . '">';
 				echo '<span ' . $onofficeSelect . '></span>';
-				echo '<label style="margin-left:5px;' . $handleLabelButtonChange . '">' . esc_html( $label ) . '</label></span><br>'
+				echo '<label style="margin-left:5px;' . $handleLabelButtonChange . '">'. '('.$module.')' . esc_html( $label ) .'('.$types.')'. '</label></span><br>'
 				     . $textHtml;
 			}
 		}

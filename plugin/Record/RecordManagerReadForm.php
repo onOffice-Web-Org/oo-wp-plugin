@@ -102,6 +102,28 @@ class RecordManagerReadForm
         return $this->getFoundRows();
     }
 
+    /**
+     *
+     * @return object[]
+     *
+     */
+
+	public function getRecordsTranslate():array
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT *
+				FROM {$prefix}oo_plugin_detect_language_page";
+
+		$result = $pWpDb->get_results($sql, OBJECT);
+
+		if ($result === null) {
+			throw new UnknownFormException();
+		}
+
+		return $result;
+	}
 
 	/**
 	 * @return object

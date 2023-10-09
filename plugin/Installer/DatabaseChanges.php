@@ -45,7 +45,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 41;
+	const MAX_VERSION = 42;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -298,6 +298,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 41;
 		}
 
+		if ( $dbversion == 41 ) {
+			dbDelta($this->getCreateQueryDetectLanguagePage());
+			$dbversion = 42;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -307,6 +312,27 @@ class DatabaseChanges implements DatabaseChangesInterface
 	public function getDbVersion()
 	{
 		return $this->_pWpOption->getOption('oo_plugin_db_version', null);
+	}
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	private function getCreateQueryDetectLanguagePage()
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_detect_language_page";
+		$sql = "CREATE TABLE $tableName (
+			detect_language_page_id bigint(20) NOT NULL AUTO_INCREMENT,
+			embed_shortcode_form_page_id int(11) NOT NULL,
+			locale varchar(100) NOT NULL,
+			PRIMARY KEY  (detect_language_page_id)
+		) $charsetCollate;";
+
+		return $sql;
 	}
 
 	/**
@@ -874,6 +900,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_form_translated_labels",
 			$prefix."oo_plugin_fieldconfig_estate_customs_labels",
 			$prefix."oo_plugin_fieldconfig_estate_translated_labels",
+			$prefix."oo_plugin_detect_language_page",
 		);
 
 		foreach ($tables as $table)	{
