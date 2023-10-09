@@ -33,6 +33,5 @@ jQuery(document).ready(function ($) {
 		}
 	}
 	const formsSelector = "#onoffice-form, .oo-form";
-	const inputSelector = "input, textarea, button";
-	$(`${formsSelector} ${inputSelector}`).on("focus select2:open", addRecaptchaScript);
+	$(`${formsSelector} :input`).on("focus select2:open", addRecaptchaScript);
 });
