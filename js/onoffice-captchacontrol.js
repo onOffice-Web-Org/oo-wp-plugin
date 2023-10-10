@@ -32,6 +32,5 @@ jQuery(document).ready(function ($) {
 				.appendTo("head");
 		}
 	}
-	const formsSelector = "#onoffice-form, .oo-form";
-	$(`${formsSelector} :input`).on("focus select2:open", addRecaptchaScript);
+	$(`#onoffice-form :input, .oo-form :input`).on("focus select2:open", addRecaptchaScript);
 });
