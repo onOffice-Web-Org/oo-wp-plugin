@@ -67,7 +67,7 @@ class TestClassRedirectIfOldUrl
 	 */
 	public function testGetCurrentLink()
 	{
-		$this->assertEquals( 'http://example.org/detail-view/123', $this->_pRedirectIfOldUrl->getCurrentLink() );
+		$this->assertEquals( 'http://example.org/detail-view/123/', $this->_pRedirectIfOldUrl->getCurrentLink() );
 	}
 
 	/**
