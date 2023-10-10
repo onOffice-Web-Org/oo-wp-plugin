@@ -357,6 +357,12 @@ abstract class AdminPageFormSettingsBase
 					'0' => __('No', 'onoffice-for-wp-websites'),
 					'1' => __('Yes', 'onoffice-for-wp-websites'),
 				];
+			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_TINYINT) {
+				$result[ $pField->getModule() ][ $pField->getName() ]['permittedvalues'] = [
+					'' => __('Not Specified', 'onoffice-for-wp-websites'),
+					'1' => __('No', 'onoffice-for-wp-websites'),
+					'2' => __('Yes', 'onoffice-for-wp-websites'),
+				];
 			}
 		}
 		return $result;
@@ -510,7 +516,8 @@ abstract class AdminPageFormSettingsBase
 		if (in_array(onOfficeSDK::MODULE_SEARCHCRITERIA, $modules)) {
 			$pFieldsCollectionBuilder
 				->addFieldsSearchCriteria($pDefaultFieldsCollection)
-				->addFieldsSearchCriteriaSpecificBackend($pDefaultFieldsCollection);
+				->addFieldsSearchCriteriaSpecificBackend($pDefaultFieldsCollection)
+				->addFieldSupervisorForSearchCriteria($pDefaultFieldsCollection);
 		}
 
 		$pFieldsCollectionBuilder->addFieldsFormBackend($pDefaultFieldsCollection,$this->getType());

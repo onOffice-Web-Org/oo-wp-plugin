@@ -109,6 +109,10 @@ class Form
 			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName)
 			->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
 
+		if ($type === self::TYPE_INTEREST || $type === self::TYPE_APPLICANT_SEARCH) {
+			$pFieldBuilderShort->addFieldSupervisorForSearchCriteria($pFieldsCollection);
+		}
+
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();
 		$this->_formNo = $pFormPost->getFormNo();

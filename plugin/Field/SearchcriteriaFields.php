@@ -100,7 +100,8 @@ class SearchcriteriaFields
 		$pFieldsCollection = new FieldsCollection();
 		$this->_pFieldsCollectionBuilder
 			->addFieldsSearchCriteria($pFieldsCollection)
-			->addFieldsAddressEstate($pFieldsCollection);
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldSupervisorForSearchCriteria($pFieldsCollection);
 
 		$pGeoFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection);
 		$pFieldsCollection->merge($pGeoFieldsCollection);
@@ -115,8 +116,10 @@ class SearchcriteriaFields
 				$aliasedFieldName = $geoRangeFields[$name];
 			}
 			$module = onOfficeSDK::MODULE_ESTATE;
+			if ($name === 'benutzer') {
+				$module = onOfficeSDK::MODULE_SEARCHCRITERIA;
+			}
 			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $aliasedFieldName);
-
 			if (FieldTypes::isRangeType($pField->getType()))
 			{
 				if (__String::getNew($name)->endsWith(self::RANGE_FROM)) {
@@ -136,6 +139,14 @@ class SearchcriteriaFields
 				}
 				else {
 					$output[$pField->getLabel()] = (array_key_exists($value, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$value] : $value);
+				}
+			} elseif (FieldTypes::FIELD_TYPE_TINYINT === $pField->getType() || FieldTypes::FIELD_TYPE_BOOLEAN === $pField->getType()) {
+				if ($value === '') {
+					$output[$pField->getLabel()] = __('Not Special', 'onoffice-for-wp-websites');
+				} elseif ($value === '0') {
+					$output[$pField->getLabel()] = __('No', 'onoffice-for-wp-websites');
+				} elseif ($value === '1') {
+					$output[$pField->getLabel()] = __('Yes', 'onoffice-for-wp-websites');
 				}
 			} else {
 				$output[$pField->getLabel()] = $value;

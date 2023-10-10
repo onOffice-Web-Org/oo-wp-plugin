@@ -1,0 +1,40 @@
+{
+    "actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+    "resourceid": "",
+    "resourcetype": "users",
+    "cacheable": true,
+    "identifier": "",
+    "data": {
+        "meta": {
+          "cntabsolute": null
+        },
+        "records": [
+            {
+                "id": 69,
+                "type": null,
+                "elements": {
+                    "id": 69,
+                    "username": "duong",
+                    "firstname": "aa",
+                    "lastname": "aa",
+                    "email": "daoduong@abc.abc"
+                }
+            },
+            {
+                "id": 45,
+                "type": null,
+                "elements": {
+                    "id": 45,
+                    "username": "tester1",
+                    "firstname": "ddd",
+                    "lastname": "ddd",
+                    "email": "dtd010196@gmail.com"
+                }
+            }
+        ]
+    },
+    "status": {
+        "errorcode": 0,
+        "message": "OK"
+    }
+}

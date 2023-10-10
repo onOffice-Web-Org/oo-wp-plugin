@@ -280,4 +280,19 @@ class FieldsCollectionBuilderShort
 		$pFieldsCollection->merge($pFieldsCollectionTmp);
 		return $this;
 	}
+
+	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function addFieldSupervisorForSearchCriteria(FieldsCollection $pFieldsCollection): self
+	{
+		$pFieldLoader = $this->_pContainer->get(FieldLoaderSupervisorValues::class);
+		$pFieldCollectionSupervisor = $this->_pContainer->get(FieldsCollectionBuilder::class)
+			->buildFieldsCollection($pFieldLoader);
+		$pFieldsCollection->merge($pFieldCollectionSupervisor);
+		return $this;
+	}
 }

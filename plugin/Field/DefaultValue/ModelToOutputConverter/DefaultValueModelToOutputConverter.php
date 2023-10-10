@@ -69,7 +69,9 @@ class DefaultValueModelToOutputConverter
 	{
 		$isSingleValue = FieldTypes::isDateOrDateTime($pField->getType()) ||
 			FieldTypes::isNumericType($pField->getType()) ||
-			$pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT;
+			$pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT ||
+			$pField->getType() === FieldTypes::FIELD_TYPE_TINYINT ||
+			$pField->getType() === FieldTypes::FIELD_TYPE_INPUT_DATE;
 		$isMultiSelect = $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
 		$isBoolean = $pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN;
 		$isStringType = FieldTypes::isStringType($pField->getType());

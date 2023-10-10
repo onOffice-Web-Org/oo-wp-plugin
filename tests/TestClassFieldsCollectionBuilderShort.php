@@ -121,6 +121,25 @@ class TestClassFieldsCollectionBuilderShort
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json'), true);
 		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '',
 			$searchCriteriaFieldsParameters, null, $responseGetSearchcriteriaFields);
+
+		$parametersGetFieldList = [
+			'labels' => true,
+			'showContent' => true,
+			'showTable' => true,
+			'fieldList' => ['benutzer'],
+			'language' => 'ENG',
+			'modules' => [onOfficeSDK::MODULE_ESTATE],
+			'realDataTypes' => true
+		];
+		$responseGetSupervisorFields = json_decode
+		 	(file_get_contents(__DIR__.'/resources/ApiResponseSupervisorFields.json'), true);
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
+			$parametersGetFieldList, null, $responseGetSupervisorFields);
+
+		$responseGetListSupervisors = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseListSupervisors.json'), true);
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '',
+			[], null, $responseGetListSupervisors);
 		$pRegionController = $this->getMockBuilder(RegionController::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -222,5 +241,17 @@ class TestClassFieldsCollectionBuilderShort
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsSearchCriteriaSpecificBackend($pFieldsCollection);
 		$this->assertCount(30, $pFieldsCollection->getAllFields());
+	}
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort::addFieldSupervisorForSearchCriteria
+	 *
+	 */
+	public function testAddFieldSupervisorForSearchCriteria()
+	{
+		$pFieldsCollection = new FieldsCollection();
+		$this->assertSame($this->_pSubject, $this->_pSubject->addFieldSupervisorForSearchCriteria($pFieldsCollection));
+		$this->assertCount(1, $pFieldsCollection->getAllFields());
 	}
 }

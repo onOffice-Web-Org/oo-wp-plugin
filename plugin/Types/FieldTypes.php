@@ -58,6 +58,15 @@ abstract class FieldTypes
 	/** */
 	const FIELD_TYPE_DATETIME = 'datetime';
 
+	/** */
+	const FIELD_TYPE_TINYINT = 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:tinyint';
+
+	/** */
+	const FIELD_TYPE_INPUT_DATE = 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:date';
+
+	/** */
+	const FIELD_TYPE_SELECT_USER = 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:User';
+
 	/** @var array */
 	const TYPES_STRING = [
 		self::FIELD_TYPE_TEXT,
