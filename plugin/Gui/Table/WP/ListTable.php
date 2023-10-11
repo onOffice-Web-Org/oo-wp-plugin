@@ -191,30 +191,27 @@ abstract class ListTable extends WP_List_Table
 	 */
 	protected function handlePageShortcodeRecord(array $records, array $recordsDetectLanguagePage)
 	{
-		$outputArray = [];
+		$listDetectLanguagePage = [];
 		foreach ($recordsDetectLanguagePage as $item) {
-			$embed_shortcode_form_page_id = $item->embed_shortcode_form_page_id;
-			$translate = $item->locale;
-			$outputArray[$embed_shortcode_form_page_id] = $translate;
+			$listDetectLanguagePage[$item->embed_shortcode_form_page_id] = $item->locale;
 		}
 
 		if (empty($records)) {
 			return [];
-		} elseif(empty($recordsDetectLanguagePage)) {
+		} elseif (empty($recordsDetectLanguagePage)) {
 			return $records;
 		}
-		$local = get_locale();
 
 		$recordHandled = [];
 		$multilingualPluginActive = $this->getMultilingualPluginActive();
-		if (count($multilingualPluginActive) > 0) {
-			$current_language = icl_get_current_language();
-			foreach ($records as $record) {
-				$recordHandled[] = $this->processRecordMultilingualPlugin($record, $current_language);
-			}
-		} else {
-			foreach ($records as $record) {
-				$recordHandled[] = $this->processRecord($record, $local, $outputArray);
+
+		foreach ($records as $record) {
+			if (count($multilingualPluginActive) > 0) {
+				$currentLanguage = icl_get_current_language();
+				$recordHandled[] = $this->processRecordMultilingualPlugin($record, $currentLanguage);
+			} else {
+				$currentLanguage = get_locale();
+				$recordHandled[] = $this->processRecord($record, $currentLanguage, $listDetectLanguagePage);
 			}
 		}
 
@@ -222,97 +219,73 @@ abstract class ListTable extends WP_List_Table
 	}
 
 	/**
-	 * @param mixed $record
-	 * @param mixed $current_language
-	 * @return mixed
+	 * @param object $record
+	 * @param string $currentLanguage
+	 * @return object
 	 */
-	private function processRecordMultilingualPlugin($record, $current_language)
+	private function processRecordMultilingualPlugin(object $record, string $currentLanguage)
 	{
 		if (!empty($record->page_shortcode)) {
 			$listPageID = explode(',', $record->page_shortcode);
 			$listPageTest = [];
+
 			foreach ($listPageID as $pageID) {
-				$pageTitle = get_the_title((int)$pageID);
-				$listPageTest[$pageID] = $pageTitle;
+				$listPageTest[$pageID] = get_the_title((int) $pageID);
 			}
 
-			$filtered_list = [];
-				if (defined('ICL_SITEPRESS_VERSION')) {
-					$translatedPageIDs = [];
-					foreach ($listPageTest as $pageID => $pageTitle) {
-						$type = apply_filters('wpml_element_type', get_post_type($pageID));
-						$trid = apply_filters('wpml_element_trid', false, $pageID, $type);
-						$translations = apply_filters('wpml_get_element_translations', array(), $trid, $type);
-						$translatedPageIDs = array_merge($translatedPageIDs, array_values($translations));
-					}
-					$list = array_unique($translatedPageIDs, SORT_REGULAR);
-
-					foreach ($list as $page) {
-						$is_duplicate = false;
-						foreach ($filtered_list as $filtered_page) {
-							if ($page->post_title == $filtered_page->post_title && $page->language_code != $current_language) {
-								$is_duplicate = true;
-								break;
-							}
+			if (defined('ICL_SITEPRESS_VERSION')) {
+				$filtered_list = [];
+				foreach ($listPageTest as $pageID => $pageTitle) {
+					$type = apply_filters('wpml_element_type', get_post_type($pageID));
+					$trid = apply_filters('wpml_element_trid', false, $pageID, $type);
+					$translations = apply_filters('wpml_get_element_translations', array(), $trid, $type);
+					$translatedPageIDs = array_values($translations);
+					foreach ($translatedPageIDs as $page) {
+						if ($page->post_title == $pageTitle && $page->language_code != $currentLanguage) {
+							continue;
 						}
-
-						if (!$is_duplicate && $page->language_code === $current_language) {
-							$filtered_list[] = $page;
-						}
+						$filtered_list[] = $page;
 					}
 				}
-			$filteredPageIDs = [];
-			foreach ($filtered_list as $item) {
-				if (isset($item->element_id)) {
-					$filteredPageIDs[] = $item->element_id;
-				}
+				$filteredPageIDs = array_map(function ($item) {
+					return $item->element_id;
+				}, $filtered_list);
+				$filteredPageIDs = array_unique($filteredPageIDs);
+				
+				$record->page_shortcode = implode(',', $filteredPageIDs);
 			}
-
-			$filteredPageIDsStr = implode(',', $filteredPageIDs);
-			$record->page_shortcode = $filteredPageIDsStr;
 		}
 		return $record;
 	}
 
 	/**
-	 * @param mixed $record
-	 * @param mixed $local
-	 * @param mixed $outputArray
-	 * @return mixed
+	 * @param object $record
+	 * @param string $currentLanguage
+	 * @param array $listDetectLanguagePage
+	 * @return object
 	 */
-	private function processRecord($record, $local, $outputArray)
+	private function processRecord(object $record, string $currentLanguage, array $listDetectLanguagePage)
 	{
 		if (!empty($record->page_shortcode)) {
 			$listPageID = explode(',', $record->page_shortcode);
-			$listPageTest = [];
-	
-			foreach ($listPageID as $pageID) {
-				$pageTitle = get_the_title((int) $pageID);
-				$listPageTest[$pageID] = $pageTitle;
-			}
-	
 			$filteredPageIDs = [];
 	
-			foreach ($listPageTest as $pageID => $pageTitle) {
-				if (isset($outputArray[$pageID]) && $local !== $outputArray[$pageID] && !in_array($pageID, $filteredPageIDs) && $outputArray[$pageID] !== null) {
-					$filteredPageIDs[] = $pageID;
+			foreach ($listPageID as $pageID) {
+				if (isset($listDetectLanguagePage[$pageID]) && $listDetectLanguagePage[$pageID] !== $currentLanguage) {
+					continue;
 				}
+				$filteredPageIDs[] = $pageID;
 			}
 	
-			foreach ($filteredPageIDs as $filteredPageID) {
-				$key = array_search($filteredPageID, $listPageID);
-				if ($key !== false) {
-					unset($listPageID[$key]);
-				}
-			}
-	
-			$filteredPageIDsStr = implode(',', $listPageID);
-			$record->page_shortcode = $filteredPageIDsStr;
+			$record->page_shortcode = implode(',', $filteredPageIDs);
 		}
 	
 		return $record;
 	}
 
+	/**
+	 * @return array
+	 */
 	private function getMultilingualPluginActive()
 	{
 		$listMultilingualPluginActive = [];

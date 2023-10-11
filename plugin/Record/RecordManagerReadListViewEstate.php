@@ -420,15 +420,14 @@ class RecordManagerReadListViewEstate
 	/**
 	 * @param $page
 	 * @param $listviewId
-	 * @param $tableName
 	 * @param $column
 	 */
 
-	public function updatePageLanguageByPageId($language, $pageID, $tableName)
+	public function updatePageLanguageByPageId($language, $pageID)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb  = $this->getWpdb();
-		$pWpDb->query("UPDATE {$prefix}".$tableName."
+		$pWpDb->query("UPDATE {$prefix}oo_plugin_detect_language_page
 				SET `locale` ='" .$language."' 
 				WHERE `embed_shortcode_form_page_id` = ".esc_sql($pageID));
 	}
@@ -436,16 +435,15 @@ class RecordManagerReadListViewEstate
 
 	/**
 	 * @param int $pageID
-	 * @param string $tableName
 	 * @return array
 	 */
 
-	public function getPageLanguageByPageId($pageID, $tableName)
+	public function getPageLanguageByPageId($pageID)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb  = $this->getWpdb();
 		$sql = "SELECT *
-				FROM {$prefix}".$tableName."
+				FROM {$prefix}oo_plugin_detect_language_page
 				WHERE `embed_shortcode_form_page_id` = ".esc_sql($pageID);
 		$return = $pWpDb->get_row($sql);
 		return $return;
@@ -455,15 +453,14 @@ class RecordManagerReadListViewEstate
 	/**
 	 * @param $page
 	 * @param $listviewId
-	 * @param $tableName
 	 * @param $column
 	 */
 
-	public function createPageLanguageByPageId($language, $pageID, $tableName)
+	public function createPageLanguageByPageId($language, $pageID)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb  = $this->getWpdb();
-		$pWpDb->insert("{$prefix}{$tableName}",
+		$pWpDb->insert("{$prefix}oo_plugin_detect_language_page",
 		['embed_shortcode_form_page_id' => $pageID, 'locale' => $language],
 		['%d', '%s']);
 	}

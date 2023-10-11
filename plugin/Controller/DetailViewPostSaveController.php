@@ -66,11 +66,6 @@ class DetailViewPostSaveController
 			"tableName" => "oo_plugin_forms",
 			"key" => "form_id",
 		],
-		'pageLanguage'    => [
-			"option" => "form",
-			"tableName" => "oo_plugin_detect_language_page",
-			"key" => "form_id",
-		],
 	];
 
 	/**
@@ -152,7 +147,7 @@ class DetailViewPostSaveController
 				}
 			}
 			$this->addPageUseShortCode($pPost);
-			$this->updateLangugeForPageId( (int) $postId, 'pageLanguage' );
+			$this->updateLangugeForPageId((int) $postId);
 			$listView        = $this->getListView();
 			$listViewAddress = $this->getListViewAddress();
 			$listViewForm    = $this->getListForm();
@@ -506,19 +501,17 @@ class DetailViewPostSaveController
 
 
 	/**
-	 * @param $postID
-	 * @param $type
+	 * @param  $postID
 	 */
 
-	private function updateLangugeForPageId(int $postID, $type)
+	private function updateLangugeForPageId(int $postID)
 	{
-		$listConfig  = self::LIST_CONFIGS[$type];
 		$local = get_locale();
-		$pageLanguage = $this->_pRecordReadListView->getPageLanguageByPageId($postID, $listConfig["tableName"]);
+		$pageLanguage = $this->_pRecordReadListView->getPageLanguageByPageId($postID);
 		if (!empty($pageLanguage)) {
-			$this->_pRecordReadListView->updatePageLanguageByPageId( $local, $postID, $listConfig["tableName"] );
+			$this->_pRecordReadListView->updatePageLanguageByPageId($local, $postID);
 		} else {
-			$this->_pRecordReadListView->createPageLanguageByPageId( $local, $postID, $listConfig["tableName"] );
+			$this->_pRecordReadListView->createPageLanguageByPageId($local, $postID);
 		}
 	}
 
