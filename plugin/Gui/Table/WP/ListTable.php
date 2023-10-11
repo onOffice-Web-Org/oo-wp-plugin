@@ -219,7 +219,7 @@ abstract class ListTable extends WP_List_Table
 			$filteredPageIDs = [];
 	
 			foreach ($listPageTest as $pageID => $pageTitle) {
-				if ($local !== $outputArray[$pageID] && !in_array($pageID, $filteredPageIDs) && $outputArray[$pageID] !== null) {
+				if (isset($outputArray[$pageID]) && $local !== $outputArray[$pageID] && !in_array($pageID, $filteredPageIDs) && $outputArray[$pageID] !== null) {
 					$filteredPageIDs[] = $pageID;
 				}
 			}
