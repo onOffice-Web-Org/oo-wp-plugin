@@ -225,7 +225,7 @@ abstract class ListTable extends WP_List_Table
 	 */
 	private function processRecordMultilingualPlugin(object $record, string $currentLanguage)
 	{
-		if (!empty($record->page_shortcode)) {
+		if (!empty($record->page_shortcode) && $currentLanguage !== 'all') {
 			$listPageID = explode(',', $record->page_shortcode);
 			$listPageTest = [];
 
