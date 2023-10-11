@@ -445,7 +445,6 @@ class TestClassFormPostOwner
 				'energieausweistyp' => 'Bedarfsausweis',
 				'wohnflaeche' => 800.0,
 				'kabel_sat_tv' => true,
-				'testField' => ['testField1', 'testField2']
 			],
 		];
 
