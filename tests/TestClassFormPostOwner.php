@@ -137,11 +137,6 @@ class TestClassFormPostOwner
 				$pFieldKabelSatTv->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
 				$pFieldsCollection->addField($pFieldKabelSatTv);
 
-				$pFieldTestField = new Field('testField', onOfficeSDK::MODULE_ESTATE);
-				$pFieldTestField->setPermittedvalues(['testField1' => 'testField1','testField2' =>  'testField2']);
-				$pFieldTestField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-				$pFieldsCollection->addField($pFieldTestField);
-
 				$pFieldGDPRCheckBox = new Field('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldGDPRCheckBox->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
 				$pFieldsCollection->addField($pFieldGDPRCheckBox);
@@ -193,7 +188,6 @@ class TestClassFormPostOwner
 		$pEstateListInputVariableReaderConfig->setValue('energieausweistyp', 'Bedarfsausweis');
 		$pEstateListInputVariableReaderConfig->setValue('wohnflaeche', '800');
 		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'y');
-		$pEstateListInputVariableReaderConfig->setValueArray('testField', ['testField1', 'testField2']);
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('objektart', $moduleEstate, FieldTypes::FIELD_TYPE_VARCHAR);
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
@@ -204,8 +198,6 @@ class TestClassFormPostOwner
 			('wohnflaeche', $moduleEstate, FieldTypes::FIELD_TYPE_INTEGER);
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('kabel_sat_tv', $moduleEstate, FieldTypes::FIELD_TYPE_BOOLEAN);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
-			('testField', $moduleEstate, FieldTypes::FIELD_TYPE_MULTISELECT);
 	}
 
 
@@ -225,14 +217,15 @@ class TestClassFormPostOwner
 			'energieausweistyp' => 'Bedarfsausweis',
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
-			'testField' => ['testField1', 'testField2'],
 			'message' => 'Hello! I am interested in selling my property!',
 			'gdprcheckbox' => 'y'
 		];
 
+		$this->prepareMockerForAddressCreationSuccess();
+		$this->prepareMockerForEstateCreationSuccess();
+		$this->prepareMockerForRelationSuccess();
 		$this->prepareMockerForContactSuccess();
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
-		$pDataFormConfiguration->setCreateOwner(false);
 
 		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
 		$pFormData = $this->_pFormPostOwner->getFormDataInstance('test', 5);
@@ -245,7 +238,6 @@ class TestClassFormPostOwner
 			'energieausweistyp' => 'Bedarfsausweis',
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => true,
-			'testField' => ['testField1', 'testField2'],
 		];
 
 		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
@@ -574,12 +566,12 @@ class TestClassFormPostOwner
 				'Telefon1' => '0815 234567890',
 				'DSGVOStatus' => "speicherungzugestimmt"
 			],
-			'estateid' => 0,
+			'estateid' => 5590,
 			'message' => 'Hello! I am interested in selling my property!',
 			'subject' => null,
 			'referrer' => '/test/page/1',
 			'formtype' => 'owner',
-			'estatedata' => ['objektart','objekttyp','energieausweistyp','wohnflaeche','kabel_sat_tv','testField'],
+			'estatedata' => ['objektart','objekttyp','energieausweistyp','wohnflaeche','kabel_sat_tv'],
 			'recipient' => 'test@my-onoffice.com'
 		];
 
@@ -634,7 +626,6 @@ class TestClassFormPostOwner
 		$pDataFormConfiguration->addInput('energieausweistyp', onOfficeSDK::MODULE_ESTATE);
 		$pDataFormConfiguration->addInput('wohnflaeche', onOfficeSDK::MODULE_ESTATE);
 		$pDataFormConfiguration->addInput('kabel_sat_tv', onOfficeSDK::MODULE_ESTATE);
-		$pDataFormConfiguration->addInput('testField', onOfficeSDK::MODULE_ESTATE);
 		$pDataFormConfiguration->addInput('kabel_sat_tv', onOfficeSDK::MODULE_ESTATE);
 		$pDataFormConfiguration->addInput('message', '');
 		$pDataFormConfiguration->addInput('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
