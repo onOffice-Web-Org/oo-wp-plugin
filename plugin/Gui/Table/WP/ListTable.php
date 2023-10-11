@@ -127,9 +127,6 @@ abstract class ListTable extends WP_List_Table
 
 	protected function handlePageShortcodeRecord(array $records, array $recordsDetectLanguagePage)
 	{
-		if (empty($records) || empty($recordsDetectLanguagePage)) {
-			return [];
-		}
 		$outputArray = [];
 		foreach ($recordsDetectLanguagePage as $item) {
 			$embed_shortcode_form_page_id = $item->embed_shortcode_form_page_id;
@@ -137,6 +134,11 @@ abstract class ListTable extends WP_List_Table
 			$outputArray[$embed_shortcode_form_page_id] = $translate;
 		}
 
+		if (empty($records)) {
+			return [];
+		} elseif(empty($recordsDetectLanguagePage)) {
+			return $records;
+		}
 		$local = get_locale();
 
 		$recordHandled = [];
