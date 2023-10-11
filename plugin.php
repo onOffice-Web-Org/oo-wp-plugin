@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.13
+Version: 4.14
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -411,16 +411,13 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 	};
 }, 500);
 
-add_filter( 'script_loader_tag', 'filter_script_loader_tag', 10, 2 );
-function filter_script_loader_tag( $tag, $handle ) {
-	$loadAttributes = [ IncludeFileModel::LOAD_ASYNC, IncludeFileModel::LOAD_DEFER ];
-	foreach ( $loadAttributes as $attr ) {
-		if ( ! wp_scripts()->get_data( $handle, $attr ) ) {
-			continue;
-		}
-		if ( ! preg_match( ":\s{$attr}[=>\s]:", $tag ) ) {
-			$tag = preg_replace( ':(?=></script>):', " $attr", $tag, 1 );
-		}
+add_filter('script_loader_tag', 'filter_script_loader_tag', 10, 2);
+function filter_script_loader_tag($tag, $handle) {
+	$attributes = [IncludeFileModel::LOAD_DEFER, IncludeFileModel::LOAD_ASYNC];
+	foreach ($attributes as $attr) {
+		if (!wp_scripts()->get_data($handle, $attr)) continue;
+		if (!preg_match(":\s$attr(=|>|\s):", $tag))
+			$tag = preg_replace(':(?=></script>):', " $attr", $tag, 1);
 		break;
 	}
 	return $tag;
