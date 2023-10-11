@@ -189,17 +189,18 @@ abstract class ListTable extends WP_List_Table
 	 * @param array $recordsDetectLanguagePage
 	 * @return array
 	 */
-	protected function handlePageShortcodeRecord(array $records, array $recordsDetectLanguagePage)
+	protected function handlePageRecordsWithLanguage(array $records, array $recordsDetectLanguagePage)
 	{
-		$listDetectLanguagePage = [];
-		foreach ($recordsDetectLanguagePage as $item) {
-			$listDetectLanguagePage[$item->embed_shortcode_form_page_id] = $item->locale;
-		}
+		$pageLocales = [];
 
 		if (empty($records)) {
 			return [];
 		} elseif (empty($recordsDetectLanguagePage)) {
 			return $records;
+		}
+
+		foreach ($recordsDetectLanguagePage as $item) {
+			$pageLocales[$item->embed_shortcode_form_page_id] = $item->locale;
 		}
 
 		$recordHandled = [];
@@ -211,7 +212,7 @@ abstract class ListTable extends WP_List_Table
 				$recordHandled[] = $this->processRecordMultilingualPlugin($record, $currentLanguage);
 			} else {
 				$currentLanguage = get_locale();
-				$recordHandled[] = $this->processRecord($record, $currentLanguage, $listDetectLanguagePage);
+				$recordHandled[] = $this->processRecord($record, $currentLanguage, $pageLocales);
 			}
 		}
 
@@ -251,7 +252,7 @@ abstract class ListTable extends WP_List_Table
 					return $item->element_id;
 				}, $filtered_list);
 				$filteredPageIDs = array_unique($filteredPageIDs);
-				
+
 				$record->page_shortcode = implode(',', $filteredPageIDs);
 			}
 		}
@@ -261,25 +262,37 @@ abstract class ListTable extends WP_List_Table
 	/**
 	 * @param object $record
 	 * @param string $currentLanguage
-	 * @param array $listDetectLanguagePage
+	 * @param array $pageLocales
 	 * @return object
 	 */
-	private function processRecord(object $record, string $currentLanguage, array $listDetectLanguagePage)
+	private function processRecord(object $record, string $currentLanguage, array $pageLocales)
 	{
-		if (!empty($record->page_shortcode)) {
-			$listPageID = explode(',', $record->page_shortcode);
-			$filteredPageIDs = [];
-	
-			foreach ($listPageID as $pageID) {
-				if (isset($listDetectLanguagePage[$pageID]) && $listDetectLanguagePage[$pageID] !== $currentLanguage) {
-					continue;
-				}
-				$filteredPageIDs[] = $pageID;
-			}
-	
-			$record->page_shortcode = implode(',', $filteredPageIDs);
+		if (empty($record->page_shortcode)) {
+			return $record;
 		}
-	
+
+		$listPageIDs = explode(',', $record->page_shortcode);
+		$filteredPageIDs = [];
+
+		$filteredPageTitles = [];
+		foreach ($listPageIDs as $pageID) {
+			$pageTitle = get_the_title((int) $pageID);
+			$filteredPageTitles[$pageID] = $pageTitle;
+		}
+		$itemsToRemove = [];
+		foreach ($listPageIDs as $pageID) {
+			$pageTitle = get_the_title($pageID);
+			unset($filteredPageTitles[$pageID]);
+			if (isset($pageLocales[$pageID]) && $pageLocales[$pageID] !== $currentLanguage && in_array($pageTitle, $filteredPageTitles)) {
+				$itemsToRemove[] = $pageID;
+			}
+		}
+
+		$filteredPageIDs = array_diff($listPageIDs, $itemsToRemove);
+		$filteredPageIDs = array_values($filteredPageIDs);
+
+		$record->page_shortcode = implode(',', $filteredPageIDs);
+
 		return $record;
 	}
 
