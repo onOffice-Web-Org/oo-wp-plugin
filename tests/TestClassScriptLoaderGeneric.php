@@ -55,6 +55,7 @@ class TestClassScriptLoaderGeneric
 				$pModel1 = new IncludeFileModel(IncludeFileModel::TYPE_SCRIPT, 'script1', '/test/file.js');
 				$pModel1->setDependencies(['testdep']);
 				$pModel1->setLoadInFooter(true);
+				$pModel1->setLoadAsynchronous('defer');
 				$pModel2 = new IncludeFileModel(IncludeFileModel::TYPE_STYLE, 'style2', '/test/file.css');
 				return [$pModel1, $pModel2];
 		}));
@@ -91,5 +92,6 @@ class TestClassScriptLoaderGeneric
 		$this->_pSubject->enqueue();
 		$this->assertEquals(['style2'], wp_styles()->queue);
 		$this->assertEquals(['script1'], wp_scripts()->queue);
+		$this->assertTrue(wp_scripts()->get_data('script1', 'defer'));
 	}
 }

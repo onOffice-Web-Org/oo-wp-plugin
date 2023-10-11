@@ -61,6 +61,7 @@ class ScriptLoaderGeneric
 		/* @var $pIncludeModel IncludeFileModel */
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_SCRIPT) as $pIncludeModel) {
 			wp_enqueue_script($pIncludeModel->getIdentifier());
+			wp_script_add_data($pIncludeModel->getIdentifier(), $pIncludeModel->getLoadAsynchronous(), true);
 		}
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_STYLE) as $pIncludeModel) {
 			wp_enqueue_style($pIncludeModel->getIdentifier());
