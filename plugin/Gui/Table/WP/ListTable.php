@@ -135,7 +135,7 @@ abstract class ListTable extends WP_List_Table
 		}
 
 		$local = get_locale();
-		if (empty($records)) {
+		if (empty($records) || empty($recordsDetectLanguagePage)) {
 			return [];
 		}
 
