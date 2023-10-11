@@ -65,6 +65,7 @@ use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 
 const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
 
@@ -409,5 +410,17 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 		}
 	};
 }, 500);
+
+add_filter('script_loader_tag', 'filter_script_loader_tag', 10, 2);
+function filter_script_loader_tag($tag, $handle) {
+	$attributes = [IncludeFileModel::LOAD_DEFER, IncludeFileModel::LOAD_ASYNC];
+	foreach ($attributes as $attr) {
+		if (!wp_scripts()->get_data($handle, $attr)) continue;
+		if (!preg_match(":\s$attr(=|>|\s):", $tag))
+			$tag = preg_replace(':(?=></script>):', " $attr", $tag, 1);
+		break;
+	}
+	return $tag;
+}
 
 return $pDI;
