@@ -515,8 +515,7 @@ class DetailViewPostSaveController
 		}
 	}
 
-
-	/**getPageLanguageByPageIdgetPageLanguageByPageId
+	/**
 	 * @param $listView
 	 * @param $post
 	 * @param $tableName
