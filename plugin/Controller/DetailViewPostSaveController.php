@@ -501,7 +501,7 @@ class DetailViewPostSaveController
 
 
 	/**
-	 * @param  $postID
+	 * @param int $postID
 	 */
 
 	private function updateLangugeForPageId(int $postID)
