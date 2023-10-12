@@ -135,7 +135,7 @@ class TestClassFieldsCollectionBuilderShort
 		$parameterUser = [
 			"data" => ["Vorname", "Nachname", "Name", "Kuerzel"],
 			"filter" => [
-				"Nr" => [["op" => "in", "val" => [69, 45]]]
+				"Nr" => [["op" => "in", "val" => [69, 45, 42, 30]]]
 			]
 		];
 		

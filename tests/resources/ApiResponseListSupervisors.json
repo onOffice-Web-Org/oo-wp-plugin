@@ -26,9 +26,31 @@
                 "elements": {
                     "id": 45,
                     "username": "tester1",
-                    "firstname": "ddd",
-                    "lastname": "ddd",
+                    "firstname": "Test first name",
+                    "lastname": "",
                     "email": "dtd010196@gmail.com"
+                }
+            },
+            {
+                "id": 42,
+                "type": null,
+                "elements": {
+                    "id": 42,
+                    "username": "tester2",
+                    "firstname": "",
+                    "lastname": "Test last name",
+                    "email": "test2@gmail.com"
+                }
+            },
+            {
+                "id": 30,
+                "type": null,
+                "elements": {
+                    "id": 30,
+                    "username": "Test Username",
+                    "firstname": "",
+                    "lastname": "",
+                    "email": "test3@gmail.com"
                 }
             }
         ]

@@ -6,6 +6,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
 use onOffice\WPlugin\Field\Collection\FieldLoaderSupervisorValues;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
 
 class TestClassFieldLoaderSupervisorValues extends WP_UnitTestCase
@@ -31,7 +32,7 @@ class TestClassFieldLoaderSupervisorValues extends WP_UnitTestCase
 		$parameterUser = [
 			"data" => ["Vorname", "Nachname", "Name", "Kuerzel"],
 			"filter" => [
-				"Nr" => [["op" => "in", "val" => [69, 45]]]
+				"Nr" => [["op" => "in", "val" => [69, 45, 42, 30]]]
 			]
 		];
 
@@ -58,16 +59,25 @@ class TestClassFieldLoaderSupervisorValues extends WP_UnitTestCase
 	public function testLoadFieldSupervisor()
 	{
 		$result = iterator_to_array($this->_pFieldLoader->load());
+		$expectation = [
+			"benutzer" => [
+				"type" => FieldTypes::FIELD_TYPE_SINGLESELECT,
+				"length" => null,
+				"permittedvalues" => [
+					69 => 'aa, aa(aa)',	
+					45 => 'Test first name(FN)',
+					42 => 'Test last name(LN)',
+					30 => '(Test Username)(TU)'
+				],
+				"default" => null,
+				"label"	=> 'Supervisor',
+				"tablename" => 'ObjTech',
+				"content" => __('Search Criteria', 'onoffice-for-wp-websites'),
+				"module" => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			]
+		];
+
 		$this->assertCount(1, $result);
-		foreach ($result as $fieldname => $fieldProperties) {
-			$this->assertIsString($fieldname);
-			$this->assertArrayHasKey('module', $fieldProperties);
-			$this->assertArrayHasKey('label', $fieldProperties);
-			$this->assertArrayHasKey('type', $fieldProperties);
-			$this->assertArrayHasKey('default', $fieldProperties);
-			$this->assertArrayHasKey('length', $fieldProperties);
-			$this->assertArrayHasKey('permittedvalues', $fieldProperties);
-			$this->assertArrayHasKey('content', $fieldProperties);
-		}
+		$this->assertEquals($expectation, $result);
 	}
 }
