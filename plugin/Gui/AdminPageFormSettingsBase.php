@@ -357,7 +357,7 @@ abstract class AdminPageFormSettingsBase
 					'0' => __('No', 'onoffice-for-wp-websites'),
 					'1' => __('Yes', 'onoffice-for-wp-websites'),
 				];
-			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_TINYINT) {
+			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
 				$result[ $pField->getModule() ][ $pField->getName() ]['permittedvalues'] = [
 					'' => __('Not Specified', 'onoffice-for-wp-websites'),
 					'1' => __('No', 'onoffice-for-wp-websites'),

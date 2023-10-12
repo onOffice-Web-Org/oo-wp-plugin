@@ -46,7 +46,7 @@ class InputModelBuilderDefaultValue
 		FieldTypes::FIELD_TYPE_MULTISELECT => InputModelOption::HTML_TYPE_SELECT,
 		FieldTypes::FIELD_TYPE_SINGLESELECT => InputModelOption::HTML_TYPE_SELECT,
 		FieldTypes::FIELD_TYPE_BOOLEAN => InputModelOption::HTML_TYPE_SELECT,
-		FieldTypes::FIELD_TYPE_TINYINT => InputModelOption::HTML_TYPE_RADIO
+		FieldTypes::FIELD_TYPE_DATATYPE_TINYINT => InputModelOption::HTML_TYPE_RADIO
 	];
 
 

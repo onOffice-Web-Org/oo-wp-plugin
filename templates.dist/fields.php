@@ -190,7 +190,7 @@ if (!function_exists('renderFormField')) {
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
 			) {
 				$inputType = 'type="number" step="1" ';
-			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_INPUT_DATE) {
+			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_DATE) {
 				$inputType = 'type="date" ';
 			}
 
@@ -204,7 +204,7 @@ if (!function_exists('renderFormField')) {
 					$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($key) . '" '
 						. $value . ' placeholder="' . esc_attr($rangeDescription) . '">';
 				}
-			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_TINYINT) {
+			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
 				$output = '<fieldset>
 					<input type="radio" id="' . esc_attr($fieldName) . '_u" name="' . esc_attr($fieldName) . '" value=""
 						' . ($selectedValue === "" ? ' checked' : '') . '>

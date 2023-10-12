@@ -140,7 +140,7 @@ class SearchcriteriaFields
 				else {
 					$output[$pField->getLabel()] = (array_key_exists($value, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$value] : $value);
 				}
-			} elseif (FieldTypes::FIELD_TYPE_TINYINT === $pField->getType() || FieldTypes::FIELD_TYPE_BOOLEAN === $pField->getType()) {
+			} elseif (FieldTypes::FIELD_TYPE_DATATYPE_TINYINT === $pField->getType() || FieldTypes::FIELD_TYPE_BOOLEAN === $pField->getType()) {
 				if ($value === '') {
 					$output[$pField->getLabel()] = __('Not Special', 'onoffice-for-wp-websites');
 				} elseif ($value === '0') {

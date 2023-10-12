@@ -27,6 +27,14 @@ class TestClassFieldLoaderSupervisorValues extends WP_UnitTestCase
 			'modules' => [onOfficeSDK::MODULE_ESTATE],
 			'realDataTypes' => true
 		];
+
+		$parameterUser = [
+			"data" => ["Vorname", "Nachname", "Name", "Kuerzel"],
+			"filter" => [
+				"Nr" => [["op" => "in", "val" => [69, 45]]]
+			]
+		];
+
 		$pSDKWrapper = new SDKWrapperMocker();
 		$responseSupervisorFieldJson = file_get_contents(__DIR__ . '/resources/ApiResponseSupervisorFields.json');
 		$responseSupervisorField = json_decode($responseSupervisorFieldJson, true);
@@ -36,6 +44,11 @@ class TestClassFieldLoaderSupervisorValues extends WP_UnitTestCase
 		$responseListSupervisors = json_decode($responseListSupervisorsJson, true);
 		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '',
 			[], null, $responseListSupervisors);
+		$responseReadUsersJson = file_get_contents(__DIR__ . '/resources/ApiResponseGetUsers.json');
+		$responseReadUsers = json_decode($responseReadUsersJson, true);
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'user', '',
+			$parameterUser, null, $responseReadUsers);
+
 		$this->_pFieldLoader = new FieldLoaderSupervisorValues($pSDKWrapper);
 	}
 

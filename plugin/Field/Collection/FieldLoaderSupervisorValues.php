@@ -49,22 +49,47 @@ class FieldLoaderSupervisorValues implements FieldLoader
 	 */
 	private function getFullNameSupervisor(): array
 	{
-		$pApiClientAction = new APIClientActionGeneric
-		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
-
-		$pApiClientAction->addRequestToQueue();
-		$this->_pSDKWrapper->sendRequests();
-		$supervisor = $pApiClientAction->getResultRecords();
 		$fullNameSupervisor = [];
+		$userIds = $this->getUserIds();
+		$parameters = [
+			"data" => ["Vorname", "Nachname", "Name", "Kuerzel"],
+			"filter" => [
+				"Nr" => [["op" => "in", "val" => $userIds]]
+			]
+		];
 
-		if (empty($supervisor)) {
+		$pApiClientAction = new APIClientActionGeneric
+		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'user');
+		$pApiClientAction->setParameters($parameters);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+
+		$userRecords = $pApiClientAction->getResultRecords();
+
+		if (empty($userRecords)) {
 			return [];
 		}
 
-		foreach ($supervisor as $value) {
-			$userName = $value['elements']['id'];
-			$fullName = $value['elements']['lastname'] . ', ' . $value['elements']['firstname'];
-			$fullNameSupervisor[$userName] = $fullName;
+		foreach ($userRecords as $userRecord) {
+			$userId = $userRecord['id'];
+			$firstName = $userRecord['elements']['Vorname'];
+			$lastName = $userRecord['elements']['Nachname'];
+			$userName = $userRecord['elements']['Name'];
+			$userCode = $userRecord['elements']['Kuerzel'];
+
+			if (!empty($firstName) && !empty($lastName)) {
+				$fullName = $lastName . ', ' . $firstName;
+			} else {
+				if (!empty($firstName) && empty($lastName)) {
+					$fullName = $firstName;
+				} elseif (empty($firstName) && !empty($lastName)) {
+					$fullName = $lastName;
+				} else {
+					$fullName = '(' .$userName . ')';
+				}
+			}
+			$fullName .= '(' . $userCode . ')';
+
+			$fullNameSupervisor[$userId] = $fullName;
 		}
 
 		return $fullNameSupervisor;
@@ -90,12 +115,37 @@ class FieldLoaderSupervisorValues implements FieldLoader
 		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
 		$pApiClientActionFields->setParameters($parametersGetFieldList);
 		$pApiClientActionFields->addRequestToQueue()->sendRequests();
-		$resultApi = $pApiClientActionFields->getResultRecords();
+		$result = $pApiClientActionFields->getResultRecords();
 
-		if (empty($resultApi[0]['elements'])) {
+		if (empty($result[0]['elements'])) {
 			return [];
 		}
 
-		return $resultApi[0]['elements'];
+		return $result[0]['elements'];
+	}
+
+	/**
+	 * @return array
+	 * @throws ApiClientException
+	 */
+	private function getUserIds(): array
+	{
+		$pApiClientAction = new APIClientActionGeneric
+		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
+
+		$pApiClientAction->addRequestToQueue();
+		$this->_pSDKWrapper->sendRequests();
+		$result = $pApiClientAction->getResultRecords();
+		$userIds= [];
+
+		if (empty($result)) {
+			return [];
+		}
+
+		foreach ($result as $value) {
+			$userIds[] = $value['elements']['id'];
+		}
+
+		return $userIds;
 	}
 }

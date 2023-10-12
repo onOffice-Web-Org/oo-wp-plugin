@@ -59,13 +59,13 @@ abstract class FieldTypes
 	const FIELD_TYPE_DATETIME = 'datetime';
 
 	/** */
-	const FIELD_TYPE_TINYINT = 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:tinyint';
+	const FIELD_TYPE_DATATYPE_TINYINT = 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:tinyint';
 
 	/** */
-	const FIELD_TYPE_INPUT_DATE = 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:date';
+	const FIELD_TYPE_DATATYPE_DATE = 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:date';
 
 	/** */
-	const FIELD_TYPE_SELECT_USER = 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:User';
+	const FIELD_TYPE_DATATYPE_USER = 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:User';
 
 	/** @var array */
 	const TYPES_STRING = [
@@ -87,9 +87,9 @@ abstract class FieldTypes
 		self::FIELD_TYPE_DATE => FILTER_SANITIZE_STRING,
 		self::FIELD_TYPE_BLOB => FILTER_UNSAFE_RAW,
 		self::FIELD_TYPE_DATETIME => FILTER_SANITIZE_STRING,
-		self::FIELD_TYPE_SELECT_USER => FILTER_SANITIZE_STRING,
-		self::FIELD_TYPE_TINYINT => FILTER_VALIDATE_INT,
-		self::FIELD_TYPE_INPUT_DATE => FILTER_SANITIZE_STRING
+		self::FIELD_TYPE_DATATYPE_USER => FILTER_SANITIZE_STRING,
+		self::FIELD_TYPE_DATATYPE_TINYINT => FILTER_VALIDATE_INT,
+		self::FIELD_TYPE_DATATYPE_DATE => FILTER_SANITIZE_STRING
 	];
 
 	/** @var array */
