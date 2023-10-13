@@ -39,7 +39,6 @@ class ScriptLoaderBuilderConfigDefault
 	public function getConfiguration(): array
 	{
 		return [
-			ScriptLoaderMap::class,
 			ScriptLoaderGeneric::class,
 		];
 	}

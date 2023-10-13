@@ -49,6 +49,7 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\MapProvider;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
@@ -916,6 +917,19 @@ class EstateList
 			wp_register_style('slick-theme', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick-theme.css');
 			wp_enqueue_style('slick');
 			wp_enqueue_style('slick-theme');
+		}
+
+		if(MapProvider::getStaticActiveMapProvider() === MapProvider::OPEN_STREET_MAPS){
+			wp_enqueue_style('leaflet-style', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/leaflet/leaflet.css');
+			wp_print_styles('leaflet-style');
+			wp_enqueue_script('leaflet-script', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/leaflet/leaflet.js',[] ,'', true);
+			wp_print_scripts('leaflet-script');
+		} else {
+			$key = get_option('onoffice-settings-googlemaps-key', null);
+			$url = 'https://maps.googleapis.com/maps/api/js?'.http_build_query(['key' => $key]);
+			wp_enqueue_script('google-maps', $url);
+			wp_enqueue_script('gmapsinit', plugins_url('/js/gmapsinit.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['google-maps']);
+			wp_print_scripts('gmapsinit');
 		}
 	}
 

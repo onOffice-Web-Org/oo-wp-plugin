@@ -70,4 +70,16 @@ class MapProvider
 		return $this->_pOptionsWrapper->getOption
 			('onoffice-maps-mapprovider', self::PROVIDER_DEFAULT);
 	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	static public function getStaticActiveMapProvider(): string
+	{
+		return get_option('onoffice-maps-mapprovider', false);
+	}
 }
