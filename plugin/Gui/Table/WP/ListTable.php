@@ -186,37 +186,37 @@ abstract class ListTable extends WP_List_Table
 
 	/**
 	 * @param array $records
-	 * @param array $recordsDetectLanguagePage
+	 * @param array $detectLanguagePageRecords
 	 * @return array
 	 */
-	protected function handlePageRecordsWithLanguage(array $records, array $recordsDetectLanguagePage)
+	protected function getDetectLanguagePageRecords(array $records, array $detectLanguagePageRecords)
 	{
-		$pageLocales = [];
+		$pageLocale = [];
 
 		if (empty($records)) {
 			return [];
-		} elseif (empty($recordsDetectLanguagePage)) {
+		} elseif (empty($detectLanguagePageRecords)) {
 			return $records;
 		}
 
-		foreach ($recordsDetectLanguagePage as $item) {
-			$pageLocales[$item->embed_shortcode_form_page_id] = $item->locale;
+		foreach ($detectLanguagePageRecords as $detectLanguagePageRecord) {
+			$pageLocale[$detectLanguagePageRecord->page_using_the_shortcode_id] = $detectLanguagePageRecord->locale;
 		}
 
-		$recordHandled = [];
-		$multilingualPluginActive = $this->getMultilingualPluginActive();
+		$detectLanguagePageRecords = [];
+		$getMultilingualPluginLists = $this->getMultilingualPluginLists();
 
 		foreach ($records as $record) {
-			if (count($multilingualPluginActive) > 0) {
+			if (count($getMultilingualPluginLists) > 0) {
 				$currentLanguage = icl_get_current_language();
-				$recordHandled[] = $this->processRecordMultilingualPlugin($record, $currentLanguage);
+				$detectLanguagePageRecords[] = $this->getPagesUsingTheShortcodeWhenUseMultilingualIds($record, $currentLanguage);
 			} else {
 				$currentLanguage = get_locale();
-				$recordHandled[] = $this->processRecord($record, $currentLanguage, $pageLocales);
+				$detectLanguagePageRecords[] = $this->getPagesUsingTheShortcodeIds($record, $currentLanguage, $pageLocale);
 			}
 		}
 
-		return $recordHandled;
+		return $detectLanguagePageRecords;
 	}
 
 	/**
@@ -224,36 +224,36 @@ abstract class ListTable extends WP_List_Table
 	 * @param string $currentLanguage
 	 * @return object
 	 */
-	private function processRecordMultilingualPlugin(object $record, string $currentLanguage)
+	private function getPagesUsingTheShortcodeWhenUseMultilingualIds(object $record, string $currentLanguage)
 	{
 		if (!empty($record->page_shortcode) && $currentLanguage !== 'all') {
-			$listPageID = explode(',', $record->page_shortcode);
-			$listPageTest = [];
+			$currentPagesUsingTheShortcodeIds = explode(',', $record->page_shortcode);
+			$pageLists = [];
 
-			foreach ($listPageID as $pageID) {
-				$listPageTest[$pageID] = get_the_title((int) $pageID);
+			foreach ($currentPagesUsingTheShortcodeIds as $pageId) {
+				$pageLists[$pageId] = get_the_title((int) $pageId);
 			}
 
 			if (defined('ICL_SITEPRESS_VERSION')) {
-				$filtered_list = [];
-				foreach ($listPageTest as $pageID => $pageTitle) {
-					$type = apply_filters('wpml_element_type', get_post_type($pageID));
-					$trid = apply_filters('wpml_element_trid', false, $pageID, $type);
-					$translations = apply_filters('wpml_get_element_translations', array(), $trid, $type);
-					$translatedPageIDs = array_values($translations);
-					foreach ($translatedPageIDs as $page) {
-						if ($page->post_title == $pageTitle && $page->language_code != $currentLanguage) {
+				$desiredPageIds = [];
+				foreach ($pageLists as $pageId => $pageTitle) {
+					$wpmlType = apply_filters('wpml_element_type', get_post_type($pageId));
+					$wpmlTrid = apply_filters('wpml_element_trid', false, $pageId, $wpmlType);
+					$wpmlTranslations = apply_filters('wpml_get_element_translations', array(), $wpmlTrid, $wpmlType);
+					$informationPages = array_values($wpmlTranslations);
+					foreach ($informationPages as $informationPage) {
+						if ($informationPage->post_title == $pageTitle && $informationPage->language_code != $currentLanguage) {
 							continue;
 						}
-						$filtered_list[] = $page;
+						$desiredPageIds[] = $informationPage;
 					}
 				}
-				$filteredPageIDs = array_map(function ($item) {
-					return $item->element_id;
-				}, $filtered_list);
-				$filteredPageIDs = array_unique($filteredPageIDs);
 
-				$record->page_shortcode = implode(',', $filteredPageIDs);
+				$lastPageIds = array_map(function ($item) {
+					return $item->element_id;
+				}, $desiredPageIds);
+
+				$record->page_shortcode = implode(',', array_unique($lastPageIds));
 			}
 		}
 		return $record;
@@ -262,36 +262,37 @@ abstract class ListTable extends WP_List_Table
 	/**
 	 * @param object $record
 	 * @param string $currentLanguage
-	 * @param array $pageLocales
+	 * @param array $pageLocale
+	 *
 	 * @return object
 	 */
-	private function processRecord(object $record, string $currentLanguage, array $pageLocales)
+	private function getPagesUsingTheShortcodeIds(object $record, string $currentLanguage, array $pageLocale)
 	{
 		if (empty($record->page_shortcode)) {
 			return $record;
 		}
 
-		$listPageIDs = explode(',', $record->page_shortcode);
-		$filteredPageIDs = [];
+		$currentPagesUsingTheShortcodeIds = explode(',', $record->page_shortcode);
 
-		$filteredPageTitles = [];
-		foreach ($listPageIDs as $pageID) {
-			$pageTitle = get_the_title((int) $pageID);
-			$filteredPageTitles[$pageID] = $pageTitle;
+		$pageList = [];
+		foreach ($currentPagesUsingTheShortcodeIds as $pageId) {
+			$pageTitle = get_the_title((int) $pageId);
+			$pageList[$pageId] = $pageTitle;
 		}
-		$itemsToRemove = [];
-		foreach ($listPageIDs as $pageID) {
-			$pageTitle = get_the_title($pageID);
-			unset($filteredPageTitles[$pageID]);
-			if (isset($pageLocales[$pageID]) && $pageLocales[$pageID] !== $currentLanguage && in_array($pageTitle, $filteredPageTitles)) {
-				$itemsToRemove[] = $pageID;
+
+		$needRemovePages = [];
+		foreach ($currentPagesUsingTheShortcodeIds as $pageId) {
+			$pageTitle = get_the_title((int) $pageId);
+			unset($pageList[$pageId]);
+			if (isset($pageLocale[$pageId]) && $pageLocale[$pageId] !== $currentLanguage && in_array($pageTitle, $pageList)) {
+				$needRemovePages[] = $pageId;
 			}
 		}
 
-		$filteredPageIDs = array_diff($listPageIDs, $itemsToRemove);
-		$filteredPageIDs = array_values($filteredPageIDs);
+		$desiredPageIds = array_diff($currentPagesUsingTheShortcodeIds, $needRemovePages);
+		$lastPageIds = array_values($desiredPageIds);
 
-		$record->page_shortcode = implode(',', $filteredPageIDs);
+		$record->page_shortcode = implode(',', $lastPageIds);
 
 		return $record;
 	}
@@ -299,20 +300,20 @@ abstract class ListTable extends WP_List_Table
 	/**
 	 * @return array
 	 */
-	private function getMultilingualPluginActive()
+	private function getMultilingualPluginLists()
 	{
-		$listMultilingualPluginActive = [];
+		$multilingualPluginActiveLists = [];
 
-		$listMultilingualPlugin = [
+		$multilingualPluginLists = [
 			"sitepress-multilingual-cms/sitepress.php",
 		];
 
-		foreach ($listMultilingualPlugin as $plugin) {
-			if (in_array($plugin ,get_option("active_plugins"))) {
-				array_push($listMultilingualPluginActive,$plugin);
+		foreach ($multilingualPluginLists as $multilingualPlugin) {
+			if (in_array($multilingualPlugin ,get_option("active_plugins"))) {
+				array_push($multilingualPluginActiveLists, $multilingualPlugin);
 			}
 		}
 
-		return $listMultilingualPluginActive;
+		return $multilingualPluginActiveLists;
 	}
 }

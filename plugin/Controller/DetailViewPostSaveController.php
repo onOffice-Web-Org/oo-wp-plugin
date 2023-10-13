@@ -147,7 +147,7 @@ class DetailViewPostSaveController
 				}
 			}
 			$this->addPageUseShortCode($pPost);
-			$this->handlePageLanguageForPostID((int) $postId);
+			$this->handleLanguagePageById((int) $postId);
 			$listView        = $this->getListView();
 			$listViewAddress = $this->getListViewAddress();
 			$listViewForm    = $this->getListForm();
@@ -504,14 +504,13 @@ class DetailViewPostSaveController
 	 * @param int $postID
 	 */
 
-	private function handlePageLanguageForPostID(int $postID)
+	private function handleLanguagePageById(int $postID)
 	{
-		$local = get_locale();
-		$languageCount = $this->_pRecordReadListView->countLanguagesForPageID($postID);
-		if (!empty($languageCount)) {
-			$this->_pRecordReadListView->updateDetectLanguageByPageID($local, $postID);
-		} else {
-			$this->_pRecordReadListView->createDetectLanguageByPageID($local, $postID);
+		$locale = get_locale();
+		$countPageId = $this->_pRecordReadListView->RetrievesPageId($postID);
+
+		if (empty($countPageId)) {
+			$this->_pRecordReadListView->insertDetectLanguagePageRecord($locale, $postID);
 		}
 	}
 

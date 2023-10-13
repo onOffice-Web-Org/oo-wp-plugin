@@ -320,27 +320,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 *
 	 */
 
-	private function getCreateQueryDetectLanguagePage()
-	{
-		$prefix = $this->getPrefix();
-		$charsetCollate = $this->getCharsetCollate();
-		$tableName = $prefix."oo_plugin_detect_language_page";
-		$sql = "CREATE TABLE $tableName (
-			detect_language_page_id bigint(20) NOT NULL AUTO_INCREMENT,
-			embed_shortcode_form_page_id int(11) NOT NULL,
-			locale varchar(100) NOT NULL,
-			PRIMARY KEY  (detect_language_page_id)
-		) $charsetCollate;";
-
-		return $sql;
-	}
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
 	private function getCreateQueryCache()
 	{
 		$prefix = $this->getPrefix();
@@ -847,6 +826,27 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$this->_pWPDB->query($sql);
 	}
 
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	private function getCreateQueryDetectLanguagePage()
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_detect_language_page";
+		$sql = "CREATE TABLE $tableName (
+			detect_language_page_id bigint(20) NOT NULL AUTO_INCREMENT,
+			page_using_the_shortcode_id int(11) NOT NULL,
+			locale varchar(100) NOT NULL,
+			PRIMARY KEY  (detect_language_page_id)
+		) $charsetCollate;";
+
+		return $sql;
+	}
 
 	/**
 	 *

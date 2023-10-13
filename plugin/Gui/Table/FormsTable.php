@@ -103,10 +103,10 @@ class FormsTable
 			$pRecordRead->addWhere("`form_type` = '".esc_sql($this->_listType)."'");
 		}
 
-		$pRecord = $pRecordRead->getRecordsSortedAlphabetically();
-		$pRecordShortcodePage = $this->handlePageRecordsWithLanguage($pRecord, $pRecordRead->getRecordsTranslate());
-		$pRecord = $this->handleRecord($pRecordShortcodePage);
-		$this->setItems($pRecord);
+		$pOldRecord = $pRecordRead->getRecordsSortedAlphabetically();
+		$pDetectLanguagePageRecords = $this->getDetectLanguagePageRecords($pOldRecord, $pRecordRead->getAllDetectLanguagePageRecords());
+		$pNewRecord = $this->handleRecord($pDetectLanguagePageRecords);
+		$this->setItems($pNewRecord);
 		$itemsCount = $pRecordRead->getCountOverall();
 
 		$this->set_pagination_args( array(

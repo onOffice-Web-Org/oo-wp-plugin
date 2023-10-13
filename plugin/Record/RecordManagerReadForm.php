@@ -102,13 +102,14 @@ class RecordManagerReadForm
         return $this->getFoundRows();
     }
 
-    /**
-     *
-     * @return object[]
-     *
-     */
+	/**
+	 *
+	 * @return object[]
+	 *
+	 * @throws UnknownFormException
+	 */
 
-	public function getRecordsTranslate():array
+	public function getAllDetectLanguagePageRecords():array
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
