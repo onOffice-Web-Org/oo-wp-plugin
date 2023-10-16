@@ -223,6 +223,7 @@ class DetailViewPostSaveController
 				}
 				$pPost = get_post( $postId );
 				$this->deletePageUseShortCode( $pPost );
+				$this->deletePageUseLanguage((int) $postId);
 			}
 			if ( $hasDetailPost ) {
 				if ( empty( $pDetailView->getPageIdsHaveDetailShortCode() ) ) {
@@ -543,5 +544,15 @@ class DetailViewPostSaveController
 			}
 
 		}
+	}
+
+
+	/**
+	 * @param int $postID
+	 */
+
+	private function deletePageUseLanguage(int $postID)
+	{
+		$this->_pRecordReadListView->deleteDetectLanguagePageRecord($postID);
 	}
 }

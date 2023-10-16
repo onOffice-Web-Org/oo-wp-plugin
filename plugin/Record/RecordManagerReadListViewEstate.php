@@ -447,4 +447,16 @@ class RecordManagerReadListViewEstate
 			['page_using_the_shortcode_id' => esc_sql($pageId), 'locale' => esc_sql($locale)],
 			['%d', '%s']);
 	}
+
+
+	/**
+	 * @param int $pageId
+	 */
+
+	public function deleteDetectLanguagePageRecord(int $pageId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb  = $this->getWpdb();
+		$pWpDb->delete($prefix.'oo_plugin_detect_language_page', ['page_using_the_shortcode_id' => $pageId]);
+	}
 }
