@@ -551,18 +551,9 @@ class Form
 		$formId = $this->getDataFormConfiguration()->getId();
 		$values = [];
 
-		foreach ($this->_pFieldsCollection->getAllFields() as $pField) {
-			$value = $pDefaultValueRead->getConvertedField($formId, $pField);
-			$values[$pField->getName()] = $value[0] ?? '';
-
-			if ($pField->getIsRangeField()) {
-				$values[$pField->getName().'__von'] = $value['min'] ?? '';
-				$values[$pField->getName().'__bis'] = $value['max'] ?? '';
-			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
-				$values[$pField->getName()] = $value;
-			} elseif (FieldTypes::isStringType($pField->getType())) {
-				$values[$pField->getName()] = ($value['native'] ?? '') ?: (array_shift($value) ?? '');
-			}
+		foreach (array_chunk($this->_pFieldsCollection->getAllFields(), 100) as $fields) {
+			$pDefaultFields = $pDefaultValueRead->getConvertedMultiFields($formId, $fields);
+			if (count($pDefaultFields)) $values = array_merge($values, $pDefaultFields);
 		}
 		return array_filter($values);
 	}
