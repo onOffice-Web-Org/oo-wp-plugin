@@ -884,7 +884,7 @@ class EstateList
 	 */
 
 	private function doExtraEnqueues(){
-		if($this->_pDataView instanceof DataListView){
+		if ($this->_pDataView instanceof DataListView) {
 			wp_register_script('onoffice-sort-list-selector', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-sort-list-selector.js', ['jquery'], '', true);
 			wp_register_script('onoffice-form-preview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-form-preview.js', [], '', true);
 			wp_register_script('onoffice-custom-select', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-custom-select.js', [], '', true);
@@ -907,7 +907,7 @@ class EstateList
 				'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),
 			]);
 		}
-		if($this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates){
+		if ($this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates) {
 			wp_register_script('slick', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick.js', ['jquery'], '', true);
 			wp_enqueue_script('slick');
 			wp_script_add_data('slick', IncludeFileModel::LOAD_DEFER, true);
@@ -919,7 +919,7 @@ class EstateList
 			wp_enqueue_style('slick-theme');
 		}
 
-		if(MapProvider::getStaticActiveMapProvider() === MapProvider::OPEN_STREET_MAPS){
+		if (MapProvider::getStaticActiveMapProvider() === MapProvider::OPEN_STREET_MAPS) {
 			wp_enqueue_style('leaflet-style', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/leaflet/leaflet.css');
 			wp_print_styles('leaflet-style');
 			wp_enqueue_script('leaflet-script', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/leaflet/leaflet.js',[] ,'', true);
