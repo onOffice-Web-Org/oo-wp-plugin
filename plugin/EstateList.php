@@ -922,7 +922,8 @@ class EstateList
 		if (MapProvider::getStaticActiveMapProvider() === MapProvider::OPEN_STREET_MAPS) {
 			wp_enqueue_style('leaflet-style', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/leaflet/leaflet.css');
 			wp_print_styles('leaflet-style');
-			wp_enqueue_script('leaflet-script', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/leaflet/leaflet.js',[] ,'', true);
+			wp_enqueue_script('leaflet-script', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/leaflet/leaflet.js',[] ,'',  false);
+			wp_script_add_data('leaflet-script', IncludeFileModel::LOAD_DEFER, true);
 			wp_print_scripts('leaflet-script');
 		} else {
 			$key = get_option('onoffice-settings-googlemaps-key', null);

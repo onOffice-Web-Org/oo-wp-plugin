@@ -54,7 +54,7 @@ return (function(EstateList $pEstatesClone) {
 	} ?>
     <div id="map" style="width: 100%; height: 100%;"></div>
     <script>
-    (function() {
+    document.addEventListener('DOMContentLoaded', function() {
         var estateMarkers = <?php echo json_encode($estateData); ?>;
         var map = L.map('map', {
             center: [50.8, 10.0],
@@ -74,7 +74,7 @@ return (function(EstateList $pEstatesClone) {
             }
         }
         map.fitBounds(group.getBounds());
-    })();
+    });
     </script>
 <?php
 });
