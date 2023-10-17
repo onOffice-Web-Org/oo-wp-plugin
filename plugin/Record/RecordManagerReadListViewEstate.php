@@ -422,7 +422,7 @@ class RecordManagerReadListViewEstate
 	 * @return int
 	 */
 
-	public function RetrievesPageId(int $pageId)
+	public function retrievesPageId(int $pageId)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb  = $this->getWpdb();
