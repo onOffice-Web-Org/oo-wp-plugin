@@ -18,6 +18,7 @@ jQuery(document).ready(function ($) {
 
             submitButton.on('click', function () {
                 if (formElement.checkValidity()) {
+                    formElement.submit();
                     submitButton.addClass('onoffice-unclickable-form');
                 }
             });
