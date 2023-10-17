@@ -282,10 +282,9 @@ abstract class ListTable extends WP_List_Table
 
 		$needRemovePages = [];
 		foreach ($currentPagesUsingTheShortcodeIds as $pageId) {
-			$pageTitles = $pageList;
 			$pageTitle = get_the_title((int) $pageId);
-			unset($pageTitles[$pageId]);
-			if (isset($pageLocale[$pageId]) && $pageLocale[$pageId] !== $currentLanguage && in_array($pageTitle, $pageTitles)) {
+			$pageList[$pageId] = $pageTitle;
+			if (isset($pageLocale[$pageId]) && $pageLocale[$pageId] !== $currentLanguage && in_array($pageTitle, $pageList)) {
 				$needRemovePages[] = $pageId;
 			}
 		}
