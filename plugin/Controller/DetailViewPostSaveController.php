@@ -508,7 +508,7 @@ class DetailViewPostSaveController
 	private function handleLanguagePageById(int $postID)
 	{
 		$locale = get_locale();
-		$countPageId = $this->_pRecordReadListView->RetrievesPageId($postID);
+		$countPageId = $this->_pRecordReadListView->retrievesPageId($postID);
 
 		if (empty($countPageId)) {
 			$this->_pRecordReadListView->insertDetectLanguagePageRecord($locale, $postID);
