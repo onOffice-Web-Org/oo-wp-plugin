@@ -2,3 +2,10 @@ span.onoffice-pleasefill {
 	color: #dd1111;
 	margin-right: 5pt;
 }
+
+.oo-form input[type=submit]:disabled,
+#onoffice-form input[type=submit]:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	pointer-events: none;
+}
