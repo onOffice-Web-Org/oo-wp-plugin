@@ -243,13 +243,15 @@ class DetailViewPostSaveController
 	 */
 	public function onMoveDelete()
 	{
-		$posts = $_GET['post'];
-		if (isset($posts)) {
-			if ( ! is_array($posts)) {
-				$posts = [$posts];
-			}
-			foreach ($posts as $postId) {
-				$this->deletePageUseLanguage((int) $postId);
+		if (isset($_GET['post'])) {
+			$posts = $_GET['post'];
+			if (isset($posts)) {
+				if ( ! is_array($posts)) {
+					$posts = [$posts];
+				}
+				foreach ($posts as $postId) {
+					$this->deletePageUseLanguage((int) $postId);
+				}
 			}
 		}
 	}
