@@ -101,6 +101,7 @@ add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
 add_action('wp_enqueue_scripts', [CaptchaDataChecker::class, 'registerScripts']);
 add_action('save_post', [$pDetailViewPostSaveController, 'onSavePost']);
 add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
+add_action('before_delete_post', [$pDetailViewPostSaveController, 'onMoveDelete']);
 add_action('oo_cache_cleanup', function() use ($pDI) {
 	$pDI->get(CacheHandler::class)->clean();
 });

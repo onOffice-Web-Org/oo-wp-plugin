@@ -223,7 +223,6 @@ class DetailViewPostSaveController
 				}
 				$pPost = get_post( $postId );
 				$this->deletePageUseShortCode( $pPost );
-				$this->deletePageUseLanguage((int) $postId);
 			}
 			if ( $hasDetailPost ) {
 				if ( empty( $pDetailView->getPageIdsHaveDetailShortCode() ) ) {
@@ -238,6 +237,22 @@ class DetailViewPostSaveController
 		}
 	}
 
+
+	/**
+	 *
+	 */
+	public function onMoveDelete()
+	{
+		$posts = $_GET['post'];
+		if (isset($posts)) {
+			if ( ! is_array($posts)) {
+				$posts = [$posts];
+			}
+			foreach ($posts as $postId) {
+				$this->deletePageUseLanguage((int) $postId);
+			}
+		}
+	}
 
 	/**
 	 *
