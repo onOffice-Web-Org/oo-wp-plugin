@@ -309,7 +309,7 @@ abstract class ListTable extends WP_List_Table
 		];
 
 		foreach ($multilingualPluginLists as $multilingualPlugin) {
-			if (in_array($multilingualPlugin ,get_option("active_plugins"))) {
+			if (is_plugin_active($multilingualPlugin)) {
 				array_push($multilingualPluginActiveLists, $multilingualPlugin);
 			}
 		}
