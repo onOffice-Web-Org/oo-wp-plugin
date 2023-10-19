@@ -158,6 +158,12 @@ class DetailViewPostSaveController
 
 	}
 
+	/**
+	 * @param mixed $listView
+	 * @param mixed $pPost
+	 * @param mixed $table
+	 * @return void
+	 */
 	private function deletePageUseShortCodeWhenUpdatePage($listView, $pPost, $table) {
 		foreach ($listView as $view) {
 			if(empty($view->page_shortcode)){
@@ -183,14 +189,14 @@ class DetailViewPostSaveController
 					}
 				}
 			}
-			foreach($pageShortcode as $key => $shortcode){
+			foreach($pageShortcode as $index => $shortcode){
 				if($shortcode == $pPost->ID && !$isViewContainingShortcode){
-					unset($pageShortcode[$key]);
+					unset($pageShortcode[$index]);
 					$tableConfig = self::LIST_CONFIGS[$table];
-					$configKey = $tableConfig["key"];
+					$nameOfId = $tableConfig["key"];
 					$tableName = $tableConfig["tableName"];
-					$viewData = $view->$configKey;
-					$this->deletePageShortCodeTests($pageShortcode, $tableName, $configKey, $viewData);
+					$viewData = $view->$nameOfId;
+					$this->deletePageShortCodeWhenShortcodeRemoved($pageShortcode, $tableName, $nameOfId, $viewData);
 					return;
 				}
 			}
@@ -580,13 +586,12 @@ class DetailViewPostSaveController
 	}
 
 	/**
-	 * @param $pageShortcode
-	 * @param $tableName
-	 * @param $column
-	 * @param $primaKey
+	 * @param array $pageShortcode
+	 * @param string $tableName
+	 * @param string $column
+	 * @param string $primaKey
 	 */
-
-	private function deletePageShortCodeTests($pageShortcode, $tableName, $column, $primaKey )
+	private function deletePageShortCodeWhenShortcodeRemoved(array $pageShortcode, string $tableName, string $column, string $primaKey)
 	{
 		$pageID = implode(",",$pageShortcode);
 		$this->_pRecordReadListView->updateColumnPageShortCode($pageID,$primaKey,$tableName,$column);
