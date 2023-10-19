@@ -151,14 +151,14 @@ class DetailViewPostSaveController
 			$listView        = $this->getListView();
 			$listViewAddress = $this->getListViewAddress();
 			$listViewForm    = $this->getListForm();
-			$this->deletePageUseShortCodeWhenUpdatePage($listView, $pPost);
-			$this->deletePageUseShortCodeWhenUpdatePage($listViewAddress, $pPost);
-			$this->deletePageUseShortCodeWhenUpdatePage($listViewForm, $pPost);
+			$this->deletePageUseShortCodeWhenUpdatePage($listView, $pPost, 'estate');
+			$this->deletePageUseShortCodeWhenUpdatePage($listViewAddress, $pPost, 'address');
+			$this->deletePageUseShortCodeWhenUpdatePage($listViewForm, $pPost, 'form');
 		}
 
 	}
 
-	private function deletePageUseShortCodeWhenUpdatePage($listView, $pPost) {
+	private function deletePageUseShortCodeWhenUpdatePage($listView, $pPost, $table) {
 		foreach ($listView as $view) {
 			if(empty($view->page_shortcode)){
 				continue;
@@ -167,15 +167,31 @@ class DetailViewPostSaveController
 			if ( ! in_array($pPost->ID, $pageShortcode)) {
 				continue;
 			}
+			$isViewContainingShortcode = false;
 			foreach (self::LIST_CONFIGS as $key => $listConfig) {
 				$metaKeys               = get_post_meta($pPost->ID, '', true);
 				$viewShortcodeName      = $this->generateViewNameOfShortCode($view->name, $listConfig['option']);
 				$viewContained          = $this->postContains($pPost->post_content, "oo_" . $key, $viewShortcodeName);
+				if ($viewContained) {
+					$isViewContainingShortcode = $viewContained;
+				}
 				if ( is_array( $metaKeys ) && isset( $metaKeys['list_shortcode'] ) && count( $metaKeys['list_shortcode'] ) !== 0 ) {
 					$viewContainedShortcode = $this->postContains( $metaKeys['list_shortcode'][0], "oo_" . $key, $viewShortcodeName );
 					if ( ! $viewContainedShortcode || $viewContained ) {
 						$this->deletePageUseShortCode( $pPost );
+						return;
 					}
+				}
+			}
+			foreach($pageShortcode as $key => $shortcode){
+				if($shortcode == $pPost->ID && !$isViewContainingShortcode){
+					unset($pageShortcode[$key]);
+					$tableConfig = self::LIST_CONFIGS[$table];
+					$configKey = $tableConfig["key"];
+					$tableName = $tableConfig["tableName"];
+					$viewData = $view->$configKey;
+					$this->deletePageShortCodeTests($pageShortcode, $tableName, $configKey, $viewData);
+					return;
 				}
 			}
 		}
@@ -563,6 +579,18 @@ class DetailViewPostSaveController
 		}
 	}
 
+	/**
+	 * @param $pageShortcode
+	 * @param $tableName
+	 * @param $column
+	 * @param $primaKey
+	 */
+
+	private function deletePageShortCodeTests($pageShortcode, $tableName, $column, $primaKey )
+	{
+		$pageID = implode(",",$pageShortcode);
+		$this->_pRecordReadListView->updateColumnPageShortCode($pageID,$primaKey,$tableName,$column);
+	}
 
 	/**
 	 * @param int $postID
