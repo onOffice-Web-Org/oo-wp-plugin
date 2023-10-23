@@ -23,7 +23,6 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Field\DefaultValue;
 
-use onOffice\WPlugin\Types\Field;
 use wpdb;
 use const OBJECT;
 use function esc_sql;
@@ -51,104 +50,40 @@ class DefaultValueRead
 
 	/**
 	 * @param int $formId
-	 * @param Field $pField
-	 * @return DefaultValueModelSingleselect
+	 * @param array $pFields
+	 * @return array
 	 */
-	public function readDefaultValuesSingleselect(int $formId, Field $pField): DefaultValueModelSingleselect
+	public function readDefaultMultiValuesSingleSelect(int $formId, array $pFields): array
 	{
-		$query = $this->createBaseQuery($formId, $pField);
-		$row = $this->_pWPDB->get_row($query, ARRAY_A);
-		$pDataModel = new DefaultValueModelSingleselect($formId, $pField);
-		$pDataModel->setDefaultsId(!empty($row['defaults_id']) ? (int)$row['defaults_id'] : 0);
-		$pDataModel->setValue(!empty($row['value']) ? $row['value'] : '');
-		return $pDataModel;
+		$pFieldNames = array_map(function ($field) {
+			return $field->getName();
+		}, $pFields);
+		$query = $this->createMultiBaseQuery($formId, $pFieldNames);
+		return $this->_pWPDB->get_results($query, OBJECT);
 	}
 
 	/**
 	 * @param int $formId
-	 * @param Field $pField
-	 * @return DefaultValueModelMultiselect
-	 */
-	public function readDefaultValuesMultiSelect(int $formId, Field $pField): DefaultValueModelMultiselect
-	{
-		$query = $this->createBaseQuery($formId, $pField);
-		$rows = $this->_pWPDB->get_results($query, ARRAY_A);
-		$values = array_column($rows, 'value');
-		$pDataModel = new DefaultValueModelMultiselect($formId, $pField);
-		$pDataModel->setValues($values);
-		return $pDataModel;
-	}
-
-	/**
-	 * @param int $formId
-	 * @param Field $pField
-	 * @return DefaultValueModelBool
-	 */
-	public function readDefaultValuesBool(int $formId, Field $pField): DefaultValueModelBool
-	{
-		$query = $this->createBaseQuery($formId, $pField);
-		$row = $this->_pWPDB->get_row($query, ARRAY_A);
-		$pDataModel = new DefaultValueModelBool($formId, $pField);
-		$pDataModel->setDefaultsId(!empty($row['defaults_id']) ? (int)$row['defaults_id'] : 0);
-		$pDataModel->setValue(!empty($row['value']) ? (bool)intval($row['value']) : false);
-
-		return $pDataModel;
-	}
-
-	/**
-	 * @param int $formId
-	 * @param Field $pField
-	 * @return DefaultValueModelText
-	 */
-	public function readDefaultValuesText(int $formId, Field $pField): DefaultValueModelText
-	{
-		$query = $this->createBaseQuery($formId, $pField);
-		$rows = $this->_pWPDB->get_results($query, OBJECT);
-		$pDataModel = new DefaultValueModelText($formId, $pField);
-
-		foreach ($rows as $pRow) {
-			$pDataModel->addValueByLocale($pRow->locale, $pRow->value);
-		}
-
-		return $pDataModel;
-	}
-
-	/**
-	 * @param int $formId
-	 * @param Field $pField
-	 * @return DefaultValueModelNumericRange
-	 */
-	public function readDefaultValuesNumericRange(int $formId, Field $pField): DefaultValueModelNumericRange
-	{
-		$query = $this->createBaseQuery($formId, $pField);
-		$rows = $this->_pWPDB->get_results($query, OBJECT);
-		$pDataModel = new DefaultValueModelNumericRange($formId, $pField);
-
-		if (count($rows) === 2) {
-			$pDataModel->setValueFrom((float)$rows[0]->value);
-			$pDataModel->setValueTo((float)$rows[1]->value);
-		}
-		return $pDataModel;
-	}
-
-	/**
-	 * @param int $formId
-	 * @param Field $pField
+	 * @param array $pFieldNames
 	 * @return string
 	 */
-	private function createBaseQuery(int $formId, Field $pField): string
+	private function createMultiBaseQuery(int $formId, array $pFieldNames): string
 	{
-		$prefix = $this->_pWPDB->prefix;
-		$query = "SELECT {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id,"
-			."{$prefix}oo_plugin_fieldconfig_form_defaults_values.locale,\n"
-			."{$prefix}oo_plugin_fieldconfig_form_defaults_values.value\n"
-			."FROM {$prefix}oo_plugin_fieldconfig_form_defaults\n"
-			."INNER JOIN {$prefix}oo_plugin_fieldconfig_form_defaults_values\n"
-			."ON {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id = "
-			." {$prefix}oo_plugin_fieldconfig_form_defaults_values.defaults_id\n"
-			."WHERE {$prefix}oo_plugin_fieldconfig_form_defaults.fieldname = '".esc_sql($pField->getName())."' AND\n"
-			." {$prefix}oo_plugin_fieldconfig_form_defaults.form_id = ".esc_sql($formId);
-		return $query;
-	}
+		$names = array_map(function ($v) {
+			return "'" . esc_sql($v) . "'";
+		}, $pFieldNames);
+		$names = implode(',', $names);
 
+		$prefix = $this->_pWPDB->prefix;
+		return "SELECT {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id,"
+				. "{$prefix}oo_plugin_fieldconfig_form_defaults_values.locale,\n"
+				. "{$prefix}oo_plugin_fieldconfig_form_defaults_values.value,\n"
+				. "{$prefix}oo_plugin_fieldconfig_form_defaults.fieldname\n"
+				. "FROM {$prefix}oo_plugin_fieldconfig_form_defaults\n"
+				. "INNER JOIN {$prefix}oo_plugin_fieldconfig_form_defaults_values\n"
+				. "ON {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id = "
+				. " {$prefix}oo_plugin_fieldconfig_form_defaults_values.defaults_id\n"
+				. "WHERE {$prefix}oo_plugin_fieldconfig_form_defaults.fieldname IN (" . $names . ") AND\n"
+				. " {$prefix}oo_plugin_fieldconfig_form_defaults.form_id = " . esc_sql($formId);
+	}
 }

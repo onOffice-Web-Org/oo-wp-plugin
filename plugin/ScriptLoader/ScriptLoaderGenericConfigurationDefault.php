@@ -52,36 +52,10 @@ class ScriptLoaderGenericConfigurationDefault
 			(new IncludeFileModel($script, 'select2', plugins_url('/vendor/select2/select2/dist/js/select2.min.js', $pluginPath)))
 				->setLoadInFooter(true)
 				->setLoadAsynchronous($defer),
-			(new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/js/onoffice-custom-select.js', $pluginPath)))
-				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath)))
-				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-leadform', plugins_url('/js/onoffice-leadform.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-sort-list-selector', plugins_url('/js/onoffice-sort-list-selector.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))
-			->setDependencies(['jquery'])
-			->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/js/onoffice_defaultview.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-estatetype', plugins_url('/js/onoffice-estatetype.js', $pluginPath)))
-				->setDependencies(['onoffice-multiselect'])
-				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/js/onoffice-form-preview.js', $pluginPath)))
-				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/js/onoffice-prevent-double-form-submission.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true),
 
 			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)),
-			new IncludeFileModel($style, 'slick', plugins_url('/third_party/slick/slick.css', $pluginPath)),
-			new IncludeFileModel($style, 'slick-theme', plugins_url('/third_party/slick/slick-theme.css', $pluginPath)),
 			new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath))
 		];
 		$styleVersion = $this->getOnOfficeStyleVersion();
@@ -91,15 +65,6 @@ class ScriptLoaderGenericConfigurationDefault
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath)))
 				->setDependencies(['jquery']);
 		}
-
-		wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
-			'amount_none' => __('0 matches', 'onoffice-for-wp-websites'),
-			'amount_one' => __('Show exact match', 'onoffice-for-wp-websites'),
-			/* translators: %s is the amount of results */
-			'amount_other' => __('Show %s matches', 'onoffice-for-wp-websites'),
-			'nonce_estate' => wp_create_nonce('onoffice-estate-preview'),
-			'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),
-		]);
 
 		return $values;
 	}

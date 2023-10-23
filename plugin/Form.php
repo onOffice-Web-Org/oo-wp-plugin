@@ -26,6 +26,7 @@ use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\Form\CaptchaHandler;
+use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use Parsedown;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateTitleBuilder;
@@ -100,6 +101,7 @@ class Form
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice-for-wp-websites'));
 		$this->setGenericSetting('formId', 'onoffice-form');
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
+		$this->doExtraEnqueues($type);
 		$this->typeFormToHoneyPot($type);
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
@@ -553,18 +555,9 @@ class Form
 		$formId = $this->getDataFormConfiguration()->getId();
 		$values = [];
 
-		foreach ($this->_pFieldsCollection->getAllFields() as $pField) {
-			$value = $pDefaultValueRead->getConvertedField($formId, $pField);
-			$values[$pField->getName()] = $value[0] ?? '';
-
-			if ($pField->getIsRangeField()) {
-				$values[$pField->getName().'__von'] = $value['min'] ?? '';
-				$values[$pField->getName().'__bis'] = $value['max'] ?? '';
-			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
-				$values[$pField->getName()] = $value;
-			} elseif (FieldTypes::isStringType($pField->getType())) {
-				$values[$pField->getName()] = ($value['native'] ?? '') ?: (array_shift($value) ?? '');
-			}
+		foreach (array_chunk($this->_pFieldsCollection->getAllFields(), 100) as $fields) {
+			$pDefaultFields = $pDefaultValueRead->getConvertedMultiFields($formId, $fields);
+			if (count($pDefaultFields)) $values = array_merge($values, $pDefaultFields);
 		}
 		return array_filter($values);
 	}
@@ -612,6 +605,41 @@ class Form
 	{
 		if ($isCaptchaRequired) {
 			CaptchaHandler::registerScripts();
+		}
+	}
+
+	/**
+	 *
+	 * @param string $type
+	 *
+	 */
+
+	private function doExtraEnqueues(string $type){
+		wp_register_script('onoffice-custom-select', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-custom-select.js', ['jquery'], '', true);
+		wp_register_script('onoffice-multiselect', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-multiselect.js', [], '', true);
+		wp_register_script('onoffice-estatetype', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-estatetype.js', ['onoffice-multiselect'], '', true);
+		wp_register_script('onoffice-leadform', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-leadform.js', ['jquery'], '', true);
+		wp_register_script('onoffice-prevent-double-form-submission', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-prevent-double-form-submission.js', ['jquery'], '', true);
+		wp_enqueue_script('onoffice-custom-select');
+		wp_enqueue_script('onoffice-multiselect');
+		wp_enqueue_script('onoffice-estatetype');
+		wp_enqueue_script('onoffice-leadform');
+		wp_enqueue_script('onoffice-prevent-double-form-submission');
+		wp_script_add_data('onoffice-multiselect', IncludeFileModel::LOAD_ASYNC, true);
+		wp_script_add_data('onoffice-estatetype', IncludeFileModel::LOAD_ASYNC, true);
+
+		if($type === self::TYPE_APPLICANT_SEARCH){
+			wp_register_script('onoffice-form-preview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'js/onoffice-form-preview.js', ['jquery'], '', true);
+			wp_enqueue_script('onoffice-form-preview');
+
+			wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
+				'amount_none' => __('0 matches', 'onoffice-for-wp-websites'),
+				'amount_one' => __('Show exact match', 'onoffice-for-wp-websites'),
+				/* translators: %s is the amount of results */
+				'amount_other' => __('Show %s matches', 'onoffice-for-wp-websites'),
+				'nonce_estate' => wp_create_nonce('onoffice-estate-preview'),
+				'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),
+			]);
 		}
 	}
 
