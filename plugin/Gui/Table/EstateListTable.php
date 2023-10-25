@@ -138,7 +138,8 @@ class EstateListTable extends ListTable
 			'page_shortcode' => __('Pages using the shortcode', 'onoffice-for-wp-websites'),
 		];
 
-		$hidden = ['ID', 'filterId'];
+		$hiddenColumns = get_hidden_columns($this->screen);
+		$hidden = array_merge($hiddenColumns, ['ID', 'filterId']);
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = [$columns, $hidden, $sortable,
@@ -183,19 +184,6 @@ class EstateListTable extends ListTable
 	 *
 	 */
 
-	protected function column_show_status($pItem)
-	{
-		return $pItem->show_status == '1' ? __('Yes', 'onoffice-for-wp-websites') : __('No', 'onoffice-for-wp-websites');
-	}
-
-
-	/**
-	 *
-	 * @param object $pItem
-	 * @return string
-	 *
-	 */
-
 	protected function column_filtername($pItem)
 	{
 		$filterName = '';
@@ -226,7 +214,6 @@ class EstateListTable extends ListTable
 			'cb' => '<input type="checkbox" />',
 			'name' => __('Name of View', 'onoffice-for-wp-websites'),
 			'filtername' => __('Filter', 'onoffice-for-wp-websites'),
-			'show_status' => __('Show Status', 'onoffice-for-wp-websites'),
 			'list_type' => __('Type of List', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		];
