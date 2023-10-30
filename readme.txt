@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.15 (2023-10-30) =
+
+**Changed**
+
+* Some changes have been made to improve performance: only loading of required scripts, compressing of scrips, improvment of sending queries 
+
 = 4.14 (2023-09-11) =
 
 **Added**
