@@ -27,11 +27,6 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelBool;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelText;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueRead;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
 use onOffice\WPlugin\Types\Field;
@@ -81,77 +76,40 @@ class TestClassDefaultValueModelToOutputConverter extends WP_UnitTestCase
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function testGetConvertedFieldForUnknownFieldType()
+	public function testGetConvertedMultiFieldsForNonEmptyNumericRangeField()
 	{
-		$this->_pField->setType('unknown');
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertEmpty($result);
-	}
-
-
-	/**
-	 *
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 *
-	 */
-
-	public function testGetConvertedFieldForEmptyTextField()
-	{
-		$this->_pField->setType(FieldTypes::FIELD_TYPE_TEXT);
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertEmpty($result);
-	}
-
-	/**
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	public function testGetConvertedFieldForBoolField()
-	{
-		$this->_pField->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertEquals(['0'], $result);
-	}
-
-	/**
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	public function testGetConvertedFieldForNonEmptyBoolField()
-	{
-		$this->_pField->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
-		$pBoolFieldModel = new DefaultValueModelBool(13, $this->_pField);
-		$pBoolFieldModel->setValue(true);
-
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => '11.0',
+				'fieldname' => 'testField',
+			],
+			(object)[
+				'defaults_id' => '13',
+				'value' => '14.0',
+				'fieldname' => 'testField',
+			],
+			(object)[
+				'defaults_id' => '16',
+				'value' => 'abc',
+				'fieldname' => 'fieldname4',
+				'type' => 'singleselect',
+				'locale' => 'en_US',
+			],
+			(object)[
+				'defaults_id' => '17',
+				'value' => 'abc',
+				'fieldname' => 'fieldname5',
+				'type' => 'singleselect',
+				'locale' => 'en_US',
+			],
+		];
 		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$this->_pField->setIsRangeField(true);
 		$pDefaultValueReader->expects($this->once())
-			->method('readDefaultValuesBool')->will($this->returnValue($pBoolFieldModel));
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertEquals(['1'], $result);
-	}
-
-	/**
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	public function testGetConvertedFieldForNonEmptyTextField()
-	{
-		$this->_pField->setType(FieldTypes::FIELD_TYPE_TEXT);
-		$pTextFieldModel = new DefaultValueModelText(13, $this->_pField);
-		$pTextFieldModel->addValueByLocale('de_DE', 'Die menschliche Spinne');
-		$pTextFieldModel->addValueByLocale('en_US', 'Spider Man');
-		$pTextFieldModel->addValueByLocale('fr_BE', 'Homme araignée');
-
-		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
-		$pDefaultValueReader->expects($this->once())
-			->method('readDefaultValuesText')->will($this->returnValue($pTextFieldModel));
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertEquals([
-			'de_DE' => 'Die menschliche Spinne',
-			'fr_BE' => 'Homme araignée',
-			'native' => 'Spider Man',
-		], $result);
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->getConvertedMultiFields(13, [$this->_pField]);
+		$this->assertEquals(['testField__von'=>'11.0', 'testField__bis'=>'14.0', 'testField'=>''], $result);
 	}
 
 
@@ -162,103 +120,301 @@ class TestClassDefaultValueModelToOutputConverter extends WP_UnitTestCase
 	 *
 	 */
 
-	public function testGetConvertedFieldForEmptySingleSelectField()
+	public function testGetConvertedMultiFieldsForNonEmptySingleSelectField()
 	{
 		$this->_pField->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertEquals([''], $result);
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Monday',
+				'fieldname' => 'testField',
+				'type' => 'date',
+				'locale' => 'en_US',
+			],
+		];
+		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$pDefaultValueReader->expects($this->once())
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->getConvertedMultiFields(13, [$this->_pField]);
+		$this->assertEquals(['testField'=> 'Monday'], $result);
 	}
 
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function testGetConvertedFieldForEmptyMultiSelectField()
+	public function testGetConvertedMultiFieldsForNonEmptyMultiSelectField()
 	{
 		$this->_pField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertSame([], $result);
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Monday',
+				'fieldname' => 'testField',
+				'type' => 'date',
+				'locale' => '',
+			],
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Tuesday',
+				'fieldname' => 'testField',
+				'type' => 'date',
+				'locale' => '',
+			],
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Wednesday',
+				'fieldname' => 'testField',
+				'type' => 'date',
+				'locale' => '',
+			],
+		];
+		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$pDefaultValueReader->expects($this->once())
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->getConvertedMultiFields(13, [$this->_pField]);
+		$this->assertEquals(['testField'=> ['Monday','Tuesday','Wednesday']], $result);
 	}
 
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function testGetConvertedFieldForNonEmptyMultiSelectField()
+	public function testGetConvertedMultiFieldsForNonEmptyBoolField()
 	{
-		$this->_pField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-		$pMultiSelectFieldModel = new DefaultValueModelMultiselect(13, $this->_pField);
-		$pMultiSelectFieldModel->setValues(['Monday', 'Tuesday', 'Wednesday', 'Saturday']);
+		$this->_pField->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => true,
+				'fieldname' => 'testField',
+				'type' => 'boolean',
+			],
+		];
+		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$pDefaultValueReader->expects($this->once())
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->getConvertedMultiFields(13, [$this->_pField]);
+		$this->assertEquals(['testField'=> true], $result);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testGetConvertedMultiFieldsForNonEmptyTextField()
+	{
+		$this->_pField->setType(FieldTypes::FIELD_TYPE_TEXT);
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Spider Man',
+				'fieldname' => 'testField',
+				'type' => 'text',
+				'locale' => 'native',
+			],
+		];
 
 		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
 		$pDefaultValueReader->expects($this->once())
-			->method('readDefaultValuesMultiSelect')->will($this->returnValue($pMultiSelectFieldModel));
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertEquals(['Monday', 'Tuesday', 'Wednesday', 'Saturday'], $result);
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->getConvertedMultiFields(13, [$this->_pField]);
+		$this->assertEquals(['testField' => 'Spider Man'], $result);
 	}
 
+
 	/**
+	 *
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 *
 	 */
-	public function testGetConvertedFieldForRegZusatz()
+
+	public function testGetConvertedMultiFieldsForRegZusatz()
 	{
 		$this->_pField->setType('displayAll');
-		$pMultiSelectFieldModel = new DefaultValueModelMultiselect(13, $this->_pField);
-		$pMultiSelectFieldModel->setValues(['Aachen', 'Würselen', 'Herzogenrath']);
-
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Aachen',
+				'fieldname' => 'testField',
+				'type' => 'displayAll',
+				'locale' => '',
+			],
+		];
 		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
 		$pDefaultValueReader->expects($this->once())
-			->method('readDefaultValuesMultiSelect')->will($this->returnValue($pMultiSelectFieldModel));
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertEquals(['Aachen', 'Würselen', 'Herzogenrath'], $result);
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->getConvertedMultiFields(13, [$this->_pField]);
+		$this->assertEquals(['testField' => 'Aachen'], $result);
 	}
 
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function testGetConvertedFieldForNonEmptySingleSelectField()
+	public function testGetConvertedMultiFieldsForAdminForNonEmptyNumericRangeField()
+	{
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => '11.0',
+				'fieldname' => 'testField',
+			],
+			(object)[
+				'defaults_id' => '13',
+				'value' => '14.0',
+				'fieldname' => 'testField',
+			],
+			(object)[
+				'defaults_id' => '16',
+				'value' => 'abc',
+				'fieldname' => 'fieldname4',
+				'type' => 'singleselect',
+				'locale' => 'en_US',
+			],
+			(object)[
+				'defaults_id' => '17',
+				'value' => 'abc',
+				'fieldname' => 'fieldname5',
+				'type' => 'singleselect',
+				'locale' => 'en_US',
+			],
+		];
+		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$this->_pField->setIsRangeField(true);
+		$pDefaultValueReader->expects($this->once())
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->GetConvertedMultiFieldsForAdmin(13, [$this->_pField]);
+		$this->assertEquals(['testField'=>['min'=>'11.0', 'max'=>'14.0']], $result);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testGetConvertedMultiFieldsForAdminForNonEmptySingleSelectField()
 	{
 		$this->_pField->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$pSingleSelectFieldModel = new DefaultValueModelSingleselect(13, $this->_pField);
-		$pSingleSelectFieldModel->setValue('Monday');
-
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Monday',
+				'fieldname' => 'testField',
+				'type' => 'date',
+				'locale' => 'en_US',
+			],
+		];
 		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
 		$pDefaultValueReader->expects($this->once())
-			->method('readDefaultValuesSingleselect')->will($this->returnValue($pSingleSelectFieldModel));
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertEquals(['Monday'], $result);
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->GetConvertedMultiFieldsForAdmin(13, [$this->_pField]);
+		$this->assertEquals(['testField'=> ['Monday']], $result);
 	}
 
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function testGetConvertedFieldForNonEmptyNumericRangeField()
+	public function testGetConvertedMultiFieldsForAdminForNonEmptyMultiSelectField()
 	{
-		$this->_pField->setType(FieldTypes::FIELD_TYPE_FLOAT);
-		$this->_pField->setIsRangeField(true);
-		$pRangeFieldModel = new DefaultValueModelNumericRange(13, $this->_pField);
-		$pRangeFieldModel->setValueFrom(11.);
-		$pRangeFieldModel->setValueTo(14.);
-
+		$this->_pField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Monday',
+				'fieldname' => 'testField',
+				'type' => 'date',
+				'locale' => '',
+			],
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Tuesday',
+				'fieldname' => 'testField',
+				'type' => 'date',
+				'locale' => '',
+			],
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Wednesday',
+				'fieldname' => 'testField',
+				'type' => 'date',
+				'locale' => '',
+			],
+		];
 		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
 		$pDefaultValueReader->expects($this->once())
-			->method('readDefaultValuesNumericRange')->will($this->returnValue($pRangeFieldModel));
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertEquals(['min' => 11.0, 'max' => 14.0], $result);
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->GetConvertedMultiFieldsForAdmin(13, [$this->_pField]);
+		$this->assertEquals(['testField' => ['Monday', 'Tuesday', 'Wednesday']], $result);
 	}
 
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function testGetConvertedFieldForEmptyNumericRangeField()
+	public function testGetConvertedMultiFieldsForAdminForNonEmptyBoolField()
 	{
-		$this->_pField->setType(FieldTypes::FIELD_TYPE_FLOAT);
-		$this->_pField->setIsRangeField(true);
-		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
-		$this->assertEquals(['min' => .0, 'max' => .0], $result);
+		$this->_pField->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => true,
+				'fieldname' => 'testField',
+				'type' => 'boolean',
+				'locale' => '',
+			],
+		];
+		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$pDefaultValueReader->expects($this->once())
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->GetConvertedMultiFieldsForAdmin(13, [$this->_pField]);
+		$this->assertEquals(['testField' => [true]], $result);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testGetConvertedMultiFieldsForAdminForNonEmptyTextField()
+	{
+		$this->_pField->setType(FieldTypes::FIELD_TYPE_TEXT);
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Spider Man',
+				'fieldname' => 'testField',
+				'type' => 'text',
+				'locale' => 'native',
+			],
+		];
+		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$pDefaultValueReader->expects($this->once())
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->GetConvertedMultiFieldsForAdmin(13, [$this->_pField]);
+		$this->assertEquals(['testField' => ['native' => 'Spider Man']], $result);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testGetConvertedMultiFieldsForAdminForRegZusatz()
+	{
+		$this->_pField->setType('displayAll');
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Aachen',
+				'fieldname' => 'testField',
+				'type' => 'displayAll',
+				'locale' => '',
+			],
+		];
+		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$pDefaultValueReader->expects($this->once())
+			->method('readDefaultMultiValuesSingleSelect')->will($this->returnValue($row));
+		$result = $this->_pSubject->GetConvertedMultiFieldsForAdmin(13, [$this->_pField]);
+		$this->assertEquals(['testField' => ['Aachen']], $result);
 	}
 }
