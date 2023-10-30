@@ -372,6 +372,7 @@ abstract class AdminPageFormSettingsBase
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws UnknownFieldException
 	 */
 	private function readDefaultValues(): array
 	{
@@ -379,9 +380,9 @@ abstract class AdminPageFormSettingsBase
 		/** @var DefaultValueModelToOutputConverter $pDefaultValueConverter */
 		$pDefaultValueConverter = $this->getContainer()->get(DefaultValueModelToOutputConverter::class);
 
-		foreach ($this->buildFieldsCollectionForCurrentForm()->getAllFields() as $pField) {
-			$result[$pField->getName()] = $pDefaultValueConverter->getConvertedField
-				((int)$this->getListViewId(), $pField);
+		foreach (array_chunk($this->buildFieldsCollectionForCurrentForm()->getAllFields(), 100) as $pField) {
+			$pDefaultFields = $pDefaultValueConverter->getConvertedMultiFieldsForAdmin((int) $this->getListViewId(), $pField);
+			if (count($pDefaultFields)) $result = array_merge($result, $pDefaultFields);
 		}
 		return $result;
 	}
@@ -693,7 +694,7 @@ abstract class AdminPageFormSettingsBase
 		wp_enqueue_script('onoffice-custom-form-label-js');
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 
-		wp_register_script('onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath));
+		wp_register_script('onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath));
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');

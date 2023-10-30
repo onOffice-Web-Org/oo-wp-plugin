@@ -2,3 +2,4 @@
 vendor/
 nbproject/
 build/
+node_modules/
