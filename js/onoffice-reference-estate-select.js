@@ -1,10 +1,8 @@
-jQuery(document).ready(function () {
+jQuery(document).ready(function ($) {
     const HIDE_REFERENCE_ESTATE = '0';
     const SHOW_REFERENCE_ESTATE = '1';
     const SHOW_ONLY_REFERENCE_ESTATE = '2';
-    const mainElement = document.querySelector('select[name=oopluginlistviews-listtype');
     const mainElementShowReferenceEstate = document.querySelector('select[name=oopluginlistviews-showreferenceestate');
-
 
     mainElementShowReferenceEstate.addEventListener('change', function (event) {
         if (mainElementShowReferenceEstate.value === HIDE_REFERENCE_ESTATE) {
