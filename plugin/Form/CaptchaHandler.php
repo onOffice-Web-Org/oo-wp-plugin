@@ -139,7 +139,7 @@ class CaptchaHandler
 		$siteKey = get_option('onoffice-settings-captcha-sitekey', '');
 
 		if ($siteKey !== '') {
-			wp_enqueue_script('onoffice-captchacontrol', plugins_url('/js/onoffice-captchacontrol.js', ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'), null, true);
+			wp_enqueue_script('onoffice-captchacontrol', plugins_url('/dist/onoffice-captchacontrol.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'), null, true);
 			wp_print_scripts('onoffice-captchacontrol');	
 		}
 	}
