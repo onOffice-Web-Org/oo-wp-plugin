@@ -39,7 +39,6 @@ onOffice.ajaxSaver = function(outerDiv) {
 		data.action = onOffice.settings.action;
 		data.nonce = onOffice.settings.nonce;
 		data.values = JSON.stringify(values);
-		var current_screen = onOffice.settings.current_screen;
 		var mergeElement = onOffice.settings.merge;
 		for (var i in mergeElement) {
 			var newKey = mergeElement[i];
@@ -62,7 +61,6 @@ onOffice.ajaxSaver = function(outerDiv) {
 			var message = onOffice.settings[responseMessageKey];
 			var getUrl = window.location.href;
 
-			var getUrlPageEdit = getUrl.split( '&' );
 			if (responseCode === true) {
 				$('#onoffice-notice-wrapper').html('<div class="notice notice-success is-dismissible"><p>' +
 					message + '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>');
