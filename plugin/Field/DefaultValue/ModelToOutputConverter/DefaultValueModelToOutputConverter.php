@@ -90,8 +90,8 @@ class DefaultValueModelToOutputConverter
 					case FieldTypes::isDateOrDateTime($pField->getType()):
 					case FieldTypes::isNumericType($pField->getType()):
 					case $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT:
-          case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT:
-          case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_DATE:
+					case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT:
+					case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_DATE:
 						$pDataModel = $this->convertGeneric($formId, $pField, $rowData);
 						$pDataModels[ $pField->getName() ] = $pDataModel[0] ?? '';
 						break;
@@ -141,8 +141,8 @@ class DefaultValueModelToOutputConverter
 				case FieldTypes::isDateOrDateTime($pField->getType()):
 				case FieldTypes::isNumericType($pField->getType()):
 				case $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT:
-        case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT:
-        case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_DATE:
+				case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT:
+				case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_DATE:
 					$pDataModel = $this->convertGeneric($formId, $pField, $rowData);
 					break;
 				case $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
