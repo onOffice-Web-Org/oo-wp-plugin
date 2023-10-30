@@ -1,0 +1,10 @@
+{
+  "name": "oo-wp-plugin",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node webpack.config.js"
+  },
+  "dependencies": {
+    "terser": "^5.0.0"
+  }
+}

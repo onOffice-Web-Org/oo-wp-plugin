@@ -92,7 +92,7 @@ class TestClassScriptLoaderMapGoogleMaps
 		$this->assertEmpty($this->_pWPScriptStyle->getRegisteredStyles());
 
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredScripts['gmapsinit']['src']);
-		$this->assertStringEndsWith(getcwd().'/js/gmapsinit.js', $registeredScripts['gmapsinit']['src']);
+		$this->assertStringEndsWith(getcwd().'/dist/gmapsinit.min.js', $registeredScripts['gmapsinit']['src']);
 
 		$this->assertEquals('https://maps.googleapis.com/maps/api/js?key=abcdef123', $registeredScripts['google-maps']['src']);
 	}
