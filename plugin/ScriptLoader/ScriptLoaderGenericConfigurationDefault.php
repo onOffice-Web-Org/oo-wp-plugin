@@ -62,7 +62,7 @@ class ScriptLoaderGenericConfigurationDefault
 		$onOfficeStyleUri = $this->getStyleUriByVersion($styleVersion);
         $values []= (new IncludeFileModel($style, $styleVersion, $onOfficeStyleUri));
 		if (Favorites::isFavorizationEnabled()) {
-			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath)))
+			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/dist/favorites.min.js', $pluginPath)))
 				->setDependencies(['jquery']);
 		}
 
