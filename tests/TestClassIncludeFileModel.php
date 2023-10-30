@@ -63,5 +63,7 @@ class TestClassIncludeFileModel
 		$this->assertEquals(['test1', 'test2'], $pIncludeFileModel->getDependencies());
 		$this->assertSame($pIncludeFileModel, $pIncludeFileModel->setLoadInFooter(true));
 		$this->assertTrue($pIncludeFileModel->getLoadInFooter());
+		$this->assertSame($pIncludeFileModel, $pIncludeFileModel->setLoadAsynchronous('defer'));
+		$this->assertEquals('defer', $pIncludeFileModel->getLoadAsynchronous());
 	}
 }
