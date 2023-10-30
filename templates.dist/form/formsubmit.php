@@ -31,13 +31,6 @@ if ($pForm->needsReCaptcha() && $key !== '') {
 			const submitButtonElement = form.querySelector('.submit_button');
 
 			onOffice.captchaControl(form, submitButtonElement);
-
-			const isValid = form.checkValidity();
-			if (isValid) {
-				form.submit();
-			} else {
-				form.reportValidity();
-			}
 		}
 	</script>
 
