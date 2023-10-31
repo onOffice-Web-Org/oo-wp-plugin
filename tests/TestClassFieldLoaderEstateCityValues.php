@@ -132,6 +132,9 @@ class TestClassFieldLoaderEstateCityValues
 		$estateParameters = [
 			'data' => ['ort'],
 			'listlimit' => 500,
+			'filter' => [
+				'veroeffentlichen' => [['op' => '=', 'val' => 1]]
+			]
 		];
 		$pSDKWrapper = new SDKWrapperMocker();
 
