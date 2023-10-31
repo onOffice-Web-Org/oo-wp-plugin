@@ -93,6 +93,7 @@ class FieldLoaderEstateCityValues
 		} elseif ($this->_pShowReferenceEstate === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
 		}
+		$requestParams['filter']['veroeffentlichen'][] = ['op' => '=', 'val' => 1];
 
 		$pApiClientAction = new APIClientActionGeneric
 		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
