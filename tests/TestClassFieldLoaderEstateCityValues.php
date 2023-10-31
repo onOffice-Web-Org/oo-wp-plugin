@@ -133,6 +133,7 @@ class TestClassFieldLoaderEstateCityValues
 			'data' => ['ort'],
 			'listlimit' => 500,
 			'filter' => [
+				'referenz' => [['op' => '=', 'val' => 1]],
 				'veroeffentlichen' => [['op' => '=', 'val' => 1]]
 			]
 		];
@@ -146,7 +147,7 @@ class TestClassFieldLoaderEstateCityValues
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
 		$pContainer->set(SDKWrapper::class, $pSDKWrapper);
-		$this->_pFieldLoader = $pContainer->make(FieldLoaderEstateCityValues::class, ['pShowReferenceEstate' => '1']);
+		$this->_pFieldLoader = $pContainer->make(FieldLoaderEstateCityValues::class, ['pShowReferenceEstate' => '2']);
 	}
 
 

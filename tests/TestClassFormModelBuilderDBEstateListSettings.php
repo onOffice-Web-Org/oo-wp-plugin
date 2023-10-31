@@ -695,4 +695,17 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals($pInputModelDB->getValue(), '1');
 		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getInputModelConvertInputTextToSelectCityField
+	 */
+	public function testGetInputModelConvertInputTextToSelectCityField()
+	{
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+
+		$pInputModelDB = $pInstance->getInputModelConvertInputTextToSelectCityField();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
+		$this->assertEquals([$pInstance, 'callbackValueInputModelConvertInputTextToSelectCityField'], $pInputModelDB->getValueCallback());
+	}
 }
