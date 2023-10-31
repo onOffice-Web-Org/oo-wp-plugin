@@ -154,6 +154,8 @@ class DataListView
 	/** @var bool */
 	private $_showPriceOnRequest = false;
 
+	/** @var string[] */
+	private $_convertTextToSelectForCityField = [];
 
 	/**
 	 *
@@ -408,4 +410,12 @@ class DataListView
 	{
 		$this->_showReferenceEstate = $showReferenceEstate;
 	}
+
+	/** @return array */
+	public function getConvertTextToSelectForCityField(): array
+		{ return $this->_convertTextToSelectForCityField; }
+
+	/** @param array $convertTextToSelectForCityField */
+	public function setConvertTextToSelectForCityField(array $convertTextToSelectForCityField)
+		{ $this->_convertTextToSelectForCityField = $convertTextToSelectForCityField; }
 }

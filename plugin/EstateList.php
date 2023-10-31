@@ -836,6 +836,9 @@ class EstateList
 		$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$pFieldsCollectionBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		if (!empty($this->_pDataView->getConvertTextToSelectForCityField())) {
+			$pFieldsCollectionBuilderShort->addFieldEstateCityValues($pFieldsCollection, $this->getShowReferenceEstate());
+		}
 		$pFieldsCollection->merge
 			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection));
 		$pFieldsCollectionFieldDuplicatorForGeoEstate =

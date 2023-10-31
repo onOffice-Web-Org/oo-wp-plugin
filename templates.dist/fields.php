@@ -64,7 +64,9 @@ if (!function_exists('renderFieldEstateSearch')) {
 			' . ($selectedValue === false ? 'checked' : '') . '>
 		<label for="' . esc_attr($inputName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
 	  </fieldset>';
-		} elseif (
+		} elseif ($inputName === 'ort' && !empty($properties['permittedvalues'])) {
+			echo renderCityField($inputName, $properties);
+		}  elseif (
 			in_array($properties['type'], $multiSelectableTypes) &&
 			$inputName !== 'regionaler_zusatz' &&
 			$inputName != 'country'
@@ -240,5 +242,20 @@ if (!function_exists('renderRegionalAddition')) {
 		$output .= ob_get_clean();
 		$output .= '</select>';
 		return $output;
+	}
+}
+
+if (!function_exists('renderCityField')) {
+	function renderCityField(string $inputName, array $properties): string
+	{
+		$permittedValues = $properties['permittedvalues'];
+		$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_attr($inputName) . '">';
+		$htmlSelect .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $properties["label"])) . '</option>';
+		foreach ($permittedValues as $value) {
+			$htmlSelect .='<option value="' . esc_attr($value) . '">' . esc_attr($value) . '</option>';
+		}
+		$htmlSelect .= '</select>';
+
+		return $htmlSelect;
 	}
 }

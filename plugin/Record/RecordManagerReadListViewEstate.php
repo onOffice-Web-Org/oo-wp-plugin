@@ -138,6 +138,7 @@ class RecordManagerReadListViewEstate
 			$result['filterable'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'filterable');
 			$result['hidden'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'hidden');
 			$result['availableOptions'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'availableOptions');
+			$result['convertTextToSelectForCityField'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'convertTextToSelectForCityField');
 		}
 
 		return $result;
@@ -203,6 +204,7 @@ class RecordManagerReadListViewEstate
 			$result['filterable'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'filterable');
 			$result['hidden'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'hidden');
 			$result['availableOptions'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'availableOptions');
+			$result['convertTextToSelectForCityField'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'convertTextToSelectForCityField');
 
 		}
 

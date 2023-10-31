@@ -31,7 +31,12 @@ onOffice.checkboxAdmin = function() {
 			{
 				element: "input[name^=oopluginfieldconfig-availableOptions]",
 				invert: false,
-				checkOnActive: true
+				checkOnActive: true,
+				checkOnActiveConvertTypeCityField: true
+			},
+			{
+				element: "input[name^=oopluginfieldconfig-convertTextToSelectForCityField]",
+				invert: false
 			}
 		],
 
@@ -53,7 +58,13 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 			var receiver = receivers[i];
 			var receiverElement = mainElement.parent().parent().find(receiver.element);
 			var invert = receiver.invert;
-
+			const hasConvertTextToSelectForCityField = mainElement.parent().parent().find("input[name^=oopluginfieldconfig-convertTextToSelectForCityField]");
+			const hasAvailableOptions = mainElement.parent().parent().find("input[name^=oopluginfieldconfig-availableOptions]");
+			if (hasConvertTextToSelectForCityField.length > 0 && hasAvailableOptions.length > 0 && receiver.checkOnActiveConvertTypeCityField) {
+				receiverElement.prop('disabled', 'disabled');
+				receiverElement[0].checked = true;
+				continue;
+			}
 			if (receiverElement.length) {
 				var isChosen = receiverElement[0].classList.contains("chosen-select");
 				if (mainElement.prop('checked')) {

@@ -186,6 +186,8 @@ abstract class AdminPageEstateListSettingsBase
 			self::ENQUEUE_DATA_MERGE => array(AdminPageSettingsBase::POST_RECORD_ID),
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
+			'label_convert_input_text_to_select_city_field' => __('Display as selection list instead of text input', 'onoffice-for-wp-websites'),
+			'available_options' => __('Hide empty values from onOffice enterprise', 'onoffice-for-wp-websites'),
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 		);
 	}

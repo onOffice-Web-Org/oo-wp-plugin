@@ -280,4 +280,22 @@ class FieldsCollectionBuilderShort
 		$pFieldsCollection->merge($pFieldsCollectionTmp);
 		return $this;
 	}
+
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $showReferenceEstate
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function addFieldEstateCityValues(FieldsCollection $pFieldsCollection, string $pShowReferenceEstate = ''): self
+	{
+		$pFieldLoader = $this->_pContainer->make(FieldLoaderEstateCityValues::class, ['pShowReferenceEstate' => $pShowReferenceEstate]);
+		$pFieldCollectionAddressEstate = $this->_pContainer->get(FieldsCollectionBuilder::class)
+			->buildFieldsCollection($pFieldLoader);
+		$pFieldsCollection->merge($pFieldCollectionAddressEstate);
+		return $this;
+	}
 }
