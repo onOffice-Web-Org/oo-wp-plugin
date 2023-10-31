@@ -128,7 +128,8 @@ class TestClassRecordManagerDuplicateListViewEstate
 				'order' => 1,
 				'filterable' => 0,
 				'hidden' => 0,
-				'availableOptions' => 0
+				'availableOptions' => 0,
+				'convertTextToSelectForCityField' => 0
 			]
 		];
 		$pictureTypeRecordOutput = [
@@ -167,7 +168,8 @@ class TestClassRecordManagerDuplicateListViewEstate
 				'order' => 1,
 				'filterable' => 0,
 				'hidden' => 0,
-				'availableOptions' => 0
+				'availableOptions' => 0,
+				'convertTextToSelectForCityField' => 0
 			]
 		];
 		$pictureTypeRecordOutput = [
