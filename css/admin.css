@@ -516,6 +516,11 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 		width: 100%;
 	}
 
+	.oo-poststuff #post-head-content{
+		max-width: 1000px;
+		width: 100%;
+	}
+
 	#onoffice-ajax #poststuff #post-body.columns-2 {
 		display: inline-block;
 		width: 100%;
@@ -532,14 +537,13 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 	#block-publish {
 		width: calc(100% - 1000px);
-		max-width: 320px;
+		max-width: 280px;
 		min-width: 200px;
 		border: 1px solid #c3c4c7;
 		box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
 		background: #fff;
 		display: inline-block;
 		position: fixed;
-		margin-top: 13px;
 		margin-left: 20px;
 	}
 
