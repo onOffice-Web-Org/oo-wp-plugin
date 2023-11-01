@@ -499,7 +499,7 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 }
 
 @media only screen and (max-width: 1365px) {
-	#block-public .postbox-header {
+	#block-publish .postbox-header {
 		display: none;
 	}
 }
