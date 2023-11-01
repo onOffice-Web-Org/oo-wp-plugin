@@ -497,3 +497,61 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 		white-space: nowrap;
 	}
 }
+
+@media only screen and (max-width: 1365px) {
+	#block-public .postbox-header {
+		display: none;
+	}
+}
+
+@media only screen and (min-width: 1366px) and (max-width: 1440px) {
+	#block-publish {
+		max-width: 230px !important;
+	}
+}
+
+@media only screen and (min-width: 1366px) {
+	.oo-poststuff {
+		display: block;
+		width: 100%;
+	}
+
+	#onoffice-ajax #poststuff #post-body.columns-2 {
+		display: inline-block;
+		width: 100%;
+	}
+
+	.oo-poststuff-estate-detail .viewusage {
+		width: 100%;
+	}
+
+	.oo-poststuff-estate-detail #block-publish,
+	.oo-poststuff-similar-estate #block-publish {
+		margin-top: 0;
+	}
+
+	#block-publish {
+		width: calc(100% - 1000px);
+		max-width: 320px;
+		min-width: 200px;
+		border: 1px solid #c3c4c7;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+		background: #fff;
+		display: inline-block;
+		position: fixed;
+		margin-top: 13px;
+		margin-left: 20px;
+	}
+
+	#block-publish .inside {
+		font-size: 13px;
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+
+	#block-publish p.submit {
+		text-align: left;
+		padding: 10px 10px 10px 10px;
+		margin: 0 !important;
+	}
+}
