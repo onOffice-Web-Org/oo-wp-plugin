@@ -764,8 +764,8 @@ abstract class AdminPageFormSettingsBase
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 		echo '<div id="poststuff" class="oo-poststuff">';
 		echo '<div id="post-head-content">';
-        $pInputModelRenderer->buildForAjax( $pFormViewName );
-        echo '</div>';
+		$pInputModelRenderer->buildForAjax( $pFormViewName );
+		echo '</div>';
 		echo '<div id="post-body" class="metabox-holder columns-'
 		     . ( 1 == get_current_screen()->get_columns() ? '1' : '2' ) . '">';
 		echo '<div class="postbox-container" id="postbox-container-1">';
