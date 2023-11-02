@@ -20,10 +20,8 @@ jQuery(document).ready(function ($) {
 
             if ($(submitButton).is(':visible')) {
                 submitButton.on('click', function () {
-                    if (formElement.checkValidity()) {
-                        submitButton.prop('disabled', true);
-                        submitButton.addClass('onoffice-unclickable-form');
-                    }
+                    submitButton.prop('disabled', true);
+                    submitButton.addClass('onoffice-unclickable-form');
                 });
             }
         });
