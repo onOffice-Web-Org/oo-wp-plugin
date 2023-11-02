@@ -1,4 +1,5 @@
 (() => {
+    const $ = jQuery;
     const estate_refresh_preview = (element, name) => {
         let formData = new FormData(element);
         formData.append('preview_name', name);
