@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.3.1
 Requires PHP: 7.3
-Stable tag: 4.14
+Stable tag: 4.15
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,12 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.15 (2023-10-30) =
+
+**Changed**
+
+* Some changes have been made to improve performance: only loading of required scripts, compressing of scrips, improvment of sending queries 
 
 = 4.14 (2023-09-11) =
 
