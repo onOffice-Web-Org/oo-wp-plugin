@@ -18,9 +18,14 @@ jQuery(document).ready(function ($) {
                 submitInput.prop('disabled', true);
             });
 
-            submitButton.on('click', function () {
-                submitButton.prop('disabled', true);
-            });
+            if ($(submitButton).is(':visible')) {
+                submitButton.on('click', function () {
+                    if (formElement.checkValidity()) {
+                        submitButton.prop('disabled', true);
+                        submitButton.addClass('onoffice-unclickable-form');
+                    }
+                });
+            }
         });
     }
 });
