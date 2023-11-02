@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.14
+Version: 4.15
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -99,7 +99,6 @@ add_action('admin_menu', [$pAdminViewController, 'register_menu']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_ajax']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_css']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
-add_action('wp_enqueue_scripts', [CaptchaDataChecker::class, 'registerScripts']);
 add_action('save_post', [$pDetailViewPostSaveController, 'onSavePost']);
 add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
 add_action('oo_cache_cleanup', function() use ($pDI) {

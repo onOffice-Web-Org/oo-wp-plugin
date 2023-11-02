@@ -7,6 +7,7 @@ jQuery(document).ready(function ($) {
         formElements.forEach((formElement) => {
             let submitted = false;
             const submitButton = $(formElement).find('.submit_button');
+            const submitInput = $(formElement).find('input[type=submit]');
 
             $(formElement).on('submit', function (event) {
                 if (submitted) {
@@ -14,14 +15,17 @@ jQuery(document).ready(function ($) {
                 } else {
                     submitted = true;
                 }
+                submitInput.prop('disabled', true);
             });
 
-            submitButton.on('click', function () {
-                if (formElement.checkValidity()) {
-                    formElement.submit();
-                    submitButton.addClass('onoffice-unclickable-form');
-                }
-            });
+            if ($(submitButton).is(':visible')) {
+                submitButton.on('click', function () {
+                    if (formElement.checkValidity()) {
+                        submitButton.prop('disabled', true);
+                        submitButton.addClass('onoffice-unclickable-form');
+                    }
+                });
+            }
         });
     }
 });

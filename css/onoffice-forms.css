@@ -3,7 +3,10 @@ span.onoffice-pleasefill {
 	margin-right: 5pt;
 }
 
-.onoffice-unclickable-form{
-	pointer-events: none;
+.onoffice-unclickable-form
+.oo-form input[type=submit]:disabled,
+#onoffice-form input[type=submit]:disabled {
+	opacity: 0.5;
 	cursor: not-allowed;
+	pointer-events: none;
 }
