@@ -25,6 +25,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use Parsedown;
 use onOffice\SDK\onOfficeSDK;
@@ -117,6 +118,7 @@ class Form
 
 		$pFormConfigFactory = $this->_pContainer->get(DataFormConfigurationFactory::class);
 		$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
+		$this->renderCaptchaScript($pFormConfig->getCaptcha());
 		$this->_pFieldsCollection = $this->buildFieldsCollectionForForm($pFieldsCollection, $type, $pFormConfig);
 		try {
 			$this->_pFormData = $pFormPost->getFormDataInstance($formName, $this->_formNo);
@@ -591,6 +593,19 @@ class Form
 			$result = $pEstateTitleBuilder->buildTitle($estateId, $format);
 		}
 		return esc_html($result);
+	}
+
+	/**
+	 *
+	 * @param bool $isCaptchaRequired
+	 *
+	 */
+
+	private function renderCaptchaScript(bool $isCaptchaRequired = false)
+	{
+		if ($isCaptchaRequired) {
+			CaptchaHandler::registerScripts();
+		}
 	}
 
 	/**
