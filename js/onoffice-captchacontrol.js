@@ -21,3 +21,16 @@ var onOffice = onOffice || {};
 		return iePosition > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./);
 	};
 })();
+
+jQuery(document).ready(function ($) {
+	function addRecaptchaScript() {
+		if (!$("#recaptcha-script").length) {
+			$("<script>")
+				.attr("src", "https://www.google.com/recaptcha/api.js")
+				.attr("async", false)
+				.attr("id", "recaptcha-script")
+				.appendTo("head");
+		}
+	}
+	$(`#onoffice-form :input, .oo-form :input`).on("focus select2:open", addRecaptchaScript);
+});
