@@ -38,7 +38,7 @@ if ($pForm->needsReCaptcha() && $key !== '') {
 			form.submit();
 		}
 		function submit<?php echo $pFormNo; ?>() {
-			const formNo = <?php echo $pForm->getFormNo(); ?>;
+			const formNo = <?php echo $pFormNo; ?>;
 			const selectorFormById = `form[id="onoffice-form"] input[name="oo_formno"][value="${formNo}"]`;
 			const form = document.querySelector(selectorFormById).parentElement;
 			const submitButtonElement = form.querySelector('.submit_button');
