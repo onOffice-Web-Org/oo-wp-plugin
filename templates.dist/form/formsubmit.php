@@ -26,31 +26,27 @@ if ($pForm->needsReCaptcha() && $key !== '') {
 	$pFormNo = $pForm->getFormNo();
 ?>
 	<script>
-		var submited = false;
 		function submitForm<?php echo $pFormNo; ?>() {
-			if (submited) {
-				return;
-			}
 			const formNo = <?php echo $pFormNo; ?>;
 			const selectorFormById = `form[id="onoffice-form"] input[name="oo_formno"][value="${formNo}"]`;
 			const form = document.querySelector(selectorFormById).parentElement;
-			submited = true;
 			form.submit();
 		}
-		function submit<?php echo $pFormNo; ?>() {
+	</script>
+	<div class="g-recaptcha" data-sitekey="<?php echo esc_attr($key); ?>" 
+		data-callback="submitForm<?php echo $pFormNo; ?>" data-size="invisible"></div>
+	<button class="submit_button">
+		<?php echo esc_html($pForm->getGenericSetting('submitButtonLabel')); ?>
+	</button>
+	<script>
+		(function() {
 			const formNo = <?php echo $pFormNo; ?>;
 			const selectorFormById = `form[id="onoffice-form"] input[name="oo_formno"][value="${formNo}"]`;
 			const form = document.querySelector(selectorFormById).parentElement;
 			const submitButtonElement = form.querySelector('.submit_button');
 			onOffice.captchaControl(form, submitButtonElement);
-		}
+		})();
 	</script>
-
-	<button class="submit_button g-recaptcha" data-sitekey="<?php echo esc_attr($key); ?>" 
-		data-callback="submitForm<?php echo $pFormNo; ?>" data-size="invisible"
-		onClick="submit<?php echo $pFormNo; ?>">
-		<?php echo esc_html($pForm->getGenericSetting('submitButtonLabel')); ?>
-	</button>
 <?php
 } else {
 ?>
