@@ -188,7 +188,7 @@ class AdminPageEstateListSettings
 			$pFormModelGeoFields->addInputModel($pInputModel);
 		}
 
-		$geoNotice = __('At least the following fields must be active: country, radius and city or postcode.', 'onoffice-for-wp-websites');
+		$geoNotice = __('At least city or postcode required.', 'onoffice-for-wp-websites');
 		$pInputModelGeoLabel = new InputModelLabel(null, $geoNotice);
 		$pInputModelGeoLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_ITALIC);
 		$pFormModelGeoFields->addInputModel($pInputModelGeoLabel);
@@ -310,5 +310,6 @@ class AdminPageEstateListSettings
 		wp_enqueue_style('onoffice-multiselect');
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
+		wp_localize_script('admin-js', 'onOffice_loc_settings', ['page' => get_current_screen()->id]);
 	}
 }

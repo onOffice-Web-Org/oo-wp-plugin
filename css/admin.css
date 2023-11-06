@@ -497,3 +497,13 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 		white-space: nowrap;
 	}
 }
+
+input[name=oopluginlistviews-countryactive]:checked::before,
+input[name=oopluginlistviews-radiusactive]:checked::before {
+	filter: brightness(0) saturate(100%) invert(35%) sepia(4%) saturate(967%) hue-rotate(170deg) brightness(91%) contrast(94%);
+}
+
+input[name=oopluginlistviews-countryactive],
+input[name=oopluginlistviews-radiusactive] {
+	pointer-events: none;
+}

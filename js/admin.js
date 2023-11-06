@@ -1,3 +1,5 @@
+var onOffice = onOffice || {};
+onOffice.settings = onOffice_loc_settings;
 jQuery(document).ready(function($){
 	$(document).on('click', '.notice-save-view.notice-dismiss', function () {
 		$(this).parent().remove();
@@ -62,6 +64,23 @@ jQuery(document).ready(function($){
 		$(data).children().attr('typeField', 1);
 		$(this).parent().parent().remove();
 	});
+
+	const editListViewPage = 'admin_page_onoffice-editlistview';
+	if (onOffice.settings.page === editListViewPage) {
+		$('#send_form').on('click', updateRequiredAttributeZipActiveField);
+	}
+	function updateRequiredAttributeZipActiveField() {
+		if ($('#geofields').is(':visible')) {
+			const isCityActive = $('input[name=oopluginlistviews-cityactive]:checked').is(':visible');
+			const isZipActive = $('input[name=oopluginlistviews-zipactive]:checked').is(':visible');
+			$('input[name=oopluginlistviews-zipactive]').attr('required', 'required');
+
+			if (isCityActive || isZipActive) {
+				$('input[name=oopluginlistviews-zipactive]').removeAttr('required');
+			}
+		}
+	}
+
 	var getCheckedFieldButton = function(btn) {
 		var addField = 1;
 		var removeField = 2;
