@@ -87,11 +87,13 @@ class AdminPageEstateUnitSettings
 		$this->addFormModel($pFormModelRecords);
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate('estate');
+		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
 		$pFormModelLayoutDesign = new Model\FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowStatus);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
