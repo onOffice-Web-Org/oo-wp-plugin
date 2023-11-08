@@ -22,6 +22,12 @@ if (onOffice.settings.page === estatePage) {
                 return self.save(this);
             });
 
+            $('td', inlineEdit).on( 'keydown', function(e){
+                if ( e.which === 13 && ! $( e.target ).hasClass( 'cancel' ) ) {
+                    return self.save(this);
+                }
+            });
+
             $("#the-list").on("click", ".editinline", function () {
                 $(this).attr("aria-expanded", "true");
                 self.quickEdit(this);
