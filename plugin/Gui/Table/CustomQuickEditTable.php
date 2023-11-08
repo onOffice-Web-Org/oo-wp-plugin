@@ -116,7 +116,7 @@ class CustomQuickEditTable
 		$html = '<fieldset class="inline-edit-col-'.$classStyle.'">';
 		$html .= '<div class="inline-edit-col">';
 		$html .= '<label class="alignleft" for="' . esc_attr($fieldName) . '">';
-		$html .= '<span class="title">'. esc_html($fieldConfig['name']) .'</span>';
+		$html .= '<span class="title" style="width: 7em">'. esc_html($fieldConfig['name']) .'</span>';
 		$html .= '<select name="' . esc_attr($fieldName) . '" id="' . esc_attr($fieldName) . '" value="">';
 
 		if (isset($fieldConfig['default']) && is_array($fieldConfig['default'])) {
@@ -143,9 +143,9 @@ class CustomQuickEditTable
 		$html = '<fieldset class="inline-edit-col-'.$classStyle.'">';
 		$html .= '<div class="inline-edit-col">';
 		$html .= '<label>';
-		$html .= '<span class="title">'. esc_html($fieldConfig['name']) .'</span>';
+		$html .= '<span class="title" style="width: 7em">'. esc_html($fieldConfig['name']) .'</span>';
 		$html .= '<span class="input-text-wrap">';
-		$html .= '<input type="text" name=' . esc_attr($fieldName) . ' id="' . esc_attr($fieldConfig['name']) . '" value="">';
+		$html .= '<input type="text" style="width: 90%" name=' . esc_attr($fieldName) . ' id="' . esc_attr($fieldConfig['name']) . '" value="">';
 		$html .= '</span>';
 		$html .= '</label>';
 		$html .= '</div>';

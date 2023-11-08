@@ -497,9 +497,3 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 		white-space: nowrap;
 	}
 }
-.inline-edit-row .input-text-wrap input[type=text]{
-	width: 90%;
-}
-.inline-edit-col label span.title{
-	width: 7em !important;
-}
