@@ -198,7 +198,7 @@ abstract class ListTable extends WP_List_Table
 						<td colspan="<?php echo $this->get_column_count(); ?>">
 							<div class="inline-edit-wrapper">
 								<legend class="inline-edit-legend"><?php _e('Quick Edit'); ?></legend>
-								<?php echo $html;?>
+								<?php echo $html; ?>
 								<div class="submit inline-edit-save" style="justify-content: space-between">
 									<button type="button" class="button cancel"><?php _e('Cancel'); ?></button>
 									<input type="hidden" name="post_view" value="list">

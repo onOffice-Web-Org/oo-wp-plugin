@@ -126,7 +126,7 @@ if (onOffice.settings.page === estatePage) {
         }
         if (fieldName === 'name') {
             const element = rowElement.find('.shortcode');
-            updateShortCode(element, value);
+            updateShortCodeField(element, value);
         }
         const element = rowElement.find('.' + fieldName);
         const parts = element.html()?.split(/(<[^>]+>)/);
@@ -134,7 +134,7 @@ if (onOffice.settings.page === estatePage) {
         element.html(result);
     }
 
-    function updateShortCode(element, value) {
+    function updateShortCodeField(element, value) {
         const shortcode = element.html();
         const parts = shortcode.split(/(<[^>]+>)/);
         parts[1] = parts[1].replace(/(&quot;)([^&]+)(&quot;)/, '$1' + value + '$3');

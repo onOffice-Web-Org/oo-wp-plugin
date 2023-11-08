@@ -150,7 +150,7 @@ class RecordManagerUpdateListViewEstate
 	 * @param array $row
 	 * @return bool
 	 */
-	public function updateDataByRow(array $row): bool
+	private function updateDataByRow(array $row): bool
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();

@@ -243,11 +243,11 @@ class EstateListTable extends ListTable implements QuickEditTable
 				self::KEY_TYPE => InputModelOption::HTML_TYPE_SELECT
 			],
 			'template' => [
-				self::KEY_NAME => __('Templates', 'onoffice-for-wp-websites'),
+				self::KEY_NAME => __('Template', 'onoffice-for-wp-websites'),
 				self::KEY_DEFAULT => [],
 				self::KEY_TYPE => InputModelOption::HTML_TYPE_SELECT,
 				self::KEY_MODULE => onOfficeSDK::MODULE_ESTATE
-			],
+			]
 		];
 	}
 
@@ -275,7 +275,7 @@ class EstateListTable extends ListTable implements QuickEditTable
 			'name' => $post->name,
 			'template' => $post->template,
 			'filterId' => $post->filterId,
-			'list_type' => $post->list_type,
+			'list_type' => $post->list_type
 		);
 
 		?>
