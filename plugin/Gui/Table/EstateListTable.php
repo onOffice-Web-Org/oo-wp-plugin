@@ -21,14 +21,19 @@
 
 namespace onOffice\WPlugin\Gui\Table;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\Controller\Exception\UnknownFilterException;
+use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
+use onOffice\WPlugin\Gui\Table\CustomQuickEditTable;
+use onOffice\WPlugin\Gui\Table\QuickEditTable;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
+use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use WP_List_Table;
 use function __;
@@ -44,7 +49,7 @@ use function wp_nonce_url;
  *
  */
 
-class EstateListTable extends ListTable
+class EstateListTable extends ListTable implements QuickEditTable
 {
 	/** @var int */
 	private $_itemsPerPage = null;
@@ -215,6 +220,72 @@ class EstateListTable extends ListTable
 
 
 	/**
+	 * @return array
+	 * @throws UnknownModuleException
+	 */
+
+	public function getFieldListShowInQuickEdit(): array
+	{
+		return [
+			'name' => [
+				self::KEY_NAME => __('List name', 'onoffice-for-wp-websites'),
+				self::KEY_DEFAULT => [],
+				self::KEY_TYPE => InputModelOption::HTML_TYPE_TEXT
+			],
+			'list_type' => [
+				self::KEY_NAME => __('List type', 'onoffice-for-wp-websites'),
+				self::KEY_DEFAULT => FormModelBuilderDBEstateListSettings::getListViewLabels(),
+				self::KEY_TYPE => InputModelOption::HTML_TYPE_SELECT
+			],
+			'filterId' => [
+				self::KEY_NAME => __('Selected filter', 'onoffice-for-wp-websites'),
+				self::KEY_DEFAULT => array(0 => '') + $this->readFilters(onOfficeSDK::MODULE_ESTATE),
+				self::KEY_TYPE => InputModelOption::HTML_TYPE_SELECT
+			],
+			'template' => [
+				self::KEY_NAME => __('Templates', 'onoffice-for-wp-websites'),
+				self::KEY_DEFAULT => [],
+				self::KEY_TYPE => InputModelOption::HTML_TYPE_SELECT,
+				self::KEY_MODULE => onOfficeSDK::MODULE_ESTATE
+			],
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+
+	private function readFilters($module)
+	{
+		try {
+			$pFilterCall = new FilterCall($module);
+			return $pFilterCall->getFilters();
+		} catch (APIClientCredentialsException $pCredentialsException) {
+			return [];
+		}
+	}
+
+	/**
+	 * @param mixed $post
+	 * @return void
+	 */
+	public function single_row($post) {
+		$post = get_post($post);
+		$inlineData = array(
+			'name' => $post->name,
+			'template' => $post->template,
+			'filterId' => $post->filterId,
+			'list_type' => $post->list_type,
+		);
+
+		?>
+		<tr id="post-<?php echo $post->ID; ?>" class="inline-edit-row-data" data-inline-data="<?php echo esc_attr(json_encode($inlineData)); ?>">
+			<?php parent::single_row_columns($post); ?>
+		</tr>
+		<?php
+	}
+
+	/**
 	 *
 	 * @return array
 	 *
@@ -282,6 +353,10 @@ class EstateListTable extends ListTable
 
 		$actions = [];
 		$actions['edit'] = '<a href="'.esc_attr($editLink).'">'.esc_html__('Edit').'</a>';
+		$actions['quick-edit'] = sprintf(
+			'<button type="button" class="button-link editinline" aria-label="%1$s" aria-expanded="false">%1$s</button>',
+			__('Quick Edit', 'onoffice-for-wp-websites')
+		);
 		$actions['duplicate'] = "<a class='button-duplicate' href='"
 			. esc_attr(wp_nonce_url(admin_url('admin.php') . '?page=onoffice-estates&action=bulk_duplicate&listVewId=' . $pItem->ID,
 				'bulk-estatelists'))
@@ -293,6 +368,20 @@ class EstateListTable extends ListTable
 			/* translators: %s is the name of the list view. */
 			__("You are about to delete the listview '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice-for-wp-websites'), $pItem->name))
 			."' ) ) { return true;}return false;\">" . esc_html__('Delete') . "</a>";
+
 		return $this->row_actions($actions);
+	}
+
+	/**
+	 * @param string $html
+	 * @return void
+	 */
+	public function inline_edit(string $html = '') {
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pDI = $pContainerBuilder->build();
+		$customQuickEditTable = $pDI->make(CustomQuickEditTable::class, ['field' => $this->getFieldListShowInQuickEdit()]);
+		$html = $customQuickEditTable->renderTemplateQuickEdit();
+		parent::inline_edit($html);
 	}
 }

@@ -66,6 +66,7 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
+use onOffice\WPlugin\Record\RecordManagerUpdateListViewEstate;
 
 const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
 
@@ -109,6 +110,7 @@ add_action('init', [$pAdminViewController, 'onInit']);
 add_action('init', function() use ($pAdminViewController) {
 	$pAdminViewController->disableHideMetaboxes();
 }, 11);
+add_action('init', 'register_ajax_actions');
 add_action('admin_init', [$pAdminViewController, 'add_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 add_action('admin_init', [$pDetailViewPostSaveController, 'getAllPost']);
@@ -421,5 +423,29 @@ function filter_script_loader_tag($tag, $handle) {
 	}
 	return $tag;
 }
+
+function register_ajax_actions() {
+	$ajax_actions = array(
+		'update_estate_list_view' => 'update_estate_list_view',
+	);
+
+	foreach ($ajax_actions as $action => $callback) {
+		add_action("wp_ajax_$action", function () use ($callback) {
+			call_user_func($callback);
+		});
+	}
+}
+
+function update_estate_list_view() {
+	global $pDI;
+	$pRecordManagerUpdateListViewEstate = $pDI->make(RecordManagerUpdateListViewEstate::class, ['recordId' => $_POST['record_id']]);
+	$result = $pRecordManagerUpdateListViewEstate->updateEstateListViewItem($_POST);
+	$response = [
+		'success' => $result,
+		'data' => $_POST
+	];
+	echo json_encode($response);
+	die();
+};
 
 return $pDI;

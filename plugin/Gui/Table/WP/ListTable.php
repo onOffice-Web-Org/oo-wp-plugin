@@ -184,4 +184,40 @@ abstract class ListTable extends WP_List_Table
 		return $recordHandled;
 	}
 
+	/**
+	 * @param string $html
+	 * @return void
+	 */
+	public function inline_edit(string $html) {
+		$screen = $this->screen;
+		?>
+		<form method="post">
+			<table id="inlineedit" style="display:none">
+				<tbody>
+					<tr id="<?php echo 'inline-edit'; ?>" class="inline-edit-row inline-edit-row-page quick-edit-row quick-edit-row-page">
+						<td colspan="<?php echo $this->get_column_count(); ?>">
+							<div class="inline-edit-wrapper">
+								<legend class="inline-edit-legend"><?php _e('Quick Edit'); ?></legend>
+								<?php echo $html;?>
+								<div class="submit inline-edit-save" style="justify-content: space-between">
+									<button type="button" class="button cancel"><?php _e('Cancel'); ?></button>
+									<input type="hidden" name="post_view" value="list">
+									<input type="hidden" name="screen" value="<?php echo esc_attr($screen->id); ?>">
+									<div>
+										<?php wp_nonce_field('inlineeditnonce', '_inline_edit', false); ?>
+										<span class="spinner"></span>
+										<button type="button" class="button button-primary save"><?php _e('Update'); ?></button>
+									</div>
+									<div class="notice notice-error notice-alt inline hidden">
+										<p class="error"></p>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+		<?php
+	}
 }

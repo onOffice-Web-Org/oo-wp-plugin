@@ -124,4 +124,42 @@ class RecordManagerUpdateListViewEstate
 
 		return $result !== false;
 	}
+
+	/**
+	 * @param array $recordData
+	 * @return bool
+	 */
+	public function updateEstateListViewItem(array $recordData) {
+		if (!empty(trim($recordData['name']))) {
+			$recordData['name'] = preg_replace('/[^a-zA-Z0-9äÄöÖüÜß:_ \-]/u', '', $recordData['name']);
+		} else {
+			return false;
+		}
+
+		$row = [
+			'name' => $recordData['name'],
+			'filterId' => $recordData['filterId'],
+			'list_type' => $recordData['list_type'],
+			'template' => $recordData['template']
+		];
+
+		return $this->updateDataByRow($row);
+	}
+
+	/**
+	 * @param array $row
+	 * @return bool
+	 */
+	public function updateDataByRow(array $row): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$whereEstateConfigTable = ['listview_id' => $this->getRecordId()];
+		$suppressErrors = $pWpDb->suppress_errors();
+		$result = $pWpDb->update($prefix.self::TABLENAME_LIST_VIEW, $row, $whereEstateConfigTable);
+		$pWpDb->suppress_errors($suppressErrors);
+
+		return $result !== false;
+	}
 }

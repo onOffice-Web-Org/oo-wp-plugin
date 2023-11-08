@@ -61,6 +61,9 @@ class AdminPageEstateList
 		echo '<form method="post">';
 		$this->_pEstateListTable->display();
 		echo '</form>';
+		if($this->_pEstateListTable->has_items()){
+			$this->_pEstateListTable->inline_edit();
+		}
 		echo '</p>';
 	}
 
@@ -99,11 +102,24 @@ class AdminPageEstateList
 			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice-for-wp-websites'),
 		);
 
+		wp_register_script('onoffice-quick-edit', plugins_url('/dist/onoffice-quick-edit.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
+		wp_enqueue_script('onoffice-quick-edit');
+		wp_localize_script('onoffice-quick-edit', 'onOffice_loc_settings', array(
+			'ajaxurl' => admin_url('admin-ajax.php'),
+			'page' => get_current_screen()->id,
+			'error' => esc_html__('There was a problem saving the view. Please make sure the name of the view is unique, even across all estate list types.', 'onoffice-for-wp-websites')
+		));
 		wp_register_script('onoffice-bulk-actions', plugins_url('/dist/onoffice-bulk-actions.min.js',
 			ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
 
 		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
 		wp_enqueue_script('onoffice-bulk-actions');
+
+		wp_register_script('oo-sanitize-shortcode-name',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-sanitize-shortcode-name.min.js',
+			['jquery'], '', true);
+		wp_enqueue_script('oo-sanitize-shortcode-name');
+		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'name']);
 
 		wp_register_script( 'oo-copy-shortcode',
 			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-copycode.min.js',
