@@ -86,8 +86,6 @@ Start editing inside the `onoffice-personalized` folder.
 
 * Bugs that prevented forms from being sent
 
-== Changelog ==
-
 = 4.15 (2023-10-30) =
 
 **Changed**
