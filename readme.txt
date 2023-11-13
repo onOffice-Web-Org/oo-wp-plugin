@@ -76,6 +76,18 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.15.1 (2023-11-13) =
+
+**Changed**
+
+* reCAPTCHA is only loaded on form pages
+
+**Fixed**
+
+* Bugs that prevented forms from being sent
+
+== Changelog ==
+
 = 4.15 (2023-10-30) =
 
 **Changed**
