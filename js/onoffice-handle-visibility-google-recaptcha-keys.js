@@ -1,6 +1,5 @@
 jQuery(document).ready(function ($) {
 	function showOrHiddenGoogleRecaptchaKey(inputSelector, toggleSelector) {
-		console.log(111111);
 		const inputElement = $(inputSelector);
 		const toggleElement = $(toggleSelector);
 
