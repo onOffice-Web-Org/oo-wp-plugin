@@ -327,8 +327,18 @@ function update_status_close_action_button_option()
 	echo true;
 	wp_die();
 }
+
+function delete_google_recaptcha_keys()
+{
+    update_option('onoffice-settings-captcha-sitekey', '');
+    update_option('onoffice-settings-captcha-secretkey', '');
+    echo true;
+    wp_die();
+}
+
 add_action('wp_ajax_update_active_plugin_seo_option', 'update_status_close_action_button_option');
 add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
+add_action('wp_ajax_delete_google_recaptcha_keys', 'delete_google_recaptcha_keys');
 
 add_action('wp', function () {
 	if (!get_option('add-detail-posts-to-rewrite-rules')) {

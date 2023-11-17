@@ -77,6 +77,12 @@ abstract class InputModelBase
 
 	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
 
+	/** */
+	const HTML_TYPE_PASSWORD = 'password';
+
+	/** */
+	const HTML_TYPE_DELETE_RECAPTCHA_BUTTON = 'buttonDeleteKey';
+
 	/** @var string */
 	private $_name = null;
 
