@@ -518,22 +518,15 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 }
 
 .oo-google-recaptcha-key > button {
+	position: absolute;
+	top: 0;
+	right: 10px;
 	background: none !important;
 	border: 1px solid transparent !important;
 	box-shadow: none;
-	font-size: 14px;
-	line-height: 2;
 	width: 40px;
 	height: 30px;
 	min-width: 40px;
-	min-height: 30px;
-	margin: 0;
-	padding: 5px 9px;
-	position: absolute;
-	right: 10px;
-	top: 0;
-	color: #2271b1;
-	vertical-align: top;
 }
 
 .oo-google-recaptcha-key > button:focus {

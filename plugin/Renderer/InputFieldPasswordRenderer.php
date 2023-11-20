@@ -40,7 +40,7 @@ class InputFieldPasswordRenderer extends InputFieldRenderer
 	public function __construct($type, $name, $value = null)
 	{
 		if (!in_array($type, array('password'))) {
-			throw new Exception(' wrong type!');
+			throw new Exception('wrong type!');
 		}
 		parent::__construct($type, $name, $value);
 	}
