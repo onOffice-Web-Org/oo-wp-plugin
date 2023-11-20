@@ -45,7 +45,7 @@ class TestClassInputFieldPasswordRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-secretkey" value="" id="password_1" ><button type="button" class="button" data-toggle="0">
+		$this->assertEquals('<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-secretkey" value="" id="password_3" ><button type="button" class="button" data-toggle="0">
 				<span class="dashicons dashicons-visibility oo-icon-eye-secret-key" aria-hidden="true"></span> 
 				</button></div>', $output);
 	}
@@ -59,7 +59,7 @@ class TestClassInputFieldPasswordRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-sitekey" value="" id="password_2" ><button type="button" class="button" data-toggle="0">
+		$this->assertEquals('<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-sitekey" value="" id="password_4" ><button type="button" class="button" data-toggle="0">
 				<span class="dashicons dashicons-visibility oo-icon-eye-site-key" aria-hidden="true"></span> 
 				</button></div>', $output);
 	}
