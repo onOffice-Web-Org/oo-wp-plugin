@@ -336,7 +336,7 @@ class AdminViewController
 
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);
-			if ($pObject !== null) {
+			if ($pObject !== null && method_exists($pObject, 'doExtraEnqueues')) {
 				$pObject->doExtraEnqueues();
 			}
 		}
