@@ -299,4 +299,12 @@ class EstateFiles
 	{
 		return $this->_estateFiles[$estateId][$imageId] ?? [];
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getEstateFileInformation(): array
+	{
+		return $this->_estateFiles;
+	}
 }

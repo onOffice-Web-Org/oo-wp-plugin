@@ -49,11 +49,13 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use onOffice\WPlugin\WP\WPPageWrapper;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\GenerateMetadataSocial;
 use function esc_url;
 use function get_page_link;
 use function home_url;
@@ -507,6 +509,16 @@ class EstateList
 					? $this->limit_characters($recordModified["objektbeschreibung"]) : null) . '" />';
 			} );
 		}
+
+		$openGraphStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-opengraph');
+		$twitterCardStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-twittercards');
+		if ($checkEstateIdRequestGuard && $openGraphStatus) {
+			$this->addMetaTags(GenerateMetaDataSocial::OPEN_GRAPH_KEY, $recordModified);
+		}
+		if ($checkEstateIdRequestGuard && $twitterCardStatus) {
+			$this->addMetaTags(GenerateMetaDataSocial::TWITTER_KEY, $recordModified);
+		}
+
 		$recordModified = new ArrayContainerEscape($recordModified);
 		if ($recordModified['multiParkingLot']) {
 			$parking = new FieldParkingLot();
@@ -917,6 +929,100 @@ class EstateList
 			wp_enqueue_style('slick');
 			wp_enqueue_style('slick-theme');
 		}
+	}
+
+	/**
+	 * @param string $keySocial
+	 * @param array $recordModified
+	 */
+	private function addMetaTags(string $keySocial, array $recordModified)
+	{
+		$pGenerateMetaDataSocial = $this->_pEnvironment->getContainer()->get(GenerateMetaDataSocial::class);
+		$estateInformationForMetaData = $this->getEstateInformationForMetaData($recordModified);
+		$metaData = [];
+
+		if ($keySocial === GenerateMetaDataSocial::OPEN_GRAPH_KEY) {
+			$metaData = $pGenerateMetaDataSocial->generateMetaDataSocial($estateInformationForMetaData, [GenerateMetaDataSocial::OPEN_GRAPH_KEY]);
+		}
+
+		if ($keySocial === GenerateMetaDataSocial::TWITTER_KEY) {
+			$metaData = $pGenerateMetaDataSocial->generateMetaDataSocial($estateInformationForMetaData, [GenerateMetaDataSocial::TWITTER_KEY]);
+		}
+
+		if (!empty($metaData)) {
+			$this->addMetaTagsToWpHead($metaData, $keySocial);
+		}
+	}
+
+	/**
+	 * @param array $metaData
+	 * @param string $keySocial
+	 * @return void
+	 */
+	private function addMetaTagsToWpHead(array $metaData, string $keySocial)
+	{
+		add_action('wp_head', function () use ($metaData, $keySocial) {
+			foreach ($metaData as $metaKey => $metaValue) {
+				if ($keySocial === GenerateMetaDataSocial::TWITTER_KEY) {
+					echo '<meta name="'.GenerateMetaDataSocial::TWITTER_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '" />';
+				} elseif ($keySocial === GenerateMetaDataSocial::OPEN_GRAPH_KEY) {
+					echo '<meta property="'.GenerateMetaDataSocial::OPEN_GRAPH_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '">';
+				}
+			}
+		});
+	}
+
+	/**
+	 * @param array $recordModified
+	 * @return array
+	 */
+	private function getEstateInformationForMetaData(array $recordModified): array
+	{
+		$image = $this->getImageForMetaData();
+		$title = $recordModified['objekttitel'] ?? '';
+		$url = $this->getEstateLink() ?? '';
+		$description = $recordModified['objektbeschreibung'] ?? '';
+
+		return [
+			'title' => $title,
+			'url' => $url,
+			'description' => $description,
+			'image' => $image
+		];
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getImageForMetaData(): string
+	{
+		$imageTypePriority = [
+			ImageTypes::TITLE,
+			ImageTypes::PHOTO,
+			ImageTypes::PHOTO_BIG,
+			ImageTypes::GROUNDPLAN,
+			ImageTypes::PANORAMA,
+			ImageTypes::LOCATION_MAP,
+			ImageTypes::ENERGY_PASS_RANGE
+		];
+
+		$estateFileInformation = $this->_pEstateFiles->getEstateFileInformation();
+		$image = '';
+
+		$estateFiles = $estateFileInformation[$this->_currentEstate['id']] ?? [];
+
+		foreach ($estateFiles as $estateFile) {
+			$type = $estateFile['type'];
+			if (in_array($type, $imageTypePriority)) {
+				$index = array_search($type, $imageTypePriority);
+				if ($index === 0) {
+					$image = $this->getEstatePictureUrl($estateFile['id']);
+					break;
+				}
+			}
+		}
+		
+		return $image;
 	}
 
 	/**

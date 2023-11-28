@@ -264,6 +264,11 @@ class InputModelRenderer
 					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
 				}
 				break;
+
+			case InputModelOption::HTML_TYPE_TOGGLE_SWITCH:
+				$pInstance = new InputFieldToggleSwitchRenderer('checkbox', $elementName, $pInputModel->getValuesAvailable());
+				$pInstance->setCheckedValues($pInputModel->getValue());
+				break;
 		}
 
 		if ($pInstance !== null) {
@@ -305,6 +310,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_NUMBER:
 			case InputModelOption::HTML_TYPE_EMAIL:
 			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
+			case InputModelOption::HTML_TYPE_TOGGLE_SWITCH:
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}
