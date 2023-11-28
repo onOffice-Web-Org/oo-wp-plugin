@@ -55,7 +55,6 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use onOffice\WPlugin\WP\WPPageWrapper;
 use onOffice\WPlugin\WP\WPQueryWrapper;
-use onOffice\WPlugin\GenerateMetadataSocial;
 use function esc_url;
 use function get_page_link;
 use function home_url;
