@@ -27,12 +27,12 @@ class InputFieldToggleSwitchRenderer extends InputFieldRenderer
 	 *
 	 * @param string $type
 	 * @param string $name
-	 * @param string $value
+	 * @param mixed $value
 	 *
 	 */
-	public function __construct(string $type, string $name, string $value)
+	public function __construct(string $type, string $name, $value)
 	{
-		parent::__construct('checkbox', $name, $value);
+		parent::__construct($type, $name, $value);
 	}
 
 	public function render()
