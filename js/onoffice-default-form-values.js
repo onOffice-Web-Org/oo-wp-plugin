@@ -68,7 +68,6 @@ onOffice.default_values_input_converter = function () {
             var clone = mainInput.cloneNode(true);
             clone.id = 'defaultvalue-lang-' + language;
             clone.name = 'defaultvalue-lang[' + fieldname + '][' + language + ']';
-            clone.style.width = '100%';
             clone.style.marginLeft = '20px';
             clone.value = '';
             return clone;
@@ -102,9 +101,7 @@ onOffice.default_values_input_converter = function () {
 
         function generateParagraph(label, clone, deleteButton) {
             var paragraph = document.createElement('p');
-            paragraph.classList = ['wp-clearfix'];
-            paragraph.style.display = 'inline-flex';
-            paragraph.style.width = '100%';
+            paragraph.classList = ['wp-clearfix custom-input-field custom-label-language'];
             paragraph.appendChild(label);
             paragraph.appendChild(clone);
             paragraph.appendChild(deleteButton);
@@ -217,6 +214,7 @@ onOffice.default_values_input_converter = function () {
         mainInputClone.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + '][max]';
         mainInput.parentElement.appendChild(labelUpTo);
         mainInput.parentElement.appendChild(mainInputClone);
+        mainInput.parentElement.classList.add('custom-from-to-input');
         var predefinedValuesIsObject = (typeof predefinedValues[fieldName] === 'object') &&
             !Array.isArray(predefinedValues[fieldName]);
 
@@ -232,7 +230,7 @@ onOffice.js_field_count = onOffice.js_field_count || 0;
 document.addEventListener("addFieldItem", function(e) {
     var fieldName = e.detail.fieldname;
     var p = document.createElement('p');
-    p.classList.add(['wp-clearfix']);
+    p.classList.add('wp-clearfix', 'custom-input-field', 'custom-label-language');
     var fieldDefinition = getFieldDefinition(fieldName);
 
     if (['varchar', 'text',

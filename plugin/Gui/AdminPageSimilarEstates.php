@@ -122,7 +122,7 @@ class AdminPageSimilarEstates
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
-		echo '<div id="poststuff">';
+		echo '<div id="poststuff" class="oo-poststuff">';
 		$pageId = $pDataSimilarView->getPageId();
 
 		echo '<div id="post-body" class="metabox-holder columns-'
