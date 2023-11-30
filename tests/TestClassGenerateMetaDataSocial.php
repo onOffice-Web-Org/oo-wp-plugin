@@ -32,7 +32,7 @@ class TestClassGenerateMetaDataSocial extends WP_UnitTestCase
 	/** @var array */
 	private $_estateData = [
 		'title' => 'Demo Test Title Open Graph and Twitter Cards',
-		'description' => 'Demo Test Class GenerateMetaDataSocial',
+		'description' => 'The sun-kissed beach was a veritable haven. Soft, white sand stretched lazily from one end of the coastline to the other, inviting visitors to take off their shoes and dip their toes in the cool water.Warm sunshine beat down on my skin as I walked along the smooth shoreline, enjoying the salty ocean breeze that greeted me with each step. In the distance, I could see boats anchored in the harbour, their masts swaying gracefully with the rhythm of the waves.',
 		'image' => 'https://link-cover-image/photo/house.jpg',
 		'url' => 'https://www.example.com/estate-detail'
 	];
@@ -42,13 +42,20 @@ class TestClassGenerateMetaDataSocial extends WP_UnitTestCase
 	 */
 	public function testGenerateOpenGraphData()
 	{
+		$expectOutput = [
+			'title' => 'Demo Test Title Open Graph and Twitter Cards',
+			'description' => 'The sun-kissed beach was a veritable haven. Soft, white sand stretched lazily from one end of the coastline to the other, inviting visitors to take off their shoes and dip their toes in the cool water.Warm sunshine beat down on my skin as I walked along the smooth shoreline, enjoying the salty ocean',
+			'image' => 'https://link-cover-image/photo/house.jpg',
+			'url' => 'https://www.example.com/estate-detail'
+		];
+
 		$pGenerateMetaData = new GenerateMetaDataSocial();
 		$openGraphData = $pGenerateMetaData->generateMetaDataSocial($this->_estateData, [GenerateMetaDataSocial::OPEN_GRAPH_KEY]);
-		$this->assertCount(7, $openGraphData);
-		$this->assertEquals($this->_estateData['title'], $openGraphData['title']);
-		$this->assertEquals($this->_estateData['description'], $openGraphData['description']);
-		$this->assertEquals($this->_estateData['image'], $openGraphData['image']);
-		$this->assertEquals($this->_estateData['url'], $openGraphData['url']);
+		$this->assertCount(9, $openGraphData);
+		$this->assertEquals($expectOutput['title'], $openGraphData['title']);
+		$this->assertEquals($expectOutput['description'], $openGraphData['description']);
+		$this->assertEquals($expectOutput['image'], $openGraphData['image']);
+		$this->assertEquals($expectOutput['url'], $openGraphData['url']);
 		$this->assertEquals('website', $openGraphData['type']);
 		$this->assertEquals(get_locale(), $openGraphData['locale']);
 	}
@@ -58,11 +65,17 @@ class TestClassGenerateMetaDataSocial extends WP_UnitTestCase
 	 */
 	public function testGenerateTwitterCardData()
 	{
+		$expectOutput = [
+			'title' => 'Demo Test Title Open Graph and Twitter Cards',
+			'description' => 'The sun-kissed beach was a veritable haven. Soft, white sand stretched lazily from one end of the coastline to the other, inviting visitors to take off their shoes and dip their toes in the cool',
+			'image' => 'https://link-cover-image/photo/house.jpg'
+		];
+		
 		$pGenerateMetaData = new GenerateMetaDataSocial();
 		$openGraphData = $pGenerateMetaData->generateMetaDataSocial($this->_estateData, [GenerateMetaDataSocial::TWITTER_KEY]);
 		$this->assertCount(3, $openGraphData);
-		$this->assertEquals($this->_estateData['title'], $openGraphData['title']);
-		$this->assertEquals($this->_estateData['description'], $openGraphData['description']);
-		$this->assertEquals($this->_estateData['image'], $openGraphData['image']);
+		$this->assertEquals($expectOutput['title'], $openGraphData['title']);
+		$this->assertEquals($expectOutput['description'], $openGraphData['description']);
+		$this->assertEquals($expectOutput['image'], $openGraphData['image']);
 	}
 }
