@@ -75,12 +75,13 @@ class EstateIdRequestGuard
 	 *
 	 * @param  int  $estateId
 	 * @param  Redirector  $pRedirector
+	 * @param bool $pEstateRedirection
 	 *
 	 * @return void
 	 */
 
-	public function estateDetailUrlChecker( int $estateId, Redirector $pRedirector ) {
+	public function estateDetailUrlChecker( int $estateId, Redirector $pRedirector, bool $pEstateRedirection ) {
 		$estateTitle = $this->_estateData->getValue( 'objekttitel' );
-		$pRedirector->redirectDetailView( $estateId, $estateTitle );
+		$pRedirector->redirectDetailView($estateId, $estateTitle, $pEstateRedirection);
 	}
 }
