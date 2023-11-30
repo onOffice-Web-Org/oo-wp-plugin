@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirect</title>
+</head>
+<body>
+    <script>
+        window.onload = function() {
+            var userLang = navigator.language || navigator.userLanguage;
+            if (userLang.startsWith('en')) {
+                window.location.href = 'https://de.enterprisehilfe.onoffice.com/help_entries/duplicates/?lang=en';
+            } else if (userLang.startsWith('es')) {
+                window.location.href = 'https://de.enterprisehilfe.onoffice.com/help_entries/duplicates/?lang=es';
+            } else {
+                window.location.href = 'https://de.enterprisehilfe.onoffice.com/help_entries/duplicates';
+            }
+        };
+    </script>
+</body>
+</html>

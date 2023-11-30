@@ -161,6 +161,7 @@ class FormPostInterest
 		$message = $values['message'] ?? '';
 		$message .= "\nSuchkriterien des Interessenten:\n".
 					"$searchCriterias";
+		$message .= "\nHow to search and update duplicates in onOffice enterprise:\n". plugins_url('plugin/Gui/resource/LinkGuideCheckDuplicate.html', ONOFFICE_PLUGIN_DIR . '/index.php');
 		$addressData = $pFormData->getAddressData( $this->getFieldsCollection() );
 		$requestParams = [
 			'addressdata' => $addressData,
