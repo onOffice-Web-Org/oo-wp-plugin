@@ -246,8 +246,7 @@ class GenerateMetaDataSocial
 	private function generateOpenGraphData(array $valueMetaData): array
 	{
 		$openGraphData = [];
-		$metaDataOpenGraphSupport = ['title', 'description', 'image', 'image:width', 'image:height', 'url', 'type', 'locale', 'site_name'];
-		$checkImageExist = false;
+		$metaDataOpenGraphSupport = ['title', 'description', 'image', 'url', 'type', 'locale', 'site_name'];
 
 		foreach ($metaDataOpenGraphSupport as $key) {
 			switch ($key) {
@@ -268,23 +267,14 @@ class GenerateMetaDataSocial
 					}
 					break;
 				case 'image':
-					$image =$valueMetaData[$key];
+					$image = $valueMetaData[$key];
 					$checkImageFormat = $this->validateImageFormat($image, self::FACEBOOK_IMAGE_FORMAT_SUPPORT);
 					if (!empty($image) && $checkImageFormat) {
 						$imageTag = $this->generateMetaDataItem($key, $image);
 						$openGraphData = array_merge($openGraphData, $imageTag);
-						$checkImageExist = true;
-					}
-					break;
-				case 'image:width':
-					if ($checkImageExist) {
-						$imageWidthTag = $this->generateMetaDataItem($key, self::OPEN_GRAPH_DEFAULT_IMAGE_WIDTH);
+						$imageWidthTag = $this->generateMetaDataItem('image:width', self::OPEN_GRAPH_DEFAULT_IMAGE_WIDTH);
 						$openGraphData = array_merge($openGraphData, $imageWidthTag);
-					}
-					break;
-				case 'image:height':
-					if ($checkImageExist) {
-						$imageHeightTag = $this->generateMetaDataItem($key, self::OPEN_GRAPH_DEFAULT_IMAGE_HEIGHT);
+						$imageHeightTag = $this->generateMetaDataItem('image:height', self::OPEN_GRAPH_DEFAULT_IMAGE_HEIGHT);
 						$openGraphData = array_merge($openGraphData, $imageHeightTag);
 					}
 					break;
