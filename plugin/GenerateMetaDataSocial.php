@@ -41,10 +41,10 @@ class GenerateMetaDataSocial
 	const OPEN_GRAPH_WEBSITE_TYPE = 'website';
 
 	/** */
-	const OPEN_GRAPH_DEFAULT_IMAGE_WIDTH = 1200;
+	const OPEN_GRAPH_DEFAULT_IMAGE_WIDTH = 600;
 
 	/** */
-	const OPEN_GRAPH_DEFAULT_IMAGE_HEIGHT = 630;
+	const OPEN_GRAPH_DEFAULT_IMAGE_HEIGHT = 315;
 
 	/** */
 	const TWITTER_KEY = 'twitter';
@@ -213,6 +213,12 @@ class GenerateMetaDataSocial
 		'zz_TR',
 	];
 
+	/** */
+	const FACEBOOK_IMAGE_FORMAT_SUPPORT = ['BMP', 'DIB', 'HEIC', 'HEIF', 'IFF', 'JFIF', 'JP2', 'JPE', 'JPEG', 'JPG', 'PNG', 'PSD', 'TIF', 'TIFF', 'WBMP', 'WEBP', 'XBM'];
+
+	/** */
+	const TWITTER_IMAGE_FORMAT_SUPPORT = ['JPG', 'PNG', 'WEBP', 'GIF'];
+
 	/**
 	 * @param array $valueMetaData
 	 * @param array $socialKey
@@ -226,7 +232,7 @@ class GenerateMetaDataSocial
 				$metaData = $this->generateOpenGraphData($valueMetaData);
 				break;
 			case [self::TWITTER_KEY]:
-				$metaData = $this->generateTwitterCard($valueMetaData);
+				$metaData = $this->generateTwitterCards($valueMetaData);
 				break;
 		}
 
@@ -262,8 +268,9 @@ class GenerateMetaDataSocial
 					}
 					break;
 				case 'image':
-					$image = $valueMetaData[$key];
-					if (!empty($image)) {
+					$image =$valueMetaData[$key];
+					$checkImageFormat = $this->validateImageFormat($image, self::FACEBOOK_IMAGE_FORMAT_SUPPORT);
+					if (!empty($image) && $checkImageFormat) {
 						$imageTag = $this->generateMetaDataItem($key, $image);
 						$openGraphData = array_merge($openGraphData, $imageTag);
 						$checkImageExist = true;
@@ -312,19 +319,19 @@ class GenerateMetaDataSocial
 	 * @param array $valueMetaData
 	 * @return array
 	 */
-	private function generateTwitterCard(array $valueMetaData): array
+	private function generateTwitterCards(array $valueMetaData): array
 	{
-		$twitterCard = [];
-		$twitterCardSupport = ['title', 'description', 'image'];
+		$twitterCards = [];
+		$twitterCardsSupport = ['title', 'description', 'image'];
 
-		foreach ($twitterCardSupport as $key) {
+		foreach ($twitterCardsSupport as $key) {
 			switch ($key) {
 				case 'title':
 					$title = $valueMetaData[$key];
 					if (!empty($title)) {
 						$limitTitle = $this->limitCharacter($title, self::TWITTER_TITLE_LIMIT_CHARACTER);
 						$titleTag = $this->generateMetaDataItem($key, $limitTitle);
-						$twitterCard = array_merge($twitterCard, $titleTag);
+						$twitterCards = array_merge($twitterCards, $titleTag);
 					}
 					break;
 				case 'description':
@@ -332,14 +339,15 @@ class GenerateMetaDataSocial
 					if (!empty($description)) {
 						$limitDescription = $this->limitCharacter($description, self::TWITTER_DESCRIPTION_LIMIT_CHARACTER);
 						$descriptionTag = $this->generateMetaDataItem($key, $limitDescription);
-						$twitterCard = array_merge($twitterCard, $descriptionTag);
+						$twitterCards = array_merge($twitterCards, $descriptionTag);
 					}
 					break;
 				case 'image':
 					$image = $valueMetaData[$key];
-					if (!empty($image)) {
+					$checkImageFormat = $this->validateImageFormat($image, self::TWITTER_IMAGE_FORMAT_SUPPORT);
+					if (!empty($image) && $checkImageFormat) {
 						$imageTag = $this->generateMetaDataItem($key, $image);
-						$twitterCard = array_merge($twitterCard, $imageTag);
+						$twitterCards = array_merge($twitterCards, $imageTag);
 					}
 					break;
 				default:
@@ -347,7 +355,7 @@ class GenerateMetaDataSocial
 			}
 		}
 
-		return $twitterCard;
+		return $twitterCards;
 	}
 
 	/**
@@ -462,5 +470,24 @@ class GenerateMetaDataSocial
 	private function join(string $locale): string
 	{
 		return strtolower($locale) . '_' . strtoupper($locale);
+	}
+
+	/**
+	 * @param string $imageUrl
+	 * @param array $imageFormatSupport
+	 * @return bool
+	 */
+	private function validateImageFormat(string $imageUrl, array $imageFormatSupport): bool
+	{
+		$checkImageFormat= false;
+		if (!empty($imageUrl)) {
+			$parts = explode('.', $imageUrl);
+			if (!empty($parts)) {
+				$imageFormat = end($parts);
+				$checkImageFormat = in_array(strtoupper($imageFormat), $imageFormatSupport);
+			}
+		}
+
+		return  $checkImageFormat;
 	}
 }

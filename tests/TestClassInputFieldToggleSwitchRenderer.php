@@ -44,7 +44,7 @@ class TestClassInputFieldToggleSwitchRenderer extends WP_UnitTestCase
 	/**
 	 *
 	 */
-	public function testRenderToggleTwitterCard()
+	public function testRenderToggleTwitterCards()
 	{
 		$pSubject = new InputFieldToggleSwitchRenderer('checkbox', 'onoffice-settings-twittercards', '');
 		ob_start();

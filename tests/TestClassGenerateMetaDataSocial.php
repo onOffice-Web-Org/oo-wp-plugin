@@ -63,7 +63,7 @@ class TestClassGenerateMetaDataSocial extends WP_UnitTestCase
 	/**
 	 *
 	 */
-	public function testGenerateTwitterCardData()
+	public function testGenerateTwitterCardsData()
 	{
 		$expectOutput = [
 			'title' => 'Demo Test Title Open Graph and Twitter Cards',

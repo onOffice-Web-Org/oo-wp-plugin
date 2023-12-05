@@ -510,11 +510,11 @@ class EstateList
 		}
 
 		$openGraphStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-opengraph');
-		$twitterCardStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-twittercards');
+		$twitterCardsStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-twittercards');
 		if ($checkEstateIdRequestGuard && $openGraphStatus) {
 			$this->addMetaTags(GenerateMetaDataSocial::OPEN_GRAPH_KEY, $recordModified);
 		}
-		if ($checkEstateIdRequestGuard && $twitterCardStatus) {
+		if ($checkEstateIdRequestGuard && $twitterCardsStatus) {
 			$this->addMetaTags(GenerateMetaDataSocial::TWITTER_KEY, $recordModified);
 		}
 
@@ -995,33 +995,23 @@ class EstateList
 	 */
 	private function getImageForMetaData(): string
 	{
-		$imageTypePriority = [
-			ImageTypes::TITLE,
-			ImageTypes::PHOTO,
-			ImageTypes::PHOTO_BIG,
-			ImageTypes::GROUNDPLAN,
-			ImageTypes::PANORAMA,
-			ImageTypes::LOCATION_MAP,
-			ImageTypes::ENERGY_PASS_RANGE
-		];
+		$estatePicturesByEstateId = $this->_pEstateFiles->getEstatePictures($this->_currentEstate['id']);
 
-		$estateFileInformation = $this->_pEstateFiles->getEstateFileInformation();
-		$image = '';
+		if (empty($estatePicturesByEstateId)) {
+			return '';
+		}
 
-		$estateFiles = $estateFileInformation[$this->_currentEstate['id']] ?? [];
-
-		foreach ($estateFiles as $estateFile) {
-			$type = $estateFile['type'];
-			if (in_array($type, $imageTypePriority)) {
-				$index = array_search($type, $imageTypePriority);
-				if ($index === 0) {
-					$image = $this->getEstatePictureUrl($estateFile['id']);
+		$estatePictureUrl = '';
+		foreach ($estatePicturesByEstateId as $key => $estatePicture) {
+			if ($estatePicture['type'] === ImageTypes::TITLE || $key === array_key_first($estatePicturesByEstateId)) {
+				$estatePictureUrl = $estatePicture['url'];
+				if ($estatePicture['type'] === ImageTypes::TITLE) {
 					break;
 				}
 			}
 		}
-		
-		return $image;
+
+		return $estatePictureUrl;
 	}
 
 	/**

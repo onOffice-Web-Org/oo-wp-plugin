@@ -167,7 +167,7 @@ class TestClassEstateList
 	public function testEstateIterator()
 	{
 		update_option('onoffice-settings-opengraph', 1);
-		update_option('onoffice-settings-twittercard', 1);
+		update_option('onoffice-settings-twittercards', 1);
 		$this->_pEstateList->loadEstates();
 
 		foreach (range(0, 4) as $iter) {
