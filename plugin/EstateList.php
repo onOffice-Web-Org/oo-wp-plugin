@@ -963,7 +963,7 @@ class EstateList
 		add_action('wp_head', function () use ($metaData, $keySocial) {
 			foreach ($metaData as $metaKey => $metaValue) {
 				if ($keySocial === GenerateMetaDataSocial::TWITTER_KEY) {
-					echo '<meta name="'.GenerateMetaDataSocial::TWITTER_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '" />';
+					echo '<meta name="'.GenerateMetaDataSocial::TWITTER_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '">';
 				} elseif ($keySocial === GenerateMetaDataSocial::OPEN_GRAPH_KEY) {
 					echo '<meta property="'.GenerateMetaDataSocial::OPEN_GRAPH_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '">';
 				}
