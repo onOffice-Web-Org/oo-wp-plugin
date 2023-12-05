@@ -1003,11 +1003,11 @@ class EstateList
 
 		$estatePictureUrl = '';
 		foreach ($estatePicturesByEstateId as $key => $estatePicture) {
-			if ($estatePicture['type'] === ImageTypes::TITLE || $key === array_key_first($estatePicturesByEstateId)) {
-				$estatePictureUrl = $estatePicture['url'];
-				if ($estatePicture['type'] === ImageTypes::TITLE) {
-					break;
-				}
+			if ($estatePicture['type'] === ImageTypes::TITLE) {
+                $estatePictureUrl = $estatePicture['url'];
+                break;
+            } elseif ($key === array_key_first($estatePicturesByEstateId)) {
+                $estatePictureUrl = $estatePicture['url'];
 			}
 		}
 
