@@ -56,7 +56,7 @@ class DateTimeFormatter
 	/** @var array */
 	private $_formatCombinations = [
 		(self::SHORT|self::ADD_DATE|self::ADD_TIME) => 'Y/m/d g:i:s a',
-		self::SHORT|self::ADD_DATE => 'Y/m/d',
+		self::SHORT|self::ADD_DATE => 'Y-m-d',
 		self::SHORT|self::ADD_TIME => 'g:i:s a',
 	];
 
