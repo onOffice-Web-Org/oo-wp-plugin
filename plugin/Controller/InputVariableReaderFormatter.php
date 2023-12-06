@@ -52,7 +52,7 @@ class InputVariableReaderFormatter
 	 */
 	public function formatFloatValue(float $value): string
 	{
-		return number_format_i18n($value, 2);
+		return number_format($value, 2, '.', '');
 	}
 
 	/**
