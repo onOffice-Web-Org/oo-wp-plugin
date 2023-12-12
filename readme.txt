@@ -76,6 +76,21 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.16 (2023-11-13) =
+
+**Changed**
+
+* Improvment for timum hooks and redirections
+* Improvment for XML Http Request
+* Styling of admin backend
+
+**Fixed**
+
+* Naming conflicts with ACF
+* Cache clearing for multisites
+* Renaming of labels on detail page
+* Enabling of send button in forms with recaptcha
+
 = 4.15.1 (2023-11-13) =
 
 **Changed**
