@@ -76,7 +76,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-= 4.16 (2023-11-13) =
+= 4.16 (2023-12-13) =
 
 **Changed**
 
