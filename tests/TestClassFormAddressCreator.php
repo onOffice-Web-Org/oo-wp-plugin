@@ -90,6 +90,31 @@ class TestClassFormAddressCreator
 				$pFieldsCollection->addField($pField2);
 				$pFieldsCollection->addField(new Field('testestatefield1multiselect', onOfficeSDK::MODULE_ESTATE));
 
+				$pField3 = new Field('vorname', onOfficeSDK::MODULE_ADDRESS);
+				$pField3->setType(FieldTypes::FIELD_TYPE_TEXT);
+				$pField3->setLabel('First name');
+				$pFieldsCollection->addField($pField3);
+
+				$pField4 = new Field('name', onOfficeSDK::MODULE_ADDRESS);
+				$pField4->setType(FieldTypes::FIELD_TYPE_TEXT);
+				$pField4->setLabel('Name');
+				$pFieldsCollection->addField($pField4);
+
+				$pField5 = new Field('email', onOfficeSDK::MODULE_ADDRESS);
+				$pField5->setType(FieldTypes::FIELD_TYPE_TEXT);
+				$pField5->setLabel('Email');
+				$pFieldsCollection->addField($pField5);
+
+				$pField6 = new Field('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
+				$pField6->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+				$pField6->setLabel('gdprcheckbox');
+				$pFieldsCollection->addField($pField6);
+
+				$pField7 = new Field('newsletter', onOfficeSDK::MODULE_ADDRESS);
+				$pField7->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+				$pField7->setLabel('newsletter');
+				$pFieldsCollection->addField($pField7);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 	}
@@ -359,5 +384,173 @@ class TestClassFormAddressCreator
 	private function readUserResponseToSKDWrapperWithSupervisorId(array $response)
 	{
 		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '', [], null, $response);
+	}
+
+	/**
+	 *
+	 */
+
+	public function testGetMessageDuplicateAddressData()
+	{
+		$this->configureSDKWrapperMockerForAddressCreationCheckDuplicate(1);
+		$this->configureSDKWrapperMockerForReadAddressById();
+		$this->configureSDKWrapperMockerForReadLatestAddress();
+		$pFormData = $this->createFormDataForAddress();
+		$result = $this->_pSubject->getMessageDuplicateAddressData($pFormData, 1, 1);
+		$expectResult = "\n\nData has been duplicated:\n--------------------------------------------------\nvorname: Test\nname: Data duplicate\nemail: test@gmail.com\n";
+		$expectResult .= "\nDuplicate detected. This data record may be a duplicate of an existing data record. Check for possible duplicates and then decide whether the data record should be updated. \n";
+		$expectResult .= "\nHow to search and update duplicates in onOffice enterprise:\nhttps://de.enterprisehilfe.onoffice.com/help_entries/dubletten \n";
+
+		$this->assertEquals($expectResult, $result);
+	}
+
+	/**
+	 *
+	 */
+	public function testGetLatestAddressIdInOnOfficeEnterprise()
+	{
+		$this->configureSDKWrapperMockerForReadLatestAddress();
+		$result = $this->_pSubject->getLatestAddressIdInOnOfficeEnterprise();
+		$this->assertEquals(1, $result);
+	}
+
+	/**
+	 *
+	 * @return FormData
+	 *
+	 */
+	private function createFormDataForAddress(): FormData
+	{
+		$dataDuplicate = ['vorname' => 'Test', 'name' => 'Data duplicate', 'email' => 'test@gmail.com', 'gdprcheckbox' => 'y', 'newsletter' => 'y'];
+		$pDataFormConfiguration = new DataFormConfiguration();
+		$pDataFormConfiguration->addInput('vorname', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addInput('name', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addInput('email', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addInput('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addInput('newsletter', onOfficeSDK::MODULE_ADDRESS);
+		$pFormData = new FormData($pDataFormConfiguration, 1);
+		$pFormData->setValues($dataDuplicate);
+		return $pFormData;
+	}
+
+	/**
+	 *
+	 * @param array $response
+	 *
+	 */
+	private function addCreateAddressForCheckDuplicateResponseToSKDWrapper(array $response)
+	{
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'address', '', [
+			'checkDuplicate' => true,
+			'noOverrideByDuplicate' => true,
+			'ArtDaten' => 'Admin',
+			"Benutzer" => "test User",
+			"email" => "test@gmail.com",
+			"gdprcheckbox" => 'y',
+			"newsletter" => 'y'
+		], null, $response);
+	}
+
+	/**
+	 * @param int $id
+	 */
+	private function configureSDKWrapperMockerForAddressCreationCheckDuplicate(int $id)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
+			'resourceid' => '',
+			'resourcetype' => 'address',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => $id, 'type' => 'address', 'elements' => []],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addCreateAddressForCheckDuplicateResponseToSKDWrapper($response);
+	}
+
+	/**
+	 * @param array $response
+	 */
+	private function readAddressResponseToSKDWrapperWithAddressId(array $response)
+	{
+		$parameters = [
+			'data' => array('vorname', 'name', 'email', 'DSGVOStatus')
+		];
+
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'address', '1', $parameters, null, $response);
+	}
+
+	/**
+	 *
+	 */
+	private function configureSDKWrapperMockerForReadAddressById()
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'address',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => 2],
+				'records' => [
+					[
+						'id' => 1,
+						'type' => 'address',
+						'elements' => ['id' => 1, 'vorname' => 'Test', 'name' => 'Data duplicate', 'email' => 'test@gmail.com']
+					],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->readAddressResponseToSKDWrapperWithAddressId($response);
+	}
+
+	/**
+	 * @param array $response
+	 */
+	private function readLatestAddressResponseToSKDWrapperWithAddress(array $response)
+	{
+		$parameters = [
+			'sortby' => 'KdNr',
+			'sortorder' => 'DESC',
+			'listlimit' => 1
+		];
+
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $response);
+	}
+
+	/**
+	 *
+	 */
+	private function configureSDKWrapperMockerForReadLatestAddress()
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'address',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => 2],
+				'records' => [
+					[
+						'id' => 1,
+						'type' => 'address',
+						'elements' => []
+					],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->readLatestAddressResponseToSKDWrapperWithAddress($response);
 	}
 }

@@ -53,6 +53,9 @@ class FormPostOwner
 	/** @var FormPostOwnerConfiguration */
 	private $_pFormPostOwnerConfiguration = null;
 
+	/** @var string */
+	private $messageDuplicateAddressData = '';
+
 	/**
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostOwnerConfiguration $pFormPostOwnerConfiguration
@@ -95,8 +98,11 @@ class FormPostOwner
 				$contactType = $pDataFormConfiguration->getContactType();
 				$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
 				$estateId = $pWPQuery->get('estate_id', null);
+				$latestAddressIdOnEnterPrise = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
 				$addressId  = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
-						->createOrCompleteAddress($pFormData, $checkduplicate, $contactType, $estateId);
+					->createOrCompleteAddress($pFormData, $checkduplicate, $contactType, $estateId);
+				$this->messageDuplicateAddressData = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
+					->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 				$estateData = $this->getEstateData();
 				$estateId   = $this->createEstate( $estateData );
 				$this->createOwnerRelation( $estateId, $addressId );
@@ -262,6 +268,7 @@ class FormPostOwner
 		$estateData = array_keys($estateValues);
 		$formType = $this->_pFormData->getFormtype();
 		$informationEnterFromInputOwnerForm = $this->createStringFromInputData($estateValues);
+		$message = $values['message'] ?? null;
 		if (empty($estateId)) {
 			$formType .= "\n" . $informationEnterFromInputOwnerForm;
 		}
@@ -269,7 +276,7 @@ class FormPostOwner
 		$requestParams = [
 			'addressdata' => $addressData,
 			'estateid' => $estateId,
-			'message' => $values['message'] ?? null,
+			'message' => $message . $this->messageDuplicateAddressData,
 			'subject' => $subject,
 			'referrer' => $this->_pFormPostOwnerConfiguration->getReferrer(),
 			'formtype' => $formType,

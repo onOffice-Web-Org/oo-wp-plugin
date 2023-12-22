@@ -53,6 +53,9 @@ class FormPostContact
 	/** @var FormPostContactConfiguration */
 	private $_pFormPostContactConfiguration = null;
 
+	/** @var string */
+	private $messageDuplicateAddressData = '';
+
 	/**
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
@@ -137,8 +140,11 @@ class FormPostContact
 		$contactType = $pFormConfig->getContactType();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
+		$latestAddressIdOnEnterPrise = $this->_pFormPostContactConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
 		$addressId = $this->_pFormPostContactConfiguration->getFormAddressCreator()
 			->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType, $estateId);
+		$this->messageDuplicateAddressData = $this->_pFormPostContactConfiguration->getFormAddressCreator()
+			->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 
 		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
 			// No subscription for newsletter, which is ok
@@ -175,10 +181,11 @@ class FormPostContact
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$pWPWrapper = $this->_pFormPostContactConfiguration->getWPWrapper();
 		$addressData = $pFormData->getAddressData($this->getFieldsCollection());
+		$message = $values['message'] ?? null;
 		$requestParams = [
 			'addressdata' => $addressData,
 			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
-			'message' => $values['message'] ?? null,
+			'message' => $message . $this->messageDuplicateAddressData,
 			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),

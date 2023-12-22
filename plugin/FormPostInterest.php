@@ -48,6 +48,9 @@ class FormPostInterest
 	/** @var FormPostInterestConfiguration */
 	private $_pFormPostInterestConfiguration = null;
 
+	/** @var string */
+	private $messageDuplicateAddressData = '';
+
 	/**
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
@@ -86,8 +89,11 @@ class FormPostInterest
 						$contactType = $pFormConfiguration->getContactType();
 				$pWPQuery = $this->_pFormPostInterestConfiguration->getWPQueryWrapper()->getWPQuery();
 				$estateId = $pWPQuery->get('estate_id', null);
+				$latestAddressIdOnEnterPrise = $this->_pFormPostInterestConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
 				$addressId = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
-						->createOrCompleteAddress( $pFormData, $checkduplicate, $contactType, $estateId);
+						->createOrCompleteAddress($pFormData, $checkduplicate, $contactType, $estateId);
+				$this->messageDuplicateAddressData = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
+						->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 				$this->createSearchcriteria( $pFormData, $addressId );
 				$this->setNewsletter( $addressId );
 			}
@@ -164,7 +170,7 @@ class FormPostInterest
 		$addressData = $pFormData->getAddressData( $this->getFieldsCollection() );
 		$requestParams = [
 			'addressdata' => $addressData,
-			'message' => $message,
+			'message' => $message . $this->messageDuplicateAddressData,
 			'subject' => sanitize_text_field($subject),
 			'formtype' => $pFormData->getFormtype(),
 			'referrer' => filter_input(INPUT_SERVER, 'REQUEST_URI') ?? '',

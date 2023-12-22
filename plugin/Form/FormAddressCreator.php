@@ -23,11 +23,13 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Form;
 
+use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
+use onOffice\WPlugin\Cache\CacheHandler;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\FormData;
@@ -74,6 +76,10 @@ class FormAddressCreator
 	{
 		$requestParams = $this->getAddressDataForApiCall($pFormData);
 		$requestParams['checkDuplicate'] = $mergeExisting;
+		if ($mergeExisting) {
+			$requestParams['noOverrideByDuplicate'] = true;
+		}
+
 		if (!empty($contactType)) {
 			$requestParams['ArtDaten'] = $contactType;
 		}
@@ -235,5 +241,129 @@ class FormAddressCreator
 		} else {
 			return '';
 		}
+	}
+
+	/**
+	 * @param FormData $pFormData
+	 * @param int $addressId
+	 * @return string
+	 * @throws ApiClientException
+	 * @throws UnknownFieldException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function handleLogicMessageDuplicateAddressData(FormData $pFormData, int $addressId): string
+	{
+		$requestParams = $this->getAddressDataForApiCall($pFormData);
+		if (isset($requestParams['gdprcheckbox']) && $requestParams['gdprcheckbox']){
+			$requestParams['DSGVOStatus'] = "speicherungzugestimmt";
+		}
+		unset($requestParams['gdprcheckbox']);
+		if (key_exists('newsletter', $requestParams)) {
+			unset($requestParams['newsletter']);
+		}
+
+		$oldAddressData = $this->getDataAddressById($addressId, $requestParams);
+		unset($oldAddressData['id']);
+
+		return $this->generateMessageDuplicateAddressData($oldAddressData);
+	}
+
+	/**
+	 * @param FormData $pFormData
+	 * @param int $addressId
+	 * @param mixed $latestAddressIdOnEnterPrise
+	 * @return string
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+	public function getMessageDuplicateAddressData(FormData $pFormData, int $addressId, $latestAddressIdOnEnterPrise): string
+	{
+		if ($addressId > $latestAddressIdOnEnterPrise || is_null($latestAddressIdOnEnterPrise)) {
+			return '';
+		}
+
+		return $this->handleLogicMessageDuplicateAddressData($pFormData, $addressId);
+	}
+
+
+	/**
+	 * @return mixed
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function getLatestAddressIdInOnOfficeEnterprise()
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pContainer->get(CacheHandler::class)->clear();
+
+		$requestParams = [
+			'sortby' => 'KdNr',
+			'sortorder' => 'DESC',
+			'listlimit' => 1
+		];
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+		$result = $pApiClientAction->getResultRecords();
+
+		if (empty($result)) {
+			return null;
+		}
+
+		return $result[0]['id'];
+	}
+
+	/**
+	 * @param int $addressId
+	 * @param array $params
+	 * @return array
+	 * @throws ApiClientException
+	 */
+	private function getDataAddressById(int $addressId, array $params): array
+	{
+		$requestParams = [
+			'data' => array_keys($params)
+		];
+
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->setResourceId((string) $addressId);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+		$result = $pApiClientAction->getResultRecords();
+
+		return $result[0]['elements'];
+	}
+
+	/**
+	 * @param array $oldData
+	 * @return string
+	 */
+	private function generateMessageDuplicateAddressData(array $oldData): string
+	{
+		$messageDuplicateAddressData = '';
+		$guidanceForHandlingSituation = '';
+		$oldAddressData = '';
+
+		if (!empty($oldData)) {
+			$messageDuplicateAddressData .= "\n\nData has been duplicated:\n";
+			$messageDuplicateAddressData .= "--------------------------------------------------\n";
+			foreach ($oldData as $key => $value) {
+				$oldAddressData .= $key . ': ' . $value . "\n";
+			}
+			$guidanceForHandlingSituation .= "\nDuplicate detected. This data record may be a duplicate of an existing data record. Check for possible duplicates and then decide whether the data record should be updated. \n";
+			$guidanceForHandlingSituation .= "\nHow to search and update duplicates in onOffice enterprise:\n";
+			$guidanceForHandlingSituation .= "https://de.enterprisehilfe.onoffice.com/help_entries/dubletten \n";
+		}
+		$messageDuplicateAddressData .= $oldAddressData . $guidanceForHandlingSituation;
+
+		return $messageDuplicateAddressData;
 	}
 }
