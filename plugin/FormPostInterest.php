@@ -49,7 +49,7 @@ class FormPostInterest
 	private $_pFormPostInterestConfiguration = null;
 
 	/** @var string */
-	private $messageDuplicateAddressData = '';
+	private $_messageDuplicateAddressData = '';
 
 	/**
 	 *
@@ -85,14 +85,17 @@ class FormPostInterest
 
 		try {
 			if ( $pFormConfiguration->getCreateInterest() ) {
-				$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
+				$checkDuplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
 						$contactType = $pFormConfiguration->getContactType();
 				$pWPQuery = $this->_pFormPostInterestConfiguration->getWPQueryWrapper()->getWPQuery();
 				$estateId = $pWPQuery->get('estate_id', null);
-				$latestAddressIdOnEnterPrise = $this->_pFormPostInterestConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
+				$latestAddressIdOnEnterPrise = null;
+				if ($checkDuplicate) {
+					$latestAddressIdOnEnterPrise = $this->_pFormPostInterestConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
+				}
 				$addressId = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
-						->createOrCompleteAddress($pFormData, $checkduplicate, $contactType, $estateId);
-				$this->messageDuplicateAddressData = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
+						->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType, $estateId);
+				$this->_messageDuplicateAddressData = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
 						->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 				$this->createSearchcriteria( $pFormData, $addressId );
 				$this->setNewsletter( $addressId );
@@ -170,7 +173,7 @@ class FormPostInterest
 		$addressData = $pFormData->getAddressData( $this->getFieldsCollection() );
 		$requestParams = [
 			'addressdata' => $addressData,
-			'message' => $message . $this->messageDuplicateAddressData,
+			'message' => $message . $this->_messageDuplicateAddressData,
 			'subject' => sanitize_text_field($subject),
 			'formtype' => $pFormData->getFormtype(),
 			'referrer' => filter_input(INPUT_SERVER, 'REQUEST_URI') ?? '',

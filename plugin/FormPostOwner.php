@@ -54,7 +54,7 @@ class FormPostOwner
 	private $_pFormPostOwnerConfiguration = null;
 
 	/** @var string */
-	private $messageDuplicateAddressData = '';
+	private $_messageDuplicateAddressData = '';
 
 	/**
 	 * @param FormPostConfiguration $pFormPostConfiguration
@@ -94,14 +94,17 @@ class FormPostOwner
 
 		try {
 			if ( $pDataFormConfiguration->getCreateOwner() ) {
-				$checkduplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
+				$checkDuplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
 				$contactType = $pDataFormConfiguration->getContactType();
 				$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
 				$estateId = $pWPQuery->get('estate_id', null);
-				$latestAddressIdOnEnterPrise = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
+				$latestAddressIdOnEnterPrise = null;
+				if ($checkDuplicate) {
+					$latestAddressIdOnEnterPrise = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
+				}
 				$addressId  = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
-					->createOrCompleteAddress($pFormData, $checkduplicate, $contactType, $estateId);
-				$this->messageDuplicateAddressData = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
+					->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType, $estateId);
+				$this->_messageDuplicateAddressData = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
 					->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 				$estateData = $this->getEstateData();
 				$estateId   = $this->createEstate( $estateData );
@@ -276,7 +279,7 @@ class FormPostOwner
 		$requestParams = [
 			'addressdata' => $addressData,
 			'estateid' => $estateId,
-			'message' => $message . $this->messageDuplicateAddressData,
+			'message' => $message . $this->_messageDuplicateAddressData,
 			'subject' => $subject,
 			'referrer' => $this->_pFormPostOwnerConfiguration->getReferrer(),
 			'formtype' => $formType,

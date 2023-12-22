@@ -54,7 +54,7 @@ class FormPostContact
 	private $_pFormPostContactConfiguration = null;
 
 	/** @var string */
-	private $messageDuplicateAddressData = '';
+	private $_messageDuplicateAddressData = '';
 
 	/**
 	 *
@@ -140,10 +140,13 @@ class FormPostContact
 		$contactType = $pFormConfig->getContactType();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
-		$latestAddressIdOnEnterPrise = $this->_pFormPostContactConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
+		$latestAddressIdOnEnterPrise = null;
+		if ($checkDuplicate) {
+			$latestAddressIdOnEnterPrise = $this->_pFormPostContactConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
+		}
 		$addressId = $this->_pFormPostContactConfiguration->getFormAddressCreator()
 			->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType, $estateId);
-		$this->messageDuplicateAddressData = $this->_pFormPostContactConfiguration->getFormAddressCreator()
+		$this->_messageDuplicateAddressData = $this->_pFormPostContactConfiguration->getFormAddressCreator()
 			->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 
 		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
@@ -181,11 +184,11 @@ class FormPostContact
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$pWPWrapper = $this->_pFormPostContactConfiguration->getWPWrapper();
 		$addressData = $pFormData->getAddressData($this->getFieldsCollection());
-		$message = $values['message'] ?? null;
+		$message = $values['message'] ?? '';
 		$requestParams = [
 			'addressdata' => $addressData,
 			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
-			'message' => $message . $this->messageDuplicateAddressData,
+			'message' => $message . $this->_messageDuplicateAddressData,
 			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),
