@@ -788,4 +788,34 @@ class FormModelBuilderDBEstateListSettings
 
 		return $pInputModelShowPriceOnRequest;
 	}
+
+	/**
+	 *
+	 * @param $module
+	 * @param string $htmlType
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createSearchFieldForFieldLists($module, string $htmlType)
+	{
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+
+		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+		$pInputModelFieldsConfig->setValue($this->getValue(DataListView::FIELDS) ?? []);
+		return $pInputModelFieldsConfig;
+	}
 }

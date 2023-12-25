@@ -585,4 +585,43 @@ class FormModelBuilderEstateDetailSettings
 
 		return $pInputModelShowPriceOnRequest;
 	}
+
+	/**
+	 *
+	 * @param $module
+	 * @param string $htmlType
+	 * @return InputModelOption
+	 *
+	 */
+
+	public function createSearchFieldForFieldLists($module, string $htmlType)
+	{
+		$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create
+			(InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
+
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = [];
+
+		if (is_array($module)) {
+			foreach ($module as $submodule) {
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule);
+				$fieldNames = array_merge($fieldNames, $newFields);
+			}
+		}
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$action = $pField->getModule() === onOfficeSDK::MODULE_ADDRESS ? onOfficeSDK::MODULE_ADDRESS : onOfficeSDK::MODULE_ESTATE;
+			$fieldNamesArray[$pField->getName()]['action'] = $action;
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+		$fields = array_merge($this->_pDataDetailView->getFields(), $this->_pDataDetailView->getAddressFields()) ?? [];
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
+		$pInputModelFieldsConfig->setValue($fields);
+		return $pInputModelFieldsConfig;
+	}
 }

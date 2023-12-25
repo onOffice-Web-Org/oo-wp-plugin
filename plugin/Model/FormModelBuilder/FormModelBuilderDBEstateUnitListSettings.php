@@ -206,9 +206,7 @@ class FormModelBuilderDBEstateUnitListSettings
 		$pFieldsCollection = new FieldsCollection();
 
 		$pFieldsCollectionBuilder
-			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection)
-			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
+			->addFieldsAddressEstate($pFieldsCollection);
 		return $pFieldsCollection;
 	}
 
@@ -231,5 +229,35 @@ class FormModelBuilderDBEstateUnitListSettings
 			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
 		});
 		return $pInputModel;
+	}
+
+	/**
+	 *
+	 * @param $module
+	 * @param string $htmlType
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createSearchFieldForFieldLists($module, string $htmlType)
+	{
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+
+		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+		$pInputModelFieldsConfig->setValue($this->getValue(DataListView::FIELDS) ?? []);
+		return $pInputModelFieldsConfig;
 	}
 }

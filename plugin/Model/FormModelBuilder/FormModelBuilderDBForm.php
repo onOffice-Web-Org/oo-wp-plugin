@@ -53,6 +53,7 @@ use function __;
 use function get_locale;
 use function get_option;
 use const ONOFFICE_DI_CONFIG_PATH;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 
 /**
  *
@@ -145,18 +146,16 @@ class FormModelBuilderDBForm
 	 */
 	private function getFieldsCollection(): FieldsCollection
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-
-		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldsCollection = new FieldsCollection();
 
 		$pFieldsCollectionBuilder
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsFormBackend($pFieldsCollection,$this->getFormType());
-		return $pFieldsCollection;
+
+		$pFieldsCollectionConfiguratorForm = $this->_pContainer->get(FieldsCollectionConfiguratorForm::class);
+		return $pFieldsCollectionConfiguratorForm->buildForFormType($pFieldsCollection, $this->getFormType());
 	}
 
 	/**
@@ -704,6 +703,46 @@ class FormModelBuilderDBForm
 
 		return $pInputModelFieldsConfig;
 	}
+
+	/**
+	 *
+	 * @param $module
+	 * @param string $htmlType
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createSearchFieldForFieldLists($module, string $htmlType)
+	{
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = [];
+
+		if (is_array($module)) {
+			foreach ($module as $submodule) {
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule ?? '');
+				$fieldNames = array_merge($fieldNames, $newFields);
+			}
+		} else {
+			$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+		}
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+
+		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
+		$pInputModelFieldsConfig->setValue($this->getValue(DataFormConfiguration::FIELDS) ?? []);
+		return $pInputModelFieldsConfig;
+	}
+
 	/** @return string */
 	public function getFormType()
 		{ return $this->_formType; }

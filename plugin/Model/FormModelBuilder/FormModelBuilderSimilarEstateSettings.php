@@ -486,4 +486,41 @@ class FormModelBuilderSimilarEstateSettings
 
 		return $pInputModelShowPriceOnRequest;
 	}
+
+	/**
+	 *
+	 * @param $module
+	 * @param string $htmlType
+	 * @return InputModelOption
+	 *
+	 */
+
+	public function createSearchFieldForFieldLists($module, string $htmlType)
+	{
+		$fields = [];
+
+		if ($module == onOfficeSDK::MODULE_ESTATE) {
+			$pInputModelFieldsConfig = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_FIELD_CONFIG, null, true);
+			$fields = $this->_pDataSimilarView->getFields();
+		} else {
+			throw new UnknownModuleException();
+		}
+
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
+		$pInputModelFieldsConfig->setValue($fields);
+		return $pInputModelFieldsConfig;
+	}
 }

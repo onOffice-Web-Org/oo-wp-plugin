@@ -305,4 +305,20 @@ class FormModelBuilderDBAddress
 		$pInputModel->setValue($value);
 		$pInputModel->setValuesAvailable($key);
 	}
+
+	/**
+	 *
+	 * @param $module
+	 * @param string $htmlType
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createSearchFieldForFieldLists($module, string $htmlType)
+	{
+		$pFieldnames = new Fieldnames(new FieldsCollection());
+		$this->setFieldnames($pFieldnames);
+		$pInputModelFieldsConfig = parent::createSearchFieldForFieldLists($module, $htmlType);
+		return $pInputModelFieldsConfig;
+	}
 }

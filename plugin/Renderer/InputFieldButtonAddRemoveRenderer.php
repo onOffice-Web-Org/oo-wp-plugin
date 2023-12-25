@@ -123,6 +123,7 @@ class InputFieldButtonAddRemoveRenderer
 				     . '' . $this->renderAdditionalAttributes()
 				     . 'value="' . esc_html( $key ) . '"'
 				     . 'data-onoffice-category="' . esc_attr( $this->getLabel() ) . '"'
+				     . 'data-onoffice-label="' . esc_attr($label) . '"'
 				     . 'id="' . esc_html( $inputId ) . '">';
 				echo '<span ' . $onofficeSelect . '></span>';
 				echo '<label style="margin-left:5px;' . $handleLabelButtonChange . '">' . esc_html( $label ) . '</label></span><br>'

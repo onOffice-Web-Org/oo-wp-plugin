@@ -164,6 +164,63 @@ abstract class FormModelBuilder
 		return $pInputModelFieldsConfig;
 	}
 
+	/**
+	 *
+	 * @param $module
+	 * @param string $htmlType
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createSearchFieldForFieldLists($module, string $htmlType)
+	{
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+		$fieldNames = [];
+
+		try {
+			$this->_pFieldnames->loadLanguage();
+			if (is_array($module)) {
+				foreach ($module as $submodule) {
+					$fieldNamesModule = $this->_pFieldnames->getFieldList($submodule);
+					$fieldNames = array_merge($fieldNames, $fieldNamesModule);
+				}
+			} else {
+				$fieldNames = $this->_pFieldnames->getFieldList($module);
+			}
+
+		} catch (APIClientCredentialsException $pCredentialsException) {}
+
+		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNames));
+
+		$fields = $this->getValue(self::CONFIG_FIELDS) ?? [];
+		$pInputModelFieldsConfig->setValue($fields);
+		return $pInputModelFieldsConfig;
+	}
+
+	/**
+	 *
+	 * @param array $fieldNames
+	 * @return array
+	 *
+	 */
+	public function groupByContent(array $fieldNames): array
+	{
+		$resultByContent = [];
+	
+		$listTypeUnSupported = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
+		foreach ($fieldNames as $key => $properties) {
+			if (in_array($properties['type'], $listTypeUnSupported)) {
+				continue;
+			}
+			$content = $properties['content'];
+			$resultByContent[$content][$key] = $properties;
+		}
+	
+		return array_merge(...array_values($resultByContent));
+	}
 
 	/**
 	 *

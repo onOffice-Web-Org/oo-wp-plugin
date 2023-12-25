@@ -51,32 +51,80 @@ jQuery(document).ready(function($){
 
 	$('.item-delete-link').click(function() {
 		var labelButtonHandleField= $(this).parent().parent().attr('action-field-name');
-		var data = document.querySelector("."+labelButtonHandleField);
+		const data = $('.' + labelButtonHandleField);
 		if(data === null){
 			$(this).parent().parent().remove();
 			return;
 		}
-		$(data).children().first().removeClass("dashicons-remove");
-		$(data).children().first().addClass("dashicons-insert");
-		$(data).children().next().css("opacity", "1");
-		$(data).children().attr('typeField', 1);
+		$(data).each(function() {
+			$(this).children().first().next().css("opacity", "1");
+			$(this).children().first().removeClass("dashicons-remove");
+			$(this).children().first().addClass("dashicons-insert");
+			$(this).children().first().attr("typeField", 1);
+			$(this).find('.check-action').removeClass("action-remove");
+		});
 		$(this).parent().parent().remove();
 	});
+
+	$('#oo-search-field .input-search').on('input', function() {
+		let filter = $(this).val().toUpperCase();
+		let clearIcon = $('.clear-icon');
+
+		if ($(this).val().trim() !== '') {
+			clearIcon.removeClass('dashicons-search').addClass('dashicons-no-alt');
+		} else {
+			clearIcon.removeClass('dashicons-no-alt').addClass('dashicons-search');
+		}
+
+		$('#oo-search-field .field-lists .search-field-item').each(function() {
+			let dataLabel = $(this).data('label').toUpperCase();
+			let dataKey = $(this).data('key').toUpperCase();
+			let dataContent = $(this).data('content').toUpperCase();
+
+			if (dataLabel.indexOf(filter) > -1 || dataKey.indexOf(filter) > -1 || dataContent.indexOf(filter) > -1) {
+				$(this).show();
+			} else {
+				$(this).hide();
+			}
+		});
+	});
+
+	$(document).on('click', function(event) {
+		let $fieldLists = $('#oo-search-field .field-lists');
+		let $inputSearch = $('#oo-search-field .input-search');
+
+		if (!$(event.target).closest($fieldLists).length && event.target !== $inputSearch[0]) {
+			$fieldLists.hide();
+		}
+	});
+
+	$('#oo-search-field .input-search').on('click', function(event) {
+		event.stopPropagation();
+		$('.field-lists').show();
+	});
+
+	$('#oo-search-field #clear-input').on('click', function() {
+		$('.input-search').val('').trigger('input');
+	});
+
 	var getCheckedFieldButton = function(btn) {
 		var addField = 1;
 		var removeField = 2;
 		var checkTypeField = $(btn).children().attr('typeField');
 		if (checkTypeField == addField) {
-			$(btn).children().first().removeClass("dashicons-insert");
-			$(btn).children().first().addClass("dashicons-remove");
 			var label = $(btn).attr('data-action-div');
 			var valElName = $(btn).attr('value');
-			var valElLabel = $(btn).children().next().text();
+			const valElLabel = $(btn).attr('data-onoffice-label');
 			var category = $(btn).attr('data-onoffice-category');
 			var module = $(btn).attr('data-onoffice-module');
 			var actionFieldName = 'labelButtonHandleField-' + valElName;
-			$(btn).children().first().next().css("opacity", "0.5")
-			$(btn).children().first().attr("typeField", removeField);
+			$('.' + actionFieldName).each(function() {
+				$(this).children().first().next().css("opacity", "0.5");
+				$(this).children().first().attr("typeField", removeField);
+				$(this).children().first().removeClass("dashicons-insert");
+				$(this).children().first().addClass("dashicons-remove");
+				$(this).find('.check-action').addClass("action-remove");
+			});
 			var optionsAvailable = false;
 			var checkedFields = [];
 
@@ -99,11 +147,14 @@ jQuery(document).ready(function($){
 		} else {
 			var valElName = $(btn).attr('value');
 			var checkedFields = [];
-
-			$(btn).children().first().next().css("opacity", "1")
-			$(btn).children().first().removeClass("dashicons-remove");
-			$(btn).children().first().addClass("dashicons-insert");
-			$(btn).children().first().attr("typeField", addField);
+			const actionFieldName = 'labelButtonHandleField-' + valElName;
+			$('.' + actionFieldName).each(function() {
+				$(this).children().first().next().css("opacity", "1");
+				$(this).children().first().removeClass("dashicons-remove");
+				$(this).children().first().addClass("dashicons-insert");
+				$(this).children().first().attr("typeField", addField);
+				$(this).find('.check-action').removeClass("action-remove");
+			});
 			$('*#sortableFieldsList').find('#menu-item-' + valElName).remove();
 		}
 
