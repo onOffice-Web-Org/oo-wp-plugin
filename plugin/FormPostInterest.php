@@ -162,7 +162,7 @@ class FormPostInterest
 		$message .= "\nSuchkriterien des Interessenten:\n".
 					"$searchCriterias";
 		$addressData = $this->_pFormPostInterestConfiguration->getSearchcriteriaFields()
-			->getFieldLabelsOfInputs($pFormData->getAddressData( $this->getFieldsCollection() ));
+			->getFieldLabelsOfInputsAddress($pFormData->getAddressData( $this->getFieldsCollection() ));
 
 		$addressData = $this->createStringFromInputData($addressData);
 

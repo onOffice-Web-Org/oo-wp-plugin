@@ -95,6 +95,51 @@ class SearchcriteriaFields
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
+	public function getFieldLabelsOfInputsAddress(array $inputFormFields): array
+	{
+		$pFieldsCollection = new FieldsCollection();
+		$this->_pFieldsCollectionBuilder
+			->addFieldsSearchCriteria($pFieldsCollection)
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldCountryForAddress($pFieldsCollection);
+
+		$pGeoFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection);
+		$pFieldsCollection->merge($pGeoFieldsCollection);
+		$pFieldsCollection->merge(new FieldModuleCollectionDecoratorInterestForms(new FieldsCollection));
+
+		$output = [];
+		foreach ($inputFormFields as $name => $value) {
+			$aliasedFieldName = $this->getFieldNameOfInput($name);
+			$module = onOfficeSDK::MODULE_ADDRESS;
+
+			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $aliasedFieldName);
+
+			if (FieldTypes::isRangeType($pField->getType()))
+			{
+				if (__String::getNew($name)->endsWith(self::RANGE_FROM)) {
+					$output[$pField->getLabel().' (min)'] = $value;
+				} elseif  (__String::getNew($name)->endsWith(self::RANGE_UPTO)) {
+					$output[$pField->getLabel().' (max)'] = $value;
+				} else {
+					$output[$pField->getLabel()] = $value;
+				}
+			} else if (FieldTypes::isMultipleSelectType($pField->getType())) {
+				if (is_array($value)) {
+					$tmpOutput = [];
+					foreach ($value as $val) {
+						$tmpOutput []= (array_key_exists($val, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$val] : $val);
+					}
+					$output[$pField->getLabel()] = implode(', ', $tmpOutput);
+				}
+				else {
+					$output[$pField->getLabel()] = (array_key_exists($value, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$value] : $value);
+				}
+			} else {
+				$output[$pField->getLabel()] = $value;
+			}
+		}
+		return $output;
+	}
 	public function getFieldLabelsOfInputs(array $inputFormFields): array
 	{
 		$pFieldsCollection = new FieldsCollection();
