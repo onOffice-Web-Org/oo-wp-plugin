@@ -172,8 +172,7 @@ class FormPostInterest
 				."Kontaktdaten des Interessenten:"."\n"
 				.$addressData."\n\n"
 				."Suchkriterien des Interessenten:"."\n"
-				.$searchCriterias."\n\n"
-				.$message;
+				.$searchCriterias."\n\n";
 
 		$requestParams = [
 				'anonymousEmailidentity' => true,
