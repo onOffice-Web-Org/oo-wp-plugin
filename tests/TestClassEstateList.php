@@ -1039,4 +1039,19 @@ class TestClassEstateList
 		}
 		return $fieldsCollection;
 	}
+
+	/**
+	 *
+	 */
+	public function testGenerateSourceElementPictureTag()
+	{
+		$this->_pEstateList->loadEstates();
+		$this->_pEstateList->estateIterator();
+		ob_start();
+		$this->_pEstateList->generateSourceElementPictureTag(2);
+		$output = ob_get_clean();
+		$this->assertEquals($output,
+			'<picture><source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@x250 1x, https://test.url/image/2.jpg@x375 1.5x, https://test.url/image/2.jpg@x500 2x, https://test.url/image/2.jpg@x750 3x" /><source media="(min-width:1400px)" srcset="https://test.url/image/2.jpg@x250 1x, https://test.url/image/2.jpg@x375 1.5x, https://test.url/image/2.jpg@x500 2x, https://test.url/image/2.jpg@x750 3x" /><source media="(min-width:1200px)" srcset="https://test.url/image/2.jpg@x250 1x, https://test.url/image/2.jpg@x375 1.5x, https://test.url/image/2.jpg@x500 2x, https://test.url/image/2.jpg@x750 3x" /><source media="(min-width:992px)" srcset="https://test.url/image/2.jpg@x250 1x, https://test.url/image/2.jpg@x375 1.5x, https://test.url/image/2.jpg@x500 2x, https://test.url/image/2.jpg@x750 3x" /><source media="(min-width:768px)" srcset="https://test.url/image/2.jpg@x250 1x, https://test.url/image/2.jpg@x375 1.5x, https://test.url/image/2.jpg@x500 2x, https://test.url/image/2.jpg@x750 3x" /><source media="(min-width:576px)" srcset="https://test.url/image/2.jpg@x250 1x, https://test.url/image/2.jpg@x375 1.5x, https://test.url/image/2.jpg@x500 2x, https://test.url/image/2.jpg@x750 3x" /><source media="(max-width:575px)" srcset="https://test.url/image/2.jpg@x250 1x, https://test.url/image/2.jpg@x375 1.5x, https://test.url/image/2.jpg@x500 2x, https://test.url/image/2.jpg@x750 3x" /><img class="oo-responsive-image estate-status" src="https://test.url/image/2.jpg@x250" alt="Name id 15" loading="lazy"/></picture>'
+		);
+	}
 }

@@ -38,6 +38,18 @@ div.multiselect[data-values=""] > input[type=button] {
     opacity: 0.7;
 }
 
+.oo-responsive-image {
+    display: block;
+    width: 100%;
+    min-height: 250px;
+    position: relative;
+    object-fit: cover;
+}
+
+.oo-responsive-image.oo-height-image-detail {
+    min-height: 400px;
+}
+
 @keyframes rotating {
     from {
         transform: rotate(0deg);
