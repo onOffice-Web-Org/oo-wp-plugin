@@ -280,4 +280,19 @@ class FieldsCollectionBuilderShort
 		$pFieldsCollection->merge($pFieldsCollectionTmp);
 		return $this;
 	}
+
+	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function addFieldCountryForAddress(FieldsCollection $pFieldsCollection): self
+	{
+		$pFieldLoader = $this->_pContainer->get(FieldLoaderCountryValues::class);
+		$pFieldCollectionCountry = $this->_pContainer->get(FieldsCollectionBuilder::class)
+			->buildFieldsCollection($pFieldLoader);
+		$pFieldsCollection->merge($pFieldCollectionCountry);
+		return $this;
+	}
 }

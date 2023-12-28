@@ -161,19 +161,31 @@ class FormPostInterest
 		$message = $values['message'] ?? '';
 		$message .= "\nSuchkriterien des Interessenten:\n".
 					"$searchCriterias";
-		$addressData = $pFormData->getAddressData( $this->getFieldsCollection() );
+		$addressData = $this->_pFormPostInterestConfiguration->getSearchcriteriaFields()
+			->getFieldLabelsOfInputs($pFormData->getAddressData( $this->getFieldsCollection() ));
+
+		$addressData = $this->createStringFromInputData($addressData);
+
+		$body = 'Data for form that has been sent'."\n\n"
+				.'--------------------------------------------------'
+				.'eingetragen.'."\n\n"
+				."Kontaktdaten des Interessenten:"."\n"
+				.$addressData."\n\n"
+				."Suchkriterien des Interessenten:"."\n"
+				.$searchCriterias."\n\n"
+				.'Herzliche Grüße'."\n"
+				.'Ihr onOffice Team';
+
 		$requestParams = [
-			'addressdata' => $addressData,
-			'message' => $message,
-			'subject' => sanitize_text_field($subject),
-			'formtype' => $pFormData->getFormtype(),
-			'referrer' => filter_input(INPUT_SERVER, 'REQUEST_URI') ?? '',
-			'recipient' => $recipient
+				'anonymousEmailidentity' => true,
+				'body' => $body,
+				'subject' => sanitize_text_field($subject),
+				'replyto' => sanitize_email($values['Email']),
+				'receiver' => [sanitize_email($recipient)],
+				'X-Original-From' => sanitize_email($values['Email']),
+				'saveToAgentsLog' => false
 		];
 
-		if ($recipient !== '') {
-			$requestParams['recipient'] = $recipient;
-		}
 		if (isset($addressData['newsletter'])) {
 			$requestParams['addressdata']['newsletter_aktiv'] = $this->_pFormPostInterestConfiguration
 				->getNewsletterAccepted();
@@ -185,7 +197,7 @@ class FormPostInterest
 
 		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
 		$pAPIClientAction = new APIClientActionGeneric
-		($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
+		($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'sendmail');
 		$pAPIClientAction->setParameters($requestParams);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
 		if (!$pAPIClientAction->getResultStatus()) {

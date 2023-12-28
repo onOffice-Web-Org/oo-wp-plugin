@@ -100,7 +100,8 @@ class SearchcriteriaFields
 		$pFieldsCollection = new FieldsCollection();
 		$this->_pFieldsCollectionBuilder
 			->addFieldsSearchCriteria($pFieldsCollection)
-			->addFieldsAddressEstate($pFieldsCollection);
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldCountryForAddress($pFieldsCollection);
 
 		$pGeoFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection);
 		$pFieldsCollection->merge($pGeoFieldsCollection);
@@ -115,6 +116,10 @@ class SearchcriteriaFields
 				$aliasedFieldName = $geoRangeFields[$name];
 			}
 			$module = onOfficeSDK::MODULE_ESTATE;
+			if ($name === "Land") {
+				$module = onOfficeSDK::MODULE_ADDRESS;
+			}
+
 			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $aliasedFieldName);
 
 			if (FieldTypes::isRangeType($pField->getType()))

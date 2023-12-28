@@ -110,7 +110,8 @@ class Form
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsFormFrontend($pFieldsCollection)
 			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName)
-			->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+			->addFieldCountryForAddress($pFieldsCollection);
 
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();
