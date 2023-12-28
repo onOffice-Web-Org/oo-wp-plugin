@@ -731,7 +731,7 @@ class EstateList
 
 		echo '<img class="oo-responsive-image estate-status' . esc_html($heightImageInDetailClass) . '" ' .
 			'src="' . esc_url($this->getEstatePictureUrl($imageId, ['height' => $height])) . '" ' .
-			'alt="' . esc_html($this->_currentEstate["title"]) . '" ' .
+			'alt="' . esc_html($this->_currentEstate["title"] ?? '') . '" ' .
 			'loading="lazy"/>';
 		echo '</picture>';
 	}
