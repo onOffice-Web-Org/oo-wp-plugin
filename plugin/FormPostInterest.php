@@ -168,13 +168,12 @@ class FormPostInterest
 
 		$body = 'Data for form that has been sent'."\n\n"
 				.'--------------------------------------------------'
-				.'eingetragen.'."\n\n"
+				.'Data about user.'."\n\n"
 				."Kontaktdaten des Interessenten:"."\n"
 				.$addressData."\n\n"
 				."Suchkriterien des Interessenten:"."\n"
 				.$searchCriterias."\n\n"
-				.'Herzliche Grüße'."\n"
-				.'Ihr onOffice Team';
+				.$message;
 
 		$requestParams = [
 				'anonymousEmailidentity' => true,

@@ -25,18 +25,18 @@ class FieldLoaderCountryValues implements FieldLoader
 	 */
 	public function load(): Generator
 	{
-		$fullName = $this->getFullName();
-		$countryElementsRecord = $this->getField();
+		$valueCountry = $this->getValueCountry();
+		$field = $this->getField();
 
-		if (empty($countryElementsRecord)) {
+		if (empty($fieldArray)) {
 			return;
 		}
 
-		foreach ($countryElementsRecord as $fieldName => $fieldProperties) {
+		foreach ($field as $fieldName => $fieldProperties) {
 			if ($fieldName === 'Land') {
 				$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 				$fieldProperties['module'] = onOfficeSDK::MODULE_ADDRESS;
-				$fieldProperties['permittedvalues'] = $fullName;
+				$fieldProperties['permittedvalues'] = $valueCountry;
 				yield $fieldName => $fieldProperties;
 			}
 		}
@@ -46,10 +46,10 @@ class FieldLoaderCountryValues implements FieldLoader
 	 * @return array
 	 * @throws ApiClientException
 	 */
-	private function getFullName(): array
+	private function getValueCountry(): array
 	{
 		$parameters = [
-            "fieldname"=> "Land"
+			"fieldname"=> "Land"
 		];
 
 		$pApiClientAction = new APIClientActionGeneric
@@ -59,13 +59,14 @@ class FieldLoaderCountryValues implements FieldLoader
 		$pApiClientAction->addRequestToQueue()->sendRequests();
 
 		$userRecords = $pApiClientAction->getResultRecords();
-        $data = [];
 		if (empty($userRecords)) {
 			return [];
 		}
-        foreach($userRecords as $key => $value) {
-            $data[$value["id"]] = $value["elements"]['title'];
-        }
+
+		$data = [];
+		foreach($userRecords as $key => $value) {
+			$data[$value["id"]] = $value["elements"]['title'];
+		}
 
 		return $data;
 	}
@@ -76,7 +77,7 @@ class FieldLoaderCountryValues implements FieldLoader
 	 */
 	private function getField(): array
 	{
-		$parametersGetFieldList = [
+		$parameters = [
 			'labels' => true,
 			'showContent' => true,
 			'showTable' => true,
@@ -88,7 +89,7 @@ class FieldLoaderCountryValues implements FieldLoader
 
 		$pApiClientActionFields = new APIClientActionGeneric
 		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
-		$pApiClientActionFields->setParameters($parametersGetFieldList);
+		$pApiClientActionFields->setParameters($parameters);
 		$pApiClientActionFields->addRequestToQueue()->sendRequests();
 		$result = $pApiClientActionFields->getResultRecords();
 
