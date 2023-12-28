@@ -28,7 +28,7 @@ class FieldLoaderCountryValues implements FieldLoader
 		$valueCountry = $this->getValueCountry();
 		$field = $this->getField();
 
-		if (empty($fieldArray)) {
+		if (empty($field)) {
 			return;
 		}
 
