@@ -28,10 +28,10 @@
 					$pictureValues = $pEstates->getEstatePictureValues( $id );
 					if ( $referenz === "1" && $pEstates->getViewRestrict() ) {
 						echo '<div class="oo-listimage">';
-						$pEstates->generateSourceElementPictureTag($id);
+						$pEstates->generateEstatePictureTag($id);
 					} else {
 						echo '<a class="oo-listimage estate-status" href="' . esc_url($pEstates->getEstateLink()) . '">';
-						$pEstates->generateSourceElementPictureTag($id);
+						$pEstates->generateEstatePictureTag($id);
 					}
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';

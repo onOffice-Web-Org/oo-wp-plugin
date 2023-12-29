@@ -85,10 +85,10 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 
 					if ( $referenz === "1" && $pEstatesClone->getViewRestrict() ) {
 						echo '<div class="oo-listimage estate-status">';
-						$pEstatesClone->generateSourceElementPictureTag($id);
+						$pEstatesClone->generateEstatePictureTag($id);
 					} else {
 						echo '<a class="oo-listimage estate-status" href="' . esc_url($pEstatesClone->getEstateLink()) . '">';
-						$pEstatesClone->generateSourceElementPictureTag($id);
+						$pEstatesClone->generateEstatePictureTag($id);
 					}
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';

@@ -56,7 +56,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				$estatePictures = $pEstates->getEstatePictures();
 				foreach ($estatePictures as $id) {
 					echo '<div class="oo-detailspicture">';
-					$pEstates->generateSourceElementPictureTag($id);
+					$pEstates->generateEstatePictureTag($id);
 					echo '</div>';
 				}
 				?>

@@ -713,7 +713,7 @@ class EstateList
 	 * @param int $imageId
 	 * @return void
 	 */
-	public function generateSourceElementPictureTag(int $imageId)
+	public function generateEstatePictureTag(int $imageId)
 	{
 		$minWidthMediaQueries = self::MIN_WIDTH_MEDIA_QUERY;
 		$maxWidthMediaQueries = self::MAX_WIDTH_MEDIA_QUERY;
@@ -743,7 +743,7 @@ class EstateList
 	 * @param string $mediaFeature
 	 * @return void
 	 */
-	public function generateSourceElementHtml(int $imageId, int $height, int $mediaQuery, string $mediaFeature)
+	private function generateSourceElementHtml(int $imageId, int $height, int $mediaQuery, string $mediaFeature)
 	{
 		echo '<source media="(' . esc_html($mediaFeature) . ':' . esc_html($mediaQuery) . 'px' . ')" ' .
 			'srcset="' . esc_url($this->getEstatePictureUrl($imageId, ['height' => $height])) . ' 1x, ' .
