@@ -84,6 +84,12 @@ abstract class AdminPageSettingsBase
 	/** */
 	const VIEW_SAVE_FAIL_MESSAGE = 'view_save_fail_message';
 
+	/** */
+	const VIEW_UNSAVED_CHANGES_MESSAGE = 'view_unsaved_changes_message';
+
+	/** */
+	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
+
 	/** @var string */
 	private $_pageTitle = null;
 
@@ -559,6 +565,10 @@ abstract class AdminPageSettingsBase
 		wp_register_script('oo-copy-shortcode',
 		plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-copycode.min.js',
 			['jquery'], '', true);
+
+		wp_register_script('oo-unsaved-changes-warning', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-warning.min.js',
+			['jquery'], '', true);
+		wp_enqueue_script('oo-unsaved-changes-warning');
 	}
 
 

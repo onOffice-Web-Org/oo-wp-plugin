@@ -93,6 +93,11 @@ class AdminViewController
 	/** @var AdminPageFormSettingsMain */
 	private $_pAdminPageFormSettings = null;
 
+	/** */
+	const VIEW_UNSAVED_CHANGES_MESSAGE = 'view_unsaved_changes_message';
+
+	/** */
+	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
 
 	/**
 	 *
@@ -333,6 +338,13 @@ class AdminViewController
 		wp_localize_script('handle-notification-actions', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_localize_script('handle-notification-actions', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_enqueue_script('handle-notification-actions');
+		wp_register_script('oo-unsaved-changes-warning', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-unsaved-changes-warning.min.js',
+			['jquery'], '', true);
+		wp_enqueue_script('oo-unsaved-changes-warning');
+		wp_localize_script('oo-unsaved-changes-warning', 'onOffice_message_warnning', [
+			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('leave without saving', 'onoffice-for-wp-websites')
+		]);
 
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);

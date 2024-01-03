@@ -187,6 +187,8 @@ abstract class AdminPageEstateListSettingsBase
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
+			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('leave without saving', 'onoffice-for-wp-websites'),
 		);
 	}
 

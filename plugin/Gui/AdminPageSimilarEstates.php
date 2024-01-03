@@ -88,6 +88,12 @@ class AdminPageSimilarEstates
 	/** */
 	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
 
+	/** */
+	const VIEW_UNSAVED_CHANGES_MESSAGE = 'view_unsaved_changes_message';
+
+	/** */
+	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
+
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
@@ -331,6 +337,10 @@ class AdminPageSimilarEstates
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
+
+		wp_register_script('oo-unsaved-changes-warning', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-warning.min.js',
+			['jquery'], '', true);
+		wp_enqueue_script('oo-unsaved-changes-warning');
 	}
 
 	/**
@@ -361,6 +371,8 @@ class AdminPageSimilarEstates
 			self::ENQUEUE_DATA_MERGE => array(AdminPageEstate::PARAM_TAB),
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
+			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('leave without saving', 'onoffice-for-wp-websites'),
 		);
 	}
 
