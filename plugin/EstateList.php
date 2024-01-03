@@ -1006,7 +1006,7 @@ class EstateList
 			if ($estatePicture['type'] === ImageTypes::TITLE) {
 				$estatePictureUrl = $estatePicture['url'];
 				break;
-			} elseif ($key === array_key_first($estatePicturesByEstateId)) {
+			} elseif ($key === reset($estatePicturesByEstateId)) {
 				$estatePictureUrl = $estatePicture['url'];
 			}
 		}
