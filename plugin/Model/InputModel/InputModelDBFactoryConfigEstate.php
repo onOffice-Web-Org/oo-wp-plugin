@@ -104,7 +104,7 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_FIELD => 'sortBySetting',
 		],
 
-		InputModelDBFactory::INPUT_SORT_BY_CHOSEN => [
+		InputModelDBFactory::INPUT_SORT_BY_SELECT_TWO => [
 			self::KEY_TABLE => 'oo_plugin_sortbyuservalues',
 			self::KEY_FIELD => 'sortbyuservalue',
 		],

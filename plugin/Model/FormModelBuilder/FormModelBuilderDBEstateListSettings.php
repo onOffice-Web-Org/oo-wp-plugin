@@ -587,11 +587,11 @@ class FormModelBuilderDBEstateListSettings
 	 *
 	 */
 
-	public function createInputModelSortByChosenStandard() {
+	public function createInputModelSortBySelectTwoStandard() {
 		$label       = __( 'Sort by', 'onoffice-for-wp-websites' );
 		$pInputModel = $this->getInputModelDBFactory()->create
 		( InputModelDBFactory::INPUT_SORTBY, $label, true );
-		$pInputModel->setHtmlType( InputModelOption::HTML_TYPE_CHOSEN );
+		$pInputModel->setHtmlType( InputModelOption::HTML_TYPE_SELECT_TWO );
 		$pInputModel->setIsMulti( false );
 		$pInputModel->setValuesAvailable( $this->getDataOfSortByInput() );
 		$value = $this->getValue( DataListView::SORT_BY_STANDARD_VALUES );
@@ -610,11 +610,12 @@ class FormModelBuilderDBEstateListSettings
 	 *
 	 */
 
-	public function createInputModelSortByChosen() {
+	public function createInputModelSortBySelectTwo()
+	{
 		$label       = __( 'Sort by', 'onoffice-for-wp-websites' );
 		$pInputModel = $this->getInputModelDBFactory()->create
-		( InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label, true );
-		$pInputModel->setHtmlType( InputModelOption::HTML_TYPE_CHOSEN );
+		( InputModelDBFactory::INPUT_SORT_BY_SELECT_TWO, $label, true );
+		$pInputModel->setHtmlType( InputModelOption::HTML_TYPE_SELECT_TWO );
 		$pInputModel->setIsMulti( true );
 		$pInputModel->setValuesAvailable( $this->getDataOfSortByInput() );
 		$value = $this->getValue( DataListView::SORT_BY_USER_VALUES );
@@ -637,7 +638,7 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$label = __('Standard Sort', 'onoffice-for-wp-websites');
 		$pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORT_BY_DEFAULT, $label);
-		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT_TWO);
 
 		$selectedValue = $this->getValue($pInputModel->getField());
 		$pInputModel->setValue($selectedValue);

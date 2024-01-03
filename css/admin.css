@@ -483,6 +483,28 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	width: 50%;
 }
 
+.oo-poststuff .custom-input-field .select2 {
+	min-width: 50%;
+}
+
+.oo-poststuff .custom-input-field .select2 .select2-selection {
+	border: 1px solid #8c8f94;
+	min-height: 30px;
+}
+
+.oo-poststuff .custom-input-field .select2 .select2-selection .select2-search--inline {
+	margin-bottom: 0;
+}
+
+.oo-poststuff .custom-input-field .select2 .select2-selection .select2-search__field {
+	width: 100% !important;
+	margin-top: 3px;
+}
+
+.oo-poststuff .custom-input-field .select2 .select2-selection .select2-search__field::placeholder {
+	color: #999;
+}
+
 .oo-poststuff .custom-input-field input[type="checkbox"],
 .oo-poststuff .custom-input-field input[type="radio"] {
 	margin-left: auto;

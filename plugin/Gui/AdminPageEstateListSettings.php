@@ -129,9 +129,9 @@ class AdminPageEstateListSettings
 
 		$this->addFormModel($pFormModelRecordsFilter);
 
-		$pInputModelSortByChosenStandard = $pFormModelBuilder->createInputModelSortByChosenStandard();
+		$pInputModelSortBySelectTwoStandard = $pFormModelBuilder->createInputModelSortBySelectTwoStandard();
 		$pInputModelSorting              = $pFormModelBuilder->createInputModelSortingSelection();
-		$pInputModelSortByChosenUser     = $pFormModelBuilder->createInputModelSortByChosen();
+		$pInputModelSortBySelectTwoUser  = $pFormModelBuilder->createInputModelSortBySelectTwo();
 		$pInputModelSortByDefault        = $pFormModelBuilder->createInputModelSortByDefault();
 		$pInputModelSortByspec           = $pFormModelBuilder->createInputModelSortBySpec();
 		$pInputModelSortOrder            = $pFormModelBuilder->createInputModelSortOrder();
@@ -142,10 +142,10 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->setGroupSlug( self::FORM_VIEW_RECORDS_SORTING );
 		$pFormModelRecordsFilter->setLabel( __( 'Sorting', 'onoffice-for-wp-websites' ) );
 		$pFormModelRecordsFilter->addInputModel( $pInputModelSorting );
-		$pFormModelRecordsFilter->addInputModel( $pInputModelSortByChosenUser );
+		$pFormModelRecordsFilter->addInputModel( $pInputModelSortBySelectTwoUser );
 		$pFormModelRecordsFilter->addInputModel( $pInputModelSortByDefault );
 		$pFormModelRecordsFilter->addInputModel( $pInputModelSortByspec );
-		$pFormModelRecordsFilter->addInputModel( $pInputModelSortByChosenStandard );
+		$pFormModelRecordsFilter->addInputModel( $pInputModelSortBySelectTwoStandard );
 		$pFormModelRecordsFilter->addInputModel( $pInputModelSortOrder );
 		$pFormModelRecordsFilter->addInputModel( $pInputModelRandomSort );
 		$this->addFormModel( $pFormModelRecordsFilter );
@@ -310,5 +310,8 @@ class AdminPageEstateListSettings
 		wp_enqueue_style('onoffice-multiselect');
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
+		wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js');
+		wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css');
+		wp_enqueue_script('onoffice-singleselect',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
 	}
 }

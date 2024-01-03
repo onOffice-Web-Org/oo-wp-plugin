@@ -77,6 +77,9 @@ abstract class InputModelBase
 
 	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
 
+	/** */
+	const HTML_TYPE_SELECT_TWO = 'select2';
+
 	/** @var string */
 	private $_name = null;
 

@@ -234,6 +234,13 @@ class InputModelRenderer
 				$pInstance->setSelectedValue($pInputModel->getValue());
 				break;
 
+			case InputModelBase::HTML_TYPE_SELECT_TWO:
+				$pInstance = new InputFieldSelectTwoRenderer($pInputModel->getIdentifier(), $pInputModel->getValuesAvailable());
+				$pInstance->addAdditionalAttribute('class', 'select2 onoffice-custom-select2');
+				$pInstance->setMultiple($pInputModel->getIsMulti());
+				$pInstance->setSelectedValue($pInputModel->getValue());
+				break;
+
 			case InputModelOption::HTML_TYPE_NUMBER:
 				$pInstance = new InputFieldNumberRenderer($elementName);
 				$pInstance->setValue($pInputModel->getValue());
