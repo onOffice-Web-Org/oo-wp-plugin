@@ -488,6 +488,7 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 }
 
 .oo-poststuff .custom-input-field .select2 .select2-selection {
+	display: flex;
 	border: 1px solid #8c8f94;
 	min-height: 30px;
 }
@@ -498,7 +499,7 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 .oo-poststuff .custom-input-field .select2 .select2-selection .select2-search__field {
 	width: 100% !important;
-	margin-top: 3px;
+	margin-top: 0;
 }
 
 .oo-poststuff .custom-input-field .select2 .select2-selection .select2-search__field::placeholder {

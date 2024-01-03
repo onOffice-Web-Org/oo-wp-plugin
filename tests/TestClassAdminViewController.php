@@ -154,7 +154,7 @@ class TestClassAdminViewController
 	public function testEnqueueCss(AdminViewController $pAdminViewController)
 	{
 		$pAdminViewController->enqueue_css();
-		$this->assertCount(2, wp_styles()->queue);
+		$this->assertCount(1, wp_styles()->queue);
 	}
 
 	/**
