@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.15.1
+Version: 4.16
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -251,7 +251,13 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 	}
 });
 
-add_action('parse_request', function(WP $pWP) use ($pDI) {
+add_filter('oo_is_detailpage_redirection', function($value) {
+	return $value;
+});
+
+$pEstateRedirection = apply_filters('oo_is_detailpage_redirection', true);
+
+add_action('parse_request', function(WP $pWP) use ($pDI, $pEstateRedirection) {
 	$estateId = $pWP->query_vars['estate_id'] ?? '';
 	/** @var EstateIdRequestGuard $pEstateIdGuard */
 	$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
@@ -269,7 +275,7 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			include(get_query_template('404'));
 			die();
 		}
-		$pEstateIdGuard->estateDetailUrlChecker( $estateId, $pDI->get( Redirector::class ) );
+		$pEstateIdGuard->estateDetailUrlChecker( $estateId, $pDI->get( Redirector::class ), $pEstateRedirection);
 	}
 });
 
@@ -337,8 +343,8 @@ add_action('wp', function () {
 	}
 });
 
-add_action('parse_request', function () use ( $pDI ) {
-	if ( strpos($_SERVER["REQUEST_URI"], "onoffice-clear-cache") !== false ) {
+add_action('admin_init', function () use ( $pDI ) {
+	if ( strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
 		$pDI->get(CacheHandler::class)->clear();
 		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
 		update_option('onoffice-notice-cache-was-cleared', true);
@@ -357,6 +363,9 @@ add_action('admin_notices', function () {
 });
 
 add_action('admin_bar_menu', function ( $wp_admin_bar ) {
+	if (is_network_admin()) {
+		return;
+	}
 	$user = wp_get_current_user();
 	$allowed_roles = array('editor', 'administrator');
 	if( array_intersect($allowed_roles, $user->roles ) ){
@@ -370,7 +379,7 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 			[
 				'id'     => 'onoffice-clear-cache',
 				'title' => __('Clear onOffice cache', 'onoffice-for-wp-websites'),
-				'href'   => admin_url('onoffice-clear-cache'),
+				'href'   => admin_url('admin.php?action=onoffice-clear-cache'),
 				'parent' => 'onoffice',
 				'meta'   => [ 'class' => 'onoffice-clear-cache' ]
 			],
