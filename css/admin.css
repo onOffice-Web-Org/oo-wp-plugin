@@ -601,7 +601,7 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 #oo-search-field .field-lists .search-field-list {
 	width: 100%;
-	overflow-y: scroll;
+	overflow-y: auto;
 	max-height: 217px;
 }
 

@@ -102,6 +102,7 @@ class InputSearchFieldForFieldListsRenderer
 	public function render()
 	{
 		if (is_array($this->getValue())) {
+			$pFieldsCollection = new FieldsCollection();
 			if(empty($this->getOoModule())){
 				$pFieldsCollection = $this->buildFieldsCollection();
 			}
