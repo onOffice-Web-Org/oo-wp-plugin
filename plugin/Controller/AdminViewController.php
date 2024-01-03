@@ -338,10 +338,10 @@ class AdminViewController
 		wp_localize_script('handle-notification-actions', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_localize_script('handle-notification-actions', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_enqueue_script('handle-notification-actions');
-		wp_register_script('oo-unsaved-changes-warning', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-unsaved-changes-warning.min.js',
+		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
-		wp_enqueue_script('oo-unsaved-changes-warning');
-		wp_localize_script('oo-unsaved-changes-warning', 'onOffice_message_warnning', [
+		wp_enqueue_script('oo-unsaved-changes-message');
+		wp_localize_script('oo-unsaved-changes-message', 'onOffice_unsaved_changes_message', [
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('leave without saving', 'onoffice-for-wp-websites')
 		]);

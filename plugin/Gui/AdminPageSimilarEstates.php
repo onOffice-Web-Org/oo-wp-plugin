@@ -338,9 +338,9 @@ class AdminPageSimilarEstates
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
 
-		wp_register_script('oo-unsaved-changes-warning', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-warning.min.js',
+		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
-		wp_enqueue_script('oo-unsaved-changes-warning');
+		wp_enqueue_script('oo-unsaved-changes-message');
 	}
 
 	/**

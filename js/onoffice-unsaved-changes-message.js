@@ -1,4 +1,4 @@
-var onOffice = typeof onOffice_loc_settings !== 'undefined' ? onOffice_loc_settings : onOffice_message_warnning;
+var onOffice = typeof onOffice_loc_settings !== 'undefined' ? onOffice_loc_settings : onOffice_unsaved_changes_message;
 
 jQuery(document).ready(function($){
 	let checkUnsavedChanges = false;
@@ -11,7 +11,7 @@ jQuery(document).ready(function($){
 		checkUnsavedChanges = true;
 	});
 
-	function generateUnsavedChangesWarning(href) {
+	function generateUnsavedChangesMessage(href) {
 		return $(`
 			<div class='notice notice-error is-dismissible'>
 				<p>${onOffice.view_unsaved_changes_message} 
@@ -24,7 +24,7 @@ jQuery(document).ready(function($){
 	function handleUnsavedChanges(e, href) {
 		if (checkUnsavedChanges) {
 			e.preventDefault();
-			let appendUnsavedChangesHtml = generateUnsavedChangesWarning(href);
+			let appendUnsavedChangesHtml = generateUnsavedChangesMessage(href);
 			appendUnsavedChangesHtml.insertAfter('.wp-header-end');
 			$('html, body').animate({ scrollTop: 0 }, 1000);
 
