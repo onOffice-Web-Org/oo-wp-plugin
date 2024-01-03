@@ -72,9 +72,9 @@ class TestClassFormModelBuilderDBEstateListSettings
 
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosen
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortBySelectTwo
 	 */
-	public function testCreateInputModelSortByChosen()
+	public function testCreateInputModelSortBySelectTwo()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
@@ -99,17 +99,17 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
 		$pInstance->method('getValue')->with('sortbyuservalues')->willReturn(null);
 
-		$pInputModelDB = $pInstance->createInputModelSortByChosen();
+		$pInputModelDB = $pInstance->createInputModelSortBySelectTwo();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
-		$this->assertEquals('chosen', $pInputModelDB->getHtmlType());
+		$this->assertEquals('select2', $pInputModelDB->getHtmlType());
 	}
 
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosenStandard
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortBySelectTwoStandard
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getDataOfSortByInput
 	 */
-	public function testCreateInputModelSortByChosenStandard()
+	public function testCreateInputModelSortBySelectTwoStandard()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 		                  ->disableOriginalConstructor()
@@ -146,17 +146,17 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
 		$pInstance->method('getValue')->with('sortby')->willReturn(null);
 
-		$pInputModelDB = $pInstance->createInputModelSortByChosenStandard();
+		$pInputModelDB = $pInstance->createInputModelSortBySelectTwoStandard();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
-		$this->assertEquals('chosen', $pInputModelDB->getHtmlType());
+		$this->assertEquals('select2', $pInputModelDB->getHtmlType());
 		$this->assertEquals($data, $pInstance->getDataOfSortByInput());
 	}
 
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosen
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortBySelectTwo
 	 */
-	public function testCreateInputModelSortByChosenGroup()
+	public function testCreateInputModelSortBySelectTwoGroup()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
@@ -182,7 +182,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
 		$pInstance->method('getValue')->with('sortbyuservalues')->willReturn(null);
 
-		$pInputModelDB = $pInstance->createInputModelSortByChosen();
+		$pInputModelDB = $pInstance->createInputModelSortBySelectTwo();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$expectValue = [
 			'group' => [
@@ -201,9 +201,9 @@ class TestClassFormModelBuilderDBEstateListSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosen
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortBySelectTwo
 	 */
-	public function testCreateInputModelSortByChosenGroupNotPopular()
+	public function testCreateInputModelSortBySelectTwoGroupNotPopular()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
@@ -224,7 +224,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
 		$pInstance->method('getValue')->with('sortbyuservalues')->willReturn(null);
 
-		$pInputModelDB = $pInstance->createInputModelSortByChosen();
+		$pInputModelDB = $pInstance->createInputModelSortBySelectTwo();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$expectValue = [
 			'group' => [
