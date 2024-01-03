@@ -469,15 +469,11 @@ class GenerateMetaDataSocial
 	 */
 	private function validateImageFormat(string $imageUrl, array $imageFormatSupport): bool
 	{
-		$checkImageFormat= false;
 		if (!empty($imageUrl)) {
-			$parts = explode('.', $imageUrl);
-			if (!empty($parts)) {
-				$imageFormat = end($parts);
-				$checkImageFormat = in_array(strtoupper($imageFormat), $imageFormatSupport);
-			}
+			$imageFormat = strtoupper(pathinfo($imageUrl, PATHINFO_EXTENSION));
+			return in_array(strtoupper($imageFormat), $imageFormatSupport);
 		}
 
-		return  $checkImageFormat;
+		return  false;
 	}
 }
