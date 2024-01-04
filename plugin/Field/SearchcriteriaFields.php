@@ -91,11 +91,12 @@ class SearchcriteriaFields
 
 	/**
 	 * @param array $inputFormFields
+	 * @param array $listDataInputs
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function getFieldLabelsOfInputs(array $inputFormFields): array
+	public function getFieldLabelsOfInputs(array $inputFormFields, array $listDataInputs): array
 	{
 		$pFieldsCollection = new FieldsCollection();
 		$this->_pFieldsCollectionBuilder
@@ -116,6 +117,9 @@ class SearchcriteriaFields
 			}
 			$module = onOfficeSDK::MODULE_ESTATE;
 			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $aliasedFieldName);
+			if ($name === 'regionaler_zusatz') {
+				$pField = $pFieldsCollection->getFieldByModuleAndName($listDataInputs[$name], $aliasedFieldName);
+			}
 
 			if (FieldTypes::isRangeType($pField->getType()))
 			{
