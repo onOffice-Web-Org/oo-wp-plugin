@@ -55,7 +55,6 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 			var invert = receiver.invert;
 
 			if (receiverElement.length) {
-				var isChosen = receiverElement[0].classList.contains("chosen-select");
 				if (mainElement.prop('checked')) {
 					if (!invert) {
 						receiverElement[0].checked = receiverElement[0].checked || (receiver.checkOnActive && (instance._isInitialRun||fromOnChange));
@@ -63,9 +62,6 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 					} else {
 						receiverElement.prop('disabled', 'disabled');
 						receiverElement.removeAttr('checked');
-						if (isChosen) {
-							receiverElement.trigger("chosen:updated");
-						}
 					}
 				} else {
 					if (!invert) {
@@ -73,9 +69,6 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 						receiverElement.removeAttr('checked');
 					} else {
 						receiverElement.removeAttr('disabled');
-						if (isChosen) {
-							receiverElement.trigger("chosen:updated");
-						}
 					}
 				}
 			}

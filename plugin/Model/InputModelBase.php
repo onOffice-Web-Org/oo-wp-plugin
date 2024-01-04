@@ -61,9 +61,6 @@ abstract class InputModelBase
 	const HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST = 'complexSortableDetailList';
 
 	/** */
-	const HTML_TYPE_CHOSEN = 'chosen';
-
-	/** */
 	const HTML_TYPE_NUMBER = 'number';
 
 	/** */

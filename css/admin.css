@@ -1,7 +1,3 @@
-#onoffice-ajax .metabox-holder .postbox-container .postbox .chosen-container .chosen-drop {
-	display: grid;
-}
-
 #onoffice-ajax .metabox-holder .postbox-container .postbox .template-list input,
 #onoffice-ajax .metabox-holder .postbox-container .postbox .template-list label,
 #onoffice-ajax .metabox-holder .postbox-container .postbox .template-list select {
@@ -83,22 +79,20 @@ body #onoffice-ajax span.viewusage .italic {
 	min-height: 320px;
 	max-width: 488px;
 	background: #fff;
-	width: 50%;
+	width: 49%;
 }
 
 #sortableFieldsList .menu-item-bar {
 	display: block;
-	padding-left: 12px;
+	margin: 0 12px;
 }
 
 #sortableFieldsList .menu-item-bar > .menu-item-handle {
 	max-width: 430px;
-	width: 100%;
 }
 
 #sortableFieldsList .menu-item-settings {
 	max-width: 440px;
-	width: 100%;
 }
 
 #sortableFieldsList .menu-item-settings .submitdelete {
@@ -114,7 +108,7 @@ body #onoffice-ajax span.viewusage .italic {
 #sortableFieldsList .menu-item-settings {
 	display: block;
 	position: relative;
-	margin-left: 12px;
+	margin: 0 12px;
 	background: #fff;
 	clear: both;
 }
@@ -483,29 +477,6 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	width: 50%;
 }
 
-.oo-poststuff .custom-input-field .select2 {
-	min-width: 50%;
-}
-
-.oo-poststuff .custom-input-field .select2 .select2-selection {
-	display: flex;
-	border: 1px solid #8c8f94;
-	min-height: 30px;
-}
-
-.oo-poststuff .custom-input-field .select2 .select2-selection .select2-search--inline {
-	margin-bottom: 0;
-}
-
-.oo-poststuff .custom-input-field .select2 .select2-selection .select2-search__field {
-	width: 100% !important;
-	margin-top: 0;
-}
-
-.oo-poststuff .custom-input-field .select2 .select2-selection .select2-search__field::placeholder {
-	color: #999;
-}
-
 .oo-poststuff .custom-input-field input[type="checkbox"],
 .oo-poststuff .custom-input-field input[type="radio"] {
 	margin-left: auto;
@@ -557,17 +528,32 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	margin-bottom: 5px;
 }
 
-.oo-poststuff .custom-input-field .chosen-container-single,
-.oo-poststuff .custom-input-field .chosen-container-multi {
+.oo-poststuff .custom-input-field .select2 {
 	width: 50% !important;
 }
 
-.oo-poststuff .custom-input-field .chosen-container-single .chosen-single {
-	border-color: #8c8f94;
-	box-shadow: none;
-	border-radius: 3px;
-	padding: 0 24px 0 8px;
+.oo-poststuff .custom-input-field select {
+	max-height: 30px;
+}
+
+.oo-poststuff .custom-input-field .select2 .select2-selection {
+	display: flex;
+	border: 1px solid #8c8f94;
 	min-height: 30px;
+	height: 100%;
+}
+
+.oo-poststuff .custom-input-field .select2 .select2-selection .select2-search--inline {
+	margin-bottom: 0;
+}
+
+.oo-poststuff .custom-input-field .select2 .select2-selection .select2-search__field {
+	width: 100% !important;
+	margin-top: 0;
+}
+
+.oo-poststuff .custom-input-field .select2 .select2-selection .select2-search__field::placeholder {
+	color: #999;
 }
 
 #listSettings .custom-input-field,

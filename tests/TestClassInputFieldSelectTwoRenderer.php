@@ -9,7 +9,7 @@ use onOffice\WPlugin\Renderer\InputFieldSelectTwoRenderer;
  * @preserveGlobalState disabled
  */
 
-class TestClassInputFieldSelect2Renderer extends \WP_UnitTestCase
+class TestClassInputFieldSelectTwoRenderer extends \WP_UnitTestCase
 {
 	/**
 	 *
