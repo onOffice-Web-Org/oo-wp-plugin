@@ -157,6 +157,21 @@ class DataListView
 	/** @var string[] */
 	private $_convertTextToSelectForCityField = [];
 
+	/** @var string[] */
+	private $_priceFields = [
+		'kaufpreis',
+		'erbpacht',
+		'nettokaltmiete',
+		'warmmiete',
+		'pacht',
+		'kaltmiete',
+		'miete_pauschal',
+		'saisonmiete',
+		'wochmietbto',
+		'kaufpreis_pro_qm',
+		'mietpreis_pro_qm',
+	];
+
 	/**
 	 *
 	 * @param int $id
@@ -409,6 +424,14 @@ class DataListView
 	public function setShowReferenceEstate(string $showReferenceEstate)
 	{
 		$this->_showReferenceEstate = $showReferenceEstate;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getListFieldsShowPriceOnRequest(): array
+	{
+		return $this->_priceFields;
 	}
 
 	/** @return array */
