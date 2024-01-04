@@ -117,24 +117,29 @@ class TestClassFormPostOwner
 				$FieldObjektart = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
 				$FieldObjektart->setPermittedvalues(['haus' => 'Haus', 'wohnung' => 'Wohnung']);
 				$FieldObjektart->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$FieldObjektart->setLabel('Objektart');
 				$pFieldsCollection->addField($FieldObjektart);
 
 				$FieldObjekttyp = new Field('objekttyp', onOfficeSDK::MODULE_ESTATE);
 				$FieldObjekttyp->setPermittedvalues(['stadthaus' => 'Stadthaus', 'reihenhaus' => 'Reihenhaus']);
 				$FieldObjekttyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$FieldObjekttyp->setLabel('Objekttyp');
 				$pFieldsCollection->addField($FieldObjekttyp);
 
 				$pFieldEnergieausweistyp = new Field('energieausweistyp', onOfficeSDK::MODULE_ESTATE);
 				$pFieldEnergieausweistyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 				$pFieldEnergieausweistyp->setPermittedvalues(['Bedarfsausweis' => 'Bedarfsausweis']);
+				$pFieldEnergieausweistyp->setLabel('Energieausweistyp');
 				$pFieldsCollection->addField($pFieldEnergieausweistyp);
 
 				$pFieldWohnfl = new Field('wohnflaeche', onOfficeSDK::MODULE_ESTATE);
 				$pFieldWohnfl->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldWohnfl->setLabel('Wohnflaeche');
 				$pFieldsCollection->addField($pFieldWohnfl);
 
 				$pFieldKabelSatTv = new Field('kabel_sat_tv', onOfficeSDK::MODULE_ESTATE);
 				$pFieldKabelSatTv->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+				$pFieldKabelSatTv->setLabel('Kabel_sat_tv');
 				$pFieldsCollection->addField($pFieldKabelSatTv);
 
 				$pFieldGDPRCheckBox = new Field('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
@@ -143,6 +148,7 @@ class TestClassFormPostOwner
 
 				$pFieldBad = new Field('bad', onOfficeSDK::MODULE_ESTATE);
 				$pFieldBad->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldBad->setLabel('Bad');
 				$pFieldsCollection->addField($pFieldBad);
 
 				return $this->_pFieldsCollectionBuilderShort;
@@ -711,7 +717,7 @@ class TestClassFormPostOwner
 				. 'Objekttyp: Stadthaus' . "\n"
 				. 'Energieausweistyp: Bedarfsausweis' . "\n"
 				. 'Wohnflaeche: 800' . "\n"
-				. 'Kabel_sat_tv: 1' . "\n"
+				. 'Kabel_sat_tv: Yes' . "\n"
 				. 'Bad: Bidet, Urinal, Bathtub',
 			'estatedata' => ['objektart', 'objekttyp', 'energieausweistyp', 'wohnflaeche', 'kabel_sat_tv', 'bad'],
 			'recipient' => 'test@my-onoffice.com'
