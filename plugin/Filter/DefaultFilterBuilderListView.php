@@ -90,6 +90,14 @@ class DefaultFilterBuilderListView
 				$filter = $this->getFavoritesFilter();
 				break;
 		}
+
+		$priceFields = $this->_pDataListView->getListFieldsShowPriceOnRequest();
+		$filterKeys = array_keys($filter);
+
+		if (count(array_intersect($priceFields, $filterKeys)) > 0) {
+			$filter['preisAufAnfrage'][] = ['op' => '!=', 'val' => 1];
+		}
+
 		$filterWithRegion = $this->addSubRegionFilter($filter);
 
 		return $filterWithRegion;
