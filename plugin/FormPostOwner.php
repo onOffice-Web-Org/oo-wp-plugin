@@ -244,7 +244,12 @@ class FormPostOwner
 		$data = [];
 
 		foreach ($inputData as $key => $value) {
-			$data []= ucfirst($key).': '.ucfirst($value);
+			if (is_array($value)) {
+				$convertArrayToString = implode(', ', $value);
+				$data []= ucfirst($key) . ': ' . ucfirst($convertArrayToString);
+			} else {
+				$data []= ucfirst($key) . ': ' . ucfirst($value);
+			}
 		}
 
 		return implode("\n", $data);
