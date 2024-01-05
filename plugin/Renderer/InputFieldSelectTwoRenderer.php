@@ -33,10 +33,10 @@ class InputFieldSelectTwoRenderer extends InputFieldSelectRenderer
 	{
 		$name = $this->getMultiple() ? $this->getName() . '[]' : $this->getName();
 		$output = '<select name="'.esc_html($name).'"'
-				  .$this->renderAdditionalAttributes()
-				  .' id="'.esc_html($this->getGuiId()).'"'
-				  . ($this->getMultiple() ? ' multiple' : '')
-				  . '>';
+					.$this->renderAdditionalAttributes()
+					.' id="'.esc_html($this->getGuiId()).'"'
+					. ($this->getMultiple() ? ' multiple' : '')
+					. '>';
 		$values = $this->getValue();
 		if (array_key_exists('group', $values)) {
 			foreach ($values['group'] as $k => $group) {
