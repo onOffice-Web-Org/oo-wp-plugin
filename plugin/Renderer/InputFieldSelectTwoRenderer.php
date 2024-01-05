@@ -33,8 +33,8 @@ class InputFieldSelectTwoRenderer extends InputFieldSelectRenderer
 	{
 		$name = $this->getMultiple() ? $this->getName() . '[]' : $this->getName();
 		$output = '<select name="'.esc_html($name).'"'
-				  . $this->renderAdditionalAttributes()
-				  . ' id="'.esc_html($this->getGuiId()).'"'
+				  .$this->renderAdditionalAttributes()
+				  .' id="'.esc_html($this->getGuiId()).'"'
 				  . ($this->getMultiple() ? ' multiple' : '')
 				  . '>';
 		$values = $this->getValue();
@@ -77,16 +77,12 @@ class InputFieldSelectTwoRenderer extends InputFieldSelectRenderer
 	 * @return bool
 	 */
 	public function getMultiple()
-	{
-		return $this->_multiple;
-	}
+	{ return $this->_multiple; }
 
 	/**
 	 * @param bool $multiple
 	 */
-	public function setMultiple(bool $multiple)
-	{
-		$this->_multiple = $multiple;
-	}
+	public function setMultiple($multiple)
+	{ $this->_multiple = $multiple; }
 
 }
