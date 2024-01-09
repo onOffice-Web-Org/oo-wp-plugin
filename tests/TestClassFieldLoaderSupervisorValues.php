@@ -29,13 +29,6 @@ class TestClassFieldLoaderSupervisorValues extends WP_UnitTestCase
 			'realDataTypes' => true
 		];
 
-		$parameterUser = [
-			"data" => ["Vorname", "Nachname", "Name", "Kuerzel"],
-			"filter" => [
-				"Nr" => [["op" => "in", "val" => [69, 45, 42, 30]]]
-			]
-		];
-
 		$pSDKWrapper = new SDKWrapperMocker();
 		$responseSupervisorFieldJson = file_get_contents(__DIR__ . '/resources/ApiResponseSupervisorFields.json');
 		$responseSupervisorField = json_decode($responseSupervisorFieldJson, true);
@@ -45,10 +38,6 @@ class TestClassFieldLoaderSupervisorValues extends WP_UnitTestCase
 		$responseListSupervisors = json_decode($responseListSupervisorsJson, true);
 		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '',
 			[], null, $responseListSupervisors);
-		$responseReadUsersJson = file_get_contents(__DIR__ . '/resources/ApiResponseGetUsers.json');
-		$responseReadUsers = json_decode($responseReadUsersJson, true);
-		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'user', '',
-			$parameterUser, null, $responseReadUsers);
 
 		$this->_pFieldLoader = new FieldLoaderSupervisorValues($pSDKWrapper);
 	}
@@ -64,10 +53,10 @@ class TestClassFieldLoaderSupervisorValues extends WP_UnitTestCase
 				"type" => FieldTypes::FIELD_TYPE_SINGLESELECT,
 				"length" => null,
 				"permittedvalues" => [
-					69 => 'aa, aa(aa)',	
-					45 => 'Test first name(FN)',
-					42 => 'Test last name(LN)',
-					30 => '(Test Username)(TU)'
+					69 => 'aa, aa',	
+					45 => 'Test first name',
+					42 => 'Test last name',
+					30 => '(Test Username)'
 				],
 				"default" => null,
 				"label"	=> 'Supervisor',

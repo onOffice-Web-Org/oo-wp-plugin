@@ -43,57 +43,6 @@ class FieldLoaderSupervisorValues implements FieldLoader
 		}
 	}
 
-	/**
-	 * @return array
-	 * @throws ApiClientException
-	 */
-	private function getFullNameSupervisor(): array
-	{
-		$fullNameSupervisor = [];
-		$userIds = $this->getUserIds();
-		$parameters = [
-			"data" => ["Vorname", "Nachname", "Name", "Kuerzel"],
-			"filter" => [
-				"Nr" => [["op" => "in", "val" => $userIds]]
-			]
-		];
-
-		$pApiClientAction = new APIClientActionGeneric
-		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'user');
-		$pApiClientAction->setParameters($parameters);
-		$pApiClientAction->addRequestToQueue()->sendRequests();
-
-		$userRecords = $pApiClientAction->getResultRecords();
-
-		if (empty($userRecords)) {
-			return [];
-		}
-
-		foreach ($userRecords as $userRecord) {
-			$userId = $userRecord['id'];
-			$firstName = $userRecord['elements']['Vorname'];
-			$lastName = $userRecord['elements']['Nachname'];
-			$userName = $userRecord['elements']['Name'];
-			$userCode = $userRecord['elements']['Kuerzel'];
-
-			if (!empty($firstName) && !empty($lastName)) {
-				$fullName = $lastName . ', ' . $firstName;
-			} else {
-				if (!empty($firstName) && empty($lastName)) {
-					$fullName = $firstName;
-				} elseif (empty($firstName) && !empty($lastName)) {
-					$fullName = $lastName;
-				} else {
-					$fullName = '(' .$userName . ')';
-				}
-			}
-			$fullName .= '(' . $userCode . ')';
-
-			$fullNameSupervisor[$userId] = $fullName;
-		}
-
-		return $fullNameSupervisor;
-	}
 
 	/**
 	 * @return array
@@ -128,7 +77,7 @@ class FieldLoaderSupervisorValues implements FieldLoader
 	 * @return array
 	 * @throws ApiClientException
 	 */
-	private function getUserIds(): array
+	private function getFullNameSupervisor(): array
 	{
 		$pApiClientAction = new APIClientActionGeneric
 		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
@@ -136,16 +85,33 @@ class FieldLoaderSupervisorValues implements FieldLoader
 		$pApiClientAction->addRequestToQueue();
 		$this->_pSDKWrapper->sendRequests();
 		$result = $pApiClientAction->getResultRecords();
-		$userIds= [];
+		$fullNameSupervisor = [];
 
 		if (empty($result)) {
 			return [];
 		}
 
 		foreach ($result as $value) {
-			$userIds[] = $value['elements']['id'];
+			$fullName = '';
+			$firstName = $value['elements']['firstname'];
+			$lastName = $value['elements']['lastname'];
+			$userName = $value['elements']['username'];
+
+			if (!empty($firstName) && !empty($lastName)) {
+				$fullName = $lastName . ', ' . $firstName;
+			} else {
+				if (!empty($firstName) && empty($lastName)) {
+					$fullName = $firstName;
+				} elseif (empty($firstName) && !empty($lastName)) {
+					$fullName = $lastName;
+				} else {
+					$fullName = '(' .$userName . ')';
+				}
+			}
+
+			$fullNameSupervisor[$value['elements']['id']] = $fullName;
 		}
 
-		return $userIds;
+		return $fullNameSupervisor;
 	}
 }
