@@ -131,13 +131,6 @@ class TestClassFieldsCollectionBuilderShort
 			'modules' => [onOfficeSDK::MODULE_ESTATE],
 			'realDataTypes' => true
 		];
-
-		$parameterUser = [
-			"data" => ["Vorname", "Nachname", "Name", "Kuerzel"],
-			"filter" => [
-				"Nr" => [["op" => "in", "val" => [69, 45, 42, 30]]]
-			]
-		];
 		
 		$responseGetSupervisorFields = json_decode
 		 	(file_get_contents(__DIR__.'/resources/ApiResponseSupervisorFields.json'), true);
@@ -148,10 +141,6 @@ class TestClassFieldsCollectionBuilderShort
 			(file_get_contents(__DIR__.'/resources/ApiResponseListSupervisors.json'), true);
 		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '',
 			[], null, $responseGetListSupervisors);
-		$responseReadUsers = json_decode
-			(file_get_contents(__DIR__ . '/resources/ApiResponseGetUsers.json'), true);
-		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'user', '',
-			$parameterUser, null, $responseReadUsers);
 		$pRegionController = $this->getMockBuilder(RegionController::class)
 			->disableOriginalConstructor()
 			->getMock();
