@@ -54,7 +54,7 @@ class SearchParameters
 	 * @global int $page
 	 * @global bool $more
 	 */
-	public function linkPagesLink(string $link, int $i, SearchParametersModel $pModel): string
+	public function linkPagesLink(string $link, int $i, SearchParametersModel $pModel, int $pListViewId, bool $pCheckPaginationTheme): string
 	{
 		global $paged, $more;
 
@@ -65,7 +65,7 @@ class SearchParameters
 			$link = $linkparams['link_before'].str_replace('%', $i, $linkparams['pagelink'])
 				.$linkparams['link_after'];
 			if ($i != $paged || ! $more && 1 == $paged) {
-				$url = $this->geturl( $i, $pModel->getParameters() );
+				$url = !$pCheckPaginationTheme ? $this->getUrlByListViewId($i, $pModel->getParameters(), $pListViewId) : $this->geturl($i, $pModel->getParameters());
 				$output .= '<a href="'.esc_url($url).'">'.$link.'</a>';
 			} else {
 				$output .= $link;
@@ -105,12 +105,26 @@ class SearchParameters
 	}
 
 	/**
+	 * @param int $i
+	 * @param array $parameters
+	 * @param int $id
+	 * @return string
+	 */
+	private function getUrlByListViewId(int $i, array $parameters, int $pListViewId): string
+	{
+		$url = get_permalink();
+		$parameter = $parameters;
+		$parameter['page_of_id_'.$pListViewId] = $i;
+		return add_query_arg($parameter, $url);
+	}
+
+	/**
 	 * @param SearchParametersModel $pSearchParametersModel
 	 */
-	public function registerNewPageLinkArgs(SearchParametersModel $pSearchParametersModel)
+	public function registerNewPageLinkArgs(SearchParametersModel $pSearchParametersModel, $pListViewId, $pCheckPaginationTheme)
 	{
-		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pSearchParametersModel): string {
-			return $this->linkPagesLink($link, $i, $pSearchParametersModel);
+		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pSearchParametersModel, $pListViewId, $pCheckPaginationTheme): string {
+			return $this->linkPagesLink($link, $i, $pSearchParametersModel, $pListViewId, $pCheckPaginationTheme);
 		}, 10, 2);
 		add_filter('wp_link_pages_args', [$pSearchParametersModel, 'populateDefaultLinkParams']);
 	}

@@ -118,7 +118,7 @@ class ContentFilterShortCodeEstateList
 			$pSortListModel = $this->_pSortListBuilder->build($pListView);
 			$pListViewWithSortParams = $this->listViewWithSortParams($pListView, $pSortListModel);
 
-			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel);
+			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel, false);
 			$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory
 				->buildDefaultListViewFilter($pListViewWithSortParams);
 
@@ -130,11 +130,14 @@ class ContentFilterShortCodeEstateList
 			$pEstateList->setUnitsViewName($attributes['units']);
 			$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 
-			$pEstateList->loadEstates($this->_pWPQueryWrapper->getWPQuery()->get('paged', 1) ?: 1);
+			$pEstateList->loadEstates($this->_pWPQueryWrapper->getWPQuery($pListView->getId())->get('paged', 1) ?: 1);
 			$pTemplate = $this->_pTemplate
 				->withTemplateName($pListViewWithSortParams->getTemplate())
 				->withEstateList($pEstateList);
-			$result = $pTemplate->render();
+			$result = '<div id="'.str_replace(' ', '-', $attributes['view']).'">';
+			$result .= $pTemplate->render();
+			$result .= '</div>';
+			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel, true);
 		}
 		return $result;
 	}
@@ -160,10 +163,10 @@ class ContentFilterShortCodeEstateList
 	 * @throws NotFoundException
 	 * @throws UnknownFieldException
 	 */
-	private function registerNewPageLinkArgs(DataListView $pListView, SortListDataModel $pSortListDataModel)
+	private function registerNewPageLinkArgs(DataListView $pListView, SortListDataModel $pSortListDataModel, bool $pCheckPaginationTheme = false)
 	{
 		$pModel = $this->_pSearchParametersModelBuilderEstate
 			->buildSearchParametersModel($pListView, $pSortListDataModel);
-		$this->_pSearchParameters->registerNewPageLinkArgs($pModel);
+		$this->_pSearchParameters->registerNewPageLinkArgs($pModel, $pListView->getId(), $pCheckPaginationTheme);
 	}
 }
