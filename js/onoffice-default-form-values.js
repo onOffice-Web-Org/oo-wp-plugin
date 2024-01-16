@@ -189,7 +189,8 @@ onOffice.default_values_input_converter = function () {
         if (fieldDefinition.type === "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:tinyint") {
             const parent = mainInput;
             const element = document.createElement('fieldset');
-            const keys = Object.keys(fieldDefinition.permittedvalues).sort();
+            const order = ['', '0', '1'];
+            const keys = Object.keys(fieldDefinition.permittedvalues).sort((a, b) => order.indexOf(a) - order.indexOf(b));
             parent.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
 
             element.className = 'onoffice-input-radio';
@@ -205,10 +206,10 @@ onOffice.default_values_input_converter = function () {
                 }
                 label.appendChild(mainInputClone);
                 element.appendChild(label);
+                parent.parentElement.appendChild(element);
             });
             const labels = parent.parentElement.getElementsByTagName('label')[1];
             parent.parentElement.removeChild(labels);
-            parent.parentElement.appendChild(element);
             mainInput.remove();
             return;
         }

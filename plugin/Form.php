@@ -563,7 +563,7 @@ class Form
 			$pDefaultFields = $pDefaultValueRead->getConvertedMultiFields($formId, $fields);
 			if (count($pDefaultFields)) $values = array_merge($values, $pDefaultFields);
 		}
-		return array_filter($values);
+		return array_filter($values, function($value) {return ($value === "0" || !empty($value));});
 	}
 
 	/**
