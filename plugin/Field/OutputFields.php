@@ -76,7 +76,8 @@ class OutputFields
 
 		$allFields = array_merge($fieldsArray, array_keys($geoFields));
 		$valuesDefault = array_map(function($field) use ($geoFields, $pInputVariableReader) {
-			return $pInputVariableReader->getFieldValueFormatted($field) ?: $geoFields[$field] ?? null;
+			$value = $pInputVariableReader->getFieldValueFormatted($field);
+			return $value === false ? false : ($value ?? null);
 		}, $allFields);
 
 		$resultDefault = array_combine($allFields, $valuesDefault);

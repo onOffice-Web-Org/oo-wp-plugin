@@ -470,17 +470,6 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	}
 }
 
-.onoffice-input-radio {
-	border-radius: 4px;
-	width: 50%;
-	gap: 10px;
-	display: grid;
-	padding: 10px;
-	float: left;
-	margin-left: 4px;
-	justify-content: initial;
-	border: 1px solid #8c8f94;
-}
 
 /* new style */
 .oo-poststuff .custom-input-field {
@@ -580,4 +569,19 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 .oo-poststuff .key-of-field-block {
 	display: flex;
+}
+
+.oo-poststuff .custom-input-field .onoffice-input-radio {
+	border-radius: 4px;
+	width: 50%;
+	display: grid;
+	float: left;
+	justify-content: initial;
+	border: 1px solid #8c8f94;
+}
+
+.oo-poststuff .custom-input-field .onoffice-input-radio label {
+    display: flex;
+	justify-content: space-between;
+    margin: 10px;
 }

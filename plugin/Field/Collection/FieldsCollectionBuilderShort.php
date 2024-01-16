@@ -289,6 +289,9 @@ class FieldsCollectionBuilderShort
 	 */
 	public function addFieldSupervisorForSearchCriteria(FieldsCollection $pFieldsCollection): self
 	{
+		if (!$pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_SEARCHCRITERIA, 'benutzer')) {
+			return $this;
+		};
 		$pFieldLoader = $this->_pContainer->get(FieldLoaderSupervisorValues::class);
 		$pFieldCollectionSupervisor = $this->_pContainer->get(FieldsCollectionBuilder::class)
 			->buildFieldsCollection($pFieldLoader);

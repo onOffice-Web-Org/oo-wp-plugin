@@ -205,8 +205,10 @@ onOffice.default_values_input_converter = function () {
                 }
                 label.appendChild(mainInputClone);
                 element.appendChild(label);
-                parent.parentElement.appendChild(element);
             });
+            const labels = parent.parentElement.getElementsByTagName('label')[1];
+            parent.parentElement.removeChild(labels);
+            parent.parentElement.appendChild(element);
             mainInput.remove();
             return;
         }
