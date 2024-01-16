@@ -36,6 +36,7 @@ use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\Field;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -252,7 +253,9 @@ class TestClassFieldsCollectionBuilderShort
 	public function testAddFieldSupervisorForSearchCriteria()
 	{
 		$pFieldsCollection = new FieldsCollection();
+		$field = new Field('benutzer', onOfficeSDK::MODULE_SEARCHCRITERIA, 'testLabel');
+		$pFieldsCollection->addField($field);
 		$this->assertSame($this->_pSubject, $this->_pSubject->addFieldSupervisorForSearchCriteria($pFieldsCollection));
-		$this->assertCount(1, $pFieldsCollection->getAllFields());
+		$this->assertCount(2, $pFieldsCollection->getAllFields());
 	}
 }

@@ -207,7 +207,7 @@ if (!function_exists('renderFormField')) {
 			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
 				$output = '<fieldset>
 					<input type="radio" id="' . esc_attr($fieldName) . '_u" name="' . esc_attr($fieldName) . '" value=""
-						' . ($selectedValue === "" ? ' checked' : '') . '>
+						' . ($selectedValue === null ? ' checked' : '') . '>
 					<label for="' . esc_attr($fieldName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
 					<input type="radio" id="' . esc_attr($fieldName) . '_y" name="' . esc_attr($fieldName) . '" value="1"
 						' . ($selectedValue == 2 ? 'checked' : '') . '>
