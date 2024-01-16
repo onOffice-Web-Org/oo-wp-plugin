@@ -207,13 +207,13 @@ if (!function_exists('renderFormField')) {
 			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
 				$output = '<fieldset>
 					<input type="radio" id="' . esc_attr($fieldName) . '_u" name="' . esc_attr($fieldName) . '" value=""
-						' . ($selectedValue === null ? ' checked' : '') . '>
+						' . ($selectedValue == '' ? ' checked' : '') . '>
 					<label for="' . esc_attr($fieldName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
 					<input type="radio" id="' . esc_attr($fieldName) . '_y" name="' . esc_attr($fieldName) . '" value="1"
-						' . ($selectedValue == 2 ? 'checked' : '') . '>
+						' . ($selectedValue == 1 ? 'checked' : '') . '>
 					<label for="' . esc_attr($fieldName) . '_y">' . esc_html__('Yes', 'onoffice-for-wp-websites') . '</label>
 					<input type="radio" id="' . esc_attr($fieldName) . '_n" name="' . esc_attr($fieldName) . '" value="0"
-						' . ($selectedValue == 1 ? 'checked' : '') . '>
+						' . ($selectedValue == 0 ? 'checked' : '') . '>
 					<label for="' . esc_attr($fieldName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
 					</fieldset>';
 			} else {
