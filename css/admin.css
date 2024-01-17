@@ -580,7 +580,7 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 }
 
 .oo-poststuff .custom-input-field .onoffice-input-radio label {
-    display: flex;
+	display: flex;
 	justify-content: space-between;
-    margin: 10px;
+	margin: 10px;
 }
