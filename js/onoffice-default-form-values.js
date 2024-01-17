@@ -189,8 +189,7 @@ onOffice.default_values_input_converter = function () {
         if (fieldDefinition.type === "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:tinyint") {
             const parent = mainInput;
             const element = document.createElement('fieldset');
-            const order = ['', '0', '1'];
-            const keys = Object.keys(fieldDefinition.permittedvalues).sort((a, b) => order.indexOf(a) - order.indexOf(b));
+            const keys = Object.keys(fieldDefinition.permittedvalues).sort();
             parent.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
 
             element.className = 'onoffice-input-radio';

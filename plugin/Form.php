@@ -563,7 +563,16 @@ class Form
 			$pDefaultFields = $pDefaultValueRead->getConvertedMultiFields($formId, $fields);
 			if (count($pDefaultFields)) $values = array_merge($values, $pDefaultFields);
 		}
-		return array_filter($values, function($value) {return ($value === "0" || !empty($value));});
+		return array_filter($values, array($this, 'filterDefaultValues'));
+	}
+
+	/**
+	 * @param mixed $value
+	 * @return bool
+	 */
+	private function filterDefaultValues($value): bool
+	{
+		return ($value === "0" || !empty($value));
 	}
 
 	/**
