@@ -51,6 +51,7 @@ use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerInsertException;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\Renderer\InputFieldTemplateListRenderer;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Translation\ModuleTranslation;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -423,6 +424,28 @@ abstract class AdminPageFormSettingsBase
 		$this->_pFormModelBuilder = $this->getContainer()->get(FormModelBuilderDBForm::class);
 		$this->_pFormModelBuilder->setFormType($this->getType());
 		$pFormModel = $this->_pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
+
+		$showDeleteOrRenameActiveTemplateNotification = false;
+		$showChooseWrongTemplateNotification = false;
+		$templatePath = '';
+		$pageTitle = '';
+		if ($this->getListViewId() !== null) {
+			$pRecordManagerReadForm = $this->getContainer()->get(RecordManagerReadForm::class);
+			$formRecords = $pRecordManagerReadForm->getRowById($this->getListViewId());
+			$pageTitle = $formRecords['name'];
+			$templatePath = $formRecords['template'];
+
+			$showDeleteOrRenameActiveTemplateNotification = $this->_pFormModelBuilder->checkLogicDeleteOrRenameActiveTemplate('onoffice-editform', $templatePath);
+			$showChooseWrongTemplateNotification = $this->_pFormModelBuilder->checkLogicChooseWrongTemplate('onoffice-editform', $this->getType(), basename($templatePath));
+		}
+
+		$showDeleteOrRenameTemplate = $this->_pFormModelBuilder->checkLogicDeleteOrRenameTemplate('onoffice-editform');
+		$this->generateDeleteOrRenameTemplateNotification($showDeleteOrRenameTemplate['status'], $showDeleteOrRenameActiveTemplateNotification,
+			$pageTitle, $showDeleteOrRenameTemplate['elements']);
+
+		$this->generateChooseWrongTemplateNotification($showChooseWrongTemplateNotification, $templatePath,
+			$this->getType() ? InputFieldTemplateListRenderer::TEMPLATE_DEFAULT_LIST['onoffice-editform'][$this->getType()] : '');
+
 		$this->addFormModel($pFormModel);
 
 		$pInputModelName = $this->_pFormModelBuilder->createInputModelName();
@@ -863,6 +886,22 @@ abstract class AdminPageFormSettingsBase
 
 		wp_redirect( admin_url( 'admin.php?' . $pageQuery . $typeQuery . $idQuery . $statusQuery ) );
 		die();
+	}
+
+	/**
+	 * @param bool $chooseWrongTemplateStatus
+	 * @param string $templatePath
+	 * @param string $defaultTemplateName
+	 * @return void
+	 */
+	protected function generateChooseWrongTemplateNotification(bool $chooseWrongTemplateStatus, string $templatePath, string $defaultTemplateName)
+	{
+		parent::generateChooseWrongTemplateNotification($chooseWrongTemplateStatus, $templatePath, $defaultTemplateName);
+		if ($chooseWrongTemplateStatus) {
+			$message = sprintf(esc_html__('The template %1$s is not compatible with the form type %2$s. Please select the default template "%3$s" or a new template.',
+				'onoffice-for-wp-websites'), basename($templatePath), $this->getType(), $defaultTemplateName);
+			echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
 	}
 
 	/** @return string */

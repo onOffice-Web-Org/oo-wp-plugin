@@ -28,6 +28,7 @@ use onOffice\WPlugin\Model;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Renderer\InputFieldTemplateListRenderer;
 
 
 /**
@@ -61,6 +62,28 @@ class AdminPageEstateUnitSettings
 	{
 		$pFormModelBuilder = new FormModelBuilderDBEstateUnitListSettings();
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
+
+		$showDeleteOrRenameActiveTemplateNotification = false;
+		$showChooseWrongTemplateNotification = false;
+		$templatePath = '';
+		$pageTitle = '';
+
+		if ($this->getListViewId() !== null) {
+			$listViewEstateUnitRecords = $this->getListViewEstateRecords($this->getListViewId());
+			$pageTitle = $listViewEstateUnitRecords['name'];
+			$templatePath = $listViewEstateUnitRecords['template'];
+
+			$showDeleteOrRenameActiveTemplateNotification = $pFormModelBuilder->checkLogicDeleteOrRenameActiveTemplate('onoffice-editunitlist', $templatePath);
+			$showChooseWrongTemplateNotification = $pFormModelBuilder->checkLogicChooseWrongTemplate('onoffice-editunitlist', null, basename($templatePath));
+		}
+
+		$showDeleteOrRenameTemplate = $pFormModelBuilder->checkLogicDeleteOrRenameTemplate('onoffice-editunitlist');
+		$this->generateDeleteOrRenameTemplateNotification($showDeleteOrRenameTemplate['status'], $showDeleteOrRenameActiveTemplateNotification,
+			$pageTitle, $showDeleteOrRenameTemplate['elements']);
+
+		$this->generateChooseWrongTemplateNotification($showChooseWrongTemplateNotification, $templatePath,
+			InputFieldTemplateListRenderer::TEMPLATE_DEFAULT_LIST['onoffice-editunitlist']);
+
 		$this->addFormModel($pFormModel);
 
 		$pInputModelName = $pFormModelBuilder->createInputModelName();
@@ -190,6 +213,22 @@ class AdminPageEstateUnitSettings
 		$rowCleanRecordsPerPage = $this->setRecordsPerPage($row, RecordManager::TABLENAME_LIST_VIEW);
 		$rowCleanRecordsPerPage[RecordManager::TABLENAME_LIST_VIEW]['list_type'] = 'units';
 		return $rowCleanRecordsPerPage;
+	}
+
+	/**
+	 * @param bool $chooseWrongTemplateStatus
+	 * @param string $templatePath
+	 * @param string $defaultTemplateName
+	 * @return void
+	 */
+	protected function generateChooseWrongTemplateNotification(bool $chooseWrongTemplateStatus, string $templatePath, string $defaultTemplateName)
+	{
+		parent::generateChooseWrongTemplateNotification($chooseWrongTemplateStatus, $templatePath, $defaultTemplateName);
+		if ($chooseWrongTemplateStatus) {
+			$message = sprintf(esc_html__('The template %1$s is not compatible with unit lists. Please select the default template "%2$s" or a new template.',
+				'onoffice-for-wp-websites'), basename($templatePath), $defaultTemplateName);
+			echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
 	}
 
 	/**

@@ -27,6 +27,7 @@ use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Renderer\InputFieldTemplateListRenderer;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -197,6 +198,141 @@ abstract class FormModelBuilder
 		} catch (APIClientCredentialsException $pException) {
 			return [];
 		}
+	}
+
+	/**
+	 * @param string $screenId
+	 * @return array
+	 */
+	public function checkLogicDeleteOrRenameTemplate(string $screenId): array
+	{
+		$dataByScreenId = $this->getTemplateListAndFolderNameByScreenId($screenId);
+		$templateDefaultListForFolderName = $this->getTemplateDefaultListForFolderName();
+		$currentTemplateList = $this->getTemplateNamesByScreenId($screenId);
+		$deletedOrRenamedTemplates = array_diff($templateDefaultListForFolderName[$dataByScreenId['folder']], $currentTemplateList);
+
+		return [
+			'status' => count($deletedOrRenamedTemplates) > 0,
+			'elements' => $deletedOrRenamedTemplates
+		];
+	}
+
+	/**
+	 * @param string $screenId
+	 * @param string $activeTemplatePath
+	 * @return bool
+	 */
+	public function checkLogicDeleteOrRenameActiveTemplate(string $screenId, string $activeTemplatePath): bool
+	{
+		$dataByScreenId = $this->getTemplateListAndFolderNameByScreenId($screenId);
+
+		if (empty($dataByScreenId['elements'])) {
+			return false;
+		}
+
+		$currentTemplateNames = [];
+		foreach ($dataByScreenId['elements'] as $template) {
+			$currentTemplateNames[] = basename($template);
+		}
+
+		$templateDefaultListForFolderName = $this->getTemplateDefaultListForFolderName();
+		$currentTemplateList = $this->getTemplateNamesByScreenId($screenId);
+		$deletedElements = array_diff($templateDefaultListForFolderName[$dataByScreenId['folder']], $currentTemplateList);
+
+		if (!empty($deletedElements) && !in_array(basename($activeTemplatePath), $currentTemplateNames)
+				&& $deletedElements[array_key_first($deletedElements)] === basename($activeTemplatePath)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param string $screenId
+	 * @param $screenTab
+	 * @param string $selectedTemplatePath
+	 * @return bool
+	 */
+	public function checkLogicChooseWrongTemplate(string $screenId, $screenTab, string $selectedTemplatePath): bool
+	{
+		$defaultTemplate = $screenTab ? InputFieldTemplateListRenderer::TEMPLATE_DEFAULT_LIST[$screenId][$screenTab] :
+				InputFieldTemplateListRenderer::TEMPLATE_DEFAULT_LIST[$screenId];
+
+		return $this->checkDifferentName($defaultTemplate, basename($selectedTemplatePath));
+	}
+
+	/**
+	 * @param string $screenId
+	 * @return array
+	 */
+	private function getTemplateListAndFolderNameByScreenId(string $screenId): array
+	{
+		$folder = '';
+		if ($screenId === 'onoffice-editlistview' || $screenId === 'onoffice-estates' || $screenId === 'onoffice-editunitlist') {
+			$folder = 'estate';
+		} elseif ($screenId === 'onoffice-editform') {
+			$folder = 'form';
+		} elseif ($screenId === 'onoffice-editlistviewaddress') {
+			$folder = 'address';
+		}
+
+		return [
+			'elements' => glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php') . 'templates.dist/' . $folder . '/' . '*' . '.php'),
+			'folder' => $folder
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getTemplateDefaultListForFolderName(): array
+	{
+		$templateDefaultList = InputFieldTemplateListRenderer::TEMPLATE_DEFAULT_LIST;
+
+		$templateDefaultListByFolderName = [];
+		foreach ($templateDefaultList as $key => $templateDefault) {
+			if ($key === 'onoffice-editlistview' ||  $key === 'onoffice-editunitlist') {
+				$templateDefaultListByFolderName['estate'][] = $templateDefault;
+			} elseif ($key === 'onoffice-estates') {
+				foreach ($templateDefault as $template) {
+					$templateDefaultListByFolderName['estate'][] = $template;
+				}
+			} elseif ($key === 'onoffice-editform') {
+				foreach ($templateDefault as $template) {
+					$templateDefaultListByFolderName['form'][] = $template;
+				}
+			} elseif ($key === 'onoffice-editlistviewaddress') {
+				$templateDefaultListByFolderName['address'][] = $templateDefault;
+			}
+		}
+
+		return $templateDefaultListByFolderName;
+	}
+
+	/**
+	 * @param string $correct
+	 * @param string $name
+	 * @return bool
+	 */
+	private function checkDifferentName(string $correct, string $name): bool
+	{
+		return ($correct !== $name);
+	}
+
+	/**
+	 * @param string $screenId
+	 *
+	 * @return array
+	 */
+	private function getTemplateNamesByScreenId(string $screenId): array
+	{
+		$data = $this->getTemplateListAndFolderNameByScreenId($screenId);
+		$templateNames = [];
+		foreach ($data['elements'] as $template) {
+			$templateNames[] = basename($template);
+		}
+
+		return $templateNames;
 	}
 
 

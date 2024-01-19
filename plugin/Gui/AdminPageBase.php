@@ -96,6 +96,39 @@ abstract class AdminPageBase
 		echo '<hr class="wp-header-end">';
 	}
 
+	/**
+	 * @param bool $deleteOrRenameTemplateStatus
+	 * @param bool $deleteOrRenameActiveTemplateStatus
+	 * @param string $pageTitle
+	 * @param array $listTemplate
+	 * @return void
+	 */
+	public function generateDeleteOrRenameTemplateNotification(
+		bool $deleteOrRenameTemplateStatus,
+		bool $deleteOrRenameActiveTemplateStatus,
+		string $pageTitle,
+		array $listTemplate)
+	{
+		if ($deleteOrRenameTemplateStatus && !$deleteOrRenameActiveTemplateStatus) {
+			$message = sprintf(esc_html__('Deleting or renaming a template can lead to visual and critical errors on your website. The template %s has been deleted or renamed.',
+				'onoffice-for-wp-websites'), esc_html(implode(', ', $listTemplate)));
+		} elseif ($deleteOrRenameActiveTemplateStatus) {
+			$message = sprintf(esc_html__('The active template for %s has been deleted or renamed. Please select a new template.',
+				'onoffice-for-wp-websites'), esc_html($pageTitle));
+		}
+
+		if (isset($message)) {
+			echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
+	}
+
+	/**
+	 * @param bool $chooseWrongTemplateStatus
+	 * @param string $templatePath
+	 * @param string $defaultTemplateName
+	 * @return void
+	 */
+	protected function generateChooseWrongTemplateNotification(bool $chooseWrongTemplateStatus, string $templatePath, string $defaultTemplateName) {}
 
 	/**
 	 *

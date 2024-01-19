@@ -39,6 +39,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelOptionFactorySimilarView;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
+use onOffice\WPlugin\Renderer\InputFieldTemplateListRenderer;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
@@ -107,6 +108,21 @@ class AdminPageSimilarEstates
 		}
 		$pDataSimilarSettingsHandler = $this->getContainer()->get(DataSimilarEstatesSettingsHandler::class);
 		$pDataSimilarView = $pDataSimilarSettingsHandler->getDataSimilarEstatesSettings();
+
+		$templatePath = $pDataSimilarView->getDataViewSimilarEstates()->getTemplate();
+		$pageTitle = esc_html__('Similar Estates', 'onoffice-for-wp-websites');
+		$pFormModelBuilder = $this->getContainer()->get(FormModelBuilderSimilarEstateSettings::class);
+
+		$showDeleteOrRenameTemplate = $pFormModelBuilder->checkLogicDeleteOrRenameTemplate($_GET['page']);
+		$showDeleteOrRenameActiveTemplateNotification = $pFormModelBuilder->checkLogicDeleteOrRenameActiveTemplate($_GET['page'], $templatePath);
+		$showChooseWrongTemplateNotification = $pFormModelBuilder->checkLogicChooseWrongTemplate($_GET['page'], $_GET['tab'], basename($templatePath));
+
+		$this->generateDeleteOrRenameTemplateNotification($showDeleteOrRenameTemplate['status'], $showDeleteOrRenameActiveTemplateNotification,
+			$pageTitle, $showDeleteOrRenameTemplate['elements']);
+
+		$this->generateChooseWrongTemplateNotification($showChooseWrongTemplateNotification, $templatePath,
+			InputFieldTemplateListRenderer::TEMPLATE_DEFAULT_LIST[$_GET['page']][$_GET['tab']]);
+
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
 
@@ -506,5 +522,21 @@ class AdminPageSimilarEstates
 		}
 
 		return $value;
+	}
+
+	/**
+	 * @param bool $chooseWrongTemplateStatus
+	 * @param string $templatePath
+	 * @param string $defaultTemplateName
+	 * @return void
+	 */
+	protected function generateChooseWrongTemplateNotification(bool $chooseWrongTemplateStatus, string $templatePath, string $defaultTemplateName)
+	{
+		parent::generateChooseWrongTemplateNotification($chooseWrongTemplateStatus, $templatePath, $defaultTemplateName);
+		if ($chooseWrongTemplateStatus) {
+			$message = sprintf(esc_html__('The template %1$s is not compatible with similar pages. Please select the default template "%2$s" or a new template.',
+				'onoffice-for-wp-websites'), basename($templatePath), $defaultTemplateName);
+			echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
 	}
 }

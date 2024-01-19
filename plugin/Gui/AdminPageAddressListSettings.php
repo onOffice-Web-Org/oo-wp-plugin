@@ -34,6 +34,7 @@ use onOffice\WPlugin\Record\RecordManagerInsertException;
 use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use onOffice\WPlugin\Record\RecordManagerUpdateListViewAddress;
+use onOffice\WPlugin\Renderer\InputFieldTemplateListRenderer;
 use stdClass;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
@@ -90,6 +91,28 @@ class AdminPageAddressListSettings
 		$pEnvironment = new AddressListEnvironmentDefault();
 		$this->_pFormModelBuilderAddress = new FormModelBuilderDBAddress();
 		$pFormModel = $this->_pFormModelBuilderAddress->generate($this->getPageSlug(), $this->getListViewId());
+
+		$showDeleteOrRenameActiveTemplateNotification = false;
+		$showChooseWrongTemplateNotification = false;
+		$templatePath = '';
+		$pageTitle = '';
+		if ($this->getListViewId() !== null) {
+			$pRecordManagerReadListViewAddress = $this->getContainer()->get(RecordManagerReadListViewAddress::class);
+			$listViewAddressRecords = $pRecordManagerReadListViewAddress->getRowById($this->getListViewId());
+			$pageTitle = $listViewAddressRecords['name'];
+			$templatePath = $listViewAddressRecords['template'];
+
+			$showDeleteOrRenameActiveTemplateNotification = $this->_pFormModelBuilderAddress->checkLogicDeleteOrRenameActiveTemplate('onoffice-editlistviewaddress', $templatePath);
+			$showChooseWrongTemplateNotification = $this->_pFormModelBuilderAddress->checkLogicChooseWrongTemplate('onoffice-editlistviewaddress', null, basename($templatePath));
+		}
+
+		$showDeleteOrRenameTemplate = $this->_pFormModelBuilderAddress->checkLogicDeleteOrRenameTemplate('onoffice-editlistviewaddress');
+		$this->generateDeleteOrRenameTemplateNotification($showDeleteOrRenameTemplate['status'], $showDeleteOrRenameActiveTemplateNotification,
+			$pageTitle, $showDeleteOrRenameTemplate['elements']);
+
+		$this->generateChooseWrongTemplateNotification($showChooseWrongTemplateNotification, $templatePath,
+			InputFieldTemplateListRenderer::TEMPLATE_DEFAULT_LIST['onoffice-editlistviewaddress']);
+
 		$this->addFormModel($pFormModel);
 		$pBuilderShort = $pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollection = new FieldsCollection();
@@ -105,7 +128,6 @@ class AdminPageAddressListSettings
 		$this->addFormModelRecordsFilter();
 		$this->addFormModelRecordsSorting();
 	}
-
 
 	/**
 	 *
@@ -383,5 +405,21 @@ class AdminPageAddressListSettings
 		$result = isset($row[$table]['name']) && !empty(trim($row[$table]['name']));
 
 		return $result;
+	}
+
+	/**
+	 * @param bool $chooseWrongTemplateStatus
+	 * @param string $templatePath
+	 * @param string $defaultTemplateName
+	 * @return void
+	 */
+	protected function generateChooseWrongTemplateNotification(bool $chooseWrongTemplateStatus, string $templatePath, string $defaultTemplateName)
+	{
+		parent::generateChooseWrongTemplateNotification($chooseWrongTemplateStatus, $templatePath, $defaultTemplateName);
+		if ($chooseWrongTemplateStatus) {
+			$message = sprintf(esc_html__('The template %1$s is not compatible with address lists. Please select the default template "%2$s" or a new template.',
+				'onoffice-for-wp-websites'), basename($templatePath), $defaultTemplateName);
+			echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
 	}
 }

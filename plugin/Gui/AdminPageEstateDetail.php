@@ -39,6 +39,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
+use onOffice\WPlugin\Renderer\InputFieldTemplateListRenderer;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
@@ -119,6 +120,20 @@ class AdminPageEstateDetail
 		}
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDataView = $pDataDetailViewHandler->getDetailView();
+
+		$pageTitle = esc_html__('Detail View', 'onoffice-for-wp-websites');
+		$pFormModelBuilder = $this->getContainer()->get(FormModelBuilderEstateDetailSettings::class);
+
+		$showDeleteOrRenameTemplate = $pFormModelBuilder->checkLogicDeleteOrRenameTemplate($_GET['page']);
+		$showDeleteOrRenameActiveTemplateNotification = $pFormModelBuilder->checkLogicDeleteOrRenameActiveTemplate($_GET['page'], $pDataView->getTemplate());
+		$showChooseWrongTemplateNotification = $pFormModelBuilder->checkLogicChooseWrongTemplate($_GET['page'], $_GET['tab'], basename($pDataView->getTemplate()));
+
+		$this->generateDeleteOrRenameTemplateNotification($showDeleteOrRenameTemplate['status'], $showDeleteOrRenameActiveTemplateNotification,
+			$pageTitle, $showDeleteOrRenameTemplate['elements']);
+
+		$this->generateChooseWrongTemplateNotification($showChooseWrongTemplateNotification, $pDataView->getTemplate(),
+			InputFieldTemplateListRenderer::TEMPLATE_DEFAULT_LIST[$_GET['page']][$_GET['tab']]);
+
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
 
@@ -603,5 +618,21 @@ class AdminPageEstateDetail
 		}
 
 		return $value;
+	}
+
+	/**
+	 * @param bool $chooseWrongTemplateStatus
+	 * @param string $templatePath
+	 * @param string $defaultTemplateName
+	 * @return void
+	 */
+	protected function generateChooseWrongTemplateNotification(bool $chooseWrongTemplateStatus, string $templatePath, string $defaultTemplateName)
+	{
+		parent::generateChooseWrongTemplateNotification($chooseWrongTemplateStatus, $templatePath, $defaultTemplateName);
+		if ($chooseWrongTemplateStatus) {
+			$message = sprintf(esc_html__('The template %1$s is not compatible with detail pages. Please select the default template "%2$s" or a new template.',
+				'onoffice-for-wp-websites'), basename($templatePath), $defaultTemplateName);
+			echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
 	}
 }
