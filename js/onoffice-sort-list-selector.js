@@ -1,12 +1,12 @@
 jQuery(document).ready(function($) {
-    $('#onofficeSortListSelector').change(function() {
-
+    $('.onofficeSortListSelector').change(function() {
+        let listviewID = $(this).data('sort-listviewid');
         var selectedvalue = $(this).val();
         var sortUrlParameter = [];
 
         if (selectedvalue != "") {
-            sortUrlParameter["sortby"] = selectedvalue.split("#")[0];
-            sortUrlParameter["sortorder"] = selectedvalue.split("#")[1];
+            sortUrlParameter[`sortby_id_${listviewID}`] = selectedvalue.split("#")[0];
+            sortUrlParameter[`sortorder_id_${listviewID}`] = selectedvalue.split("#")[1];
         }
         var searchparams = new URLSearchParams(window.location.search);
 

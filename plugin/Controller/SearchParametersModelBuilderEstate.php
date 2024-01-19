@@ -85,17 +85,18 @@ class SearchParametersModelBuilderEstate
 		}
 
 		if ($pSortListDataModel->isAdjustableSorting())	{
-			$this->addForAdjustableSorting($pModel);
+			$this->addForAdjustableSorting($pModel, $pDataView->getId());
 		}
 		return $pModel;
 	}
 
 	/**
+	 * @param int $listViewId
 	 * @param SearchParametersModel $pSearchParametersModel
 	 */
-	private function addForAdjustableSorting(SearchParametersModel $pSearchParametersModel)
+	private function addForAdjustableSorting(SearchParametersModel $pSearchParametersModel, int $listViewId)
 	{
-		foreach (SortListTypes::getSortUrlPrameter() as $urlParameter) {
+		foreach (SortListTypes::getSortUrlPrameter($listViewId) as $urlParameter) {
 			$pSearchParametersModel->addAllowedGetParameter($urlParameter);
 			$pSearchParametersModel->setParameter($urlParameter,
 				$this->_pRequestVariablesSanitizer->getFilteredGet($urlParameter));

@@ -39,6 +39,6 @@ class SortListDropDownGenerator
 	{
 		$pListView = $this->_pListViewFactory->getListViewByName($listViewName);
 		$pModel = $this->_pListBuilder->build($pListView);
-		return $this->_pRenderer->createHtmlSelector($pModel);
+		return $this->_pRenderer->createHtmlSelector($pModel, $pListView->getId());
 	}
 }

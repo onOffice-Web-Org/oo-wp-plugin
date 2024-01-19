@@ -38,11 +38,12 @@ class SortListTypes
 	const SORT_BY_USER_DEFINED_DEFAULT_DELIMITER = '#';
 
 	/**
+	 * @param int $listViewId
 	 * @return array
 	 */
-	static public function getSortUrlPrameter(): array
+	static public function getSortUrlPrameter(int $listViewId): array
 	{
-		return [self::SORT_BY, self::SORT_ORDER];
+		return [self::SORT_BY . '_id_' . $listViewId, self::SORT_ORDER . '_id_' . $listViewId];
 	}
 
 

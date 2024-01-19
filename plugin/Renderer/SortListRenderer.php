@@ -30,21 +30,22 @@ use function esc_html;
 class SortListRenderer
 {
 	/** */
-	const ELEMENT_ID = 'onofficeSortListSelector';
+	const ELEMENT_CLASS = 'onofficeSortListSelector';
 
 
 	/**
 	 * @param SortListDataModel $pSortListModel
+	 * @param int $listViewId
 	 * @return string
 	 */
 
-	public function createHtmlSelector(SortListDataModel $pSortListModel): string
+	public function createHtmlSelector(SortListDataModel $pSortListModel, int $listViewId): string
 	{
 		$isAdjustable = $pSortListModel->isAdjustableSorting();
 		$htmlSortListSelector = '';
 
 		if ($isAdjustable) {
-			$htmlSortListSelector = $this->createHtml($pSortListModel);
+			$htmlSortListSelector = $this->createHtml($pSortListModel, $listViewId);
 		}
 
 		return $htmlSortListSelector;
@@ -111,12 +112,13 @@ class SortListRenderer
 
 	/**
 	 * @param SortListDataModel $pSortListModel
+	 * @param int $listViewId
 	 * @return string
 	 */
 
-	private function createHtml(SortListDataModel $pSortListModel): string
+	private function createHtml(SortListDataModel $pSortListModel, int $listViewId): string
 	{
-		$htmlString = '<select name="userDefinedSelection" id="'.self::ELEMENT_ID.'">';
+		$htmlString = '<select name="userDefinedSelection" data-sort-listviewid="' . esc_html($listViewId) . '" class="' . self::ELEMENT_CLASS . '">';
 
 		$selectedValue = $this->createSelectedValue($pSortListModel);
 		$possibleSortorders = [SortListTypes::SORTORDER_ASC, SortListTypes::SORTORDER_DESC];
