@@ -430,7 +430,7 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::checkChooseWrongTemplate
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::checkLogicChooseWrongTemplate
 	 */
 	public function testCheckLogicChooseWrongTemplate()
 	{
@@ -440,7 +440,7 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::checkChooseWrongTemplate
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::checkLogicChooseWrongTemplate
 	 */
 	public function testCheckLogicChooseCorrentTemplate()
 	{
