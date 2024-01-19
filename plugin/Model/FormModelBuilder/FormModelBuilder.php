@@ -238,12 +238,15 @@ abstract class FormModelBuilder
 		$templateDefaultListForFolderName = $this->getTemplateDefaultListForFolderName();
 		$currentTemplateList = $this->getTemplateNamesByScreenId($screenId);
 		$deletedElements = array_diff($templateDefaultListForFolderName[$dataByScreenId['folder']], $currentTemplateList);
-		$deletedElementsKeys = array_keys($deletedElements);
-		$firstKeyDeletedElement = reset($deletedElementsKeys);
 
-		if (!empty($deletedElements) && !in_array(basename($activeTemplatePath), $currentTemplateNames)
-			&& $deletedElements[$firstKeyDeletedElement] === basename($activeTemplatePath)) {
-			return true;
+		if (!empty($deletedElements)) {
+			$deletedElementsKeys = array_keys($deletedElements);
+			$firstKeyDeletedElement = reset($deletedElementsKeys);
+
+			if (!in_array(basename($activeTemplatePath), $currentTemplateNames)
+				&& $deletedElements[$firstKeyDeletedElement] === basename($activeTemplatePath)) {
+				return true;
+			}
 		}
 
 		return false;
