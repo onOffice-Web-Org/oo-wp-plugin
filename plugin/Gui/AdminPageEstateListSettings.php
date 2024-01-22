@@ -103,6 +103,7 @@ class AdminPageEstateListSettings
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
 		$pInputModelShowMap = $pFormModelBuilder->createInputModelShowMap();
 		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
+		$pInputModelShowPublishedProperties = $pFormModelBuilder->createInputModelShowPublishedProperties();
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDataDetailView = $pDataDetailViewHandler->getDetailView();
 		$restrictAccessControl     = $pDataDetailView->getViewRestrict();
@@ -126,6 +127,7 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->addInputModel($pInputModelListReferenceEstates);
 		$pFormModelRecordsFilter->addInputModel($pInputModelFilter);
 		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
+		$pFormModelRecordsFilter->addInputModel($pInputModelShowPublishedProperties);
 
 		$this->addFormModel($pFormModelRecordsFilter);
 
@@ -303,6 +305,9 @@ class AdminPageEstateListSettings
 		wp_enqueue_script('onoffice-custom-form-label-js');
 		wp_enqueue_script('oo-reference-estate-js');
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+		wp_register_script('onoffice-show-published-properties', plugins_url('/dist/onoffice-show-published-properties.min.js', $pluginPath), ['jquery'], '', true);
+		wp_enqueue_script('onoffice-show-published-properties');
+		wp_localize_script('onoffice-show-published-properties', 'show_published_properties', ['ajaxurl' => admin_url('admin-ajax.php'), 'title' => __('estates', 'onoffice-for-wp-websites')]);
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviews-name']);
 		wp_register_script('onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath));
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));

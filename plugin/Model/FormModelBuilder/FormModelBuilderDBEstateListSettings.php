@@ -37,6 +37,7 @@ use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Model\InputModelLabel;
+use onOffice\WPlugin\Model\InputModelButtonShowPublishedProperites;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -415,6 +416,23 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModelShowReferenceEstate->setValuesAvailable( self::getListViewReferenceEstates() );
 
 		return $pInputModelShowReferenceEstate;
+	}
+
+	/**
+	 *
+	 * @return InputModelButtonShowPublishedProperites
+	 *
+	 */
+
+	public function createInputModelShowPublishedProperties(): InputModelButtonShowPublishedProperites
+	{
+		$labelShowPublishedProperties = __('Show published properties', 'onoffice-for-wp-websites');
+		$pInputModelShowPublishedProperties = new InputModelButtonShowPublishedProperites($labelShowPublishedProperties);
+		$pInputModelShowPublishedProperties->setHtmlType(InputModelButtonShowPublishedProperites::HTML_TYPE_BUTTON_SHOW_PUBLISHED_PROPERTIES);
+		$pPublishEstateGuide = '<a href="https://wp-plugin.onoffice.com/de/erste-schritte/einrichtung/" target="_blank">' . __('please publish it', 'onoffice-for-wp-websites') . '</a>';
+		$pInputModelShowPublishedProperties->setHintHtml(sprintf( __( 'If the number of properties is zero, %s.', 'onoffice-for-wp-websites'), $pPublishEstateGuide));
+
+		return $pInputModelShowPublishedProperties;
 	}
 
 	/**

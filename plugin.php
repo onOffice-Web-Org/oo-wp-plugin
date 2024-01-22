@@ -66,6 +66,7 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
+use onOffice\WPlugin\Controller\ShowPublishedPropertiesInEditListView;
 
 const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
 
@@ -430,5 +431,12 @@ function filter_script_loader_tag($tag, $handle) {
 	}
 	return $tag;
 }
+
+add_action('wp_ajax_show_published_properties', function () use ($pDI) {
+	$response = $pDI->get(ShowPublishedPropertiesInEditListView::class)->getShowPublishedProperties($_POST['elements']);
+
+	echo json_encode($response);
+	wp_die();
+});
 
 return $pDI;

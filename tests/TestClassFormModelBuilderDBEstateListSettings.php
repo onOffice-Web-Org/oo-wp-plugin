@@ -36,6 +36,7 @@ use DI\Container;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
 use DI\ContainerBuilder;
+use onOffice\WPlugin\Model\InputModelButtonShowPublishedProperites;
 
 class TestClassFormModelBuilderDBEstateListSettings
 	extends WP_UnitTestCase
@@ -694,5 +695,19 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getValue(), '1');
 		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelShowPublishedProperties
+	 */
+	public function testCreateInputModelShowPublishedProperties()
+	{
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+
+		$pInputModelDB = $pInstance->createInputModelShowPublishedProperties();
+		$this->assertInstanceOf(InputModelButtonShowPublishedProperites::class, $pInputModelDB);
+		$this->assertEquals(InputModelBase::HTML_TYPE_BUTTON_SHOW_PUBLISHED_PROPERTIES, $pInputModelDB->getHtmlType());
+		$this->assertEquals('Show published properties', $pInputModelDB->getLabel());
+		$this->assertEquals('If the number of properties is zero, <a href="https://wp-plugin.onoffice.com/de/erste-schritte/einrichtung/" target="_blank">please publish it</a>.', $pInputModelDB->getHintHtml());
 	}
 }
