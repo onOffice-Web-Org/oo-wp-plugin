@@ -98,7 +98,7 @@ class ShowPublishedPropertiesInEditListView
 		}
 		$this->_pApiClientAction->sendRequests();
 
-		if (!$pApiClientActions->getResultStatus() || empty($pApiClientActions->getResultRecords())) {
+		if (!$this->_pApiClientAction->getResultStatus() || empty($this->_pApiClientAction->getResultRecords())) {
 			return [];
 		}
 
