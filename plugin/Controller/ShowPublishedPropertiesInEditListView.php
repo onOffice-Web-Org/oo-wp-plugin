@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
-use DI\DependencyException;
-use DI\NotFoundException;
-use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
-use onOffice\WPlugin\API\ApiClientException;
-use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\DataView\DataListView;
 
@@ -35,6 +30,7 @@ class ShowPublishedPropertiesInEditListView
 	public function getShowPublishedProperties(array $elements): array
 	{
 		$results = [];
+
 		foreach($elements as $element => $listValue){
 			$requestParams = $this->addShowPublishedPropertiesRequestParams($listValue, $element);
 			$results[$element] = $this->loadNumberEstates($requestParams);
@@ -100,7 +96,7 @@ class ShowPublishedPropertiesInEditListView
 			$pApiClientActions->addRequestToQueue();
 			$listRequestInQueue[$key] = $pApiClientActions;
 		}
-		$pApiClientActions->sendRequests();
+		$this->_pApiClientAction->sendRequests();
 
 		if (!$pApiClientActions->getResultStatus() || empty($pApiClientActions->getResultRecords())) {
 			return [];
