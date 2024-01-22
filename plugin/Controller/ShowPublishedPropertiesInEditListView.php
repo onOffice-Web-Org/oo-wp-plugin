@@ -8,6 +8,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\API\ApiClientException;
 
 
 class ShowPublishedPropertiesInEditListView
@@ -89,6 +90,7 @@ class ShowPublishedPropertiesInEditListView
 		$results = [];
 		$listRequestInQueue = [];
 		$pApiClientAction = $this->_pApiClientAction->withActionIdAndResourceType(onOfficeSDK::ACTION_ID_READ, 'estate');
+		$pApiClientActions = null;
 
 		foreach ($pListRequestParams as $key => $requestParams) {
 			$pApiClientActions = clone $pApiClientAction;
@@ -96,9 +98,9 @@ class ShowPublishedPropertiesInEditListView
 			$pApiClientActions->addRequestToQueue();
 			$listRequestInQueue[$key] = $pApiClientActions;
 		}
-		$this->_pApiClientAction->sendRequests();
+		$pApiClientActions->sendRequests();
 
-		if (!$this->_pApiClientAction->getResultStatus() || empty($this->_pApiClientAction->getResultRecords())) {
+		if (!$pApiClientActions->getResultStatus() || empty($pApiClientActions->getResultRecords())) {
 			return [];
 		}
 
