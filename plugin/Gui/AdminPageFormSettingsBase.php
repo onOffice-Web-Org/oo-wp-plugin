@@ -393,19 +393,13 @@ abstract class AdminPageFormSettingsBase
 		/** @var CustomLabelRead $pCustomLabelRead*/
 		$pCustomLabelRead = $this->getContainer()->get(CustomLabelRead::class);
 		$pLanguage = $this->getContainer()->get(Language::class);
+		$currentLocale = $pLanguage->getLocale();
 
-		foreach ($this->buildFieldsCollectionForCurrentForm()->getAllFields() as $pField) {
-			$pCustomLabelModel = $pCustomLabelRead->readCustomLabelsField
-			((int)$this->getListViewId(), $pField, RecordManager::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS);
+		foreach (array_chunk($this->buildFieldsCollectionForCurrentForm()->getAllFields(), 100) as $pField) {
+			$pCustomLabelModel = $pCustomLabelRead->getCustomLabelsFieldsForAdmin
+			((int)$this->getListViewId(), $pField, $currentLocale, RecordManager::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS);
 
-			$valuesByLocale = $pCustomLabelModel->getValuesByLocale();
-			$currentLocale = $pLanguage->getLocale();
-
-			if (isset($valuesByLocale[$currentLocale])) {
-				$valuesByLocale['native'] = $valuesByLocale[$currentLocale];
-				unset($valuesByLocale[$currentLocale]);
-			}
-			$result[$pField->getName()] = $valuesByLocale;
+			if (count($pCustomLabelModel)) $result = array_merge($result, $pCustomLabelModel);
 		}
 
 		return $result;
