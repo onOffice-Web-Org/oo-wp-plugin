@@ -79,6 +79,41 @@ $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = $pDI->get(DetailViewPostSaveController::class);
 $pDI->get(ScriptLoaderRegistrator::class)->generate();
 
+$pListedRoutes = array(
+	'/wp/v2/blocks',
+);
+add_filter('rest_pre_dispatch', function ($result, $server, $request) use ($pListedRoutes) {
+	$route = $request->get_route();
+	$params = $request->get_params();
+	$cache_key = 'rest_api_' . md5($route . serialize($params));
+
+	if (in_array($route, $pListedRoutes)) {
+		$cached_response = get_transient($cache_key);
+
+		if ($cached_response) {
+			return rest_ensure_response($cached_response);
+		}
+	}
+
+	return $result;
+}, 10, 3);
+
+add_filter('rest_post_dispatch', function ($response, $server, $request) use ($pListedRoutes) {
+	if (!($response instanceof WP_Error)) {
+		$route = $request->get_route();
+		$params = $request->get_params();
+		$cache_key = 'rest_api_' . md5($route . serialize($params));
+
+		if (in_array($route, $pListedRoutes)) {
+			if ($request->get_method() === 'GET' && $response->get_status() >= 200 && $response->get_status() < 300) {
+				set_transient($cache_key, $response->get_data(), HOUR_IN_SECONDS);
+			}
+		}
+	}
+
+	return $response;
+}, 10, 3);
+
 add_action('plugins_loaded', function() use ($pDI) {
 	$pDI->get(DatabaseChangesInterface::class)->install();
 });
