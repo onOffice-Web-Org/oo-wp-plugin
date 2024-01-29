@@ -67,4 +67,19 @@ class TestClassWPQueryWrapper
 		$this->assertEquals(3, $pWPQueryWrapper->getWPQuery()->get('paged'));
 		wp_reset_query();
 	}
+
+	/**
+	 *
+	 */
+	public function testGetWpQueryWithMultiplePage()
+	{
+		$_GET = [
+			'page_of_id_4' => 4
+		];
+		global $wp_query;
+		$wp_query = new WP_Query(['page' => 2, 'paged'=> 3]);
+		$pWPQueryWrapper = new WPQueryWrapper();
+		$this->assertEquals(4, $pWPQueryWrapper->getWPQuery(4)->get('paged'));
+		wp_reset_query();
+	}
 }

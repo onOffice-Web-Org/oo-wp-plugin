@@ -50,11 +50,13 @@ class SearchParameters
 	 * @param string $link
 	 * @param int $i
 	 * @param SearchParametersModel $pModel
+	 * @param int $pListViewId
+	 * @param bool $pCheckPaginationTheme
 	 * @return string
 	 * @global int $page
 	 * @global bool $more
 	 */
-	public function linkPagesLink(string $link, int $i, SearchParametersModel $pModel, int $pListViewId, bool $pCheckPaginationTheme): string
+	public function linkPagesLink(string $link, int $i, SearchParametersModel $pModel, int $pListViewId=0, bool $pCheckPaginationTheme=false): string
 	{
 		global $paged, $more;
 
@@ -65,7 +67,9 @@ class SearchParameters
 			$link = $linkparams['link_before'].str_replace('%', $i, $linkparams['pagelink'])
 				.$linkparams['link_after'];
 			if ($i != $paged || ! $more && 1 == $paged) {
-				$url = !$pCheckPaginationTheme ? $this->getUrlByListViewId($i, $pModel->getParameters(), $pListViewId) : $this->geturl($i, $pModel->getParameters());
+				$url = !$pCheckPaginationTheme && !empty($pListViewId) ? 
+					$this->getUrlByListViewId($i, $pModel->getParameters(), $pListViewId) : 
+					$this->geturl($i, $pModel->getParameters());
 				$output .= '<a href="'.esc_url($url).'">'.$link.'</a>';
 			} else {
 				$output .= $link;
