@@ -190,7 +190,11 @@ if (!function_exists('renderFormField')) {
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
 			) {
 				$inputType = 'type="number" step="1" ';
-			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_DATE) {
+			} elseif (
+				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATE ||
+				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATETIME || 
+				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_DATE
+			) {
 				$inputType = 'type="date" ';
 			}
 

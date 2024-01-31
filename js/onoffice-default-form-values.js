@@ -223,9 +223,11 @@ onOffice.default_values_input_converter = function () {
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:date',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:tinyint'
             ].indexOf(fieldDefinition.type) >= 0) {
-            if (fieldDefinition.type === 'date' || fieldDefinition.type === 'datetime') {
-                mainInput.setAttribute('type', 'text');
-            } else if (fieldDefinition.type === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:date') {
+            if (
+                fieldDefinition.type === 'date' || 
+                fieldDefinition.type === 'datetime' || 
+                fieldDefinition.type === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:date'
+            ) {
                 mainInput.setAttribute('type', 'date');
             }
             mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
