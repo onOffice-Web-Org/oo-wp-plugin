@@ -78,6 +78,9 @@ class DataFormConfiguration
 
 	/** @var array */
 	private $_markdownFields = [];
+
+	/** @var array */
+	private $_hiddenFields = [];
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -150,6 +153,14 @@ class DataFormConfiguration
 	/** @param array $markdownFields */
 	public function setMarkdownFields(array $markdownFields)
 		{ $this->_markdownFields = $markdownFields; }
+
+	/** @return array */
+	public function getHiddenFields(): array
+	{ return $this->_hiddenFields; }
+
+	/** @param string $hiddenField */
+	public function addHiddenFields(string $hiddenField)
+	{ $this->_hiddenFields []= $hiddenField; }
 
 	/** @param string $requiredField */
 	public function addMarkdownFields(string $markdownFields)

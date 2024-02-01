@@ -208,6 +208,13 @@ class Form
 		return $inputsAll;
 	}
 
+	public function isHiddenField(string $field): bool
+	{
+		$hiddenFields = $this->getDataFormConfiguration()->getHiddenFields();
+
+		return in_array($field, $hiddenFields);
+	}
+
 
 	/**
 	 * @param $inputs
@@ -370,6 +377,7 @@ class Form
 				$label = $parsedown->line($label);
 			}
 		}
+
 		return $label;
 	}
 

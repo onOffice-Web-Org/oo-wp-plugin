@@ -124,6 +124,7 @@ class FormModelBuilderDBForm
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
 		$pReferenceIsAvailableOptions = $this->getInputModelIsAvailableOptions();
 		$pReferenceIsMarkdown = $this->getInputModelIsMarkDown();
+		$pReferenceIsHiddenFields = $this->getInputModelIsHiddenFields();
 		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValue($pFieldsCollectionUsedFields));
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValueLanguageSwitch());
@@ -131,6 +132,7 @@ class FormModelBuilderDBForm
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsMarkdown);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
+		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsHiddenFields);
 		if($this->getFormType() === Form::TYPE_APPLICANT_SEARCH){
 			$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
 		}
@@ -196,6 +198,7 @@ class FormModelBuilderDBForm
 		$values['fieldsRequired'] = array();
 		$values['fieldsAvailableOptions'] = array();
 		$values['fieldsMarkdown'] = array();
+		$values['fieldsHidden'] = array();
 		$pFactory = new DataFormConfigurationFactory($this->_formType);
 
 		if ($formId !== null) {
@@ -211,6 +214,7 @@ class FormModelBuilderDBForm
 		$values['fieldsRequired'] = $pDataFormConfiguration->getRequiredFields();
 		$values['fieldsAvailableOptions'] = $pDataFormConfiguration->getAvailableOptionsFields();
 		$values['fieldsMarkdown'] = $pDataFormConfiguration->getMarkdownFields();
+		$values['fieldsHidden'] = $pDataFormConfiguration->getHiddenFields();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -704,6 +708,35 @@ class FormModelBuilderDBForm
 
 		return $pInputModelFieldsConfig;
 	}
+
+	/**
+	 * @return InputModelDB|null
+	 */
+	public function getInputModelIsHiddenFields(): InputModelDB
+	{
+		$pInputModelFieldsConfig = new InputModelDBFactoryConfigForm();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFieldsConfig);
+		$label = __('Hidden Field', 'onoffice-for-wp-websites');
+		$type = InputModelDBFactoryConfigForm::INPUT_FORM_HIDDEN;
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelIsFieldsHidden'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param string $key
+	 */
+	public function callbackValueInputModelIsFieldsHidden(InputModelBase $pInputModel, string $key)
+	{
+		$hiddenFields = $this->getValue('fieldsHidden');
+		$value = in_array($key, $hiddenFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
+
 	/** @return string */
 	public function getFormType()
 		{ return $this->_formType; }

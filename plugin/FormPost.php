@@ -35,6 +35,8 @@ use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
+use DI\Container;
 
 /**
  *
@@ -215,6 +217,8 @@ abstract class FormPost
 		$inputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $pFormConfig->getInputs());
 		$pFormConfig->setInputs($inputs);
 
+		$pDefaultValue = $this->readDefaultValueByFormId($pFormConfig->getId(), $pFormConfig->getHiddenFields());
+
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$formData = $pFormFieldValidator->getValidatedValues($formFields, $this->_pFieldsCollection);
 		$requiredFields = $this->getAllowedRequiredFields($requiredFields);
@@ -222,11 +226,39 @@ abstract class FormPost
 		$pFormData = new FormData($pFormConfig, $formNo);
 		$pFormData->setRequiredFields($requiredFieldsAreAllowed);
 		$pFormData->setFormtype($pFormConfig->getFormType());
-		$pFormData->setValues($formData);
+		$pFormData->setValues(array_merge($formData, $pDefaultValue));
 
 		return $pFormData;
 	}
 
+	/**
+	 *
+	 * @param int $formId
+	 * @param array $fieldHidden
+	 * @return array
+	 *
+	 */
+
+	public function readDefaultValueByFormId($formId, $fieldHidden)
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		/** @var DefaultValueModelToOutputConverter $pDefaultValueRead */
+		$pDefaultValueRead = $pContainer->get(DefaultValueModelToOutputConverter::class);
+		$pFields = [];
+		foreach ($fieldHidden as $field){
+			$pFields[] = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
+		}
+
+		$values = [];
+		foreach (array_chunk($pFields, 100) as $fields) {
+			$pDefaultFields = $pDefaultValueRead->getConvertedMultiFields($formId, $fields);
+			if (count($pDefaultFields)) $values = array_merge($values, $pDefaultFields);
+		}
+
+		return $values;
+	}
 
 	/**
 	 * @return FieldsCollection
