@@ -25,6 +25,7 @@ namespace onOffice\tests;
 
 use Generator;
 use onOffice\WPlugin\ArrayContainerEscape;
+use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\Factory\EstateListFactory;
@@ -68,6 +69,40 @@ class TestClassEstateIdRequestGuard
 
 	/**
 	 *
+	 * @dataProvider dataProvider
+	 *
+	 * @param int $estateId
+	 * @param bool|ArrayContainerEscape $iterator
+	 * @param bool $result
+	 *
+	 */
+	public function testCreateEstateDetailLinkForSwitchLanguageWPML(int $estateId, $iterator, bool $result)
+	{
+		add_option('onoffice-detail-view-showTitleUrl', true);
+		$url = 'https://www.onoffice.de/detail/';
+		$title =  $iterator ? '-' . $iterator['objekttitel'] : '';
+		$expectedUrl = 'https://www.onoffice.de/detail/'. $estateId . $title;
+
+		$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$pEstateDetail = $this->getMockBuilder(EstateDetail::class)
+			->setConstructorArgs([new DataDetailView()])
+			->setMethods(['loadEstates', 'estateIterator'])
+			->getMock();
+		$pEstateDetail->expects($this->once())->method('estateIterator')
+			->will($this->returnValue($iterator));
+
+		$pEstateDetailFactory->method('createEstateDetail')->will($this->returnValue($pEstateDetail));
+		$pSubject = new EstateIdRequestGuard($pEstateDetailFactory);
+		$pEstateDetailUrl = new EstateDetailUrl();
+
+		$result = $pSubject->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl);
+		$this->assertEquals($expectedUrl, $result);
+	}
+
+	/**
+	 *
 	 * @return Generator
 	 *
 	 */
@@ -75,10 +110,10 @@ class TestClassEstateIdRequestGuard
 	public function dataProvider(): Generator
 	{
 		yield from [
-			[3, new ArrayContainerEscape(['Id' => 3]), true],
+			[3, new ArrayContainerEscape(['Id' => 3, 'objekttitel' => 'title-3']), true],
 			[5, false, false],
 			[7, false, false],
-			[9, new ArrayContainerEscape(['Id' => 9]), true],
+			[9, new ArrayContainerEscape(['Id' => 9, 'objekttitel' => 'title-9']), true],
 		];
 	}
 }

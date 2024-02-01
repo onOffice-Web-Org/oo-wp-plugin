@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Record;
 
 use onOffice\WPlugin\ArrayContainerEscape;
+use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Utility\Redirector;
@@ -83,5 +84,22 @@ class EstateIdRequestGuard
 	public function estateDetailUrlChecker( int $estateId, Redirector $pRedirector, bool $pEstateRedirection ) {
 		$estateTitle = $this->_estateData->getValue( 'objekttitel' );
 		$pRedirector->redirectDetailView($estateId, $estateTitle, $pEstateRedirection);
+	}
+
+	/**
+	 * @param string $url
+	 * @param int $estateId
+	 * @param EstateDetailUrl $pEstateDetailUrl
+	 *
+	 * @return string
+	 */
+	public function createEstateDetailLinkForSwitchLanguageWPML(string $url, int $estateId, EstateDetailUrl $pEstateDetailUrl): string
+	{
+		$estateDetailTitle = '';
+		if ($estateId > 0 && $this->isValid($estateId)) {
+			$estateDetailTitle = $this->_estateData->getValue('objekttitel');
+		}
+
+		return $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle);
 	}
 }
