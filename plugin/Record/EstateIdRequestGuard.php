@@ -90,16 +90,17 @@ class EstateIdRequestGuard
 	 * @param string $url
 	 * @param int $estateId
 	 * @param EstateDetailUrl $pEstateDetailUrl
+	 * @param string $oldUrl
 	 *
 	 * @return string
 	 */
-	public function createEstateDetailLinkForSwitchLanguageWPML(string $url, int $estateId, EstateDetailUrl $pEstateDetailUrl): string
+	public function createEstateDetailLinkForSwitchLanguageWPML(string $url, int $estateId, EstateDetailUrl $pEstateDetailUrl, string $oldUrl): string
 	{
 		$estateDetailTitle = '';
 		if ($estateId > 0 && $this->isValid($estateId)) {
 			$estateDetailTitle = $this->_estateData->getValue('objekttitel');
 		}
 
-		return $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle);
+		return $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl);
 	}
 }

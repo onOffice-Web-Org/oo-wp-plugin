@@ -205,10 +205,11 @@ add_filter('wpml_ls_language_url', function($url) use ($pDI){
 	/** @var EstateIdRequestGuard $pEstateIdGuard */
 	$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
 	$pEstateDetailUrl = $pDI->get(EstateDetailUrl::class);
+	$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
 	$pWPQueryWrapper = $pDI->get(WPQueryWrapper::class);
 	$estateId = (int) $pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
 
-	return $pEstateIdGuard->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl);
+	return $pEstateIdGuard->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl);
 }, 10, 2);
 
 register_activation_hook(__FILE__, [Installer::class, 'install']);

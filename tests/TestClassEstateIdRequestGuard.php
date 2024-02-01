@@ -81,7 +81,8 @@ class TestClassEstateIdRequestGuard
 		add_option('onoffice-detail-view-showTitleUrl', true);
 		$url = 'https://www.onoffice.de/detail/';
 		$title =  $iterator ? '-' . $iterator['objekttitel'] : '';
-		$expectedUrl = 'https://www.onoffice.de/detail/'. $estateId . $title;
+		$oldUrl = 'https://www.onoffice.de/detail/' . $estateId . $title . '/';
+		$expectedUrl = 'https://www.onoffice.de/detail/'. $estateId . $title . '/';
 
 		$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
 			->disableOriginalConstructor()
@@ -97,7 +98,7 @@ class TestClassEstateIdRequestGuard
 		$pSubject = new EstateIdRequestGuard($pEstateDetailFactory);
 		$pEstateDetailUrl = new EstateDetailUrl();
 
-		$result = $pSubject->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl);
+		$result = $pSubject->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl);
 		$this->assertEquals($expectedUrl, $result);
 	}
 
