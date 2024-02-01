@@ -223,12 +223,11 @@ onOffice.default_values_input_converter = function () {
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:date',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:tinyint'
             ].indexOf(fieldDefinition.type) >= 0) {
-            if (
-                fieldDefinition.type === 'date' || 
-                fieldDefinition.type === 'datetime' || 
-                fieldDefinition.type === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:date'
-            ) {
+            if (fieldDefinition.type === 'date' || fieldDefinition.type === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:date') {
                 mainInput.setAttribute('type', 'date');
+            }
+            if (fieldDefinition.type === 'datetime') {
+                mainInput.setAttribute('type', 'datetime-local');
             }
             mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
             mainInput.value = predefinedValues[fieldName][0] || '';

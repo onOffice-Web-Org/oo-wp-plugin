@@ -192,10 +192,13 @@ if (!function_exists('renderFormField')) {
 				$inputType = 'type="number" step="1" ';
 			} elseif (
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATE ||
-				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATETIME || 
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_DATE
 			) {
 				$inputType = 'type="date" ';
+			} elseif (
+				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATETIME
+			) {
+				$inputType = 'type="datetime-local" ';
 			}
 
 			if (
