@@ -198,7 +198,7 @@ if (!function_exists('renderFormField')) {
 			} elseif (
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATETIME
 			) {
-				$inputType = 'type="datetime-local" ';
+				$inputType = 'type="datetime-local" step="1" ';
 			}
 
 			if (

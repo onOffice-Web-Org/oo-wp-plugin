@@ -228,6 +228,7 @@ onOffice.default_values_input_converter = function () {
             }
             if (fieldDefinition.type === 'datetime') {
                 mainInput.setAttribute('type', 'datetime-local');
+                mainInput.setAttribute('step', 1);
             }
             mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
             mainInput.value = predefinedValues[fieldName][0] || '';
