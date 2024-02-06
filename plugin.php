@@ -237,7 +237,7 @@ function custom_cron_schedules($schedules) {
 add_filter('cron_schedules', 'custom_cron_schedules');
 
 if (!wp_next_scheduled('oo_cache_cleanup')) {
-	$onofficeSettingsCache = get_option('onoffice-settings-cache');
+	$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
 	wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_cleanup');
 }
 

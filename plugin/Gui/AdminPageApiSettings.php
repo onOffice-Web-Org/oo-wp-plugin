@@ -533,7 +533,7 @@ class AdminPageApiSettings
 	{
 		$labelCache = __('Duration', 'onoffice-for-wp-websites');
 		$pInputModelCache = new InputModelOption
-		('onoffice-settings', 'cache', $labelCache, 'string');
+		('onoffice-settings', 'duration-cache', $labelCache, 'string');
 		$pInputModelCache->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelCache->setValuesAvailable([
 			'ten_minutes' => __('10 minutes', 'onoffice-for-wp-websites'),

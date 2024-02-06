@@ -299,7 +299,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ( $dbversion == 41 ) {
-			$this->_pWpOption->updateOption('onoffice-settings-cache', 'hourly');
+			$this->_pWpOption->updateOption('onoffice-settings-duration-cache', 'hourly');
 			$dbversion = 42;
 		}
 

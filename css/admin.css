@@ -474,7 +474,7 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	}
 }
 
-select[name="onoffice-settings-cache"] {
+select[name="onoffice-settings-duration-cache"] {
 	width: 100%;
 	max-width: 368px;
 }
