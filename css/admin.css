@@ -311,6 +311,10 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	margin-left: 20px;
 }
 
+.cache-description {
+	font-weight: normal;
+}
+
 #viewformspecific .hint-text {
 	color: #646970;
 	font-style: italic;
@@ -468,6 +472,11 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 		font-size: 14px;
 		white-space: nowrap;
 	}
+}
+
+select[name="onoffice-settings-cache"] {
+	width: 100%;
+	max-width: 368px;
 }
 
 /* new style */

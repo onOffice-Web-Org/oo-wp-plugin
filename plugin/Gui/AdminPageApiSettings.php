@@ -64,6 +64,7 @@ class AdminPageApiSettings
 		$this->_encrypter = $this->getContainer()->make(SymmetricEncryption::class);
 		$this->addFormModelAPI();
 		$this->addFormModelEmail();
+		$this->addFormModelCache();
 		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleMapsKey();
 		$this->addFormModelGoogleCaptcha();
@@ -524,4 +525,34 @@ class AdminPageApiSettings
 
         $this->addFormModel($pFormModel);
     }
+
+	/**
+	 *
+	 */
+	private function addFormModelCache()
+	{
+		$labelCache = __('Duration', 'onoffice-for-wp-websites');
+		$pInputModelCache = new InputModelOption
+		('onoffice-settings', 'cache', $labelCache, 'string');
+		$pInputModelCache->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelCache->setValuesAvailable([
+			'ten_minutes' => __('10 minutes', 'onoffice-for-wp-websites'),
+			'thirty_minutes' => __('30 minutes', 'onoffice-for-wp-websites'),
+			'hourly' => __('1 hour', 'onoffice-for-wp-websites'),
+			'six_hours' => __('6 hours', 'onoffice-for-wp-websites'),
+			'twicedaily' => __('12 hours', 'onoffice-for-wp-websites'),
+			'daily' => __('24 hours', 'onoffice-for-wp-websites'),
+		]);
+		$pInputModelCache->setValue(get_option($pInputModelCache->getIdentifier()));
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelCache);
+		$pFormModel->setGroupSlug('onoffice-cache');
+		$pFormModel->setPageSlug($this->getPageSlug());
+		$cacheTitle = esc_html__('Cache', 'onoffice-for-wp-websites');
+		$description = esc_html__('The Cache duration value determines the period of time after which the plugin cache of your page is refreshed. This value is set to 1 hour by default.', 'onoffice-for-wp-websites');
+		$descriptionHtml = '<p class="description cache-description"><br>' .  $description . '</p>';
+		$label = sprintf('%1$s %2$s', $cacheTitle, $descriptionHtml);
+		$pFormModel->setLabel($label);
+		$this->addFormModel($pFormModel);
+	}
 }

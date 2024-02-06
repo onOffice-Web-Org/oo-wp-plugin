@@ -113,6 +113,7 @@ class Installer
 		delete_option('onoffice-click-button-close-action');
 		delete_option('onoffice-settings-title-and-description');
 		delete_option('onoffice-settings-honeypot');
+		delete_option('onoffice-settings-cache');
 
 		self::flushRules();
 	}

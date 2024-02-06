@@ -45,7 +45,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 41;
+	const MAX_VERSION = 42;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -296,6 +296,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ( $dbversion == 40 ) {
 			$this->updateDefaultPictureTypesForSimilarEstate();
 			$dbversion = 41;
+		}
+
+		if ( $dbversion == 41 ) {
+			$this->_pWpOption->updateOption('onoffice-settings-cache', 'hourly');
+			$dbversion = 42;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );

@@ -67,7 +67,9 @@ class DBCache
 
 	private function getCacheMaxAge()
 	{
-		return time() - $this->_options['ttl'];
+		$onofficeSettingsCache = get_option('onoffice-settings-cache');
+		$interval = !empty($onofficeSettingsCache) ? wp_get_schedules()[$onofficeSettingsCache]["interval"] : $this->_options['ttl'];
+		return time() - $interval;
 	}
 
 
