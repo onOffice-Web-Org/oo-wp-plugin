@@ -78,9 +78,8 @@ class ScriptLoaderMapGoogleMaps
 	public function register()
 	{
 		$key = $this->_pWPOptionWrapper->getOption('onoffice-settings-googlemaps-key', null);
-		$url = 'https://maps.googleapis.com/maps/api/js?'.http_build_query(['key' => $key]);
-		$this->_pWPScriptStyle->registerScript('google-maps', $url);
 		$this->_pWPScriptStyle->registerScript('gmapsinit',
-			plugins_url('/dist/gmapsinit.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['google-maps']);
+			plugins_url('/dist/gmapsinit.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'));
+		$this->_pWPScriptStyle->localizeScript('gmapsinit','apitokengooglemap', ['googlemaps' => $key]);
 	}
 }

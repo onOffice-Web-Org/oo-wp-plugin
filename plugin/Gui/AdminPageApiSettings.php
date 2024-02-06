@@ -200,9 +200,15 @@ class AdminPageApiSettings
 				('onoffice-settings', 'googlemaps-key', $labelgoogleMapsKey, 'string');
 		$optionMapKey = $pInputModelGoogleMapsKey->getIdentifier();
 		$pInputModelGoogleMapsKey->setValue(get_option($optionMapKey));
+		$labelgoogleMapsId = __('Google Maps Id', 'onoffice-for-wp-websites');
+		$pInputModelGoogleMapsId = new InputModelOption
+				('onoffice-settings', 'googlemaps-id', $labelgoogleMapsId, 'string');
+		$optionMapId = $pInputModelGoogleMapsId->getIdentifier();
+		$pInputModelGoogleMapsId->setValue(get_option($optionMapId));
 
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelGoogleMapsKey);
+		$pFormModel->addInputModel($pInputModelGoogleMapsId);
 		$pFormModel->setGroupSlug('onoffice-google-maps-key');
 		$pFormModel->setPageSlug($this->getPageSlug());
 		$pFormModel->setLabel(__('Google Maps Key', 'onoffice-for-wp-websites'));

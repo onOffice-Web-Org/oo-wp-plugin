@@ -52,43 +52,34 @@ return (function (EstateList $pEstatesClone) {
 	if ($estateData === []) {
 	    return;
     } ?>
+
+    <div id="gmap"></div>
     <script type="text/javascript">
-    (function() {
-        var gmapInit = function() {
+        async function gmapInit() {
             var estates = <?php echo json_encode($estateData, JSON_PRETTY_PRINT); ?>;
             var settings = {zoom: null};
 
             var mapElement = document.getElementById('gmap');
-            var map = new google.maps.Map(mapElement, settings.mapConfig);
-            var bounds = new google.maps.LatLngBounds();
-
-            map.fitBounds(bounds);
-            map.addListener("bounds_changed", function() {
-                if (settings.zoom !== null) {
-                    map.setZoom(settings.zoom);
-                }
+            const { Map } = await google.maps.importLibrary("maps");
+            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+            const defaultPosition = estates.length > 0 ? { lat: estates[0].position.lat, lng: estates[0].position.lng } : { lat: 37.42, lng: -122.1 };
+            const map = new Map(mapElement, {
+                center: defaultPosition,
+                zoom: 14,
+                mapId:  <?php echo json_encode(get_option('onoffice-settings-googlemaps-id'))?> ?? ''
             });
-
             for (var i in estates) {
                 var estateConfig = estates[i];
-                var latLng = new google.maps.LatLng(estateConfig.position.lat, estateConfig.position.lng);
-                bounds.extend(latLng);
-
-                if (estateConfig.visible) {
-                    // no marker but extended map bounds
-                    new google.maps.Marker({
-                        position: latLng,
-                        icon: null,
-                        map: map,
-                        title: estateConfig.title
-                    });
-                }
+                const position = { lat: estateConfig.position.lat, lng: estateConfig.position.lng };
+                const marker = new AdvancedMarkerElement({
+                    map: map,
+                    position,
+                    title: estateConfig.title,
+                });
             }
         };
 
-        google.maps.event.addDomListener(window, "load", gmapInit);
-    })();
+        gmapInit();
     </script>
-    <div id="gmap" style="width: 100%; height: 100%;"></div>
 <?php
 });
