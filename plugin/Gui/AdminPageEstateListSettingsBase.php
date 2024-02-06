@@ -32,6 +32,7 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderFromNamesForm;
 use onOffice\WPlugin\Field\CustomLabel\ModelToOutputConverter\CustomLabelRowSaver;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
 use function __;
@@ -282,5 +283,19 @@ abstract class AdminPageEstateListSettingsBase
 		$pCustomLabelSave = $this->getContainer()->get(CustomLabelRowSaver::class);
 		$pCustomLabelSave->saveCustomLabels($recordId,
 			$row['oo_plugin_fieldconfig_estate_translated_labels'] ?? [], $pFieldsCollectionCurrent, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
+	}
+
+	/**
+	 * @param string $listViewId
+	 *
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function getListViewEstateRecords(string $listViewId): array
+	{
+		$pFieldsCollectionBuilder = $this->getContainer()->get(RecordManagerReadListViewEstate::class);
+
+		return $pFieldsCollectionBuilder->getRowById($listViewId);
 	}
 }

@@ -38,9 +38,9 @@ use onOffice\WPlugin\Model\InputModelDBAdapterRow;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Renderer\InputFieldTemplateListRenderer;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Record\RecordManager;
 use stdClass;
 use function __;
 use function wp_enqueue_script;
@@ -80,6 +80,27 @@ class AdminPageEstateListSettings
 	{
 		$pFormModelBuilder = new FormModelBuilderDBEstateListSettings();
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
+
+		$showDeleteOrRenameActiveTemplateNotification = false;
+		$showChooseWrongTemplateNotification = false;
+		$templatePath = '';
+		$pageTitle = '';
+		if ($this->getListViewId() !== null) {
+			$listViewEstateListRecords = $this->getListViewEstateRecords($this->getListViewId());
+			$pageTitle = $listViewEstateListRecords['name'];
+			$templatePath = $listViewEstateListRecords['template'];
+
+			$showDeleteOrRenameActiveTemplateNotification = $pFormModelBuilder->checkLogicDeleteOrRenameActiveTemplate('onoffice-editlistview', $templatePath);
+			$showChooseWrongTemplateNotification = $pFormModelBuilder->checkLogicChooseWrongTemplate('onoffice-editlistview', null, basename($templatePath));
+		}
+
+		$showDeleteOrRenameTemplate = $pFormModelBuilder->checkLogicDeleteOrRenameTemplate('onoffice-editlistview');
+		$this->generateDeleteOrRenameTemplateNotification($showDeleteOrRenameTemplate['status'], $showDeleteOrRenameActiveTemplateNotification,
+			$pageTitle, $showDeleteOrRenameTemplate['elements']);
+
+		$this->generateChooseWrongTemplateNotification($showChooseWrongTemplateNotification, $templatePath,
+			InputFieldTemplateListRenderer::TEMPLATE_DEFAULT_LIST['onoffice-editlistview']);
+
 		$this->addFormModel($pFormModel);
 
 		$pInputModelName = $pFormModelBuilder->createInputModelName();
@@ -202,7 +223,6 @@ class AdminPageEstateListSettings
 		$this->addSortableFieldsList([onOfficeSDK::MODULE_ESTATE], $pFormModelBuilder);
 	}
 
-
 	/**
 	 *
 	 */
@@ -291,6 +311,21 @@ class AdminPageEstateListSettings
 		}
 	}
 
+	/**
+	 * @param bool $chooseWrongTemplateStatus
+	 * @param string $templatePath
+	 * @param string $defaultTemplateName
+	 * @return void
+	 */
+	protected function generateChooseWrongTemplateNotification(bool $chooseWrongTemplateStatus, string $templatePath, string $defaultTemplateName)
+	{
+		parent::generateChooseWrongTemplateNotification($chooseWrongTemplateStatus, $templatePath, $defaultTemplateName);
+		if ($chooseWrongTemplateStatus) {
+			$message = sprintf(esc_html__('The template %1$s is not compatible with property lists. Please select the default template "%2$s" or a new template.',
+				'onoffice-for-wp-websites'), basename($templatePath), $defaultTemplateName);
+			echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
+	}
 
 	/**
 	 *
