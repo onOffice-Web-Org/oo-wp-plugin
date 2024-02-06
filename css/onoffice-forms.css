@@ -10,3 +10,7 @@ span.onoffice-pleasefill {
 	cursor: not-allowed;
 	pointer-events: none;
 }
+
+.hidden-field {
+	display: none;
+}

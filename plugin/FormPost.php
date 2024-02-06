@@ -36,7 +36,6 @@ use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
-use DI\Container;
 
 /**
  *
@@ -217,16 +216,18 @@ abstract class FormPost
 		$inputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $pFormConfig->getInputs());
 		$pFormConfig->setInputs($inputs);
 
-		$pDefaultValue = $this->readDefaultValueByFormId($pFormConfig->getId(), $pFormConfig->getHiddenFields());
-
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$formData = $pFormFieldValidator->getValidatedValues($formFields, $this->_pFieldsCollection);
+		if (!empty($pFormConfig->getHiddenFields())) {
+			$pDefaultValue = $this->readDefaultValueForHiddenFieldsByFormId($pFormConfig->getId(), $pFormConfig->getHiddenFields());
+			$formData = array_merge($formData, $pDefaultValue);
+		}
 		$requiredFields = $this->getAllowedRequiredFields($requiredFields);
 		$requiredFieldsAreAllowed = $this->getAllowedRequiredFieldsIsRangeField($requiredFields);
 		$pFormData = new FormData($pFormConfig, $formNo);
 		$pFormData->setRequiredFields($requiredFieldsAreAllowed);
 		$pFormData->setFormtype($pFormConfig->getFormType());
-		$pFormData->setValues(array_merge($formData, $pDefaultValue));
+		$pFormData->setValues($formData);
 
 		return $pFormData;
 	}
@@ -234,25 +235,27 @@ abstract class FormPost
 	/**
 	 *
 	 * @param int $formId
-	 * @param array $fieldHidden
+	 * @param array $hiddenFields
 	 * @return array
 	 *
 	 */
 
-	public function readDefaultValueByFormId($formId, $fieldHidden)
+	private function readDefaultValueForHiddenFieldsByFormId(int $formId, array $hiddenFields): array
 	{
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
+
 		/** @var DefaultValueModelToOutputConverter $pDefaultValueRead */
 		$pDefaultValueRead = $pContainer->get(DefaultValueModelToOutputConverter::class);
-		$pFields = [];
-		foreach ($fieldHidden as $field){
-			$pFields[] = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
+
+		$fields = [];
+		foreach ($hiddenFields as $field) {
+			$fields[] = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
 		}
 
 		$values = [];
-		foreach (array_chunk($pFields, 100) as $fields) {
+		foreach (array_chunk($fields, 100) as $fields) {
 			$pDefaultFields = $pDefaultValueRead->getConvertedMultiFields($formId, $fields);
 			if (count($pDefaultFields)) $values = array_merge($values, $pDefaultFields);
 		}

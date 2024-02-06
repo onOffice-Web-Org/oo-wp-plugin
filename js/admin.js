@@ -190,6 +190,11 @@ jQuery(document).ready(function($){
 			return name.replace('exclude', '');
 		})
 
+		if (fieldName === 'DSGVOStatus' || fieldName === 'AGB_akzeptiert' || fieldName === 'gdprcheckbox') {
+			var selectors = ['oopluginformfieldconfig-hiddenfield'];
+			var hiddenField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
+			hiddenField.parent().remove();
+		}
 		if (!optionsAvailable) {
             var selectors = ['oopluginformfieldconfig-availableOptions', 'oopluginfieldconfig-availableOptions'];
 			var availableOptionEl = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');

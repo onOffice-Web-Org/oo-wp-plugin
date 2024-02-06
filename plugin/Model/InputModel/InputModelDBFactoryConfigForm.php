@@ -93,7 +93,7 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_MARK_DOWN = 'formMarkdown';
 
 	/** */
-	const INPUT_FORM_HIDDEN = 'formHidden';
+	const INPUT_FORM_HIDDEN_FIELD = 'formHiddenField';
 
 	/** */
 	const INPUT_FORM_ESTATE_CONTEXT_AS_HEADING = 'show_estate_context';
@@ -201,7 +201,7 @@ class InputModelDBFactoryConfigForm
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'markdown',
 		],
-		self::INPUT_FORM_HIDDEN => [
+		self::INPUT_FORM_HIDDEN_FIELD => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'hidden_field',
 		],

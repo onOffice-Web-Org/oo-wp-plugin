@@ -208,6 +208,10 @@ class Form
 		return $inputsAll;
 	}
 
+	/**
+	 * @param string $field
+	 * @return bool
+	 */
 	public function isHiddenField(string $field): bool
 	{
 		$hiddenFields = $this->getDataFormConfiguration()->getHiddenFields();
@@ -377,7 +381,6 @@ class Form
 				$label = $parsedown->line($label);
 			}
 		}
-
 		return $label;
 	}
 
@@ -628,10 +631,12 @@ class Form
 		wp_register_script('onoffice-estatetype', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-estatetype.min.js', ['onoffice-multiselect'], '', true);
 		wp_register_script('onoffice-leadform', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-leadform.min.js', ['jquery'], '', true);
 		wp_register_script('onoffice-prevent-double-form-submission', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-prevent-double-form-submission.min.js', ['jquery'], '', true);
+		wp_register_script('onoffice-hidden-field', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-hidden-field.min.js', ['jquery'], '', true);
 		wp_enqueue_script('onoffice-custom-select');
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_script('onoffice-estatetype');
 		wp_enqueue_script('onoffice-leadform');
+		wp_enqueue_script('onoffice-hidden-field');
 		wp_enqueue_script('onoffice-prevent-double-form-submission');
 		wp_script_add_data('onoffice-multiselect', IncludeFileModel::LOAD_ASYNC, true);
 		wp_script_add_data('onoffice-estatetype', IncludeFileModel::LOAD_ASYNC, true);

@@ -58,9 +58,11 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		if ( in_array( $input, array( 'message' )) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage = $isRequiredMessage ? '*' : '';
+			$isHiddenField = $pForm->isHiddenField('message');
+			$additionHidden = $isHiddenField ? 'class="hidden-field"' : '';
 	
-			$line = $pForm->getFieldLabel( 'message' ).$additionMessage.':<br>';
-			$line .= '<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
+			$line = !$isHiddenField ? $pForm->getFieldLabel( 'message' ).$additionMessage.':<br>' : '';
+			$line .= '<textarea name="message" '.$additionHidden.'>'.$pForm->getFieldValue('message').'</textarea><br>';
 		}
 		if ($table == 'address') {
 			$addressValues []= $line;

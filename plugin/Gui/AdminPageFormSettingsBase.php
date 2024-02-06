@@ -180,6 +180,7 @@ abstract class AdminPageFormSettingsBase
 	{
 		$pBoolToFieldList = new BooleanValueToFieldList(new InputModelDBFactoryConfigForm, $pValues);
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRED);
+		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_HIDDEN_FIELD);
 	}
 
 	/**
@@ -272,12 +273,6 @@ abstract class AdminPageFormSettingsBase
 	{
 		$pBoolToFieldList = new BooleanValueToFieldList(new InputModelDBFactoryConfigForm, $pValues);
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_MARK_DOWN);
-	}
-
-	protected function customHiddenFields(stdClass $pValues)
-	{
-		$pBoolToFieldList = new BooleanValueToFieldList(new InputModelDBFactoryConfigForm, $pValues);
-		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_HIDDEN);
 	}
 
 
@@ -825,7 +820,6 @@ abstract class AdminPageFormSettingsBase
 
 		$this->prepareValues( $values );
 		$this->customFontMarkdown( $values );
-		$this->customHiddenFields( $values );
 		$pInputModelDBAdapterRow = new InputModelDBAdapterRow();
 
 		foreach ( $this->getFormModels() as $pFormModel ) {
