@@ -53,7 +53,6 @@ return (function (EstateList $pEstatesClone) {
 	    return;
     } ?>
     <script type="text/javascript">
-    (function() {
         var gmapInit = function() {
             var estates = <?php echo json_encode($estateData, JSON_PRETTY_PRINT); ?>;
             var settings = {zoom: null};
@@ -85,9 +84,6 @@ return (function (EstateList $pEstatesClone) {
                 }
             }
         };
-
-        google.maps.event.addDomListener(window, "load", gmapInit);
-    })();
     </script>
     <div id="gmap" style="width: 100%; height: 100%;"></div>
 <?php
