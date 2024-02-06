@@ -53,7 +53,7 @@ return (function (EstateList $pEstatesClone) {
 	    return;
     } ?>
 
-    <div id="gmap"></div>
+    <div id="gmap" style="width: 100%; height: 100%;"></div>
     <script type="text/javascript">
         async function gmapInit() {
             var estates = <?php echo json_encode($estateData, JSON_PRETTY_PRINT); ?>;
@@ -62,11 +62,11 @@ return (function (EstateList $pEstatesClone) {
             var mapElement = document.getElementById('gmap');
             const { Map } = await google.maps.importLibrary("maps");
             const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-            const defaultPosition = estates.length > 0 ? { lat: estates[0].position.lat, lng: estates[0].position.lng } : { lat: 37.42, lng: -122.1 };
+            const defaultPosition = estates.length > 0 ? { lat: estates[0].position.lat, lng: estates[0].position.lng } : { lat: 50.8, lng: 10.0 };
             const map = new Map(mapElement, {
                 center: defaultPosition,
                 zoom: 14,
-                mapId:  <?php echo json_encode(get_option('onoffice-settings-googlemaps-id'))?> ?? ''
+                mapId:  <?php echo json_encode(get_option('onoffice-settings-googlemap-id'))?> ?? ''
             });
             for (var i in estates) {
                 var estateConfig = estates[i];
