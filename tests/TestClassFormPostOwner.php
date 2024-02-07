@@ -128,6 +128,7 @@ class TestClassFormPostOwner
 
 				$pFieldEnergieausweistyp = new Field('energieausweistyp', onOfficeSDK::MODULE_ESTATE);
 				$pFieldEnergieausweistyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$pFieldEnergieausweistyp->setLabel('Energieausweistyp');
 				$pFieldEnergieausweistyp->setPermittedvalues(['Bedarfsausweis' => 'Bedarfsausweis']);
 				$pFieldEnergieausweistyp->setLabel('Energieausweistyp');
 				$pFieldsCollection->addField($pFieldEnergieausweistyp);

@@ -159,6 +159,11 @@ class FormModelBuilderDBForm
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsFormBackend($pFieldsCollection,$this->getFormType());
+
+		if ($this->getFormType() === Form::TYPE_INTEREST || $this->getFormType() === Form::TYPE_APPLICANT_SEARCH) {
+			$pFieldsCollectionBuilder->addFieldSupervisorForSearchCriteria($pFieldsCollection);
+		}
+
 		return $pFieldsCollection;
 	}
 
