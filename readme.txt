@@ -76,6 +76,20 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.17 (2024-02-07) =
+
+**Changed**
+
+* Fields of type date are displayed with datepicker
+* Fields of type boolean are displayed with radio buttons
+* Fields of type user are displayed as selection
+
+**Fixed**
+
+* Readable additional geographical information in e-mails
+* Filtering of properties with "price on request"
+* Sending forms with multiple selections
+
 = 4.16 (2023-12-13) =
 
 **Changed**
