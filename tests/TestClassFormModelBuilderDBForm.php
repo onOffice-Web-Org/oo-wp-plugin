@@ -359,4 +359,14 @@ class TestClassFormModelBuilderDBForm
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 		$this->assertEquals([$pInstance, 'callbackValueInputModelIsMarkDown'], $pInputModelDB->getValueCallback());
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelIsHiddenField
+	 */
+	public function testGetInputModelIsHiddenField()
+	{
+		$pInputModelIsHiddenField = $this->_pInstance->getInputModelIsHiddenField();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelIsHiddenField);
+		$this->assertEquals($pInputModelIsHiddenField->getHtmlType(), 'checkbox');
+	}
 }
