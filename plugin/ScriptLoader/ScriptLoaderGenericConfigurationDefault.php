@@ -167,14 +167,6 @@ class ScriptLoaderGenericConfigurationDefault
 	private function renderScriptForFormPage(array $scripts, string $pluginPath, string $script, string $pageContent, string $async): array
 	{
 		$forms = $this->getFormsByPageContent($pageContent);
-				
-		$hasGeneralForm = !empty(array_filter($forms, function($form) {
-			return in_array($form->form_type, [Form::TYPE_CONTACT, Form::TYPE_OWNER, Form::TYPE_INTEREST]);
-		}));
-
-		$hasApplicantSearchForm = !empty(array_filter($forms, function($form) {
-			return $form->form_type === Form::TYPE_APPLICANT_SEARCH;
-		}));
 
 		$scripts[] = (new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
@@ -193,20 +185,33 @@ class ScriptLoaderGenericConfigurationDefault
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true);
 
-		if ($hasApplicantSearchForm) {
+		if ($this->checkFormType($forms, [Form::TYPE_APPLICANT_SEARCH])) {
 			$scripts[] = (new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/dist/onoffice-form-preview.min.js', $pluginPath)))
 					->setDependencies(['jquery'])
 					->setLoadInFooter(true);
 			$this->localizeFormPreviewScript();
 		}
 
-		if (get_option('onoffice-settings-honeypot') == true && $hasGeneralForm) {
+		if (get_option('onoffice-settings-honeypot') == true && $this->checkFormType($forms, [Form::TYPE_CONTACT, Form::TYPE_OWNER, Form::TYPE_INTEREST])) {
 			$scripts[] = (new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/dist/onoffice-honeypot.min.js', $pluginPath)))
 					->setDependencies(['jquery'])
 					->setLoadInFooter(true);
 		}
 
 		return $scripts;
+	}
+
+	/**
+	 * @param array $forms
+	 * @param array $typeForm
+	 * @return bool
+	 */
+
+	private function checkFormType(array $forms, array $typeForm): bool
+	{
+		return !empty(array_filter($forms, function($form) use ($typeForm) {
+			return in_array($form->form_type, $typeForm);
+		}));
 	}
 
 	/**
