@@ -48,7 +48,6 @@ jQuery(document).ready(function ($) {
                 }
             });
         }
-        standardSortInput.trigger("chosen:updated");
     };
 
     onOffice.sortingSelection = function (sortingSelectionVal) {

@@ -541,17 +541,6 @@ abstract class AdminPageSettingsBase
 		wp_enqueue_script('postbox');
 		wp_enqueue_script('admin-js');
 
-		wp_register_script('chosen-jquery',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/chosen.jquery.js', ['jquery'], '', true);
-
-		wp_register_script('chosen-prism',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/docsupport/prism.js', ['chosen-jquery'], '', true);
-
-		wp_register_script('chosen-init',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/docsupport/init.js', ['chosen-jquery', 'chosen-prism'], '', true);
-
-		wp_enqueue_script('chosen-init');
-
 		wp_register_script('oo-sanitize-shortcode-name',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-sanitize-shortcode-name.min.js',
 			['jquery'], '', true);

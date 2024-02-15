@@ -61,9 +61,6 @@ abstract class InputModelBase
 	const HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST = 'complexSortableDetailList';
 
 	/** */
-	const HTML_TYPE_CHOSEN = 'chosen';
-
-	/** */
 	const HTML_TYPE_NUMBER = 'number';
 
 	/** */
@@ -76,6 +73,9 @@ abstract class InputModelBase
 	const HTML_TYPE_BUTTON_FIELD = 'buttonHandleField';
 
 	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
+
+	/** */
+	const HTML_TYPE_SELECT_TWO = 'select2';
 
 	/** @var string */
 	private $_name = null;
