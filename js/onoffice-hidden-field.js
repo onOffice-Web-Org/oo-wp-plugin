@@ -1,10 +1,9 @@
 jQuery(document).ready(function ($) {
-    $('#onoffice-form div, #onoffice-form p, #onoffice-form').contents().filter(function() {
+    $('.oo-form div, .oo-form p, .oo-form').contents().filter(function() {
         return this.nodeType === 3 && $(this).next('.hidden-field').length > 0;
     }).remove();
 
-
-    $('#onoffice-form .hidden-field').each(function() {
+    $('.oo-form .hidden-field').each(function() {
         if (this.nextSibling && this.nextSibling.nodeType === 3) {
             $(this.nextSibling).remove();
         }

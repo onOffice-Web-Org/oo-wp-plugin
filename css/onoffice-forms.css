@@ -11,6 +11,6 @@ span.onoffice-pleasefill {
 	pointer-events: none;
 }
 
-.hidden-field {
+.oo-form .hidden-field {
 	display: none;
 }
