@@ -154,6 +154,10 @@ class FormModelBuilderDBForm
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsFormBackend($pFieldsCollection,$this->getFormType());
 
+		if ($this->getFormType() === Form::TYPE_INTEREST || $this->getFormType() === Form::TYPE_APPLICANT_SEARCH) {
+			$pFieldsCollectionBuilder->addFieldSupervisorForSearchCriteria($pFieldsCollection);
+		}
+
 		$pFieldsCollectionConfiguratorForm = $this->_pContainer->get(FieldsCollectionConfiguratorForm::class);
 		return $pFieldsCollectionConfiguratorForm->buildForFormType($pFieldsCollection, $this->getFormType());
 	}
