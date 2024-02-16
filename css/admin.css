@@ -336,6 +336,8 @@ input#onoffice-input-submit {
 body #post-body-content .viewusage, body #post-body-content .wp-clearfix{
 	display: inline-block;
 }
+
+body #post-head-content p.wp-clearfix:nth-child(1),
 body #post-body-content p.wp-clearfix:nth-child(1){
 	display: block !important;
 }
