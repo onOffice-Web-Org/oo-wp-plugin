@@ -45,7 +45,8 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
-	$line = $pForm->getFieldLabel( $input ).$addition.': ';
+	$isHiddenField = $pForm->isHiddenField($input);
+	$line = !$isHiddenField ? $pForm->getFieldLabel( $input ).$addition.': ' : '';
 	$line .= renderFormField($input, $pForm);
 
 	if ( $pForm->isMissingField( $input ) ) {
@@ -53,8 +54,9 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
+		$isHiddenField = $pForm->isHiddenField('gdprcheckbox');
 		$line             = renderFormField( 'gdprcheckbox', $pForm );
-		$line             .= $pForm->getFieldLabel( 'gdprcheckbox' );
+		$line            .= !$isHiddenField ? $pForm->getFieldLabel( 'gdprcheckbox' ) : '';
 	}
 	if ($table == 'address') {
 		$addressValues []= $line;

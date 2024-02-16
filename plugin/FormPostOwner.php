@@ -167,6 +167,10 @@ class FormPostOwner
 		foreach ($estateFields as $input) {
 			$value = $pInputVariableReader->getFieldValue($input);
 
+			if ($value === null && isset($pFormData->getValues()[$input])) {
+				$value = $pFormData->getValues()[$input];
+			}
+
 			if ($pInputVariableReader->getFieldType($input) === FieldTypes::FIELD_TYPE_MULTISELECT &&
 				!is_array($value)) {
 				$estateData[$input] = [$value];

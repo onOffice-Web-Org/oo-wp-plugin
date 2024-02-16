@@ -52,7 +52,8 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
 		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
-		$line = $pForm->getFieldLabel($input).$addition.': ';
+		$isHiddenField = $pForm->isHiddenField($input);
+		$line = !$isHiddenField ? $pForm->getFieldLabel($input).$addition.': ' : '';
 		$line .= renderFormField($input, $pForm);
 
 		if ($table == 'address') {

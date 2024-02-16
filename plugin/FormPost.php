@@ -215,13 +215,12 @@ abstract class FormPost
 		$requiredFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $pFormConfig->getRequiredFields());
 		$inputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $pFormConfig->getInputs());
 		$pFormConfig->setInputs($inputs);
+		if (!empty($pFormConfig->getHiddenFields())) {
+			$this->readDefaultValueForHiddenFieldsByFormId($pFormConfig->getId(), $pFormConfig->getHiddenFields());
+		}
 
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$formData = $pFormFieldValidator->getValidatedValues($formFields, $this->_pFieldsCollection);
-		if (!empty($pFormConfig->getHiddenFields())) {
-			$pDefaultValue = $this->readDefaultValueForHiddenFieldsByFormId($pFormConfig->getId(), $pFormConfig->getHiddenFields());
-			$formData = array_merge($formData, $pDefaultValue);
-		}
 		$requiredFields = $this->getAllowedRequiredFields($requiredFields);
 		$requiredFieldsAreAllowed = $this->getAllowedRequiredFieldsIsRangeField($requiredFields);
 		$pFormData = new FormData($pFormConfig, $formNo);
@@ -233,14 +232,16 @@ abstract class FormPost
 	}
 
 	/**
-	 *
 	 * @param int $formId
 	 * @param array $hiddenFields
-	 * @return array
 	 *
+	 * @return void
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
 	 */
 
-	private function readDefaultValueForHiddenFieldsByFormId(int $formId, array $hiddenFields): array
+	private function readDefaultValueForHiddenFieldsByFormId(int $formId, array $hiddenFields)
 	{
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -260,7 +261,11 @@ abstract class FormPost
 			if (count($pDefaultFields)) $values = array_merge($values, $pDefaultFields);
 		}
 
-		return $values;
+		array_walk($values, function($value, $key) {
+			if ($value === "0" || !empty($value)) {
+				$_POST[$key] = $value;
+			}
+		});
 	}
 
 	/**

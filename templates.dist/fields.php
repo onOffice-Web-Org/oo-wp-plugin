@@ -181,7 +181,7 @@ if (!function_exists('renderFormField')) {
 			$inputType = 'type="text" ';
 			$value = 'value="' . esc_attr($pForm->getFieldValue($fieldName, true)) . '"';
 			if ($isHiddenField === true) {
-				$inputType = 'type="hidden" class="hidden-field" disabled ';
+				$inputType .= 'class="hidden-field" disabled ';
 			} elseif ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" ';
 				$value = 'value="y" ' . ($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
