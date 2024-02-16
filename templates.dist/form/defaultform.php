@@ -61,7 +61,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$isHiddenField = $pForm->isHiddenField('gdprcheckbox');
 			echo renderFormField( 'gdprcheckbox', $pForm );
 			echo !$isHiddenField ? $pForm->getFieldLabel( 'gdprcheckbox' ) . '<br>' : '';
-			echo $pForm->getFieldLabel( 'gdprcheckbox' ) . '<br>';
 			continue;
 		}
 		if ( in_array( $input, array( 'message' ) ) ) {
