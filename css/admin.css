@@ -499,13 +499,13 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 }
 
 @media only screen and (max-width: 1365px) {
-	#block-publish .postbox-header {
+	.block-publish .postbox-header {
 		display: none;
 	}
 }
 
 @media only screen and (min-width: 1366px) and (max-width: 1440px) {
-	#block-publish {
+	.block-publish {
 		max-width: 230px !important;
 	}
 }
@@ -530,12 +530,12 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 		width: 100%;
 	}
 
-	.oo-poststuff-estate-detail #block-publish,
-	.oo-poststuff-similar-estate #block-publish {
+	.oo-poststuff-estate-detail .block-publish,
+	.oo-poststuff-similar-estate .block-publish {
 		margin-top: 0;
 	}
 
-	#block-publish {
+	.block-publish {
 		width: calc(100% - 1000px);
 		max-width: 280px;
 		min-width: 200px;
@@ -547,13 +547,13 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 		margin-left: 20px;
 	}
 
-	#block-publish .inside {
+	.block-publish .inside {
 		font-size: 13px;
 		margin: 0 !important;
 		padding: 0 !important;
 	}
 
-	#block-publish p.submit {
+	.block-publish p.submit {
 		text-align: left;
 		padding: 10px 10px 10px 10px;
 		margin: 0 !important;
