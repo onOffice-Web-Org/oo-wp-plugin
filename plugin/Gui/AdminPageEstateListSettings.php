@@ -310,6 +310,5 @@ class AdminPageEstateListSettings
 		wp_enqueue_style('onoffice-multiselect');
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
-		wp_localize_script('admin-js', 'onOffice_loc_settings', ['page' => get_current_screen()->id]);
 	}
 }
