@@ -67,7 +67,7 @@ class InputFieldSelectRenderer
 					.'}';
 				echo '</script>';
 			} else {
-				$textHtml = '<div style="text-align: right">' . $this->getHint() . '</div>';
+				$textHtml = '<div>' . $this->getHint() . '</div>';
 			}
 		}
 		echo '<select name="'.esc_html($this->getName()).'" '

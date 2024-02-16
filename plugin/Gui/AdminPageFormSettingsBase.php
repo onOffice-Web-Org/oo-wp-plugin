@@ -357,6 +357,12 @@ abstract class AdminPageFormSettingsBase
 					'0' => __('No', 'onoffice-for-wp-websites'),
 					'1' => __('Yes', 'onoffice-for-wp-websites'),
 				];
+			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
+				$result[ $pField->getModule() ][ $pField->getName() ]['permittedvalues'] = [
+					'' => __('Not Specified', 'onoffice-for-wp-websites'),
+					'0' => __('No', 'onoffice-for-wp-websites'),
+					'1' => __('Yes', 'onoffice-for-wp-websites'),
+				];
 			}
 		}
 		return $result;
@@ -511,7 +517,8 @@ abstract class AdminPageFormSettingsBase
 		if (in_array(onOfficeSDK::MODULE_SEARCHCRITERIA, $modules)) {
 			$pFieldsCollectionBuilder
 				->addFieldsSearchCriteria($pDefaultFieldsCollection)
-				->addFieldsSearchCriteriaSpecificBackend($pDefaultFieldsCollection);
+				->addFieldsSearchCriteriaSpecificBackend($pDefaultFieldsCollection)
+				->addFieldSupervisorForSearchCriteria($pDefaultFieldsCollection);
 		}
 
 		$pFieldsCollectionBuilder->addFieldsFormBackend($pDefaultFieldsCollection,$this->getType());
@@ -762,7 +769,7 @@ abstract class AdminPageFormSettingsBase
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
-		echo '<div id="poststuff">';
+		echo '<div id="poststuff" class="oo-poststuff">';
 		echo '<div id="post-body" class="metabox-holder columns-'
 		     . ( 1 == get_current_screen()->get_columns() ? '1' : '2' ) . '">';
 		echo '<div id="post-body-content">';

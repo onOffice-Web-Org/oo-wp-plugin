@@ -1,18 +1,3 @@
-#onoffice-ajax .metabox-holder .postbox-container .postbox p {
-	display: block;
-}
-
-#onoffice-ajax .metabox-holder .postbox-container .postbox label {
-	float: left;
-	margin-right: 12pt;
-}
-
-#onoffice-ajax .metabox-holder .postbox-container .postbox input,
-#onoffice-ajax .metabox-holder .postbox-container .postbox select {
-	float: right;
-	max-width: 230px;
-}
-
 #onoffice-ajax .metabox-holder .postbox-container .postbox .chosen-container .chosen-drop {
 	display: grid;
 }
@@ -79,6 +64,7 @@ body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
 
 #onoffice-ajax #listSettings {
 	width: 49%;
+	box-sizing: border-box;
 }
 
 body #onoffice-ajax span.viewusage {
@@ -95,23 +81,23 @@ body #onoffice-ajax span.viewusage .italic {
 .fieldsSortable {
 	float: right;
 	min-height: 320px;
-	max-width: 480px;
+	max-width: 488px;
 	background: #fff;
 	width: 50%;
 }
 
 #sortableFieldsList .menu-item-bar {
 	display: block;
-	padding-left: 5px;
+	padding-left: 12px;
 }
 
 #sortableFieldsList .menu-item-bar > .menu-item-handle {
-	max-width: 435px;
+	max-width: 430px;
 	width: 100%;
 }
 
 #sortableFieldsList .menu-item-settings {
-	max-width: 455px;
+	max-width: 440px;
 	width: 100%;
 }
 
@@ -128,7 +114,7 @@ body #onoffice-ajax span.viewusage .italic {
 #sortableFieldsList .menu-item-settings {
 	display: block;
 	position: relative;
-	margin-left: 5px;
+	margin-left: 12px;
 	background: #fff;
 	clear: both;
 }
@@ -193,11 +179,6 @@ div.fieldsSortable #sortableFieldsList div.menu-item-settings p {
 	line-height: 1em;
 }
 
-div.fieldsSortable #sortableFieldsList div.menu-item-settings p input {
-	margin-right: 10px;
-	float: right;
-}
-
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:before {
 	vertical-align: middle;
 }
@@ -213,10 +194,6 @@ div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButto
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:hover {
 	cursor: pointer;
 	color: #d43f3a;
-}
-
-div.fieldsSortable #sortableFieldsList div.menu-item-settings p label {
-	float: left;
 }
 
 body.toplevel_page_onoffice .card {
@@ -365,13 +342,8 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 .button.button-copy{
 	display: none;
 }
-.memssageReference{
-	text-align: right;
-}
+
 .memssageOnlyReference{
-	text-align: right;
-}
-.memssageRecordsPerPage{
 	text-align: right;
 }
 
@@ -498,12 +470,127 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	}
 }
 
-input[name=oopluginlistviews-countryactive]:checked::before,
-input[name=oopluginlistviews-radiusactive]:checked::before {
+/* new style */
+.oo-poststuff .custom-input-field {
+	display: flex;
+	justify-content: space-between;
+}
+
+.oo-poststuff .custom-input-field > *,
+.oo-poststuff .custom-input-field.custom-lable-language label,
+.oo-poststuff .custom-input-field.custom-lable-language input[type="text"],
+.oo-poststuff .custom-input-field.custom-lable-language select {
+	width: 50%;
+}
+
+.oo-poststuff .custom-input-field input[type="checkbox"],
+.oo-poststuff .custom-input-field input[type="radio"] {
+	margin-left: auto;
+	width: 16px;
+	min-width: 16px;
+	max-width: 16px;
+}
+
+.oo-poststuff .custom-input-field.custom-from-to-input {
+	flex-wrap: wrap;
+}
+
+.oo-poststuff .custom-input-field.custom-from-to-input input[type="number"],
+.oo-poststuff .custom-input-field.custom-from-to-input input[type="text"] {
+	margin: 0 0 10px;
+}
+
+.oo-poststuff .custom-input-field.custom-label-language > span {
+	width: auto !important;
+}
+
+.oo-poststuff .custom-input-field label.custom-label[for^="checkbox"] {
+	width: 100%;
+	display: block;
+}
+
+.oo-poststuff .custom-input-field > div.multiselect .onoffice-multiselect-popup label {
+	display: flex;
+	flex-direction: row-reverse;
+}
+
+.oo-poststuff .custom-input-field > div.multiselect span {
+	display: flex;
+	padding-right: 10px;
+	line-height: 1.5rem;
+}
+
+.oo-poststuff .custom-input-field > div.multiselect input[type="button"] {
+	width: auto !important;
+	float: right;
+}
+
+.oo-poststuff .custom-input-field:has(div.multiselect) {
+	display: block;
+}
+
+.oo-poststuff .custom-input-field div.multiselect > div.onoffice-multiselect-popup > label {
+	display: flex;
+	margin-bottom: 5px;
+}
+
+.oo-poststuff .custom-input-field .chosen-container-single,
+.oo-poststuff .custom-input-field .chosen-container-multi {
+	width: 50% !important;
+}
+
+.oo-poststuff .custom-input-field .chosen-container-single .chosen-single {
+	border-color: #8c8f94;
+	box-shadow: none;
+	border-radius: 3px;
+	padding: 0 24px 0 8px;
+	min-height: 30px;
+}
+
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-countryactive]:checked::before,
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive]:checked::before {
 	filter: brightness(0) saturate(100%) invert(35%) sepia(4%) saturate(967%) hue-rotate(170deg) brightness(91%) contrast(94%);
 }
 
-input[name=oopluginlistviews-countryactive],
-input[name=oopluginlistviews-radiusactive] {
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-countryactive],
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive] {
 	pointer-events: none;
+}
+
+#listSettings .custom-input-field,
+#viewpicturetypes .custom-input-field {
+	display: block;
+}
+
+#viewaccesscontrol .custom-input-field label{
+	width: 100%;
+}
+
+#viewpicturetypes .custom-input-field label {
+	float: left;
+	max-width: 50%;
+}
+
+#viewpicturetypes .custom-input-field input {
+	float: right;
+	max-width: 50%;
+}
+
+.oo-poststuff .key-of-field-block {
+	display: flex;
+}
+
+.oo-poststuff .custom-input-field .onoffice-input-radio {
+	border-radius: 4px;
+	width: 50%;
+	display: grid;
+	float: left;
+	justify-content: initial;
+	border: 1px solid #8c8f94;
+}
+
+.oo-poststuff .custom-input-field .onoffice-input-radio label {
+	display: flex;
+	justify-content: space-between;
+	margin: 10px;
 }
