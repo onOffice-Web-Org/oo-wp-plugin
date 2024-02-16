@@ -112,6 +112,10 @@ class Form
 			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName)
 			->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
 
+		if ($type === self::TYPE_INTEREST || $type === self::TYPE_APPLICANT_SEARCH) {
+			$pFieldBuilderShort->addFieldSupervisorForSearchCriteria($pFieldsCollection);
+		}
+
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();
 		$this->_formNo = $pFormPost->getFormNo();
@@ -559,7 +563,10 @@ class Form
 			$pDefaultFields = $pDefaultValueRead->getConvertedMultiFields($formId, $fields);
 			if (count($pDefaultFields)) $values = array_merge($values, $pDefaultFields);
 		}
-		return array_filter($values);
+
+		return array_filter($values, function($value) {
+			return ($value === "0" || !empty($value));
+		});
 	}
 
 	/**
