@@ -48,11 +48,6 @@ body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
 	max-width: 500px;
 }
 
-#onoffice-ajax #poststuff #post-body-content {
-    width: 100%;
-	margin: 0;
-}
-
 #onoffice-ajax #poststuff #post-body.columns-2 #side-sortables {
     width: 100%;
 }
@@ -333,12 +328,7 @@ input#onoffice-input-submit {
 	border-width: 1px;
 }
 
-body #post-body-content .viewusage, body #post-body-content .wp-clearfix{
-	display: inline-block;
-}
-
-body #post-head-content p.wp-clearfix:nth-child(1),
-body #post-body-content p.wp-clearfix:nth-child(1){
+body #post-head-content p.wp-clearfix:nth-child(1) {
 	display: block !important;
 }
 .button.button-copy{
