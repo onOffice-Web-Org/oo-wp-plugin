@@ -490,7 +490,7 @@ abstract class AdminPageSettingsBase
 
 	protected function renderSearchFieldForFieldLists(InputModelRenderer $pInputModelRenderer, $pFormViewSearchFieldForFieldLists)
 	{
-		echo '<div id="oo-search-field" class="postbox">';
+		echo '<div class="oo-search-field postbox">';
 		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Field list search', 'onoffice-for-wp-websites' ) . '</span></h2>';
 		echo '<div class="inside">';
 		$pInputModelRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);

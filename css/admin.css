@@ -585,18 +585,18 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	margin: 10px;
 }
 
-#onoffice-ajax #oo-search-field {
+#onoffice-ajax .oo-search-field {
 	width: 49%;
 	float: left;
 }
 
-#oo-search-field .input-search{
+.oo-search-field .input-search{
 	width: 100%;
 	padding: 7px 15px;
 	border-radius: 0;
 }
 
-#oo-search-field .field-lists {
+.oo-search-field .field-lists {
 	display: none;
 	width: 100%;
 	position: absolute;
@@ -609,22 +609,22 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	border-top: none;
 }
 
-#oo-search-field .field-lists .line-bottom-content {
+.oo-search-field .field-lists .line-bottom-content {
 	margin: 15px 14px 0;
 	border-bottom: 1px solid #c3c4c7;
 }
 
-#oo-search-field .field-lists .search-field-list {
+.oo-search-field .field-lists .search-field-list {
 	width: 100%;
 	overflow-y: auto;
 	max-height: 217px;
 }
 
-#oo-search-field .ui-sortable-handle {
+.oo-search-field .ui-sortable-handle {
 	border-bottom: 1px solid #c3c4c7;
 }
 
-#oo-search-field .field-lists .search-field-list .search-field-item {
+.oo-search-field .field-lists .search-field-list .search-field-item {
 	cursor: pointer;
 	padding: 2px 8px;
 	margin: 2px;
@@ -633,31 +633,31 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	box-sizing: border-box;
 }
 
-#oo-search-field .field-lists .search-field-list .search-field-item:hover {
+.oo-search-field .field-lists .search-field-list .search-field-item:hover {
 	background-color: #ddd;
 }
 
-#oo-search-field .field-lists .search-field-list .field-item {
+.oo-search-field .field-lists .search-field-list .field-item {
 	display: flex;
 	align-items: center;
 }
 
-#oo-search-field .field-lists .search-field-list .field-item-detail > * {
+.oo-search-field .field-lists .search-field-list .field-item-detail > * {
 	margin: 0;
 	margin-left: 5px;
 }
 
-#oo-search-field .field-lists .search-field-list .action-remove {
+.oo-search-field .field-lists .search-field-list .action-remove {
 	color: #ff000091;
 }
 
-#oo-search-field .box-search {
+.oo-search-field .box-search {
 	position: relative;
 	display: inline-block;
 	width: 100%;
 }
 
-#oo-search-field .box-search .clear-icon {
+.oo-search-field .box-search .clear-icon {
 	position: absolute;
 	top: 50%;
 	right: 16px;

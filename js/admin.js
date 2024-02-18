@@ -57,16 +57,15 @@ jQuery(document).ready(function($){
 			return;
 		}
 		$(data).each(function() {
-			$(this).children().first().next().css("opacity", "1");
-			$(this).children().first().removeClass("dashicons-remove");
-			$(this).children().first().addClass("dashicons-insert");
-			$(this).children().first().attr("typeField", 1);
-			$(this).find('.check-action').removeClass("action-remove");
+			const parentItem = $(this);
+			parentItem.find('.dashicons').removeClass('dashicons-remove').addClass('dashicons-insert').attr('typeField', 1);
+			parentItem.find('.check-action').removeClass('action-remove');
+			parentItem.find('.field-item-detail').css('opacity', '1');
 		});
 		$(this).parent().parent().remove();
 	});
 
-	$('#oo-search-field .input-search').on('input', function() {
+	$('.oo-search-field .input-search').on('input', function() {
 		let filter = $(this).val().toUpperCase();
 		let clearIcon = $('.clear-icon');
 
@@ -76,7 +75,7 @@ jQuery(document).ready(function($){
 			clearIcon.removeClass('dashicons-no-alt').addClass('dashicons-search');
 		}
 
-		$('#oo-search-field .field-lists .search-field-item').each(function() {
+		$('.oo-search-field .field-lists .search-field-item').each(function() {
 			let dataLabel = $(this).data('label').toUpperCase();
 			let dataKey = $(this).data('key').toUpperCase();
 			let dataContent = $(this).data('content').toUpperCase();
@@ -90,20 +89,20 @@ jQuery(document).ready(function($){
 	});
 
 	$(document).on('click', function(event) {
-		let $fieldLists = $('#oo-search-field .field-lists');
-		let $inputSearch = $('#oo-search-field .input-search');
+		let $fieldLists = $('.oo-search-field .field-lists');
+		let $inputSearch = $('.oo-search-field .input-search');
 
 		if (!$(event.target).closest($fieldLists).length && event.target !== $inputSearch[0]) {
 			$fieldLists.hide();
 		}
 	});
 
-	$('#oo-search-field .input-search').on('click', function(event) {
+	$('.oo-search-field .input-search').on('click', function(event) {
 		event.stopPropagation();
 		$('.field-lists').show();
 	});
 
-	$('#oo-search-field #clear-input').on('click', function() {
+	$('.oo-search-field #clear-input').on('click', function() {
 		$('.input-search').val('').trigger('input');
 	});
 
@@ -119,11 +118,10 @@ jQuery(document).ready(function($){
 			var module = $(btn).attr('data-onoffice-module');
 			var actionFieldName = 'labelButtonHandleField-' + valElName;
 			$('.' + actionFieldName).each(function() {
-				$(this).children().first().next().css("opacity", "0.5");
-				$(this).children().first().attr("typeField", removeField);
-				$(this).children().first().removeClass("dashicons-insert");
-				$(this).children().first().addClass("dashicons-remove");
-				$(this).find('.check-action').addClass("action-remove");
+				const parentItem = $(this);
+				parentItem.find('.dashicons').removeClass('dashicons-insert').addClass('dashicons-remove').attr('typeField', removeField);
+				parentItem.find('.check-action').addClass('action-remove');
+				parentItem.find('.field-item-detail').css('opacity', '0.5');
 			});
 			var optionsAvailable = false;
 			var checkedFields = [];
@@ -149,11 +147,10 @@ jQuery(document).ready(function($){
 			var checkedFields = [];
 			const actionFieldName = 'labelButtonHandleField-' + valElName;
 			$('.' + actionFieldName).each(function() {
-				$(this).children().first().next().css("opacity", "1");
-				$(this).children().first().removeClass("dashicons-remove");
-				$(this).children().first().addClass("dashicons-insert");
-				$(this).children().first().attr("typeField", addField);
-				$(this).find('.check-action').removeClass("action-remove");
+				const parentItem = $(this);
+				parentItem.find('.dashicons').removeClass('dashicons-remove').addClass('dashicons-insert').attr('typeField', addField);
+				parentItem.find('.check-action').removeClass('action-remove');
+				parentItem.find('.field-item-detail').css('opacity', '1');
 			});
 			$('*#sortableFieldsList').find('#menu-item-' + valElName).remove();
 		}
