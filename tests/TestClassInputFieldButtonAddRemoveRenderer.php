@@ -79,7 +79,7 @@ class TestClassInputFieldButtonAddRemoveRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<span class="inputFieldButton labelButtonHandleField-johndoe"name="testRenderer"data-onoffice-module="address"value="johndoe"data-onoffice-category=""data-onoffice-label="John Doe"id="labelbuttonHandleField_1bjohndoe"><span class="dashicons dashicons-remove" typeField="2"></span><label style="margin-left:5px;opacity: 0.5;">John Doe</label></span><br><span class="inputFieldButton labelButtonHandleField-konradzuse"name="testRenderer"data-onoffice-module="address"value="konradzuse"data-onoffice-category=""data-onoffice-label="Konrad Zuse"id="labelbuttonHandleField_1bkonradzuse"><span class="dashicons dashicons-insert" typeField="1"></span><label style="margin-left:5px;opacity: 1;">Konrad Zuse</label></span><br>', $output);
+		$this->assertEquals('<span class="inputFieldButton labelButtonHandleField-johndoe"name="testRenderer"data-onoffice-module="address"value="johndoe"data-onoffice-category=""data-onoffice-label="John Doe"id="labelbuttonHandleField_1bjohndoe"><span class="dashicons dashicons-remove" typeField="2"></span><label class="field-item-detail" style="margin-left:5px;opacity: 0.5;">John Doe</label></span><br><span class="inputFieldButton labelButtonHandleField-konradzuse"name="testRenderer"data-onoffice-module="address"value="konradzuse"data-onoffice-category=""data-onoffice-label="Konrad Zuse"id="labelbuttonHandleField_1bkonradzuse"><span class="dashicons dashicons-insert" typeField="1"></span><label class="field-item-detail" style="margin-left:5px;opacity: 1;">Konrad Zuse</label></span><br>', $output);
 	}
 	
 	/**
@@ -102,7 +102,7 @@ class TestClassInputFieldButtonAddRemoveRenderer
 		$pCheckboxFieldRenderer->setOoModule('address');
 		$pCheckboxFieldRenderer->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<span class="inputFieldButton labelButtonHandleField-0"name="testRenderer"data-onoffice-module="address"value="0"data-onoffice-category=""data-onoffice-label="1"id="labelbuttonHandleField_1b0"><span class="dashicons dashicons-insert" typeField="1"></span><label style="margin-left:5px;opacity: 1;">1</label></span><br><span class="inputFieldButton labelButtonHandleField-1"name="testRenderer"data-onoffice-module="address"value="1"data-onoffice-category=""data-onoffice-label="2"id="labelbuttonHandleField_1b1"><span class="dashicons dashicons-insert" typeField="1"></span><label style="margin-left:5px;opacity: 1;">2</label></span><br>', $output);
+		$this->assertEquals('<span class="inputFieldButton labelButtonHandleField-0"name="testRenderer"data-onoffice-module="address"value="0"data-onoffice-category=""data-onoffice-label="1"id="labelbuttonHandleField_1b0"><span class="dashicons dashicons-insert" typeField="1"></span><label class="field-item-detail" style="margin-left:5px;opacity: 1;">1</label></span><br><span class="inputFieldButton labelButtonHandleField-1"name="testRenderer"data-onoffice-module="address"value="1"data-onoffice-category=""data-onoffice-label="2"id="labelbuttonHandleField_1b1"><span class="dashicons dashicons-insert" typeField="1"></span><label class="field-item-detail" style="margin-left:5px;opacity: 1;">2</label></span><br>', $output);
 	}
 	
 	/**
