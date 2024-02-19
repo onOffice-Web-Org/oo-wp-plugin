@@ -585,7 +585,7 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	margin: 10px;
 }
 
-#onoffice-ajax .oo-search-field {
+.oo-search-field {
 	width: 49%;
 	float: left;
 }
