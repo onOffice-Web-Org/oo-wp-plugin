@@ -120,6 +120,7 @@ if (!function_exists('renderFormField')) {
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
 		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
+		$isHiddenField = $pForm->isHiddenField($fieldName);
 
 		$requiredAttribute = "";
 		if ($isRequired) {
@@ -131,7 +132,9 @@ if (!function_exists('renderFormField')) {
 		}
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
-			$output .= '<select class="custom-single-select" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
+			$output .= '<select size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute;
+			$output .= $isHiddenField ? 'class="hidden-field" disabled ' : 'class="custom-single-select"';
+			$output .= '>';
 			/* translators: %s will be replaced with the translated field name. */
 			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 			foreach ($permittedValues as $key => $value) {
@@ -148,7 +151,7 @@ if (!function_exists('renderFormField')) {
 			if (!is_array($selectedValue)) {
 				$selectedValue = [];
 			}
-			$output .= renderRegionalAddition($fieldName, $selectedValue, true, $fieldLabel, $isRequired, $permittedValues ?? null);
+			$output .= renderRegionalAddition($fieldName, $selectedValue, true, $fieldLabel, $isRequired, $permittedValues ?? null, $isHiddenField);
 		} elseif (
 			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
 			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
@@ -170,14 +173,16 @@ if (!function_exists('renderFormField')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '".' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$output = '<select class="custom-multiple-select form-control" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
+			$output = '<select name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute;
+			$output .= $isHiddenField ? 'class="hidden-field" disabled ' : 'class="custom-multiple-select form-control"' . '>';
 			$output .= $htmlOptions;
 			$output .= '</select>';
 		} else {
 			$inputType = 'type="text" ';
 			$value = 'value="' . esc_attr($pForm->getFieldValue($fieldName, true)) . '"';
-
-			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+			if ($isHiddenField === true) {
+				$inputType .= 'class="hidden-field" disabled ';
+			} elseif ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" ';
 				$value = 'value="y" ' . ($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
 			} elseif (
@@ -212,7 +217,8 @@ if (!function_exists('renderFormField')) {
 						. $value . ' placeholder="' . esc_attr($rangeDescription) . '">';
 				}
 			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
-				$output = '<fieldset>
+				$additionHidden = $isHiddenField === true ? 'class="hidden-field" disabled ' : '';
+				$output = '<fieldset '.$additionHidden.'>
 					<input type="radio" id="' . esc_attr($fieldName) . '_u" name="' . esc_attr($fieldName) . '" value=""
 						' . ($selectedValue == '' ? ' checked' : '') . '>
 					<label for="' . esc_attr($fieldName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
@@ -233,7 +239,7 @@ if (!function_exists('renderFormField')) {
 
 
 if (!function_exists('renderRegionalAddition')) {
-	function renderRegionalAddition(string $inputName, array $selectedValue, bool $multiple, string $fieldLabel, bool $isRequired, array $permittedValues = null): string
+	function renderRegionalAddition(string $inputName, array $selectedValue, bool $multiple, string $fieldLabel, bool $isRequired, array $permittedValues = null, bool $isHiddenField = false): string
 	{
 		$output = '';
 		$name = esc_attr($inputName) . ($multiple ? '[]' : '');
@@ -244,7 +250,9 @@ if (!function_exists('renderRegionalAddition')) {
 			$requiredAttribute = "required";
 		}
 
-		$output .= '<select name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';
+		$output .= '<select name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute ;
+		$output .= $isHiddenField ? 'class="hidden-field" disabled ' : '';
+		$output .= '>';
 		$pRegionController = new RegionController();
 
 		if ($permittedValues !== null) {

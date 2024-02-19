@@ -35,6 +35,7 @@ use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
 
 /**
  *
@@ -214,6 +215,9 @@ abstract class FormPost
 		$requiredFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $pFormConfig->getRequiredFields());
 		$inputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $pFormConfig->getInputs());
 		$pFormConfig->setInputs($inputs);
+		if (!empty($pFormConfig->getHiddenFields())) {
+			$this->readDefaultValueForHiddenFieldsByFormId($pFormConfig->getId(), $pFormConfig->getHiddenFields());
+		}
 
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$formData = $pFormFieldValidator->getValidatedValues($formFields, $this->_pFieldsCollection);
@@ -227,6 +231,42 @@ abstract class FormPost
 		return $pFormData;
 	}
 
+	/**
+	 * @param int $formId
+	 * @param array $hiddenFields
+	 *
+	 * @return void
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+
+	private function readDefaultValueForHiddenFieldsByFormId(int $formId, array $hiddenFields)
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+
+		/** @var DefaultValueModelToOutputConverter $pDefaultValueRead */
+		$pDefaultValueRead = $pContainer->get(DefaultValueModelToOutputConverter::class);
+
+		$fields = [];
+		foreach ($hiddenFields as $field) {
+			$fields[] = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
+		}
+
+		$values = [];
+		foreach (array_chunk($fields, 100) as $fields) {
+			$pDefaultFields = $pDefaultValueRead->getConvertedMultiFields($formId, $fields);
+			if (count($pDefaultFields)) $values = array_merge($values, $pDefaultFields);
+		}
+
+		array_walk($values, function($value, $key) {
+			if ($value === "0" || !empty($value)) {
+				$_POST[$key] = $value;
+			}
+		});
+	}
 
 	/**
 	 * @return FieldsCollection

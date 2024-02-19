@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use DI\Container;
 use DI\ContainerBuilder;
 use Exception;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -55,7 +56,6 @@ class TestClassForm
 		$pContainerBuilder = new ContainerBuilder();
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
-
 		$pFieldsCollectionBuilder = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -83,6 +83,7 @@ class TestClassForm
 		$pDataFormConfiguration = new DataFormConfigurationInterest;
 		$pDataFormConfiguration->setId(13);
 		$pDataFormConfiguration->setInputs(['testModule' => 'testInput1']);
+		$pDataFormConfiguration->addHiddenFields('test-hidden');
 
 		$pRecordManagerReadForm = $this->getMockBuilder(RecordManagerReadForm::class)
 			->getMock();
@@ -129,5 +130,13 @@ class TestClassForm
 	{
 		$this->assertTrue(wp_script_is('onoffice-honeypot', 'enqueued'));
 		$this->assertContains('onoffice-honeypot', wp_scripts()->queue);
+	}
+
+	/**
+	 *
+	 */
+	public function testIsHiddenField()
+	{
+		$this->assertEquals(true, $this->_pSubjects->isHiddenField('test-hidden'));
 	}
 }

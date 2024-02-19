@@ -58,22 +58,30 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			continue;
 		}
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
+			$isHiddenField = $pForm->isHiddenField('gdprcheckbox');
+			$fieldLabel = $pForm->getFieldLabel('gdprcheckbox');
 			echo renderFormField( 'gdprcheckbox', $pForm );
-			echo $pForm->getFieldLabel( 'gdprcheckbox' ) . '<br>';
+			echo !$isHiddenField ? $fieldLabel . '<br>' : '';
 			continue;
 		}
 		if ( in_array( $input, array( 'message' ) ) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage   = $isRequiredMessage ? '*' : '';
-			echo $pForm->getFieldLabel( 'message' );
-			echo $additionMessage . ':<br>';
-			echo '<textarea name="message">' . $pForm->getFieldValue( 'message' ) . '</textarea><br>';
+			$isHiddenField = $pForm->isHiddenField('message');
+			$additionHidden = $isHiddenField ? 'class="hidden-field"' : '';
+			if (!$isHiddenField) {
+				echo $pForm->getFieldLabel( 'message' );
+				echo $additionMessage . ':<br>';
+			}
+			echo '<textarea name="message" '.$additionHidden.'>' . $pForm->getFieldValue( 'message' ) . '</textarea><br>';
 			continue;
 		}
 
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
-		echo $pForm->getFieldLabel($input).$addition.': ';
+		$isHiddenField = $pForm->isHiddenField($input);
+		$line = $pForm->getFieldLabel($input).$addition.': ';
+		echo !$isHiddenField ? $line : '';
 		echo renderFormField($input, $pForm).'<br>';
 	}
 ?>

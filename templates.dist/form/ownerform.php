@@ -45,22 +45,29 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
+		$isHiddenField = $pForm->isHiddenField($input);
 		$line = $pForm->getFieldLabel($input).$addition.': ';
+		$line = !$isHiddenField ? $line : '';
 		$line .= renderFormField($input, $pForm);
 
 		if ( $pForm->isMissingField( $input ) ) {
 			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 		}
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
+			$isHiddenField = $pForm->isHiddenField('gdprcheckbox');
+			$fieldLabel = $pForm->getFieldLabel('gdprcheckbox');
 			$line = renderFormField( 'gdprcheckbox', $pForm );
-			$line .= $pForm->getFieldLabel( 'gdprcheckbox' );
+			$line .= !$isHiddenField ? $fieldLabel : '';
 		}
 		if ( in_array( $input, array( 'message' )) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage = $isRequiredMessage ? '*' : '';
-	
-			$line = $pForm->getFieldLabel( 'message' ).$additionMessage.':<br>';
-			$line .= '<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
+			$isHiddenField = $pForm->isHiddenField('message');
+			$additionHidden = $isHiddenField ? 'class="hidden-field"' : '';
+
+			$line = $pForm->getFieldLabel('message').$additionMessage.':<br>';
+			$line = !$isHiddenField ? $line : '';
+			$line .= '<textarea name="message" '.$additionHidden.'>'.$pForm->getFieldValue('message').'</textarea><br>';
 		}
 		if ($table == 'address') {
 			$addressValues []= $line;

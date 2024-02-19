@@ -58,6 +58,11 @@ class InputFieldComplexSortableDetailListContentDefault
 			{
 				continue;
 			}
+
+			if (($key === 'DSGVOStatus' || $key === 'AGB_akzeptiert' || $key === 'gdprcheckbox') && $pInputModel->getField() === 'hidden_field')
+			{
+				continue;
+			}
 			$pInputModel->setIgnore($isDummy);
 			$callbackValue = $pInputModel->getValueCallback();
 
