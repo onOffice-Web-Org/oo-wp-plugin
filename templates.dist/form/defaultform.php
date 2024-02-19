@@ -59,8 +59,9 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		}
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
 			$isHiddenField = $pForm->isHiddenField('gdprcheckbox');
+			$fieldLabel = $pForm->getFieldLabel('gdprcheckbox');
 			echo renderFormField( 'gdprcheckbox', $pForm );
-			echo !$isHiddenField ? $pForm->getFieldLabel( 'gdprcheckbox' ) . '<br>' : '';
+			echo !$isHiddenField ? $fieldLabel . '<br>' : '';
 			continue;
 		}
 		if ( in_array( $input, array( 'message' ) ) ) {
@@ -79,7 +80,8 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
 		$isHiddenField = $pForm->isHiddenField($input);
-		echo !$isHiddenField ? $pForm->getFieldLabel($input).$addition.': ' : '';
+		$line = $pForm->getFieldLabel($input).$addition.': ';
+		echo !$isHiddenField ? $line : '';
 		echo renderFormField($input, $pForm).'<br>';
 	}
 ?>

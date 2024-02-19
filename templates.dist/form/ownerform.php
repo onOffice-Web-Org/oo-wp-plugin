@@ -46,7 +46,8 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
 		$isHiddenField = $pForm->isHiddenField($input);
-		$line = !$isHiddenField ? $pForm->getFieldLabel($input).$addition.': ' : '';
+		$line = $pForm->getFieldLabel($input).$addition.': ';
+		$line = !$isHiddenField ? $line : '';
 		$line .= renderFormField($input, $pForm);
 
 		if ( $pForm->isMissingField( $input ) ) {
@@ -54,16 +55,18 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		}
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
 			$isHiddenField = $pForm->isHiddenField('gdprcheckbox');
+			$fieldLabel = $pForm->getFieldLabel('gdprcheckbox');
 			$line = renderFormField( 'gdprcheckbox', $pForm );
-			$line .= !$isHiddenField ? $pForm->getFieldLabel( 'gdprcheckbox' ) : '';
+			$line .= !$isHiddenField ? $fieldLabel : '';
 		}
 		if ( in_array( $input, array( 'message' )) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage = $isRequiredMessage ? '*' : '';
 			$isHiddenField = $pForm->isHiddenField('message');
 			$additionHidden = $isHiddenField ? 'class="hidden-field"' : '';
-	
-			$line = !$isHiddenField ? $pForm->getFieldLabel( 'message' ).$additionMessage.':<br>' : '';
+
+			$line = $pForm->getFieldLabel('message').$additionMessage.':<br>';
+			$line = !$isHiddenField ? $line : '';
 			$line .= '<textarea name="message" '.$additionHidden.'>'.$pForm->getFieldValue('message').'</textarea><br>';
 		}
 		if ($table == 'address') {

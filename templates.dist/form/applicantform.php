@@ -46,7 +46,8 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
 	$isHiddenField = $pForm->isHiddenField($input);
-	$line = !$isHiddenField ? $pForm->getFieldLabel( $input ).$addition.': ' : '';
+	$line = $pForm->getFieldLabel($input).$addition.': ';
+	$line = !$isHiddenField ? $line : '';
 	$line .= renderFormField($input, $pForm);
 
 	if ( $pForm->isMissingField( $input ) ) {
@@ -55,8 +56,9 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 	if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
 		$isHiddenField = $pForm->isHiddenField('gdprcheckbox');
+		$fieldLabel = $pForm->getFieldLabel( 'gdprcheckbox' );
 		$line             = renderFormField( 'gdprcheckbox', $pForm );
-		$line            .= !$isHiddenField ? $pForm->getFieldLabel( 'gdprcheckbox' ) : '';
+		$line            .= !$isHiddenField ? $fieldLabel : '';
 	}
 	if ($table == 'address') {
 		$addressValues []= $line;
