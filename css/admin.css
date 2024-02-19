@@ -594,6 +594,7 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	width: 100%;
 	padding: 7px 15px;
 	border-radius: 0;
+	margin-bottom: 7px;
 }
 
 .oo-search-field .field-lists {
@@ -659,8 +660,9 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 .oo-search-field .box-search .clear-icon {
 	position: absolute;
-	top: 50%;
-	right: 16px;
+	top: 38%;
+    font-size: 27px;
+	right: 20px;
 	transform: translateY(-50%);
 	cursor: pointer;
 }
