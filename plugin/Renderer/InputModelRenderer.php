@@ -73,7 +73,7 @@ class InputModelRenderer
 		foreach ($pFormModel->getInputModel() as $pInputModel) {
 			$pInputField = $this->createInputField($pInputModel, $pFormModel);
 			$italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
-			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON) {
+			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON_SHOW_PUBLISHED_PROPERTIES) {
 				echo '<p id="" class="wp-clearfix custom-input-field">';
 				echo '<label class="howto custom-label" for="'. esc_html($pInputField->getGuiId()).'">';
 				echo $pInputModel->getLabel(). $italicText;
@@ -223,6 +223,12 @@ class InputModelRenderer
 			case InputModelBase::HTML_TYPE_BUTTON:
 				$pInstance = new InputFieldButtonRenderer(null, '', $pInputModel->getValue());
 				$pInstance->setLabel($pInputModel->getLabel());
+				break;
+
+			case InputModelBase::HTML_TYPE_BUTTON_SHOW_PUBLISHED_PROPERTIES:
+				$pInstance = new InputFieldButtonShowPublishedPropertiesRenderer('button', '');
+				$pInstance->setLabel($pInputModel->getLabel());
+				$pInstance->setHint($pInputModel->getHintHtml());
 				break;
 
 			case InputModelBase::HTML_TYPE_CHOSEN:
