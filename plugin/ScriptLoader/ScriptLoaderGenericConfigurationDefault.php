@@ -93,24 +93,53 @@ class ScriptLoaderGenericConfigurationDefault
 		$scripts = [];
 		$pageContent = get_the_content();
 
+		$shortcode = $this->getShortcodeByPostMeta();
+
 		if (empty($pageContent)) {
 			return $scripts;
 		}
 
-		if ($this->isEstateListPage($pageContent)) {
+		$pageContent = str_replace('\u0022', '"', $pageContent);
+		if ($this->isEstateListPage($pageContent) || !empty($shortcode['estate'])) {
 			$scripts = $this->renderScriptForEstateListPage($scripts, $pluginPath, $script, $async);
 		}
 
-		$shortcodeFormForDetailPage = !empty(get_option('onoffice-default-view')) ? get_option('onoffice-default-view')->getShortCodeForm() : '';
-		if ($this->isDetailEstatePage($pageContent)) {
+		if ($this->isDetailEstatePage($pageContent) || !empty($shortcode['detail'])) {
 			$scripts = $this->renderScriptFormPageForEstateDetailPage($scripts, $pluginPath, $script, $style, $defer);
 		}
 
-		if ($this->isFormPage($pageContent) || ($this->isDetailEstatePage($pageContent) && ! empty($shortcodeFormForDetailPage))) {
-			$scripts = $this->renderScriptForFormPage($scripts, $pluginPath, $script, $pageContent, $async);
+		$shortcodeFormForDetailPage = !empty(get_option('onoffice-default-view')) ? get_option('onoffice-default-view')->getShortCodeForm() : '';
+		if ($this->isFormPage($pageContent) || (is_array($shortcode) && !empty($shortcode['form'])) || ($this->isDetailEstatePage($pageContent) && ! empty($shortcodeFormForDetailPage))) {
+			$pageContent = ($this->isFormPage($pageContent) || $this->isDetailEstatePage($pageContent)) ? $pageContent : $shortcode['form'];
+			$scripts = $this->renderScriptForFormPage($scripts, $pluginPath, $script, $pageContent, $async, $shortcodeFormForDetailPage);
+		}
+	
+		return $scripts;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getShortcodeByPostMeta(): array
+	{
+		$metaKeys = get_post_meta(get_the_ID(), '', true);
+		if (!is_array($metaKeys) || empty($metaKeys)) {
+			return [];
 		}
 
-		return $scripts;
+		$filteredMetaKeys = [];
+		array_walk($metaKeys, function($metaValueArray, $key) use (&$filteredMetaKeys) {
+			$metaValue = str_replace('\u0022', '"', $metaValueArray[0]);
+			if ($this->isEstateListPage($metaValue)) {
+				$filteredMetaKeys['estate'] = $metaValue;
+			} elseif ($this->isDetailEstatePage($metaValue)) {
+				$filteredMetaKeys['detail'] = $metaValue;
+			} elseif ($this->isFormPage($metaValue)) {
+				$filteredMetaKeys['form'][] = $metaValue;
+			}
+		});
+
+		return $filteredMetaKeys;
 	}
 
 	/**
@@ -159,14 +188,15 @@ class ScriptLoaderGenericConfigurationDefault
 	 * @param array $scripts
 	 * @param string $pluginPath
 	 * @param string $script
-	 * @param string $pageContent
+	 * @param mixed $pageContent
 	 * @param string $async
+	 * @param string $shortcodeFormForDetailPage
 	 * @return array
 	 */
 
-	private function renderScriptForFormPage(array $scripts, string $pluginPath, string $script, string $pageContent, string $async): array
+	private function renderScriptForFormPage(array $scripts, string $pluginPath, string $script, $pageContent, string $async, string $shortcodeFormForDetailPage = ''): array
 	{
-		$forms = $this->getFormsByPageContent($pageContent);
+		$forms = $this->getFormsByPageContent($pageContent, $shortcodeFormForDetailPage);
 
 		$scripts[] = (new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
@@ -215,12 +245,17 @@ class ScriptLoaderGenericConfigurationDefault
 	}
 
 	/**
-	 * @param string $pageContent
+	 * @param mixed $pageContent
+	 * @param string $shortcodeFormForDetailPage
 	 * @return array
 	 */
 
-	private function getFormsByPageContent(string $pageContent): array
-	{		
+	private function getFormsByPageContent($pageContent, string $shortcodeFormForDetailPage): array
+	{
+		if (is_array($pageContent)) {
+			$pageContent = implode(',', $pageContent);
+		}
+
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
@@ -229,7 +264,11 @@ class ScriptLoaderGenericConfigurationDefault
 			return "'" . esc_sql($item) . "'";
 		}, $this->extractFormNames($pageContent));
 		$names = implode(',', $names);
-	
+
+		if ($this->isDetailEstatePage($pageContent)) {
+			$names = "'" . esc_sql($shortcodeFormForDetailPage) . "'";
+		}
+
 		$pRecordManagerReadForm = $pContainer->get(RecordManagerReadForm::class);
 		$pRecordManagerReadForm->addColumn('form_type');
 		$pRecordManagerReadForm->addWhere("`name` IN(" . $names . ")");
