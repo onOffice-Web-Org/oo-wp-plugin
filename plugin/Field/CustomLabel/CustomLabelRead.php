@@ -185,7 +185,7 @@ class CustomLabelRead
 			. "INNER JOIN {$prefix}$pTranslateLabelConfigurationField\n"
 			. "ON {$prefix}$pCustomsLabelConfigurationField.customs_labels_id = "
 			. " {$prefix}$pTranslateLabelConfigurationField.input_id\n"
-			. "WHERE {$prefix}$pCustomsLabelConfigurationField.fieldname = '" . esc_sql($field) . "' AND\n"
+			. "WHERE BINARY {$prefix}$pCustomsLabelConfigurationField.fieldname = '" . esc_sql($field) . "' AND\n"
 			. "{$prefix}$pTranslateLabelConfigurationField.locale = '" . esc_sql($current_lang) . "' AND\n"
 			. " {$prefix}$pCustomsLabelConfigurationField.form_id = " . esc_sql($formId);
 		return $queryByFormId;
