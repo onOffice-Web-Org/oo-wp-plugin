@@ -126,7 +126,7 @@ class AdminPageSimilarEstates
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
-		echo '<div id="poststuff" class="oo-poststuff">';
+		echo '<div id="poststuff" class="oo-poststuff oo-poststuff-similar-estate">';
 		$pageId = $pDataSimilarView->getPageId();
 
 		echo '<div id="post-body" class="metabox-holder columns-'
@@ -155,7 +155,7 @@ class AdminPageSimilarEstates
 		echo '</div>';
 
 		do_settings_sections($this->getPageSlug());
-		submit_button(null, 'primary', 'send_form');
+		$this->generateBlockPublish();
 
 		echo '</form>';
 	}

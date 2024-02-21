@@ -329,7 +329,9 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createSortableFieldList($module, $htmlType, bool $isShow = true): InputModelDB
 	{
-		$pSortableFieldsList = parent::createSortableFieldList($module, $htmlType);
+		$pSortableFieldsList = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+		$pSortableFieldsList->setHtmlType($htmlType);
 		if (! $isShow) {
 			return $pSortableFieldsList;
 		}
