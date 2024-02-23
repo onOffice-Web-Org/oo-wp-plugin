@@ -1,0 +1,62 @@
+{
+    "actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+    "resourceid": "",
+    "resourcetype": "users",
+    "cacheable": true,
+    "identifier": "",
+    "data": {
+        "meta": {
+          "cntabsolute": null
+        },
+        "records": [
+            {
+                "id": 69,
+                "type": null,
+                "elements": {
+                    "id": 69,
+                    "username": "duong",
+                    "firstname": "aa",
+                    "lastname": "aa",
+                    "email": "daoduong@abc.abc"
+                }
+            },
+            {
+                "id": 45,
+                "type": null,
+                "elements": {
+                    "id": 45,
+                    "username": "tester1",
+                    "firstname": "Test first name",
+                    "lastname": "",
+                    "email": "dtd010196@gmail.com"
+                }
+            },
+            {
+                "id": 42,
+                "type": null,
+                "elements": {
+                    "id": 42,
+                    "username": "tester2",
+                    "firstname": "",
+                    "lastname": "Test last name",
+                    "email": "test2@gmail.com"
+                }
+            },
+            {
+                "id": 30,
+                "type": null,
+                "elements": {
+                    "id": 30,
+                    "username": "Test Username",
+                    "firstname": "",
+                    "lastname": "",
+                    "email": "test3@gmail.com"
+                }
+            }
+        ]
+    },
+    "status": {
+        "errorcode": 0,
+        "message": "OK"
+    }
+}
