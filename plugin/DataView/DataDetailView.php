@@ -167,6 +167,21 @@ class DataDetailView
 	/** @var bool */
 	private $_showPriceOnRequest = false;
 
+    /** @var string[] */
+    private $_priceFields = [
+        'kaufpreis',
+        'erbpacht',
+        'nettokaltmiete',
+        'warmmiete',
+        'pacht',
+        'kaltmiete',
+        'miete_pauschal',
+        'saisonmiete',
+        'wochmietbto',
+        'kaufpreis_pro_qm',
+        'mietpreis_pro_qm',
+    ];
+
 	/**
 	 *
 	 */
@@ -353,4 +368,13 @@ class DataDetailView
 	/** @param bool $priceOnRequest */
 	public function setShowPriceOnRequest(bool $priceOnRequest)
 	{ $this->_showPriceOnRequest = $priceOnRequest; }
+
+
+    /**
+     * @return array
+     */
+    public function getListFieldsShowPriceOnRequest(): array
+    {
+        return $this->_priceFields;
+    }
 }

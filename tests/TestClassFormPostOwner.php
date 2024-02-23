@@ -79,7 +79,7 @@ class TestClassFormPostOwner
 		$this->prepareSDKWrapperForFieldsAddressEstate();
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend'])
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend', 'addFieldsAddressEstateWithRegionValues'])
 			->setConstructorArgs([new Container])
 			->getMock();
 
@@ -117,29 +117,40 @@ class TestClassFormPostOwner
 				$FieldObjektart = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
 				$FieldObjektart->setPermittedvalues(['haus' => 'Haus', 'wohnung' => 'Wohnung']);
 				$FieldObjektart->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$FieldObjektart->setLabel('Objektart');
 				$pFieldsCollection->addField($FieldObjektart);
 
 				$FieldObjekttyp = new Field('objekttyp', onOfficeSDK::MODULE_ESTATE);
 				$FieldObjekttyp->setPermittedvalues(['stadthaus' => 'Stadthaus', 'reihenhaus' => 'Reihenhaus']);
 				$FieldObjekttyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$FieldObjekttyp->setLabel('Objekttyp');
 				$pFieldsCollection->addField($FieldObjekttyp);
 
 				$pFieldEnergieausweistyp = new Field('energieausweistyp', onOfficeSDK::MODULE_ESTATE);
 				$pFieldEnergieausweistyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$pFieldEnergieausweistyp->setLabel('Energieausweistyp');
 				$pFieldEnergieausweistyp->setPermittedvalues(['Bedarfsausweis' => 'Bedarfsausweis']);
+				$pFieldEnergieausweistyp->setLabel('Energieausweistyp');
 				$pFieldsCollection->addField($pFieldEnergieausweistyp);
 
 				$pFieldWohnfl = new Field('wohnflaeche', onOfficeSDK::MODULE_ESTATE);
 				$pFieldWohnfl->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldWohnfl->setLabel('Wohnflaeche');
 				$pFieldsCollection->addField($pFieldWohnfl);
 
 				$pFieldKabelSatTv = new Field('kabel_sat_tv', onOfficeSDK::MODULE_ESTATE);
 				$pFieldKabelSatTv->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+				$pFieldKabelSatTv->setLabel('Kabel_sat_tv');
 				$pFieldsCollection->addField($pFieldKabelSatTv);
 
 				$pFieldGDPRCheckBox = new Field('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldGDPRCheckBox->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
 				$pFieldsCollection->addField($pFieldGDPRCheckBox);
+
+				$pFieldBad = new Field('bad', onOfficeSDK::MODULE_ESTATE);
+				$pFieldBad->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldBad->setLabel('Bad');
+				$pFieldsCollection->addField($pFieldBad);
 
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
@@ -188,6 +199,7 @@ class TestClassFormPostOwner
 		$pEstateListInputVariableReaderConfig->setValue('energieausweistyp', 'Bedarfsausweis');
 		$pEstateListInputVariableReaderConfig->setValue('wohnflaeche', '800');
 		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'y');
+		$pEstateListInputVariableReaderConfig->setValueArray('bad', ['Bidet', 'Urinal', 'Bathtub']);
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('objektart', $moduleEstate, FieldTypes::FIELD_TYPE_VARCHAR);
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
@@ -198,6 +210,8 @@ class TestClassFormPostOwner
 			('wohnflaeche', $moduleEstate, FieldTypes::FIELD_TYPE_INTEGER);
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('kabel_sat_tv', $moduleEstate, FieldTypes::FIELD_TYPE_BOOLEAN);
+		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+			('bad', $moduleEstate, FieldTypes::FIELD_TYPE_MULTISELECT);
 	}
 
 
@@ -628,6 +642,7 @@ class TestClassFormPostOwner
 		$pDataFormConfiguration->addInput('kabel_sat_tv', onOfficeSDK::MODULE_ESTATE);
 		$pDataFormConfiguration->addInput('message', '');
 		$pDataFormConfiguration->addInput('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addInput('bad', onOfficeSDK::MODULE_ESTATE);
 
 		$pDataFormConfiguration->setRequiredFields(['Vorname', 'Name', 'objektart']);
 
@@ -638,5 +653,104 @@ class TestClassFormPostOwner
 		$pDataFormConfiguration->setCreateOwner(true);
 
 		return $pDataFormConfiguration;
+	}
+
+	/**
+	 *
+	 */
+	public function testSendContactSuccessUsingArrayInputEstate()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'ArtDaten' => 'Eigentümer',
+			'Telefon1' => '0815 234567890',
+			'objektart' => 'haus',
+			'objekttyp' => 'stadthaus',
+			'energieausweistyp' => 'Bedarfsausweis',
+			'wohnflaeche' => 800,
+			'kabel_sat_tv' => 'y',
+			'message' => 'Hello! I am interested in selling my property!',
+			'gdprcheckbox' => 'y',
+			'bad' => ['Bidet', 'Urinal', 'Bathtub']
+		];
+		$pDataFormConfiguration = $this->getDataFormConfiguration();
+		$this->prepareMockerForContactSuccessUsingArrayInputEstate();
+		$pDataFormConfiguration->setCreateOwner(false);
+
+		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
+		$pFormData = $this->_pFormPostOwner->getFormDataInstance('test', 5);
+		$this->assertInstanceOf(FormData::class, $pFormData);
+		$this->assertTrue($pFormData->getFormSent());
+
+		$estateData = [
+			'objektart' => 'haus',
+			'objekttyp' => 'stadthaus',
+			'energieausweistyp' => 'Bedarfsausweis',
+			'wohnflaeche' => 800,
+			'kabel_sat_tv' => true,
+			'bad' => ['Bidet', 'Urinal', 'Bathtub']
+		];
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+		$this->assertEquals($estateData, $this->_pFormPostOwner->getEstateData());
+	}
+
+	/**
+	 *
+	 */
+	private function prepareMockerForContactSuccessUsingArrayInputEstate()
+	{
+		$parameters = [
+			'addressdata' => [
+				'Vorname' => 'John',
+				'Name' => 'Doe',
+				'ArtDaten' => ['Eigentümer'],
+				'Telefon1' => '0815 234567890',
+				'DSGVOStatus' => "speicherungzugestimmt"
+			],
+			'estateid' => 0,
+			'message' => 'Hello! I am interested in selling my property!',
+			'subject' => null,
+			'referrer' => '/test/page/1',
+			'formtype' => 'owner' . "\n"
+				. 'Objektart: Haus' . "\n"
+				. 'Objekttyp: Stadthaus' . "\n"
+				. 'Energieausweistyp: Bedarfsausweis' . "\n"
+				. 'Wohnflaeche: 800' . "\n"
+				. 'Kabel_sat_tv: Yes' . "\n"
+				. 'Bad: Bidet, Urinal, Bathtub',
+			'estatedata' => ['objektart', 'objekttyp', 'energieausweistyp', 'wohnflaeche', 'kabel_sat_tv', 'bad'],
+			'recipient' => 'test@my-onoffice.com'
+		];
+
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:do',
+			'resourceid' => '',
+			'resourcetype' => 'contactaddress',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => [
+					'cntabsolute' => null,
+				],
+				'records' => [
+					0 => [
+						'id' => 0,
+						'type' => '',
+						'elements' => [
+							'success' => 'success',
+						],
+					],
+				],
+			],
+			'status' => [
+				'errorcode' => 0,
+				'message' => 'OK',
+			],
+		];
+
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_DO,
+				'contactaddress', '', $parameters, null, $response);
 	}
 }

@@ -313,7 +313,7 @@ class AdminViewController
 	public function enqueue_css()
 	{
 		wp_enqueue_style('onoffice-admin-css',
-			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), '4.2.0');
+			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
 
 		wp_enqueue_style('chosen-admin-css',
 			plugins_url('/third_party/chosen/chosen.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
@@ -343,7 +343,7 @@ class AdminViewController
 
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);
-			if ($pObject !== null) {
+			if ($pObject !== null && method_exists($pObject, 'doExtraEnqueues')) {
 				$pObject->doExtraEnqueues();
 			}
 		}

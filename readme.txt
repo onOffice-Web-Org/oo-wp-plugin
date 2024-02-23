@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.3.1
 Requires PHP: 7.3
-Stable tag: 4.15.1
+Stable tag: 4.17
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,35 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.17 (2024-02-07) =
+
+**Changed**
+
+* Fields of type date are displayed with datepicker
+* Fields of type boolean are displayed with radio buttons
+* Fields of type user are displayed as selection
+
+**Fixed**
+
+* Readable additional geographical information in e-mails
+* Filtering of properties with "price on request"
+* Sending forms with multiple selections
+
+= 4.16 (2023-12-13) =
+
+**Changed**
+
+* Improvment for timum hooks and redirections
+* Improvment for XML Http Request
+* Styling of admin backend
+
+**Fixed**
+
+* Naming conflicts with ACF
+* Cache clearing for multisites
+* Renaming of labels on detail page
+* Enabling of send button in forms with recaptcha
 
 = 4.15.1 (2023-11-13) =
 
