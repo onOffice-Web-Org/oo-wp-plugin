@@ -273,7 +273,11 @@ if (!function_exists('renderCityField')) {
 		$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_attr($inputName) . '">';
 		$htmlSelect .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $properties["label"])) . '</option>';
 		foreach ($permittedValues as $value) {
-			$htmlSelect .='<option value="' . esc_attr($value) . '">' . esc_attr($value) . '</option>';
+			$selected = null;
+			if ($value == $properties['value']) {
+				$selected = 'selected';
+			}
+			$htmlSelect .='<option value="' . esc_attr($value) . '" ' . $selected . '>' . esc_attr($value) . '</option>';
 		}
 		$htmlSelect .= '</select>';
 
