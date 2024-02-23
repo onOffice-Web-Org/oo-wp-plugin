@@ -192,6 +192,15 @@ if (!function_exists('renderFormField')) {
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
 			) {
 				$inputType = 'type="number" step="1" ';
+			} elseif (
+				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATE ||
+				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_DATE
+			) {
+				$inputType = 'type="date" ';
+			} elseif (
+				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATETIME
+			) {
+				$inputType = 'type="datetime-local" step="1" ';
 			}
 
 			if (
@@ -204,6 +213,18 @@ if (!function_exists('renderFormField')) {
 					$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($key) . '" '
 						. $value . ' placeholder="' . esc_attr($rangeDescription) . '">';
 				}
+			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
+				$output = '<fieldset>
+					<input type="radio" id="' . esc_attr($fieldName) . '_u" name="' . esc_attr($fieldName) . '" value=""
+						' . ($selectedValue == '' ? ' checked' : '') . '>
+					<label for="' . esc_attr($fieldName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
+					<input type="radio" id="' . esc_attr($fieldName) . '_y" name="' . esc_attr($fieldName) . '" value="1"
+						' . ($selectedValue == 1 ? 'checked' : '') . '>
+					<label for="' . esc_attr($fieldName) . '_y">' . esc_html__('Yes', 'onoffice-for-wp-websites') . '</label>
+					<input type="radio" id="' . esc_attr($fieldName) . '_n" name="' . esc_attr($fieldName) . '" value="0"
+						' . ($selectedValue == 0 ? 'checked' : '') . '>
+					<label for="' . esc_attr($fieldName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
+					</fieldset>';
 			} else {
 				$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($fieldName) . '" ' . $value . '>';
 			}

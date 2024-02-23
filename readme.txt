@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.3.1
 Requires PHP: 7.3
-Stable tag: 4.16
+Stable tag: 4.17
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,20 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.17 (2024-02-07) =
+
+**Changed**
+
+* Fields of type date are displayed with datepicker
+* Fields of type boolean are displayed with radio buttons
+* Fields of type user are displayed as selection
+
+**Fixed**
+
+* Readable additional geographical information in e-mails
+* Filtering of properties with "price on request"
+* Sending forms with multiple selections
 
 = 4.16 (2023-12-13) =
 

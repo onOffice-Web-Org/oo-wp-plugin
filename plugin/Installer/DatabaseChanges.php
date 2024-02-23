@@ -45,7 +45,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 42;
+	const MAX_VERSION = 43;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -301,6 +301,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ( $dbversion == 41 ) {
 			dbDelta($this->getCreateQueryFieldConfig());
 			$dbversion = 42;
+		}
+
+		if ($dbversion == 42) {
+			$this->updateValueGeoFieldsForEsateList();
+			$dbversion = 43;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1120,5 +1125,17 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$pDataDetailViewOptions->setShowPriceOnRequest(true);
 			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
 		}
+	}
+
+	/**
+	 * @return void
+	 */
+	public function updateValueGeoFieldsForEsateList()
+	{
+		$prefix = $this->getPrefix();
+		$sql = "UPDATE {$prefix}oo_plugin_listviews
+			SET country_active = 1, radius_active = 1";
+
+		$this->_pWPDB->query($sql);
 	}
 }

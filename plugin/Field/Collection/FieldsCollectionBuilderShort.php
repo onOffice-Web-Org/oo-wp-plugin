@@ -297,5 +297,23 @@ class FieldsCollectionBuilderShort
 			->buildFieldsCollection($pFieldLoader);
 		$pFieldsCollection->merge($pFieldCollectionAddressEstate);
 		return $this;
+  }
+
+	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function addFieldSupervisorForSearchCriteria(FieldsCollection $pFieldsCollection): self
+	{
+		if (!$pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_SEARCHCRITERIA, 'benutzer')) {
+			return $this;
+		};
+		$pFieldLoader = $this->_pContainer->get(FieldLoaderSupervisorValues::class);
+		$pFieldCollectionSupervisor = $this->_pContainer->get(FieldsCollectionBuilder::class)
+			->buildFieldsCollection($pFieldLoader);
+		$pFieldsCollection->merge($pFieldCollectionSupervisor);
+		return $this;
 	}
 }
