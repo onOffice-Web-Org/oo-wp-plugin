@@ -298,13 +298,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 41;
 		}
 
-		if ( $dbversion == 41 ) {
-			dbDelta($this->getCreateQueryFieldConfig());
+		if ($dbversion == 41) {
+			$this->updateValueGeoFieldsForEsateList();
 			$dbversion = 42;
 		}
 
 		if ($dbversion == 42) {
-			$this->updateValueGeoFieldsForEsateList();
+			dbDelta($this->getCreateQueryFieldConfig());
 			$dbversion = 43;
 		}
 
