@@ -13,12 +13,26 @@ class TestClassInputVariableReaderFormatter
 	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatValue
 	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatFloatValue
 	 */
-	public function testFormatFloatValue()
+	public function testFormatFloatValueWithThousandSeparatorComma()
 	{
 		$pInstance = new InputVariableReaderFormatter;
+		update_option('onoffice-settings-thousand-separator', 'comma-separator');
 
-		$this->assertEquals('3,948.00', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
-		$this->assertEquals('3,948.00', $pInstance->formatFloatValue(3948.00));
+		$this->assertEquals('3948.00', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals('3948.00', $pInstance->formatFloatValue(3948.00));
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatValue
+	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatFloatValue
+	 */
+	public function testFormatFloatValueWithThousandSeparatorDot()
+	{
+		$pInstance = new InputVariableReaderFormatter;
+		update_option('onoffice-settings-thousand-separator', 'dot-separator');
+
+		$this->assertEquals('3948,00', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals('3948,00', $pInstance->formatFloatValue(3948.00));
 	}
 
 	/**
@@ -38,10 +52,22 @@ class TestClassInputVariableReaderFormatter
 	/**
 	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatValue
 	 */
-	public function testFormatValueArray()
+	public function testFormatValueArrayWithThousandSeparatorComma()
 	{
 		$pInstance = new InputVariableReaderFormatter;
+		update_option('onoffice-settings-thousand-separator', 'comma-separator');
 
-		$this->assertEquals(['3,948.00'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals(['3948.00'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatValue
+	 */
+	public function testFormatValueArrayWithThousandSeparatorDot()
+	{
+		$pInstance = new InputVariableReaderFormatter;
+		update_option('onoffice-settings-thousand-separator', 'dot-separator');
+
+		$this->assertEquals(['3948,00'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
 	}
 }

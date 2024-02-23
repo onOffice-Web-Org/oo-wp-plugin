@@ -52,7 +52,8 @@ class ScriptLoaderGenericConfigurationDefault
 			(new IncludeFileModel($script, 'select2', plugins_url('/vendor/select2/select2/dist/js/select2.min.js', $pluginPath)))
 				->setLoadInFooter(true)
 				->setLoadAsynchronous($defer),
-
+			(new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
+				->setDependencies(['jquery']),
 			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)),
@@ -65,6 +66,8 @@ class ScriptLoaderGenericConfigurationDefault
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/dist/favorites.min.js', $pluginPath)))
 				->setDependencies(['jquery']);
 		}
+
+		$this->localizeApplyThousandSeparatorScript();
 
 		return $values;
 	}
@@ -137,4 +140,15 @@ class ScriptLoaderGenericConfigurationDefault
         }
         return $onofficeCssStyleVersion;
     }
+
+	/**
+	 * @return void
+	 */
+	private function localizeApplyThousandSeparatorScript()
+	{
+		wp_localize_script('onoffice-apply-thousand-separator', 'onoffice_setting', [
+			'status' => true,
+			'thousand_separator_format' => get_option('onoffice-settings-thousand-separator')
+		]);
+	}
 }

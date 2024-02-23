@@ -73,4 +73,28 @@ class TestClassInputVariableReaderParser
 		$this->assertEquals([399.99], $this->_pInstance->parseValue(['399,99'], FieldTypes::FIELD_TYPE_FLOAT));
 		$this->assertEquals(null, $this->_pInstance->parseValue('', FieldTypes::FIELD_TYPE_FLOAT));
 	}
+
+	/**
+	 * covers \onOffice\WPlugin\Controller\InputVariableReaderParser::parseFloat
+	 * covers \onOffice\WPlugin\Controller\InputVariableReaderParser::parseValue
+	 */
+	public function testParseFloatWithThousandSeparatorComma()
+	{
+		update_option('onoffice-settings-thousand-separator', 'comma-separator');
+		$this->assertEquals(39999 , $this->_pInstance->parseFloat('399,99'));
+		$this->assertEquals(39999, $this->_pInstance->parseValue('399,99', FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals(null, $this->_pInstance->parseFloat(''));
+	}
+
+	/**
+	 * covers \onOffice\WPlugin\Controller\InputVariableReaderParser::parseFloat
+	 * covers \onOffice\WPlugin\Controller\InputVariableReaderParser::parseValue
+	 */
+	public function testParseFloatWithThousandSeparatorDot()
+	{
+		update_option('onoffice-settings-thousand-separator', 'dot-separator');
+		$this->assertEquals(399999 , $this->_pInstance->parseFloat('399.999'));
+		$this->assertEquals(399999, $this->_pInstance->parseValue('399.999', FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals(null, $this->_pInstance->parseFloat(''));
+	}
 }

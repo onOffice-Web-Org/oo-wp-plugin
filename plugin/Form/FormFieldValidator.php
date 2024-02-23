@@ -25,6 +25,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Form;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\InputVariableReaderFormatter;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\RequestVariablesSanitizer;
@@ -180,6 +181,13 @@ class FormFieldValidator
 			$returnValue = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		} else {
 			$returnValue = $this->_pRequestSanitizer->getFilteredPost($fieldName, $filter);
+		}
+
+		$onofficeSettingsThousandSeparator = get_option('onoffice-settings-thousand-separator');
+		if ($onofficeSettingsThousandSeparator === InputVariableReaderFormatter::COMMA_THOUSAND_SEPARATOR) {
+			$returnValue = str_replace(',', '', $returnValue);
+		} elseif ($onofficeSettingsThousandSeparator === InputVariableReaderFormatter::DOT_THOUSAND_SEPARATOR) {
+			$returnValue = str_replace('.', '', $returnValue);
 		}
 
 		switch ($dataType) {

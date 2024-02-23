@@ -51,6 +51,10 @@ if (!function_exists('renderFieldEstateSearch')) {
 			$inputType = 'type="number" step="1" ';
 		}
 
+		if (isset($properties['is-apply-thousand-separator'])) {
+			$inputType = 'type="text" class="apply-thousand-separator-format" ';
+		}
+
 		if ($properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN) {
 			echo '<br>';
 			echo '<fieldset>
@@ -120,6 +124,7 @@ if (!function_exists('renderFormField')) {
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
 		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
+		$isApplyThousandSeparatorField = $pForm->isApplyThousandSeparatorField($fieldName);
 
 		$requiredAttribute = "";
 		if ($isRequired) {
@@ -199,6 +204,10 @@ if (!function_exists('renderFormField')) {
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATETIME
 			) {
 				$inputType = 'type="datetime-local" step="1" ';
+			}
+
+			if ($isApplyThousandSeparatorField) {
+				$inputType = 'type="text" class="apply-thousand-separator-format" ';
 			}
 
 			if (

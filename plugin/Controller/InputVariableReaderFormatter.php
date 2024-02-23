@@ -27,6 +27,66 @@ use onOffice\WPlugin\Types\FieldTypes;
 
 class InputVariableReaderFormatter
 {
+	const APPLY_THOUSAND_SEPARATOR_FIELDS = [
+		'mieteinnahmen_pro_jahr_ist',
+		'mieteinnahmen_pro_jahr_soll',
+		'kaltmiete',
+		'erschliessungskosten',
+		'miete_pauschal',
+		'heizkosten',
+		'heizkosten_brutto',
+		'erbpacht',
+		'hausgeld',
+		'pacht',
+		'provision_innen_wert',
+		'mieteinnahmen_ist',
+		'mieteinnahmen_soll',
+		'nettokaltmiete',
+		'betriebskosten',
+		'stellplatzkaufpreis',
+		'calculatedPrice',
+		'kaufpreis',
+		'kaufpreis_pro_qm',
+		'mieteinnahmen_pro_monat',
+		'stellplatzmiete',
+		'warmmiete',
+		'mietpreis_pro_qm',
+		'saisonmiete',
+		'nebenkosten',
+		'wochmietbto',
+		'x_fache',
+		'x_fache_soll',
+		'nebenflaeche',
+		'verwaltungsflaeche',
+		'calculatedArea',
+		'dachbodenflaeche',
+		'balkon_terrasse_flaeche',
+		'kellerflaeche',
+		'hallenhoehe',
+		'gewerbeflaeche',
+		'teilbar_ab',
+		'gartenflaeche',
+		'gastroflaeche',
+		'raumhoehe',
+		'wohnflaeche',
+		'bueroflaeche',
+		'sonstflaeche',
+		'grundstuecksflaeche',
+		'vermietbare_flaeche',
+		'verkaufsflaeche',
+		'lagerflaeche',
+		'ladenflaeche',
+		'gesamtflaeche',
+		'gesamtflaeche_verfuegbar_qm',
+		'nutzflaeche'
+	];
+
+	/** */
+	const COMMA_THOUSAND_SEPARATOR = 'comma-separator';
+
+	/** */
+	const DOT_THOUSAND_SEPARATOR = 'dot-separator';
+
 	/**
 	 * @param $value
 	 * @param string $type
@@ -52,6 +112,16 @@ class InputVariableReaderFormatter
 	 */
 	public function formatFloatValue(float $value): string
 	{
+		$onofficeSettingsThousandSeparator = get_option('onoffice-settings-thousand-separator');
+
+		if ($onofficeSettingsThousandSeparator === self::COMMA_THOUSAND_SEPARATOR) {
+			$parts = explode(',', $value);
+
+			return number_format($parts[0], 2, '.', '');
+		} elseif ($onofficeSettingsThousandSeparator === self::DOT_THOUSAND_SEPARATOR) {
+			return number_format($value, 2, ',', '');
+		}
+
 		return number_format_i18n($value, 2);
 	}
 
