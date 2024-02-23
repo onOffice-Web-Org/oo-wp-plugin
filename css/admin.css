@@ -48,11 +48,6 @@ body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
 	max-width: 500px;
 }
 
-#onoffice-ajax #poststuff #post-body-content {
-    width: 100%;
-	margin: 0;
-}
-
 #onoffice-ajax #poststuff #post-body.columns-2 #side-sortables {
     width: 100%;
 }
@@ -333,10 +328,7 @@ input#onoffice-input-submit {
 	border-width: 1px;
 }
 
-body #post-body-content .viewusage, body #post-body-content .wp-clearfix{
-	display: inline-block;
-}
-body #post-body-content p.wp-clearfix:nth-child(1){
+body #post-head-content p.wp-clearfix:nth-child(1) {
 	display: block !important;
 }
 .button.button-copy{
@@ -547,6 +539,16 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	min-height: 30px;
 }
 
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-countryactive]:checked::before,
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive]:checked::before {
+	filter: brightness(0) saturate(100%) invert(35%) sepia(4%) saturate(967%) hue-rotate(170deg) brightness(91%) contrast(94%);
+}
+
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-countryactive],
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive] {
+	pointer-events: none;
+}
+
 #listSettings .custom-input-field,
 #viewpicturetypes .custom-input-field {
 	display: block;
@@ -568,8 +570,9 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 .oo-poststuff .key-of-field-block {
 	display: flex;
+}
 
-  .oo-toggle-switch {
+.oo-toggle-switch {
 	position: relative;
 	display: inline-block;
 	width: 60px;
@@ -624,4 +627,81 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 .oo-toggle-switch .slider.round:before {
 	border-radius: 50%;
+}
+
+.oo-poststuff .custom-input-field .onoffice-input-radio {
+	border-radius: 4px;
+	width: 50%;
+	display: grid;
+	float: left;
+	justify-content: initial;
+	border: 1px solid #8c8f94;
+}
+
+.oo-poststuff .custom-input-field .onoffice-input-radio label {
+	display: flex;
+	justify-content: space-between;
+	margin: 10px;
+}
+
+@media only screen and (max-width: 1365px) {
+	.block-publish .postbox-header {
+		display: none;
+	}
+}
+
+@media only screen and (min-width: 1366px) and (max-width: 1440px) {
+	.block-publish {
+		max-width: 230px !important;
+	}
+}
+
+@media only screen and (min-width: 1366px) {
+	.oo-poststuff {
+		display: block;
+		width: 100%;
+	}
+
+	.oo-poststuff #post-head-content {
+		max-width: 1000px;
+		width: 100%;
+	}
+
+	#onoffice-ajax #poststuff #post-body.columns-2 {
+		display: inline-block;
+		width: 100%;
+	}
+
+	.oo-poststuff-estate-detail .viewusage {
+		width: 100%;
+	}
+
+	.oo-poststuff-estate-detail .block-publish,
+	.oo-poststuff-similar-estate .block-publish {
+		margin-top: 0;
+	}
+
+	.block-publish {
+		width: calc(100% - 1000px);
+		max-width: 280px;
+		min-width: 200px;
+		border: 1px solid #c3c4c7;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+		background: #fff;
+		display: inline-block;
+		position: fixed;
+		margin-left: 20px;
+	}
+
+	.block-publish .inside {
+		font-size: 13px;
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+
+	.block-publish p.submit {
+		text-align: left;
+		padding: 10px 10px 10px 10px;
+		margin: 0 !important;
+	}
 }

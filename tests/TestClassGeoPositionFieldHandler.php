@@ -161,6 +161,7 @@ class TestClassGeoPositionFieldHandler
 		$this->assertEquals([
 			'radius_active' => 'radius',
 			'zip_active' => 'zip',
+			'country_active' => 'country'
 		], $pGeoPositionFieldHandler->getActiveFields());
 	}
 
