@@ -112,7 +112,7 @@ class TestClassFormPostInterest
 		]));
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend'])
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend', 'addFieldSupervisorForSearchCriteria'])
 			->setConstructorArgs([new Container])
 			->getMock();
 
