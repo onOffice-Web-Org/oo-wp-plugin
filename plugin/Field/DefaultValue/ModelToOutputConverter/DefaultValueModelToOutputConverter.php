@@ -90,6 +90,8 @@ class DefaultValueModelToOutputConverter
 					case FieldTypes::isDateOrDateTime($pField->getType()):
 					case FieldTypes::isNumericType($pField->getType()):
 					case $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT:
+					case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT:
+					case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_DATE:
 						$pDataModel = $this->convertGeneric($formId, $pField, $rowData);
 						$pDataModels[ $pField->getName() ] = $pDataModel[0] ?? '';
 						break;
@@ -139,6 +141,8 @@ class DefaultValueModelToOutputConverter
 				case FieldTypes::isDateOrDateTime($pField->getType()):
 				case FieldTypes::isNumericType($pField->getType()):
 				case $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT:
+				case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT:
+				case $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_DATE:
 					$pDataModel = $this->convertGeneric($formId, $pField, $rowData);
 					break;
 				case $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
@@ -194,7 +198,16 @@ class DefaultValueModelToOutputConverter
 	{
 		$pDataModel = new DefaultValueModelSingleselect($formId, $pField);
 		$pDataModel->setDefaultsId(isset($rows[0]->defaults_id) ? (int) $rows[0]->defaults_id : 0);
-		$pDataModel->setValue($rows[0]->value ?? '');
+
+		if ($pField->getType() === FieldTypes::FIELD_TYPE_DATE || $pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_DATE) {
+			$formattedDate = date_i18n('Y-m-d', strtotime($rows[0]->value ?? ''));
+			$pDataModel->setValue($formattedDate);
+		} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_DATETIME) {
+			$formattedDate = date_i18n('Y-m-d H:i:s', strtotime($rows[0]->value ?? ''));
+			$pDataModel->setValue($formattedDate);
+		} else {
+			$pDataModel->setValue($rows[0]->value ?? '');
+		}
 
 		$pConverter = $this->_pOutputConverterFactory->createForSingleSelect();
 		return $pConverter->convertToRow($pDataModel);

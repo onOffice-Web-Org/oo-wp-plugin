@@ -6,7 +6,6 @@ jQuery(document).ready(function ($) {
     function handleFormSubmissions(formElements) {
         formElements.forEach((formElement) => {
             let submitted = false;
-            const submitButton = $(formElement).find('.submit_button');
             const submitInput = $(formElement).find('input[type=submit]');
 
             $(formElement).on('submit', function (event) {
@@ -17,15 +16,6 @@ jQuery(document).ready(function ($) {
                 }
                 submitInput.prop('disabled', true);
             });
-
-            if ($(submitButton).is(':visible')) {
-                submitButton.on('click', function () {
-                    if (formElement.checkValidity()) {
-                        submitButton.prop('disabled', true);
-                        submitButton.addClass('onoffice-unclickable-form');
-                    }
-                });
-            }
         });
     }
 });

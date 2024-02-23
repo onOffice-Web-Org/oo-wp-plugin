@@ -1,23 +1,18 @@
 (() => {
     let forms = document.querySelectorAll('form');
     const fetch_possible_types = () => {
-        let request = new XMLHttpRequest();
-        request.open('GET', '/onoffice-estate-types.json', false);
-        request.send(null);
-        if (request.status === 200) {
-            return JSON.parse(request.responseText);
-        }
-        return {};
+        return fetch('/onoffice-estate-types.json', {method: 'GET'})
+            .then(response => response.json())
+            .catch(() => ({}));
     };
 
-    const possibleTypes = fetch_possible_types();
     const mergeEstateTypesOfKinds = (possibleTypesValues, estateKinds) => {
         let target = [];
         estateKinds.forEach(e => target = target.concat(possibleTypesValues[e]));
         return target;
     }
 
-    const controlMultiSelectEstateKindType = (elementKind, elementType) => {
+    const controlMultiSelectEstateKindType = (elementKind, elementType, possibleTypes) => {
         elementType.allOptions =  elementType.onoffice_multiselect._options;
         const multiSelectChangeFn = (e) => {
             if (e.detail.name === 'objektart[]') {
@@ -48,7 +43,7 @@
         multiSelectChangeFn(e);
     }
 
-    const controlSingleSelectEstateKindType = (elementKind, elementType) => {
+    const controlSingleSelectEstateKindType = (elementKind, elementType, possibleTypes) => {
         if (!elementType.allOptions) {
             let newTypes = {};
             Object.assign(newTypes, [...elementType.options]);
@@ -80,15 +75,17 @@
         singleSelectChangeFn(new Event('ready'));
     }
 
-    forms.forEach(function (element) {
-        let elementMultiType = element.querySelector('div[data-name^=objekttyp].multiselect');
-        let elementMultiKind = element.querySelector('div[data-name^=objektart].multiselect');
-        let elementSingleType = element.querySelector('select[name=objekttyp]');
-        let elementSingleKind = element.querySelector('select[name=objektart]');
-        if (elementMultiType && elementMultiKind) {
-            controlMultiSelectEstateKindType(elementMultiKind, elementMultiType);
-        } else if(elementSingleType && elementSingleKind) {
-            controlSingleSelectEstateKindType(elementSingleKind, elementSingleType);
-        }
+    fetch_possible_types().then(possibleTypes => {
+        forms.forEach(function (element) {
+            let elementMultiType = element.querySelector('div[data-name^=objekttyp].multiselect');
+            let elementMultiKind = element.querySelector('div[data-name^=objektart].multiselect');
+            let elementSingleType = element.querySelector('select[name=objekttyp]');
+            let elementSingleKind = element.querySelector('select[name=objektart]');
+            if (elementMultiType && elementMultiKind) {
+                controlMultiSelectEstateKindType(elementMultiKind, elementMultiType, possibleTypes);
+            } else if(elementSingleType && elementSingleKind) {
+                controlSingleSelectEstateKindType(elementSingleKind, elementSingleType, possibleTypes);
+            }
+        });
     });
 })();

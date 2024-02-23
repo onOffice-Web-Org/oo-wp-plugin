@@ -357,6 +357,12 @@ abstract class AdminPageFormSettingsBase
 					'0' => __('No', 'onoffice-for-wp-websites'),
 					'1' => __('Yes', 'onoffice-for-wp-websites'),
 				];
+			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
+				$result[ $pField->getModule() ][ $pField->getName() ]['permittedvalues'] = [
+					'' => __('Not Specified', 'onoffice-for-wp-websites'),
+					'0' => __('No', 'onoffice-for-wp-websites'),
+					'1' => __('Yes', 'onoffice-for-wp-websites'),
+				];
 			}
 		}
 		return $result;
@@ -393,19 +399,13 @@ abstract class AdminPageFormSettingsBase
 		/** @var CustomLabelRead $pCustomLabelRead*/
 		$pCustomLabelRead = $this->getContainer()->get(CustomLabelRead::class);
 		$pLanguage = $this->getContainer()->get(Language::class);
+		$currentLocale = $pLanguage->getLocale();
 
-		foreach ($this->buildFieldsCollectionForCurrentForm()->getAllFields() as $pField) {
-			$pCustomLabelModel = $pCustomLabelRead->readCustomLabelsField
-			((int)$this->getListViewId(), $pField, RecordManager::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS);
+		foreach (array_chunk($this->buildFieldsCollectionForCurrentForm()->getAllFields(), 100) as $pField) {
+			$pCustomLabelModel = $pCustomLabelRead->getCustomLabelsFieldsForAdmin
+			((int)$this->getListViewId(), $pField, $currentLocale, RecordManager::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS);
 
-			$valuesByLocale = $pCustomLabelModel->getValuesByLocale();
-			$currentLocale = $pLanguage->getLocale();
-
-			if (isset($valuesByLocale[$currentLocale])) {
-				$valuesByLocale['native'] = $valuesByLocale[$currentLocale];
-				unset($valuesByLocale[$currentLocale]);
-			}
-			$result[$pField->getName()] = $valuesByLocale;
+			if (count($pCustomLabelModel)) $result = array_merge($result, $pCustomLabelModel);
 		}
 
 		return $result;
@@ -511,7 +511,8 @@ abstract class AdminPageFormSettingsBase
 		if (in_array(onOfficeSDK::MODULE_SEARCHCRITERIA, $modules)) {
 			$pFieldsCollectionBuilder
 				->addFieldsSearchCriteria($pDefaultFieldsCollection)
-				->addFieldsSearchCriteriaSpecificBackend($pDefaultFieldsCollection);
+				->addFieldsSearchCriteriaSpecificBackend($pDefaultFieldsCollection)
+				->addFieldSupervisorForSearchCriteria($pDefaultFieldsCollection);
 		}
 
 		$pFieldsCollectionBuilder->addFieldsFormBackend($pDefaultFieldsCollection,$this->getType());
@@ -762,12 +763,12 @@ abstract class AdminPageFormSettingsBase
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
-		echo '<div id="poststuff">';
-		echo '<div id="post-body" class="metabox-holder columns-'
-		     . ( 1 == get_current_screen()->get_columns() ? '1' : '2' ) . '">';
-		echo '<div id="post-body-content">';
+		echo '<div id="poststuff" class="oo-poststuff">';
+		echo '<div id="post-head-content">';
 		$pInputModelRenderer->buildForAjax( $pFormViewName );
 		echo '</div>';
+		echo '<div id="post-body" class="metabox-holder columns-'
+		     . ( 1 == get_current_screen()->get_columns() ? '1' : '2' ) . '">';
 		echo '<div class="postbox-container" id="postbox-container-1">';
 		do_meta_boxes( get_current_screen()->id, 'normal', null );
 		echo '</div>';
@@ -790,10 +791,9 @@ abstract class AdminPageFormSettingsBase
 		echo '</div>';
 		echo '<div class="clear"></div>';
 		echo '</div>';
-		echo '</div>';
 		do_settings_sections( $this->getPageSlug() );
-		submit_button( null, 'primary', 'send_form' );
-
+		$this->generateBlockPublish();
+		echo '</div>';
 		echo '</form>';
 	}
 
