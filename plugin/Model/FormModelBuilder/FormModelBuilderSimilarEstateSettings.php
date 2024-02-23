@@ -160,8 +160,8 @@ class FormModelBuilderSimilarEstateSettings
 	}
 
 	/**
-	 * @param $module
-	 * @param $htmlType
+	 * @param string $module
+	 * @param string $htmlType
 	 * @return InputModelOption
 	 * @throws DependencyException
 	 * @throws ExceptionInputModelMissingField
@@ -189,7 +189,7 @@ class FormModelBuilderSimilarEstateSettings
 		if (is_array($module)) {
 			$this->_formModules = $module;
 			foreach ($module as $submodule) {
-				$newFields = $pFieldsCollection->getFieldsByModule($submodule ?? '');
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule);
 				$fieldNames = array_merge($fieldNames, $newFields);
 			}
 		} else {
