@@ -159,6 +159,7 @@ class FormModelBuilderDBForm
 		}
 
 		$pFieldsCollectionConfiguratorForm = $this->_pContainer->get(FieldsCollectionConfiguratorForm::class);
+
 		return $pFieldsCollectionConfiguratorForm->buildForFormType($pFieldsCollection, $this->getFormType());
 	}
 

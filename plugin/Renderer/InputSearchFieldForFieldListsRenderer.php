@@ -92,6 +92,7 @@ class InputSearchFieldForFieldListsRenderer
 				->addFieldsSearchCriteriaSpecificBackend($pFieldsCollection);
 		} catch (APIClientCredentialsException $pCredentialsException) {
 		} catch (APIEmptyResultException $pEmptyResultException) {}
+
 		return $pFieldsCollection;
 	}
 

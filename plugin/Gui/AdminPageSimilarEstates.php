@@ -118,7 +118,7 @@ class AdminPageSimilarEstates
 		/* @var $pRenderer InputModelRenderer */
 		$pRenderer = $this->getContainer()->get(InputModelRenderer::class);
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
-		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug( self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG );
+		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
@@ -421,7 +421,7 @@ class AdminPageSimilarEstates
 	private function renderSearchFieldForFieldLists(InputModelRenderer $pRenderer, $pFormViewSearchFieldForFieldLists)
 	{
 		echo '<div class="oo-search-field postbox">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Field list search', 'onoffice-for-wp-websites' ) . '</span></h2>';
+		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Field list search', 'onoffice-for-wp-websites') . '</span></h2>';
 		echo '<div class="inside">';
 		$pRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);
 		echo '</div>';
