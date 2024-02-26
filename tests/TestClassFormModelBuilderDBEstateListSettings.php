@@ -69,7 +69,6 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
 			->with($this->anything())
 			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
-
 				$pField1 = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
 				$pFieldsCollection->addField($pField1);
 
@@ -78,7 +77,6 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->_pFieldsCollectionBuilderShort->method('addFieldsEstateDecoratorReadAddressBackend')
 			->with($this->anything())
 			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
-
 				$pField1 = new Field('objektnr_extern', onOfficeSDK::MODULE_ESTATE);
 				$pFieldsCollection->addField($pField1);
 

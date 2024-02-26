@@ -144,7 +144,6 @@ class InputSearchFieldForFieldListsRenderer
 	/**
 	 * @param string $key
 	 * @param array $item
-	 * @param string $module
 	 * @return string
 	 */
 	private function generateItemSearch(string $key, array $item): string

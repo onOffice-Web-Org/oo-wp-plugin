@@ -194,6 +194,7 @@ abstract class FormModelBuilder
 
 		$fields = $this->getValue(self::CONFIG_FIELDS) ?? [];
 		$pInputModelFieldsConfig->setValue($fields);
+
 		return $pInputModelFieldsConfig;
 	}
 

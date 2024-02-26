@@ -820,6 +820,7 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
 		$pInputModelFieldsConfig->setValue($this->getValue(DataListView::FIELDS) ?? []);
+
 		return $pInputModelFieldsConfig;
 	}
 }

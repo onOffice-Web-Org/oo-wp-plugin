@@ -72,7 +72,6 @@ class TestClassFormModelBuilderDBForm
 		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
 			->with($this->anything())
 			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
-
 				$pField1 = new Field('asd', onOfficeSDK::MODULE_SEARCHCRITERIA);
 				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 				$pFieldsCollection->addField($pField1);
@@ -82,7 +81,6 @@ class TestClassFormModelBuilderDBForm
 		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
 			->with($this->anything())
 			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
-
 				$pField1 = new Field('Vorname', onOfficeSDK::MODULE_ADDRESS);
 				$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 				$pFieldsCollection->addField($pField1);

@@ -744,6 +744,7 @@ class FormModelBuilderDBForm
 
 		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
 		$pInputModelFieldsConfig->setValue($this->getValue(DataFormConfiguration::FIELDS) ?? []);
+
 		return $pInputModelFieldsConfig;
 	}
 

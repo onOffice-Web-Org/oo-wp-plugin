@@ -624,6 +624,7 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
 		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
 		$pInputModelFieldsConfig->setValue($fields);
+
 		return $pInputModelFieldsConfig;
 	}
 }

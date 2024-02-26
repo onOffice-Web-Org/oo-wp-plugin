@@ -322,6 +322,7 @@ class FormModelBuilderDBAddress
 	{
 		$this->setFieldnames($this->_pFieldnames);
 		$pInputModelFieldsConfig = parent::createSearchFieldForFieldLists($module, $htmlType);
+
 		return $pInputModelFieldsConfig;
 	}
 }
