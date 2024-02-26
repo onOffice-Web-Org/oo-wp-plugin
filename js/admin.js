@@ -86,6 +86,10 @@ jQuery(document).ready(function($){
 				$(this).hide();
 			}
 		});
+	}).on('keypress', function(event) {
+		if (event.which == 13) {
+			event.preventDefault();
+		}
 	});
 
 	$(document).on('click', function(event) {

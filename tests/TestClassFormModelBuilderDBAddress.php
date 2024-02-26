@@ -32,6 +32,8 @@ use onOffice\WPlugin\Model\InputModelDB;
 use WP_UnitTestCase;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
+use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Types\FieldsCollection;
 
 class TestClassFormModelBuilderDBAddress
 	extends WP_UnitTestCase
@@ -90,5 +92,21 @@ class TestClassFormModelBuilderDBAddress
 		$pInputModelDB = $pInstance->createInputModelPictureTypes();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress::createSearchFieldForFieldLists
+	 */
+	public function testCreateSearchFieldForFieldLists()
+	{
+		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
+			->setMethods(['getFieldLabel', 'getFieldInformation', 'loadLanguage'])
+			->setConstructorArgs([new FieldsCollection()])
+			->getMock();
+
+		$pFormModelBuilderDBAddress = new FormModelBuilderDBAddress($pFieldnames);
+		$pInputModelDB = $pFormModelBuilderDBAddress->createSearchFieldForFieldLists('address', 'searchFieldForFieldLists');
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'searchFieldForFieldLists');
 	}
 }

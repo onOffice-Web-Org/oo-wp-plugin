@@ -43,6 +43,7 @@ use onOffice\WPlugin\Types\ImageTypes;
 use function __;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
+use DI\Container;
 
 /**
  *
@@ -64,6 +65,20 @@ class FormModelBuilderSimilarEstateSettings
 
 	/** @var array */
 	private $_formModules = [];
+
+	/** @var Container */
+	private $_pContainer = null;
+
+	/**
+	 * @param Container $pContainer
+	 */
+
+	public function __construct(Container $pContainer = null)
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainer ?? $pContainerBuilder->build();
+	}
 
 	/**
 	 * @param string $pageSlug
@@ -145,11 +160,7 @@ class FormModelBuilderSimilarEstateSettings
 	 */
 	private function getFieldsCollection(): FieldsCollection
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-
-		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldsCollection = new FieldsCollection();
 
 		$pFieldsCollectionBuilder
@@ -492,6 +503,8 @@ class FormModelBuilderSimilarEstateSettings
 	 * @param $module
 	 * @param string $htmlType
 	 * @return InputModelOption
+	 * @throws UnknownModuleException
+	 * @throws ExceptionInputModelMissingField
 	 *
 	 */
 

@@ -198,7 +198,7 @@ class FormModelBuilderDBEstateUnitListSettings
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	private function getFieldsCollection(): FieldsCollection
+	protected function getFieldsCollection(): FieldsCollection
 	{
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -231,35 +231,5 @@ class FormModelBuilderDBEstateUnitListSettings
 			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
 		});
 		return $pInputModel;
-	}
-
-	/**
-	 *
-	 * @param $module
-	 * @param string $htmlType
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createSearchFieldForFieldLists($module, string $htmlType)
-	{
-		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
-			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
-
-		$pFieldsCollection = $this->getFieldsCollection();
-		$fieldNames = $pFieldsCollection->getFieldsByModule($module);
-
-		$fieldNamesArray = [];
-		$pFieldsCollectionUsedFields = new FieldsCollection;
-
-		foreach ($fieldNames as $pField) {
-			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
-			$pFieldsCollectionUsedFields->addField($pField);
-		}
-
-		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
-		$pInputModelFieldsConfig->setHtmlType($htmlType);
-		$pInputModelFieldsConfig->setValue($this->getValue(DataListView::FIELDS) ?? []);
-		return $pInputModelFieldsConfig;
 	}
 }

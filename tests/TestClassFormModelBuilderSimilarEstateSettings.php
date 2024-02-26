@@ -33,6 +33,10 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\Field;
 
 class TestClassFormModelBuilderSimilarEstateSettings
 	extends WP_UnitTestCase
@@ -64,6 +68,11 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	/** @var DataSimilarView */
 	private $_pDataSimilarView = null;
 
+	/** @var Container */
+	private $_pContainer;
+
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
 
 	/**
 	 * @before
@@ -71,6 +80,43 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	public function prepare()
 	{
 		$this->_pInputModelOptionFactorySimilarViewDBEntry = new InputModelOptionFactorySimilarView('onoffice');
+		
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend',  'addFieldsEstateGeoPosisionBackend'])
+				->setConstructorArgs([$this->_pContainer])
+				->getMock();
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+
+				$pField1 = new Field('objekttitel', onOfficeSDK::MODULE_ESTATE);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsEstateDecoratorReadAddressBackend')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+
+				$pField1 = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+			
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsEstateGeoPosisionBackend')
+				->with($this->anything())
+				->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+			$pField1 = new Field('objekttyp', onOfficeSDK::MODULE_ESTATE);
+			$pFieldsCollection->addField($pField1);
+
+			return $this->_pFieldsCollectionBuilderShort;
+		}));
 	}
 
 	/**
@@ -326,5 +372,19 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInputModelDB = $pInstance->createInputModelPictureTypes();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createSearchFieldForFieldLists
+	 */
+	public function testCreateSearchFieldForFieldLists()
+	{
+		$pFormModelBuilderSimilarEstateSettings = new FormModelBuilderSimilarEstateSettings($this->_pContainer);
+		$pFormModelBuilderSimilarEstateSettings->generate('test');
+		$pInputModelOption = $pFormModelBuilderSimilarEstateSettings->createSearchFieldForFieldLists('estate', 'searchFieldForFieldLists');
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'searchFieldForFieldLists');
 	}
 }

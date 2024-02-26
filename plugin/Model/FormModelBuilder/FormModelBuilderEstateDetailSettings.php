@@ -51,6 +51,7 @@ use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use DI\DependencyException;
 use DI\NotFoundException;
+use DI\Container;
 
 /**
  *
@@ -73,12 +74,14 @@ class FormModelBuilderEstateDetailSettings
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
+	/** @var Container */
+	private $_pContainer = null;
 
 	/**
-	 *
+	 * @param Container $pContainer
 	 */
 
-	public function __construct(Fieldnames $_pFieldnames = null)
+	public function __construct(Container $pContainer = null, Fieldnames $_pFieldnames = null)
 	{
 		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
 			(new FieldModuleCollectionDecoratorReadAddress
@@ -86,6 +89,9 @@ class FormModelBuilderEstateDetailSettings
 		$this->_pFieldnames = $_pFieldnames ?? new Fieldnames($pFieldCollection);
 		$this->_pFieldnames->loadLanguage();
 		$this->setFieldnames($this->_pFieldnames);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainer ?? $pContainerBuilder->build();
 	}
 
 
@@ -530,11 +536,7 @@ class FormModelBuilderEstateDetailSettings
 	 */
 	private function getFieldsCollection(): FieldsCollection
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-
-		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldsCollection = new FieldsCollection();
 
 		$pFieldsCollectionBuilder
@@ -597,7 +599,7 @@ class FormModelBuilderEstateDetailSettings
 	public function createSearchFieldForFieldLists($module, string $htmlType)
 	{
 		$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
+		(InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
 
 		$pFieldsCollection = $this->getFieldsCollection();
 		$fieldNames = [];

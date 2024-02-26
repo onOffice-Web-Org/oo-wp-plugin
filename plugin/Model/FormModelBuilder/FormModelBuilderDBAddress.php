@@ -50,6 +50,9 @@ class FormModelBuilderDBAddress
 	/** */
 	const DEFAULT_RECORDS_PER_PAGE = 20;
 
+	/** @var Fieldnames */
+	private $_pFieldnames = null;
+
 	/** @var string[] */
 	private static $_defaultFields = array(
 		'Anrede',
@@ -64,14 +67,15 @@ class FormModelBuilderDBAddress
 	 *
 	 */
 
-	public function __construct()
+	public function __construct(Fieldnames $_pFieldnames = null)
 	{
 		$pInputModelDBFactoryConfig = new InputModelDBFactoryConfigAddress();
 		$pInputModelDBFactory = new InputModelDBFactory($pInputModelDBFactoryConfig);
 		$this->setInputModelDBFactory($pInputModelDBFactory);
+		$this->_pFieldnames = $_pFieldnames ?? new Fieldnames(new FieldsCollection());
 
 		$pFieldsCollection = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
-		$pFieldnames = new Fieldnames($pFieldsCollection);
+		$pFieldnames = $_pFieldnames ?? new Fieldnames($pFieldsCollection);
 		$pFieldnames->loadLanguage();
 		$this->setFieldnames($pFieldnames);
 	}
@@ -316,8 +320,7 @@ class FormModelBuilderDBAddress
 
 	public function createSearchFieldForFieldLists($module, string $htmlType)
 	{
-		$pFieldnames = new Fieldnames(new FieldsCollection());
-		$this->setFieldnames($pFieldnames);
+		$this->setFieldnames($this->_pFieldnames);
 		$pInputModelFieldsConfig = parent::createSearchFieldForFieldLists($module, $htmlType);
 		return $pInputModelFieldsConfig;
 	}

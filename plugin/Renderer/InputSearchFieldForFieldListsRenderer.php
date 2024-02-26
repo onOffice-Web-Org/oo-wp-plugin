@@ -46,7 +46,7 @@ class InputSearchFieldForFieldListsRenderer
 	 *
 	 */
 
-	public function __construct($name, $value)
+	public function __construct(string $name, $value)
 	{
 		parent::__construct('searchFieldForFieldLists', $name, $value);
 	}

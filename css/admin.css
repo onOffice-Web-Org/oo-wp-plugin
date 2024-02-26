@@ -587,6 +587,10 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	margin: 10px;
 }
 
+.oo-poststuff .custom-input-field .field-item-detail {
+	margin-left: 5px;
+}
+
 .oo-search-field {
 	width: 49%;
 	float: left;
@@ -663,7 +667,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .oo-search-field .box-search .clear-icon {
 	position: absolute;
 	top: 38%;
-    font-size: 27px;
+	font-size: 27px;
 	right: 20px;
 	transform: translateY(-50%);
 	cursor: pointer;

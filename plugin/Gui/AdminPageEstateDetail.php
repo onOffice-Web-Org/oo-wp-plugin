@@ -290,7 +290,7 @@ class AdminPageEstateDetail
 	 */
 	protected function buildForms()
 	{
-		$pFormModelBuilder = new FormModelBuilderEstateDetailSettings();
+		$pFormModelBuilder = $this->getContainer()->get(FormModelBuilderEstateDetailSettings::class);
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug());
 		$this->addFormModel($pFormModel);
 
