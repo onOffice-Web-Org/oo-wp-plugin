@@ -102,8 +102,6 @@ class Form
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice-for-wp-websites'));
 		$this->setGenericSetting('formId', 'onoffice-form');
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
-		$this->doExtraEnqueues($type);
-		$this->typeFormToHoneyPot($type);
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
@@ -625,40 +623,6 @@ class Form
 		}
 	}
 
-	/**
-	 *
-	 * @param string $type
-	 *
-	 */
-
-	private function doExtraEnqueues(string $type){
-		wp_register_script('onoffice-custom-select', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-custom-select.min.js', ['jquery'], '', true);
-		wp_register_script('onoffice-multiselect', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-multiselect.min.js', [], '', true);
-		wp_register_script('onoffice-estatetype', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-estatetype.min.js', ['onoffice-multiselect'], '', true);
-		wp_register_script('onoffice-leadform', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-leadform.min.js', ['jquery'], '', true);
-		wp_register_script('onoffice-prevent-double-form-submission', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-prevent-double-form-submission.min.js', ['jquery'], '', true);
-		wp_enqueue_script('onoffice-custom-select');
-		wp_enqueue_script('onoffice-multiselect');
-		wp_enqueue_script('onoffice-estatetype');
-		wp_enqueue_script('onoffice-leadform');
-		wp_enqueue_script('onoffice-prevent-double-form-submission');
-		wp_script_add_data('onoffice-multiselect', IncludeFileModel::LOAD_ASYNC, true);
-		wp_script_add_data('onoffice-estatetype', IncludeFileModel::LOAD_ASYNC, true);
-
-		if($type === self::TYPE_APPLICANT_SEARCH){
-			wp_register_script('onoffice-form-preview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-form-preview.min.js', ['jquery'], '', true);
-			wp_enqueue_script('onoffice-form-preview');
-
-			wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
-				'amount_none' => __('0 matches', 'onoffice-for-wp-websites'),
-				'amount_one' => __('Show exact match', 'onoffice-for-wp-websites'),
-				/* translators: %s is the amount of results */
-				'amount_other' => __('Show %s matches', 'onoffice-for-wp-websites'),
-				'nonce_estate' => wp_create_nonce('onoffice-estate-preview'),
-				'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),
-			]);
-		}
-	}
 
 	/**
 	 *
@@ -669,20 +633,6 @@ class Form
 	public function getFormNo()
 	{
 		return esc_html($this->_formNo);
-	}
-
-
-	/**
-	 *
-	 * @param $type
-	 *
-	 */
-
-	private function typeFormToHoneyPot($type)
-	{
-		if (get_option('onoffice-settings-honeypot') == true && $type !== 'applicantsearch') {
-			wp_enqueue_script('onoffice-honeypot', plugins_url('dist/onoffice-honeypot.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'), array('jquery'));
-		}
 	}
 
 
