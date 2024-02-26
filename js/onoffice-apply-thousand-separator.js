@@ -1,16 +1,31 @@
 onoffice_setting = onoffice_setting || [];
 jQuery(document).ready(function ($) {
     let thousandSeparatorFormat = onoffice_setting.thousand_separator_format || '';
+    function getSeparators(separatorFormat) {
+        return {
+            thousandSeparator: separatorFormat === 'comma-separator' ? ',' : '.',
+            decimalSeparator: separatorFormat === 'comma-separator' ? '.' : ','
+        };
+    }
+
+    function cleanInputValue(value, separatorFormat) {
+        return separatorFormat === 'comma-separator' ? value.replace(/[^0-9.]/g, '') : value.replace(/[^0-9,]/g, '');
+    }
 
     function formatForThousandSeparator(fieldKey, fieldValue, separatorFormat) {
-        let thousandSeparator = separatorFormat === 'comma-separator' ? ',' : '.';
-        let decimalSeparator = separatorFormat === 'comma-separator' ? '.' : ',';
+        const { thousandSeparator, decimalSeparator } = getSeparators(separatorFormat);
         let value = processSeparator(fieldValue, thousandSeparator, decimalSeparator);
-
         $('input[name="' + fieldKey + '"]').val(value);
     }
 
-    function processSeparator(value, thousandSeparator , decimalSeparator) {
+    function processSeparator(value, thousandSeparator, decimalSeparator) {
+        let parts = value.split(/[,.]/);
+        if (parts.length > 2) {
+            let integerPart = parts.shift();
+            let decimalPart = parts.join('');
+            value = integerPart + '.' + decimalPart;
+        }
+
         let match = value.match(/^(\d+)[,.](\d+)$/);
         if (match) {
             return match[1].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator) + decimalSeparator + match[2];
@@ -19,15 +34,16 @@ jQuery(document).ready(function ($) {
         }
     }
 
+    function applyThousandSeparatorFormat(element) {
+        let inputName = $(element).attr('name');
+        let inputValue = $(element).val();
+        inputValue = cleanInputValue(inputValue, thousandSeparatorFormat);
+        formatForThousandSeparator(inputName, inputValue, thousandSeparatorFormat);
+    }
+
     $('.apply-thousand-separator-format').on('input', function() {
-        let inputName = $(this).attr('name');
-        let inputValue = $(this).val();
-        inputValue = thousandSeparatorFormat === 'comma-separator' ? inputValue.replace(/[^0-9.]/g, '') : inputValue.replace(/[^0-9,]/g, '');
-        formatForThousandSeparator(inputName, inputValue, thousandSeparatorFormat);
+        applyThousandSeparatorFormat(this);
     }).each(function() {
-        let inputName = $(this).attr('name');
-        let inputValue = $(this).val();
-        inputValue = thousandSeparatorFormat === 'comma-separator' ? inputValue.replace(/[^0-9.]/g, '') : inputValue.replace(/[^0-9,]/g, '');
-        formatForThousandSeparator(inputName, inputValue, thousandSeparatorFormat);
+        applyThousandSeparatorFormat(this);
     });
 });
