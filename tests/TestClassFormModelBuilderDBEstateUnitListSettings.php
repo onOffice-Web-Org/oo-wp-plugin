@@ -49,7 +49,7 @@ class TestClassFormModelBuilderDBEstateUnitListSettings
 	 */
 	public function testGenerate()
 	{
-		$pFormModelBuilder = new FormModelBuilderDBEstateUnitListSettings;
+		$pFormModelBuilder = new FormModelBuilderDBEstateUnitListSettings();
 		$pFormModel = $pFormModelBuilder->generate('abc');
 		$this->assertEquals($pFormModel->getPageSlug(), 'abc');
 	}

@@ -84,6 +84,9 @@ class TestClassFormModelBuilderEstateDetailSettings
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilderShort = null;
 
+	/** @var FormModelBuilderEstateDetailSettings */
+	private $_pFormModelBuilderEstateDetailSettings;
+
 	/**
 	 * @before
 	 */
@@ -143,6 +146,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 			return $this->_pFieldsCollectionBuilderShort;
 		}));
+		$this->_pFormModelBuilderEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pContainer, $this->_pFieldnames);
 	}
 	
 	/**
@@ -151,7 +155,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	
 	public function testConstruct()
 	{
-		$pInstance = new FormModelBuilderEstateDetailSettings($this->_pContainer, $this->_pFieldnames);
+		$pInstance = $this->_pFormModelBuilderEstateDetailSettings;
 		$this->assertInstanceOf(FormModelBuilderEstateDetailSettings::class, $pInstance);
 	}
 	
@@ -272,7 +276,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelOguloLinks()
 	{
-		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pContainer, $this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelOguloLinks();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
@@ -283,7 +287,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelObjectLinks()
 	{
-		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pContainer, $this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelObjectLinks();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
@@ -294,7 +298,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelLinks()
 	{
-		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pContainer, $this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelLinks();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
@@ -306,7 +310,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelShowStatus()
 	{
-		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pContainer, $this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelShowStatus();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
@@ -384,7 +388,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelShowPriceOnRequest()
 	{
-		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pContainer, $this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelShowPriceOnRequest();
 		$this->assertNotEmpty($pInputModelDB->getValuesAvailable());
@@ -396,7 +400,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateSortableFieldList()
 	{
-		$pFormModelBuilderEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pContainer, $this->_pFieldnames);
+		$pFormModelBuilderEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderEstateDetailSettings->generate('test');
 		$pInputModelOption = $pFormModelBuilderEstateDetailSettings->createSortableFieldList('estate', 'complexSortableDetailList');
 
@@ -410,7 +414,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateSearchFieldForFieldLists()
 	{
-		$pFormModelBuilderEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pContainer, $this->_pFieldnames);
+		$pFormModelBuilderEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderEstateDetailSettings->generate('test');
 		$pInputModelOption = $pFormModelBuilderEstateDetailSettings->createSearchFieldForFieldLists(['estate', 'address'], 'searchFieldForFieldLists');
 
