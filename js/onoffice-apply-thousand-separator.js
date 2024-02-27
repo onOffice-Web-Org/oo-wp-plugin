@@ -7,55 +7,21 @@ jQuery(document).ready(($) => {
         decimalSeparator: separatorFormat === 'comma-separator' ? '.' : ','
     });
 
-    const cleanInputValue = (value, separatorFormat) => {
-        const { decimalSeparator } = getSeparators(separatorFormat);
-        value = separatorFormat === 'comma-separator' ? value.replace(/[^0-9.]/g, '') : value.replace(/[^0-9,]/g, '');
-        const regex = new RegExp(`(\\${decimalSeparator}\\d{2})\\d+`, 'g');
-        return value.replace(regex, '$1');
-    };
+    const separators = getSeparators(thousandSeparatorFormat);
 
-    const processSeparator = (value, thousandSeparator, decimalSeparator) => {
-        let parts = value.split(/[,.]/);
-        if (parts.length > 2) {
-            let integerPart = parts.shift();
-            let decimalPart = parts.join('');
-            value = integerPart + '.' + decimalPart;
+    $('.apply-thousand-separator-format').each(function() {
+        const step = $(this).data('step');
+        if (step == 1) {
+            new AutoNumeric(this, {
+                decimalCharacter: separators.decimalSeparator,
+                digitGroupSeparator: separators.thousandSeparator,
+                decimalPlaces: 0
+            });
+        } else {
+            new AutoNumeric(this, {
+                decimalCharacter: separators.decimalSeparator,
+                digitGroupSeparator: separators.thousandSeparator,
+            });
         }
-
-        let match = value.match(/^(\d+)[,.](\d+)$/);
-        return match ? match[1].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator) + decimalSeparator + match[2] : value.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
-    };
-
-    const formatForThousandSeparator = (fieldKey, fieldValue, separatorFormat) => {
-        const { thousandSeparator, decimalSeparator } = getSeparators(separatorFormat);
-        let value = processSeparator(fieldValue, thousandSeparator, decimalSeparator);
-        $(`input[name="${fieldKey}"]`).val(value);
-    };
-
-    const applyThousandSeparatorFormat = (element) => {
-        let inputName = $(element).attr('name');
-        let inputValue = cleanInputValue($(element).val(), thousandSeparatorFormat);
-        if ($(element).data('step') === 1) {
-            let numericValue = parseFloat(inputValue.replace(/,/g, '.'));
-            if (!isNaN(numericValue)) {
-                numericValue = Math.round(numericValue);
-                inputValue = numericValue.toString();
-            }
-        }
-        formatForThousandSeparator(inputName, inputValue, thousandSeparatorFormat);
-    };
-
-    const normalizeInputValue = () => {
-        const { decimalSeparator } = getSeparators(thousandSeparatorFormat);
-        $('.apply-thousand-separator-format').each(function() {
-            let value = $(this).val().replace(new RegExp(`\\${decimalSeparator}$`), '');
-            $(this).val(value);
-        });
-    };
-
-    $('.apply-thousand-separator-format').on('blur', normalizeInputValue).on('input', function() {
-        applyThousandSeparatorFormat(this);
-    }).each(function() {
-        applyThousandSeparatorFormat(this);
     });
 });
