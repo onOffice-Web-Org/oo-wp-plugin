@@ -520,11 +520,10 @@ class EstateList
 				foreach ($priceFields as $priceField) {
 					$this->displayTextPriceOnRequest($recordModified, $priceField);
 				}
-				unset($recordModified['preisAufAnfrage']);
 			}
-		} else { // do not show priceOnRequest as single Field
-			unset($recordModified['preisAufAnfrage']);
 		}
+		// do not show priceOnRequest as single Field
+		unset($recordModified['preisAufAnfrage']);
 
 		return $recordModified;
 	}
