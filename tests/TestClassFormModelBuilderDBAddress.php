@@ -96,6 +96,7 @@ class TestClassFormModelBuilderDBAddress
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress::createSearchFieldForFieldLists
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder::createSearchFieldForFieldLists
 	 */
 	public function testCreateSearchFieldForFieldLists()
 	{

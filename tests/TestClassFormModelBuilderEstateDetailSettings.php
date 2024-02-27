@@ -409,6 +409,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createSearchFieldForFieldLists
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::getFieldsCollection
 	 */
 	public function testCreateSearchFieldForFieldLists()
 	{

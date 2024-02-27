@@ -374,6 +374,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createSearchFieldForFieldLists
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::getFieldsCollection
 	 */
 	public function testCreateSearchFieldForFieldLists()
 	{

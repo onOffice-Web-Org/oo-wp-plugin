@@ -402,6 +402,7 @@ class TestClassFormModelBuilderDBForm
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createSearchFieldForFieldLists
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getFieldsCollection
 	 */
 	public function testCreateSearchFieldForFieldLists()
 	{

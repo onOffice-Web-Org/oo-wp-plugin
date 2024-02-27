@@ -754,6 +754,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createSearchFieldForFieldLists
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getFieldsCollection
 	 */
 	public function testCreateSearchFieldForFieldLists()
 	{
