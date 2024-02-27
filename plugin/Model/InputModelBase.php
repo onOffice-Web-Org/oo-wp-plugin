@@ -80,6 +80,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_SORTABLE_TAGS = 'sortabletags';
 
+	/** */
+	const HTML_SEARCH_FIELD_FOR_FIELD_LISTS = 'searchFieldForFieldLists';
+
 	/** @var string */
 	private $_name = null;
 
@@ -319,5 +322,4 @@ abstract class InputModelBase
 	/** @param int $minValue */
 	public function setMinValueHtml(int $minValue)
 		{ $this->_minValue = $minValue; }
-
 }
