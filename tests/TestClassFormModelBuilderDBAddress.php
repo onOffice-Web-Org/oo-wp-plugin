@@ -97,11 +97,12 @@ class TestClassFormModelBuilderDBAddress
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress::createSearchFieldForFieldLists
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder::createSearchFieldForFieldLists
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder::groupByContent
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder::getFieldNamesByModule
 	 */
 	public function testCreateSearchFieldForFieldLists()
 	{
 		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
-			->setMethods(['getFieldLabel', 'getFieldInformation', 'loadLanguage'])
 			->setConstructorArgs([new FieldsCollection()])
 			->getMock();
 
