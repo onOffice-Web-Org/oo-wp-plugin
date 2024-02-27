@@ -185,7 +185,7 @@ class EstateList
 			$pDataListView = $this->_pDataView;
 		}
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
-		if ($this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
+		if ($this->_pDataView instanceof DataListView && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
 			$this->loadRecordsOrderEstatesByTags($currentPage);
 		} else {
 			$this->loadRecords($currentPage);
@@ -499,11 +499,11 @@ class EstateList
 			$requestParams['sortorder'] =$pListView->getSortorder();
 		}
 
-		if ($pListView->getSortByTags() !== '' && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
+		if ($pListView instanceof DataListView && $pListView->getSortByTags() !== '' && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
 			$requestParams['sortby'] =  $pListView->getSortByTags();
 		}
 
-		if ($pListView->getSortByTagsDirection() !== '' && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
+		if ($pListView instanceof DataListView && $pListView->getSortByTagsDirection() !== '' && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
 			$requestParams['sortorder'] =$pListView->getSortByTagsDirection();
 		}
 
