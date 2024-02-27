@@ -52,7 +52,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 		}
 
 		if (isset($properties['is-apply-thousand-separator'])) {
-			$inputType = 'type="text" class="apply-thousand-separator-format" ';
+			$inputType = 'type="text" class="apply-thousand-separator-format" data-step="1" ';
 		}
 
 		if ($properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN) {

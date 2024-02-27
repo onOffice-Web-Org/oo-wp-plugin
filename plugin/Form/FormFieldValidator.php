@@ -83,7 +83,7 @@ class FormFieldValidator
 			$dataType = $pField->getType();
 
 			if (!$this->isEmptyValue($fieldName, $dataType)) {
-				$value = $this->getValueFromRequest($dataType, $fieldName, $module);
+				$value = $this->getValueFromRequest($dataType, $fieldName, $module, $name);
 				$sanitizedData[$fieldName] = $this->getValidatedValue($value, $pField);
 			}
 		}
@@ -159,11 +159,12 @@ class FormFieldValidator
 	 * @param string $dataType
 	 * @param string $fieldName
 	 * @param string $module
+	 * @param string $name
 	 * @return mixed
 	 *
 	 */
 
-	private function getValueFromRequest(string $dataType, string $fieldName, string $module)
+	private function getValueFromRequest(string $dataType, string $fieldName, string $module, string $name)
 	{
 		$filter = FILTER_DEFAULT;
 		$filters = FieldTypes::getInputVarSanitizers();
@@ -183,11 +184,16 @@ class FormFieldValidator
 			$returnValue = $this->_pRequestSanitizer->getFilteredPost($fieldName, $filter);
 		}
 
-		$onofficeSettingsThousandSeparator = get_option('onoffice-settings-thousand-separator');
-		if ($onofficeSettingsThousandSeparator === InputVariableReaderFormatter::COMMA_THOUSAND_SEPARATOR) {
-			$returnValue = str_replace(',', '', $returnValue);
-		} elseif ($onofficeSettingsThousandSeparator === InputVariableReaderFormatter::DOT_THOUSAND_SEPARATOR) {
-			$returnValue = str_replace('.', '', $returnValue);
+		if (in_array($name, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS)) {
+			$onofficeSettingsThousandSeparator = get_option('onoffice-settings-thousand-separator');
+			switch ($onofficeSettingsThousandSeparator) {
+				case InputVariableReaderFormatter::COMMA_THOUSAND_SEPARATOR:
+					$returnValue = str_replace(',', '', $returnValue);
+					break;
+				case InputVariableReaderFormatter::DOT_THOUSAND_SEPARATOR:
+					$returnValue = str_replace(['.', ','], ['', '.'], $returnValue);
+					break;
+			}
 		}
 
 		switch ($dataType) {
