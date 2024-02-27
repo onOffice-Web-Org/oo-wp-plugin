@@ -587,6 +587,101 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	margin: 10px;
 }
 
+.oo-poststuff .custom-input-field .field-item-detail {
+	margin-left: 5px;
+}
+
+.oo-search-field {
+	width: 100%;
+	float: left;
+}
+
+.oo-search-field .input-search{
+	width: 100%;
+	padding: 7px 15px;
+	border-radius: 0;
+	margin-bottom: 7px;
+}
+
+.oo-search-field .field-lists {
+	display: none;
+	width: 100%;
+	position: absolute;
+	z-index: 999;
+	left: -1px;
+	background-color: white;
+	margin-top: 2px;
+	box-sizing: content-box;
+	border: 1px solid #c3c4c7;
+	border-top: none;
+	border-bottom: 2px solid #747474;
+	box-shadow: 0 12px 6px #00000014;
+}
+
+.oo-search-field .field-lists .line-bottom-content {
+	margin: 15px 14px 0;
+	border-bottom: 1px solid #c3c4c7;
+}
+
+.oo-search-field .field-lists .search-field-list {
+	width: 100%;
+	overflow-y: auto;
+	max-height: 217px;
+}
+
+.oo-search-field .ui-sortable-handle {
+	border-bottom: 1px solid #c3c4c7;
+}
+
+.oo-search-field .field-lists .search-field-list .search-field-item {
+	cursor: pointer;
+	padding: 2px 8px;
+	margin: 2px;
+	list-style-type: none;
+	background-color: white;
+	box-sizing: border-box;
+}
+
+.oo-search-field .field-lists .search-field-list .search-field-item:hover {
+	background-color: #ddd;
+}
+
+.oo-search-field .field-lists .search-field-list .field-item {
+	display: flex;
+	align-items: center;
+}
+
+.oo-search-field .field-lists .search-field-list .field-item-detail .field-item-detail-category {
+	margin: 0 0 0 5px;
+	font-size: 12px;
+}
+
+.oo-search-field .field-lists .search-field-list .field-item-detail .field-item-detail-name {
+	margin: 0 0 0 5px;
+	font-size: 14px;
+	display: block;
+	font-weight: 600;
+}
+
+.oo-search-field .field-lists .search-field-list .action-remove {
+	color: #ff000091;
+}
+
+.oo-search-field .box-search {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+}
+
+.oo-search-field .box-search .clear-icon {
+	position: absolute;
+	top: 38%;
+	font-size: 27px;
+	right: 20px;
+	transform: translateY(-50%);
+	cursor: pointer;
+}
+
 @media only screen and (max-width: 1365px) {
 	.block-publish .postbox-header {
 		display: none;
