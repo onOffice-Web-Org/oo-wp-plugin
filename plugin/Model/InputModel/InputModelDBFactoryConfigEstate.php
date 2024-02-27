@@ -126,6 +126,18 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'show_map',
 		],
+		InputModelDBFactory::INPUT_MARKED_PROPERTIES_SORT => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'markedPropertiesSort',
+		],
+		InputModelDBFactory::INPUT_SORT_BY_TAGS => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'sortByTags',
+		],
+		InputModelDBFactory::INPUT_SORT_ORDER_BY_TAGS => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'sortByTagsDirection',
+		],
 	];
 
 

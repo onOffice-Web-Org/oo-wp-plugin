@@ -22,6 +22,13 @@ jQuery(document).ready(function ($) {
         'oopluginlistviews-sortByUserDefinedDirection',
     ];
 
+    var displayFieldsMarkedProperties = [
+        'oopluginlistviews-sortBySetting',
+        'oopluginlistviews-markedPropertiesSort',
+        'oopluginlistviews-sortByTags',
+        'oopluginlistviews-sortByTagsDirection',
+    ];
+
     onOffice.generateSortByUserDefinedDefault = function () {
         var oldSelected = $("#viewrecordssorting")
             .find("[name=oopluginlistviews-sortByUserDefinedDefault] :selected").val();
@@ -53,7 +60,7 @@ jQuery(document).ready(function ($) {
 
     onOffice.sortingSelection = function (sortingSelectionVal) {
         if (sortingSelection.length) {
-            $("#viewrecordssorting").find('p.wp-clearfix').hide();
+            $("#viewrecordssorting").find('p.wp-clearfix, div.wp-clearfix').hide();
             sortRamdom.prop('checked', false);
         }
 
@@ -67,6 +74,12 @@ jQuery(document).ready(function ($) {
             $("#viewrecordssorting").find("input, select").each(function (key, item) {
                 if (displayFieldsUserSelectionValue.includes($(item).attr('name'))) {
                     $(item).closest('p.wp-clearfix').show();
+                }
+            });
+        } else if (sortingSelectionVal === '2') {
+            $("#viewrecordssorting").find("input, select").each(function (key, item) {
+                if (displayFieldsMarkedProperties.includes($(item).attr('name'))) {
+                    $(item).closest('p.wp-clearfix, div.wp-clearfix').show();
                 }
             });
         } else {

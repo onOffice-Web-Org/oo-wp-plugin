@@ -49,6 +49,16 @@ jQuery(document).ready(function($){
 		$(this).parent().parent().parent().parent().find('.menu-item-settings').toggle();
 	});
 
+	$(".sortable-tags").sortable({
+		update: function() {
+			var sortedKeys = [];
+			$(".sortable-tags .sortable-tag").each(function() {
+				sortedKeys.push($(this).data("key"));
+			});
+			$(".hidden-sortable-tags").val(sortedKeys);
+		}
+	});
+
 	$('.item-delete-link').click(function() {
 		var labelButtonHandleField= $(this).parent().parent().attr('action-field-name');
 		var data = document.querySelector("."+labelButtonHandleField);

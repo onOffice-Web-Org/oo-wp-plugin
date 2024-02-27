@@ -73,7 +73,7 @@ class InputModelRenderer
 		foreach ($pFormModel->getInputModel() as $pInputModel) {
 			$pInputField = $this->createInputField($pInputModel, $pFormModel);
 			$italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
-			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON) {
+			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_SORTABLE_TAGS) {
 				echo '<p id="" class="wp-clearfix custom-input-field">';
 				echo '<label class="howto custom-label" for="'. esc_html($pInputField->getGuiId()).'">';
 				echo $pInputModel->getLabel(). $italicText;
@@ -263,6 +263,12 @@ class InputModelRenderer
 				if ($pInputModel->getSpecialDivId() != null) {
 					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
 				}
+				break;
+
+			case InputModelOption::HTML_TYPE_SORTABLE_TAGS:
+				$pInstance = new SortableTagsRenderer($elementName, $pInputModel->getValuesAvailable());
+				$pInstance->setValue($pInputModel->getValue());
+				$pInstance->setLabel($pInputModel->getLabel());
 				break;
 		}
 

@@ -630,6 +630,22 @@ class FormModelBuilderDBEstateListSettings
 
 
 	/**
+	 * @return array
+	 */
+
+	public function getDefaultDataOfMarkedPropertiesSort() {
+		return [
+			'neu' => __('New', 'onoffice-for-wp-websites'),
+			'top_angebot' => __('Top offer', 'onoffice-for-wp-websites'),
+			'no_marker' => __('No marker', 'onoffice-for-wp-websites'),
+			'kauf' => __('Sold', 'onoffice-for-wp-websites'),
+			'miete' => __('Rented', 'onoffice-for-wp-websites'),
+			'reserviert' => __('Reserved', 'onoffice-for-wp-websites'),
+			'referenz' => __('Reference', 'onoffice-for-wp-websites'),
+		];
+	}
+
+	/**
 	 *
 	 * @return InputModelDB
 	 *
@@ -663,6 +679,7 @@ class FormModelBuilderDBEstateListSettings
 			}
 		}
 		$pInputModel->setValuesAvailable($defaultValues);
+
 		return $pInputModel;
 	}
 
@@ -701,6 +718,7 @@ class FormModelBuilderDBEstateListSettings
             '0' => __('Default sort', 'onoffice-for-wp-websites'),
             '1' => __('User selection', 'onoffice-for-wp-websites'),
             '' => __('Random order', 'onoffice-for-wp-websites'),
+            '2' => __('Marked properties', 'onoffice-for-wp-websites'),
         ];
 
 	    $pInputModel = $this->getInputModelDBFactory()->create( InputModelDBFactory::INPUT_SORT_BY_SETTING, $label );
@@ -789,5 +807,78 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModelShowPriceOnRequest->setValuesAvailable(1);
 
 		return $pInputModelShowPriceOnRequest;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelMarkedPropertiesSort() {
+		$label = __( 'Sequence', 'onoffice-for-wp-websites' );
+		$pInputModel = $this->getInputModelDBFactory()->create
+		(InputModelDBFactory::INPUT_MARKED_PROPERTIES_SORT, $label, true);
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SORTABLE_TAGS);
+		$defaultData = $this->getDefaultDataOfMarkedPropertiesSort();
+		$pInputModel->setValuesAvailable($defaultData);
+		$value = $this->getValue(DataListView::SORT_MARKED_PROPERTIES);
+
+		$markedPropertiesSortableDefaultData = [];
+		
+		if ($value !== null) {
+			foreach (explode(',', $value) as $value) {
+				if (isset($defaultData[$value])) {
+					$markedPropertiesSortableDefaultData[$value] = $defaultData[$value];
+				}
+			}
+		}
+		$values = !empty($markedPropertiesSortableDefaultData) ? $markedPropertiesSortableDefaultData : $defaultData;
+		$pInputModel->setValue( $values );
+
+		return $pInputModel;
+	}
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelSortByTags() {
+		$label = __( 'Sort criteria within same selection', 'onoffice-for-wp-websites' );
+		$pInputModel = $this->getInputModelDBFactory()->create
+		( InputModelDBFactory::INPUT_SORT_BY_TAGS, $label, true );
+		$pInputModel->setHtmlType( InputModelOption::HTML_TYPE_CHOSEN );
+		$pInputModel->setIsMulti( false );
+		$pInputModel->setValuesAvailable( $this->getDataOfSortByInput() );
+		$value = $this->getValue( DataListView::SORT_BY_TAGS );
+		if (is_null($value)) {
+			$value = [];
+		}
+		$pInputModel->setValue( $value );
+
+		return $pInputModel;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelSortByTagsDirection()
+	{
+		$labelSortByTagsDirection = __('Sort direction', 'onoffice-for-wp-websites');
+		$pInputModelSortByTagsDirection = $this->getInputModelDBFactory()->create
+			(InputModelDBFactory::INPUT_SORT_ORDER_BY_TAGS, $labelSortByTagsDirection);
+		$pInputModelSortByTagsDirection->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelSortByTagsDirection->setValuesAvailable(array(
+			'ASC' => __('Ascending', 'onoffice-for-wp-websites'),
+			'DESC' => __('Descending', 'onoffice-for-wp-websites'),
+		));
+		$pInputModelSortByTagsDirection->setValue($this->getValue($pInputModelSortByTagsDirection->getField()));
+
+		return $pInputModelSortByTagsDirection;
 	}
 }

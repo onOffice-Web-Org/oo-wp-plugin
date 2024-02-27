@@ -79,12 +79,37 @@ class EstateStatusLabel
 		$this->_estateValues = $estateValues;
 
 		foreach ($this->_fieldsByPrio as $key) {
+			if ($this->getBoolValue('tagNameOfEstate')) {
+				return $this->processRecordLabelForTags($this->_estateValues['tagNameOfEstate']);
+			}
 			if ($this->getBoolValue($key)) {
 				return $this->processRecord($key);
 			}
 		}
 
 		return '';
+	}
+
+	/**
+	 * @return string
+	 * @throws UnknownFieldException
+	 */
+	private function processRecordLabelForTags(string $key): string
+	{
+		$this->_pFieldnamesActive->loadLanguage();
+		$this->_pFieldnamesInactive->loadLanguage();
+
+		if ($key === 'miete' && $this->_estateValues['verkauft'] || $key === 'kauf' && $this->_estateValues['verkauft']) {
+			if ($this->_estateValues['vermarktungsart'] === 'miete') {
+				return __('rented', 'onoffice-for-wp-websites');
+			} elseif ($this->_estateValues['vermarktungsart'] === 'kauf') {
+				return __('sold', 'onoffice-for-wp-websites');
+			}
+		}
+
+		$label = $this->getFieldLabel($key);
+
+		return $label;
 	}
 
 	/**
