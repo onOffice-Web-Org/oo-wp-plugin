@@ -186,8 +186,8 @@ class InputSearchFieldForFieldListsRenderer
 			. 'id="' . esc_html($inputId) . '">'
 			. '<span ' . $actionIcons . '></span>'
 			. '<div class="field-item-detail" style="' . $fieldItemCustomCss . '">'
-			. '<span>' . esc_html($item["content"]) . '</span>'
-			. '<h4>' . esc_html($item['label']) . ' (' . esc_html($key) . ')' . '</h4></span>'
+			. '<span class="field-item-detail-category">' . esc_html($item["content"]) . '</span>'
+			. '<span class="field-item-detail-name">' . esc_html($item['label']) . ' (' . esc_html($key) . ')' . '</span></span>'
 			. '</div>'
 			. '</li>';
 	}
