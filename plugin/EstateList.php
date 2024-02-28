@@ -496,11 +496,11 @@ class EstateList
 		}
 
 		if ($pListView instanceof DataListView && $pListView->getSortByTags() !== '' && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
-			$requestParams['sortby'] =  $pListView->getSortByTags();
+			$requestParams['sortby'] = $pListView->getSortByTags();
 		}
 
 		if ($pListView instanceof DataListView && $pListView->getSortByTagsDirection() !== '' && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
-			$requestParams['sortorder'] =$pListView->getSortByTagsDirection();
+			$requestParams['sortorder'] = $pListView->getSortByTagsDirection();
 		}
 
 		if ($pListView->getFilterId() !== 0) {
