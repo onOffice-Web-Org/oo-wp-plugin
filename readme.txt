@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.18.1 (2024-02-28) =
+
+**Fixed**
+
+* Styling of slick slider
+
 = 4.18 (2024-02-28) =
 
 **Added**
