@@ -324,6 +324,7 @@ class ScriptLoaderGenericConfigurationDefault
         if (empty($pageContent)) {
             return $styles;
         }
+        $shortcode = $this->getShortcodeByPostMeta();
         $pageContent = str_replace('\u0022', '"', $pageContent);
         if ($this->isDetailEstatePage($pageContent) || !empty($shortcode['detail'])) {
             $styles[] = new IncludeFileModel($style, 'slick', plugins_url('/third_party/slick/slick.css', $pluginPath));
