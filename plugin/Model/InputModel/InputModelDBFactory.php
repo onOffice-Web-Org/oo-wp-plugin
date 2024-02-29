@@ -73,6 +73,9 @@ class InputModelDBFactory
 	const INPUT_EXPOSE = 'expose';
 
 	/** */
+	const INPUT_FORWARDING_PAGE = 'forwardingPage';
+
+	/** */
 	const INPUT_SORT_BY_SETTING = 'sortBySetting';
 
 	/** */

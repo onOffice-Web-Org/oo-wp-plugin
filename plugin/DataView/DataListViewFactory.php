@@ -83,6 +83,7 @@ class DataListViewFactory
 		$pListView->setShowReferenceStatus($row['show_reference_estate'] ?? 1);
 		$pListView->setShowMap($row['show_map']);
 		$pListView->setShowPriceOnRequest((bool)$row['show_price_on_request']);
+		$pListView->setForwardingPage($row['forwarding_page'] ?? 0);
 
 		$geoFieldsAll = [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,

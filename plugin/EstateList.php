@@ -272,13 +272,61 @@ class EstateList
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
-		foreach ($inputs->getFilterableFields() as $name) {
-			if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
-				$activeInputs[] = $name;
+		if (!empty($this->_pDataView->getForwardingPage())) {
+			foreach ($inputs->getFields() as $name) {
+				if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
+					$activeInputs[] = $name;
+				}
+			}
+		} else {
+			foreach ($inputs->getFilterableFields() as $name) {
+				if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
+					$activeInputs[] = $name;
+				}
 			}
 		}
 		$inputs->setFilterableFields($activeInputs);
 		return $inputs;
+	}
+
+	/**
+	 * @return array
+	 */
+
+	public function getEmbedShortcodesInForwardingPages(): array
+	{
+		$listShortCode = $this->getListShortcodesInPostContentByID($this->getDataView()->getForwardingPage());
+		if (empty($listShortCode)) {
+			return [];
+		}
+		$dataViewName = $this->getDataView()->getName();
+	
+		$transformed = array_values(array_map(function($name) use ($dataViewName) {
+			if ($name === $dataViewName) {
+				return null;
+			}
+			return '[oo_estate view="' . $name . '" forwardingpage="' . $dataViewName . '"]';
+		}, $listShortCode));
+	
+		return array_filter($transformed, function($value) {
+			return !is_null($value);
+		});
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getListShortcodesInPostContentByID($postID): array
+	{
+		$post = get_post($postID);
+		if (!$post) {
+			return [];
+		}
+
+		$postContent = $post->post_content;
+		preg_match_all('/\[oo_estate view="([^"]+)"\]/', $postContent, $matches);
+
+		return !empty($matches[1]) ? $matches[1] : [];
 	}
 
 	/**
@@ -831,6 +879,9 @@ class EstateList
 	 */
 	public function getVisibleFilterableFields(): array
 	{
+		if (empty($this->_pDataView->getForwardingPage())) {
+			return [];
+		}
 		$pContainer = $this->_pEnvironment->getContainer();
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();

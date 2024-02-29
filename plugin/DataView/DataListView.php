@@ -154,6 +154,9 @@ class DataListView
 	/** @var bool */
 	private $_showPriceOnRequest = false;
 
+	/** @var int */
+	private $_forwardingPage = 0;
+
 	/** @var string[] */
 	private $_priceFields = [
 		'kaufpreis',
@@ -429,5 +432,21 @@ class DataListView
 	public function getListFieldsShowPriceOnRequest(): array
 	{
 		return $this->_priceFields;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getForwardingPage(): int
+	{
+		return $this->_forwardingPage;
+	}
+
+	/**
+	 * @param int $forwardingPage
+	 */
+	public function setForwardingPage(int $forwardingPage)
+	{
+		$this->_forwardingPage = $forwardingPage;
 	}
 }

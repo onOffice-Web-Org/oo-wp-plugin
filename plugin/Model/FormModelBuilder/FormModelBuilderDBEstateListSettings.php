@@ -788,4 +788,49 @@ class FormModelBuilderDBEstateListSettings
 
 		return $pInputModelShowPriceOnRequest;
 	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelForwardingPage()
+	{
+		$labelForwardingPage = __('Select page', 'onoffice-for-wp-websites');
+
+		$pInputModelForwardingPage = $this->getInputModelDBFactory()->create
+			(InputModelDBFactory::INPUT_FORWARDING_PAGE, $labelForwardingPage);
+		$pInputModelForwardingPage->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelForwardingPage->setValuesAvailable(array('' => '') + $this->getPublishedPages());
+		$pInputModelForwardingPage->setValue($this->getValue($pInputModelForwardingPage->getField()));
+
+		return $pInputModelForwardingPage;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getPublishedPages() {
+		$args = [
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+            'no_found_rows' => true
+        ];
+
+        $query = new \WP_Query($args);
+
+        if (empty($query->post)) {
+            return [];
+        }
+
+        $infoPage = array_reduce($query->post, function($information, $post) {
+            $information[$post->ID] = $post->post_title;
+            return $information;
+        }, []);
+
+        return $infoPage;
+	}
 }

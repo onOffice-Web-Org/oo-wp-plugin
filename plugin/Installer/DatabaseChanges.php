@@ -45,7 +45,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 41;
+	const MAX_VERSION = 42;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -298,6 +298,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 41;
 		}
 
+		if ( $dbversion == 41 ) {
+			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 42;
+		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -390,6 +394,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`page_shortcode` tinytext NOT NULL,
 			`show_map` tinyint(1) NOT NULL DEFAULT '1',
 			`show_price_on_request` tinyint(1) NOT NULL DEFAULT '0',
+			`forwarding_page` int(11),
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";

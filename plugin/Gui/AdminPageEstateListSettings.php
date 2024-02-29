@@ -177,6 +177,14 @@ class AdminPageEstateListSettings
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$this->addFormModel($pFormModelDocumentTypes);
 
+		$pInputModelForwardingPage = $pFormModelBuilder->createInputModelForwardingPage();
+		$pFormModelForwardingPage = new FormModel();
+		$pFormModelForwardingPage->setPageSlug($this->getPageSlug());
+		$pFormModelForwardingPage->setGroupSlug(self::FORM_VIEW_FORWARDING_PAGE_FOR_SEARCHFORM_TEMPLATE);
+		$pFormModelForwardingPage->setLabel(__('Forwarding page of the property search', 'onoffice-for-wp-websites'));
+		$pFormModelForwardingPage->addInputModel($pInputModelForwardingPage);
+		$this->addFormModel($pFormModelForwardingPage);
+
 		$pListView = new DataListView($this->getListViewId() ?? 0, '');
 
 		$pFormModelGeoFields = new FormModel();
@@ -226,6 +234,9 @@ class AdminPageEstateListSettings
 
 		$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
 		$this->createMetaBoxByForm($pFormGeoPosition, 'normal');
+
+		$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORWARDING_PAGE_FOR_SEARCHFORM_TEMPLATE);
+		$this->createMetaBoxByForm($pFormGeoPosition, 'side');
 	}
 
 

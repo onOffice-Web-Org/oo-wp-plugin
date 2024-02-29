@@ -112,11 +112,20 @@ class ContentFilterShortCodeEstateList
 	public function render(array $attributes): string
 	{
 		$pListView = $this->_pDataListViewFactory->getListViewByName($attributes['view']);
+		if (!empty($attributes['forwardingPage'])) {
+			$pSearch = $this->_pDataListViewFactory->getListViewByName($attributes['forwardingPage']);
+		}
 		$result = '';
 
 		if (is_object($pListView) && $pListView->getName() === $attributes['view']) {
 			$pSortListModel = $this->_pSortListBuilder->build($pListView);
 			$pListViewWithSortParams = $this->listViewWithSortParams($pListView, $pSortListModel);
+
+			if (!empty($attributes['forwardingPage'])) {
+				$pListViewWithSortParams->setFilterableFields($pSearch->getFields());
+				$pListViewWithSortParams->setShowReferenceEstate($pSearch->getShowReferenceEstate());
+				$pListViewWithSortParams->setRecordsPerPage($pSearch->getRecordsPerPage());
+			}
 
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel);
 			$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory
@@ -135,6 +144,13 @@ class ContentFilterShortCodeEstateList
 				->withTemplateName($pListViewWithSortParams->getTemplate())
 				->withEstateList($pEstateList);
 			$result = $pTemplate->render();
+			$embedShortcodesInForwardingPages = $pEstateList->getEmbedShortcodesInForwardingPages();
+
+			if (!empty($embedShortcodesInForwardingPages) && !empty($pListView->getForwardingPage())) {
+				foreach ($embedShortcodesInForwardingPages as $shortcode) {
+					$result .= do_shortcode($shortcode);
+				}
+			}
 		}
 		return $result;
 	}

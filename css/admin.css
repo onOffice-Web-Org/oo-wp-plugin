@@ -547,6 +547,10 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	min-height: 30px;
 }
 
+#viewforwardingpage {
+	display: none;
+}
+
 #listSettings .custom-input-field,
 #viewpicturetypes .custom-input-field {
 	display: block;

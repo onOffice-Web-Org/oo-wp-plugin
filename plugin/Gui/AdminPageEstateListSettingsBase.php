@@ -60,6 +60,9 @@ abstract class AdminPageEstateListSettingsBase
 	/** */
 	const CUSTOM_LABELS = 'customlabels';
 
+	/** */
+	const FORM_VIEW_FORWARDING_PAGE_FOR_SEARCHFORM_TEMPLATE = 'viewforwardingpage';
+
 	/**
 	 *
 	 */

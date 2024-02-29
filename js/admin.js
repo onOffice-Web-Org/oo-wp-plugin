@@ -1,4 +1,21 @@
 jQuery(document).ready(function($){
+	function toggleViewForwardingPage() {
+		var selectedTemplate = $('input[name="oopluginlistviews-template"]:checked').val();
+		if ($('#viewforwardingpage').length > 0) {
+			if (selectedTemplate.includes("SearchForm.php")) {
+				$('#viewforwardingpage').show();
+			} else {
+				$('#viewforwardingpage').hide();
+				$('select[name="oopluginlistviews-forwardingPage"]').val('');
+			}
+		}
+	}
+
+	toggleViewForwardingPage();
+
+	$('input[name="oopluginlistviews-template"]').change(function() {
+		toggleViewForwardingPage();
+	});
 	$(document).on('click', '.notice-save-view.notice-dismiss', function () {
 		$(this).parent().remove();
 	});
