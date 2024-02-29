@@ -136,14 +136,29 @@ abstract class FormModelBuilder
 	 *
 	 */
 
-	public function createSortableFieldList($module, $htmlType)
+	public function createSortableFieldList($module, string $htmlType)
 	{
+		$fieldNames = $this->getFieldNamesByModule($module);
 		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
 			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
-		$fieldNames = [];
 
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+
+		$fields = $this->getValue(self::CONFIG_FIELDS) ?? [];
+		$pInputModelFieldsConfig->setValue($fields);
+
+		return $pInputModelFieldsConfig;
+	}
+
+	/**
+	 * @param $module
+	 * @return array
+	 */
+	private function getFieldNamesByModule($module): array
+	{
+		$fieldNames = [];
 		try {
 			$this->_pFieldnames->loadLanguage();
 			if (is_array($module)) {
@@ -154,16 +169,60 @@ abstract class FormModelBuilder
 			} else {
 				$fieldNames = $this->_pFieldnames->getFieldList($module);
 			}
-
 		} catch (APIClientCredentialsException $pCredentialsException) {}
 
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+		return $fieldNames;
+	}
+
+	/**
+	 *
+	 * @param $module
+	 * @param string $htmlType
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createSearchFieldForFieldLists($module, string $htmlType)
+	{
+		$fieldNames = $this->getFieldNamesByModule($module);
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+
+		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNames));
 
 		$fields = $this->getValue(self::CONFIG_FIELDS) ?? [];
 		$pInputModelFieldsConfig->setValue($fields);
+
 		return $pInputModelFieldsConfig;
 	}
 
+	/**
+	 *
+	 * @param array $fieldNames
+	 * @return array
+	 *
+	 */
+	public function groupByContent(array $fieldNames): array
+	{
+		$resultByContent = [];
+	
+		$listTypeUnSupported = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
+		foreach ($fieldNames as $key => $properties) {
+			if (in_array($properties['type'], $listTypeUnSupported)) {
+				continue;
+			}
+			$content = $properties['content'];
+			$resultByContent[$content][$key] = $properties;
+		}
+
+		if (empty($resultByContent)) {
+			return [];
+		}
+
+		return array_merge(...array_values($resultByContent));
+	}
 
 	/**
 	 *

@@ -147,7 +147,7 @@ class SearchcriteriaFields
 				}
 			} elseif (FieldTypes::FIELD_TYPE_DATATYPE_TINYINT === $pField->getType() || FieldTypes::FIELD_TYPE_BOOLEAN === $pField->getType()) {
 				if ($value === '') {
-					$output[$pField->getLabel()] = __('Not Special', 'onoffice-for-wp-websites');
+					$output[$pField->getLabel()] = __('Not Specified', 'onoffice-for-wp-websites');
 				} elseif ($value === '0') {
 					$output[$pField->getLabel()] = __('No', 'onoffice-for-wp-websites');
 				} elseif ($value === '1') {

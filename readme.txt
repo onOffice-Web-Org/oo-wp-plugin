@@ -2,9 +2,9 @@
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
-Tested up to: 6.3.1
+Tested up to: 6.4.3
 Requires PHP: 7.3
-Stable tag: 4.17
+Stable tag: 4.18.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,29 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.18.1 (2024-02-28) =
+
+**Fixed**
+
+* Styling of slick slider
+
+= 4.18 (2024-02-28) =
+
+**Added**
+
+* Search for fields in all property lists, detailed views and forms in admin settings
+
+**Changed**
+
+* Improve performance while using editor of ACF plugin
+* Improve position of save button in all property lists, detailed views and forms in admin settings
+* Mandatory fields for geo range search
+
+**Fixed**
+
+* Dequeing of scripts and styles by onOffices Plugin
+* Custom labeling for Land field
 
 = 4.17 (2024-02-07) =
 

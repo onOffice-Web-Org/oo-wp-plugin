@@ -98,6 +98,7 @@ class AdminPageAddressListSettings
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS, $this->_pFormModelBuilderAddress, $fieldNames);
 		$this->addSortableFieldsList(array(onOfficeSDK::MODULE_ADDRESS), $this->_pFormModelBuilderAddress,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ADDRESS, $this->_pFormModelBuilderAddress);
 
 		$this->addFormModelName();
 		$this->addFormModelPictureTypes();

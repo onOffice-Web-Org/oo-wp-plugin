@@ -36,6 +36,8 @@ use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\FieldTypes;
 
 class TestClassFormModelBuilderDBForm
 	extends WP_UnitTestCase
@@ -49,6 +51,9 @@ class TestClassFormModelBuilderDBForm
 	/** @var FormModelBuilderDBForm */
 	private $_pInstance;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
+
 	/**
 	 * @before
 	 */
@@ -58,6 +63,41 @@ class TestClassFormModelBuilderDBForm
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
+
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormBackend'])
+				->setConstructorArgs([$this->_pContainer])
+				->getMock();
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('asd', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('Vorname', onOfficeSDK::MODULE_ADDRESS);
+				$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+			
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsFormBackend')
+				->with($this->anything())
+				->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+			$pField1 = new Field('region_plz', onOfficeSDK::MODULE_SEARCHCRITERIA);
+			$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+			$pFieldsCollection->addField($pField1);
+
+			return $this->_pFieldsCollectionBuilderShort;
+		}));
+
 		$this->_pInstance = new FormModelBuilderDBForm($this->_pContainer);
 	}
 
@@ -358,5 +398,18 @@ class TestClassFormModelBuilderDBForm
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 		$this->assertEquals([$pInstance, 'callbackValueInputModelIsMarkDown'], $pInputModelDB->getValueCallback());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createSearchFieldForFieldLists
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getFieldsCollection
+	 */
+	public function testCreateSearchFieldForFieldLists()
+	{
+		$this->_pInstance->setFormType('address');
+		$pInputModelDB = $this->_pInstance->createSearchFieldForFieldLists('address', 'searchFieldForFieldLists');
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'searchFieldForFieldLists');
 	}
 }

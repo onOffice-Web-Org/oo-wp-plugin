@@ -265,6 +265,12 @@ class InputModelRenderer
 				}
 				break;
 
+			case InputModelOption::HTML_SEARCH_FIELD_FOR_FIELD_LISTS:
+				$pInstance = new InputSearchFieldForFieldListsRenderer(AdminPageAjax::EXCLUDE_FIELD . $elementName, $pInputModel->getValuesAvailable());
+				$pInstance->setCheckedValues($pInputModel->getValue());
+				$pInstance->setOoModule($pFormModel->getOoModule());
+				break;
+
 			case InputModelOption::HTML_TYPE_PASSWORD:
 				$pInstance = new InputFieldPasswordRenderer('password', $elementName);
 				$pInstance->addAdditionalAttribute('size', '50');
@@ -274,6 +280,7 @@ class InputModelRenderer
 			case InputModelBase::HTML_TYPE_DELETE_RECAPTCHA_BUTTON:
 				$pInstance = new InputFieldDeleteRecaptchaButtonRenderer(null, '');
 				break;
+
 		}
 
 		if ($pInstance !== null) {
@@ -315,6 +322,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_NUMBER:
 			case InputModelOption::HTML_TYPE_EMAIL:
 			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
+			case InputModelOption::HTML_SEARCH_FIELD_FOR_FIELD_LISTS:
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}
