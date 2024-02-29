@@ -295,19 +295,19 @@ class EstateList
 
 	public function getEmbedShortcodesInForwardingPages(): array
 	{
-		$listShortCode = $this->getListShortcodesInPostContentByID($this->getDataView()->getForwardingPage());
+		$listShortCode = $this->getEmbedShortcodesInPostContentBypageID($this->getDataView()->getForwardingPage());
 		if (empty($listShortCode)) {
 			return [];
 		}
 		$dataViewName = $this->getDataView()->getName();
-	
+
 		$transformed = array_values(array_map(function($name) use ($dataViewName) {
 			if ($name === $dataViewName) {
 				return null;
 			}
 			return '[oo_estate view="' . $name . '" forwardingpage="' . $dataViewName . '"]';
 		}, $listShortCode));
-	
+
 		return array_filter($transformed, function($value) {
 			return !is_null($value);
 		});
@@ -316,7 +316,7 @@ class EstateList
 	/**
 	 * @return array
 	 */
-	private function getListShortcodesInPostContentByID($postID): array
+	private function getEmbedShortcodesInPostContentBypageID($postID): array
 	{
 		$post = get_post($postID);
 		if (!$post) {

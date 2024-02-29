@@ -112,8 +112,8 @@ class ContentFilterShortCodeEstateList
 	public function render(array $attributes): string
 	{
 		$pListView = $this->_pDataListViewFactory->getListViewByName($attributes['view']);
-		if (!empty($attributes['forwardingPage'])) {
-			$pSearch = $this->_pDataListViewFactory->getListViewByName($attributes['forwardingPage']);
+		if (!empty($attributes['forwardingpage'])) {
+			$pListViewSearch = $this->_pDataListViewFactory->getListViewByName($attributes['forwardingpage']);
 		}
 		$result = '';
 
@@ -121,10 +121,15 @@ class ContentFilterShortCodeEstateList
 			$pSortListModel = $this->_pSortListBuilder->build($pListView);
 			$pListViewWithSortParams = $this->listViewWithSortParams($pListView, $pSortListModel);
 
-			if (!empty($attributes['forwardingPage'])) {
-				$pListViewWithSortParams->setFilterableFields($pSearch->getFields());
-				$pListViewWithSortParams->setShowReferenceEstate($pSearch->getShowReferenceEstate());
-				$pListViewWithSortParams->setRecordsPerPage($pSearch->getRecordsPerPage());
+			if (!empty($attributes['forwardingpage'])) {
+				$pListViewWithSortParams->setFilterableFields($pListViewSearch->getFields());
+				$pListViewWithSortParams->setShowReferenceEstate($pListViewSearch->getShowReferenceEstate());
+				$pListViewWithSortParams->setRecordsPerPage($pListViewSearch->getRecordsPerPage());
+				$pListViewWithSortParams->setListType($pListViewSearch->getListType());
+				$pListViewWithSortParams->setFilterId($pListViewSearch->getFilterId());
+				$pListViewWithSortParams->setSortBySetting($pListViewSearch->getSortBySetting());
+				$pListViewWithSortParams->setSortby($pListViewSearch->getSortby());
+				$pListViewWithSortParams->setSortorder($pListViewSearch->getSortorder());
 			}
 
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel);

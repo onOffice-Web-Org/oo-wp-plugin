@@ -128,7 +128,7 @@ class InputModelDBFactoryConfigEstate
 		],
 		InputModelDBFactory::INPUT_FORWARDING_PAGE => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
-			self::KEY_FIELD => 'forwarding_page',
+			self::KEY_FIELD => 'forwarding_page_of_property_search',
 		],
 	];
 

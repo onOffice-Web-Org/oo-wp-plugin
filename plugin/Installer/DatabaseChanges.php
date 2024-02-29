@@ -394,7 +394,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`page_shortcode` tinytext NOT NULL,
 			`show_map` tinyint(1) NOT NULL DEFAULT '1',
 			`show_price_on_request` tinyint(1) NOT NULL DEFAULT '0',
-			`forwarding_page` int(11),
+			`forwarding_page_of_property_search` int(11),
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";

@@ -1,8 +1,8 @@
 jQuery(document).ready(function($){
 	function toggleViewForwardingPage() {
-		var selectedTemplate = $('input[name="oopluginlistviews-template"]:checked').val();
-		if ($('#viewforwardingpage').length > 0) {
-			if (selectedTemplate.includes("SearchForm.php")) {
+		var selectedTemplateInListView = $('.oo-poststuff input[name="oopluginlistviews-template"]:checked').val();
+		if ($('#viewforwardingpage').length == 1) {
+			if (selectedTemplateInListView.includes("SearchForm.php")) {
 				$('#viewforwardingpage').show();
 			} else {
 				$('#viewforwardingpage').hide();
@@ -13,7 +13,7 @@ jQuery(document).ready(function($){
 
 	toggleViewForwardingPage();
 
-	$('input[name="oopluginlistviews-template"]').change(function() {
+	$('.oo-poststuff input[name="oopluginlistviews-template"]').change(function() {
 		toggleViewForwardingPage();
 	});
 	$(document).on('click', '.notice-save-view.notice-dismiss', function () {
