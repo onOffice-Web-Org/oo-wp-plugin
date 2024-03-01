@@ -157,6 +157,9 @@ class DataListView
 	/** @var int */
 	private $_forwardingPage = 0;
 
+	/** @var bool */
+	private $_hideSearch = false;
+
 	/** @var string[] */
 	private $_priceFields = [
 		'kaufpreis',
@@ -448,5 +451,21 @@ class DataListView
 	public function setForwardingPage(int $forwardingPage)
 	{
 		$this->_forwardingPage = $forwardingPage;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isSearchHidden(): bool
+	{
+		return $this->_hideSearch;
+	}
+
+	/**
+	 * @param bool $hideSearch
+	 */
+	public function setSearchHidden(bool $hideSearch)
+	{
+		$this->_hideSearch = $hideSearch;
 	}
 }

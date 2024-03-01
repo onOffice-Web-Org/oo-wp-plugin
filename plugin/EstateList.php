@@ -314,9 +314,10 @@ class EstateList
 	}
 
 	/**
+	 * @param int $postID
 	 * @return array
 	 */
-	private function getEmbedShortcodesInPostContentBypageID($postID): array
+	private function getEmbedShortcodesInPostContentBypageID(int $postID): array
 	{
 		$post = get_post($postID);
 		if (!$post) {
@@ -879,7 +880,7 @@ class EstateList
 	 */
 	public function getVisibleFilterableFields(): array
 	{
-		if (empty($this->_pDataView->getForwardingPage())) {
+		if ($this->_pDataView->isSearchHidden()) {
 			return [];
 		}
 		$pContainer = $this->_pEnvironment->getContainer();

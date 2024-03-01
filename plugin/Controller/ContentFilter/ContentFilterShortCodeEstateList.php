@@ -128,8 +128,7 @@ class ContentFilterShortCodeEstateList
 				$pListViewWithSortParams->setListType($pListViewSearch->getListType());
 				$pListViewWithSortParams->setFilterId($pListViewSearch->getFilterId());
 				$pListViewWithSortParams->setSortBySetting($pListViewSearch->getSortBySetting());
-				$pListViewWithSortParams->setSortby($pListViewSearch->getSortby());
-				$pListViewWithSortParams->setSortorder($pListViewSearch->getSortorder());
+				$pListViewWithSortParams->setSearchHidden(true);
 			}
 
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel);
