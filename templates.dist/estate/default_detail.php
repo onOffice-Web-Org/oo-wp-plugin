@@ -28,7 +28,7 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
  *
  */
 
-$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
+$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
 /** @var EstateDetail $pEstates */
 ?>
 <style>
@@ -95,6 +95,22 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				</div>
 			<?php }
 
+            $areaButlerUrl = '';
+            if (!is_null($currentEstate['MPAreaButlerUrlWithAddress'])) {
+                $areaButlerUrl = $currentEstate['MPAreaButlerUrlWithAddress'];
+            } elseif (!is_null($currentEstate['MPAreaButlerUrlNoAddress'])) {
+                $areaButlerUrl = $currentEstate['MPAreaButlerUrlNoAddress'];
+            }
+
+            if ($areaButlerUrl !== '') {
+            ?>
+            <div class="oo-area-butler">
+                <iframe id="area-butler" width="100%" height="100%"
+                    src="<?php echo esc_url($areaButlerUrl); ?>" title="AreaButler Map Snippet"></iframe>
+            </div>
+            <?php } ?>
+
+            <?php
 			ob_start();
 			require('map/map.php');
 			$mapContent = ob_get_clean();
