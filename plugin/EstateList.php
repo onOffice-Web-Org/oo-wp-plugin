@@ -314,12 +314,12 @@ class EstateList
 	}
 
 	/**
-	 * @param int $postID
+	 * @param int $pageID
 	 * @return array
 	 */
-	private function getEmbedShortcodesInPostContentBypageID(int $postID): array
+	private function getEmbedShortcodesInPostContentBypageID(int $pageID): array
 	{
-		$post = get_post($postID);
+		$post = get_post($pageID);
 		if (!$post) {
 			return [];
 		}
