@@ -196,7 +196,7 @@ class AdminPageEstateListSettings
 			$pFormModelGeoFields->addInputModel($pInputModel);
 		}
 
-		$geoNotice = __('At least the following fields must be active: country, radius and city or postcode.', 'onoffice-for-wp-websites');
+		$geoNotice = __('At least city or postcode are required.', 'onoffice-for-wp-websites');
 		$pInputModelGeoLabel = new InputModelLabel(null, $geoNotice);
 		$pInputModelGeoLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_ITALIC);
 		$pFormModelGeoFields->addInputModel($pInputModelGeoLabel);
@@ -208,6 +208,7 @@ class AdminPageEstateListSettings
 
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
 		$this->addSortableFieldsList([onOfficeSDK::MODULE_ESTATE], $pFormModelBuilder);
+		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder);
 	}
 
 

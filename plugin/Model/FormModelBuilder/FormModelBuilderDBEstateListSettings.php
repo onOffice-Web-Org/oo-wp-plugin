@@ -45,6 +45,7 @@ use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
 use function __;
 use DI\DependencyException;
 use DI\NotFoundException;
+use DI\Container;
 
 /**
  *
@@ -80,13 +81,18 @@ class FormModelBuilderDBEstateListSettings
 		'kaltmiete',
 	);
 
+	/** @var Container */
+	private $_pContainer = null;
 
 	/**
-	 *
+	 * @param Container $pContainer
 	 */
 
-	public function __construct()
+	public function __construct(Container $pContainer = null)
 	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainer ?? $pContainerBuilder->build();
 		$pConfig = new InputModelDBFactoryConfigEstate();
 		$this->setInputModelDBFactory(new InputModelDBFactory($pConfig));
 
@@ -329,7 +335,9 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createSortableFieldList($module, $htmlType, bool $isShow = true): InputModelDB
 	{
-		$pSortableFieldsList = parent::createSortableFieldList($module, $htmlType);
+		$pSortableFieldsList = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+		$pSortableFieldsList->setHtmlType($htmlType);
 		if (! $isShow) {
 			return $pSortableFieldsList;
 		}
@@ -714,13 +722,9 @@ class FormModelBuilderDBEstateListSettings
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	private function getFieldsCollection(): FieldsCollection
+	protected function getFieldsCollection(): FieldsCollection
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-
-		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldsCollection = new FieldsCollection();
 
 		$pFieldsCollectionBuilder
@@ -789,6 +793,36 @@ class FormModelBuilderDBEstateListSettings
 		return $pInputModelShowPriceOnRequest;
 	}
 
+	/**
+	 *
+	 * @param $module
+	 * @param string $htmlType
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createSearchFieldForFieldLists($module, string $htmlType)
+	{
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+
+		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+		$pInputModelFieldsConfig->setValue($this->getValue(DataListView::FIELDS) ?? []);
+
+		return $pInputModelFieldsConfig;
+	}
 
 	/**
 	 *
@@ -812,6 +846,7 @@ class FormModelBuilderDBEstateListSettings
 	/**
 	 * @return array
 	 */
+
 	private function getPublishedPages(): array
 	{
 		$args = [

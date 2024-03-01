@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.16
+Version: 4.18.1
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -77,6 +77,13 @@ $pDI = $pDIBuilder->build();
 
 $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = $pDI->get(DetailViewPostSaveController::class);
+
+add_action('save_post', [$pDetailViewPostSaveController, 'onSavePost']);
+add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
+if (is_admin() && isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit') {
+	return $pDI;
+}
+
 $pDI->get(ScriptLoaderRegistrator::class)->generate();
 
 add_action('plugins_loaded', function() use ($pDI) {
@@ -99,8 +106,6 @@ add_action('admin_menu', [$pAdminViewController, 'register_menu']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_ajax']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_css']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
-add_action('save_post', [$pDetailViewPostSaveController, 'onSavePost']);
-add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
 add_action('oo_cache_cleanup', function() use ($pDI) {
 	$pDI->get(CacheHandler::class)->clean();
 });
