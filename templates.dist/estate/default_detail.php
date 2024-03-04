@@ -96,7 +96,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php } ?>
 
 			<?php 
-			$areaButlerUrl = $currentEstate['MPAreaButlerUrlWithAddress'] ?? $currentEstate['MPAreaButlerUrlNoAddress'] ?? '';
+			$areaButlerUrl = !empty($currentEstate['MPAreaButlerUrlWithAddress']) ? $currentEstate['MPAreaButlerUrlWithAddress'] : ($currentEstate['MPAreaButlerUrlNoAddress'] ?? '');
 			if (!empty($areaButlerUrl)) { ?>
 				<div class="oo-area-butler">
 					<iframe width="100%" height="100%" src="<?php echo esc_url($areaButlerUrl); ?>"></iframe>
