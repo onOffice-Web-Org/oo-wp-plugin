@@ -260,7 +260,7 @@ class FormsTable
 			return '';
 		}
 
-		if($pItem->captcha === '1' && $pItem->form_type !== Form::TYPE_APPLICANT_SEARCH) {
+		if($pItem->captcha === '1' && $pItem->form_type !== Form::TYPE_APPLICANT_SEARCH && !empty(get_option('onoffice-settings-captcha-sitekey'))) {
 			echo "<div class='reCAPTCHA_badge'>
 				<span class='reCAPTCHA_enabled'>
 					<p class='badge'>" . esc_html__('Google ReCAPTCHA', 'onoffice-for-wp-websites') . "</p>
