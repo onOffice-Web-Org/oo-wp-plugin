@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui\Table;
 
 use onOffice\WPlugin\Controller\UserCapabilities;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 use onOffice\WPlugin\Gui\AdminPageFormList;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
@@ -99,6 +100,7 @@ class FormsTable
 		$pRecordRead->addColumn('name', 'shortcode');
 		$pRecordRead->addColumn('page_shortcode');
 		$pRecordRead->addColumn('default_recipient');
+		$pRecordRead->addColumn('captcha');
 		if ($this->_listType != 'all' && $this->_listType != null) {
 			$pRecordRead->addWhere("`form_type` = '".esc_sql($this->_listType)."'");
 		}
@@ -256,6 +258,14 @@ class FormsTable
 		if ( $primary !== $column_name )
 		{
 			return '';
+		}
+
+		if($pItem->captcha === '1' && $pItem->form_type !== Form::TYPE_APPLICANT_SEARCH) {
+			echo "<div class='reCAPTCHA_badge'>
+				<span class='reCAPTCHA_enabled'>
+					<p class='badge'>" . esc_html__('Google ReCAPTCHA', 'onoffice-for-wp-websites') . "</p>
+				</span>
+			</div>";
 		}
 
 		$formIdParam = AdminPageEstateListSettingsBase::GET_PARAM_VIEWID;
