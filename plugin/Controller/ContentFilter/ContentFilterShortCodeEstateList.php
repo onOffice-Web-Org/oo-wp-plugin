@@ -122,7 +122,6 @@ class ContentFilterShortCodeEstateList
 			$pListViewWithSortParams = $this->listViewWithSortParams($pListView, $pSortListModel);
 
 			if (!empty($attributes['forwardingpage'])) {
-				$pListViewWithSortParams->setFilterableFields($pListViewSearch->getFields());
 				$pListViewWithSortParams->setShowReferenceEstate($pListViewSearch->getShowReferenceEstate());
 				$pListViewWithSortParams->setRecordsPerPage($pListViewSearch->getRecordsPerPage());
 				$pListViewWithSortParams->setListType($pListViewSearch->getListType());

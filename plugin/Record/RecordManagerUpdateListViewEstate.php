@@ -85,9 +85,13 @@ class RecordManagerUpdateListViewEstate
 		if (array_key_exists(self::TABLENAME_FIELDCONFIG, $tableRow)) {
 			$fields = $tableRow[self::TABLENAME_FIELDCONFIG];
 			$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG, $whereListviewTable);
-			foreach ($fields as $fieldRow) {
-				$table = $prefix.self::TABLENAME_FIELDCONFIG;
-				$pWpDb->insert($table, $fieldRow);
+			if (!empty($tableRow[self::TABLENAME_LIST_VIEW]["forwarding_page_of_property_search"])) {
+				$this->handleFieldConfigurations($tableRow[self::TABLENAME_FIELDCONFIG], $whereListviewTable, $tableRow);
+			} else {
+				foreach ($fields as $fieldRow) {
+					$table = $prefix.self::TABLENAME_FIELDCONFIG;
+					$pWpDb->insert($table, $fieldRow);
+				}
 			}
 		}
 
@@ -124,4 +128,45 @@ class RecordManagerUpdateListViewEstate
 
 		return $result !== false;
 	}
+
+
+	/**
+	 * @param array $fields
+	 * @param array $whereListviewTable
+	 */
+	private function handleFieldConfigurations(array $fields, array $whereListviewTable): void
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+	
+		$separatedArrays = [];
+		foreach ($fields as $item) {
+			$listviewId = $item['listview_id'];
+			$separatedArrays[$listviewId][] = $item;
+		}
+		foreach ($separatedArrays as $key => $field) {
+			$table = $prefix.self::TABLENAME_FIELDCONFIG;
+			foreach ($field as $value) {
+				$whereConditions = [
+					'listview_id' => $key,
+					'fieldname' => $value['fieldname']
+				];
+				if ($key === $whereListviewTable['listview_id']) {
+					$pWpDb->insert($table, $value);
+					continue;
+				}
+
+				$recordExists = $pWpDb->get_var($pWpDb->prepare(
+					"SELECT COUNT(*) FROM $table WHERE listview_id = %d AND fieldname = %s",
+					$key, $value['fieldname']
+				));
+				if ($recordExists > 0) {
+					$pWpDb->update($table, $value, $whereConditions);
+				} else {
+					$pWpDb->insert($table, $value);
+				}
+			}
+		}
+	}
+	
 }
