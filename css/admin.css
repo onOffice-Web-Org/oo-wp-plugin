@@ -539,11 +539,6 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	min-height: 30px;
 }
 
-
-#viewforwardingpage {
-	display: none;
-}
-
 .oo-poststuff .custom-input-field input[name=oopluginlistviews-countryactive]:checked::before,
 .oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive]:checked::before {
 	filter: brightness(0) saturate(100%) invert(35%) sepia(4%) saturate(967%) hue-rotate(170deg) brightness(91%) contrast(94%);
@@ -571,6 +566,10 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 #viewpicturetypes .custom-input-field input {
 	float: right;
 	max-width: 50%;
+}
+
+#viewforwardingpage {
+	display: none;
 }
 
 .oo-poststuff .key-of-field-block {

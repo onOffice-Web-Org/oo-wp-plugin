@@ -41,6 +41,7 @@ use DI\NotFoundException;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use onOffice\WPlugin\DataView\DataListViewFactory;
+use Exception;
 
 /**
  *
@@ -106,7 +107,7 @@ abstract class AdminPageEstateListSettingsBase
 		}
 
 		if (!empty($row[RecordManager::TABLENAME_LIST_VIEW]['forwarding_page_of_property_search'])) {
-			$row[RecordManager::TABLENAME_FIELDCONFIG] = $this->processForwardingPage($row);
+			$row[RecordManager::TABLENAME_FIELDCONFIG] = $this->processForwardingPageConfigurations($row);
 		}
 
 		if ($recordId != null) {
@@ -289,24 +290,27 @@ abstract class AdminPageEstateListSettingsBase
 	 * @param array $row
 	 * @return array
 	 */
-	private function processForwardingPage(array $row)
+	private function processForwardingPageConfigurations(array $row)
 	{
 		$pEstateDetailFactory = $this->getContainer()->get(DataListViewFactory::class);
-		$post = get_post($row[RecordManager::TABLENAME_LIST_VIEW]["forwarding_page_of_property_search"])->post_content;
-		preg_match_all('/\[oo_estate view="([^"]+)"\]/', $post, $matches);
+		$pageContent = get_post($row[RecordManager::TABLENAME_LIST_VIEW]["forwarding_page_of_property_search"])->post_content;
+		preg_match_all('/\[oo_estate view="([^"]+)"\]/', $pageContent, $listShortcode);
 		$fieldConfig = $row[RecordManager::TABLENAME_FIELDCONFIG];
+		$fieldConfigsForwardingPage = [];
 
-		foreach ($matches[1] as $value) {
-			$listViewId = $pEstateDetailFactory->getListViewByName($value)->getId();
+		foreach ($listShortcode[1] as $value) {
+			try {
+				$listViewId = $pEstateDetailFactory->getListViewByName($value)->getId();
+			} catch (Exception $pException) {
+				continue;
+			}
 			foreach ($fieldConfig as $config) {
-				$configForwardingPage['fieldname'] = $config['fieldname'];
-				$configForwardingPage['listview_id'] = $listViewId;
-				$configForwardingPage['filterable'] = "1";
-
-				$fieldConfig[] = $configForwardingPage;
+				$config['listview_id'] = $listViewId;
+				$config['filterable'] = "1";
+				$fieldConfigsForwardingPage[] = $config;
 			}
 		}
 
-		return $fieldConfig;
+		return array_merge($fieldConfig, $fieldConfigsForwardingPage);
 	}
 }

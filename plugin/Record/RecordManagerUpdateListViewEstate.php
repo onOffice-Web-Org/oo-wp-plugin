@@ -86,7 +86,7 @@ class RecordManagerUpdateListViewEstate
 			$fields = $tableRow[self::TABLENAME_FIELDCONFIG];
 			$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG, $whereListviewTable);
 			if (!empty($tableRow[self::TABLENAME_LIST_VIEW]["forwarding_page_of_property_search"])) {
-				$this->handleFieldConfigurations($tableRow[self::TABLENAME_FIELDCONFIG], $whereListviewTable, $tableRow);
+				$this->handleFieldConfigurations($tableRow[self::TABLENAME_FIELDCONFIG], $whereListviewTable);
 			} else {
 				foreach ($fields as $fieldRow) {
 					$table = $prefix.self::TABLENAME_FIELDCONFIG;
@@ -138,35 +138,27 @@ class RecordManagerUpdateListViewEstate
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
+		$table = $prefix . self::TABLENAME_FIELDCONFIG;
 	
-		$separatedArrays = [];
 		foreach ($fields as $item) {
 			$listviewId = $item['listview_id'];
-			$separatedArrays[$listviewId][] = $item;
-		}
-		foreach ($separatedArrays as $key => $field) {
-			$table = $prefix.self::TABLENAME_FIELDCONFIG;
-			foreach ($field as $value) {
-				$whereConditions = [
-					'listview_id' => $key,
-					'fieldname' => $value['fieldname']
-				];
-				if ($key === $whereListviewTable['listview_id']) {
-					$pWpDb->insert($table, $value);
-					continue;
-				}
-
-				$recordExists = $pWpDb->get_var($pWpDb->prepare(
-					"SELECT COUNT(*) FROM $table WHERE listview_id = %d AND fieldname = %s",
-					$key, $value['fieldname']
-				));
-				if ($recordExists > 0) {
-					$pWpDb->update($table, $value, $whereConditions);
-				} else {
-					$pWpDb->insert($table, $value);
-				}
+			$whereConditions = ['listview_id' => $listviewId, 'fieldname' => $item['fieldname']];
+	
+			if ($listviewId === $whereListviewTable['listview_id']) {
+				$pWpDb->insert($table, $item);
+				continue;
+			}
+	
+			$recordExists = $pWpDb->get_var($pWpDb->prepare(
+				"SELECT COUNT(*) FROM $table WHERE listview_id = %d AND fieldname = %s",
+				$listviewId, $item['fieldname']
+			));
+	
+			if ($recordExists > 0) {
+				$pWpDb->update($table, $item, $whereConditions);
+			} else {
+				$pWpDb->insert($table, $item);
 			}
 		}
 	}
-	
 }
