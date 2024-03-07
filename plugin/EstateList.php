@@ -271,52 +271,42 @@ class EstateList
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
-		if (!empty($this->_pDataView->getForwardingPage())) {
-			foreach ($inputs->getFields() as $name) {
-				if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
-					$activeInputs[] = $name;
-				}
-			}
-		} else {
+		if (empty($this->_pDataView->getForwardingPage())) {
 			foreach ($inputs->getFilterableFields() as $name) {
 				if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
 					$activeInputs[] = $name;
 				}
 			}
 		}
+
 		$inputs->setFilterableFields($activeInputs);
 		return $inputs;
 	}
 
 	/**
-	 * @return array
+	 * @return string
 	 */
 
-	public function getEmbedShortcodesInForwardingPages(): array
+	public function getEmbedShortcodeInForwardingPages(): string
 	{
-		$listShortCode = $this->getEmbedShortcodesInPostContentBypageID($this->getDataView()->getForwardingPage());
-		if (empty($listShortCode)) {
-			return [];
+		$shortcode = $this->getEmbedShortcodesInPostContentBypageID($this->getDataView()->getForwardingPage());
+		if (empty($shortcode)) {
+			return '';
 		}
 		$dataViewName = $this->getDataView()->getName();
-
-		$transformed = array_values(array_map(function($name) use ($dataViewName) {
-			if ($name === $dataViewName) {
-				return null;
-			}
-			return '[oo_estate view="' . $name . '" forwardingpage="' . $dataViewName . '"]';
-		}, $listShortCode));
-
-		return array_filter($transformed, function($value) {
-			return !is_null($value);
-		});
+	
+		if ($shortcode === $dataViewName) {
+			return '';
+		}
+	
+		return '[oo_estate view="' . $shortcode . '"]';
 	}
 
 	/**
 	 * @param int $pageID
 	 * @return array
 	 */
-	private function getEmbedShortcodesInPostContentBypageID(int $pageID): array
+	private function getEmbedShortcodesInPostContentBypageID(int $pageID): string
 	{
 		$post = get_post($pageID);
 		if (!$post) {
@@ -324,9 +314,9 @@ class EstateList
 		}
 
 		$postContent = $post->post_content;
-		preg_match_all('/\[oo_estate view="([^"]+)"\]/', $postContent, $matches);
-
-		return !empty($matches[1]) ? $matches[1] : [];
+		preg_match('/\[oo_estate view="([^"]+)"\]/', $postContent, $matches);
+	
+		return !empty($matches[1]) ? $matches[1] : '';
 	}
 
 	/**
@@ -879,9 +869,6 @@ class EstateList
 	 */
 	public function getVisibleFilterableFields(): array
 	{
-		if ($this->_pDataView->isSearchHidden()) {
-			return [];
-		}
 		$pContainer = $this->_pEnvironment->getContainer();
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();

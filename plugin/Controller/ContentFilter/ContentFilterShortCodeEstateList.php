@@ -112,23 +112,11 @@ class ContentFilterShortCodeEstateList
 	public function render(array $attributes): string
 	{
 		$pListView = $this->_pDataListViewFactory->getListViewByName($attributes['view']);
-		if (!empty($attributes['forwardingpage'])) {
-			$pListViewSearch = $this->_pDataListViewFactory->getListViewByName($attributes['forwardingpage']);
-		}
 		$result = '';
 
 		if (is_object($pListView) && $pListView->getName() === $attributes['view']) {
 			$pSortListModel = $this->_pSortListBuilder->build($pListView);
 			$pListViewWithSortParams = $this->listViewWithSortParams($pListView, $pSortListModel);
-
-			if (!empty($attributes['forwardingpage'])) {
-				$pListViewWithSortParams->setShowReferenceEstate($pListViewSearch->getShowReferenceEstate());
-				$pListViewWithSortParams->setRecordsPerPage($pListViewSearch->getRecordsPerPage());
-				$pListViewWithSortParams->setListType($pListViewSearch->getListType());
-				$pListViewWithSortParams->setFilterId($pListViewSearch->getFilterId());
-				$pListViewWithSortParams->setSortBySetting($pListViewSearch->getSortBySetting());
-				$pListViewWithSortParams->setSearchHidden(true);
-			}
 
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel);
 			$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory
@@ -147,12 +135,10 @@ class ContentFilterShortCodeEstateList
 				->withTemplateName($pListViewWithSortParams->getTemplate())
 				->withEstateList($pEstateList);
 			$result = $pTemplate->render();
-			$embedShortcodesInForwardingPages = $pEstateList->getEmbedShortcodesInForwardingPages();
+			$embedShortcodeInForwardingPages = $pEstateList->getEmbedShortcodeInForwardingPages();
 
-			if (!empty($embedShortcodesInForwardingPages) && !empty($pListView->getForwardingPage())) {
-				foreach ($embedShortcodesInForwardingPages as $shortcode) {
-					$result .= do_shortcode($shortcode);
-				}
+			if (!empty($embedShortcodeInForwardingPages) && !empty($pListView->getForwardingPage())) {
+				$result .= do_shortcode($embedShortcodeInForwardingPages);
 			}
 		}
 		return $result;

@@ -75,10 +75,6 @@ class DefaultFilterBuilderListView
 	{
 		$filterableFields = $this->_pDataListView->getFilterableFields();
 
-		if (!empty($this->_pDataListView->getForwardingPage())) {
-			$filterableFields = $this->_pDataListView->getFields();
-		}
-
 		// Geo position will be done later
 		if (in_array(GeoPosition::FIELD_GEO_POSITION, $filterableFields)) {
 			$position = array_search(GeoPosition::FIELD_GEO_POSITION, $filterableFields, true);
