@@ -236,8 +236,8 @@ class AdminPageEstateListSettings
 		$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
 		$this->createMetaBoxByForm($pFormGeoPosition, 'normal');
 
-		$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORWARDING_PAGE_OF_THE_PROPERTY_SEARCH);
-		$this->createMetaBoxByForm($pFormGeoPosition, 'side');
+		$pFormForwardingPage = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORWARDING_PAGE_OF_THE_PROPERTY_SEARCH);
+		$this->createMetaBoxByForm($pFormForwardingPage, 'side');
 	}
 
 

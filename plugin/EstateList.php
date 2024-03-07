@@ -288,7 +288,7 @@ class EstateList
 
 	public function getEmbedShortcodeInForwardingPages(): string
 	{
-		$shortcode = $this->getEmbedShortcodesInPostContentBypageID($this->getDataView()->getForwardingPage());
+		$shortcode = $this->getEmbedShortcodesInPostContentByPageID($this->getDataView()->getForwardingPage());
 		if (empty($shortcode)) {
 			return '';
 		}
@@ -305,7 +305,7 @@ class EstateList
 	 * @param int $pageID
 	 * @return array
 	 */
-	private function getEmbedShortcodesInPostContentBypageID(int $pageID): string
+	private function getEmbedShortcodesInPostContentByPageID(int $pageID): string
 	{
 		$post = get_post($pageID);
 		if (!$post) {

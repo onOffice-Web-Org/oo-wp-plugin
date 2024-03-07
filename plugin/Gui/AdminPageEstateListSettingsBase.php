@@ -107,7 +107,7 @@ abstract class AdminPageEstateListSettingsBase
 		}
 
 		if (!empty($row[RecordManager::TABLENAME_LIST_VIEW]['forwarding_page_of_property_search'])) {
-			$row[RecordManager::TABLENAME_FIELDCONFIG] = $this->processForwardingPageConfigurations($row);
+			$row[RecordManager::TABLENAME_FIELDCONFIG] = $this->getNewFieldsListOfShortcodeEmbedForwardingPage($row);
 		}
 
 		if ($recordId != null) {
@@ -290,13 +290,13 @@ abstract class AdminPageEstateListSettingsBase
 	 * @param array $row
 	 * @return array
 	 */
-	private function processForwardingPageConfigurations(array $row)
+	private function getNewFieldsListOfShortcodeEmbedForwardingPage(array $row): array
 	{
 		$pEstateDetailFactory = $this->getContainer()->get(DataListViewFactory::class);
 		$pageContent = get_post($row[RecordManager::TABLENAME_LIST_VIEW]["forwarding_page_of_property_search"])->post_content;
 		preg_match('/\[oo_estate view="([^"]+)"\]/', $pageContent, $shortcode);
-		$fieldConfig = $row[RecordManager::TABLENAME_FIELDCONFIG];
-		$fieldConfigsForwardingPage = [];
+		$fieldOldConfig = $row[RecordManager::TABLENAME_FIELDCONFIG];
+		$fieldNewConfigs = [];
 
 		$listViewId = null;
 
@@ -308,13 +308,13 @@ abstract class AdminPageEstateListSettingsBase
 		}
 	
 		if ($listViewId !== null) {
-			foreach ($fieldConfig as $config) {
+			foreach ($fieldOldConfig as $config) {
 				$config['listview_id'] = $listViewId;
 				$config['filterable'] = "1";
-				$fieldConfigsForwardingPage[] = $config;
+				$fieldNewConfigs[] = $config;
 			}
 		}
 
-		return array_merge($fieldConfig, $fieldConfigsForwardingPage);
+		return array_merge($fieldOldConfig, $fieldNewConfigs);
 	}
 }

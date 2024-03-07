@@ -46,6 +46,7 @@ use function __;
 use DI\DependencyException;
 use DI\NotFoundException;
 use DI\Container;
+use WP_Query;
 
 /**
  *
@@ -856,7 +857,7 @@ class FormModelBuilderDBEstateListSettings
 			'no_found_rows' => true
 		];
 
-		$query = new \WP_Query($args);
+		$query = new WP_Query($args);
 
 		if (empty($query->posts)) {
 			return [];

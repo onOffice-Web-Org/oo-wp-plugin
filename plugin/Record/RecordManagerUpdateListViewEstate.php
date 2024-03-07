@@ -86,7 +86,7 @@ class RecordManagerUpdateListViewEstate
 			$fields = $tableRow[self::TABLENAME_FIELDCONFIG];
 			$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG, $whereListviewTable);
 			if (!empty($tableRow[self::TABLENAME_LIST_VIEW]["forwarding_page_of_property_search"])) {
-				$this->handleFieldConfigurations($tableRow[self::TABLENAME_FIELDCONFIG], $whereListviewTable);
+				$this->handleFieldConfig($tableRow[self::TABLENAME_FIELDCONFIG], $whereListviewTable);
 			} else {
 				foreach ($fields as $fieldRow) {
 					$table = $prefix.self::TABLENAME_FIELDCONFIG;
@@ -134,7 +134,7 @@ class RecordManagerUpdateListViewEstate
 	 * @param array $fields
 	 * @param array $whereListviewTable
 	 */
-	private function handleFieldConfigurations(array $fields, array $whereListviewTable): void
+	private function handleFieldConfig(array $fields, array $whereListviewTable): void
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();

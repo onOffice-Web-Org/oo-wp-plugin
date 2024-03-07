@@ -298,7 +298,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 41;
 		}
 
-		if ( $dbversion == 41 ) {
+		if ($dbversion == 41) {
 			$this->updateValueGeoFieldsForEsateList();
 			$dbversion = 42;
 		}
