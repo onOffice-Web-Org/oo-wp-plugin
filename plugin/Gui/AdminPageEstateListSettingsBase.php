@@ -294,16 +294,20 @@ abstract class AdminPageEstateListSettingsBase
 	{
 		$pEstateDetailFactory = $this->getContainer()->get(DataListViewFactory::class);
 		$pageContent = get_post($row[RecordManager::TABLENAME_LIST_VIEW]["forwarding_page_of_property_search"])->post_content;
-		preg_match_all('/\[oo_estate view="([^"]+)"\]/', $pageContent, $listShortcode);
+		preg_match('/\[oo_estate view="([^"]+)"\]/', $pageContent, $shortcode);
 		$fieldConfig = $row[RecordManager::TABLENAME_FIELDCONFIG];
 		$fieldConfigsForwardingPage = [];
 
-		foreach ($listShortcode[1] as $value) {
+		$listViewId = null;
+
+		if (!empty($shortcode) && isset($shortcode[1])) {
 			try {
-				$listViewId = $pEstateDetailFactory->getListViewByName($value)->getId();
-			} catch (Exception $pException) {
-				continue;
-			}
+				$listView = $pEstateDetailFactory->getListViewByName($shortcode[1]);
+				$listViewId = $listView->getId();
+			} catch (Exception $pException) {}
+		}
+	
+		if ($listViewId !== null) {
 			foreach ($fieldConfig as $config) {
 				$config['listview_id'] = $listViewId;
 				$config['filterable'] = "1";
