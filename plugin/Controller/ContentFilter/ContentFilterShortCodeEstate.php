@@ -87,7 +87,6 @@ class ContentFilterShortCodeEstate
 		$attributes = shortcode_atts([
 			'view' => null,
 			'units' => null,
-			'forwardingpage' => null
 		], $attributesInput);
 		if ($attributes['view'] === $this->_pContentFilterShortCodeEstateDetail->getViewName()) {
 			return $this->_pContentFilterShortCodeEstateDetail->render($attributes);

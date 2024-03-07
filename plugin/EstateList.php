@@ -278,7 +278,6 @@ class EstateList
 				}
 			}
 		}
-
 		$inputs->setFilterableFields($activeInputs);
 		return $inputs;
 	}
