@@ -87,6 +87,7 @@ class TestTemplateEstateDefaultDetail
 			'lage' => 'Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.',
 			'ausstatt_beschr' => 'teilweise mit einer alten Mauer aus Findlingen umgeben',
 			'sonstige_angaben' => 'Vereinbaren sie noch heute einen Besichtigungstermin',
+			'MPAreaButlerUrlWithAddress' => 'AreaButler',
 		];
 
 		$pArrayContainerEstateDetail = new ArrayContainerEscape($estateData);
