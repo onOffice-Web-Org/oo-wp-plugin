@@ -131,10 +131,10 @@ class ScriptLoaderGenericConfigurationDefault
 
 		$filteredMetaKeys = [];
 		array_walk($metaKeys, function($metaValueArray, $key) use (&$filteredMetaKeys) {
-			if (!is_array($metaValueArray) || empty($metaValueArray) || !isset($metaValueArray[0])) {
-				return;
+			$metaValue = '';
+			if (isset($metaValueArray[0])) {
+				$metaValue = str_replace('\u0022', '"', $metaValueArray[0]);
 			}
-			$metaValue = str_replace('\u0022', '"', $metaValueArray[0]);
 			if ($this->isEstateListPage($metaValue)) {
 				$filteredMetaKeys['estate'] = $metaValue;
 			} elseif ($this->isDetailEstatePage($metaValue)) {
