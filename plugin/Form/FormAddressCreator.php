@@ -61,7 +61,7 @@ class FormAddressCreator
 	/**
 	 * @param FormData $pFormData
 	 * @param bool $mergeExisting
-	 * @param string $contactType
+	 * @param array $contactType
 	 * @param int|null $estateId
 	 * @return int the new (or updated) address ID
 	 * @throws ApiClientException
@@ -70,7 +70,7 @@ class FormAddressCreator
 	 * @throws NotFoundException
 	 */
 	public function createOrCompleteAddress(
-		FormData $pFormData, bool $mergeExisting = false, string $contactType = '', int $estateId = null): int
+		FormData $pFormData, bool $mergeExisting = false, array $contactType = [], int $estateId = null): int
 	{
 		$requestParams = $this->getAddressDataForApiCall($pFormData);
 		$requestParams['checkDuplicate'] = $mergeExisting;

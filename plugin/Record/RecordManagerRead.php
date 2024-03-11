@@ -131,8 +131,29 @@ abstract class RecordManagerRead
 				WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql((int)$recordId);
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
+		if ($result !== null) {
+			$result['contact_type'] = $this->readContactTypesByFormId($recordId);
+		}
 
 		return $result;
+	}
+
+	/**
+	 * @param int $formId
+	 *
+	 * @return array
+	 */
+	public function readContactTypesByFormId(int $formId): array
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$sql = "SELECT `contact_type`
+			FROM {$prefix}oo_plugin_contacttypes
+			WHERE `form_id` = ".esc_sql($formId);
+
+		$contactTypes = $pWpDb->get_col($sql);
+
+		return $contactTypes ?? [];
 	}
 
 

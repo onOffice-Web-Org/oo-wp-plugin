@@ -407,10 +407,14 @@ class FormModelBuilderDBForm
         $pInputModelFormContactType = $this->getInputModelDBFactory()->create
         (InputModelDBFactoryConfigForm::INPUT_FORM_CONTACT_TYPE, $labelContactType);
         $field = $pInputModelFormContactType->getField();
-        $pInputModelFormContactType->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-        $availableContactType = array('' => 'No contact type') + $this->getDataContactType(onOfficeSDK::MODULE_ADDRESS);
+        $pInputModelFormContactType->setHtmlType(InputModelOption::HTML_TYPE_SELECT_TWO);
+        $availableContactType = $this->getDataContactType(onOfficeSDK::MODULE_ADDRESS);
         $pInputModelFormContactType->setValuesAvailable($availableContactType);
+        $pInputModelFormContactType->setIsMulti(true);
         $selectedValue = $this->getValue($field);
+        if ($selectedValue == null) {
+            $selectedValue = [];
+        }
         $pInputModelFormContactType->setValue($selectedValue);
 
         return $pInputModelFormContactType;

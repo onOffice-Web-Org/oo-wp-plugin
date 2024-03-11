@@ -270,6 +270,13 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setOoModule($pFormModel->getOoModule());
 				break;
+
+			case InputModelOption::HTML_TYPE_SELECT_TWO:
+				$pInstance = new InputFieldMultipleSelectTwoRenderer($pInputModel->getIdentifier(), $pInputModel->getValuesAvailable());
+				$pInstance->addAdditionalAttribute('class', 'select2 custom-multi-select2');
+				$pInstance->setMultiple($pInputModel->getIsMulti());
+				$pInstance->setSelectedValue($pInputModel->getValue());
+				break;
 		}
 
 		if ($pInstance !== null) {
@@ -312,6 +319,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_EMAIL:
 			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
 			case InputModelOption::HTML_SEARCH_FIELD_FOR_FIELD_LISTS:
+			case InputModelOption::HTML_TYPE_SELECT_TWO:
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}

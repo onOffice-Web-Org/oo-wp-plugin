@@ -80,6 +80,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_SEARCH_FIELD_FOR_FIELD_LISTS = 'searchFieldForFieldLists';
 
+	/** */
+	const HTML_TYPE_SELECT_TWO = 'select2';
+
 	/** @var string */
 	private $_name = null;
 
