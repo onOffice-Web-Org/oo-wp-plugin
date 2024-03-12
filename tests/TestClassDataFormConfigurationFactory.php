@@ -443,7 +443,7 @@ class TestClassDataFormConfigurationFactory
 			'newsletter' => '1',
 			'availableOptions' => '1',
 			'show_estate_context' => '0',
-			'contact_type' => '',
+			'contact_type' => ['Owner', 'Investor'],
             'default_recipient' => 'default@my-onoffice.com'
 		];
 	}

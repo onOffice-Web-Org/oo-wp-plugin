@@ -152,7 +152,7 @@ class TestClassFormAddressCreator
 	{
 		$this->configureSDKWrapperMockerForAddressCreationWithContactType(1);
 		$pFormData = $this->createFormData();
-		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, 'Admin');
+		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, ['Admin']);
 		$this->assertEquals(1, $result);
 	}
 
@@ -185,7 +185,7 @@ class TestClassFormAddressCreator
 		$this->configureSDKWrapperMockerForUserBySupervisorId(3);
 		
 		$pFormData = $this->createFormData();
-		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, 'Admin', 1);
+		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, ['Admin'], 1);
 		$this->assertEquals(1, $result);
 	}
 
@@ -331,7 +331,7 @@ class TestClassFormAddressCreator
 			'testaddressfield1varchar' => 'testValue',
 			'testaddressfield1multiselect' => ['hut','tut'],
 			'checkDuplicate' => false,
-			'ArtDaten' => 'Admin'
+			'ArtDaten' => ['Admin']
 		], null, $response);
 	}
 
@@ -341,7 +341,7 @@ class TestClassFormAddressCreator
 			'testaddressfield1varchar' => 'testValue',
 			'testaddressfield1multiselect' => ['hut','tut'],
 			'checkDuplicate' => false,
-			'ArtDaten' => 'Admin',
+			'ArtDaten' => ['Admin'],
 			"Benutzer" => "testUserName"
 		], null, $response);
 	}

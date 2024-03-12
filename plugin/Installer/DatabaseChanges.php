@@ -625,13 +625,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 			FROM $tableForm
 			WHERE contact_type IS NOT NULL 
 			AND contact_type != '' ", ARRAY_A);
-		foreach ($contactTypes as $contactType) {
-			$formId = esc_sql((int) $contactType['form_id']);
-			$value = esc_sql($contactType['contact_type']);
-			$this->_pWPDB->insert($tableContactTypes, ['form_id' => $formId, 'contact_type' => $value]);
-		}
 
-		$this->_pWPDB->get_results("ALTER TABLE $tableForm DROP COLUMN contact_type;");
+		if (!is_null($contactTypes)) {
+			foreach ($contactTypes as $contactType) {
+				$formId = esc_sql((int) $contactType['form_id']);
+				$value = esc_sql($contactType['contact_type']);
+				$this->_pWPDB->insert($tableContactTypes, ['form_id' => $formId, 'contact_type' => $value]);
+			}
+
+			$this->_pWPDB->get_results("ALTER TABLE $tableForm DROP COLUMN contact_type;");
+		}
 	}
 
 	/**

@@ -200,7 +200,7 @@ class TestClassFormModelBuilderDBForm
 
 		$pInputModelDB = $pInstance->createInputModelContactType();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
-		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select2');
 	}
 
 	/**
