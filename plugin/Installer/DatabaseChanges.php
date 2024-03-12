@@ -626,7 +626,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			WHERE contact_type IS NOT NULL 
 			AND contact_type != '' ", ARRAY_A);
 
-		if (!is_null($contactTypes)) {
+		if (count($contactTypes)) {
 			foreach ($contactTypes as $contactType) {
 				$formId = esc_sql((int) $contactType['form_id']);
 				$value = esc_sql($contactType['contact_type']);
