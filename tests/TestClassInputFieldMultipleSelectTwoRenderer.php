@@ -38,7 +38,7 @@ class TestClassInputFieldMultipleSelectTwoRenderer
 		$pSubject->setMultiple(true);
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select class="custom-multi-select2" name="multiSelect2[]" id="select_1" multiple></select>', $output);
+		$this->assertEquals('<select class="custom-multi-select2" name="multiSelect2[]" id="select_3" multiple></select>', $output);
 	}
 
 	/**
@@ -56,7 +56,7 @@ class TestClassInputFieldMultipleSelectTwoRenderer
 		$pSubject->setMultiple(true);
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select class="custom-multi-select2" name="multiSelect2[]" id="select_2" multiple><option value="Owner" >Eigentümer</option><option value="Investor" >Investor</option></select>',
+		$this->assertEquals('<select class="custom-multi-select2" name="multiSelect2[]" id="select_4" multiple><option value="Owner" >Eigentümer</option><option value="Investor" >Investor</option></select>',
 			$output);
 	}
 
@@ -76,7 +76,7 @@ class TestClassInputFieldMultipleSelectTwoRenderer
 		$pSubject->setMultiple(true);
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select class="custom-multi-select2" name="multiSelect2[]" id="select_3" multiple><option value="Owner" selected="selected">Eigentümer</option><option value="Investor" >Investor</option></select>',
+		$this->assertEquals('<select class="custom-multi-select2" name="multiSelect2[]" id="select_5" multiple><option value="Owner" selected="selected">Eigentümer</option><option value="Investor" >Investor</option></select>',
 			$output);
 	}
 }
