@@ -51,7 +51,7 @@ class TestClassRedirectIfOldUrl
 		$pContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH );
 		$this->_pContainer        = $pContainerBuilder->build();
 		$this->_pRedirectIfOldUrl = $this->_pContainer->get( Redirector::class );
-
+		$_SERVER['REQUEST_URI'] = '/detail-view/123';
 	}
 
 	/**
@@ -67,7 +67,7 @@ class TestClassRedirectIfOldUrl
 	 */
 	public function testGetCurrentLink()
 	{
-		$this->assertEquals( 'http://example.org/detail-view/123', $this->_pRedirectIfOldUrl->getCurrentLink() );
+		$this->assertEquals( 'http://example.org/detail-view/123/', $this->_pRedirectIfOldUrl->getCurrentLink() );
 	}
 
 	/**
@@ -87,6 +87,7 @@ class TestClassRedirectIfOldUrl
 		global $wp;
 		global $wp_filter;
 		$wp->request = 'detail-view/123-show-title-url';
+		$_SERVER['REQUEST_URI'] = '/detail-view/123-show-title-url';
 		$this->set_permalink_structure( '/%postname%/' );
 		$savePostBackup         = $wp_filter['save_post'];
 		$wp_filter['save_post'] = new \WP_Hook;
@@ -97,7 +98,7 @@ class TestClassRedirectIfOldUrl
 			'post_type'    => 'page',
 		] );
 		$wp_filter['save_post'] = $savePostBackup;
-		$this->assertNull( $this->_pRedirectIfOldUrl->redirectDetailView( 123, 'Show Title Url' ) );
+		$this->assertNull($this->_pRedirectIfOldUrl->redirectDetailView(123, 'Show Title Url', true));
 	}
 
 	/**
@@ -108,6 +109,7 @@ class TestClassRedirectIfOldUrl
 		global $wp;
 		global $wp_filter;
 		$wp->request = 'detail-view/abc-123-show-title-difference-url';
+		$_SERVER['REQUEST_URI'] = '/detail-view/abc-123-show-title-difference-url';
 		$this->set_permalink_structure( '/%postname%/' );
 		$savePostBackup         = $wp_filter['save_post'];
 		$wp_filter['save_post'] = new \WP_Hook;
@@ -118,7 +120,7 @@ class TestClassRedirectIfOldUrl
 			'post_type'    => 'page',
 		] );
 		$wp_filter['save_post'] = $savePostBackup;
-		$this->assertTrue( $this->_pRedirectIfOldUrl->redirectDetailView( 123, 'Show Title Url' ) );
+		$this->assertTrue($this->_pRedirectIfOldUrl->redirectDetailView(123, 'Show Title Url', true));
 	}
 
 
@@ -131,6 +133,7 @@ class TestClassRedirectIfOldUrl
 		global $wp;
 		global $wp_filter;
 		$wp->request = 'e1/detail-view/abc-123-show-title-difference-url';
+		$_SERVER['REQUEST_URI'] = '/e1/detail-view/abc-123-show-title-difference-url';
 		$this->set_permalink_structure( '/%postname%/' );
 		$savePostBackup         = $wp_filter['save_post'];
 		$wp_filter['save_post'] = new \WP_Hook;
@@ -141,6 +144,6 @@ class TestClassRedirectIfOldUrl
 			'post_type'    => 'page',
 		] );
 		$wp_filter['save_post'] = $savePostBackup;
-		$this->assertTrue( $this->_pRedirectIfOldUrl->redirectDetailView( 123, 'Show Title Url' ) );
+		$this->assertTrue($this->_pRedirectIfOldUrl->redirectDetailView(123, 'Show Title Url', true));
 	}
 }

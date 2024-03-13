@@ -108,33 +108,49 @@ class EstateDetailUrl
 		return '-' . $sanitizeTitle;
 	}
 
-
-	public function getUrlWithEstateTitle( int $estateId, string $title = null, string $oldUrl = null ): string
+	/**
+	 * @param int $estateId
+	 * @param string|null $title
+	 * @param string|null $oldUrl
+	 * @param bool $isUrlHaveTitle
+	 * @param bool $pEstateRedirection
+	 * @return string
+	 */
+	public function getUrlWithEstateTitle(int $estateId, string $title = null, string $oldUrl = null, bool $isUrlHaveTitle = false, bool $pEstateRedirection = false): string
 	{
 		$getParameters = [];
 		$urlElements   = parse_url( $oldUrl );
 		$urlTemp       = $estateId;
-		$slashChar     = '';
+		$tickerUrlHasTitleFlag = false;
 
-		if ( ! empty( $title ) && $this->isOptionShowTitleUrl() ) {
-			$urlTemp .= $this->getSanitizeTitle( $title );
+		if (!empty($title) && $this->isOptionShowTitleUrl()) {
+			if ($pEstateRedirection === false && !empty($urlElements['query']) && !$isUrlHaveTitle) {
+				$urlTemp .= '';
+			} else {
+				$tickerUrlHasTitleFlag = true;
+				$urlTemp .= $this->getSanitizeTitle($title);
+			}
 		}
+
 		if ( ! empty( $urlElements['query'] ) ) {
 			parse_str( $urlElements['query'], $getParameters );
 		}
 
 		$oldUrlPathArr = explode( '/', $urlElements['path'] );
 		if ( empty( end( $oldUrlPathArr ) ) ) {
-			$slashChar = '/';
 			array_pop( $oldUrlPathArr );
 		}
 		array_pop( $oldUrlPathArr );
 		$newPath = implode( '/', $oldUrlPathArr );
 
-		$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $newPath . '/' . $urlTemp . $slashChar;
+		$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $newPath . '/' . $urlTemp;
 
-		if ( ! empty( $getParameters ) ) {
-			$urlLsSwitcher .= '?' . http_build_query( $getParameters );
+		if (!empty($getParameters)) {
+			if ($pEstateRedirection) {
+				$urlLsSwitcher .= '';
+			} elseif(!$tickerUrlHasTitleFlag) {
+				$urlLsSwitcher .= '?' . http_build_query($getParameters);
+			}
 		}
 
 		return $urlLsSwitcher;

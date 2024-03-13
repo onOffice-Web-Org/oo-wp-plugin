@@ -74,8 +74,8 @@ class InputModelRenderer
 			$pInputField = $this->createInputField($pInputModel, $pFormModel);
 			$italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
 			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON) {
-				echo '<p id="" class="wp-clearfix">';
-				echo '<label class="howto" for="'.esc_html($pInputField->getGuiId()).'">';
+				echo '<p id="" class="wp-clearfix custom-input-field">';
+				echo '<label class="howto custom-label" for="'. esc_html($pInputField->getGuiId()).'">';
 				echo $pInputModel->getLabel(). $italicText;
 				echo '</label>';
 				$pInputField->render();
@@ -226,7 +226,7 @@ class InputModelRenderer
 				break;
 
 			case InputModelBase::HTML_TYPE_CHOSEN:
-				$pInstance = new InputFieldChosenRenderer(
+			$pInstance = new InputFieldChosenRenderer(
 					$pInputModel->getIdentifier(),
 					$pInputModel->getValuesAvailable());
 				$pInstance->addAdditionalAttribute('class', 'chosen-select');
@@ -263,6 +263,12 @@ class InputModelRenderer
 				if ($pInputModel->getSpecialDivId() != null) {
 					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
 				}
+				break;
+
+			case InputModelOption::HTML_SEARCH_FIELD_FOR_FIELD_LISTS:
+				$pInstance = new InputSearchFieldForFieldListsRenderer(AdminPageAjax::EXCLUDE_FIELD . $elementName, $pInputModel->getValuesAvailable());
+				$pInstance->setCheckedValues($pInputModel->getValue());
+				$pInstance->setOoModule($pFormModel->getOoModule());
 				break;
 		}
 
@@ -305,6 +311,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_NUMBER:
 			case InputModelOption::HTML_TYPE_EMAIL:
 			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
+			case InputModelOption::HTML_SEARCH_FIELD_FOR_FIELD_LISTS:
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}

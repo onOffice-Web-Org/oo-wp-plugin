@@ -1,15 +1,32 @@
 var onOffice = onOffice || {};
 
+var CaptchaCallback = function () {
+	const recaptchaElements = document.querySelectorAll('.g-recaptcha');
+	recaptchaElements.forEach(function (element) {
+		const sitekey = element.getAttribute('data-sitekey');
+		const size = element.getAttribute('data-size');
+		const callback = element.getAttribute('data-callback');
+
+		const grecaptchaId = grecaptcha.render(element, {
+			'sitekey': sitekey,
+			'size': size,
+			'callback': callback
+		});
+
+		element.setAttribute('data-grecaptcha-id', grecaptchaId);
+	});
+};
+
 (function() {
 	onOffice.captchaControl = function(formElement, submitButtonElement) {
-		this._formElement = formElement;
-		var self = this;
 		submitButtonElement.onclick = function(event) {
+			const recaptcha = formElement.querySelector('.g-recaptcha');
+			const grecaptchaId = recaptcha.getAttribute('data-grecaptcha-id');
 			event.preventDefault();
-			if (!self._formElement.checkValidity() && !_isMSIE()) {
-				self._formElement.reportValidity();
+			if (!formElement.checkValidity() && !_isMSIE()) {
+				formElement.reportValidity();
 			} else {
-				window.grecaptcha.execute();
+				window.grecaptcha.execute(grecaptchaId);
 			};
 		};
 	};
@@ -26,8 +43,9 @@ jQuery(document).ready(function ($) {
 	function addRecaptchaScript() {
 		if (!$("#recaptcha-script").length) {
 			$("<script>")
-				.attr("src", "https://www.google.com/recaptcha/api.js")
-				.attr("async", false)
+				.attr("src", "https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit")
+				.attr("async", "async")
+				.attr("defer", "defer")
 				.attr("id", "recaptcha-script")
 				.appendTo("head");
 		}

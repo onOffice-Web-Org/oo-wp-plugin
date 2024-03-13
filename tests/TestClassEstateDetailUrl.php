@@ -140,4 +140,86 @@ class TestClassEstateDetailUrl
 
 		$this->assertEquals($expectedUrl, $pInstance->createEstateDetailLink($url, $estateId, $title));
 	}
+
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function testGetUrlWithFilterTrueAndEnableOptionShowTitleWithParameter()
+	{
+		$pEstateRedirection = apply_filters('oo_is_detailpage_redirection', true);
+		add_option('onoffice-detail-view-showTitleUrl', true);
+		$estateId = 123;
+		$title = 'test-title';
+		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
+		$url = 'https://www.onoffice.de/detail/123?lang=en';
+		$expectedUrl = 'https://www.onoffice.de/detail/123-test-title';
+		$this->assertEquals($expectedUrl, $pInstance->getUrlWithEstateTitle($estateId, $title, $url, false, $pEstateRedirection));
+	}
+
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function testGetUrlWithFilterTrueAndDisableOptionShowTitleWithParameter()
+	{
+		$pEstateRedirection = apply_filters('oo_is_detailpage_redirection', true);
+		add_option('onoffice-detail-view-showTitleUrl', false);
+		$estateId = 123;
+		$title = 'test-title';
+		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
+		$url = 'https://www.onoffice.de/detail/123?lang=en';
+		$expectedUrl = 'https://www.onoffice.de/detail/123';
+		$this->assertEquals($expectedUrl, $pInstance->getUrlWithEstateTitle($estateId, $title, $url, false, $pEstateRedirection));
+	}
+
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function testGetUrlWithFilterFalseAndDisableOptionShowTitleWithParameter()
+	{
+		$pEstateRedirection = apply_filters('oo_is_detailpage_redirection', false);
+		add_option('onoffice-detail-view-showTitleUrl', false);
+		$estateId = 123;
+		$title = 'test-title';
+		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
+
+		$urlHasTitleWithoutParamster = 'https://www.onoffice.de/detail/123';
+		$expectedUrlHasTitleWithoutParamster = 'https://www.onoffice.de/detail/123';
+		$this->assertEquals($expectedUrlHasTitleWithoutParamster, $pInstance->getUrlWithEstateTitle($estateId, $title, $urlHasTitleWithoutParamster, false, $pEstateRedirection));
+
+		$urlWithoutTitle = 'https://www.onoffice.de/detail/123?lang=en';
+		$expectedUrlWithoutTitle = 'https://www.onoffice.de/detail/123?lang=en';
+		$this->assertEquals($expectedUrlWithoutTitle, $pInstance->getUrlWithEstateTitle($estateId, $title, $urlWithoutTitle, false, $pEstateRedirection));
+	}
+
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function testGetUrlWithFilterFalseAndEnableOptionShowTitleWithParameter()
+	{
+		$pEstateRedirection = apply_filters('oo_is_detailpage_redirection', false);
+		add_option('onoffice-detail-view-showTitleUrl', true);
+		$estateId = 123;
+		$title = 'test-title';
+		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
+
+		$urlHasTitleWithoutParamster = 'https://www.onoffice.de/detail/123';
+		$expectedUrlHasTitleWithoutParamster = 'https://www.onoffice.de/detail/123-test-title';
+		$this->assertEquals($expectedUrlHasTitleWithoutParamster, $pInstance->getUrlWithEstateTitle($estateId, $title, $urlHasTitleWithoutParamster, false, $pEstateRedirection));
+
+		$urlWithoutTitle = 'https://www.onoffice.de/detail/123/?lang=en';
+		$expectedUrlWithoutTitle = 'https://www.onoffice.de/detail/123?lang=en';
+		$this->assertEquals($expectedUrlWithoutTitle, $pInstance->getUrlWithEstateTitle($estateId, $title, $urlWithoutTitle, false, $pEstateRedirection));
+
+		$urlHasTitleHasParamster = 'https://www.onoffice.de/detail/123-test-title';
+		$expectedUrlHasTitleHasParamster = 'https://www.onoffice.de/detail/123-test-title';
+		$this->assertEquals($expectedUrlHasTitleHasParamster, $pInstance->getUrlWithEstateTitle($estateId, $title, $urlHasTitleHasParamster, true, $pEstateRedirection));
+
+		$urlHasTitle = 'https://www.onoffice.de/detail/123-test-title/?lang=en';
+		$expectedUrlHasTitle = 'https://www.onoffice.de/detail/123-test-title';
+		$this->assertEquals($expectedUrlHasTitle, $pInstance->getUrlWithEstateTitle($estateId, $title, $urlHasTitle, true, $pEstateRedirection));
+	}
 }

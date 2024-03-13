@@ -83,14 +83,14 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 
 			<?php if ($currentEstate["objektbeschreibung"] !== "") { ?>
 				<div class="oo-detailsfreetext">
-					<h2><?php esc_html_e('Description', 'onoffice-for-wp-websites'); ?></h2>
+					<h2><?php echo esc_html($pEstates->getFieldLabel('objektbeschreibung')); ?></h2>
 					<?php echo nl2br($currentEstate["objektbeschreibung"]); ?>
 				</div>
 			<?php } ?>
 
 			<?php if ($currentEstate["lage"] !== "") { ?>
 				<div class="oo-detailsfreetext">
-					<h2><?php esc_html_e('Location', 'onoffice-for-wp-websites'); ?></h2>
+					<h2><?php echo esc_html($pEstates->getFieldLabel('lage')); ?></h2>
 					<?php echo nl2br($currentEstate["lage"]); ?>
 				</div>
 			<?php }
@@ -107,14 +107,14 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 
 			<?php if ($currentEstate["ausstatt_beschr"] !== "") { ?>
 				<div class="oo-detailsfreetext">
-					<h2><?php esc_html_e('Equipment', 'onoffice-for-wp-websites'); ?></h2>
+					<h2><?php echo esc_html($pEstates->getFieldLabel('ausstatt_beschr')); ?></h2>
 					<?php echo nl2br($currentEstate["ausstatt_beschr"]); ?>
 				</div>
 			<?php } ?>
 
 			<?php if ($currentEstate["sonstige_angaben"] !== "") { ?>
 				<div class="oo-detailsfreetext">
-					<h2><?php esc_html_e('Other Information', 'onoffice-for-wp-websites'); ?></h2>
+					<h2><?php echo esc_html($pEstates->getFieldLabel('sonstige_angaben')); ?></h2>
 					<?php echo nl2br($currentEstate["sonstige_angaben"]); ?>
 				</div>
 			<?php } ?>

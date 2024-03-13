@@ -77,7 +77,7 @@ class InputFieldComplexSortableDetailListContentDefault
 		$pContainer = $pDIContainerBuilder->build();
 		/* @var $pInputModelRenderer InputModelRenderer */
 		$pInputModelRenderer = $pContainer->get(InputModelRenderer::class);
-		echo '<p class="wp-clearfix"><label class="howto">'.esc_html__('Key of Field:', 'onoffice-for-wp-websites')
+		echo '<p class="wp-clearfix key-of-field-block"><label class="howto">' . esc_html__('Key of Field:', 'onoffice-for-wp-websites')
 				.'&nbsp;</label><span class="menu-item-settings-name">'.esc_html($key).'</span></p>';
 
 		$pInputModelRenderer->buildForAjax($pFormModel);

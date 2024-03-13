@@ -135,6 +135,7 @@ class GeoPositionFieldHandler
 		$defaultActive = [
 			GeoPosition::ESTATE_LIST_SEARCH_ZIP,
 			GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
+			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY
 		];
 		$intersection = array_intersect_key($this->_booleanFields, array_flip($defaultActive));
 		return array_combine($intersection, array_fill(0, count($intersection), '1'));

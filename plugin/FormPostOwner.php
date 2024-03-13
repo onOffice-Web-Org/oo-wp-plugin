@@ -34,6 +34,7 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
+use onOffice\WPlugin\Field\EstateFields;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
@@ -53,19 +54,25 @@ class FormPostOwner
 	/** @var FormPostOwnerConfiguration */
 	private $_pFormPostOwnerConfiguration = null;
 
+	/** @var EstateFields */
+	private $_pEstateFields = null;
+
 	/**
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostOwnerConfiguration $pFormPostOwnerConfiguration
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 * @param FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm
+	 * @param EstateFields $pEstateFields
 	 */
 	public function __construct(
 		FormPostConfiguration $pFormPostConfiguration,
 		FormPostOwnerConfiguration $pFormPostOwnerConfiguration,
 		SearchcriteriaFields $pSearchcriteriaFields,
-		FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm)
+		FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm,
+		EstateFields $pEstateFields)
 	{
 		$this->_pFormPostOwnerConfiguration = $pFormPostOwnerConfiguration;
+		$this->_pEstateFields = $pEstateFields;
 		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
 	}
 
@@ -237,7 +244,12 @@ class FormPostOwner
 		$data = [];
 
 		foreach ($inputData as $key => $value) {
-			$data []= ucfirst($key).': '.ucfirst($value);
+			if (is_array($value)) {
+				$convertArrayToString = implode(', ', $value);
+				$data []= ucfirst($key) . ': ' . ucfirst($convertArrayToString);
+			} else {
+				$data []= ucfirst($key) . ': ' . ucfirst($value);
+			}
 		}
 
 		return implode("\n", $data);
@@ -259,9 +271,10 @@ class FormPostOwner
 	{
 		$addressData = $this->_pFormData->getAddressData($this->getFieldsCollection());
 		$values = $this->_pFormData->getValues();
+		$filledEstateData = $this->_pEstateFields->getFieldLabelsOfInputs($estateValues, $this->getFieldsCollection());
 		$estateData = array_keys($estateValues);
 		$formType = $this->_pFormData->getFormtype();
-		$informationEnterFromInputOwnerForm = $this->createStringFromInputData($estateValues);
+		$informationEnterFromInputOwnerForm = $this->createStringFromInputData($filledEstateData);
 		if (empty($estateId)) {
 			$formType .= "\n" . $informationEnterFromInputOwnerForm;
 		}

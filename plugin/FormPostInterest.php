@@ -155,8 +155,9 @@ class FormPostInterest
 	private function sendEmail(FormData $pFormData, string $recipient, $subject = null)
 	{
 		$values = $pFormData->getValues();
+		$listDataInputs = $pFormData->getDataFormConfiguration()->getInputs();
 		$filledSearchCriteriaData = $this->_pFormPostInterestConfiguration->getSearchcriteriaFields()
-			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData());
+			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData(), $listDataInputs);
 		$searchCriterias = $this->createStringFromInputData($filledSearchCriteriaData);
 		$message = $values['message'] ?? '';
 		$message .= "\nSuchkriterien des Interessenten:\n".
