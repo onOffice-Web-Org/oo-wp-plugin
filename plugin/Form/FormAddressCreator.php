@@ -359,8 +359,8 @@ class FormAddressCreator
 				$oldAddressData .= $key . ': ' . $value . "\n";
 			}
 			$guidanceForHandlingSituation .= "\n" . __( 'Duplicate detected. This data record may be a duplicate of an existing data record. Check for possible duplicates and then decide whether the data record should be updated.', 'onoffice-for-wp-websites') . "\n";
-			$guidanceForHandlingSituation .= "\n" . __( 'How to search and update duplicates in onOffice enterprise:', 'onoffice-for-wp-websites') . "\n";
-			$guidanceForHandlingSituation .=  __( 'https://de.enterprisehilfe.onoffice.com/help_entries/dubletten/?lang=en', 'onoffice-for-wp-websites');
+			$guidanceForHandlingSituation .= "\n" . __( 'How to search and update duplicates in onOffice enterprise:', 'onoffice-for-wp-websites') . " \n";
+			$guidanceForHandlingSituation .=  __( 'https://de.enterprisehilfe.onoffice.com/help_entries/dubletten/?lang=en', 'onoffice-for-wp-websites') . " \n";
 		}
 		$messageDuplicateAddressData .= $oldAddressData . $guidanceForHandlingSituation;
 
