@@ -399,7 +399,7 @@ class TestClassFormAddressCreator
 		$result = $this->_pSubject->getMessageDuplicateAddressData($pFormData, 1, 1);
 		$expectResult = "\n\nData has been duplicated:\n--------------------------------------------------\nvorname: Test\nname: Data duplicate\nemail: test@gmail.com\n";
 		$expectResult .= "\nDuplicate detected. This data record may be a duplicate of an existing data record. Check for possible duplicates and then decide whether the data record should be updated. \n";
-		$expectResult .= "\nHow to search and update duplicates in onOffice enterprise:\nhttps://de.enterprisehilfe.onoffice.com/help_entries/dublettenn/?lang=en \n";
+		$expectResult .= "\nHow to search and update duplicates in onOffice enterprise: \nhttps://de.enterprisehilfe.onoffice.com/help_entries/dublettenn/?lang=en \n";
 
 		$this->assertEquals($expectResult, $result);
 	}
