@@ -353,14 +353,14 @@ class FormAddressCreator
 		$oldAddressData = '';
 
 		if (!empty($oldData)) {
-			$messageDuplicateAddressData .= "\n\nData has been duplicated:\n";
+			$messageDuplicateAddressData .= "\n\n" . __( 'Data has been duplicated:', 'onoffice-for-wp-websites' ) . "\n";
 			$messageDuplicateAddressData .= "--------------------------------------------------\n";
 			foreach ($oldData as $key => $value) {
 				$oldAddressData .= $key . ': ' . $value . "\n";
 			}
-			$guidanceForHandlingSituation .= "\nDuplicate detected. This data record may be a duplicate of an existing data record. Check for possible duplicates and then decide whether the data record should be updated. \n";
-			$guidanceForHandlingSituation .= "\nHow to search and update duplicates in onOffice enterprise:\n";
-			$guidanceForHandlingSituation .= "https://de.enterprisehilfe.onoffice.com/help_entries/dubletten \n";
+			$guidanceForHandlingSituation .= "\n" . __( 'Duplicate detected. This data record may be a duplicate of an existing data record. Check for possible duplicates and then decide whether the data record should be updated.', 'onoffice-for-wp-websites') . "\n";
+			$guidanceForHandlingSituation .= "\n" . __( 'How to search and update duplicates in onOffice enterprise:', 'onoffice-for-wp-websites') . "\n";
+			$guidanceForHandlingSituation .=  __( 'https://de.enterprisehilfe.onoffice.com/help_entries/dubletten/?lang=en', 'onoffice-for-wp-websites');
 		}
 		$messageDuplicateAddressData .= $oldAddressData . $guidanceForHandlingSituation;
 
