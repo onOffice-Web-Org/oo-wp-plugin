@@ -143,6 +143,9 @@ abstract class InputModelBase
 	/** @var int */
 	private $_minValue = 0;
 
+	/** @var string */
+	private $_directory = '';
+
 	/**
 	 *
 	 * @return string
@@ -319,4 +322,12 @@ abstract class InputModelBase
 	/** @param int $minValue */
 	public function setMinValueHtml(int $minValue)
 		{ $this->_minValue = $minValue; }
+
+	/** @return string */
+	public function getDirectory(): string
+		{ return $this->_directory; }
+
+	/** @param string $directory */
+	public function setDirectory(string $directory)
+		{ $this->_directory = $directory; }
 }

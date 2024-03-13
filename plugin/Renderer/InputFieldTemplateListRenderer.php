@@ -22,6 +22,8 @@
 namespace onOffice\WPlugin\Renderer;
 
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\Controller\TemplateSelection;
+use DI\ContainerBuilder;
 
 /**
  *
@@ -68,6 +70,11 @@ class InputFieldTemplateListRenderer
 
 	public function render()
 	{
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$templateSelection = $pContainer->get(TemplateSelection::class);
+
 		if (!$this->checkedValueIsSet()) {
 			$this->setDefaultCheckedValue();
 		}
@@ -85,7 +92,9 @@ class InputFieldTemplateListRenderer
 			}
 			foreach ($templateList as $key => $label) {
 				$checked = false;
-				if ($label === $this->_checkedValue || $key === $this->_checkedValue) {
+				$templateDefault = $templateSelection->getTemplateDefault($key, $this->getDirectory());
+
+				if ($templateDefault === $this->_checkedValue || $label === $this->_checkedValue || $key === $this->_checkedValue) {
 					$checked = true;
 					$this->setCheckedValue(null);
 				}

@@ -399,6 +399,7 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelTemplate = $this->_pInputModelDetailViewFactory->create($field, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_TEMPLATE_LIST);
 		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));
+		$pInputModelTemplate->setDirectory('estate');
 		$pInputModelTemplate->setValue($this->getTemplateValueByField($field));
 
 		return $pInputModelTemplate;

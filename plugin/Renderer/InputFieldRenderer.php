@@ -73,7 +73,10 @@ abstract class InputFieldRenderer
 
 	/** @var int */
 	private $_maxValue = 0;
-	
+
+	/** @var string */
+	private $_directory = '';
+
 	/**
 	 *
 	 * @param string $type
@@ -256,4 +259,12 @@ abstract class InputFieldRenderer
 	/** @param string $minValue */
 	public function setMinValue(int $minValue)
 		{ $this->_minValue = $minValue; }
+
+	/** @param string $directory */
+	public function setDirectory(string $directory)
+		{ $this->_directory = $directory; }
+
+	/** @return string */
+	public function getDirectory(): string
+		{ return $this->_directory; }
 }
