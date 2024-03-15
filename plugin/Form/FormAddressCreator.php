@@ -36,6 +36,7 @@ use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Language;
 
 /**
  *
@@ -254,13 +255,13 @@ class FormAddressCreator
 	 */
 	private function handleLogicMessageDuplicateAddressData(FormData $pFormData, int $addressId): string
 	{
-		$requestParams = $this->getAddressDataForApiCall($pFormData);
+		$requestParams = $this->getAddressDataForReadAddressApiCall($pFormData);
 		if (isset($requestParams['gdprcheckbox']) && $requestParams['gdprcheckbox']){
-			$requestParams['DSGVOStatus'] = "speicherungzugestimmt";
+			$requestParams['DSGVOStatus'] = onOfficeSDK::MODULE_ADDRESS;
 		}
-		unset($requestParams['gdprcheckbox']);
-		if (key_exists('newsletter', $requestParams)) {
+		if (key_exists('newsletter', $requestParams) || key_exists('gdprcheckbox', $requestParams)) {
 			unset($requestParams['newsletter']);
+			unset($requestParams['gdprcheckbox']);
 		}
 
 		$oldAddressData = $this->getDataAddressById($addressId, $requestParams);
@@ -329,7 +330,9 @@ class FormAddressCreator
 	private function getDataAddressById(int $addressId, array $params): array
 	{
 		$requestParams = [
-			'data' => array_keys($params)
+			'data' => array_keys($params),
+			'outputlanguage' => Language::getDefault(),
+			'formatoutput' => true,
 		];
 
 		$pApiClientAction = new APIClientActionGeneric
@@ -348,6 +351,9 @@ class FormAddressCreator
 	 */
 	private function generateMessageDuplicateAddressData(array $oldData): string
 	{
+		$pFieldsCollection = new FieldsCollection();
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+
 		$messageDuplicateAddressData = '';
 		$guidanceForHandlingSituation = '';
 		$oldAddressData = '';
@@ -356,7 +362,11 @@ class FormAddressCreator
 			$messageDuplicateAddressData .= "\n\n" . __( 'Data has been duplicated:', 'onoffice-for-wp-websites' ) . "\n";
 			$messageDuplicateAddressData .= "--------------------------------------------------\n";
 			foreach ($oldData as $key => $value) {
-				$oldAddressData .= $key . ': ' . $value . "\n";
+				$label = $pFieldsCollection->getFieldByKeyUnsafe($key)->getLabel();
+				if (is_array($value)) {
+					$value = implode(", ", $value);
+				}
+				$oldAddressData .= $label . ': ' . $value . "\n";
 			}
 			$guidanceForHandlingSituation .= "\n" . __( 'Duplicate detected. This data record may be a duplicate of an existing data record. Check for possible duplicates and then decide whether the data record should be updated.', 'onoffice-for-wp-websites') . " \n";
 			$guidanceForHandlingSituation .= "\n" . __( 'How to search and update duplicates in onOffice enterprise:', 'onoffice-for-wp-websites') . " \n";
@@ -365,5 +375,32 @@ class FormAddressCreator
 		$messageDuplicateAddressData .= $oldAddressData . $guidanceForHandlingSituation;
 
 		return $messageDuplicateAddressData;
+	}
+
+	/**
+	 * @param FormData $pFormData
+	 * @return array
+	 *
+	 * @throws UnknownFieldException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getAddressDataForReadAddressApiCall(FormData $pFormData): array
+	{
+		$addressData = [];
+		$pFieldsCollection = new FieldsCollection();
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate( $pFieldsCollection )
+		                                     ->addFieldsSearchCriteria( $pFieldsCollection )
+		                                     ->addFieldsFormFrontend( $pFieldsCollection );
+		$addressFields = $pFormData->getDataFormConfiguration()->getInputs();
+
+		foreach ($addressFields as $fieldName => $module) {
+			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $fieldName);
+			if ($pField->getModule() === onOfficeSDK::MODULE_ADDRESS) {
+				$addressData[$fieldName] = $module;
+			}
+		}
+
+		return $addressData;
 	}
 }
