@@ -186,16 +186,49 @@ onOffice.default_values_input_converter = function () {
         onOffice.default_values_inputs_converted.push(fieldName);
         var fieldDefinition = getFieldDefinition(fieldName);
 
+        if (fieldDefinition.type === "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:tinyint") {
+            const parent = mainInput;
+            const element = document.createElement('fieldset');
+            const keys = Object.keys(fieldDefinition.permittedvalues).sort();
+            parent.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
+
+            element.className = 'onoffice-input-radio';
+            keys.forEach(k => {
+                const mainInputClone = parent.cloneNode(true);
+                const label = document.createElement('label');
+                onOffice.js_field_count += 1;
+                mainInputClone.id = 'input_radio_js_' + onOffice.js_field_count;
+                mainInputClone.value = k;
+                label.textContent = fieldDefinition.permittedvalues[k];
+                if (k == onOffice_loc_settings.defaultvalues[fieldName]) {
+                    mainInputClone.checked = true;
+                }
+                label.appendChild(mainInputClone);
+                element.appendChild(label);
+                parent.parentElement.appendChild(element);
+            });
+            const labels = parent.parentElement.getElementsByTagName('label')[1];
+            parent.parentElement.removeChild(labels);
+            mainInput.remove();
+            return;
+        }
+
         if (!fieldDefinition.rangefield &&
             [
                 'integer', 'float', 'date', 'datetime',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:int',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer',
-                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
+                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal',
+                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:date',
+                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:tinyint'
             ].indexOf(fieldDefinition.type) >= 0) {
-            if (fieldDefinition.type === 'date' || fieldDefinition.type === 'datetime') {
-                mainInput.setAttribute('type', 'text');
+            if (fieldDefinition.type === 'date' || fieldDefinition.type === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:date') {
+                mainInput.setAttribute('type', 'date');
+            }
+            if (fieldDefinition.type === 'datetime') {
+                mainInput.setAttribute('type', 'datetime-local');
+                mainInput.setAttribute('step', 1);
             }
             mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
             mainInput.value = predefinedValues[fieldName][0] || '';
@@ -286,6 +319,29 @@ document.addEventListener("addFieldItem", function(e) {
         onOffice.js_field_count += 1;
         select.options.selectedIndex = 0;
         element.parentNode.replaceChild(select, element);
+    } else if (['urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:tinyint'].indexOf(fieldDefinition.type) >= 0) {
+        const element = e.detail.item.querySelector('input[name^=oopluginfieldconfigformdefaultsvalues-value]');
+        const fieldset = document.createElement('fieldset');
+        const keys = Object.keys(fieldDefinition.permittedvalues).sort();
+        fieldset.className = 'onoffice-input-radio';
+        keys.forEach(function (k) {
+            const label = document.createElement('label');
+            const input = document.createElement('input');
+            input.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
+            input.type = 'radio';
+            input.value = k;
+            input.className = 'onoffice-input';
+            onOffice.js_field_count += 1;
+            label.htmlFor = 'input_radio_js_' + onOffice.js_field_count;
+            label.textContent = fieldDefinition.permittedvalues[k];
+            if(k == onOffice_loc_settings.defaultvalues[fieldName]){
+                input.checked = true;
+            }
+            label.appendChild(input);
+            fieldset.appendChild(label);
+        });
+
+        element.parentNode.replaceChild(fieldset, element);
     }
 
     var paragraph = e.detail.item.querySelectorAll('.menu-item-settings p')[2];

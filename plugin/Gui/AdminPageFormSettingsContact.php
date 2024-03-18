@@ -179,6 +179,7 @@ class AdminPageFormSettingsContact
 
 		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+		$this->addSearchFieldForFieldLists($this->getSortableFieldModules(), $pFormModelBuilder);
 	}
 
 
