@@ -359,7 +359,8 @@ class FormAddressCreator
 		$oldAddressData = '';
 
 		if (!empty($oldData)) {
-			$messageDuplicateAddressData .= "\n\n" . __( 'Data has been duplicated:', 'onoffice-for-wp-websites' ) . "\n";
+			$messageDuplicateAddressData .= "\n\n\n" . __( 'Attention: Duplicate detected! This data is similar to existing data records. Please take a moment to check for duplicates and decide whether updates are required.', 'onoffice-for-wp-websites') . "\n";
+			$messageDuplicateAddressData .= "\n" . __( 'Existing data record:', 'onoffice-for-wp-websites' ) . "\n";
 			$messageDuplicateAddressData .= "--------------------------------------------------\n";
 			foreach ($oldData as $key => $value) {
 				$label = $pFieldsCollection->getFieldByKeyUnsafe($key)->getLabel();
@@ -368,9 +369,8 @@ class FormAddressCreator
 				}
 				$oldAddressData .= $label . ': ' . $value . "\n";
 			}
-			$guidanceForHandlingSituation .= "\n" . __( 'Duplicate detected. This data record may be a duplicate of an existing data record. Check for possible duplicates and then decide whether the data record should be updated.', 'onoffice-for-wp-websites') . " \n";
-			$guidanceForHandlingSituation .= "\n" . __( 'How to search and update duplicates in onOffice enterprise:', 'onoffice-for-wp-websites') . " \n";
-			$guidanceForHandlingSituation .=  __( 'https://de.enterprisehilfe.onoffice.com/help_entries/dubletten/?lang=en', 'onoffice-for-wp-websites') . " \n";
+			$guidanceForHandlingSituation .= "\n" . __( 'How to search and update duplicates in onOffice enterprise:', 'onoffice-for-wp-websites') . "\n";
+			$guidanceForHandlingSituation .=  __( 'https://de.enterprisehilfe.onoffice.com/help_entries/dubletten/?lang=en', 'onoffice-for-wp-websites') . "\n";
 		}
 		$messageDuplicateAddressData .= $oldAddressData . $guidanceForHandlingSituation;
 

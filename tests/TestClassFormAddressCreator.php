@@ -397,9 +397,9 @@ class TestClassFormAddressCreator
 		$this->configureSDKWrapperMockerForReadLatestAddress();
 		$pFormData = $this->createFormDataForAddress();
 		$result = $this->_pSubject->getMessageDuplicateAddressData($pFormData, 1, 1);
-		$expectResult = "\n\nData has been duplicated:\n--------------------------------------------------\nFirst name: Test\nName: Data duplicate\nEmail: test@gmail.com\n";
-		$expectResult .= "\nDuplicate detected. This data record may be a duplicate of an existing data record. Check for possible duplicates and then decide whether the data record should be updated. \n";
-		$expectResult .= "\nHow to search and update duplicates in onOffice enterprise: \nhttps://de.enterprisehilfe.onoffice.com/help_entries/dubletten/?lang=en \n";
+		$expectResult = "\n\n\nAttention: Duplicate detected! This data is similar to existing data records. Please take a moment to check for duplicates and decide whether updates are required.\n";
+        $expectResult .= "\nExisting data record:\n--------------------------------------------------\nFirst name: Test\nName: Data duplicate\nEmail: test@gmail.com\n";
+        $expectResult .= "\nHow to search and update duplicates in onOffice enterprise:\nhttps://de.enterprisehilfe.onoffice.com/help_entries/dubletten/?lang=en\n";
 
 		$this->assertEquals($expectResult, $result);
 	}
