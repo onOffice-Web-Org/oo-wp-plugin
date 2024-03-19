@@ -92,12 +92,12 @@ class InputFieldTemplateListRenderer
 			}
 			foreach ($templateList as $key => $label) {
 				$checked = false;
-				$labelName = $templateSelection->getLabelOfTemplate($key, $this->getTemplateDirectory());
+				$templateNameInTopPHPComment = $templateSelection->getTemplateNameInTopPHPComment($key, $this->getTemplateDirectory());
 				if ($label === $this->_checkedValue || $key === $this->_checkedValue) {
 					$checked = true;
 					$this->setCheckedValue(null);
 				}
-				$label = !empty($labelName) ? $labelName : basename($label, ".php");
+				$label = !empty($templateNameInTopPHPComment) ? $templateNameInTopPHPComment : basename($label, ".php");
 				$inputId = 'label' . $this->getGuiId() . 'b' . $key;
 				echo '<input type="' . esc_html($this->getType()) . '" name="' . esc_html($this->getName())
 					. '" value="' . esc_html($key) . '"'

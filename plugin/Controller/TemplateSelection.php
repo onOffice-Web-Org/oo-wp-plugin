@@ -69,15 +69,24 @@ class TemplateSelection
 	 * @param string $directory
 	 * @return string
 	 */
-	public function getLabelOfTemplate(string $partPath, string $directory): string 
+	public function getTemplateNameInTopPHPComment(string $partPath, string $directory): string 
 	{
 		$fullPath = $this->getFullTemplatePath($partPath, $directory);
 		if (!is_file($fullPath) || !is_readable($fullPath) || empty($fullPath)) {
 			return '';
 		}
 		$templateFileContent = file_get_contents($fullPath);
-		preg_match('|Template Name:\s*(.*)$|mi', $templateFileContent, $matches);
+		preg_match('|Template Name:\s*(.*)$|mi', $templateFileContent, $header);
 
-		return isset($matches[1]) ? $matches[1] : '';
+		return isset($header[1]) ? $this->cleanupHeaderComment($header[1]) : '';
+	}
+
+	/**
+	 * @param string $str
+	 * @return string
+	 */
+	private function cleanupHeaderComment(string $str): string
+	{
+		return trim(preg_replace('/\s*(?:\*\/|\?>).*/', '', $str));
 	}
 }
