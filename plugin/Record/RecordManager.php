@@ -77,6 +77,9 @@ abstract class RecordManager
 	/** */
 	const TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS = 'oo_plugin_fieldconfig_estate_translated_labels';
 
+	/** */
+	const TABLENAME_RECIPIENTS = 'oo_plugin_recipients';
+
 	/**
 	 *
 	 * @deprecated get wpdb via DI

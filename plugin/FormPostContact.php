@@ -88,6 +88,7 @@ class FormPostContact
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfig->getRecipientByUserSelection();
+		$carbonCopyRecipients = $pFormConfig->getCarbonCopyRecipients();
 		$subject = $pFormConfig->getSubject();
 
 		try {
@@ -95,7 +96,7 @@ class FormPostContact
 				$this->createAddress($pFormData);
 			}
 		} finally {
-			$this->sendContactRequest($pFormData, $recipient, $subject);
+			$this->sendContactRequest($pFormData, $recipient, $subject, $carbonCopyRecipients);
 		}
 	}
 
@@ -171,12 +172,13 @@ class FormPostContact
 	 * @param FormData $pFormData
 	 * @param string $recipient
 	 * @param string $subject
+	 * @param array $carbonCopyRecipients
 	 * @throws ApiClientException
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
 
-	private function sendContactRequest(FormData $pFormData, string $recipient = '', $subject = null)
+	private function sendContactRequest(FormData $pFormData, string $recipient = '', $subject = null, array $carbonCopyRecipients = [])
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$contactType = $pFormConfig->getContactType();
@@ -210,6 +212,12 @@ class FormPostContact
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
 		}
+
+		$estateId = $pWPQuery->get('estate_id', null);
+		if (!empty($carbonCopyRecipients) && is_null($estateId)) {
+			$requestParams['cc'] = $carbonCopyRecipients;
+		}
+
 		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();
 		$pAPIClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');

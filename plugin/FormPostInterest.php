@@ -81,6 +81,7 @@ class FormPostInterest
 		/* @var $pFormConfiguration DataFormConfigurationInterest */
 		$pFormConfiguration = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfiguration->getRecipientByUserSelection();
+		$carbonCopyRecipients = $pFormConfiguration->getCarbonCopyRecipients();
 		$subject = $pFormConfiguration->getSubject();
 
 		try {
@@ -102,7 +103,7 @@ class FormPostInterest
 			}
 		} finally {
 			if ( $recipient != null ) {
-				$this->sendEmail( $pFormData, $recipient, $subject );
+				$this->sendEmail( $pFormData, $recipient, $subject, $carbonCopyRecipients );
 			}
 		}
 	}
@@ -156,13 +157,16 @@ class FormPostInterest
 	 * @param FormData $pFormData
 	 * @param string $recipient
 	 * @param string $subject
+	 * @param array $carbonCopyRecipients
 	 * @throws ApiClientException
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 * @throws Field\UnknownFieldException
 	 */
-	private function sendEmail(FormData $pFormData, string $recipient, $subject = null)
+	private function sendEmail(FormData $pFormData, string $recipient, $subject = null, array $carbonCopyRecipients = [])
 	{
+		$pWPQuery = $this->_pFormPostInterestConfiguration->getWPQueryWrapper()->getWPQuery();
+		$estateId = $pWPQuery->get('estate_id', null);
 		$values = $pFormData->getValues();
 		$listDataInputs = $pFormData->getDataFormConfiguration()->getInputs();
 		$filledSearchCriteriaData = $this->_pFormPostInterestConfiguration->getSearchcriteriaFields()
@@ -184,6 +188,11 @@ class FormPostInterest
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
 		}
+
+		if (!empty($carbonCopyRecipients) && is_null($estateId)) {
+			$requestParams['cc'] = $carbonCopyRecipients;
+		}
+
 		if (isset($addressData['newsletter'])) {
 			$requestParams['addressdata']['newsletter_aktiv'] = $this->_pFormPostInterestConfiguration
 				->getNewsletterAccepted();

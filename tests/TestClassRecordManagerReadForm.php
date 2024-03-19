@@ -134,6 +134,19 @@ class TestClassRecordManagerReadForm
 		];
 	}
 
+	/**
+	 * @param int $formId
+	 *
+	 * @return array
+	 */
+	private function getRecipientsByFormId(int $formId): array
+	{
+		return [
+			'form_id' => $formId,
+			'carbon_copy_recipient' => 'test@gmail.com'
+		];
+	}
+
 	public function testGetRecords()
 	{
 		$pFieldsForm = $this->_pRecordManagerReadForm->getRecords();
@@ -190,5 +203,17 @@ class TestClassRecordManagerReadForm
 		]));
 		$pFieldsForm = $this->_pRecordManagerReadForm->readFieldsByFormId(1);
 		$this->assertEquals(4, count($pFieldsForm));
+	}
+
+	/**
+	 *
+	 */
+	public function testReadCarbonCopyRecipientsByFormId()
+	{
+		$this->_pRecordManagerReadForm->method('readCarbonCopyRecipientsByFormId')->will($this->returnValueMap([
+			[1, $this->getRecipientsByFormId(1)]
+		]));
+		$pFieldsForm = $this->_pRecordManagerReadForm->readCarbonCopyRecipientsByFormId(1);
+		$this->assertEquals(2, count($pFieldsForm));
 	}
 }

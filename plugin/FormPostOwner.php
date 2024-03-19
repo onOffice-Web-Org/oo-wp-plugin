@@ -97,6 +97,7 @@ class FormPostOwner
 		$this->_pFormData = $pFormData;
 
 		$recipient = $pDataFormConfiguration->getRecipientByUserSelection();
+		$carbonCopyRecipients = $pDataFormConfiguration->getCarbonCopyRecipients();
 		$subject = $pDataFormConfiguration->getSubject();
 		$estateData = $this->getEstateData();
 
@@ -121,7 +122,7 @@ class FormPostOwner
 			}
 		} finally {
 			if ( null != $recipient ) {
-				$this->sendContactRequest( $recipient, $estateId ?? 0, $estateData, $subject );
+				$this->sendContactRequest( $recipient, $estateId ?? 0, $estateData, $subject, $carbonCopyRecipients );
 			}
 		}
 	}
@@ -271,13 +272,14 @@ class FormPostOwner
 	 * @param int $estateId
 	 * @param array $estateValues
 	 * @param string $subject
+	 * @param array $carbonCopyRecipients
 	 * @throws API\APIEmptyResultException
 	 * @throws ApiClientException
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
 
-	private function sendContactRequest(string $recipient, int $estateId, array $estateValues, $subject=null)
+	private function sendContactRequest(string $recipient, int $estateId, array $estateValues, $subject = null, array $carbonCopyRecipients = [])
 	{
 		$addressData = $this->_pFormData->getAddressData($this->getFieldsCollection());
 		$values = $this->_pFormData->getValues();
@@ -306,6 +308,10 @@ class FormPostOwner
 
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
+		}
+
+		if (!empty($carbonCopyRecipients) && $estateId !== 0) {
+			$requestParams['cc'] = $carbonCopyRecipients;
 		}
 
 		if (isset($addressData['newsletter'])) {

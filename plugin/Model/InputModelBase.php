@@ -80,6 +80,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_SEARCH_FIELD_FOR_FIELD_LISTS = 'searchFieldForFieldLists';
 
+	/** */
+	const HTML_CARBON_COPY_RECIPIENTS = 'carbonCopyRecipients';
+
 	/** @var string */
 	private $_name = null;
 

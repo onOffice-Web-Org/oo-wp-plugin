@@ -270,6 +270,16 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setOoModule($pFormModel->getOoModule());
 				break;
+
+			case InputModelOption::HTML_CARBON_COPY_RECIPIENTS:
+				$pInstance = new InputFieldCarbonCopyRecipientsRenderer($elementName, $pInputModel->getValuesAvailable());
+				$pInstance->addAdditionalAttribute('class', 'form-control onoffice-cc-recipients');
+				$pInstance->setMultiple($pInputModel->getIsMulti());
+				$pInstance->setSelectedValue($pInputModel->getValue());
+				if ($pInputModel->getHintHtml() != null) {
+					$pInstance->setHint($pInputModel->getHintHtml());
+				}
+				break;
 		}
 
 		if ($pInstance !== null) {

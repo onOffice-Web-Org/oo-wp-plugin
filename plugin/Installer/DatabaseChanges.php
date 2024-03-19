@@ -45,7 +45,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 42;
+	const MAX_VERSION = 43;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -301,6 +301,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 41) {
 			$this->updateValueGeoFieldsForEsateList();
 			$dbversion = 42;
+		}
+
+		if ($dbversion == 42) {
+			dbDelta($this->getCreateQueryRecipients());
+			$dbversion = 43;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -879,6 +884,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_form_translated_labels",
 			$prefix."oo_plugin_fieldconfig_estate_customs_labels",
 			$prefix."oo_plugin_fieldconfig_estate_translated_labels",
+			$prefix."oo_plugin_recipients",
 		);
 
 		foreach ($tables as $table)	{
@@ -1131,5 +1137,23 @@ class DatabaseChanges implements DatabaseChangesInterface
 			SET country_active = 1, radius_active = 1";
 
 		$this->_pWPDB->query($sql);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCreateQueryRecipients(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_recipients";
+		$sql = "CREATE TABLE $tableName (
+			`recipient_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` bigint(20) NOT NULL,
+			`carbon_copy_recipient` tinytext NOT NULL,
+			PRIMARY KEY (`recipient_id`)
+		) $charsetCollate;";
+
+		return $sql;
 	}
 }

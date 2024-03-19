@@ -344,6 +344,29 @@ class FormModelBuilderDBForm
 	/**
 	 * @return InputModelDB
 	 */
+	public function createInputModelCarbonCopyRecipients()
+	{
+		$labelRecipients = __('Other Recipients(Cc Recipients)', 'onoffice-for-wp-websites');
+		$pInputModelFormCarbonCopyRecipients = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_CARBON_COPY_RECIPIENTS, $labelRecipients);
+		$pInputModelFormCarbonCopyRecipients->setHtmlType(InputModelOption::HTML_CARBON_COPY_RECIPIENTS);
+		$pInputModelFormCarbonCopyRecipients->setDeactivate(true);
+		$pInputModelFormCarbonCopyRecipients->setIsMulti(true);
+		$pInputModelFormCarbonCopyRecipients->setHintHtml(__('Cc Recipients will not work with contact forms on estate detail pages.', 'onoffice-for-wp-websites'));
+		$field = $pInputModelFormCarbonCopyRecipients->getField();
+		$selectedRecipient = $this->getValue($field);
+		if ($selectedRecipient == null) {
+			$selectedRecipient = [];
+		}
+
+		$pInputModelFormCarbonCopyRecipients->setValue($selectedRecipient);
+
+		return $pInputModelFormCarbonCopyRecipients;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
 	public function createInputModelRecipientContactForm()
 	{
 		$labelRecipient = __('Override email address', 'onoffice-for-wp-websites');

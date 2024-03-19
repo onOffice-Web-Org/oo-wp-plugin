@@ -166,6 +166,7 @@ class RecordManagerReadForm
 		$result['fields'] = array_column($resultFieldConfig, 'fieldname');
 		$result['filterable'] = array_keys(array_filter(array_column($resultFieldConfig, 'filterable', 'fieldname')));
 		$result['hidden'] = array_keys(array_filter(array_column($resultFieldConfig, 'hidden', 'fieldname')));
+		$result['carbon_copy_recipients'] = $this->readCarbonCopyRecipientsByFormId($result['form_id']);
 
 		return $result;
 	}

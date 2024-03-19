@@ -78,6 +78,10 @@ class DataFormConfiguration
 
 	/** @var array */
 	private $_markdownFields = [];
+
+	/** @var array */
+	private $_carbonCopyRecipients = [];
+
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -238,4 +242,17 @@ class DataFormConfiguration
 
 		return $this->_recipient;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getCarbonCopyRecipients(): array
+		{ return $this->_carbonCopyRecipients; }
+
+	/**
+	 * @param array $carbonCopyRecipients
+	 * @return void
+	 */
+	public function setCarbonCopyRecipients(array $carbonCopyRecipients)
+		{ $this->_carbonCopyRecipients = $carbonCopyRecipients; }
 }

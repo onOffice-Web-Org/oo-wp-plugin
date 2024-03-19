@@ -90,7 +90,8 @@ class TestClassRecordManagerDuplicateForm
 			],
 			'filterable' => [],
 			'hidden' => [],
-			'availableOptions' => []
+			'availableOptions' => [],
+			'carbon_copy_recipients' => ['test1@gmail.com', 'test2@gmail.com']
 		];
 
 		$this->_pWPDB = $this->getMockBuilder(wpdb::class)

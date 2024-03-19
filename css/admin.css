@@ -743,3 +743,20 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 		margin: 0 !important;
 	}
 }
+
+.oo-poststuff .custom-input-field .select2 {
+	width: 50% !important;
+}
+
+.oo-poststuff .custom-input-field .select2 .select2-selection {
+	display: flex;
+	border: 1px solid #8c8f94;
+	min-height: 30px;
+	height: 100%;
+}
+
+.oo-poststuff .onoffice-cc-recipients-error-message {
+	display: none;
+	color: red;
+	text-align: right;
+}

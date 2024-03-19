@@ -131,6 +131,32 @@ abstract class RecordManagerRead
 				WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql((int)$recordId);
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
+		if ($result !== null) {
+			$result['carbon_copy_recipient'] = $this->readCarbonCopyRecipientsByFormId($recordId);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param int $formId
+	 *
+	 * @return array
+	 */
+	public function readCarbonCopyRecipientsByFormId(int $formId): array
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT `carbon_copy_recipient`
+			FROM {$prefix}oo_plugin_recipients
+			WHERE `form_id` = ".esc_sql($formId);
+
+		$carbonCopyRecipients = $pWpDb->get_col($sql);
+		$result = array();
+		if (is_array($carbonCopyRecipients)) {
+			$result = $carbonCopyRecipients;
+		}
 
 		return $result;
 	}

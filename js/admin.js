@@ -49,6 +49,43 @@ jQuery(document).ready(function($){
 		$(this).parent().parent().parent().parent().find('.menu-item-settings').toggle();
 	});
 
+	if ($('.onoffice-cc-recipients').length > 0) {
+		$('.onoffice-cc-recipients').select2({
+			tags: true
+		});
+
+		$('.onoffice-cc-recipients').on('change', function() {
+			validateEmails($(this).val());
+		});
+	}
+
+	function validateEmails(emails) {
+		let valid = true;
+		$.each(emails, function(index, email) {
+			if (!isValidEmail(email)) {
+				valid = false;
+				return false;
+			}
+		});
+		if (!valid) {
+			$('.onoffice-cc-recipients-error-message').show();
+		} else {
+			$('.onoffice-cc-recipients-error-message').hide();
+		}
+	}
+
+	function isValidEmail(email) {
+		let regex = new RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+		return regex.test(email);
+	}
+
+	$('#send_form').on('click', function () {
+		if ($('.onoffice-cc-recipients-error-message').is(':visible')) {
+			return false;
+		}
+	});
+
+
 	$('.item-delete-link').click(function() {
 		var labelButtonHandleField= $(this).parent().parent().attr('action-field-name');
 		const data = $('.' + labelButtonHandleField);

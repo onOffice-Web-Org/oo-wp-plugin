@@ -163,6 +163,15 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 							$tableFieldFormTranslatedLabel, 'input_id', 'translated_label_id' );
 					}
 				}
+
+				$carbonCopyRecipients = $listViewRoot['carbon_copy_recipients'];
+				foreach ($carbonCopyRecipients as $carbonCopyRecipient) {
+					$this->_pWPDB->insert($prefix.'oo_plugin_recipients', [
+							'form_id' => esc_sql((int) $duplicateListViewId),
+							'carbon_copy_recipient' => esc_sql($carbonCopyRecipient),
+						]
+					);
+				}
 			}
 		}
 	}

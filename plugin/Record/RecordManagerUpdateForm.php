@@ -70,4 +70,25 @@ class RecordManagerUpdateForm
 
 		return $result;
 	}
+
+	/**
+	 * @param array $recipients
+	 *
+	 * @return bool
+	 */
+	public function updateRecipientsByRow(array $recipients): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$pWpDb->delete($prefix.self::TABLENAME_RECIPIENTS, ['form_id' => $this->getRecordId()]);
+
+		$result = true;
+		foreach ($recipients as $row) {
+			if (is_array($row)) {
+				$result = $result && $pWpDb->insert($pWpDb->prefix.self::TABLENAME_RECIPIENTS, $row);
+			}
+		}
+
+		return $result;
+	}
 }

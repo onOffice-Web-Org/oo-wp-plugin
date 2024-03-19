@@ -199,6 +199,12 @@ class RecordStructure
 				self::EMPTY_VALUE => '',
 			),
 		],
+		RecordManager::TABLENAME_RECIPIENTS => array(
+			'carbon_copy_recipient' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+		),
 	);
 
 

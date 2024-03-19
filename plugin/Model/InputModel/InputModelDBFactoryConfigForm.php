@@ -98,6 +98,8 @@ class InputModelDBFactoryConfigForm
     /** */
     const INPUT_FORM_CONTACT_TYPE = 'contactType';
 
+	const INPUT_FORM_CARBON_COPY_RECIPIENTS = 'carbonCopyRecipients';
+
 
 	/** @var array */
 	private $_inputConfig = [
@@ -197,6 +199,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_MARK_DOWN => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'markdown',
+		],
+		self::INPUT_FORM_CARBON_COPY_RECIPIENTS => [
+			self::KEY_TABLE => 'oo_plugin_recipients',
+			self::KEY_FIELD => 'carbon_copy_recipient',
 		],
 	];
 

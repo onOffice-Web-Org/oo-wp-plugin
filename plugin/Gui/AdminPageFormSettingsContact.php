@@ -103,6 +103,8 @@ class AdminPageFormSettingsContact
 		} else {
 			$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipient();
 		}
+		$pInputModelCarbonCopyRecipients = $pFormModelBuilder->createInputModelCarbonCopyRecipients();
+
 		$pInputModelDefaultRecipient = $pFormModelBuilder->createInputModelDefaultRecipient();
 		$pInputModelSubject = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT);
 		$pInputModelCaptcha = $pFormModelBuilder->createInputModelCaptchaRequired();
@@ -112,6 +114,7 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice-for-wp-websites'));
 		$pFormModelFormSpecific->addInputModel($pInputModelDefaultRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelRecipient);
+		$pFormModelFormSpecific->addInputModel($pInputModelCarbonCopyRecipients);
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
 
