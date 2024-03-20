@@ -198,7 +198,7 @@ abstract class FormModelBuilderDB
 		$pInputModelTemplate = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_TEMPLATE, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_TEMPLATE_LIST);
-		$pInputModelTemplate->setDirectory($path);
+		$pInputModelTemplate->setTemplateDirectory($path);
 
 		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths($path));
 		$pInputModelTemplate->setValue($selectedTemplate);

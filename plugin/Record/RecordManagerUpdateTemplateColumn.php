@@ -29,28 +29,28 @@ class RecordManagerUpdateTemplateColumn
 	extends RecordManager
 {
 	/** @var string */
-	private $_templateName = null;
+	private $_templateUrl = null;
 
 	/** @var string */
-	private $_templateChangeName = null;
+	private $_customTemplateUrl = null;
 
 	/** @var string */
 	private $_mainTable = '';
 
 	/**
-	 * @param string $templateName
+	 * @param string $templateUrl
 	 */
-	public function setTemplateName(string $templateName)
+	public function setTemplateUrl(string $templateUrl)
 	{
-		$this->_templateName = $templateName;
+		$this->_templateUrl = $templateUrl;
 	}
 
 	/**
-	 * @param string $templateChangeName
+	 * @param string $customTemplateUrl
 	 */
-	public function setTemplateChangeName(string $templateChangeName)
+	public function setCustomTemplateUrl(string $customTemplateUrl)
 	{
-		$this->_templateChangeName = $templateChangeName;
+		$this->_customTemplateUrl = $customTemplateUrl;
 	}
 
 	/**
@@ -61,9 +61,9 @@ class RecordManagerUpdateTemplateColumn
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$whereTemplate = ['template' => $this->_templateName];
+		$whereTemplateUrl = ['template' => $this->_templateUrl];
 		$suppressErrors = $pWpDb->suppress_errors();
-		$result = $pWpDb->update($prefix.$this->getMainTable(), ['template' => $this->_templateChangeName], $whereTemplate);
+		$result = $pWpDb->update($prefix.$this->getMainTable(), ['template' => $this->_customTemplateUrl], $whereTemplateUrl);
 		$pWpDb->suppress_errors($suppressErrors);
 
 		return $result !== false;

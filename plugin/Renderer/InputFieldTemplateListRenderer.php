@@ -92,9 +92,9 @@ class InputFieldTemplateListRenderer
 			}
 			foreach ($templateList as $key => $label) {
 				$checked = false;
-				$templateDefault = $templateSelection->getTemplateDefault($key, $this->getDirectory());
+				$defaultNameOfTemplate = $templateSelection->getDefaultNameOfTemplate($key, $this->getTemplateDirectory());
 
-				if ($templateDefault === $this->_checkedValue || $label === $this->_checkedValue || $key === $this->_checkedValue) {
+				if ($defaultNameOfTemplate === $this->_checkedValue || $label === $this->_checkedValue || $key === $this->_checkedValue) {
 					$checked = true;
 					$this->setCheckedValue(null);
 				}

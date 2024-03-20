@@ -30,13 +30,13 @@ use onOffice\WPlugin\Record\RecordManagerUpdateTemplateColumn;
 class TemplateSelection
 {
 	/** @var string */
-	private $_type = '';
+	private $_templateType = '';
 
 	/** @var string */
 	private $_folderName = '';
 
 	/** @var string */
-	private $_content = '';
+	private $_templateFileContent = '';
 
 	/** @var RecordManagerUpdateTemplateColumn */
 	private $_pRecordManagerUpdateTemplateColumn = null;
@@ -52,13 +52,16 @@ class TemplateSelection
 	/**
 	 *
 	 */
-	public function processWPPageTemplatesFile(): void
+	public function processWPPageTemplatesFile()
 	{
 		$templateTypes = [RecordManagerFactory::TYPE_ADDRESS, RecordManagerFactory::TYPE_ESTATE, RecordManagerFactory::TYPE_FORM];
 
-		foreach ($templateTypes as $type) {
-			$this->_type = $type;
-			$templateInformation = $this->readTemplatePaths($this->_type);
+		foreach ($templateTypes as $templateType) {
+			$this->_templateType = $templateType;
+			$templateInformation = $this->readTemplatePaths($this->_templateType);
+			if (empty($templateInformation)) {
+				continue;
+			}
 			foreach ($templateInformation as $info) {
 				$this->_folderName = $info['folder'];
 				$this->processPageTemplateFiles($info);
@@ -69,33 +72,33 @@ class TemplateSelection
 	/**
 	 * @param array $info
 	 */
-	private function processPageTemplateFiles(array $info): void
+	private function processPageTemplateFiles(array $info)
 	{
 		foreach ($info['path'] as $path => $fileName) {
-			$fullPath = $this->getFullTemplatePath($path, $this->_type);
-			if (!is_file($fullPath) || !is_readable($fullPath)) {
+			$fullPath = $this->getFullTemplatePath($path, $this->_templateType);
+			if (!is_file($fullPath) || !is_readable($fullPath) || !is_writable($fullPath)) {
 				continue;
 			}
-			$this->_content = file_get_contents($fullPath);
-			$templateNameFromFile = basename($fileName, ".php");
-			if (!preg_match('|Template Name:\s*(.*)$|mi', $this->_content, $header)) {
-				$this->addTemplateNameToTopPHPComment($fullPath, $templateNameFromFile);
+			$this->_templateFileContent = file_get_contents($fullPath);
+			$fileNameHaveNoExtension = basename($fileName, ".php");
+			if (!preg_match('|Template Name:\s*(.*)$|mi', $this->_templateFileContent, $header)) {
+				$this->addStatesTemplateNameToTopPHPComment($fullPath, $fileNameHaveNoExtension);
 				continue;
 			}
-			$this->updateTemplateName($fullPath, $header[1], $templateNameFromFile, $fileName);
+			$this->updateTemplateName($fullPath, $header[1], $fileNameHaveNoExtension, $fileName);
 		}
 	}
 
 	/**
 	 * @param string $fullPath
 	 * @param string $templateName
-	 * @param string $templateNameFromFile
+	 * @param string $fileNameHaveNoExtension
 	 * @param string $fileName
 	 */
-	private function updateTemplateName(string $fullPath, string $templateName, string $templateNameFromFile, string $fileName): void
+	private function updateTemplateName(string $fullPath, string $templateName, string $fileNameHaveNoExtension, string $fileName)
 	{
-		if ($templateName !== $templateNameFromFile) {
-			$this->renameTemplate($fileName, $templateName, $fullPath);
+		if ($templateName !== $fileNameHaveNoExtension) {
+			$this->updateName($fileName, $templateName, $fullPath);
 		}
 	}
 
@@ -104,30 +107,47 @@ class TemplateSelection
 	 * @param string $templateName
 	 * @param string $fullPath
 	 */
-	private function renameTemplate(string $fileName, string $templateName, string $fullPath): void
+	private function updateName(string $fileName, string $templateName, string $fullPath)
 	{
-		$templateNameFile = $this->_folderName . '/' . $templateName . '.php';
-		$templateChangeNameFile = $this->_folderName . '/' . $fileName;
+		$templateUrl = $this->_folderName . '/' . $templateName . '.php';
+		$customTemplateUrl = $this->_folderName . '/' . $fileName;
 
-		$this->_pRecordManagerUpdateTemplateColumn->setTemplateName($templateNameFile);
-		$this->_pRecordManagerUpdateTemplateColumn->setTemplateChangeName($templateChangeNameFile);
-		$this->_pRecordManagerUpdateTemplateColumn->setMainTable($this->_type);
+		$this->_pRecordManagerUpdateTemplateColumn->setTemplateUrl($templateUrl);
+		$this->_pRecordManagerUpdateTemplateColumn->setCustomTemplateUrl($customTemplateUrl);
+		$this->_pRecordManagerUpdateTemplateColumn->setMainTable($this->_templateType);
 
-		$pDataDetailViewOptions = get_option('onoffice-default-view');
-		if (!empty($pDataDetailViewOptions) && get_option('onoffice-default-view')->getTemplate() === $templateNameFile) {
-			$pDataDetailViewOptions->setTemplate($templateChangeNameFile);
-			update_option('onoffice-default-view', $pDataDetailViewOptions);
-		}
-
-		$pDataViewSimilarEstates = get_option('onoffice-similar-estates-settings-view');
-		if (!empty($pDataViewSimilarEstates) && get_option('onoffice-similar-estates-settings-view')->getDataViewSimilarEstates()->getTemplate() === $templateNameFile) {
-			$pDataViewSimilarEstates->getDataViewSimilarEstates()->setTemplate($templateChangeNameFile);
-			update_option('onoffice-similar-estates-settings-view', $pDataViewSimilarEstates);
-		}
+		$this->updateTemplateConfigInDetailViewOption($templateUrl, $customTemplateUrl);
+		$this->updateTemplateConfigInSimilarEstatesViewOption($templateUrl, $customTemplateUrl);
 
 		if ($this->_pRecordManagerUpdateTemplateColumn->updateDataTemplateColumn()) {
-			$newContent = str_replace('Template Name: ' . $templateName, 'Template Name: ' . basename($fileName, ".php"), $this->_content);
-			file_put_contents($fullPath, $newContent);
+			$newTemplateFileContent = str_replace('Template Name: ' . $templateName, 'Template Name: ' . basename($fileName, ".php"), $this->_templateFileContent);
+			file_put_contents($fullPath, $newTemplateFileContent);
+		}
+	}
+
+	/**
+	 * @param string $templateUrl
+	 * @param string $customTemplateUrl
+	 */
+	private function updateTemplateConfigInDetailViewOption(string $templateUrl, string $customTemplateUrl)
+	{
+		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		if (!empty($pDataDetailViewOptions) && $pDataDetailViewOptions->getTemplate() === $templateUrl) {
+			$pDataDetailViewOptions->setTemplate($customTemplateUrl);
+			update_option('onoffice-default-view', $pDataDetailViewOptions);
+		}
+	}
+
+	/**
+	 * @param string $templateUrl
+	 * @param string $customTemplateUrl
+	 */
+	private function updateTemplateConfigInSimilarEstatesViewOption(string $templateUrl, string $customTemplateUrl)
+	{
+		$pDataViewSimilarEstates = get_option('onoffice-similar-estates-settings-view');
+		if (!empty($pDataViewSimilarEstates) && $pDataViewSimilarEstates->getDataViewSimilarEstates()->getTemplate() === $templateUrl) {
+			$pDataViewSimilarEstates->getDataViewSimilarEstates()->setTemplate($customTemplateUrl);
+			update_option('onoffice-similar-estates-settings-view', $pDataViewSimilarEstates);
 		}
 	}
 
@@ -135,10 +155,12 @@ class TemplateSelection
 	 * @param string $fullPath
 	 * @param string $templateName
 	 */
-	private function addTemplateNameToTopPHPComment(string $fullPath, string $templateName): void
+	private function addStatesTemplateNameToTopPHPComment(string $fullPath, string $templateName)
 	{
-		$newContent = "<?php\n/**\n * Template Name: $templateName\n * Template Default: $templateName\n */\n?>\n" . $this->_content;
-		file_put_contents($fullPath, $newContent);
+		$templateComment = "\n/**\n * Template Name: $templateName\n * Template Default: $templateName\n */\n";
+		$this->_templateFileContent = preg_replace("/^<\?php/", "<?php" . $templateComment, $this->_templateFileContent, 1);
+
+		file_put_contents($fullPath, $this->_templateFileContent);
 	}
 
 	/**
@@ -153,28 +175,33 @@ class TemplateSelection
 	}
 
 	/**
-	 * @param string $relativePath
+	 * @param string $partPath
 	 * @param string $directory
 	 * @return string
 	 */
-	private function getFullTemplatePath(string $relativePath, string $directory): string 
+	private function getFullTemplatePath(string $partPath, string $directory): string 
 	{
-		foreach ($this->getTemplates($directory) as $paths) {
-			foreach ($paths as $fullPath) {
-				if (strpos($fullPath, $relativePath) !== false) {
+		$templatePaths = $this->getTemplates($directory);
+
+		foreach ($templatePaths as $templatePath) {
+			if (empty($templatePath)) {
+				continue;
+			}
+			foreach ($templatePath as $fullPath) {
+				if (strpos($fullPath, $partPath) !== false) {
 					return $fullPath;
 				}
 			}
 		}
 
-		return "";
+		return '';
 	}
 
 	/**
 	 * @param string $directory
 	 * @return array
 	 */
-	private function getTemplates(string $directory, string $pattern = '*'): array 
+	public function getTemplates(string $directory, string $pattern = '*'): array 
 	{
 		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ] = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
 										. 'onoffice-personalized/templates/' . $directory . '/' . $pattern . '.php' );
@@ -185,13 +212,13 @@ class TemplateSelection
 	}
 
 	/**
-	 * @param string $relativePath
+	 * @param string $partPath
 	 * @param string $directory
 	 * @return string
 	 */
-	public function getTemplateDefault(string $relativePath, string $directory): string 
+	public function getDefaultNameOfTemplate(string $partPath, string $directory): string 
 	{
-		$fullPath = $this->getFullTemplatePath($relativePath, $directory);
+		$fullPath = $this->getFullTemplatePath($partPath, $directory);
 		if (!is_file($fullPath) || !is_readable($fullPath) || empty($fullPath)) {
 			return '';
 		}
