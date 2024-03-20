@@ -84,9 +84,11 @@ class RecordManagerUpdateForm
 
 		$result = true;
 		foreach ($recipients as $row) {
-			if (is_array($row)) {
-				$result = $result && $pWpDb->insert($pWpDb->prefix.self::TABLENAME_RECIPIENTS, $row);
+			if (empty($row)) {
+				continue;
 			}
+
+			$result = $result && $pWpDb->insert($pWpDb->prefix.self::TABLENAME_RECIPIENTS, $row);
 		}
 
 		return $result;

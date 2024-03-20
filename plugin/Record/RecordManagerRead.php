@@ -153,12 +153,8 @@ abstract class RecordManagerRead
 			WHERE `form_id` = ".esc_sql($formId);
 
 		$carbonCopyRecipients = $pWpDb->get_col($sql);
-		$result = array();
-		if (is_array($carbonCopyRecipients)) {
-			$result = $carbonCopyRecipients;
-		}
 
-		return $result;
+		return is_array($carbonCopyRecipients) ? $carbonCopyRecipients : [];
 	}
 
 

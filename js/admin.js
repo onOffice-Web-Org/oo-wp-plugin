@@ -79,7 +79,7 @@ jQuery(document).ready(function($){
 		return regex.test(email);
 	}
 
-	$('#send_form').on('click', function () {
+	$('.block-publish #send_form').on('click', function () {
 		if ($('.onoffice-cc-recipients-error-message').is(':visible')) {
 			return false;
 		}

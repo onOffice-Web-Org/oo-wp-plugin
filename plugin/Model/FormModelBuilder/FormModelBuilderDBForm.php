@@ -355,7 +355,7 @@ class FormModelBuilderDBForm
 		$pInputModelFormCarbonCopyRecipients->setHintHtml(__('Cc Recipients will not work with contact forms on estate detail pages.', 'onoffice-for-wp-websites'));
 		$field = $pInputModelFormCarbonCopyRecipients->getField();
 		$selectedRecipient = $this->getValue($field);
-		if ($selectedRecipient == null) {
+		if (is_null($selectedRecipient)) {
 			$selectedRecipient = [];
 		}
 
