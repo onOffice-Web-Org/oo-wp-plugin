@@ -33,17 +33,15 @@ class TestClassTemplateSelection extends \WP_UnitTestCase
 	 */
 	private function prepareTemplateEnvironment(string $templatePath)
 	{
-		if (!is_dir($templatePath) && 
-			!mkdir($templatePath . 'templates/', 755, true) && 
-			!is_dir($templatePath . 'templates/')) 
-		{
-			throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . 'templates/'));
+		if (!is_dir($templatePath . 'templates/')) {
+			if (!mkdir($templatePath . 'templates/', 755, true)) {
+				throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . 'templates/'));
+			}
 		}
-		if (!is_dir($templatePath) && 
-			!mkdir($templatePath . 'templates/estate/', 755, true) && 
-			!is_dir($templatePath . 'templates/estate/')) 
-		{
-			throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . 'templates/estate/'));
+		if (!is_dir($templatePath . 'templates/estate/')) {
+			if (!mkdir($templatePath . 'templates/estate/', 755, true)) {
+				throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . 'templates/estate/'));
+			}
 		}
 
 		copy(__DIR__.'/resources/templates/default_detail.php', $templatePath.'/templates/estate/default_detail.php');
