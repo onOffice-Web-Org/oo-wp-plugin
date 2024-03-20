@@ -239,6 +239,7 @@ class DataFormConfigurationFactory
 		$geoPositionSettings = $this->_pGeoPositionFieldHandler->getActiveFields();
 		$fieldMapping = (new GeoPosition)->getSearchCriteriaFields();
 
+		$geoFields = [];
 		foreach ($geoPositionSettings as $field) {
 			if ($this->_type === Form::TYPE_APPLICANT_SEARCH && $field === GeoPosition::ESTATE_LIST_SEARCH_RADIUS) {
 				continue;
@@ -253,8 +254,10 @@ class DataFormConfigurationFactory
 				'individual_fieldname' => 0,
 			];
 
-			$result []= $geoPositionField;
+			$geoFields []= $geoPositionField;
 		}
+
+		array_splice($result, $arrayPosition, 0, $geoFields);
 
 		return $result;
 	}
