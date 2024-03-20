@@ -60,14 +60,14 @@ jQuery(document).ready(function($){
 	}
 
 	function validateEmails(emails) {
-		let valid = true;
+		let isValid = true;
 		$.each(emails, function(index, email) {
 			if (!isValidEmail(email)) {
-				valid = false;
+				isValid = false;
 				return false;
 			}
 		});
-		if (!valid) {
+		if (!isValid) {
 			$('.onoffice-cc-recipients-error-message').show();
 		} else {
 			$('.onoffice-cc-recipients-error-message').hide();
