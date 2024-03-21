@@ -70,8 +70,17 @@ class DataListView
 	/** */
 	const SORT_BY_STANDARD_VALUES = 'sortby';
 
+	/** */	
+	const SORT_MARKED_PROPERTIES = 'markedPropertiesSort';
+
+	/** */
+	const SORT_BY_TAGS = 'sortByTags';
+
 	/** */
 	const SHOW_PRICE_ON_REQUEST = '1';
+
+	/** */
+	const SHOW_MARKED_PROPERTIES_SORT = 2;
 
 	/** @var int */
 	private $_id = null;
@@ -153,6 +162,15 @@ class DataListView
 
 	/** @var bool */
 	private $_showPriceOnRequest = false;
+
+	/** @var string */
+	private $_markedPropertiesSort = '';
+
+	/** @var string */
+	private $_sortByTags = '';
+
+	/** @var string */
+	private $_sortByTagsDirection = '';
 
 	/** @var string[] */
 	private $_priceFields = [
@@ -422,6 +440,30 @@ class DataListView
 	{
 		$this->_showReferenceEstate = $showReferenceEstate;
 	}
+
+	/** @param string $markedPropertiesSort */
+	public function setMarkedPropertiesSort(string $markedPropertiesSort)
+		{ $this->_markedPropertiesSort = $markedPropertiesSort; }
+
+	/** @return string */
+	public function getMarkedPropertiesSort(): string
+		{ return $this->_markedPropertiesSort; }
+
+	/** @param string $sortByTags */
+	public function setSortByTags(string $sortByTags)
+		{ $this->_sortByTags = $sortByTags; }
+
+	/** @return string */
+	public function getSortByTags(): string
+		{ return $this->_sortByTags; }
+
+	/** @param string $sortByTagsDirection */
+	public function setSortByTagsDirection(string $sortByTagsDirection)
+		{ $this->_sortByTagsDirection = $sortByTagsDirection; }
+
+	/** @return string */
+	public function getSortByTagsDirection(): string
+		{ return $this->_sortByTagsDirection; }
 
 	/**
 	 * @return array

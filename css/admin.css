@@ -549,6 +549,36 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	pointer-events: none;
 }
 
+.sortable-tags { 
+	background-color: #fff;
+	list-style-type: none; 
+	margin: 0; 
+	width: 100%;
+	margin-top: 6px;
+	border: 1px solid #c3c4c7;
+	display: flex;
+	flex-direction: column;
+}
+
+.sortable-tags .rotate-icon {
+	transform: rotate(90deg);
+}
+
+.sortable-tags .sortable-tag {
+	margin: 5px;
+	padding: 5px;
+	background-color: #fafafa;
+	cursor: pointer;
+	border: 1px solid #c3c4c7;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.sortable-tags .sortable-tag span {
+	color: #c3c4c7;
+}
+
 #listSettings .custom-input-field,
 #viewpicturetypes .custom-input-field {
 	display: block;
