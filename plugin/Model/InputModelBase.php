@@ -78,6 +78,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
 
+  /** */
+	const HTML_SEARCH_FIELD_FOR_FIELD_LISTS = 'searchFieldForFieldLists';
+
 	/** */
 	const HTML_TYPE_TOGGLE_SWITCH = 'toggleSwitch';
 
@@ -320,5 +323,4 @@ abstract class InputModelBase
 	/** @param int $minValue */
 	public function setMinValueHtml(int $minValue)
 		{ $this->_minValue = $minValue; }
-
 }
