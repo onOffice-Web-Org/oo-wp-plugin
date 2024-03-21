@@ -220,7 +220,7 @@ class AdminPageApiSettings
 		$listPluginSEOActive = $pAdminViewController->getPluginSEOActive();
 		$listNamePluginSEO = implode(", ",$listPluginSEOActive);
 		$titleDoNotModify = esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites');
-		$summaryDetailDoNotModify = esc_html__( 'Custom fields', 'onoffice-for-wp-websites' );
+		$summaryDetailDoNotModify = esc_html__( 'Further information on custom fields', 'onoffice-for-wp-websites' );
 		$descriptionDetailDoNotModify = esc_html__( 'With the help of an SEO plugin, it is possible to use individual fields to insert data directly from onOffice enterprise into the title and metadata of your website.', 'onoffice-for-wp-websites' );
 		$guideUseCustomFieldsDoNotModify = esc_html__( 'These custom fields allow you to insert specific information, such as the property title and property number from onOffice enterprise. The corresponding field names can be found in the field list on the detail page. Please note that only fields that are active for the detail page, for example, can be output.',
 			'onoffice-for-wp-websites' );
