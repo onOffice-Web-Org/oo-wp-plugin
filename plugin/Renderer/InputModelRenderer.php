@@ -270,6 +270,17 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setOoModule($pFormModel->getOoModule());
 				break;
+
+			case InputModelOption::HTML_TYPE_PASSWORD:
+				$pInstance = new InputFieldPasswordRenderer('password', $elementName);
+				$pInstance->addAdditionalAttribute('size', '50');
+				$pInstance->setValue($pInputModel->getValue());
+				break;
+
+			case InputModelBase::HTML_TYPE_DELETE_RECAPTCHA_BUTTON:
+				$pInstance = new InputFieldDeleteRecaptchaButtonRenderer(null, '');
+				break;
+
 		}
 
 		if ($pInstance !== null) {

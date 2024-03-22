@@ -30,6 +30,7 @@ use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Gui\AdminPageAjax;
+use onOffice\WPlugin\Gui\AdminPageApiSettings;
 use onOffice\WPlugin\Gui\AdminPageEstate;
 use onOffice\WPlugin\Gui\AdminPageEstateDetail;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
@@ -334,5 +335,23 @@ We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?p
 		$pAdminViewController->method('getField')->willReturn($fieldNamesMock);
 		$pAdminViewController->displayAPIError();
 		$this->expectOutputString('<div class="notice notice-error"><p>The onOffice plugin has an unexpected problem when trying to reach the onOffice API.</p><p>Please check the <a href="https://status.onoffice.de/">onOffice server status</a> to see if there are known problems. Otherwise, report the problem using the <a href="https://wp-plugin.onoffice.com/en/support/">support form</a>.</p></div>');
+	}
+
+	/**
+	 * @depends testOnInit
+	 * @param AdminViewController $pAdminViewController
+	 * @throws Exception
+	 * @global array $wp_filter
+	 */
+	public function testEnqueueExtraJsWithHandleRecaptcha(AdminViewController $pAdminViewController)
+	{
+		global $wp_filter;
+		$wp_filter['admin_page_onoffice-settings'] = new \WP_Hook;
+		/* @var $pWpHook WP_Hook */
+		$pWpHook = $wp_filter['admin_page_onoffice-settings'];
+		$adminPage = new AdminPageApiSettings('admin_page_onoffice-settings');
+		$pWpHook->callbacks = [[['function' => [$adminPage]]]];
+		$pAdminViewController->enqueueExtraJs("admin_page_onoffice-settings");
+		$this->assertEquals(['handle-notification-actions', 'handle-visibility-google-recaptcha-keys'], wp_scripts()->queue);
 	}
 }

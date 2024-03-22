@@ -164,9 +164,11 @@ class AdminPageApiSettings
 			('onoffice-settings', 'captcha-sitekey', $labelSiteKey, 'string');
 		$optionNameKey = $pInputModelCaptchaSiteKey->getIdentifier();
 		$pInputModelCaptchaSiteKey->setValue(get_option($optionNameKey));
+		$pInputModelCaptchaSiteKey->setHtmlType(InputModelOption::HTML_TYPE_PASSWORD);
 		$pInputModelCaptchaPageSecret = new InputModelOption
 			('onoffice-settings', 'captcha-secretkey', $labelSecretKey, 'string');
 		$pInputModelCaptchaPageSecret->setIsPassword(true);
+		$pInputModelCaptchaPageSecret->setHtmlType(InputModelOption::HTML_TYPE_PASSWORD);
 		$optionNameSecret = $pInputModelCaptchaPageSecret->getIdentifier();
 		$pInputModelCaptchaPageSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
 			return $this->checkPassword($password, $optionNameSecret);
@@ -175,9 +177,13 @@ class AdminPageApiSettings
 		$pInputModelCaptchaPageSecret->setValue
 			(get_option($optionNameSecret, $pInputModelCaptchaPageSecret->getDefault()));
 
+		$pInputModelDeleteRecaptchaKeys = new InputModelOption('onoffice-settings', 'delete-recaptcha-keys', '', 'string');
+		$pInputModelDeleteRecaptchaKeys->setHtmlType(InputModelOption::HTML_TYPE_DELETE_RECAPTCHA_BUTTON);
+
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelCaptchaSiteKey);
 		$pFormModel->addInputModel($pInputModelCaptchaPageSecret);
+		$pFormModel->addInputModel($pInputModelDeleteRecaptchaKeys);
 		$pFormModel->setGroupSlug('onoffice-google-recaptcha');
 		$pFormModel->setPageSlug($this->getPageSlug());
 		$pFormModel->setLabel(__('Google reCAPTCHA', 'onoffice-for-wp-websites'));
