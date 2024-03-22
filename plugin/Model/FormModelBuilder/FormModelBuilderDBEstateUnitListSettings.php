@@ -86,6 +86,7 @@ class FormModelBuilderDBEstateUnitListSettings
 		} else {
 			$this->setValues(array(
 				DataListView::FIELDS => self::$_defaultFields,
+				'show_status' => self::DEFAULT_RECORDS_SHOW_STATUS
 			));
 		}
 
@@ -231,5 +232,21 @@ class FormModelBuilderDBEstateUnitListSettings
 			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
 		});
 		return $pInputModel;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelShowStatus()
+	{
+		$labelShowStatus = __('Show Estate Status', 'onoffice-for-wp-websites');
+
+		$pInputModelShowStatus = $this->getInputModelDBFactory()->create
+		(InputModelDBFactory::INPUT_SHOW_STATUS, $labelShowStatus);
+		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowStatus->setValue($this->getValue('show_status'));
+		$pInputModelShowStatus->setValuesAvailable(1);
+
+		return $pInputModelShowStatus;
 	}
 }

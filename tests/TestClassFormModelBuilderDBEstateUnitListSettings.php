@@ -53,4 +53,23 @@ class TestClassFormModelBuilderDBEstateUnitListSettings
 		$pFormModel = $pFormModelBuilder->generate('abc');
 		$this->assertEquals($pFormModel->getPageSlug(), 'abc');
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings::createInputModelShowStatus
+	 */
+	public function testCreateInputModelShowStatus()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateUnitListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('0');
+		$pInputModelDB = $pInstance->createInputModelShowStatus();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getValue(), '0');
+		$this->assertEquals('show_status', $pInputModelDB->getField());
+		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
+	}
 }
