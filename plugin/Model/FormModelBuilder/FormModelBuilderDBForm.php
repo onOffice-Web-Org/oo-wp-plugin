@@ -412,7 +412,7 @@ class FormModelBuilderDBForm
         $pInputModelFormContactType->setValuesAvailable($availableContactType);
         $pInputModelFormContactType->setIsMulti(true);
         $selectedValue = $this->getValue($field);
-        if ($selectedValue == null) {
+        if (is_null($selectedValue)) {
             $selectedValue = [];
         }
         $pInputModelFormContactType->setValue($selectedValue);

@@ -84,9 +84,11 @@ class RecordManagerUpdateForm
 
 		$result = true;
 		foreach ($contactTypes as $row) {
-			if (is_array($row)) {
-				$result = $result && $pWpDb->insert($pWpDb->prefix.self::TABLENAME_CONTACT_TYPES, $row);
+			if (empty($row)) {
+				continue;
 			}
+
+			$result = $result && $pWpDb->insert($pWpDb->prefix.self::TABLENAME_CONTACT_TYPES, $row);
 		}
 
 		return $result;

@@ -152,13 +152,8 @@ abstract class RecordManagerRead
 			WHERE `form_id` = ".esc_sql($formId);
 
 		$contactTypes = $pWpDb->get_col($sql);
-		$result = array();
 
-		if (is_array($contactTypes)) {
-			$result = $contactTypes;
-		}
-
-		return $result;
+		return is_array($contactTypes) ? $contactTypes : [];
 	}
 
 
