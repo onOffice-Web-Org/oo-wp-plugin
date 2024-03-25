@@ -437,6 +437,10 @@ function filter_script_loader_tag($tag, $handle) {
 	return $tag;
 }
 
-$pDI->get(TemplateSelection::class)->processWPPageTemplatesFile();
+add_action('plugins_loaded', function() use ($pDI) {
+	if (is_admin()) {
+		$pDI->get(TemplateSelection::class)->processWPPageTemplatesFile();
+	}
+});
 
 return $pDI;
