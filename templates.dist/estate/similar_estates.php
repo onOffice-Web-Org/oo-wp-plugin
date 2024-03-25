@@ -27,9 +27,11 @@
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstates->getEstatePictureValues( $id );
 					if ( $referenz === "1" && $pEstates->getViewRestrict() ) {
-						echo 'div style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
+						echo '<div class="oo-listimage">';
+						$pEstates->generateEstatePictureTag($id);
 					} else {
-						echo '<a href="'.$pEstates->getEstateLink().'" style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
+						echo '<a class="oo-listimage estate-status" href="' . esc_url($pEstates->getEstateLink()) . '">';
+						$pEstates->generateEstatePictureTag($id);
 					}
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
