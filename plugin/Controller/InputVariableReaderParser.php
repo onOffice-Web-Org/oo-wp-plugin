@@ -112,6 +112,17 @@ class InputVariableReaderParser
 		$stringDec = __String::getNew($stringThousand)->replace
 		($wp_locale->number_format['decimal_point'], '.');
 
+		$onofficeSettingsThousandSeparator = get_option('onoffice-settings-thousand-separator');
+		if ($onofficeSettingsThousandSeparator === InputVariableReaderFormatter::DOT_THOUSAND_SEPARATOR) {
+			$stringThousand = str_replace('.', '', $floatString);
+			$stringDec = __String::getNew($stringThousand)->replace
+			($wp_locale->number_format['thousands_sep'], '.');
+		} elseif ($onofficeSettingsThousandSeparator === InputVariableReaderFormatter::COMMA_THOUSAND_SEPARATOR) {
+			$stringThousand = str_replace(',', '', $floatString);
+			$stringDec = __String::getNew($stringThousand)->replace
+			($wp_locale->number_format['decimal_point'], '.');
+		}
+
 		return floatval($stringDec);
 	}
 
