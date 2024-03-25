@@ -82,6 +82,8 @@ class TestClassSearchParametersModelBuilderEstate
 			'testField2' => 'bye',
 			'testField3__von' => '2020-03-20 07:33:33',
 			'testField3__bis' => '2020-05-01 01:01:01',
+			'sortby_id_13' => 'kaufpreis',
+			'sortorder_id_13' => 'DESC',
 		];
 
 		$pDataListView = new DataListView(13, 'testlist');
@@ -97,8 +99,8 @@ class TestClassSearchParametersModelBuilderEstate
 			'testField3' => '',
 			'testField3__von' => '2020-03-20 07:33:33',
 			'testField3__bis' => '2020-05-01 01:01:01',
-			'sortby' => '',
-			'sortorder' => '',
+			'sortby_id_13' => 'kaufpreis',
+			'sortorder_id_13' => 'DESC',
 		]);
 		$pSearchParametersExpectation->setAllowedGetParameters([
 			'testField1',
@@ -106,8 +108,8 @@ class TestClassSearchParametersModelBuilderEstate
 			'testField3',
 			'testField3__von',
 			'testField3__bis',
-			'sortby',
-			'sortorder',
+			'sortby_id_13',
+			'sortorder_id_13',
 		]);
 		$this->assertEquals($pSearchParametersExpectation, $pSearchParametersResult);
 	}

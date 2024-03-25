@@ -24,19 +24,24 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Controller\SortList\SortListTypes;
+use onOffice\WPlugin\DataView\DataListView;
 use WP_UnitTestCase;
 use function __;
 
 class TestClassSortListTypes
 	extends WP_UnitTestCase
 {
+	/** @var DataListView */
+	private $_pListView = null;
+
 	/**
 	 * @covers \onOffice\WPlugin\Controller\SortList\SortListTypes::getSortUrlPrameter
 	 */
 	public function testGetSortUrlParameter()
 	{
-		$expectedValues = ['sortorder', 'sortby'];
-		$value = SortListTypes::getSortUrlPrameter();
+		$this->_pListView = new DataListView(1, 'test');
+		$expectedValues = ['sortby_id_1', 'sortorder_id_1'];
+		$value = SortListTypes::getSortUrlPrameter($this->_pListView->getId());
 
 		$this->assertEqualSets($expectedValues, $value);
 	}

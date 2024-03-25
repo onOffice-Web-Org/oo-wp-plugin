@@ -64,8 +64,8 @@ class SortListBuilder
 
 		if ($pSortListDataModel->isAdjustableSorting())	{
 			$pSortListDataModel->setSelectedSortby($this->estimateAdjustableSelectedSortby($sortbyDefault,
-				$pSortListDataModel->getSortByUserValues()));
-			$pSortListDataModel->setSelectedSortorder($this->estimateAdjustableSelectedSortorder($sortbyDefault));
+				$pSortListDataModel->getSortByUserValues(), $pListView->getId()));
+			$pSortListDataModel->setSelectedSortorder($this->estimateAdjustableSelectedSortorder($sortbyDefault, $pListView->getId()));
 		} else {
 			$pSortListDataModel->setSelectedSortby($pListView->getSortby());
 			$pSortListDataModel->setSelectedSortorder($pListView->getSortorder());
@@ -134,12 +134,13 @@ class SortListBuilder
 	/**
 	 * @param string $default
 	 * @param array $sortbyUserValues
+	 * @param int $listViewId
 	 * @return string
 	 */
-	private function estimateAdjustableSelectedSortby(string $default, array $sortbyUserValues): string
+	private function estimateAdjustableSelectedSortby(string $default, array $sortbyUserValues, int $listViewId): string
 	{
 		$pRequestVariables = new RequestVariablesSanitizer();
-		$sortby = $pRequestVariables->getFilteredGet(SortListTypes::SORT_BY) ?? '';
+		$sortby = $pRequestVariables->getFilteredGet(SortListTypes::SORT_BY . '_id_' . $listViewId) ?? '';
 		$pValidator = new SortListValidator;
 		if ($sortby != '' && $pValidator->isSortbyValide($sortby, $sortbyUserValues)) {
 			$selectedSortBy = $sortby;
@@ -184,12 +185,13 @@ class SortListBuilder
 
 	/**
 	 * @param string $sortbyDefault
+	 * @param int $listViewId
 	 * @return string
 	 */
-	private function estimateAdjustableSelectedSortorder(string $sortbyDefault): string
+	private function estimateAdjustableSelectedSortorder(string $sortbyDefault, int $listViewId): string
 	{
 		$pRequestVariables = new RequestVariablesSanitizer();
-		$sortorder = $pRequestVariables->getFilteredGet(SortListTypes::SORT_ORDER) ?? '';
+		$sortorder = $pRequestVariables->getFilteredGet(SortListTypes::SORT_ORDER . '_id_' . $listViewId) ?? '';
 		$pValidator = new SortListValidator;
 
 		if (count(explode('#', $sortbyDefault)) == 1)
