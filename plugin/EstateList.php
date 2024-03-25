@@ -513,15 +513,16 @@ class EstateList
 		}
 
 		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
-			if ($this->enableShowPriceOnRequestText() || isset($recordModified['preisAufAnfrage'])) {
+			if ($this->enableShowPriceOnRequestText() ) {
 				$priceFields = $this->_pDataView->getListFieldsShowPriceOnRequest();
 
 				foreach ($priceFields as $priceField) {
 					$this->displayTextPriceOnRequest($recordModified, $priceField);
 				}
-				unset($recordModified['preisAufAnfrage']);
 			}
 		}
+		// do not show priceOnRequest as single Field
+		unset($recordModified['preisAufAnfrage']);
 
 		return $recordModified;
 	}
