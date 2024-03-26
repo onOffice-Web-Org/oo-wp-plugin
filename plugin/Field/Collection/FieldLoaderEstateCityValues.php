@@ -43,6 +43,7 @@ class FieldLoaderEstateCityValues
 	/** @var SDKWrapper */
 	private $_pSDKWrapper;
 
+	/** @var string */
 	private $_pShowReferenceEstate = '';
 
 	/**
@@ -144,10 +145,10 @@ class FieldLoaderEstateCityValues
 		$pApiClientAction->addRequestToQueue()->sendRequests();
 		$result = $pApiClientAction->getResultRecords();
 
-		if (empty($result[0]['elements'])) {
+		if (empty($result)) {
 			return [];
 		}
 
-		return $result[0]['elements'];
+		return !empty($result[0]['elements']) ? $result[0]['elements'] : [];
 	}
 }

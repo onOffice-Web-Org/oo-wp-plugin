@@ -3,12 +3,13 @@ jQuery(document).ready(function ($) {
 		width: '100%'
 	});
 
-	const selectElement = $('.form-control').first();
-
-	if (selectElement.hasClass('custom-multiple-select')) {
+	if ($('.custom-multiple-select').length > 0) {
+		const selectElement = $('.custom-multiple-select').first();
 		const selectStyles = window.getComputedStyle(selectElement.get(0));
+
 		$('.select2-container--default .select2-selection--multiple').css({
-			'padding': selectStyles.padding
+			'padding': selectStyles.padding,
+			'display': 'flex'
 		});
 	}
 });

@@ -292,6 +292,9 @@ class FieldsCollectionBuilderShort
 
 	public function addFieldEstateCityValues(FieldsCollection $pFieldsCollection, string $pShowReferenceEstate = ''): self
 	{
+		if (!$pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, 'ort')) {
+			return $this;
+		};
 		$pFieldLoader = $this->_pContainer->make(FieldLoaderEstateCityValues::class, ['pShowReferenceEstate' => $pShowReferenceEstate]);
 		$pFieldCollectionAddressEstate = $this->_pContainer->get(FieldsCollectionBuilder::class)
 			->buildFieldsCollection($pFieldLoader);
