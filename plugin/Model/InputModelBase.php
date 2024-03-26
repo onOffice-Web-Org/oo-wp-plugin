@@ -75,10 +75,14 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_BUTTON_FIELD = 'buttonHandleField';
 
+	/** */
 	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
 
-	/** */
+  /** */
 	const HTML_SEARCH_FIELD_FOR_FIELD_LISTS = 'searchFieldForFieldLists';
+
+	/** */
+	const HTML_TYPE_TOGGLE_SWITCH = 'toggleSwitch';
 
 	/** @var string */
 	private $_name = null;

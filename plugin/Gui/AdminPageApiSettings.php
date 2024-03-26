@@ -67,6 +67,7 @@ class AdminPageApiSettings
 		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleMapsKey();
 		$this->addFormModelGoogleCaptcha();
+		$this->addFormModelSocialMetaData();
 		$this->addFormModelHoneypot();
 		$this->addFormModelFavorites($pageSlug);
         $this->addFormModelDetailView($pageSlug);
@@ -188,6 +189,35 @@ class AdminPageApiSettings
 		$this->addFormModel($pFormModel);
 	}
 
+	/**
+	 *
+	 */
+
+	private function addFormModelSocialMetaData()
+	{
+		$labelOpenGraph = __('Enable Open Graph', 'onoffice-for-wp-websites');
+		$pInputModelOpenGraph = new InputModelOption
+			('onoffice-settings', 'opengraph', $labelOpenGraph, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$pInputModelOpenGraph->setValuesAvailable(1);
+		$pInputModelOpenGraph->setHtmlType(InputModelOption::HTML_TYPE_TOGGLE_SWITCH);
+		$pInputModelOpenGraph->setValue(get_option($pInputModelOpenGraph->getIdentifier()));
+
+		$labelTwitterCards = __('Enable Twitter Cards', 'onoffice-for-wp-websites');
+		$pInputModelTwitterCards = new InputModelOption
+			('onoffice-settings', 'twittercards', $labelTwitterCards, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$pInputModelTwitterCards->setValuesAvailable(1);
+		$pInputModelTwitterCards->setHtmlType(InputModelOption::HTML_TYPE_TOGGLE_SWITCH);
+		$pInputModelTwitterCards->setValue(get_option($pInputModelTwitterCards->getIdentifier()));
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelTwitterCards);
+		$pFormModel->addInputModel($pInputModelOpenGraph);
+		$pFormModel->setGroupSlug('onoffice-settings');
+		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setLabel(__('Social MetaData', 'onoffice-for-wp-websites'));
+
+		$this->addFormModel($pFormModel);
+	}
 
 	/**
 	 *
