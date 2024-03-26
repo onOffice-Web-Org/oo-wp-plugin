@@ -249,8 +249,8 @@ jQuery(document).ready(function($){
 		}
 
 		if (fieldName !== 'ort') {
-			var selectors = ['oopluginfieldconfig-convertTextToSelectForCityField'];
-			var convertTextToSelectForCityField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
+			const selectors = ['oopluginfieldconfig-convertTextToSelectForCityField'];
+			let convertTextToSelectForCityField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
 			convertTextToSelectForCityField.parent().remove();
 		}
 

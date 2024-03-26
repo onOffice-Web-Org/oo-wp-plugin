@@ -3,10 +3,10 @@ jQuery(document).ready(function ($) {
 		width: '100%'
 	});
 
-	var selectElement = $('.form-control').first();
+	const selectElement = $('.form-control').first();
 
 	if (selectElement.hasClass('custom-multiple-select')) {
-		var selectStyles = window.getComputedStyle(selectElement.get(0));
+		const selectStyles = window.getComputedStyle(selectElement.get(0));
 		$('.select2-container--default .select2-selection--multiple').css({
 			'padding': selectStyles.padding
 		});
