@@ -169,7 +169,7 @@ class DefaultFilterBuilderListView
 				$additionalEstateCities []= $value;
 			}
 
-			if (!empty($additionalEstateCities)) {
+			if ($additionalEstateCities !== []) {
 				$baseFilter['ort'] = [
 					['op' => 'in', 'val' => $additionalEstateCities],
 				];
