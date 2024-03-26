@@ -52,4 +52,7 @@ interface DataView
 
 	/** @return bool */
 	public function getRandom(): bool;
+
+	/** @return array */
+	public function getListFieldsShowPriceOnRequest(): array;
 }
