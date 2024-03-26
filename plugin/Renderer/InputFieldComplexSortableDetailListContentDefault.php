@@ -53,12 +53,12 @@ class InputFieldComplexSortableDetailListContentDefault
 		$pFormModel = new FormModel();
 
 		foreach ($extraInputModels as $pInputModel) {
-			if ($key !== 'ort' && !in_array($type, [FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]) &&
+			if (!in_array($type, [FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]) &&
 				$pInputModel->getField() == 'availableOptions')
 			{
 				continue;
 			}
-			if ($key !== 'ort' && $pInputModel->getField() == 'convertTextToSelectForCityField') {
+			if ($key !== 'ort' && $pInputModel->getField() == 'convertTextToSelectForCityField' && !$isDummy) {
 				continue;
 			}
 			$pInputModel->setIgnore($isDummy);

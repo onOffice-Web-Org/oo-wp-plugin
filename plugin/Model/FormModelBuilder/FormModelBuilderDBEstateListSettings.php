@@ -351,10 +351,10 @@ class FormModelBuilderDBEstateListSettings
 
 	public function callbackValueInputModelConvertInputTextToSelectCityField(InputModelBase $pInputModel, string $key)
 	{
-		$valueFromConf = $this->getValue('convertTextToSelectForCityField');
+		$valueFromConfig = $this->getValue('convertTextToSelectForCityField');
 
-		$availableOptionsFields = is_array($valueFromConf) ? $valueFromConf : array();
-		$value = in_array($key, $availableOptionsFields);
+		$convertTextToSelectForCityFields = is_array($valueFromConfig) ? $valueFromConfig : array();
+		$value = in_array($key, $convertTextToSelectForCityFields);
 		$pInputModel->setValue($value);
 		$pInputModel->setValuesAvailable($key);
 	}

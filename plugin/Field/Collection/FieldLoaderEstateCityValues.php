@@ -112,6 +112,11 @@ class FieldLoaderEstateCityValues
 			}
 		}
 
+		if (empty($listCityName)) {
+			return [];
+		}
+		sort($listCityName);
+
 		return array_unique($listCityName);
 	}
 
@@ -123,7 +128,7 @@ class FieldLoaderEstateCityValues
 
 	private function sendRequest(): array
 	{
-		$parametersGetFieldList = [
+		$fieldListParameters = [
 			'labels' => true,
 			'showContent' => true,
 			'showTable' => true,
@@ -135,13 +140,14 @@ class FieldLoaderEstateCityValues
 
 		$pApiClientAction = new APIClientActionGeneric
 		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
-		$pApiClientAction->setParameters($parametersGetFieldList);
+		$pApiClientAction->setParameters($fieldListParameters);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
 		$result = $pApiClientAction->getResultRecords();
 
 		if (empty($result[0]['elements'])) {
 			return [];
 		}
+
 		return $result[0]['elements'];
 	}
 }

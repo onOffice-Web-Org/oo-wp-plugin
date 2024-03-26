@@ -248,30 +248,10 @@ jQuery(document).ready(function($){
 			availableOptionEl.parent().remove();
 		}
 
-		const hiddenCheckbox = clonedElement.find('input[name="oopluginfieldconfig-hidden[]"]');
-		if (hiddenCheckbox.length > 0 && fieldName === 'ort') {
-			const convertTextToSelectForCityField = $('<p>').addClass('wp-clearfix');
-			const labelCity = $('<label>')
-				.addClass('howto')
-				.text(onOffice_loc_settings.label_convert_input_text_to_select_city_field);
-			const checkboxCity = $('<input>')
-				.attr('type', 'checkbox')
-				.attr('name', 'oopluginfieldconfig-convertTextToSelectForCityField[]')
-				.attr('value', 'ort')
-				.addClass('onoffice-input');
-			const availableOptions = $('<p>').addClass('wp-clearfix');
-			const labelOptions = $('<label>')
-				.addClass('howto')
-				.text(onOffice_loc_settings.available_options);
-			const checkboxOptions = $('<input>')
-				.attr('type', 'checkbox')
-				.attr('name', 'oopluginfieldconfig-availableOptions[]')
-				.attr('value', 'ort')
-				.addClass('onoffice-input');
-			convertTextToSelectForCityField.append(labelCity, checkboxCity);
-			availableOptions.append(labelOptions, checkboxOptions);
-			hiddenCheckbox.parent().after(availableOptions);
-			hiddenCheckbox.parent().after(convertTextToSelectForCityField);
+		if (fieldName !== 'ort') {
+			var selectors = ['oopluginfieldconfig-convertTextToSelectForCityField'];
+			var convertTextToSelectForCityField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
+			convertTextToSelectForCityField.parent().remove();
 		}
 
 		if(onOffice_loc_settings.modulelabels && module){

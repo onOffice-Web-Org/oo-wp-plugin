@@ -296,8 +296,9 @@ class FieldsCollectionBuilderShort
 		$pFieldCollectionAddressEstate = $this->_pContainer->get(FieldsCollectionBuilder::class)
 			->buildFieldsCollection($pFieldLoader);
 		$pFieldsCollection->merge($pFieldCollectionAddressEstate);
+
 		return $this;
-  }
+	}
 
 	/**
 	 * @param FieldsCollection $pFieldsCollection

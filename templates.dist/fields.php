@@ -270,11 +270,10 @@ if (!function_exists('renderCityField')) {
 	function renderCityField(string $inputName, array $properties): string
 	{
 		$permittedValues = $properties['permittedvalues'];
-		$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_attr($inputName) . '">';
-		$htmlSelect .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $properties["label"])) . '</option>';
+		$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_attr($inputName) . '[]" multiple="multiple">';
 		foreach ($permittedValues as $value) {
 			$selected = null;
-			if ($value == $properties['value']) {
+			if (is_array($properties['value']) && in_array($value, $properties['value'])) {
 				$selected = 'selected';
 			}
 			$htmlSelect .='<option value="' . esc_attr($value) . '" ' . $selected . '>' . esc_attr($value) . '</option>';
