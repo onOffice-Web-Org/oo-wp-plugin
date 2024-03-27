@@ -42,6 +42,20 @@ class RequestVariablesSanitizer
 		return $this->getFiltered($_GET, $name, $filter, $option);
 	}
 
+	/**
+	 * @return array
+	 */
+
+	public function getParameterPage()
+	{
+		$pagedData = [];
+		foreach ($_GET as $key => $value) {
+			if (strpos($key, 'page_of_id_') === 0) {
+				$pagedData[] = $key;
+			}
+		}
+		return $pagedData;
+	}
 
 	/**
 	 *
