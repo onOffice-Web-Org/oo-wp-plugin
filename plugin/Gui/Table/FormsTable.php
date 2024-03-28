@@ -134,7 +134,8 @@ class FormsTable
 			'page_shortcode' => __('Pages using the shortcode', 'onoffice-for-wp-websites'),
 		);
 
-		$hidden = array('ID', 'filterId');
+		$hiddenColumns = get_hidden_columns($this->screen);
+		$hidden = array_merge($hiddenColumns, ['ID','filterId']);
 		$sortable = array();
 
 		$this->_column_headers = array($columns, $hidden, $sortable,

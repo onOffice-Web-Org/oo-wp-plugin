@@ -185,7 +185,8 @@ class AddressListTable
 			'page_shortcode' => __('Pages using the shortcode', 'onoffice-for-wp-websites'),
 		];
 
-		$hidden = ['ID','filterId'];
+		$hiddenColumns = get_hidden_columns($this->screen);
+		$hidden = array_merge($hiddenColumns, ['ID','filterId']);
 		$sortable = [];
 
 		$this->_column_headers = [$columns, $hidden, $sortable,
