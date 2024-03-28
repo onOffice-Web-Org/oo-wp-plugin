@@ -31,7 +31,10 @@ onOffice.checkboxAdmin = function() {
 			{
 				element: "input[name^=oopluginfieldconfig-availableOptions]",
 				invert: false,
-				checkOnActive: true
+			},
+			{
+				element: "input[name^=oopluginfieldconfig-convertTextToSelectForCityField]",
+				invert: false
 			}
 		],
 

@@ -98,7 +98,10 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'availableOptions',
 		],
-
+		self::INPUT_FIELD_CONVERT_TEXT_TO_SELECT_FOR_CITY_FIELD => [
+			self::KEY_TABLE => 'oo_plugin_fieldconfig',
+			self::KEY_FIELD => 'convertTextToSelectForCityField',
+		],
 		InputModelDBFactory::INPUT_SORT_BY_SETTING => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'sortBySetting',

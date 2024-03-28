@@ -155,6 +155,9 @@ class DataListView
 	private $_showPriceOnRequest = false;
 
 	/** @var string[] */
+	private $_convertTextToSelectForCityField = [];
+
+	/** @var string[] */
 	private $_priceFields = [
 		'kaufpreis',
 		'erbpacht',
@@ -430,4 +433,12 @@ class DataListView
 	{
 		return $this->_priceFields;
 	}
+
+	/** @return array */
+	public function getConvertTextToSelectForCityField(): array
+		{ return $this->_convertTextToSelectForCityField; }
+
+	/** @param array $convertTextToSelectForCityField */
+	public function setConvertTextToSelectForCityField(array $convertTextToSelectForCityField)
+		{ $this->_convertTextToSelectForCityField = $convertTextToSelectForCityField; }
 }
