@@ -27,8 +27,9 @@
 
 namespace onOffice\WPlugin\Cache;
 
-use onOffice\SDK\Cache\onOfficeSDKCache;
 use wpdb;
+use onOffice\SDK\Cache\onOfficeSDKCache;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 
 /**
  *
@@ -149,13 +150,13 @@ class DBCache
 
 	public function cleanup()
 	{
-		$cacheMaxAge = $this->getCacheMaxAge();
-		$this->_pWpdb->query( $this->_pWpdb->prepare( "
-				DELETE
-				FROM {$this->_pWpdb->prefix}oo_plugin_cache
-				WHERE UNIX_TIMESTAMP(cache_created) < %d
-				", $cacheMaxAge )
-		);
+		// $cacheMaxAge = $this->getCacheMaxAge();
+		// $this->_pWpdb->query( $this->_pWpdb->prepare( "
+		// 		DELETE
+		// 		FROM {$this->_pWpdb->prefix}oo_plugin_cache
+		// 		WHERE UNIX_TIMESTAMP(cache_created) < %d
+		// 		", $cacheMaxAge )
+		// );
 	}
 
 
@@ -169,5 +170,65 @@ class DBCache
 		$this->_options['ttl'] = 0;
 		$this->cleanup();
 		$this->_options['ttl'] = $oldTtl;
+	}
+
+	/**
+	 *
+	 */
+
+	public function refeshApi($pSDKWrapper)
+	{
+		$records = $this->getHttpResponseByParameter();
+		$data = [];
+		foreach ($records as $key => $record) {
+			$parameters = unserialize($record['cache_parameters']);
+			if ($parameters["resourcetype"] == 'estate') {
+				$pAPIClientAction = new APIClientActionGeneric
+					($pSDKWrapper, $parameters['actionid'], $parameters['resourcetype']);
+				$pAPIClientAction->setResourceId($parameters['resourceid']);
+				$pAPIClientAction->setParameters($parameters['parameters']);
+				$pAPIClientAction->addRequestToQueue();
+				$data[$record['cache_parameters_hashed']] = $pAPIClientAction;
+			}
+		}
+		$pAPIClientAction->sendRequests();
+		$results = [];
+		foreach ($data as $key => $record) {
+			if ($parameters["resourcetype"] == 'estate') {
+				$results[$key] = $record->getResult();
+			}
+		}
+		foreach ($results as $key => $record) {
+			$this->updateCacheResponseByParameters($key, $record);
+		}
+	}
+
+	public function updateCacheResponseByParameters($parameters, $newResponse)
+	{
+
+		// $parametersSerialized = $this->getParametersSerialized($parameters);
+		$newResponse = $this->getParametersSerialized($newResponse);
+
+		$this->_pWpdb->update(
+			"{$this->_pWpdb->prefix}oo_plugin_cache",
+			['cache_response' => $newResponse],
+			['cache_parameters_hashed' => $parameters],
+			['%s'],
+			['%s']
+		);
+	}
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getHttpResponseByParameter()
+	{
+		$records = $this->_pWpdb->get_results( "
+				SELECT *
+				FROM {$this->_pWpdb->prefix}oo_plugin_cache", ARRAY_A );
+	
+		return $records;
 	}
 }

@@ -81,4 +81,17 @@ class CacheHandler
 			}
 		}
 	}
+
+
+	/**
+	 *
+	 * @throws ApiClientException
+	 */
+
+	public function checkCacheAPI()
+	{
+		foreach ($this->_pSDKWrapper->getCache() as $pCache) {
+			$pCache->refeshApi($this->_pSDKWrapper);
+		}
+	}
 }

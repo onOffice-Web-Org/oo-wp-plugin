@@ -436,4 +436,30 @@ function filter_script_loader_tag($tag, $handle) {
 	return $tag;
 }
 
+function oo_custom_cron_job_task() {
+	$pDIBuilder = new ContainerBuilder();
+	$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+	$pDI = $pDIBuilder->build();
+	
+	update_option('onoffice-test', 1);
+	$pDI->get(CacheHandler::class)->checkCacheAPI();
+	update_option('onoffice-test', 0);
+}
+
+add_filter('cron_schedules', 'oo_add_custom_cron_schedule');
+function oo_add_custom_cron_schedule($schedules) {
+	if(!isset($schedules['every_second'])) {
+		$schedules['every_second'] = array(
+			'interval' => 60,
+			'display'  => __('Every Second', 'onoffice-for-wp-websites'),
+		);
+	};
+	return $schedules;
+}
+
+if (!wp_next_scheduled('oo_custom_cron_job_hook')) {
+	wp_schedule_event(time(), 'every_second', 'oo_custom_cron_job_hook');
+}
+add_action('oo_custom_cron_job_hook', 'oo_custom_cron_job_task');
+
 return $pDI;
