@@ -1151,7 +1151,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 */
 	public function updatePriceFieldsOptionForSimilarEstate()
 	{
-		$pDataSimilarViewOptions = get_option('onoffice-similar-estates-settings-view');
+		$pDataSimilarViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
 		if (!empty($pDataSimilarViewOptions)) {
 			$pDataViewSimilarEstates = new DataViewSimilarEstates();
 			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setListFieldsShowPriceOnRequest($pDataViewSimilarEstates->getListFieldsShowPriceOnRequest());
@@ -1164,11 +1164,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 */
 	public function updatePriceFieldsOptionDetailView()
 	{
-		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		$pDataDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
 		if (!empty($pDataDetailViewOptions)) {
 			$pDataDataDetailView = new DataDetailView();
 			$pDataDetailViewOptions->setListFieldsShowPriceOnRequest($pDataDataDetailView->getListFieldsShowPriceOnRequest());
-			$pDataDetailViewOptions->setFields($pDataDataDetailView->getListFieldsShowPriceOnRequest());
 			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
 		}
 	}
