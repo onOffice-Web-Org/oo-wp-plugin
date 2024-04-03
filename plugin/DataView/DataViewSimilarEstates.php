@@ -106,6 +106,22 @@ class DataViewSimilarEstates
 	/** @var bool */
 	private $_showPriceOnRequest = false;
 
+	/** @var string[] */
+	private $_priceFields = [
+		'kaufpreis',
+		'erbpacht',
+		'nettokaltmiete',
+		'warmmiete',
+		'pacht',
+		'kaltmiete',
+		'miete_pauschal',
+		'saisonmiete',
+		'wochmietbto',
+		'kaufpreis_pro_qm',
+		'mietpreis_pro_qm',
+		'calculatedPrice'
+	];
+
 	/** @param bool $sameEstateKind */
 	public function setSameEstateKind(bool $sameEstateKind)
 		{ $this->_sameEstateKind = $sameEstateKind; }
@@ -213,4 +229,18 @@ class DataViewSimilarEstates
 	/** @param bool $showPriceOnRequest */
 	public function setShowPriceOnRequest(bool $showPriceOnRequest)
 	{ $this->_showPriceOnRequest = $showPriceOnRequest; }
+
+	/**
+	 * @return array
+	 */
+	public function getListFieldsShowPriceOnRequest(): array
+	{
+		return $this->_priceFields;
+	}
+
+	/** @param array $priceFields */
+	public function setListFieldsShowPriceOnRequest(array $priceFields)
+	{
+		$this->_priceFields = $priceFields;
+	}
 }

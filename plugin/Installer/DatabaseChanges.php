@@ -30,6 +30,7 @@ use Exception;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\ImageTypes;
@@ -45,7 +46,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 43;
+	const MAX_VERSION = 44;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -306,6 +307,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 42) {
 			dbDelta($this->getCreateQueryFieldConfig());
 			$dbversion = 43;
+		}
+
+		if ($dbversion == 43) {
+			$this->updatePriceFieldsOptionForSimilarEstate();
+			$this->updatePriceFieldsOptionDetailView();
+			$dbversion = 44;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1137,5 +1144,32 @@ class DatabaseChanges implements DatabaseChangesInterface
 			SET country_active = 1, radius_active = 1";
 
 		$this->_pWPDB->query($sql);
+	}
+
+	/**
+	 *
+	 */
+	public function updatePriceFieldsOptionForSimilarEstate()
+	{
+		$pDataSimilarViewOptions = get_option('onoffice-similar-estates-settings-view');
+		if (!empty($pDataSimilarViewOptions)) {
+			$pDataViewSimilarEstates = new DataViewSimilarEstates();
+			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setListFieldsShowPriceOnRequest($pDataViewSimilarEstates->getListFieldsShowPriceOnRequest());
+			$this->_pWpOption->updateOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function updatePriceFieldsOptionDetailView()
+	{
+		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		if (!empty($pDataDetailViewOptions)) {
+			$pDataDataDetailView = new DataDetailView();
+			$pDataDetailViewOptions->setListFieldsShowPriceOnRequest($pDataDataDetailView->getListFieldsShowPriceOnRequest());
+			$pDataDetailViewOptions->setFields($pDataDataDetailView->getListFieldsShowPriceOnRequest());
+			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
+		}
 	}
 }
