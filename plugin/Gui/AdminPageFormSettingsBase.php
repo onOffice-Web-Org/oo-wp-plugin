@@ -754,6 +754,7 @@ abstract class AdminPageFormSettingsBase
 		$pInputModelRenderer     = $this->getContainer()->get( InputModelRenderer::class );
 		$pFormViewName           = $this->getFormModelByGroupSlug( self::FORM_RECORD_NAME );
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug( self::FORM_VIEW_SORTABLE_FIELDS_CONFIG );
+		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
 		$this->generatePageMainTitle( $this->getPageTitle() );
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
@@ -776,6 +777,8 @@ abstract class AdminPageFormSettingsBase
 		do_meta_boxes( get_current_screen()->id, 'side', null );
 		do_meta_boxes( get_current_screen()->id, 'advanced', null );
 		echo '</div>';
+		echo '<div class="clear"></div>';
+		$this->renderSearchFieldForFieldLists($pInputModelRenderer, $pFormViewSearchFieldForFieldLists);
 		echo '<div class="clear"></div>';
 		do_action( 'add_meta_boxes', get_current_screen()->id, null );
 		echo '<div style="float:left;">';

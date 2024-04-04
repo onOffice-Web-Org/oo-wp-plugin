@@ -43,6 +43,7 @@ use onOffice\WPlugin\Types\ImageTypes;
 use function __;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
+use DI\Container;
 
 /**
  *
@@ -64,6 +65,20 @@ class FormModelBuilderSimilarEstateSettings
 
 	/** @var array */
 	private $_formModules = [];
+
+	/** @var Container */
+	private $_pContainer = null;
+
+	/**
+	 * @param Container $pContainer
+	 */
+
+	public function __construct(Container $pContainer = null)
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainer ?? $pContainerBuilder->build();
+	}
 
 	/**
 	 * @param string $pageSlug
@@ -145,11 +160,7 @@ class FormModelBuilderSimilarEstateSettings
 	 */
 	private function getFieldsCollection(): FieldsCollection
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-
-		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldsCollection = new FieldsCollection();
 
 		$pFieldsCollectionBuilder
@@ -485,5 +496,45 @@ class FormModelBuilderSimilarEstateSettings
 		$pInputModelShowPriceOnRequest->setValuesAvailable(1);
 
 		return $pInputModelShowPriceOnRequest;
+	}
+
+	/**
+	 *
+	 * @param $module
+	 * @param string $htmlType
+	 * @return InputModelOption
+	 * @throws UnknownModuleException
+	 * @throws ExceptionInputModelMissingField
+	 *
+	 */
+
+	public function createSearchFieldForFieldLists($module, string $htmlType)
+	{
+		$fields = [];
+
+		if ($module == onOfficeSDK::MODULE_ESTATE) {
+			$pInputModelFieldsConfig = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_FIELD_CONFIG, null, true);
+			$fields = $this->_pDataSimilarView->getFields();
+		} else {
+			throw new UnknownModuleException();
+		}
+
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
+		$pInputModelFieldsConfig->setValue($fields);
+
+		return $pInputModelFieldsConfig;
 	}
 }
