@@ -88,6 +88,9 @@ class AdminPageSimilarEstates
 	/** */
 	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
 
+	/** */
+	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
+
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
@@ -115,6 +118,7 @@ class AdminPageSimilarEstates
 		/* @var $pRenderer InputModelRenderer */
 		$pRenderer = $this->getContainer()->get(InputModelRenderer::class);
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
+		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
@@ -133,6 +137,8 @@ class AdminPageSimilarEstates
 		echo '<div class="postbox-container" id="postbox-container-2">';
 		do_meta_boxes(get_current_screen()->id, 'side', null );
 		echo '</div>';
+		echo '<div class="clear"></div>';
+		$this->renderSearchFieldForFieldLists($pRenderer, $pFormViewSearchFieldForFieldLists);
 		echo '<div class="clear"></div>';
 		echo '<div style="float:left;">';
 		$this->generateAccordionBoxes($pFieldsCollection);
@@ -242,7 +248,7 @@ class AdminPageSimilarEstates
 		$fieldsEstate = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE,
 			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldsEstate);
-
+		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder);
 	}
 
 	/**
@@ -403,6 +409,42 @@ class AdminPageSimilarEstates
 		}
 
 		$this->addFormModel($pFormHidden);
+	}
+
+	/**
+	 *
+	 * @param InputModelRenderer $pInputModelRenderer
+	 * @param $pFormViewSearchFieldForFieldLists
+	 *
+	 */
+
+	private function renderSearchFieldForFieldLists(InputModelRenderer $pRenderer, $pFormViewSearchFieldForFieldLists)
+	{
+		echo '<div class="oo-search-field postbox">';
+		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Field list search', 'onoffice-for-wp-websites') . '</span></h2>';
+		echo '<div class="inside">';
+		$pRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);
+		echo '</div>';
+		echo '</div>';
+	}
+
+	/**
+	 *
+	 * @param $modules
+	 * @param FormModelBuilderSimilarEstateSettings $pFormModelBuilder
+	 * @param string $htmlType
+	 *
+	 */
+
+	private function addSearchFieldForFieldLists($module, FormModelBuilderSimilarEstateSettings $pFormModelBuilder, string $htmlType = InputModelBase::HTML_SEARCH_FIELD_FOR_FIELD_LISTS)
+	{
+		$pInputModelSearchFieldForFieldLists = $pFormModelBuilder->createSearchFieldForFieldLists($module, $htmlType);
+
+		$pFormModelFieldsConfig = new FormModel();
+		$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
+		$pFormModelFieldsConfig->setGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
+		$pFormModelFieldsConfig->addInputModel($pInputModelSearchFieldForFieldLists);
+		$this->addFormModel($pFormModelFieldsConfig);
 	}
 
 	/**
