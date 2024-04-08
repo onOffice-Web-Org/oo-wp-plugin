@@ -214,6 +214,7 @@ class EstateList
 	private function loadRecords(int $currentPage)
 	{
 		$estateParameters = $this->getEstateParameters($currentPage, $this->_formatOutput);
+		$estateParameters['data'][] = 'waehrung';
 		$this->_pApiClientAction->setParameters($estateParameters);
 		$this->_pApiClientAction->addRequestToQueue();
 
@@ -523,6 +524,10 @@ class EstateList
 		}
 		// do not show priceOnRequest as single Field
 		unset($recordModified['preisAufAnfrage']);
+
+		if (!empty($currentRecord['elements']['waehrung']) && !empty($currentRecord['elements']['calculatedPrice'])) {
+			$recordModified['calculatedPrice'] = 'approx. ' . $currentRecord['elements']['calculatedPrice'] . ' '.$currentRecord['elements']['waehrung'];
+		}
 
 		return $recordModified;
 	}
