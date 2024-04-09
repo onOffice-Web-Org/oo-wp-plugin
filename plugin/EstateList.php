@@ -525,10 +525,13 @@ class EstateList
 		// do not show priceOnRequest as single Field
 		unset($recordModified['preisAufAnfrage']);
 
-		if ($recordRaw['preisAufAnfrage'] !== DataListView::SHOW_PRICE_ON_REQUEST) {
+		$calculatedPrice = $currentRecord['elements']['calculatedPrice'];
+		if ($recordRaw['preisAufAnfrage'] !== DataListView::SHOW_PRICE_ON_REQUEST || !$this->enableShowPriceOnRequestText()) {
 			if (!empty($currentRecord['elements']['waehrung'])
-				&& !empty($currentRecord['elements']['calculatedPrice'])) {
-				$recordModified['calculatedPrice'] = $currentRecord['elements']['calculatedPrice'] . ' ' .$currentRecord['elements']['waehrung'];
+				&& !empty($calculatedPrice)) {
+				$number = floatval(str_replace('.', '', $calculatedPrice));
+				$formatCalculatedPrice = number_format($number, 2, ',', '.');
+				$recordModified['calculatedPrice'] = $formatCalculatedPrice . ' ' . $currentRecord['elements']['waehrung'];
 			}
 		}
 
