@@ -29,6 +29,8 @@ namespace onOffice\WPlugin\Cache;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
 use wpdb;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
@@ -43,6 +45,8 @@ class DBCache
 	/** @var array */
 	private $_options = array();
 
+	/** @var bool */
+	private $_cleanCache = false;
 
 	/**
 	 *
@@ -67,7 +71,9 @@ class DBCache
 
 	private function getCacheMaxAge()
 	{
-		return time() - $this->_options['ttl'];
+		$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
+		$interval = !empty($onofficeSettingsCache) && !$this->_cleanCache ? wp_get_schedules()[$onofficeSettingsCache]["interval"] : $this->_options['ttl'];
+		return time() - $interval;
 	}
 
 
@@ -110,6 +116,9 @@ class DBCache
 
 	public function getHttpResponseByParameterArray( array $parameters )
 	{
+		if (get_option('cron-job-running-process') == 1) {
+			return null;
+		}
 		$parametersHashed = $this->getParametersHashed( $parameters );
 		$cacheMaxAge = $this->getCacheMaxAge();
 
@@ -167,7 +176,90 @@ class DBCache
 	{
 		$oldTtl = $this->_options['ttl'];
 		$this->_options['ttl'] = 0;
+		$this->_cleanCache = true;
 		$this->cleanup();
 		$this->_options['ttl'] = $oldTtl;
+	}
+
+	/**
+	 * @param SDKWrapper $pSDKWrapper
+	 * @return void
+	 */
+
+	public function updateResponseColumnWithLatestData(SDKWrapper $pSDKWrapper)
+	{
+		$cachedRecords = $this->getCacheRecords();
+		update_option('cron-job-running-process', 0);
+
+		if (empty($cachedRecords)) {
+			return;
+		}
+
+		$result = [];
+		$pAPIClientAction = null;
+
+		foreach ($cachedRecords as $record) {
+			$parameters = unserialize($record['cache_parameters']);
+			$pAPIClientAction = new APIClientActionGeneric
+				($pSDKWrapper, $parameters['actionid'], $parameters['resourcetype']);
+			$pAPIClientAction->setResourceId($parameters['resourceid']);
+			$pAPIClientAction->setParameters($parameters['parameters']);
+			$pAPIClientAction->addRequestToQueue();
+			$result[$record['cache_parameters_hashed']] = $pAPIClientAction;
+		}
+
+		$responseData = [];
+		if (!empty($result)) {
+			$pAPIClientAction->sendRequests();
+			foreach ($result as $key => $record) {
+				if (empty($record->getResultResponseData())) {
+					continue;
+				}
+				$responseData[$key] = $record->getResultResponseData();
+			}
+		}
+
+		if (!empty($responseData)) {
+			$this->updateDataResponsesColumn($responseData);
+		}
+	}
+
+	/**
+	 * @param array $responseData
+	 * @return void
+	 */
+	private function updateDataResponsesColumn(array $responseData)
+	{
+		$conditions = [];
+		$parametersHashedValues = [];
+		foreach ($responseData as $parametersHashed => $response) {
+			$serializedResponse = $this->getParametersSerialized($response);
+			$conditions[] = "WHEN cache_parameters_hashed = %s THEN %s";
+			$parametersHashedValues[] = $parametersHashed;
+			$parametersHashedValues[] = $serializedResponse;
+		}
+
+		$conditionsSql = implode(' ', $conditions);
+		$placeholders = implode(',', array_fill(0, count($responseData), '%s'));
+		$sql = "UPDATE {$this->_pWpdb->prefix}oo_plugin_cache SET cache_response = CASE {$conditionsSql} END WHERE cache_parameters_hashed IN ({$placeholders})";
+		$preparedSql = $this->_pWpdb->prepare($sql, array_merge($parametersHashedValues, array_keys($responseData)));
+
+		$this->_pWpdb->query($preparedSql);
+	}
+
+	/**
+	 * @return array
+	 */
+
+	private function getCacheRecords(): array
+	{
+		$cacheMaxAge = $this->getCacheMaxAge();
+		$records = $this->_pWpdb->get_results( $this->_pWpdb->prepare("
+				SELECT *
+				FROM {$this->_pWpdb->prefix}oo_plugin_cache
+				WHERE UNIX_TIMESTAMP(cache_created) < %d
+				", $cacheMaxAge), ARRAY_A );
+	
+		return $records;
 	}
 }

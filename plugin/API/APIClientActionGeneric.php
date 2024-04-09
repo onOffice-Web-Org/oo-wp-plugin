@@ -159,6 +159,15 @@ class APIClientActionGeneric
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getResultResponseData(): array
+	{
+		$resultApi = $this->getResult();
+		return $resultApi ?? [];
+	}
+
+	/**
 	 * @param string $actionId
 	 * @param string $resourceType
 	 * @return self

@@ -180,9 +180,7 @@ add_action('wp', [FormPostHandler::class, 'initialCheck']);
 
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_ajax']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
-add_action('oo_cache_cleanup', function() use ($pDI) {
-	$pDI->get(CacheHandler::class)->clean();
-});
+
 add_action('admin_notices', [$pAdminViewController, 'generalAdminNoticeSEO']);
 add_action('init', function() use ($pAdminViewController) {
 	$pAdminViewController->disableHideMetaboxes();
@@ -288,10 +286,6 @@ add_filter('wpml_ls_language_url', function($url) use ($pDI){
 register_activation_hook(__FILE__, [Installer::class, 'install']);
 register_deactivation_hook(__FILE__, [Installer::class, 'deactivate']);
 register_uninstall_hook(__FILE__, [Installer::class, 'deinstall']);
-
-if (!wp_next_scheduled('oo_cache_cleanup')) {
-	wp_schedule_event(time(), 'hourly', 'oo_cache_cleanup');
-}
 
 // Gets triggered before we know if it has to be updated at all, so that no value has to be changed
 add_action('pre_update_option', function($value, $option) use ($pDI) {
@@ -440,6 +434,41 @@ function filter_script_loader_tag($tag, $handle) {
 		break;
 	}
 	return $tag;
+}
+
+function custom_cron_schedules($schedules) {
+	if(!isset($schedules['ten_minutes'])) {
+		$schedules['ten_minutes'] = array(
+			'interval' => 60 * 10,
+			'display' => __('10 minutes')
+		);
+	}
+	if(!isset($schedules['thirty_minutes'])) {
+		$schedules['thirty_minutes'] = array(
+			'interval' => 60 * 30,
+			'display' => __('30 minutes')
+		);
+	}
+	if(!isset($schedules['six_hours'])) {
+		$schedules['six_hours'] = array(
+			'interval' => 60 * 60 * 6,
+			'display'  => __('6 hours')
+		);
+	}
+
+	return $schedules;
+}
+
+add_filter('cron_schedules', 'custom_cron_schedules');
+
+add_action('oo_cache_renew', function() use ($pDI) {
+	update_option('cron-job-running-process', 1);
+	$pDI->get(CacheHandler::class)->renew();
+});
+
+if (!wp_next_scheduled('oo_cache_renew')) {
+	$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
+	wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
 }
 
 return $pDI;

@@ -45,7 +45,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 43;
+	const MAX_VERSION = 44;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -306,6 +306,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 42) {
 			dbDelta($this->getCreateQueryFieldConfig());
 			$dbversion = 43;
+		}
+
+		if ($dbversion == 43) {
+			$this->_pWpOption->addOption( 'onoffice-settings-duration-cache', 'hourly' );
+			$dbversion = 44;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
