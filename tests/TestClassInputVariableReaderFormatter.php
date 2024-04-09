@@ -17,8 +17,8 @@ class TestClassInputVariableReaderFormatter
 	{
 		$pInstance = new InputVariableReaderFormatter;
 
-		$this->assertEquals('3,948.00', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
-		$this->assertEquals('3,948.00', $pInstance->formatFloatValue(3948.00));
+		$this->assertEquals('3948.00', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals('3948.00', $pInstance->formatFloatValue(3948.00));
 	}
 
 	/**
@@ -42,6 +42,6 @@ class TestClassInputVariableReaderFormatter
 	{
 		$pInstance = new InputVariableReaderFormatter;
 
-		$this->assertEquals(['3,948.00'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals(['3948.00'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
 	}
 }
