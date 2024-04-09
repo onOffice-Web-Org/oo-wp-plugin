@@ -152,7 +152,8 @@ class ScriptLoaderGenericConfigurationDefault
 	{
 		return $this->matchesShortcode($content, self::ESTATE_TAG, 'view', '[^"]*') &&
 				!$this->matchesShortcode($content, self::ESTATE_TAG, 'view', 'detail') ||
-				$this->matchesShortcode($content, self::ESTATE_TAG, 'units', '[^"]*');
+				$this->matchesShortcode($content, self::ESTATE_TAG, 'units', '[^"]*') &&
+				!$this->matchesShortcode($content, self::ESTATE_TAG, 'units', '.*detail.*');
 	}
 
 	/**
@@ -182,7 +183,7 @@ class ScriptLoaderGenericConfigurationDefault
 	 */
 	private function matchesShortcode(string $content, string $tag, string $attribute, string $valuePattern): bool
 	{
-		$pattern = '/\[' . $tag . '\s+' . $attribute . '="' . $valuePattern . '"\]/';
+		$pattern = '/\[' . preg_quote($tag, '/') . '\s+.*?' . preg_quote($attribute, '/') . '="' . $valuePattern . '".*?\]/';
 		return (bool) preg_match($pattern, $content);
 	}
 

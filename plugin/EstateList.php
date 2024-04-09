@@ -490,7 +490,12 @@ class EstateList
 		}
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'] ?? [];
 
-		if ($this->getShowEstateMarketingStatus()) {
+		$showEstateMarketingStatusOfUnitList = false;
+		if ($this->_unitsViewName != null) {
+			$showEstateMarketingStatusOfUnitList = $this->_pEnvironment->getEstateUnitsByName($this->_unitsViewName)->getShowEstateMarketingStatus();
+		}
+
+		if ($this->getShowEstateMarketingStatus() || $showEstateMarketingStatusOfUnitList) {
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
