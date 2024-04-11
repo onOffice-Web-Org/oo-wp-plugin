@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Renderer\InputFieldPasswordRenderer;
+use onOffice\WPlugin\Renderer\InputFieldGoogleRecaptchaRenderer;
 use WP_UnitTestCase;
 
 /**
@@ -33,7 +33,7 @@ use WP_UnitTestCase;
  *
  */
 
-class TestClassInputFieldPasswordRenderer
+class TestClassInputFieldGoogleRecaptchaRenderer
 	extends WP_UnitTestCase
 {
 	/**
@@ -41,11 +41,11 @@ class TestClassInputFieldPasswordRenderer
 	 */
 	public function testRenderInputSecretKey()
 	{
-		$pSubject = new InputFieldPasswordRenderer('password', 'onoffice-settings-captcha-secretkey', '');
+		$pSubject = new InputFieldGoogleRecaptchaRenderer('googleRecaptchaAccount', 'onoffice-settings-captcha-secretkey', '');
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-secretkey" value="" id="password_3" ><button type="button" class="button" data-toggle="0">
+		$this->assertEquals('<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-secretkey" value="" id="googleRecaptchaAccount_3" ><button type="button" class="button" data-toggle="0">
 				<span class="dashicons dashicons-visibility oo-icon-eye-secret-key" aria-hidden="true"></span> 
 				</button></div>', $output);
 	}
@@ -55,11 +55,11 @@ class TestClassInputFieldPasswordRenderer
 	 */
 	public function testRenderInputSiteKey()
 	{
-		$pSubject = new InputFieldPasswordRenderer('password', 'onoffice-settings-captcha-sitekey', '');
+		$pSubject = new InputFieldGoogleRecaptchaRenderer('googleRecaptchaAccount', 'onoffice-settings-captcha-sitekey', '');
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-sitekey" value="" id="password_4" ><button type="button" class="button" data-toggle="0">
+		$this->assertEquals('<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-sitekey" value="" id="googleRecaptchaAccount_4" ><button type="button" class="button" data-toggle="0">
 				<span class="dashicons dashicons-visibility oo-icon-eye-site-key" aria-hidden="true"></span> 
 				</button></div>', $output);
 	}

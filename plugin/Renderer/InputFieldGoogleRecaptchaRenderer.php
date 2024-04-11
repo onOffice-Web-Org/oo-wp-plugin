@@ -26,7 +26,7 @@ use Exception;
 /**
  *
  */
-class InputFieldPasswordRenderer extends InputFieldRenderer
+class InputFieldGoogleRecaptchaRenderer extends InputFieldRenderer
 {
 	/**
 	 *
@@ -39,7 +39,7 @@ class InputFieldPasswordRenderer extends InputFieldRenderer
 
 	public function __construct($type, $name, $value = null)
 	{
-		if (!in_array($type, array('password'))) {
+		if (!in_array($type, array('googleRecaptchaAccount'))) {
 			throw new Exception('wrong type!');
 		}
 		parent::__construct($type, $name, $value);
@@ -53,20 +53,26 @@ class InputFieldPasswordRenderer extends InputFieldRenderer
 	public function render()
 	{
 		$iconShowPassword = '';
+		$showDeleteGoogleRecaptchaKeysButton = false;
 		if ($this->getName() === 'onoffice-settings-captcha-secretkey') {
 			$iconShowPassword = '<button type="button" class="button" data-toggle="0">
 				<span class="dashicons dashicons-visibility oo-icon-eye-secret-key" aria-hidden="true"></span> 
 				</button>';
+			$showDeleteGoogleRecaptchaKeysButton = true;
 		} elseif ($this->getName() === 'onoffice-settings-captcha-sitekey') {
 			$iconShowPassword = '<button type="button" class="button" data-toggle="0">
 				<span class="dashicons dashicons-visibility oo-icon-eye-site-key" aria-hidden="true"></span> 
 				</button>';
 		}
 		echo '<div class="oo-google-recaptcha-key">';
-		echo '<input type="' . esc_html($this->getType()) . '" name="' . esc_html($this->getName())
+		echo '<input type="password" name="' . esc_html($this->getName())
 			. '" value="' . esc_html($this->getValue()) . '" id="' . esc_html($this->getGuiId()) . '"'
 			. ' ' . $this->renderAdditionalAttributes()
 			. '>' . $iconShowPassword;
 		echo '</div>';
+
+		if ($showDeleteGoogleRecaptchaKeysButton) {
+			echo '<button class="button delete-google-recaptcha-keys-button">'. __('Delete Keys', 'onoffice-for-wp-websites') .'</button>';
+		}
 	}
 }

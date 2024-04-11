@@ -454,53 +454,6 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .options-menu li:hover a p{
 	color:#fff;
 }
-@media only screen and (max-width: 782px) {
-	.page-option-action summary{
-		padding: 10px 15px;
-		font-size: 14px;
-		white-space: nowrap;
-	}
-
-	.oo-google-recaptcha-key {
-		max-width: none !important;
-		width: 100%;
-	}
-
-	.oo-google-recaptcha-key > button > span {
-		margin-top: 10px !important;
-	}
-}
-
-.delete-google-recaptcha-keys-button {
-	border: 1px solid #ff0000 !important;
-	color: #ff0000 !important;
-}
-
-.oo-google-recaptcha-key {
-	max-width: 380px;
-	position: relative;
-}
-
-.oo-google-recaptcha-key > button {
-	position: absolute;
-	top: 0;
-	right: 10px;
-	background: none !important;
-	border: 1px solid transparent !important;
-	box-shadow: none;
-	width: 40px;
-	height: 30px;
-	min-width: 40px;
-}
-
-.oo-google-recaptcha-key > button:focus {
-	box-shadow: none !important;
-}
-
-.oo-google-recaptcha-key > button > span {
-	margin-top: 5px;
-}
-
 
 /* new style */
 .oo-poststuff .custom-input-field {
@@ -782,4 +735,52 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 		padding: 10px 10px 10px 10px;
 		margin: 0 !important;
 	}
+}
+
+@media only screen and (max-width: 782px) {
+	.page-option-action summary{
+		padding: 10px 15px;
+		font-size: 14px;
+		white-space: nowrap;
+	}
+
+	.oo-google-recaptcha-key {
+		max-width: none;
+		width: 100%;
+	}
+
+	.oo-google-recaptcha-key > button > span {
+		margin-top: 10px;
+	}
+}
+
+.delete-google-recaptcha-keys-button {
+	border: 1px solid #ff0000 !important;
+	color: #ff0000 !important;
+	margin-top: 20px !important;
+}
+
+.oo-google-recaptcha-key {
+	max-width: 380px;
+	position: relative;
+}
+
+.oo-google-recaptcha-key > button {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	background: none !important;
+	border: 1px solid transparent !important;
+	box-shadow: none;
+	width: 40px;
+	height: 30px;
+	min-width: 40px;
+}
+
+.oo-google-recaptcha-key > button:focus {
+	box-shadow: none !important;
+}
+
+.oo-google-recaptcha-key > button > span {
+	margin-top: 5px;
 }

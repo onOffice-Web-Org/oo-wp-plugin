@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-	function showOrHiddenGoogleRecaptchaKey(inputSelector, toggleSelector) {
+	function showOrHideGoogleRecaptchaKey(inputSelector, toggleSelector) {
 		const inputElement = $(inputSelector);
 		const toggleElement = $(toggleSelector);
 
@@ -13,10 +13,10 @@ jQuery(document).ready(function ($) {
 	}
 
 	$('.oo-icon-eye-secret-key').on('click', function () {
-		showOrHiddenGoogleRecaptchaKey('input[name="onoffice-settings-captcha-secretkey"]', '.oo-icon-eye-secret-key');
+		showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-secretkey"]', '.oo-icon-eye-secret-key');
 	});
 
 	$('.oo-icon-eye-site-key').on('click', function () {
-		showOrHiddenGoogleRecaptchaKey('input[name="onoffice-settings-captcha-sitekey"]', '.oo-icon-eye-site-key');
+		showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-sitekey"]', '.oo-icon-eye-site-key');
 	});
 });

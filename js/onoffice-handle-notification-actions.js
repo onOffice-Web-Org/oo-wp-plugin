@@ -17,7 +17,8 @@ jQuery(document).ready(function ($) {
 	});
 
 	$(document).on('click', '.delete-google-recaptcha-keys-button', function (event) {
-		if (confirm('Would you like to permanently delete the site key and the secret key?')) {
+		let message = confirm_dialog_google_recaptcha_keys.notification;
+		if (confirm(message)) {
 			event.preventDefault();
 			const data = {
 				'action': 'delete_google_recaptcha_keys'

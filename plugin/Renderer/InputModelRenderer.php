@@ -271,16 +271,11 @@ class InputModelRenderer
 				$pInstance->setOoModule($pFormModel->getOoModule());
 				break;
 
-			case InputModelOption::HTML_TYPE_PASSWORD:
-				$pInstance = new InputFieldPasswordRenderer('password', $elementName);
+			case InputModelOption::HTML_GOOGLE_RECAPTCHA:
+				$pInstance = new InputFieldGoogleRecaptchaRenderer('googleRecaptchaAccount', $elementName);
 				$pInstance->addAdditionalAttribute('size', '50');
 				$pInstance->setValue($pInputModel->getValue());
 				break;
-
-			case InputModelBase::HTML_TYPE_DELETE_RECAPTCHA_BUTTON:
-				$pInstance = new InputFieldDeleteRecaptchaButtonRenderer(null, '');
-				break;
-
 		}
 
 		if ($pInstance !== null) {

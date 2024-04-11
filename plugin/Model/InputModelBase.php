@@ -81,10 +81,7 @@ abstract class InputModelBase
 	const HTML_SEARCH_FIELD_FOR_FIELD_LISTS = 'searchFieldForFieldLists';
 
 	/** */
-	const HTML_TYPE_PASSWORD = 'password';
-
-	/** */
-	const HTML_TYPE_DELETE_RECAPTCHA_BUTTON = 'buttonDeleteKey';
+	const HTML_GOOGLE_RECAPTCHA = 'googleRecaptchaAccount';
 
 	/** @var string */
 	private $_name = null;
