@@ -81,7 +81,7 @@ abstract class InputModelBase
 	const HTML_SEARCH_FIELD_FOR_FIELD_LISTS = 'searchFieldForFieldLists';
 
 	/** */
-	const HTML_GOOGLE_RECAPTCHA = 'googleRecaptchaAccount';
+	const HTML_GOOGLE_RECAPTCHA_ACCOUNT = 'googleRecaptchaAccount';
 
 	/** @var string */
 	private $_name = null;

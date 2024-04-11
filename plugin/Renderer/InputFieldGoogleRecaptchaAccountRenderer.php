@@ -26,7 +26,7 @@ use Exception;
 /**
  *
  */
-class InputFieldGoogleRecaptchaRenderer extends InputFieldRenderer
+class InputFieldGoogleRecaptchaAccountRenderer extends InputFieldRenderer
 {
 	/**
 	 *

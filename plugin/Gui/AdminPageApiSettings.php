@@ -164,11 +164,11 @@ class AdminPageApiSettings
 			('onoffice-settings', 'captcha-sitekey', $labelSiteKey, 'string');
 		$optionNameKey = $pInputModelCaptchaSiteKey->getIdentifier();
 		$pInputModelCaptchaSiteKey->setValue(get_option($optionNameKey));
-		$pInputModelCaptchaSiteKey->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA);
+		$pInputModelCaptchaSiteKey->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
 		$pInputModelCaptchaPageSecret = new InputModelOption
 			('onoffice-settings', 'captcha-secretkey', $labelSecretKey, 'string');
 		$pInputModelCaptchaPageSecret->setIsPassword(true);
-		$pInputModelCaptchaPageSecret->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA);
+		$pInputModelCaptchaPageSecret->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
 		$optionNameSecret = $pInputModelCaptchaPageSecret->getIdentifier();
 		$pInputModelCaptchaPageSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
 			return $this->checkPassword($password, $optionNameSecret);

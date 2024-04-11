@@ -737,23 +737,6 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	}
 }
 
-@media only screen and (max-width: 782px) {
-	.page-option-action summary{
-		padding: 10px 15px;
-		font-size: 14px;
-		white-space: nowrap;
-	}
-
-	.oo-google-recaptcha-key {
-		max-width: none;
-		width: 100%;
-	}
-
-	.oo-google-recaptcha-key > button > span {
-		margin-top: 10px;
-	}
-}
-
 .delete-google-recaptcha-keys-button {
 	border: 1px solid #ff0000 !important;
 	color: #ff0000 !important;
@@ -783,4 +766,21 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 
 .oo-google-recaptcha-key > button > span {
 	margin-top: 5px;
+}
+
+@media only screen and (max-width: 782px) {
+	.page-option-action summary{
+		padding: 10px 15px;
+		font-size: 14px;
+		white-space: nowrap;
+	}
+
+	.oo-google-recaptcha-key {
+		max-width: none;
+		width: 100%;
+	}
+
+	.oo-google-recaptcha-key > button > span {
+		margin-top: 10px;
+	}
 }

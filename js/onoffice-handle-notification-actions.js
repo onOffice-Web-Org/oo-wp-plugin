@@ -17,8 +17,8 @@ jQuery(document).ready(function ($) {
 	});
 
 	$(document).on('click', '.delete-google-recaptcha-keys-button', function (event) {
-		let message = confirm_dialog_google_recaptcha_keys.notification;
-		if (confirm(message)) {
+		let notification = confirm_dialog_google_recaptcha_keys.notification;
+		if (confirm(notification)) {
 			event.preventDefault();
 			const data = {
 				'action': 'delete_google_recaptcha_keys'

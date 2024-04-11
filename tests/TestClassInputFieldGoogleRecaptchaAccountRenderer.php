@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Renderer\InputFieldGoogleRecaptchaRenderer;
+use onOffice\WPlugin\Renderer\InputFieldGoogleRecaptchaAccountRenderer;
 use WP_UnitTestCase;
 
 /**
@@ -33,7 +33,7 @@ use WP_UnitTestCase;
  *
  */
 
-class TestClassInputFieldGoogleRecaptchaRenderer
+class TestClassInputFieldGoogleRecaptchaAccountRenderer
 	extends WP_UnitTestCase
 {
 	/**
@@ -41,7 +41,7 @@ class TestClassInputFieldGoogleRecaptchaRenderer
 	 */
 	public function testRenderInputSecretKey()
 	{
-		$pSubject = new InputFieldGoogleRecaptchaRenderer('googleRecaptchaAccount', 'onoffice-settings-captcha-secretkey', '');
+		$pSubject = new InputFieldGoogleRecaptchaAccountRenderer('googleRecaptchaAccount', 'onoffice-settings-captcha-secretkey', '');
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
@@ -55,7 +55,7 @@ class TestClassInputFieldGoogleRecaptchaRenderer
 	 */
 	public function testRenderInputSiteKey()
 	{
-		$pSubject = new InputFieldGoogleRecaptchaRenderer('googleRecaptchaAccount', 'onoffice-settings-captcha-sitekey', '');
+		$pSubject = new InputFieldGoogleRecaptchaAccountRenderer('googleRecaptchaAccount', 'onoffice-settings-captcha-sitekey', '');
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
