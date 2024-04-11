@@ -47,7 +47,7 @@ class TestClassInputFieldGoogleRecaptchaRenderer
 		$output = ob_get_clean();
 		$this->assertEquals('<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-secretkey" value="" id="googleRecaptchaAccount_4" ><button type="button" class="button" data-toggle="0">
 				<span class="dashicons dashicons-visibility oo-icon-eye-secret-key" aria-hidden="true"></span> 
-				</button></div>', $output);
+				</button></div><button class="button delete-google-recaptcha-keys-button">Delete Keys</button>', $output);
 	}
 
 	/**
