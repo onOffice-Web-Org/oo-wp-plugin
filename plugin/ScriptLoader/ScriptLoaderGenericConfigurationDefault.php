@@ -153,10 +153,10 @@ class ScriptLoaderGenericConfigurationDefault
 	 */
 	private function isEstateListPage(string $content): bool
 	{
-		return $this->matchesShortcode($content, self::ESTATE_TAG, 'view', '[^"]*') &&
-				!$this->matchesShortcode($content, self::ESTATE_TAG, 'view', 'detail') ||
-				$this->matchesShortcode($content, self::ESTATE_TAG, 'units', '[^"]*') &&
-				!$this->matchesShortcode($content, self::ESTATE_TAG, 'units', '.*detail.*');
+		return ($this->matchesShortcode($content, self::ESTATE_TAG, 'view', '[^"]*') &&
+				!$this->matchesShortcode($content, self::ESTATE_TAG, 'view', 'detail')) ||
+				($this->matchesShortcode($content, self::ESTATE_TAG, 'units', '[^"]*') &&
+				!$this->matchesShortcode($content, self::ESTATE_TAG, 'view', 'detail'));
 	}
 
 	/**
@@ -186,7 +186,7 @@ class ScriptLoaderGenericConfigurationDefault
 	 */
 	private function matchesShortcode(string $content, string $tag, string $attribute, string $valuePattern): bool
 	{
-		$pattern = '/\[' . preg_quote($tag, '/') . '\s+.*?' . preg_quote($attribute, '/') . '="' . $valuePattern . '".*?\]/';
+		$pattern = '/\[' . $tag . '\s+.*?' . $attribute . '="' . $valuePattern . '".*?\]/';
 		return (bool) preg_match($pattern, $content);
 	}
 
