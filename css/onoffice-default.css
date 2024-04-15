@@ -72,8 +72,3 @@ form[data-applicant-form-id] #spinner {
 .message{
     display: none!important;
 }
-
-.oo-area-butler {
-    position: relative;
-    height: 500px;
-}
