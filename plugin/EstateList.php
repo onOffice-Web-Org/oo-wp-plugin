@@ -495,7 +495,7 @@ class EstateList
 			$showEstateMarketingStatusOfUnitList = $this->_pEnvironment->getEstateUnitsByName($this->_unitsViewName)->getShowEstateMarketingStatus();
 		}
 
-		if ($this->getShowEstateMarketingStatus() || $showEstateMarketingStatusOfUnitList) {
+		if ($this->getShowEstateMarketingStatus() && $this->_unitsViewName == null || $showEstateMarketingStatusOfUnitList) {
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
