@@ -213,7 +213,7 @@
     font-weight: 700;
 }
 
-.oo-detailsfreetext, .oo-detailsmap {
+.oo-detailsfreetext, .oo-detailsmap, .oo-area-butler {
     padding-bottom: 15px;
     padding-top: 15px;
     border-bottom: 2px solid #efefef;
@@ -262,6 +262,10 @@
 
 .oo-area-butler {
     position: relative;
+    height: auto;
+}
+
+.oo-area-butler .oo-area-butler-iframe {
     height: 500px;
 }
 
