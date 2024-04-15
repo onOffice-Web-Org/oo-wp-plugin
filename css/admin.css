@@ -675,6 +675,45 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	cursor: pointer;
 }
 
+.delete-google-recaptcha-keys-button.button {
+	border: 1px solid #ff0000;
+	color: #ff0000;
+	margin-top: 20px;
+}
+
+.oo-google-recaptcha-key {
+	max-width: 380px;
+	position: relative;
+}
+
+.oo-google-recaptcha-key > button.button {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	background: none;
+	border: 1px solid transparent;
+	box-shadow: none;
+	width: 40px;
+	height: 30px;
+	min-width: 40px;
+}
+
+.oo-google-recaptcha-key > button.button:hover {
+	background: none;
+	border: 1px solid transparent;
+	transform: scale(1.2);
+}
+
+.oo-google-recaptcha-key > button.button:focus {
+	background: none;
+	border: 1px solid transparent;
+	box-shadow: none;
+}
+
+.oo-google-recaptcha-key > button > span {
+	margin-top: 5px;
+}
+
 @media only screen and (max-width: 1365px) {
 	.block-publish .postbox-header {
 		display: none;
@@ -735,37 +774,6 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 		padding: 10px 10px 10px 10px;
 		margin: 0 !important;
 	}
-}
-
-.delete-google-recaptcha-keys-button {
-	border: 1px solid #ff0000 !important;
-	color: #ff0000 !important;
-	margin-top: 20px !important;
-}
-
-.oo-google-recaptcha-key {
-	max-width: 380px;
-	position: relative;
-}
-
-.oo-google-recaptcha-key > button {
-	position: absolute;
-	top: 0;
-	right: 10px;
-	background: none !important;
-	border: 1px solid transparent !important;
-	box-shadow: none;
-	width: 40px;
-	height: 30px;
-	min-width: 40px;
-}
-
-.oo-google-recaptcha-key > button:focus {
-	box-shadow: none !important;
-}
-
-.oo-google-recaptcha-key > button > span {
-	margin-top: 5px;
 }
 
 @media only screen and (max-width: 782px) {
