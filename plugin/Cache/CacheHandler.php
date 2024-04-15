@@ -90,10 +90,8 @@ class CacheHandler
 
 	public function renew()
 	{
-		if($this->_pApiChecker->isAvailable()){
-			foreach ($this->_pSDKWrapper->getCache() as $pCache) {
-				$pCache->updateResponseColumnWithLatestData($this->_pSDKWrapper);
-			}
+		foreach ($this->_pSDKWrapper->getCache() as $pCache) {
+			$pCache->updateResponseColumnWithLatestData($this->_pSDKWrapper);
 		}
 	}
 }

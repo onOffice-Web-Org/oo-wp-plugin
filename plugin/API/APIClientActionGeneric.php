@@ -163,8 +163,12 @@ class APIClientActionGeneric
 	 */
 	public function getResultResponseData(): array
 	{
-		$resultApi = $this->getResult();
-		return $resultApi ?? [];
+		$resultApi = [];
+		if ($this->getResultStatus()) {
+			$resultApi = $this->getResult();
+		}
+
+		return $resultApi;
 	}
 
 	/**
