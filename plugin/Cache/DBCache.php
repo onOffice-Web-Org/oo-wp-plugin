@@ -140,6 +140,9 @@ class DBCache
 	 */
 	public function write( array $parameters, $value )
 	{
+		if (get_option('cron-job-running-process') == 1) {
+			return true;
+		}
 		$parametersHashed = $this->getParametersHashed( $parameters );
 		$parametersSerialized = $this->getParametersSerialized( $parameters );
 
@@ -188,10 +191,11 @@ class DBCache
 
 	public function updateResponseColumnWithLatestData(SDKWrapper $pSDKWrapper)
 	{
+		update_option('cron-job-running-process', 1);
 		$cachedRecords = $this->getCacheRecords();
-		update_option('cron-job-running-process', 0);
 
 		if (empty($cachedRecords)) {
+			update_option('cron-job-running-process', 0);
 			return;
 		}
 
@@ -222,6 +226,7 @@ class DBCache
 		if (!empty($responseData)) {
 			$this->updateDataResponsesColumn($responseData);
 		}
+		update_option('cron-job-running-process', 0);
 	}
 
 	/**
@@ -240,9 +245,9 @@ class DBCache
 		}
 
 		$conditionsSql = implode(' ', $conditions);
-		$placeholders = implode(',', array_fill(0, count($responseData), '%s'));
+		$placeholders = implode(',', array_fill(0, count($parametersHashedValues), '%s'));
 		$sql = "UPDATE {$this->_pWpdb->prefix}oo_plugin_cache SET cache_response = CASE {$conditionsSql} END WHERE cache_parameters_hashed IN ({$placeholders})";
-		$preparedSql = $this->_pWpdb->prepare($sql, array_merge($parametersHashedValues, array_keys($responseData)));
+		$preparedSql = $this->_pWpdb->prepare($sql, $parametersHashedValues);
 
 		$this->_pWpdb->query($preparedSql);
 	}
@@ -259,7 +264,7 @@ class DBCache
 				FROM {$this->_pWpdb->prefix}oo_plugin_cache
 				WHERE UNIX_TIMESTAMP(cache_created) < %d
 				", $cacheMaxAge), ARRAY_A );
-	
+
 		return $records;
 	}
 }

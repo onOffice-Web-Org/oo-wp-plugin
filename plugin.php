@@ -142,6 +142,35 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 	};
 }, 500);
 
+if (get_option('cron-job-running-process') == 1) {
+	update_option('cron-job-running-process', 0);
+}
+
+function custom_cron_schedules($schedules) {
+	if(!isset($schedules['ten_minutes'])) {
+		$schedules['ten_minutes'] = array(
+			'interval' => 60 * 10,
+			'display' => __('10 minutes')
+		);
+	}
+	if(!isset($schedules['thirty_minutes'])) {
+		$schedules['thirty_minutes'] = array(
+			'interval' => 60 * 30,
+			'display' => __('30 minutes')
+		);
+	}
+	if(!isset($schedules['six_hours'])) {
+		$schedules['six_hours'] = array(
+			'interval' => 60 * 60 * 6,
+			'display'  => __('6 hours')
+		);
+	}
+
+	return $schedules;
+}
+
+add_filter('cron_schedules', 'custom_cron_schedules');
+
 add_action('admin_init', function () use ( $pDI ) {
 	if ( strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
 		$pDI->get(CacheHandler::class)->clear();
@@ -206,6 +235,26 @@ add_action('plugins_loaded', function() {
 
 // "Settings" link in plugins list
 add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewController, 'pluginSettingsLink']);
+
+add_action('oo_cache_renew', function() use ($pDI) {
+	$pDI->get(CacheHandler::class)->renew();
+});
+
+if (!wp_next_scheduled('oo_cache_renew')) {
+	$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
+	wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
+}
+
+add_action('update_option_onoffice-settings-duration-cache', function($old_value, $value) {
+	if ($old_value !== $value) {
+		$timestamp = wp_next_scheduled('oo_cache_renew');
+		if ($timestamp) {
+			wp_unschedule_event($timestamp, 'oo_cache_renew');
+		}
+
+		wp_schedule_event(time(), $value, 'oo_cache_renew');
+	}
+}, 10, 2);
 
 $pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 
@@ -434,41 +483,6 @@ function filter_script_loader_tag($tag, $handle) {
 		break;
 	}
 	return $tag;
-}
-
-function custom_cron_schedules($schedules) {
-	if(!isset($schedules['ten_minutes'])) {
-		$schedules['ten_minutes'] = array(
-			'interval' => 60 * 10,
-			'display' => __('10 minutes')
-		);
-	}
-	if(!isset($schedules['thirty_minutes'])) {
-		$schedules['thirty_minutes'] = array(
-			'interval' => 60 * 30,
-			'display' => __('30 minutes')
-		);
-	}
-	if(!isset($schedules['six_hours'])) {
-		$schedules['six_hours'] = array(
-			'interval' => 60 * 60 * 6,
-			'display'  => __('6 hours')
-		);
-	}
-
-	return $schedules;
-}
-
-add_filter('cron_schedules', 'custom_cron_schedules');
-
-add_action('oo_cache_renew', function() use ($pDI) {
-	update_option('cron-job-running-process', 1);
-	$pDI->get(CacheHandler::class)->renew();
-});
-
-if (!wp_next_scheduled('oo_cache_renew')) {
-	$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
-	wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
 }
 
 return $pDI;
