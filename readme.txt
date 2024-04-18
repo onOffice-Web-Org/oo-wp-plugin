@@ -76,6 +76,27 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.19 (2024-04-18) =
+
+**Added**
+
+* Showing cities as filterable selection field in search
+* Default section for AreaButler in detail page template
+* Custom styling classes for empty detail page
+
+**Changed**
+
+* Automatic overwriting of address duplicates has been removed, an e-mail notification for manual management of duplicates will be sent
+* Google reCAPTCHA secret and key can be displayed and emptied
+
+**Fixed**
+
+* Error with ScriptLoader
+* Showing price on request
+* Empty price field while searching
+* Missing plugin menu item while editing pages
+* Hiding columns in the overview of real estate lists and forms
+
 = 4.18.1 (2024-02-28) =
 
 **Fixed**
