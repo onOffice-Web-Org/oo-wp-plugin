@@ -275,6 +275,12 @@ class InputModelRenderer
 				$pInstance = new InputFieldToggleSwitchRenderer('checkbox', $elementName, $pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
         break;
+
+			case InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT:
+				$pInstance = new InputFieldGoogleRecaptchaAccountRenderer('googleRecaptchaAccount', $elementName);
+				$pInstance->addAdditionalAttribute('size', '50');
+				$pInstance->setValue($pInputModel->getValue());
+				break;
 		}
 
 		if ($pInstance !== null) {

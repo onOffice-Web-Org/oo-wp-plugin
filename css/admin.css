@@ -454,13 +454,6 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .options-menu li:hover a p{
 	color:#fff;
 }
-@media only screen and (max-width: 782px) {
-	.page-option-action summary{
-		padding: 10px 15px;
-		font-size: 14px;
-		white-space: nowrap;
-	}
-}
 
 /* new style */
 .oo-poststuff .custom-input-field {
@@ -739,6 +732,52 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	cursor: pointer;
 }
 
+.delete-google-recaptcha-keys-button.button {
+	border: 1px solid #ff0000;
+	color: #ff0000;
+	margin-top: 20px;
+}
+
+.delete-google-recaptcha-keys-button.button:hover,
+.delete-google-recaptcha-keys-button.button:focus {
+	border: 1px solid #ff0000;
+	color: #ffffff;
+	background-color: #ff0000;
+}
+
+.oo-google-recaptcha-key {
+	max-width: 380px;
+	position: relative;
+}
+
+.oo-google-recaptcha-key > button.button {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	background: none;
+	border: 1px solid transparent;
+	box-shadow: none;
+	width: 40px;
+	height: 30px;
+	min-width: 40px;
+}
+
+.oo-google-recaptcha-key > button.button:hover {
+	background: none;
+	border: 1px solid transparent;
+	transform: scale(1.2);
+}
+
+.oo-google-recaptcha-key > button.button:focus {
+	background: none;
+	border: 1px solid transparent;
+	box-shadow: none;
+}
+
+.oo-google-recaptcha-key > button > span {
+	margin-top: 5px;
+}
+
 @media only screen and (max-width: 1365px) {
 	.block-publish .postbox-header {
 		display: none;
@@ -798,5 +837,22 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 		text-align: left;
 		padding: 10px 10px 10px 10px;
 		margin: 0 !important;
+	}
+}
+
+@media only screen and (max-width: 782px) {
+	.page-option-action summary{
+		padding: 10px 15px;
+		font-size: 14px;
+		white-space: nowrap;
+	}
+
+	.oo-google-recaptcha-key {
+		max-width: none;
+		width: 100%;
+	}
+
+	.oo-google-recaptcha-key > button > span {
+		margin-top: 10px;
 	}
 }

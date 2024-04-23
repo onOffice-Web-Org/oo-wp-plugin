@@ -84,6 +84,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_TOGGLE_SWITCH = 'toggleSwitch';
 
+	/** */
+	const HTML_GOOGLE_RECAPTCHA_ACCOUNT = 'googleRecaptchaAccount';
+
 	/** @var string */
 	private $_name = null;
 
