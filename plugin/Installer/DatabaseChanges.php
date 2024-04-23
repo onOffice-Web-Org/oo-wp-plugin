@@ -45,7 +45,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 42;
+	const MAX_VERSION = 43;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -303,6 +303,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 42;
 		}
 
+		if ($dbversion == 42) {
+			dbDelta($this->getCreateQueryFieldConfig());
+			$dbversion = 43;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -464,6 +469,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`filterable` tinyint(1) NOT NULL DEFAULT '0',
 			`hidden` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
+			`convertTextToSelectForCityField` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`fieldconfig_id`)
 		) $charsetCollate;";
 

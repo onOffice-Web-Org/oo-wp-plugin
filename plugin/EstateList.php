@@ -513,15 +513,16 @@ class EstateList
 		}
 
 		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
-			if ($this->enableShowPriceOnRequestText() || isset($recordModified['preisAufAnfrage'])) {
+			if ($this->enableShowPriceOnRequestText() ) {
 				$priceFields = $this->_pDataView->getListFieldsShowPriceOnRequest();
 
 				foreach ($priceFields as $priceField) {
 					$this->displayTextPriceOnRequest($recordModified, $priceField);
 				}
-				unset($recordModified['preisAufAnfrage']);
 			}
 		}
+		// do not show priceOnRequest as single Field
+		unset($recordModified['preisAufAnfrage']);
 
 		return $recordModified;
 	}
@@ -835,6 +836,9 @@ class EstateList
 		$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$pFieldsCollectionBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		if (!empty($this->_pDataView->getConvertTextToSelectForCityField())) {
+			$pFieldsCollectionBuilderShort->addFieldEstateCityValues($pFieldsCollection, $this->getShowReferenceEstate());
+		}
 		$pFieldsCollection->merge
 			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection));
 		$pFieldsCollectionFieldDuplicatorForGeoEstate =
