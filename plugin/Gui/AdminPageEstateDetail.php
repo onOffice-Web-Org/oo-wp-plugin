@@ -101,6 +101,9 @@ class AdminPageEstateDetail
 	/** */
 	const CUSTOM_LABELS = 'customlabels';
 
+	/** */
+	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
+
 	/**
 	 *
 	 */
@@ -128,6 +131,7 @@ class AdminPageEstateDetail
 		$pRenderer = $this->getContainer()->get(InputModelRenderer::class);
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
 		$pFormViewSortablecontactFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_DATA_FIELDS);
+		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
@@ -135,7 +139,7 @@ class AdminPageEstateDetail
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
-		echo '<div id="poststuff" class="oo-poststuff">';
+		echo '<div id="poststuff" class="oo-poststuff oo-poststuff-estate-detail">';
 		$pageId = $pDataView->getPageId();
 
 		echo '<span class="viewusage">';
@@ -176,6 +180,9 @@ class AdminPageEstateDetail
 		echo '<div style="float:left;">';
 		$this->generateAccordionBoxesContactPerson($pFieldsCollection);
 		echo '</div>';
+		echo '<div class="clear"></div>';
+		$this->renderSearchFieldForFieldLists($pRenderer, $pFormViewSearchFieldForFieldLists);
+		echo '<div class="clear"></div>';
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
 		echo '</div>';
@@ -201,10 +208,10 @@ class AdminPageEstateDetail
 		echo '</div>';
 		echo '<div class="clear"></div>';
 		echo '</div>';
-		echo '</div>';
 
 		do_settings_sections($this->getPageSlug());
-		submit_button(null, 'primary', 'send_form');
+		$this->generateBlockPublish();
+		echo '</div>';
 
 		echo '</form>';
 	}
@@ -283,7 +290,7 @@ class AdminPageEstateDetail
 	 */
 	protected function buildForms()
 	{
-		$pFormModelBuilder = new FormModelBuilderEstateDetailSettings();
+		$pFormModelBuilder = $this->getContainer()->get(FormModelBuilderEstateDetailSettings::class);
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug());
 		$this->addFormModel($pFormModel);
 
@@ -341,6 +348,7 @@ class AdminPageEstateDetail
 			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldsEstate);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS,
 			self::FORM_VIEW_CONTACT_DATA_FIELDS, $pFormModelBuilder, $fieldsAddress);
+		$this->addSearchFieldForFieldLists([onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE], $pFormModelBuilder);
 	}
 
 	/**
@@ -503,6 +511,41 @@ class AdminPageEstateDetail
 		$this->addFormModel($pFormHidden);
 	}
 
+	/**
+	 *
+	 * @param InputModelRenderer $pInputModelRenderer
+	 * @param $pFormViewSearchFieldForFieldLists
+	 *
+	 */
+
+	private function renderSearchFieldForFieldLists(InputModelRenderer $pRenderer, $pFormViewSearchFieldForFieldLists)
+	{
+		echo '<div class="oo-search-field postbox ">';
+		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Field list search', 'onoffice-for-wp-websites' ) . '</span></h2>';
+		echo '<div class="inside">';
+		$pRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);
+		echo '</div>';
+		echo '</div>';
+	}
+
+	/**
+	 *
+	 * @param $modules
+	 * @param FormModelBuilderEstateDetailSettings $pFormModelBuilder
+	 * @param string $htmlType
+	 *
+	 */
+
+	private function addSearchFieldForFieldLists($module, FormModelBuilderEstateDetailSettings $pFormModelBuilder, string $htmlType = InputModelBase::HTML_SEARCH_FIELD_FOR_FIELD_LISTS)
+	{
+		$pInputModelSearchFieldForFieldLists = $pFormModelBuilder->createSearchFieldForFieldLists($module, $htmlType);
+
+		$pFormModelFieldsConfig = new FormModel();
+		$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
+		$pFormModelFieldsConfig->setGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
+		$pFormModelFieldsConfig->addInputModel($pInputModelSearchFieldForFieldLists);
+		$this->addFormModel($pFormModelFieldsConfig);
+	}
 
 	/**
 	 * @param string $module

@@ -45,7 +45,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 41;
+	const MAX_VERSION = 43;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -298,6 +298,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 41;
 		}
 
+		if ($dbversion == 41) {
+			$this->updateValueGeoFieldsForEsateList();
+			$dbversion = 42;
+		}
+
+		if ($dbversion == 42) {
+			dbDelta($this->getCreateQueryFieldConfig());
+			$dbversion = 43;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -459,6 +469,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`filterable` tinyint(1) NOT NULL DEFAULT '0',
 			`hidden` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
+			`convertTextToSelectForCityField` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`fieldconfig_id`)
 		) $charsetCollate;";
 
@@ -1114,5 +1125,17 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$pDataDetailViewOptions->setShowPriceOnRequest(true);
 			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
 		}
+	}
+
+	/**
+	 * @return void
+	 */
+	public function updateValueGeoFieldsForEsateList()
+	{
+		$prefix = $this->getPrefix();
+		$sql = "UPDATE {$prefix}oo_plugin_listviews
+			SET country_active = 1, radius_active = 1";
+
+		$this->_pWPDB->query($sql);
 	}
 }

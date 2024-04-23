@@ -73,7 +73,7 @@ class InputModelConfigurationFormContact
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_NEWSLETTER]
 			[self::KEY_LABEL] = __('Newsletter', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES]
-			[self::KEY_LABEL] = __('Check for Duplicates (override existing address if the email is the same)', 'onoffice-for-wp-websites');
+			[self::KEY_LABEL] = __('Check for Duplicates', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER]
 			[self::KEY_LABEL] = __('Check for Duplicates', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS]
