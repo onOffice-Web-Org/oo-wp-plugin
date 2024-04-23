@@ -271,16 +271,16 @@ class InputModelRenderer
 				$pInstance->setOoModule($pFormModel->getOoModule());
 				break;
 
-      case InputModelOption::HTML_TYPE_TOGGLE_SWITCH:
-				$pInstance = new InputFieldToggleSwitchRenderer('checkbox', $elementName, $pInputModel->getValuesAvailable());
-				$pInstance->setCheckedValues($pInputModel->getValue());
-        break;
-
 			case InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT:
 				$pInstance = new InputFieldGoogleRecaptchaAccountRenderer('googleRecaptchaAccount', $elementName);
 				$pInstance->addAdditionalAttribute('size', '50');
 				$pInstance->setValue($pInputModel->getValue());
 				break;
+
+			case InputModelOption::HTML_TYPE_TOGGLE_SWITCH:
+				$pInstance = new InputFieldToggleSwitchRenderer('checkbox', $elementName, $pInputModel->getValuesAvailable());
+				$pInstance->setCheckedValues($pInputModel->getValue());
+			break;
 		}
 
 		if ($pInstance !== null) {
