@@ -90,6 +90,15 @@ class DefaultFilterBuilderListView
 				$filter = $this->getFavoritesFilter();
 				break;
 		}
+
+		$priceFields = $this->_pDataListView->getListFieldsShowPriceOnRequest();
+		$filterKeys = array_keys($filter);
+
+		if (count(array_intersect($priceFields, $filterKeys)) > 0) {
+			$filter['preisAufAnfrage'][] = ['op' => '!=', 'val' => 1];
+		}
+
+		$filter = $this->addEstateCityFilterWhenConvertTextToSelect($filter);
 		$filterWithRegion = $this->addSubRegionFilter($filter);
 
 		return $filterWithRegion;
@@ -140,6 +149,33 @@ class DefaultFilterBuilderListView
 				];
 			}
 		}
+		return $baseFilter;
+	}
+
+	/**
+	 * @param array $baseFilter
+	 * @return array
+	 */
+	private function addEstateCityFilterWhenConvertTextToSelect(array $baseFilter): array
+	{
+		if (in_array('ort', $this->_pDataListView->getFilterableFields(), true) && !empty($this->_pDataListView->getConvertTextToSelectForCityField())) {
+			$additionalEstateCities = [];
+			$estateCityValue = $this->_pEnvironment->getInputVariableReader()->getFieldValue('ort');
+
+			if (!is_array($estateCityValue) || empty($estateCityValue)) {
+				return $baseFilter;
+			}
+			foreach ($estateCityValue as $value) {
+				$additionalEstateCities []= $value;
+			}
+
+			if ($additionalEstateCities !== []) {
+				$baseFilter['ort'] = [
+					['op' => 'in', 'val' => $additionalEstateCities],
+				];
+			}
+		}
+
 		return $baseFilter;
 	}
 

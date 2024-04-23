@@ -28,7 +28,7 @@ use onOffice\WPlugin\Language;
 require 'SearchForm.php';
 /* @var $pEstates onOffice\WPlugin\EstateList */
 
-$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
+$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
 
 ?>
 

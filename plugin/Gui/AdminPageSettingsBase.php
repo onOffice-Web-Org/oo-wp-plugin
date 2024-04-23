@@ -77,6 +77,8 @@ abstract class AdminPageSettingsBase
 
 	const FORM_VIEW_RECORDS_SORTING = 'viewrecordssorting';
 
+	/** */
+	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
 
 	/** */
 	const VIEW_SAVE_SUCCESSFUL_MESSAGE = 'view_save_success_message';
@@ -160,6 +162,7 @@ abstract class AdminPageSettingsBase
 		$pInputModelRenderer     = $this->getContainer()->get( InputModelRenderer::class );
 		$pFormViewName           = $this->getFormModelByGroupSlug( self::FORM_RECORD_NAME );
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug( self::FORM_VIEW_SORTABLE_FIELDS_CONFIG );
+		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
 		$this->generatePageMainTitle( $this->getPageTitle() );
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
@@ -169,11 +172,11 @@ abstract class AdminPageSettingsBase
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 		echo '<div id="poststuff" class="oo-poststuff">';
-		echo '<div id="post-body" class="metabox-holder columns-'
-		     . ( 1 == get_current_screen()->get_columns() ? '1' : '2' ) . '">';
-		echo '<div id="post-body-content">';
+		echo '<div id="post-head-content">';
 		$pInputModelRenderer->buildForAjax( $pFormViewName );
 		echo '</div>';
+		echo '<div id="post-body" class="metabox-holder columns-'
+		     . ( 1 == get_current_screen()->get_columns() ? '1' : '2' ) . '">';
 		echo '<div class="postbox-container" id="postbox-container-1">';
 		do_meta_boxes( get_current_screen()->id, 'normal', null );
 		echo '</div>';
@@ -181,6 +184,8 @@ abstract class AdminPageSettingsBase
 		do_meta_boxes( get_current_screen()->id, 'side', null );
 		do_meta_boxes( get_current_screen()->id, 'advanced', null );
 		echo '</div>';
+		echo '<div class="clear"></div>';
+		$this->renderSearchFieldForFieldLists($pInputModelRenderer, $pFormViewSearchFieldForFieldLists);
 		echo '<div class="clear"></div>';
 		do_action( 'add_meta_boxes', get_current_screen()->id, null );
 		echo '<div style="float:left;">';
@@ -196,10 +201,9 @@ abstract class AdminPageSettingsBase
 		echo '</div>';
 		echo '<div class="clear"></div>';
 		echo '</div>';
-		echo '</div>';
 		do_settings_sections( $this->getPageSlug() );
-		submit_button( null, 'primary', 'send_form' );
-		
+		$this->generateBlockPublish();
+		echo '</div>';
 		echo '</form>';
 	}
 
@@ -476,6 +480,41 @@ abstract class AdminPageSettingsBase
 		}
 	}
 
+	/**
+	 *
+	 * @param InputModelRenderer $pInputModelRenderer
+	 * @param $pFormViewSearchFieldForFieldLists
+	 *
+	 */
+
+	protected function renderSearchFieldForFieldLists(InputModelRenderer $pInputModelRenderer, $pFormViewSearchFieldForFieldLists)
+	{
+		echo '<div class="oo-search-field postbox">';
+		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Field list search', 'onoffice-for-wp-websites' ) . '</span></h2>';
+		echo '<div class="inside">';
+		$pInputModelRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);
+		echo '</div>';
+		echo '</div>';
+	}
+
+	/**
+	 *
+	 * @param $modules
+	 * @param FormModelBuilder $pFormModelBuilder
+	 * @param string $htmlType
+	 *
+	 */
+
+	protected function addSearchFieldForFieldLists($modules, FormModelBuilder $pFormModelBuilder,
+		string $htmlType = InputModelBase::HTML_SEARCH_FIELD_FOR_FIELD_LISTS)
+	{
+		$pInputModelSearchFieldForFieldLists = $pFormModelBuilder->createSearchFieldForFieldLists($modules, $htmlType);
+		$pFormModelFieldsConfig = new Model\FormModel();
+		$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
+		$pFormModelFieldsConfig->setGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
+		$pFormModelFieldsConfig->addInputModel($pInputModelSearchFieldForFieldLists);
+		$this->addFormModel($pFormModelFieldsConfig);
+	}
 
 	/**
 	 *
