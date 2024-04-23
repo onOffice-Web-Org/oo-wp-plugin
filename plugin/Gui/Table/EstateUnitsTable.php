@@ -66,9 +66,10 @@ class EstateUnitsTable extends ListTable
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		);
 
+		$hidden = get_hidden_columns($this->screen);
 		$sortable = array();
 
-		$this->_column_headers = array($columns, array(), $sortable,
+		$this->_column_headers = array($columns, $hidden, $sortable,
 			$this->get_default_primary_column_name());
 		$this->fillData();
 	}
@@ -115,7 +116,6 @@ class EstateUnitsTable extends ListTable
 		return array(
 			'cb' => '<input type="checkbox" />',
 			'name' => __('Name of View', 'onoffice-for-wp-websites'),
-			'list_type' => __('Type of List', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		);
 	}

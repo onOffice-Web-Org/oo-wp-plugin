@@ -147,7 +147,7 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCheckDuplicates) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES);
-			$pInputModel->setHintHtml(esc_html__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
+			$pInputModel->setHintHtml(esc_html__('The duplicate check identifies existing duplicates of address data records and triggers an e-mail notification with information on manual duplicate management.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -158,7 +158,7 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCheckDuplicatesInterestOwner) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER);
-			$pInputModel->setHintHtml(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
+			$pInputModel->setHintHtml(esc_html__('The duplicate check identifies existing duplicates of address data records and triggers an e-mail notification with information on manual duplicate management.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -179,6 +179,7 @@ class AdminPageFormSettingsContact
 
 		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+		$this->addSearchFieldForFieldLists($this->getSortableFieldModules(), $pFormModelBuilder);
 	}
 
 
