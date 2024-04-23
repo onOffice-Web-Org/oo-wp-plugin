@@ -318,7 +318,7 @@ class AdminViewController
 	public function enqueue_css()
 	{
 		wp_enqueue_style('onoffice-admin-css',
-			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), '4.2.0');
+			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
 
 		wp_enqueue_style('chosen-admin-css',
 			plugins_url('/third_party/chosen/chosen.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
@@ -333,6 +333,9 @@ class AdminViewController
 
 	public function enqueueExtraJs($hook)
 	{
+		$confirmDialogGoogleRecaptcha = [
+			'notification' => __('Would you like to permanently delete the site key and the secret key?', 'onoffice-for-wp-websites'),
+		];
 		wp_register_script('handle-notification-actions', plugins_url('dist/onoffice-handle-notification-actions.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
 			array('jquery'));
 		wp_localize_script('handle-notification-actions', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
@@ -345,6 +348,14 @@ class AdminViewController
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('leave without saving', 'onoffice-for-wp-websites')
 		]);
+
+		if (__String::getNew($hook)->contains($this->_pageSlug.'-settings')) {
+			wp_register_script('handle-visibility-google-recaptcha-keys', plugins_url('dist/onoffice-handle-visibility-google-recaptcha-keys.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
+				array('jquery'));
+			wp_localize_script('handle-notification-actions', 'delete_google_recaptcha_keys', ['ajaxurl' => admin_url('admin-ajax.php')]);
+			wp_localize_script('handle-notification-actions', 'confirm_dialog_google_recaptcha_keys', $confirmDialogGoogleRecaptcha);
+			wp_enqueue_script('handle-visibility-google-recaptcha-keys');
+		}
 
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);
