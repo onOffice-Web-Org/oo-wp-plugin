@@ -352,6 +352,6 @@ We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?p
 		$adminPage = new AdminPageApiSettings('admin_page_onoffice-settings');
 		$pWpHook->callbacks = [[['function' => [$adminPage]]]];
 		$pAdminViewController->enqueueExtraJs("admin_page_onoffice-settings");
-		$this->assertEquals(['handle-notification-actions', 'handle-visibility-google-recaptcha-keys'], wp_scripts()->queue);
+		$this->assertEquals(['handle-notification-actions', 'oo-unsaved-changes-message', 'handle-visibility-google-recaptcha-keys'], wp_scripts()->queue);
 	}
 }
