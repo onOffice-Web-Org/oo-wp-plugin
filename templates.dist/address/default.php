@@ -30,19 +30,45 @@ require 'SearchFormAddress.php';
  *  Default template for address lists
  *
  */
-
-/* @var $pAddressList AddressList */
-foreach ($pAddressList->getRows() as $escapedValues) {
-	$imageUrl = $escapedValues['imageUrl'];
-	unset($escapedValues['imageUrl']);
-
-	echo esc_html__('Picture: ', 'onoffice-for-wp-websites'), $imageUrl, '<br>';
-
-	foreach ($escapedValues as $field => $value) {
-		if ($pAddressList->getFieldType($field) === FieldTypes::FIELD_TYPE_BLOB) {
-			continue;
-		}
-		$fieldLabel = $pAddressList->getFieldLabel($field);
-		echo $fieldLabel, ': ', (is_array($value) ? implode(', ', array_filter($value)) : $value), '<br>';
+?>
+<div class="oo-address-listframe oo-listframe">
+	<?php
+	/* @var $pAddressList AddressList */
+	foreach ($pAddressList->getRows() as $escapedValues) {
+		$imageUrl = $escapedValues['imageUrl'];
+		unset($escapedValues['imageUrl']);
+	?>
+		<div class="oo-listobject">
+			<div class="oo-listobjectwrap">
+				<?php
+				if (!empty($imageUrl)) {
+					echo '<img src="' . esc_url($imageUrl) . '" class="oo-address-image" alt="address-img" loading="lazy">';
+				}
+				?>
+				<div class="oo-listinfo">
+					<div class="oo-listinfotable oo-listinfotableview">
+						<?php
+						foreach ($escapedValues as $field => $value) {
+							if ($pAddressList->getFieldType($field) === FieldTypes::FIELD_TYPE_BLOB) {
+								continue;
+							}
+							if (empty($value)) {
+								continue;
+							}
+							$fieldLabel = $pAddressList->getFieldLabel($field);
+							echo '<div class="oo-listtd">' . esc_html($fieldLabel) . '</div><div class="oo-listtd">' . (is_array($value) ? implode(', ', array_filter($value)) : $value) . '</div>';
+						}
+						?>
+					</div>
+				</div>
+			</div>
+		</div>
+	<?php } ?>
+</div>
+<div>
+	<?php
+	if (get_option('onoffice-pagination-paginationbyonoffice')) {
+		wp_link_pages();
 	}
-}
+	?>
+</div>
