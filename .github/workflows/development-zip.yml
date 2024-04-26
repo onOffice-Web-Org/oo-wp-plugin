@@ -2,7 +2,9 @@ name: Share development zip
 
 on:
   pull_request_review:
-    types: [submitted, labeled ]
+    types: [submitted]
+  pull_request:
+     types: [labeled]
 
 jobs:
   get-versions:
