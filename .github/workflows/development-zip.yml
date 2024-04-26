@@ -2,11 +2,11 @@ name: Share development zip
 
 on:
   pull_request_review:
-    types: [submitted]
+    types: [submitted, labeled ]
 
 jobs:
   get-versions:
-    if: github.event.review.state == 'approved'
+    if: github.event.review.state == 'approved' || github.event.label.name == 'deploy test'
     name: Get versions
     runs-on: ubuntu-latest
     outputs:
