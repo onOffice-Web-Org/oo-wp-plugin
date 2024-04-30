@@ -270,6 +270,12 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setOoModule($pFormModel->getOoModule());
 				break;
+
+			case InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT:
+				$pInstance = new InputFieldGoogleRecaptchaAccountRenderer('googleRecaptchaAccount', $elementName);
+				$pInstance->addAdditionalAttribute('size', '50');
+				$pInstance->setValue($pInputModel->getValue());
+				break;
 		}
 
 		if ($pInstance !== null) {

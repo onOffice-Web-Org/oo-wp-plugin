@@ -36,7 +36,7 @@ class TestClassDateTimeFormatter
 
 		$format = DateTimeFormatter::SHORT|DateTimeFormatter::ADD_DATE;
 		$result = $pDateTimeFormatter->formatByTimestamp($format, $timestamp);
-		$this->assertEquals('2018/06/21', $result);
+		$this->assertEquals('2018-06-21', $result);
 	}
 
 	public function testShortTime()

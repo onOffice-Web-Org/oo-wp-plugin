@@ -59,7 +59,7 @@ class TestClassContentFilterShortCodeRegistrator
 				$pContentFilterShortCode1 = $this->getMockBuilder(ContentFilterShortCode::class)->getMock();
 				$pContentFilterShortCode1->method('getTag')->will($this->returnValue('test1'));
 				$pContentFilterShortCode1->expects($this->once())
-					->method('replaceShortCodes')->with([''])->will($this->returnValue('testText1'));
+					->method('replaceShortCodes')->with([])->will($this->returnValue('testText1'));
 				$pContentFilterShortCode2 = $this->getMockBuilder(ContentFilterShortCode::class)->getMock();
 				$pContentFilterShortCode2->method('getTag')->will($this->returnValue('test2'));
 				$pContentFilterShortCode2->expects($this->once())
