@@ -159,6 +159,7 @@ class ContentFilterShortCodeEstateList
 	/**
 	 * @param DataListView $pListView
 	 * @param SortListDataModel $pSortListDataModel
+	 * @param bool $pCheckPaginationTheme
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 * @throws UnknownFieldException

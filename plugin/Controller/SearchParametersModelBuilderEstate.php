@@ -110,7 +110,15 @@ class SearchParametersModelBuilderEstate
 	 */
 	private function addParametersForPagination(SearchParametersModel $pSearchParametersModel)
 	{
-		foreach ($this->_pRequestVariablesSanitizer->getParameterPage() as $urlParameter) {
+		$pageParameters = [];
+
+		foreach ($_GET as $key => $value) {
+			if (strpos($key, 'page_of_id_') === 0) {
+				$pageParameters[] = $key;
+			}
+		}
+
+		foreach ($pageParameters as $urlParameter) {
 			$pSearchParametersModel->addAllowedGetParameter($urlParameter);
 			$pSearchParametersModel->setParameter($urlParameter,
 			$this->_pRequestVariablesSanitizer->getFilteredGet($urlParameter));

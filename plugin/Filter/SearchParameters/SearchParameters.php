@@ -124,8 +124,10 @@ class SearchParameters
 
 	/**
 	 * @param SearchParametersModel $pSearchParametersModel
+	 * @param int $pListViewId
+	 * @param bool $pCheckPaginationTheme
 	 */
-	public function registerNewPageLinkArgs(SearchParametersModel $pSearchParametersModel, $pListViewId, $pCheckPaginationTheme)
+	public function registerNewPageLinkArgs(SearchParametersModel $pSearchParametersModel, int $pListViewId, bool $pCheckPaginationTheme)
 	{
 		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pSearchParametersModel, $pListViewId, $pCheckPaginationTheme): string {
 			return $this->linkPagesLink($link, $i, $pSearchParametersModel, $pListViewId, $pCheckPaginationTheme);
