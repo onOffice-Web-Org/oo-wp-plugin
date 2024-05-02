@@ -107,7 +107,7 @@ class TestClassSortListBuilder
 	 */
 	public function testBuildWithRequestVars()
 	{
-		$_GET = ['sortby' => 'kaufpreis', 'sortorder' => 'DESC'];
+		$_GET = ['sortby_id_1' => 'kaufpreis', 'sortorder_id_1' => 'DESC'];
 		$pBuilder = new SortListBuilder($this->_pBuilder);
 		$pModelAdj = $pBuilder->build($this->_pListView);
 		$this->assertInstanceOf(SortListDataModel::class, $pModelAdj);
