@@ -12,11 +12,11 @@ jQuery(document).ready(function($){
 		checkUnsavedChanges = true;
 	});
 
-    $('.filter-fields-list').sortable({
-        update: function() {
-            checkUnsavedChanges = true;
-        }
-    });
+	$('.filter-fields-list').sortable({
+		update: function() {
+			checkUnsavedChanges = true;
+		}
+	});
 
 	function generateUnsavedChangesMessage(href) {
 		return $(`
