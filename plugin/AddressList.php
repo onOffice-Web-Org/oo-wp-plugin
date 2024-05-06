@@ -49,6 +49,54 @@ use function esc_html;
 
 class AddressList
 {
+	/** @var string */
+	const CONTACT_CATEGORY_PRIVATE_CUSTOMER = 'privateCustomer';
+
+	/** @var string */
+	const CONTACT_CATEGORY_BUSINESS_CUSTOMER = 'businessCustomer';
+
+	/** @var string */
+	const CONTACT_CATEGORY_COMPANY = 'company';
+
+	/** @var string */
+	const CONTACT_CATEGORY_OFFICE = 'branch';
+
+	/** @var string */
+	const CONTACT_CATEGORY_DEPARTMMENT = 'department';
+
+	/** @var string */
+	const CONTACT_CATEGORY_MARRIED_COUPLE = 'marriedCouple';
+
+	/** @var string */
+	const CONTACT_CATEGORY_INSTITUTION = 'institution';
+
+	/** @var string */
+	const CONTACT_CATEGORY_ASSOCIATION = 'association';
+
+	/** @var string */
+	const CONTACT_CATEGORY_OWNER_ASSOCIATION  = 'communityOfOwners';
+
+	/** @var string */
+	const CONTACT_CATEGORY_JOINT_HEIRS = 'communityOfHeirs';
+
+	/** @var string */
+	const CONTACT_CATEGORY_UMBRELLA_ORGANIZATION = 'umbrellaOrganization';
+
+	/** @var string[] */
+	private $_addressParametersForImageAlt = [
+		'contactCategory',
+		'Vorname',
+		'Name',
+		'Zusatz1',
+		'branch',
+		'communityOfHeirs',
+		'communityOfOwners',
+		'umbrellaOrganization',
+		'association',
+		'institution',
+		'department'
+	];
+
 	/** @var string[] */
 	private $_specialContactData = [
 		'mobile',
@@ -78,6 +126,9 @@ class AddressList
 
 	/** @var DataListViewAddress */
 	private $_pDataViewAddress = null;
+
+	/** @var array */
+	private $_recordsRaw = [];
 
 
 	/**
@@ -138,12 +189,21 @@ class AddressList
 
 		$newPage = $inputPage === 0 ? 1 : $inputPage;
 		$apiOnlyFields = $pModifier->getAllAPIFields();
-		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields, $this->_pDataViewAddress, $newPage);
+		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields, $this->_pDataViewAddress, $newPage, true);
 
 		$pApiCall = new APIClientActionGeneric
 			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
 		$pApiCall->setParameters($parameters);
-		$pApiCall->addRequestToQueue()->sendRequests();
+		$pApiCall->addRequestToQueue();
+
+		$addressParameterRaws = $pDataListViewToApi->buildParameters($this->_addressParametersForImageAlt,
+			$this->_pDataViewAddress, $newPage);
+
+		$pAddressRawApiCall = clone $pApiCall;
+		$pAddressRawApiCall->setParameters($addressParameterRaws);
+		$pAddressRawApiCall->addRequestToQueue()->sendRequests();
+		$recordsRaw = $pAddressRawApiCall->getResultRecords();
+		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 
 		$records = $pApiCall->getResultRecords();
 		$this->fillAddressesById($records);
@@ -311,5 +371,60 @@ class AddressList
 		$pAddressList = clone $this;
 		$pAddressList->_pDataViewAddress = $pDataListViewAddress;
 		return $pAddressList;
+	}
+
+	/**
+	 * @param int $addressId
+	 *
+	 * @return string
+	 */
+	public function generateImageAlt(int $addressId): string
+	{
+		$addressRawElements = $this->_recordsRaw[$addressId]['elements'] ?? [];
+		if (empty($addressRawElements)) {
+			return '';
+		}
+
+		$contactCategory = $addressRawElements['contactCategory'];
+
+		switch ($contactCategory) {
+			case AddressList::CONTACT_CATEGORY_ASSOCIATION:
+				$imageAlt = $addressRawElements['association'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_INSTITUTION:
+				$imageAlt = $addressRawElements['institution'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_BUSINESS_CUSTOMER:
+			case AddressList::CONTACT_CATEGORY_PRIVATE_CUSTOMER:
+				$firstName = $addressRawElements['Vorname'] ?? '';
+				$name = $addressRawElements['Name'] ?? '';
+				$imageAlt = trim($firstName . ', ' . $name , ', ');
+				break;
+			case AddressList::CONTACT_CATEGORY_COMPANY:
+				$imageAlt = $addressRawElements['Zusatz1'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_OFFICE:
+				$imageAlt = $addressRawElements['branch'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_DEPARTMMENT:
+				$imageAlt = $addressRawElements['department'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_JOINT_HEIRS:
+				$imageAlt = $addressRawElements['communityOfHeirs'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_MARRIED_COUPLE:
+				$imageAlt = $addressRawElements['Name'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_OWNER_ASSOCIATION:
+				$imageAlt = $addressRawElements['communityOfOwners'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_UMBRELLA_ORGANIZATION:
+				$imageAlt = $addressRawElements['umbrellaOrganization'] ?? '';
+				break;
+			default:
+				$imageAlt = '';
+		}
+
+		return $imageAlt;
 	}
 }

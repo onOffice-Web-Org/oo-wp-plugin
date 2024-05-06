@@ -34,7 +34,7 @@ require 'SearchFormAddress.php';
 <div class="oo-address-listframe oo-listframe">
 	<?php
 	/* @var $pAddressList AddressList */
-	foreach ($pAddressList->getRows() as $escapedValues) {
+	foreach ($pAddressList->getRows() as $addressId => $escapedValues) {
 		$imageUrl = $escapedValues['imageUrl'];
 		unset($escapedValues['imageUrl']);
 	?>
@@ -42,7 +42,8 @@ require 'SearchFormAddress.php';
 			<div class="oo-listobjectwrap">
 				<?php
 				if (!empty($imageUrl)) {
-					echo '<img src="' . esc_url($imageUrl) . '" class="oo-address-image" alt="address-img" loading="lazy">';
+					$imageAlt = $pAddressList->generateImageAlt($addressId);
+					echo '<img src="' . esc_url($imageUrl) . '" class="oo-address-image" alt="' . esc_html($imageAlt) . '" loading="lazy">';
 				}
 				?>
 				<div class="oo-listinfo">
@@ -52,9 +53,11 @@ require 'SearchFormAddress.php';
 							if ($pAddressList->getFieldType($field) === FieldTypes::FIELD_TYPE_BLOB) {
 								continue;
 							}
+
 							if (empty($value)) {
 								continue;
 							}
+
 							$fieldLabel = $pAddressList->getFieldLabel($field);
 							echo '<div class="oo-listtd">' . esc_html($fieldLabel) . '</div><div class="oo-listtd">' . (is_array($value) ? implode(', ', array_filter($value)) : $value) . '</div>';
 						}
