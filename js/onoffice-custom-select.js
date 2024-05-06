@@ -1,13 +1,15 @@
+onOffice = onOffice || {};
+onOffice.custom_select2_translation = onOffice.custom_select2_translation || [];
 jQuery(document).ready(function ($) {
 	$('.custom-multiple-select, .custom-single-select').select2({
 		width: '100%'
 	});
 
-	$('.onoffice-custom-select2').select2({
-		placeholder: 'Select Some Options'
+	$('#viewrecordssorting .onoffice-custom-select2').select2({
+		placeholder: custom_select2_translation.multipleSelectOptions
 	});
 
-	$(".onoffice-custom-select2[name='oopluginlistviews-sortByUserDefinedDefault']").select2({
-		placeholder: 'Select an Option'
+	$("#viewrecordssorting .onoffice-custom-select2[name='oopluginlistviews-sortByUserDefinedDefault']").select2({
+		placeholder: custom_select2_translation.singleSelectOption
 	});
 });
