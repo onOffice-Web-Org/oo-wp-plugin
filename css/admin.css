@@ -314,6 +314,11 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	list-style: disc;
 	margin-left: 25px;
 }
+
+.do-not-modify summary {
+	cursor: pointer;
+}
+
 input#onoffice-input-submit {
 	color: #2271b1;
 	border-color: #2271b1;
