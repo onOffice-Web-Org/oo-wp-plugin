@@ -8,9 +8,15 @@ jQuery(document).ready(function($){
 		checkUnsavedChanges = true;
 	});
 
-	$('#poststuff span').on("click", function() {
+	$('#poststuff span, #poststuff li').on("click", function() {
 		checkUnsavedChanges = true;
 	});
+
+    $('.filter-fields-list').sortable({
+        update: function() {
+            checkUnsavedChanges = true;
+        }
+    });
 
 	function generateUnsavedChangesMessage(href) {
 		return $(`
