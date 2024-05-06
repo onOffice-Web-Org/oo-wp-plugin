@@ -87,6 +87,8 @@ class SearchParametersModelBuilderEstate
 		if ($pSortListDataModel->isAdjustableSorting())	{
 			$this->addForAdjustableSorting($pModel, $pDataView->getId());
 		}
+		$this->addParametersForPagination($pModel);
+
 		return $pModel;
 	}
 
@@ -100,6 +102,26 @@ class SearchParametersModelBuilderEstate
 			$pSearchParametersModel->addAllowedGetParameter($urlParameter);
 			$pSearchParametersModel->setParameter($urlParameter,
 				$this->_pRequestVariablesSanitizer->getFilteredGet($urlParameter));
+		}
+	}
+
+	/**
+	 * @param SearchParametersModel $pSearchParametersModel
+	 */
+	private function addParametersForPagination(SearchParametersModel $pSearchParametersModel)
+	{
+		$pageParameters = [];
+
+		foreach ($_GET as $key => $value) {
+			if (strpos($key, 'page_of_id_') === 0) {
+				$pageParameters[] = $key;
+			}
+		}
+
+		foreach ($pageParameters as $urlParameter) {
+			$pSearchParametersModel->addAllowedGetParameter($urlParameter);
+			$pSearchParametersModel->setParameter($urlParameter,
+			$this->_pRequestVariablesSanitizer->getFilteredGet($urlParameter));
 		}
 	}
 
