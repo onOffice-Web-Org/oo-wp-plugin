@@ -125,6 +125,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 							$newFieldConfigRow['filterable'] = $fieldConfigRow->filterable;
 							$newFieldConfigRow['hidden'] = $fieldConfigRow->hidden;
 							$newFieldConfigRow['availableOptions'] = $fieldConfigRow->availableOptions;
+							$newFieldConfigRow['convertTextToSelectForCityField'] = $fieldConfigRow->convertTextToSelectForCityField;
 							$this->_pWPDB->insert($tableFieldConfig, $newFieldConfigRow);
 						}
 					}
