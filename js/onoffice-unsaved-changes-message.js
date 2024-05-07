@@ -41,12 +41,12 @@ jQuery(document).ready(function($){
 	}
 
 	$('a[href]').on('click', function(e) {
-		if (!$(this).closest('#adminmenu').length) {
+		if (!$(this).closest('#adminmenu, #wpadminbar').length) {
 			checkNavigationTriggered = true;
 		}
 	});
 
-	$('#adminmenu a[href]').on('click', function(e) {
+	$('#adminmenu a[href], #wpadminbar a[href]').on('click', function(e) {
 		if ($(this).attr('target') === '_blank') {
 			return;
 		}
