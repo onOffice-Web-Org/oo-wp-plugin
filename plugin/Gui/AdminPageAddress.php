@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2024 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -41,15 +41,95 @@ use function add_screen_option;
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
+ * @copyright 2003-2024, onOffice(R) GmbH
  *
  */
 
-class AdminPageAddressList
+class AdminPageAddress
 	extends AdminPage
 {
+	/** */
+	const PAGE_ADDRESS_LIST = 'list';
+
+	/** */
+	const PAGE_ADDRESS_DETAIL = 'detail';
+
 	/** @var AddressListTable */
 	private $_pAddressListTable = null;
+
+	/** @var string[] */
+	private $_subPageClassByTab = array(
+		self::PAGE_ADDRESS_LIST => AdminPageAddressList::class,
+		self::PAGE_ADDRESS_DETAIL => AdminPageAddressDetail::class,
+	);
+
+	/** */
+	const PARAM_TAB = 'tab';
+
+	/** @var array */
+	private $_tabs = array();
+
+	/** @var AdminPage */
+	private $_pSelectedTab = null;
+
+	/**
+	 *
+	 * @param string $pageSlug
+	 *
+	 */
+
+	public function __construct($pageSlug)
+	{
+		$this->_tabs = array(
+			self::PAGE_ADDRESS_LIST => __('Address Views', 'onoffice-for-wp-websites'),
+			self::PAGE_ADDRESS_DETAIL => __('Detail View', 'onoffice-for-wp-websites'),
+		);
+
+		parent::__construct($pageSlug);
+
+		$selectedTab = $this->getSelectedTab();
+		$this->_pSelectedTab = $this->getAdminPageForTab($selectedTab);
+	}
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	private function getSelectedTab()
+	{
+		$selectedTab = $this->getDefaultTab();
+		$getParamTab = filter_input(INPUT_GET, self::PARAM_TAB);
+		$postParamTab = filter_input(INPUT_POST, self::PARAM_TAB);
+		if (!is_null($getParamTab)) {
+			$selectedTab = $getParamTab;
+		} elseif (!is_null($postParamTab)) {
+			$selectedTab = $postParamTab;
+		}
+
+		return $selectedTab;
+	}
+
+
+	/**
+	 *
+	 * @param string $tab
+	 * @return AdminPage
+	 *
+	 */
+
+	private function getAdminPageForTab($tab)
+	{
+		if (!isset($this->_subPageClassByTab[$tab])) {
+			$tab = self::PAGE_ADDRESS_LIST;
+		}
+
+		$className = $this->_subPageClassByTab[$tab];
+		$pAdminPage = new $className($this->getPageSlug());
+
+		return $pAdminPage;
+	}
 
 
 	/**
@@ -58,19 +138,34 @@ class AdminPageAddressList
 
 	public function renderContent()
 	{
-		$this->_pAddressListTable->prepare_items();
-		$page = 'onoffice-addresses';
-		$buttonSearch = __('Search Addresses', 'onoffice-for-wp-websites');
-		$id = 'onoffice-form-search-address';
-		$this->generateSearchForm($page,$buttonSearch, null,null,$id);
-		echo '<p>';
-		echo '<form method="post">';
-		echo $this->_pAddressListTable->views();
-		$this->_pAddressListTable->display();
-		echo '</form>';
-		echo '</p>';
+		$selectedTab = $this->getSelectedTab();
+		$defaultTab = $this->getDefaultTab();
+		$this->_pSelectedTab->generatePageMainTitle(__('Addresses', 'onoffice-for-wp-websites'));
+
+		echo '
+		<h2 class="nav-tab-wrapper">';
+		$adminUrl = admin_url('admin.php?page=onoffice-addresses');
+
+		foreach ($this->_tabs as $index => $label)
+		{
+			$newAdminUrl = ($index != $defaultTab) ? add_query_arg('tab', $index, $adminUrl) : $adminUrl;
+			$class = ($index === $selectedTab) ? ' nav-tab-active' : '';
+			echo '<a href="'.$newAdminUrl.'" class="nav-tab'.$class.'">'.esc_html($label).'</a>';
+		}
+		echo '</h2>';
+		echo $this->_pSelectedTab->renderContent();
 	}
 
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	private function getDefaultTab()
+	{
+		return self::PAGE_ADDRESS_LIST;
+	}
 
 	/**
 	 *
@@ -99,6 +194,7 @@ class AdminPageAddressList
 
 	public function handleAdminNotices()
 	{
+		$this->_pSelectedTab->handleAdminNotices();
 		$itemsDeleted = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_NUMBER_INT);
 
 		if ($itemsDeleted !== null && $itemsDeleted !== false) {
@@ -116,6 +212,7 @@ class AdminPageAddressList
 
 	public function preOutput()
 	{
+		$this->_pSelectedTab->preOutput();
 		$screen = get_current_screen();
 		if ( ! is_object( $screen ) || $screen->id !== "onoffice_page_onoffice-addresses" ) {
 			return;
@@ -169,11 +266,24 @@ class AdminPageAddressList
 		parent::preOutput();
 	}
 
-	public function doExtraEnqueues()
-	{
-		wp_register_script( 'oo-copy-shortcode',
-			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-copycode.min.js',
-			[ 'jquery' ], '', true );
-		wp_enqueue_script( 'oo-copy-shortcode');
-	}
+	/**
+	 *
+	 * @return AdminPage
+	 *
+	 */
+
+    public function getSelectedAdminPage()
+    {
+        return $this->_pSelectedTab;
+    }
+
+
+	/**
+	 *
+	 */
+
+    public function doExtraEnqueues()
+    {
+        $this->_pSelectedTab->doExtraEnqueues();
+    }
 }
