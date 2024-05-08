@@ -153,7 +153,7 @@ class TestClassEstateDetailUrl
 		$title = 'test-title';
 		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
 		$url = 'https://www.onoffice.de/detail/123?lang=en';
-		$expectedUrl = 'https://www.onoffice.de/detail/123-test-title';
+		$expectedUrl = 'https://www.onoffice.de/detail/123-test-title?lang=en';
 		$this->assertEquals($expectedUrl, $pInstance->getUrlWithEstateTitle($estateId, $title, $url, false, $pEstateRedirection));
 	}
 
@@ -169,7 +169,7 @@ class TestClassEstateDetailUrl
 		$title = 'test-title';
 		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
 		$url = 'https://www.onoffice.de/detail/123?lang=en';
-		$expectedUrl = 'https://www.onoffice.de/detail/123';
+		$expectedUrl = 'https://www.onoffice.de/detail/123?lang=en';
 		$this->assertEquals($expectedUrl, $pInstance->getUrlWithEstateTitle($estateId, $title, $url, false, $pEstateRedirection));
 	}
 
@@ -210,16 +210,16 @@ class TestClassEstateDetailUrl
 		$expectedUrlHasTitleWithoutParamster = 'https://www.onoffice.de/detail/123-test-title';
 		$this->assertEquals($expectedUrlHasTitleWithoutParamster, $pInstance->getUrlWithEstateTitle($estateId, $title, $urlHasTitleWithoutParamster, false, $pEstateRedirection));
 
-		$urlWithoutTitle = 'https://www.onoffice.de/detail/123/?lang=en';
+		$urlWithoutTitle = 'https://www.onoffice.de/detail/123?lang=en';
 		$expectedUrlWithoutTitle = 'https://www.onoffice.de/detail/123?lang=en';
 		$this->assertEquals($expectedUrlWithoutTitle, $pInstance->getUrlWithEstateTitle($estateId, $title, $urlWithoutTitle, false, $pEstateRedirection));
 
-		$urlHasTitleHasParamster = 'https://www.onoffice.de/detail/123-test-title';
-		$expectedUrlHasTitleHasParamster = 'https://www.onoffice.de/detail/123-test-title';
-		$this->assertEquals($expectedUrlHasTitleHasParamster, $pInstance->getUrlWithEstateTitle($estateId, $title, $urlHasTitleHasParamster, true, $pEstateRedirection));
+		$urlHasTitleHasParameter = 'https://www.onoffice.de/detail/123-test-title?lang=en';
+		$expectedUrlHasTitleHasParameter = 'https://www.onoffice.de/detail/123-test-title?lang=en';
+		$this->assertEquals($expectedUrlHasTitleHasParameter, $pInstance->getUrlWithEstateTitle($estateId, $title, $urlHasTitleHasParameter, true, $pEstateRedirection));
 
-		$urlHasTitle = 'https://www.onoffice.de/detail/123-test-title/?lang=en';
-		$expectedUrlHasTitle = 'https://www.onoffice.de/detail/123-test-title';
+		$urlHasTitle = 'https://www.onoffice.de/detail/123-test-title?lang=en';
+		$expectedUrlHasTitle = 'https://www.onoffice.de/detail/123-test-title?lang=en';
 		$this->assertEquals($expectedUrlHasTitle, $pInstance->getUrlWithEstateTitle($estateId, $title, $urlHasTitle, true, $pEstateRedirection));
 	}
 }
