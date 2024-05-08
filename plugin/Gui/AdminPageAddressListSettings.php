@@ -358,7 +358,7 @@ class AdminPageAddressListSettings
 			self::ENQUEUE_DATA_MERGE => array(AdminPageSettingsBase::POST_RECORD_ID),
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
-			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('leave without saving', 'onoffice-for-wp-websites'),
+			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
 		);
 	}
 

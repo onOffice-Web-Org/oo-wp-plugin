@@ -328,7 +328,7 @@ abstract class AdminPageFormSettingsBase
 			'installed_wp_languages' => $this->getInstalledLanguages(),
 			'language_native' => $pLanguage->getLocale(),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
-			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('leave without saving', 'onoffice-for-wp-websites'),
+			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
 		];
 	}
 
