@@ -64,6 +64,9 @@ class ContentFilterShortCodeAddress
 	/** @var AddressListFactory */
 	private $_pAddressListFactory;
 
+	/** @var ContentFilterShortCodeAddressDetail */
+	private $_pContentFilterShortCodeAddressDetail;
+
 	/**
 	 * ContentFilterShortCodeAddress constructor.
 	 *
@@ -80,7 +83,8 @@ class ContentFilterShortCodeAddress
 		Logger $pLogger,
 		DataListViewFactoryAddress $pDataListFactory,
 		Template $pTemplate,
-		WPQueryWrapper $pWPQueryWrapper)
+		WPQueryWrapper $pWPQueryWrapper,
+		ContentFilterShortCodeAddressDetail $pContentFilterShortCodeAddressDetail)
 	{
 		$this->_pSearchParametersModelBuilder = $pSearchParametersModelBuilder;
 
@@ -89,6 +93,7 @@ class ContentFilterShortCodeAddress
 		$this->_pAddressListFactory = $pAddressListFactory;
 		$this->_pTemplate = $pTemplate;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
+		$this->_pContentFilterShortCodeAddressDetail = $pContentFilterShortCodeAddressDetail;
 	}
 
 	/**
@@ -101,6 +106,10 @@ class ContentFilterShortCodeAddress
 			'view' => null,
 		], $attributesInput);
 		$addressListName = $attributes['view'];
+
+		if ($attributes['view'] === $this->_pContentFilterShortCodeAddressDetail->getViewName()) {
+			return $this->_pContentFilterShortCodeAddressDetail->render();
+		}
 
 		try {
 			$pTemplate = $this->createTemplate($addressListName);
