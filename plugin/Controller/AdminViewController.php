@@ -43,6 +43,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
+use onOffice\WPlugin\Gui\AdminPageAddress;
 use Parsedown;
 use HTMLPurifier_Config;
 use HTMLPurifier;
@@ -99,6 +100,9 @@ class AdminViewController
 	/** */
 	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
 
+	/** @var AdminPageAddress */
+	private $_AdminPageAddresses = null;
+
 	/**
 	 *
 	 */
@@ -126,6 +130,13 @@ class AdminViewController
 
 		if ($pSelectedSubPage instanceof AdminPageAjax) {
 			$this->_ajaxHooks['onoffice_page_'.$this->_pageSlug.'-estates'] = $pSelectedSubPage;
+		}
+
+		$this->_AdminPageAddresses = new AdminPageAddress($this->_pageSlug);
+		$pSelectedSubPageForAddress = $this->_AdminPageAddresses->getSelectedAdminPage();
+
+		if ($pSelectedSubPageForAddress instanceof AdminPageAjax) {
+			$this->_ajaxHooks['onoffice_page_'.$this->_pageSlug.'-addresses'] = $pSelectedSubPageForAddress;
 		}
 	}
 
@@ -167,11 +178,15 @@ class AdminViewController
 			__( 'Getting started', 'onoffice-for-wp-websites' ),
 			$roleMainPage, $this->_pageSlug );
 
-		$pAdminPageAddresses = new AdminPageAddressList($this->_pageSlug);
-		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice-for-wp-websites'), __('Addresses', 'onoffice-for-wp-websites'),
-			$roleAddress, $this->_pageSlug.'-addresses', array($pAdminPageAddresses, 'render'));
-		add_action('load-'.$hookAddresses, [$pAdminPageAddresses, 'handleAdminNotices']);
-		add_action('current_screen', [$pAdminPageAddresses, 'preOutput']);
+		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice-for-wp-websites'),
+			__('Addresses', 'onoffice-for-wp-websites'), $roleAddress,
+			$this->_pageSlug.'-addresses', array($this->_AdminPageAddresses, 'render'));
+		add_action('load-'.$hookAddresses, [$this->_AdminPageAddresses, 'handleAdminNotices']);
+		$pSelectedSubPageForAddress = $this->_AdminPageAddresses->getSelectedAdminPage();
+		if ($pSelectedSubPageForAddress instanceof AdminPageAjax) {
+			add_action( 'load-'.$hookAddresses, array($pSelectedSubPageForAddress, 'checkForms'));
+		}
+		add_action('current_screen', [$this->_AdminPageAddresses, 'preOutput']);
 
 		// Estates
 		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice-for-wp-websites'),
