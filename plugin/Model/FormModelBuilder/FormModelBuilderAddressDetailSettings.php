@@ -73,7 +73,7 @@ class FormModelBuilderAddressDetailSettings
 	{
 		$this->_pFieldnames = $pFieldnames ?? new Fieldnames(new FieldsCollection());
 
-		$pFieldsCollection = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
+		$pFieldsCollection = new FieldsCollection();
 		$pFieldnames = $pFieldnames ?? new Fieldnames($pFieldsCollection);
 		$pFieldnames->loadLanguage();
 		$this->setFieldnames($pFieldnames);
