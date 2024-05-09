@@ -213,13 +213,7 @@ class AdminPageAddress
 	public function preOutput()
 	{
 		$this->_pSelectedTab->preOutput();
-		$screen = get_current_screen();
-		if ( ! is_object( $screen ) || $screen->id !== "onoffice_page_onoffice-addresses" ) {
-			return;
-		}
 
-		add_screen_option( 'per_page', array('option' => 'onoffice_address_listview_per_page') );
-		$this->_pAddressListTable = new AddressListTable();
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pDI = $pContainerBuilder->build();
@@ -259,9 +253,6 @@ class AdminPageAddress
 		};
 
 		add_filter('handle_bulk_actions-onoffice_page_onoffice-addresses', $pClosureDuplicateAddress, 10, 3);
-		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-addresses', function(): Table\WP\ListTable {
-			return $this->_pAddressListTable;
-		});
 
 		parent::preOutput();
 	}
