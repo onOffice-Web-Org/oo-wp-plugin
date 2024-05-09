@@ -73,7 +73,7 @@ class FormModelBuilderAddressDetailSettings
 	{
 		$this->_pFieldnames = $pFieldnames ?? new Fieldnames(new FieldsCollection());
 
-		$pFieldsCollection = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
+		$pFieldsCollection = new FieldsCollection();
 		$pFieldnames = $pFieldnames ?? new Fieldnames($pFieldsCollection);
 		$pFieldnames->loadLanguage();
 		$this->setFieldnames($pFieldnames);
@@ -299,10 +299,10 @@ class FormModelBuilderAddressDetailSettings
 
 	/**
 	 *
-	* @return array
-	*
-	* @throws UnknownFormException
-	*/
+	 * @return array
+	 *
+	 * @throws UnknownFormException
+	 */
 
 	protected function readNameShortCodeForm()
 	{
@@ -328,7 +328,6 @@ class FormModelBuilderAddressDetailSettings
 
 	public function createInputModelShortCodeEstate()
 	{
-
 		$labelShortCodeEstate = __('Select Property Lists', 'onoffice-for-wp-websites');
 		$pInputModelShortCodeEstate = $this->_pInputModelAddressDetailFactory->create
 		(InputModelOptionFactoryAddressDetailView::INPUT_SHORT_CODE_ESTATE, $labelShortCodeEstate);
@@ -343,10 +342,10 @@ class FormModelBuilderAddressDetailSettings
 
 	/**
 	 *
-	* @return array
-	*
-	* @throws UnknownFormException
-	*/
+	 * @return array
+	 *
+	 * @throws UnknownFormException
+	 */
 
 	protected function readNameShortCodeEstate()
 	{
