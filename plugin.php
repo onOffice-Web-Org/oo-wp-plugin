@@ -171,6 +171,8 @@ add_action('init', function() use ($pDI) {
 	$pRewriteRuleBuilder->addCustomRewriteTags();
 	$pRewriteRuleBuilder->addStaticRewriteRules();
 	$pRewriteRuleBuilder->addDynamicRewriteRules();
+	$pRewriteRuleBuilder->addCustomRewriteTagsAddressDetail();
+	$pRewriteRuleBuilder->addDynamicRewriteRulesAddressDetail();
 });
 
 // This hook [wp] is one effective place to perform any high-level filtering or validation,

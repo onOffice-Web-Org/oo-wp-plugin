@@ -160,7 +160,7 @@ class AddressList
 	/**
 	 * @return ViewFieldModifierHandler
 	 */
-	private function generateRecordModifier(): ViewFieldModifierHandler
+	protected function generateRecordModifier(): ViewFieldModifierHandler
 	{
 		$fields = $this->_pDataViewAddress->getFields();
 
@@ -194,7 +194,7 @@ class AddressList
 	 * @param array $elements
 	 * @return array
 	 */
-	private function collectAdditionalContactData(array $elements): array
+	public function collectAdditionalContactData(array $elements): array
 	{
 		$additionalContactData = [];
 		foreach ($elements as $key => $value) {
@@ -225,6 +225,15 @@ class AddressList
 	{
 		return $this->_adressesById[$id] ?? [];
 	}
+
+	/**
+	 * @param array $addressData
+	 */
+	public function setAddressById($addressData)
+	{
+		$this->_adressesById = $addressData;
+	}
+
 	public function getAddressDataView()
 	{
 		return $this->_pDataViewAddress; 
@@ -317,4 +326,8 @@ class AddressList
 		$pAddressList->_pDataViewAddress = $pDataListViewAddress;
 		return $pAddressList;
 	}
+
+	/** @return AddressListEnvironment */
+	public function getEnvironment(): AddressListEnvironment
+		{ return $this->_pEnvironment; }
 }

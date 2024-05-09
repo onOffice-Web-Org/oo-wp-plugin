@@ -58,6 +58,12 @@ class RewriteRuleBuilder
 		add_rewrite_tag('%view%', '([^&]+)');
 	}
 
+	public function addCustomRewriteTagsAddressDetail()
+	{
+		add_rewrite_tag('%address_id%', '([^&]+)');
+		add_rewrite_tag('%view%', '([^&]+)');
+	}
+
 	public function addStaticRewriteRules()
 	{
 		add_rewrite_rule('^onoffice-estate-types.json$', 'index.php?onoffice_estate_type_json=1', 'top');
