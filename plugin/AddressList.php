@@ -42,6 +42,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function esc_html;
+use onOffice\WPlugin\DataView\DataViewAddress;
 
 /**
  *
@@ -76,7 +77,7 @@ class AddressList
 	/** @var AddressListEnvironment */
 	private $_pEnvironment = null;
 
-	/** @var DataListViewAddress */
+	/** @var DataViewAddress */
 	private $_pDataViewAddress = null;
 
 
@@ -86,10 +87,10 @@ class AddressList
 	 *
 	 */
 
-	public function __construct(AddressListEnvironment $pEnvironment = null)
+	public function __construct(DataViewAddress $pDataViewAddress = null, AddressListEnvironment $pEnvironment = null)
 	{
 		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
-		$this->_pDataViewAddress = new DataListViewAddress(0, 'default');
+		$this->_pDataViewAddress = $pDataViewAddress ?? new DataListViewAddress(0, 'default');
 	}
 
 	/**
@@ -159,7 +160,7 @@ class AddressList
 	/**
 	 * @return ViewFieldModifierHandler
 	 */
-	private function generateRecordModifier(): ViewFieldModifierHandler
+	protected function generateRecordModifier(): ViewFieldModifierHandler
 	{
 		$fields = $this->_pDataViewAddress->getFields();
 
@@ -193,7 +194,7 @@ class AddressList
 	 * @param array $elements
 	 * @return array
 	 */
-	private function collectAdditionalContactData(array $elements): array
+	public function collectAdditionalContactData(array $elements): array
 	{
 		$additionalContactData = [];
 		foreach ($elements as $key => $value) {
@@ -223,6 +224,19 @@ class AddressList
 	public function getAddressById($id): array
 	{
 		return $this->_adressesById[$id] ?? [];
+	}
+
+	/**
+	 * @param array $addressData
+	 */
+	public function setAddressById($addressData)
+	{
+		$this->_adressesById = $addressData;
+	}
+
+	public function getAddressDataView()
+	{
+		return $this->_pDataViewAddress; 
 	}
 
 	/**
@@ -312,4 +326,8 @@ class AddressList
 		$pAddressList->_pDataViewAddress = $pDataListViewAddress;
 		return $pAddressList;
 	}
+
+	/** @return AddressListEnvironment */
+	public function getEnvironment(): AddressListEnvironment
+		{ return $this->_pEnvironment; }
 }
