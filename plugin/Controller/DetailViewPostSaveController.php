@@ -246,9 +246,13 @@ class DetailViewPostSaveController
 		$posts = $_GET['post'];
 		if ( isset( $posts ) ) {
 			$pDataDetailViewHandler = $this->_pContainer->get(DataDetailViewHandler::class);
+			$pDataAddressDetailViewHandler = $this->_pContainer->get(DataAddressDetailViewHandler::class);
 			$pDetailView            = $pDataDetailViewHandler->getDetailView();
 			$detailPageIds          = $pDetailView->getPageIdsHaveDetailShortCode();
+			$pAddressDetailView     = $pDataAddressDetailViewHandler->getAddressDetailView();
+			$addressDetailPageIds   = $pAddressDetailView->getPageIdsHaveDetailShortCode();
 			$hasDetailPost          = false;
+			$hasAddressDetailPost   = false;
 			if ( ! is_array( $posts ) ) {
 				$posts = [ $posts ];
 			}
@@ -256,6 +260,10 @@ class DetailViewPostSaveController
 				if ( in_array( $postId, $detailPageIds ) ) {
 					$pDetailView->removeFromPageIdsHaveDetailShortCode( (int) $postId );
 					$hasDetailPost = true;
+				}
+				if ( in_array( $postId, $addressDetailPageIds ) ) {
+					$pAddressDetailView->removeFromPageIdsHaveDetailShortCode( (int) $postId );
+					$hasAddressDetailPost = true;
 				}
 				$pPost = get_post( $postId );
 				$this->deletePageUseShortCode( $pPost );
@@ -268,6 +276,16 @@ class DetailViewPostSaveController
 					$pDetailView->setPageId( (int) $detailPageIds[ $firstDetailPageId ] );
 				}
 				$pDataDetailViewHandler->saveDetailView( $pDetailView );
+				flush_rewrite_rules();
+			}
+			if ( $hasAddressDetailPost ) {
+				if ( empty( $pAddressDetailView->getPageIdsHaveDetailShortCode() ) ) {
+					$pAddressDetailView->setPageId( 0 );
+				} elseif ( in_array( $pAddressDetailView->getPageId(), $posts ) ) {
+					$firstDetailPageId = min( array_keys( $addressDetailPageIds ) );
+					$pAddressDetailView->setPageId( (int) $addressDetailPageIds[ $firstDetailPageId ] );
+				}
+				$pDataAddressDetailViewHandler->saveAddressDetailView( $pAddressDetailView );
 				flush_rewrite_rules();
 			}
 		}
