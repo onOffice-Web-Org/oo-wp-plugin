@@ -109,18 +109,18 @@ class DetailViewPostSaveController
 			$pAddressDetailView = $pDataAddressDetailViewHandler->getAddressDetailView();
 
 			$detailViewName = $pDetailView->getName();
+			$addressDetailViewName = $pAddressDetailView->getName();
 			$postContent = $pPost->post_content;
 			$postType = $pPost->post_type;
 			$metaKeys = get_post_meta($postId, '', true);
 
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
-			$addressDetailViewName = $pAddressDetailView->getName();
 			$viewContainedAddressDetail = $this->postContainsAddressDetailViewName($postContent, $addressDetailViewName);
-			$viewContainedAddressDetailCustomField = false;
-			$hasOtherShortcodeAddressDetailInPostContent = false;
 
 			$viewContainedCustomField = false;
 			$hasOtherShortcodeInPostContent = false;
+			$viewContainedAddressDetailCustomField = false;
+			$hasOtherShortcodeAddressDetailInPostContent = false;
 
 			if (!$viewContained && !empty($postContent) && $this->checkOtherShortcodeInPostContent($postContent, $detailViewName)) {
 				$hasOtherShortcodeInPostContent = true;
