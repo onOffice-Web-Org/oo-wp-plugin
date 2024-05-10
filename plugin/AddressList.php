@@ -234,7 +234,10 @@ class AddressList
 		$this->_adressesById = $addressData;
 	}
 
-	public function getAddressDataView()
+	/**
+	 * @return DataViewAddress
+	 */
+	public function getAddressDataView(): DataViewAddress
 	{
 		return $this->_pDataViewAddress; 
 	}

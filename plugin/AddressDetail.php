@@ -44,7 +44,10 @@ class AddressDetail
 	/** @var string */
 	private $_userName = '';
 
+	/** @var string */
 	const SHOW_PICTURE_TYPE_PASSPORT_PHOTO = 'PassportPhoto';
+
+	/** @var string */
 	const SHOW_PICTURE_TYPE_USER_PHOTO = 'UserPhoto';
 
 	/**
