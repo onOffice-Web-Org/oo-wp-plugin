@@ -72,6 +72,12 @@ class AdminPageAddressDetail
 	/** */
 	const FORM_VIEW_LAYOUT_DESIGN = 'viewlayoutdesign';
 
+	/** */
+	const VIEW_UNSAVED_CHANGES_MESSAGE = 'view_unsaved_changes_message';
+
+	/** */
+	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
+
 	/**
 	 *
 	 */
@@ -247,6 +253,9 @@ class AdminPageAddressDetail
 			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-copycode.min.js',
 			[ 'jquery' ], '', true );
 		wp_enqueue_script( 'oo-copy-shortcode' );
+		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-unsaved-changes-message.min.js',
+			['jquery'], '', true);
+		wp_enqueue_script('oo-unsaved-changes-message');
 	}
 
 	/**
@@ -274,7 +283,9 @@ class AdminPageAddressDetail
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The address detail view has been saved.', 'onoffice-for-wp-websites'),
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the address detail view.', 'onoffice-for-wp-websites'),
 			AdminPageAddress::PARAM_TAB => AdminPageAddress::PAGE_ADDRESS_DETAIL,
-			self::ENQUEUE_DATA_MERGE => array(AdminPageAddress::PARAM_TAB)
+			self::ENQUEUE_DATA_MERGE => array(AdminPageAddress::PARAM_TAB),
+			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites')
 		);
 	}
 
