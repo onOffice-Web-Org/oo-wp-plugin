@@ -27,7 +27,6 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\MapProvider;
-use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use function __;
 use function admin_url;
 use function do_settings_sections;
@@ -39,7 +38,6 @@ use onOffice\WPlugin\Utility\SymmetricEncryption;
 use function settings_fields;
 use function submit_button;
 use onOffice\WPlugin\Controller\AdminViewController;
-use function wp_enqueue_style;
 use Parsedown;
 /**
  *
@@ -209,6 +207,17 @@ class AdminPageApiSettings
 		$pInputModelTwitterCards->setHtmlType(InputModelOption::HTML_TYPE_TOGGLE_SWITCH);
 		$pInputModelTwitterCards->setValue(get_option($pInputModelTwitterCards->getIdentifier()));
 
+        $listPluginSEOActive = $this->getActiveSEOPlugins();
+        if (count($listPluginSEOActive) > 0) {
+            $listNamePluginSEO = implode(", ",$listPluginSEOActive);
+            $messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. These options can lead to conflicts with the SEO plugin. Therefore they are disabled.','onoffice-for-wp-websites'), $listNamePluginSEO);
+            $descriptionNoticeSeo = sprintf('<p class="oo-description oo-description--notice">%s</p>', $messageNoticeSEO);
+
+            $pInputModelTwitterCards->setDeactivate(true);
+            $pInputModelOpenGraph->setHintHtml($descriptionNoticeSeo);
+            $pInputModelOpenGraph->setDeactivate(true);
+        }
+
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelTwitterCards);
 		$pFormModel->addInputModel($pInputModelOpenGraph);
@@ -242,12 +251,7 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleBotSettings()
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-		$pAdminViewController = $pContainer->get(AdminViewController::class);
-		$listPluginSEOActive = [];
-		$listPluginSEOActive = $pAdminViewController->getPluginSEOActive();
+		$listPluginSEOActive = $this->getActiveSEOPlugins();
 		$listNamePluginSEO = implode(", ",$listPluginSEOActive);
 		$titleDoNotModify = esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites');
 		$summaryDetailDoNotModify = esc_html__( 'Custom fields', 'onoffice-for-wp-websites' );
@@ -280,7 +284,7 @@ class AdminPageApiSettings
 			->setBreaksEnabled(true)->text(
 				$messageNoticeSEO
 			);
-		$descriptionNoticeSeo = sprintf('<div id="notice-seo">%s</div>', $messageNoticeSEO);
+		$descriptionNoticeSeo = sprintf('<div id="notice-seo" class="oo-description--notice">%s</div>', $messageNoticeSEO);
 		$descriptionFillOut = '<p class="description-notice">
 					'.esc_html__("This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.",'onoffice-for-wp-websites').'
 				 </p>';
@@ -553,5 +557,13 @@ class AdminPageApiSettings
         $pFormModel->setLabel($pagingLabel);
 
         $this->addFormModel($pFormModel);
+    }
+
+    private function getActiveSEOPlugins() {
+        $pContainerBuilder = new ContainerBuilder;
+        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+        $pContainer = $pContainerBuilder->build();
+        $pAdminViewController = $pContainer->get(AdminViewController::class);
+        return $pAdminViewController->getPluginSEOActive();
     }
 }

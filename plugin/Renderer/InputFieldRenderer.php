@@ -245,7 +245,7 @@ abstract class InputFieldRenderer
 	public function getMaxValue(): int
 		{ return $this->_maxValue; }
 
-	/** @param string $maxValue */
+	/** @param int $maxValue */
 	public function setMaxValue(int $maxValue)
 		{ $this->_maxValue = $maxValue; }
 
@@ -253,7 +253,7 @@ abstract class InputFieldRenderer
 	public function getMinValue(): int
 		{ return $this->_minValue; }
 
-	/** @param string $minValue */
+	/** @param int $minValue */
 	public function setMinValue(int $minValue)
 		{ $this->_minValue = $minValue; }
 }

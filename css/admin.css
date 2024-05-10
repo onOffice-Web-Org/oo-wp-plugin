@@ -293,7 +293,7 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	float: right;
 	margin-top: 20px;
 }
-#notice-seo {
+.oo-description--notice {
 	border: 1px solid #c3c4c7;
 	border-left: 4px solid #dba617;
 	background-color: #fff;
@@ -615,6 +615,11 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 
 .oo-toggle-switch > input:focus + .slider {
 	box-shadow: 0 0 1px #2196F3;
+}
+
+.oo-toggle-switch > input:disabled + .slider {
+	background-color: #ccc;
+	cursor: not-allowed;
 }
 
 .oo-toggle-switch > input:checked + .slider:before {

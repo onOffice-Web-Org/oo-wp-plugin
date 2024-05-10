@@ -256,7 +256,7 @@ class InputModelRenderer
 
 			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
 				$pInstance = new InputFieldButtonAddRemoveRenderer(AdminPageAjax::EXCLUDE_FIELD . $elementName,
-				$pInputModel->getValuesAvailable());	
+				$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setLabel($pInputModel->getLabel());
 				$pInstance->setOoModule($pFormModel->getOoModule());
@@ -266,7 +266,14 @@ class InputModelRenderer
 				break;
 
 			case InputModelOption::HTML_TYPE_TOGGLE_SWITCH:
-				$pInstance = new InputFieldToggleSwitchRenderer('checkbox', $elementName, $pInputModel->getValuesAvailable());
+                $pInstance = new InputFieldToggleSwitchRenderer('checkbox', $elementName, $pInputModel->getValuesAvailable());
+
+                if ( $pInputModel->isDeactivate() ) {
+                    $pInstance->addAdditionalAttribute( 'disabled', true );
+                }
+                if ( $pInputModel->getHintHtml() != null ) {
+                    $pInstance->setHint( $pInputModel->getHintHtml() );
+                }
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				break;
 		}
