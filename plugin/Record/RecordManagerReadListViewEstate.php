@@ -110,28 +110,6 @@ class RecordManagerReadListViewEstate
 
 
 	/**
-	 * @return object
-	 * @throws UnknownFormException
-	 */
-
-	public function getNameAllRecords()
-	{
-		$prefix = $this->getTablePrefix();
-		$pWpDb = $this->getWpdb();
-
-		$sql = "SELECT name
-				FROM {$prefix}oo_plugin_listviews";
-
-		$result = $pWpDb->get_results($sql, OBJECT);
-
-		if ($result === null) {
-			throw new UnknownFormException();
-		}
-
-		return $result;
-	}
-
-	/**
 	 *
 	 * @param int $listviewId
 	 * @return array

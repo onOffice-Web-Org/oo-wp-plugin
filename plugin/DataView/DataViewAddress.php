@@ -32,12 +32,5 @@ namespace onOffice\WPlugin\DataView;
 
 interface DataViewAddress
 {
-	/** @return array */
-	public function getFields(): array;
 
-	/** @return string */
-	public function getTemplate(): string;
-
-	/** @return string */
-	public function getName(): string;
 }

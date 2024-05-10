@@ -73,15 +73,6 @@ class AdminPageAddressDetail
 	const FORM_VIEW_LAYOUT_DESIGN = 'viewlayoutdesign';
 
 	/** */
-	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
-
-	/** */
-	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
-
-	/** */
-	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
-
-	/** */
 	const VIEW_UNSAVED_CHANGES_MESSAGE = 'view_unsaved_changes_message';
 
 	/** */
@@ -108,11 +99,6 @@ class AdminPageAddressDetail
 
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
-
-		/* @var $pRenderer InputModelRenderer */
-		$pRenderer = $this->getContainer()->get(InputModelRenderer::class);
-		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
-		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
@@ -155,26 +141,6 @@ class AdminPageAddressDetail
 		do_meta_boxes( get_current_screen()->id, 'side', null );
 		echo '</div>';
 
-		echo '<div class="clear"></div>';
-		$this->renderSearchFieldForFieldLists($pRenderer, $pFormViewSearchFieldForFieldLists);
-		echo '<div class="clear"></div>';
-
-		echo '<div class="clear"></div>';
-		do_action('add_meta_boxes', get_current_screen()->id, null);
-		echo '<div style="float:left;">';
-		$this->generateAccordionBoxes();
-		echo '</div>';
-		echo '<div id="listSettings" style="float:left;" class="postbox">';
-		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
-		echo '</div>';
-
-		echo '<div class="fieldsSortable postbox">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Fields', 'onoffice-for-wp-websites') . '</span></h2>';
-		$pRenderer->buildForAjax($pFormViewSortableFields);
-		echo '</div>';
-		echo '<div class="clear"></div>';
-		echo '</div>';
-
 		do_settings_sections($this->getPageSlug());
 		$this->generateBlockPublish();
 		echo '</div>';
@@ -205,29 +171,8 @@ class AdminPageAddressDetail
 
 	private function generateMetaBoxes()
 	{
-		$pFormPictureTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
-		$this->createMetaBoxByForm($pFormPictureTypes, 'side');
-
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'side');
-	}
-
-	/**
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	protected function generateAccordionBoxes()
-	{
-		$fieldNames = array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS));
-
-		foreach ($fieldNames as $category) {
-			$slug = $this->generateGroupSlugByModuleCategory(onOfficeSDK::MODULE_ADDRESS, $category);
-			$pFormFieldsConfig = $this->getFormModelByGroupSlug($slug);
-			if (!is_null($pFormFieldsConfig))
-			{
-				$this->createMetaBoxByForm($pFormFieldsConfig, 'contactperson');
-			}
-		}
 	}
 
 	/**
@@ -239,34 +184,14 @@ class AdminPageAddressDetail
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug());
 		$this->addFormModel($pFormModel);
 
-		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
 		$pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
-		$pInputModelShortCodeEstate = $pFormModelBuilder->createInputModelShortCodeEstate();
+
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
-		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$pFormModelLayoutDesign->addInputModel($pInputModelShortCodeForm);
-		$pFormModelLayoutDesign->addInputModel($pInputModelShortCodeEstate);
 		$this->addFormModel($pFormModelLayoutDesign);
-
-		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
-		$pFormModelPictureTypes = new FormModel();
-		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
-		$pFormModelPictureTypes->setGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
-		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
-		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
-		$this->addFormModel($pFormModelPictureTypes);
-
-		$pEnvironment = new AddressListEnvironmentDefault();
-		$pBuilderShort = $pEnvironment->getFieldsCollectionBuilderShort();
-		$pFieldsCollection = new FieldsCollection();
-		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS, $pFieldsCollection);
-		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS,
-			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldNames);
-		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder);
 	}
 
 	public function save_form() {
@@ -362,86 +287,5 @@ class AdminPageAddressDetail
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites')
 		);
-	}
-
-	/**
-	 * @param string $module
-	 * @param string $groupSlug
-	 * @param FormModelBuilderAddressDetailSettings $pFormModelBuilder
-	 * @param array $fieldNames
-	 * @throws UnknownModuleException
-	 * @throws ExceptionInputModelMissingField
-	 */
-	private function addFieldsConfiguration(string $module, string $groupSlug, FormModelBuilderAddressDetailSettings $pFormModelBuilder,
-		array $fieldNames)
-	{
-		foreach ($fieldNames as $category => $fields) {
-			$slug = $this->generateGroupSlugByModuleCategory($module, $category);
-			$pInputModelFieldsConfig = $pFormModelBuilder->createButtonModelFieldsConfigByCategory
-				($slug, $fields, $category);
-			$pFormModelFieldsConfig = new FormModel();
-			$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
-			$pFormModelFieldsConfig->setGroupSlug($slug);
-			$pFormModelFieldsConfig->setLabel($category);
-			$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
-			$this->addFormModel($pFormModelFieldsConfig);
-		}
-
-		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList($module,
-			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
-		$pFormModelSortableFields = new FormModel();
-		$pFormModelSortableFields->setPageSlug($this->getPageSlug());
-		$pFormModelSortableFields->setGroupSlug($groupSlug);
-		$pFormModelSortableFields->addInputModel($pInputModelSortableFields);
-		$this->addFormModel($pFormModelSortableFields);
-	}
-
-	/**
-	 *
-	 * @param InputModelRenderer $pInputModelRenderer
-	 * @param $pFormViewSearchFieldForFieldLists
-	 *
-	 */
-
-	private function renderSearchFieldForFieldLists(InputModelRenderer $pRenderer, $pFormViewSearchFieldForFieldLists)
-	{
-		echo '<div class="oo-search-field postbox ">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Field list search', 'onoffice-for-wp-websites' ) . '</span></h2>';
-		echo '<div class="inside">';
-		$pRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);
-		echo '</div>';
-		echo '</div>';
-	}
-
-	/**
-	 *
-	 * @param $modules
-	 * @param FormModelBuilderAddressDetailSettings $pFormModelBuilder
-	 * @param string $htmlType
-	 *
-	 */
-
-	private function addSearchFieldForFieldLists($module, FormModelBuilderAddressDetailSettings $pFormModelBuilder, string $htmlType = InputModelBase::HTML_SEARCH_FIELD_FOR_FIELD_LISTS)
-	{
-		$pInputModelSearchFieldForFieldLists = $pFormModelBuilder->createSearchFieldForFieldLists($module, $htmlType);
-
-		$pFormModelFieldsConfig = new FormModel();
-		$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
-		$pFormModelFieldsConfig->setGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
-		$pFormModelFieldsConfig->addInputModel($pInputModelSearchFieldForFieldLists);
-		$this->addFormModel($pFormModelFieldsConfig);
-	}
-
-	/**
-	 *
-	 * @param string $module
-	 * @param string $category
-	 * @return string
-	 *
-	 */
-
-	protected function generateGroupSlugByModuleCategory($module, $category)
-	{
-		return $module.'/'.$category;
 	}
 }

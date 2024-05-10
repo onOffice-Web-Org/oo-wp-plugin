@@ -101,11 +101,7 @@ class DataAddressDetailViewHandler
 	public function createAddressDetailViewByValues(array $row): DataAddressDetailView
 	{
 		$pDataAddressDetailView = $this->getAddressDetailView();
-		$pDataAddressDetailView->setTemplate($row[DataAddressDetailView::TEMPLATE] ?? '');
-		$pDataAddressDetailView->setFields($row[DataAddressDetailView::FIELDS] ?? []);
-		$pDataAddressDetailView->setPictureTypes($row[DataAddressDetailView::PICTURES] ?? []);
 		$pDataAddressDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
-		$pDataAddressDetailView->setShortCodeEstate($row['shortcodeestate'] ?? '');
 		return $pDataAddressDetailView;
 	}
 }

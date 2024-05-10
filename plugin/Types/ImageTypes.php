@@ -32,8 +32,6 @@ class ImageTypes
 	const PANORAMA = 'Panorama';
 	const LOCATION_MAP = 'Lageplan';
 	const ENERGY_PASS_RANGE = 'Epass_Skala';
-	const PASSPORTPHOTO = 'PassportPhoto';
-	const USERPHOTO = 'UserPhoto';
 
 	const IMAGE_TYPES = [
 		self::TITLE,
@@ -67,17 +65,6 @@ class ImageTypes
 			self::GROUNDPLAN => __('Ground Plan', 'onoffice-for-wp-websites'),
 			self::LOCATION_MAP => __('Location Map', 'onoffice-for-wp-websites'),
 			self::ENERGY_PASS_RANGE => __('Energy-Pass Range', 'onoffice-for-wp-websites'),
-		];
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function getImageTypesForAddress(): array
-	{
-		return [
-			self::PASSPORTPHOTO => __('Passport Photo', 'onoffice-for-wp-websites'),
-			self::USERPHOTO => __('User Photo', 'onoffice-for-wp-websites')
 		];
 	}
 }

@@ -38,23 +38,6 @@ class DataAddressDetailView
 	/** */
 	const FIELDS = 'fields';
 
-	/** */
-	const TEMPLATE = 'template';
-
-	/** */
-	const PICTURES = 'pictures';
-
-	/** @var string[] */
-	private $_fields = [
-		'Anrede',
-		'Vorname',
-		'Name',
-		'Zusatz1',
-		'Email',
-		'Telefon1',
-		'Telefax1',
-	];
-
 	/** @var string[] */
 	private $_pictureTypes = [];
 
@@ -66,9 +49,6 @@ class DataAddressDetailView
 
 	/** @var string */
 	private $_shortCodeForm = '';
-
-	/** @var string */
-	private $_shortCodeEstate = '';
 
 	/** @var array */
 	private $_pageIdsHaveDetailShortCode = [];
@@ -85,30 +65,6 @@ class DataAddressDetailView
 	public function getName(): string
 		{ return 'detail'; }
 
-	/** @return string[] */
-	public function getFields(): array
-		{ return $this->_fields; }
-
-	/** @return array */
-	public function getPictureTypes(): array
-		{ return $this->_pictureTypes; }
-
-	/** @return string */
-	public function getTemplate(): string
-		{ return $this->_template; }
-
-	/** @param array $fields */
-	public function setFields(array $fields)
-		{ $this->_fields = $fields; }
-
-	/** @param array $pictureTypes */
-	public function setPictureTypes(array $pictureTypes)
-		{ $this->_pictureTypes = $pictureTypes; }
-
-	/** @param string $template */
-	public function setTemplate(string $template)
-		{ $this->_template = $template; }
-
 	/** @return string */
 	public function getShortCodeForm(): string
 		{ return $this->_shortCodeForm; }
@@ -116,14 +72,6 @@ class DataAddressDetailView
 	/** @param string $shortCodeForm */
 	public function setShortCodeForm(string $shortCodeForm)
 		{ $this->_shortCodeForm = $shortCodeForm; }
-
-	/** @return string */
-	public function getShortCodeEstate(): string
-		{ return $this->_shortCodeEstate; }
-
-	/** @param string $shortCodeEstate */
-	public function setShortCodeEstate(string $shortCodeEstate)
-		{ $this->_shortCodeEstate = $shortCodeEstate; }
 
 	/** @return array */
 	public function getPageIdsHaveDetailShortCode(): array
