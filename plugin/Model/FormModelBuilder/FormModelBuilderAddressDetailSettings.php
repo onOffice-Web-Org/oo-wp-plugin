@@ -110,7 +110,6 @@ class FormModelBuilderAddressDetailSettings
 
 	public function createInputModelShortCodeEstate()
 	{
-
 		$labelShortCodeEstate = __('Select Property Lists', 'onoffice-for-wp-websites');
 		$pInputModelShortCodeEstate = $this->_pInputModelAddressDetailFactory->create
 		(InputModelOptionFactoryAddressDetailView::INPUT_SHORT_CODE_ESTATE, $labelShortCodeEstate);
@@ -145,46 +144,10 @@ class FormModelBuilderAddressDetailSettings
 	}
 
 	public function createButtonModelFieldsConfigByCategory($category, $fieldNames, $categoryLabel) {
-		$pInputModelFieldsConfig = new InputModelOption
-		(null, $category, null, InputModelDBFactory::INPUT_FIELD_CONFIG);
-		$pInputModelFieldsConfig->setIsMulti(true);
 
-		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_BUTTON_FIELD);
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
-		$pInputModelFieldsConfig->setId($category);
-		$pInputModelFieldsConfig->setLabel($categoryLabel);
-		$fields = $this->getValue(DataListView::FIELDS);
-
-		if (null == $fields)
-		{
-			$fields = array_merge(
-					$this->_pDataAddressDetail->getFields()
-			);
-		}
-
-		$pInputModelFieldsConfig->setValue($fields);
-
-		return $pInputModelFieldsConfig;
 	}
 
 	public function createInputModelFieldsConfigByCategory($category, $fieldNames, $categoryLabel) {
-		$pInputModelFieldsConfig = new InputModelOption
-		(null, $category, null, InputModelDBFactory::INPUT_FIELD_CONFIG);
-		$pInputModelFieldsConfig->setIsMulti(true);
 
-		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX_BUTTON);
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
-		$pInputModelFieldsConfig->setId($category);
-		$pInputModelFieldsConfig->setLabel($categoryLabel);
-		$fields = $this->getValue(DataListView::FIELDS);
-
-		if (null == $fields)
-		{
-			$fields = array();
-		}
-
-		$pInputModelFieldsConfig->setValue($fields);
-
-		return $pInputModelFieldsConfig;
 	}
 }
