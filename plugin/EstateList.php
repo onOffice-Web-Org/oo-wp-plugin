@@ -40,21 +40,17 @@ use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionFieldDuplicatorForGeoEstate;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModel;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
-use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\Redirector;
+use onOffice\WPlugin\Utility\WPPluginChecker;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\WP\WPPageWrapper;
-use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
 use function home_url;
@@ -508,12 +504,14 @@ class EstateList
 			} );
 		}
 
+        $WPPluginChecker = new WPPluginChecker;
+        $isSEOPluginActive = $WPPluginChecker->isSEOPluginActive();
 		$openGraphStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-opengraph');
 		$twitterCardsStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-twittercards');
-		if ($checkEstateIdRequestGuard && $openGraphStatus) {
+		if ($checkEstateIdRequestGuard && $openGraphStatus && !$isSEOPluginActive) {
 			$this->addMetaTags(GenerateMetaDataSocial::OPEN_GRAPH_KEY, $recordModified);
 		}
-		if ($checkEstateIdRequestGuard && $twitterCardsStatus) {
+		if ($checkEstateIdRequestGuard && $twitterCardsStatus && !$isSEOPluginActive) {
 			$this->addMetaTags(GenerateMetaDataSocial::TWITTER_KEY, $recordModified);
 		}
 

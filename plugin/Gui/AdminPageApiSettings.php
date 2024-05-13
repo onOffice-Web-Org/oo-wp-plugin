@@ -35,9 +35,9 @@ use function esc_html;
 use function get_option;
 use function json_encode;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
+use onOffice\WPlugin\Utility\WPPluginChecker;
 use function settings_fields;
 use function submit_button;
-use onOffice\WPlugin\Controller\AdminViewController;
 use Parsedown;
 /**
  *
@@ -209,9 +209,10 @@ class AdminPageApiSettings
 		$pInputModelTwitterCards->setHtmlType(InputModelOption::HTML_TYPE_TOGGLE_SWITCH);
 		$pInputModelTwitterCards->setValue(get_option($pInputModelTwitterCards->getIdentifier()));
 
-        $listPluginSEOActive = $this->getActiveSEOPlugins();
-        if (count($listPluginSEOActive) > 0) {
-            $listNamePluginSEO = implode(", ",$listPluginSEOActive);
+        $WPPluginChecker = new WPPluginChecker;
+        $activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
+        if ($WPPluginChecker->isSEOPluginActive()) {
+            $listNamePluginSEO = implode(", ",$activeSEOPlugins);
             $messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. These options can lead to conflicts with the SEO plugin. Therefore they are disabled.','onoffice-for-wp-websites'), $listNamePluginSEO);
             $descriptionNoticeSeo = sprintf('<p class="oo-description oo-description--notice">%s</p>', $messageNoticeSEO);
 
@@ -253,8 +254,9 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleBotSettings()
 	{
-		$listPluginSEOActive = $this->getActiveSEOPlugins();
-		$listNamePluginSEO = implode(", ",$listPluginSEOActive);
+        $WPPluginChecker = new WPPluginChecker;
+        $activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
+		$listNamePluginSEO = implode(", ",$activeSEOPlugins);
 		$titleDoNotModify = esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites');
 		$summaryDetailDoNotModify = esc_html__( 'Further information on custom fields', 'onoffice-for-wp-websites' );
 		$descriptionDetailDoNotModify = esc_html__( 'With the help of an SEO plugin, it is possible to use individual fields to insert data directly from onOffice enterprise into the title and metadata of your website.', 'onoffice-for-wp-websites' );
@@ -291,7 +293,7 @@ class AdminPageApiSettings
 		$descriptionFillOut = '<p class="description-notice">
 					'.esc_html__("This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.",'onoffice-for-wp-websites').'
 				 </p>';
-		if ( count($listPluginSEOActive) > 0 && get_option('onoffice-settings-title-and-description') == 0) {
+		if ( $WPPluginChecker->isSEOPluginActive() && get_option('onoffice-settings-title-and-description') == 0) {
 			$descriptionFillOut = $descriptionNoticeSeo.$descriptionFillOut;
 		}
 		$labelGoogleBotIndexPdfExpose = __('Allow indexing of PDF brochures', 'onoffice-for-wp-websites');
@@ -560,13 +562,5 @@ class AdminPageApiSettings
         $pFormModel->setLabel($pagingLabel);
 
         $this->addFormModel($pFormModel);
-    }
-
-    private function getActiveSEOPlugins() {
-        $pContainerBuilder = new ContainerBuilder;
-        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-        $pContainer = $pContainerBuilder->build();
-        $pAdminViewController = $pContainer->get(AdminViewController::class);
-        return $pAdminViewController->getPluginSEOActive();
     }
 }

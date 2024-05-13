@@ -38,7 +38,7 @@ class InputFieldToggleSwitchRenderer extends InputFieldRenderer
 	public function render()
 	{
 		echo '<label class="oo-toggle-switch"><input type="checkbox"'
-			.' value="'.esc_html($this->getValue()).'" '.($this->getValue() == $this->getCheckedValues() ? ' checked="checked" ' : '')
+			.' value="'.esc_html($this->getValue()).'"'.($this->getValue() == $this->getCheckedValues() ? ' checked="checked" ' : '')
 			.' name="'.esc_html($this->getName()).'" '.$this->renderAdditionalAttributes().'>'
 			.'<span class="slider round"></span></label>'
             . $this->getHint();

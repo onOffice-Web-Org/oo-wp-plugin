@@ -27,15 +27,11 @@ use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use Exception;
-use onOffice\WPlugin\Controller\AdminViewController;
-use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\ImageTypes;
-use onOffice\WPlugin\Utility\__String;
-use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataSimilarView;
+use onOffice\WPlugin\Utility\WPPluginChecker;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
 use function dbDelta;
@@ -1018,10 +1014,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 */
 
 	public function updateDefaultSettingsTitleAndDescription() {
-		$pDataPluginSEOActive = new AdminViewController;
+        $WPPluginChecker = new WPPluginChecker;
 
 		if ( get_option('onoffice-settings-title-and-description') === false ) {
-			if (count($pDataPluginSEOActive->getPluginSEOActive()) >= 1) {
+			if ($WPPluginChecker->isSEOPluginActive()) {
 				update_option('onoffice-settings-title-and-description', 1);
 			} else {
 				update_option('onoffice-settings-title-and-description', 0);
