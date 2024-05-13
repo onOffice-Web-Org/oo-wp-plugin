@@ -26,7 +26,6 @@ use onOffice\WPlugin\DataView\DataListView;
 use const ARRAY_A;
 use const OBJECT;
 use function esc_sql;
-use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 
 /**
  *

@@ -38,28 +38,15 @@ class DataAddressDetailView
 	/** */
 	const FIELDS = 'fields';
 
-	/** @var string[] */
-	private $_pictureTypes = [];
-
-	/** @var string */
-	private $_template = '';
-
 	/** @var int */
 	private $_pageId = 0;
 
 	/** @var string */
 	private $_shortCodeForm = '';
 
-	/** @var array */
-	private $_pageIdsHaveDetailShortCode = [];
-
 	/** @return int */
 	public function getPageId(): int
 		{ return $this->_pageId; }
-
-	/** @param int $pageId */
-	public function setPageId(int $pageId)
-		{ $this->_pageId = $pageId; }
 
 	/** @return string */
 	public function getName(): string
@@ -72,16 +59,4 @@ class DataAddressDetailView
 	/** @param string $shortCodeForm */
 	public function setShortCodeForm(string $shortCodeForm)
 		{ $this->_shortCodeForm = $shortCodeForm; }
-
-	/** @return array */
-	public function getPageIdsHaveDetailShortCode(): array
-		{ return $this->_pageIdsHaveDetailShortCode; }
-
-	/** @param int $pageId */
-	public function addToPageIdsHaveDetailShortCode(int $pageId)
-		{ $this->_pageIdsHaveDetailShortCode[$pageId] = $pageId; }
-
-	/** @param int $pageId */
-	public function removeFromPageIdsHaveDetailShortCode(int $pageId)
-		{ unset($this->_pageIdsHaveDetailShortCode[$pageId]); }
 }

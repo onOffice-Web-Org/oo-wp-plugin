@@ -82,8 +82,6 @@ class FormModelBuilderAddressDetailSettings
 	/**
 	 * @param string $pageSlug
 	 * @return FormModel
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
 	 */
 
 	public function generate(string $pageSlug): FormModel

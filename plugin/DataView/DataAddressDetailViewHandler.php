@@ -102,6 +102,7 @@ class DataAddressDetailViewHandler
 	{
 		$pDataAddressDetailView = $this->getAddressDetailView();
 		$pDataAddressDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
+
 		return $pDataAddressDetailView;
 	}
 }

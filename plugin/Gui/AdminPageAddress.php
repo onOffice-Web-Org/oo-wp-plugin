@@ -263,18 +263,18 @@ class AdminPageAddress
 	 *
 	 */
 
-    public function getSelectedAdminPage()
-    {
-        return $this->_pSelectedTab;
-    }
+	public function getSelectedAdminPage()
+	{
+		return $this->_pSelectedTab;
+	}
 
 
 	/**
 	 *
 	 */
 
-    public function doExtraEnqueues()
-    {
-        $this->_pSelectedTab->doExtraEnqueues();
-    }
+	public function doExtraEnqueues()
+	{
+		$this->_pSelectedTab->doExtraEnqueues();
+	}
 }
