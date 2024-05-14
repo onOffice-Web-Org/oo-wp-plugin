@@ -58,7 +58,6 @@ class AdminPageAddressList
 
 	public function renderContent()
 	{
-		$this->generatePageMainTitle(__('Addresses', 'onoffice-for-wp-websites'));
 		$this->_pAddressListTable->prepare_items();
 		$page = 'onoffice-addresses';
 		$buttonSearch = __('Search Addresses', 'onoffice-for-wp-websites');
