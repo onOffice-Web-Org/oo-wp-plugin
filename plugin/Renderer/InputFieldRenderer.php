@@ -73,6 +73,9 @@ abstract class InputFieldRenderer
 
 	/** @var int */
 	private $_maxValue = 0;
+
+	/** @var bool */
+    private $_isDisabled = false;
 	
 	/**
 	 *
@@ -256,4 +259,12 @@ abstract class InputFieldRenderer
 	/** @param int $minValue */
 	public function setMinValue(int $minValue)
 		{ $this->_minValue = $minValue; }
+
+    /** @return bool */
+    public function getIsDisabled()
+    { return $this->_isDisabled; }
+
+    /** @param bool $isDisabled */
+    public function setIsDisabled(bool $isDisabled)
+    { $this->_isDisabled = $isDisabled; }
 }

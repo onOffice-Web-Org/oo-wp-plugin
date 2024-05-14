@@ -281,7 +281,7 @@ class InputModelRenderer
                 $pInstance = new InputFieldToggleSwitchRenderer('checkbox', $elementName, $pInputModel->getValuesAvailable());
 
                 if ( $pInputModel->isDeactivate() ) {
-                    $pInstance->addAdditionalAttribute( 'disabled', true );
+                    $pInstance->setIsDisabled(true);
                 }
                 if ( $pInputModel->getHintHtml() != null ) {
                     $pInstance->setHint( $pInputModel->getHintHtml() );

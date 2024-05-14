@@ -93,7 +93,7 @@ abstract class InputModelBase
 	/** @var mixed */
 	private $_value = null;
 
-	/** @var mixed */
+	/** @var bool */
 	private $_deactivate = false;
 
 	/** @var string */
@@ -198,11 +198,11 @@ abstract class InputModelBase
 	public function setValue($value)
 		{ $this->_value = $value; }
 
-	/** @param mixed $deactivate */
+	/** @param bool $deactivate */
 	public function setDeactivate($deactivate)
 		{ $this->_deactivate = $deactivate; }
 
-	/** @return mixed */
+	/** @return bool */
 	public function isDeactivate()
 		{ return $this->_deactivate; }
 

@@ -929,7 +929,7 @@ class EstateList
 					echo '<meta property="'.GenerateMetaDataSocial::OPEN_GRAPH_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '">';
 				}
 			}
-		});
+		}, 1);
 	}
 
 	/**
