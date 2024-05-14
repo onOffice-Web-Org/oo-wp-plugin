@@ -213,7 +213,7 @@ class AdminPageApiSettings
         $activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
         if ($WPPluginChecker->isSEOPluginActive()) {
             $listNamePluginSEO = implode(", ",$activeSEOPlugins);
-            $messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. These options can lead to conflicts with the SEO plugin. Therefore they are disabled.','onoffice-for-wp-websites'), $listNamePluginSEO);
+            $messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SocialMedia Data settings. Therefore they are disabled.','onoffice-for-wp-websites'), $listNamePluginSEO);
             $descriptionNoticeSeo = sprintf('<p class="oo-description oo-description--notice">%s</p>', $messageNoticeSEO);
 
             $pInputModelTwitterCards->setDeactivate(true);
