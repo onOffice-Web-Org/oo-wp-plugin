@@ -169,6 +169,22 @@ class AdminPageAddress
 
 	/**
 	 *
+	 */
+
+	public function handleAdminNotices()
+	{
+		$itemsDeleted = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_NUMBER_INT);
+
+		if ($itemsDeleted !== null && $itemsDeleted !== false) {
+			add_action('admin_notices', function() use ($itemsDeleted) {
+				$pHandler = new AdminNoticeHandlerListViewDeletion();
+				echo $pHandler->handleListView($itemsDeleted);
+			});
+		}
+	}
+
+	/**
+	 *
 	 * @param string $subTitle
 	 *
 	 */
