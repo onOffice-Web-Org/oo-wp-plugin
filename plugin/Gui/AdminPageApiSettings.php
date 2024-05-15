@@ -361,7 +361,7 @@ class AdminPageApiSettings
 	{
 		$this->generatePageMainTitle(__('Settings', 'onoffice-for-wp-websites'));
 
-		echo '<form method="post" action="options.php" class="oo-poststuff-settings">';
+		echo '<form method="post" action="options.php" class="oo-page-api-settings">';
 
 		/* @var $pInputModelRenderer InputModelRenderer */
 		$pInputModelRenderer = $this->getContainer()->get(InputModelRenderer::class);

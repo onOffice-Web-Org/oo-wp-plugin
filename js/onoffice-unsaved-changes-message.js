@@ -4,7 +4,7 @@ jQuery(document).ready(function($){
 	let checkUnsavedChanges = false;
 	let checkNavigationTriggered = false;
 
-	$('.oo-poststuff :input, .oo-poststuff-settings :input').on("change", function() {
+	$('.oo-poststuff :input, .oo-page-api-settings :input').on("change", function() {
 		checkUnsavedChanges = true;
 	});
 
