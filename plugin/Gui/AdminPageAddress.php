@@ -54,9 +54,6 @@ class AdminPageAddress
 	/** */
 	const PAGE_ADDRESS_DETAIL = 'detail';
 
-	/** @var AddressListTable */
-	private $_pAddressListTable = null;
-
 	/** @var string[] */
 	private $_subPageClassByTab = array(
 		self::PAGE_ADDRESS_LIST => AdminPageAddressList::class,
