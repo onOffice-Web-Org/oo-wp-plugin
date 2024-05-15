@@ -76,6 +76,7 @@ class AdminPageAddress
 	 *
 	 * @param string $pageSlug
 	 *
+	 * @throws \Exception
 	 */
 
 	public function __construct($pageSlug)

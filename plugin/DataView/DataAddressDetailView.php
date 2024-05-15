@@ -49,7 +49,6 @@ class DataAddressDetailView
 		'Telefax1',
 	];
 
-
 	/** @var int */
 	private $_pageId = 0;
 
@@ -59,6 +58,7 @@ class DataAddressDetailView
 	/** @return int */
 	public function getPageId(): int
 		{ return $this->_pageId; }
+
 	/** @return string */
 	public function getName(): string
 		{ return 'detail'; }
@@ -78,5 +78,4 @@ class DataAddressDetailView
 	/** @param string $shortCodeEstate */
 	public function setShortCodeEstate(string $shortCodeEstate)
 		{ $this->_shortCodeEstate = $shortCodeEstate; }
-
 }
