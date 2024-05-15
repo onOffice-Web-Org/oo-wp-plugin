@@ -35,7 +35,7 @@ use function esc_html;
 use function get_option;
 use function json_encode;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
-use onOffice\WPlugin\Utility\WPPluginChecker;
+use onOffice\WPlugin\WP\WPPluginChecker;
 use function settings_fields;
 use function submit_button;
 use Parsedown;

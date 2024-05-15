@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\Utility;
+namespace onOffice\WPlugin\WP;
 
 /**
  *
