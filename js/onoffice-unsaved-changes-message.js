@@ -4,19 +4,21 @@ jQuery(document).ready(function($){
 	let checkUnsavedChanges = false;
 	let checkNavigationTriggered = false;
 
-	$('#poststuff :input, form[action="options.php"] :input').on("change", function() {
+	$('.oo-poststuff :input, .oo-poststuff-settings :input').on("change", function() {
 		checkUnsavedChanges = true;
 	});
 
-	$('#poststuff span, #poststuff li').on("click", function() {
+	$('.oo-poststuff span.dashicons, .oo-poststuff li').on("click", function() {
 		checkUnsavedChanges = true;
 	});
 
-	$('.filter-fields-list').sortable({
-		update: function() {
-			checkUnsavedChanges = true;
-		}
-	});
+	if ($('.filter-fields-list').length) {
+		$('.filter-fields-list').sortable({
+			update: function() {
+				checkUnsavedChanges = true;
+			}
+		});
+	}
 
 	function generateUnsavedChangesMessage(href) {
 		return $(`
