@@ -29,7 +29,7 @@ use onOffice\WPlugin\DataView\DataAddressDetailView;
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
+ * @copyright 2003-2024, onOffice(R) GmbH
  *
  */
 

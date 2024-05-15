@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2024 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,7 @@ use onOffice\WPlugin\Model\InputModelOption;
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
+ * @copyright 2003-2024, onOffice(R) GmbH
  *
  */
 
@@ -77,7 +77,7 @@ class InputModelOptionFactoryAddressDetailView
 	 *
 	 */
 
-	public function create(string $name, $label, bool $multi = false): InputModelOption
+	public function create(string $name, string $label, bool $multi = false): InputModelOption
 	{
 		if (!isset($this->_inputConfig[$name])) {
 			throw new ExceptionInputModelMissingField($name);

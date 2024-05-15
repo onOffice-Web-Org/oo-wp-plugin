@@ -29,7 +29,6 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
-use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 
 use WP_Post;
 
@@ -338,6 +337,7 @@ class DetailViewPostSaveController
 
 		return false;
 	}
+
 
 	/**
 	 *
