@@ -66,7 +66,7 @@ class FormModelBuilderAddressDetailSettings
 	private $_pFieldnames = null;
 
 	/**
-	 * @param Fieldnames $pFieldnames
+	 * @param Fieldnames|null $pFieldnames
 	 */
 
 	public function __construct(Fieldnames $pFieldnames = null)
@@ -82,8 +82,6 @@ class FormModelBuilderAddressDetailSettings
 	/**
 	 * @param string $pageSlug
 	 * @return FormModel
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
 	 */
 
 	public function generate(string $pageSlug): FormModel
@@ -129,7 +127,7 @@ class FormModelBuilderAddressDetailSettings
 	* @throws UnknownFormException
 	*/
 
-	protected function readNameShortCodeEstate()
+	protected function readNameShortCodeEstate(): array
 	{
 		$recordManagerReadEstate = new RecordManagerReadListViewEstate();
 		$allRecordsEstate = $recordManagerReadEstate->getNameAllRecords();
@@ -140,6 +138,7 @@ class FormModelBuilderAddressDetailSettings
 			$shortCodeEstate[$value->name] = '[oo_estate view=&quot;'
 				. esc_html($estate_name) . '&quot;]';
 		}
+
 		return $shortCodeEstate;
 	}
 

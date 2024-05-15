@@ -98,7 +98,7 @@ class AdminPageAddress
 	 *
 	 */
 
-	private function getSelectedTab()
+	private function getSelectedTab(): string
 	{
 		$selectedTab = $this->getDefaultTab();
 		$getParamTab = filter_input(INPUT_GET, self::PARAM_TAB);
@@ -120,7 +120,7 @@ class AdminPageAddress
 	 *
 	 */
 
-	private function getAdminPageForTab($tab)
+	private function getAdminPageForTab(string $tab)
 	{
 		if (!isset($this->_subPageClassByTab[$tab])) {
 			$tab = self::PAGE_ADDRESS_LIST;
@@ -163,7 +163,7 @@ class AdminPageAddress
 	 *
 	 */
 
-	private function getDefaultTab()
+	private function getDefaultTab(): string
 	{
 		return self::PAGE_ADDRESS_LIST;
 	}
