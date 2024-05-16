@@ -612,20 +612,6 @@ class Form
 
 	/**
 	 *
-	 * @param bool $isCaptchaRequired
-	 *
-	 */
-
-	private function renderCaptchaScript(bool $isCaptchaRequired = false)
-	{
-		if ($isCaptchaRequired) {
-			CaptchaHandler::registerScripts();
-		}
-	}
-
-
-	/**
-	 *
 	 * @return int
 	 *
 	 */
