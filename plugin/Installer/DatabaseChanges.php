@@ -27,16 +27,12 @@ use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use Exception;
-use onOffice\WPlugin\Controller\AdminViewController;
-use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\ImageTypes;
-use onOffice\WPlugin\Utility\__String;
-use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
+use onOffice\WPlugin\WP\WPPluginChecker;
 use wpdb;
 use function dbDelta;
 use function esc_sql;
@@ -304,8 +300,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 42) {
-			dbDelta($this->getCreateQueryListviews());
+			dbDelta($this->getCreateQueryFieldConfig());
 			$dbversion = 43;
+		}
+
+		if ($dbversion == 43) {
+			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 44;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -472,6 +473,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`filterable` tinyint(1) NOT NULL DEFAULT '0',
 			`hidden` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
+			`convertTextToSelectForCityField` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`fieldconfig_id`)
 		) $charsetCollate;";
 
@@ -1020,10 +1022,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 */
 
 	public function updateDefaultSettingsTitleAndDescription() {
-		$pDataPluginSEOActive = new AdminViewController;
+        $WPPluginChecker = new WPPluginChecker;
 
 		if ( get_option('onoffice-settings-title-and-description') === false ) {
-			if (count($pDataPluginSEOActive->getPluginSEOActive()) >= 1) {
+			if ($WPPluginChecker->isSEOPluginActive()) {
 				update_option('onoffice-settings-title-and-description', 1);
 			} else {
 				update_option('onoffice-settings-title-and-description', 0);

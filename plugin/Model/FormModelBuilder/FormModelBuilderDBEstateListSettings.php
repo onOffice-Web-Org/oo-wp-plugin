@@ -271,6 +271,25 @@ class FormModelBuilderDBEstateListSettings
 		return $pInputModel;
 	}
 
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function getInputModelConvertInputTextToSelectCityField()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Display as selection list instead of text input', 'onoffice-for-wp-websites');
+		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_CONVERT_TEXT_TO_SELECT_FOR_CITY_FIELD;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelConvertInputTextToSelectCityField'));
+
+		return $pInputModel;
+	}
 
 	/**
 	 *
@@ -323,6 +342,22 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel->setValuesAvailable($key);
 	}
 
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 *
+	 */
+
+	public function callbackValueInputModelConvertInputTextToSelectCityField(InputModelBase $pInputModel, string $key)
+	{
+		$valueFromConfig = $this->getValue('convertTextToSelectForCityField');
+
+		$convertTextToSelectForCityFields = is_array($valueFromConfig) ? $valueFromConfig : array();
+		$value = in_array($key, $convertTextToSelectForCityFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
 
 	/**
 	 *
@@ -365,9 +400,11 @@ class FormModelBuilderDBEstateListSettings
 		$pSortableFieldsList->setValue($fields);
 		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
 		$pInputModelIsHidden = $this->getInputModelIsHidden();
+		$pInputModelConvertInputTextToSelectCityField = $this->getInputModelConvertInputTextToSelectCityField();
 		$pInputModelIsAvailableOptions = $this->getInputModelAvailableOptions();
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
+		$pSortableFieldsList->addReferencedInputModel($pInputModelConvertInputTextToSelectCityField);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsAvailableOptions);
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());

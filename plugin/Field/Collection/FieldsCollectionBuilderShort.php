@@ -282,6 +282,28 @@ class FieldsCollectionBuilderShort
 	}
 
 	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $showReferenceEstate
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function addFieldEstateCityValues(FieldsCollection $pFieldsCollection, string $pShowReferenceEstate = ''): self
+	{
+		if (!$pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, 'ort')) {
+			return $this;
+		};
+		$pFieldLoader = $this->_pContainer->make(FieldLoaderEstateCityValues::class, ['pShowReferenceEstate' => $pShowReferenceEstate]);
+		$pFieldCollectionAddressEstate = $this->_pContainer->get(FieldsCollectionBuilder::class)
+			->buildFieldsCollection($pFieldLoader);
+		$pFieldsCollection->merge($pFieldCollectionAddressEstate);
+
+		return $this;
+	}
+
+	/**
 	 * @param FieldsCollection $pFieldsCollection
 	 * @return $this
 	 * @throws DependencyException

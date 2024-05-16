@@ -64,6 +64,7 @@ class TestClassDataListViewFactory
 		'show_reference_estate' => '1',
 		'show_price_on_request' => true,
 		'show_map' => '1',
+		'convertTextToSelectForCityField' => ['ort']
 		'markedPropertiesSort' => 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz',
 		'sortByTags' => 'kaufpreis',
 		'sortByTagsDirection' => 'ASC'
@@ -113,6 +114,7 @@ class TestClassDataListViewFactory
 		$this->assertEquals($this->_baseRow['show_reference_estate'], $pDataListView->getShowReferenceEstate());
 		$this->assertEquals($this->_baseRow['show_price_on_request'], $pDataListView->getShowPriceOnRequest());
 		$this->assertEquals($this->_baseRow['show_map'], $pDataListView->getShowMap());
+		$this->assertEquals($this->_baseRow['convertTextToSelectForCityField'], $pDataListView->getConvertTextToSelectForCityField());
 		$this->assertEquals($this->_baseRow['markedPropertiesSort'], $pDataListView->getMarkedPropertiesSort());
 		$this->assertEquals($this->_baseRow['sortByTags'], $pDataListView->getSortByTags());
 		$this->assertEquals($this->_baseRow['sortByTagsDirection'], $pDataListView->getSortByTagsDirection());

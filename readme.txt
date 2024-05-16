@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.4.3
 Requires PHP: 7.3
-Stable tag: 4.18.1
+Stable tag: 4.19
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,27 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.19 (2024-04-18) =
+
+**Added**
+
+* Showing cities as filterable selection field in search
+* Default section for AreaButler in detail page template
+* Custom styling classes for empty detail page
+
+**Changed**
+
+* Automatic overwriting of address duplicates has been removed, an e-mail notification for manual management of duplicates will be sent
+* Google reCAPTCHA secret and key can be displayed and emptied
+
+**Fixed**
+
+* Error with ScriptLoader
+* Showing price on request
+* Empty price field while searching
+* Missing plugin menu item while editing pages
+* Hiding columns in the overview of real estate lists and forms
 
 = 4.18.1 (2024-02-28) =
 
