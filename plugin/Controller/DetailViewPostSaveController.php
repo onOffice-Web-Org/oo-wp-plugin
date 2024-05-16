@@ -135,7 +135,7 @@ class DetailViewPostSaveController
 				if ($viewContainedMetaKey) {
 					$viewContainedCustomField = true;
 				}
-				$viewAddressDetailContainedMetaKey = $this->postContainsViewName($metaKey[0], $addressDetailViewName);
+				$viewAddressDetailContainedMetaKey = $this->postContainsViewName($metaKey[0], $addressDetailViewName, 'oo_address');
 				if ($viewAddressDetailContainedMetaKey) {
 					$viewContainedAddressDetailCustomField = true;
 				}
