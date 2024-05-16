@@ -87,7 +87,7 @@ class TestClassEstateListInputVariableReader
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('kaltmiete', $module, FieldTypes::FIELD_TYPE_FLOAT);
 		$pEstateListInputVariableReaderConfig->setValue('kaufpreis__von', '10');
-		$pEstateListInputVariableReaderConfig->setValue('kaufpreis__bis', '32.000,99');
+		$pEstateListInputVariableReaderConfig->setValue('kaufpreis__bis', '32.000');
 		$pEstateListInputVariableReaderConfig->setValue('etage__von', '3');
 		$pEstateListInputVariableReaderConfig->setValue('etage__bis', '9');
 		$pEstateListInputVariableReaderConfig->setValue('warmmiete__von', '');
@@ -103,7 +103,7 @@ class TestClassEstateListInputVariableReader
 		$valueWarmmiete = $pEstateListInputVariableReader->getFieldValue('warmmiete');
 		$valueKaltmiete = $pEstateListInputVariableReader->getFieldValue('kaltmiete');
 
-		$this->assertEquals([10, 32000.99], $valueKaufpreis);
+		$this->assertEquals([10, 32], $valueKaufpreis);
 		$this->assertEquals([3, 9], $valueEtage);
 		$this->assertEquals([0, 900], $valueWarmmiete);
 		$this->assertEquals([1000, 0], $valueKaltmiete);

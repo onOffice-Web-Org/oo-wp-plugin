@@ -2,11 +2,15 @@ name: Share development zip
 
 on:
   pull_request_review:
-    types: [submitted]
+    types:
+      - submitted
+  pull_request:
+    types:
+      - labeled
 
 jobs:
   get-versions:
-    if: github.event.review.state == 'approved'
+    if: github.event.review.state == 'approved' || github.event.label.name == 'deploy test'
     name: Get versions
     runs-on: ubuntu-latest
     outputs:
@@ -35,7 +39,7 @@ jobs:
     name: Build development release
     needs: get-versions
     # We cannot use a relative path here, or GitHub Actions does not find the workflow. This might be a bug in GitHub Actions.
-    uses: onOfficeGmbH/oo-wp-plugin/.github/workflows/build-release.yml@master
+    uses: onOffice-Web-Org/oo-wp-plugin/.github/workflows/build-release.yml@master
     with:
       # The trigger makes this run on a merge commit, but we want to run
       # on the latest commit before the review.
