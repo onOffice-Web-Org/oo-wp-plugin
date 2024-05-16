@@ -107,7 +107,9 @@ class FormModelBuilderDBEstateUnitListSettings
 	 */
 	public function createSortableFieldList($module, $htmlType, bool $isShow = true): InputModelDB
 	{
-		$pSortableFieldsList = parent::createSortableFieldList($module, $htmlType, false);
+		$pSortableFieldsList = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+		$pSortableFieldsList->setHtmlType($htmlType);
 		$pFieldsCollection = $this->getFieldsCollection();
 		$fieldNames = [];
 
@@ -196,7 +198,7 @@ class FormModelBuilderDBEstateUnitListSettings
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	private function getFieldsCollection(): FieldsCollection
+	protected function getFieldsCollection(): FieldsCollection
 	{
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -206,9 +208,7 @@ class FormModelBuilderDBEstateUnitListSettings
 		$pFieldsCollection = new FieldsCollection();
 
 		$pFieldsCollectionBuilder
-			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection)
-			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
+			->addFieldsAddressEstate($pFieldsCollection);
 		return $pFieldsCollection;
 	}
 

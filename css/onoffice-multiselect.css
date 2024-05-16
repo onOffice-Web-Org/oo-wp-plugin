@@ -23,3 +23,8 @@
 .onoffice-multiselect-popup > input[type=button] {
   margin-top: 10px;
 }
+
+.select2-dropdown.select2-dropdown--below,
+.select2-dropdown.select2-dropdown--above {
+    margin-top: 32px;
+}

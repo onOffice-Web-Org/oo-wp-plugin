@@ -89,6 +89,15 @@ class AdminPageSimilarEstates
 	/** */
 	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
 
+	/** */
+	const VIEW_UNSAVED_CHANGES_MESSAGE = 'view_unsaved_changes_message';
+
+	/** */
+	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
+
+	/** */
+	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
+
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
@@ -131,6 +140,7 @@ class AdminPageSimilarEstates
 		/* @var $pRenderer InputModelRenderer */
 		$pRenderer = $this->getContainer()->get(InputModelRenderer::class);
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
+		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
@@ -138,7 +148,7 @@ class AdminPageSimilarEstates
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
-		echo '<div id="poststuff" class="oo-poststuff">';
+		echo '<div id="poststuff" class="oo-poststuff oo-poststuff-similar-estate">';
 		$pageId = $pDataSimilarView->getPageId();
 
 		echo '<div id="post-body" class="metabox-holder columns-'
@@ -149,6 +159,8 @@ class AdminPageSimilarEstates
 		echo '<div class="postbox-container" id="postbox-container-2">';
 		do_meta_boxes(get_current_screen()->id, 'side', null );
 		echo '</div>';
+		echo '<div class="clear"></div>';
+		$this->renderSearchFieldForFieldLists($pRenderer, $pFormViewSearchFieldForFieldLists);
 		echo '<div class="clear"></div>';
 		echo '<div style="float:left;">';
 		$this->generateAccordionBoxes($pFieldsCollection);
@@ -165,7 +177,7 @@ class AdminPageSimilarEstates
 		echo '</div>';
 
 		do_settings_sections($this->getPageSlug());
-		submit_button(null, 'primary', 'send_form');
+		$this->generateBlockPublish();
 
 		echo '</form>';
 	}
@@ -258,7 +270,7 @@ class AdminPageSimilarEstates
 		$fieldsEstate = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE,
 			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldsEstate);
-
+		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder);
 	}
 
 	/**
@@ -347,6 +359,10 @@ class AdminPageSimilarEstates
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
+
+		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
+			['jquery'], '', true);
+		wp_enqueue_script('oo-unsaved-changes-message');
 	}
 
 	/**
@@ -377,6 +393,8 @@ class AdminPageSimilarEstates
 			self::ENQUEUE_DATA_MERGE => array(AdminPageEstate::PARAM_TAB),
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
+			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
 		);
 	}
 
@@ -419,6 +437,42 @@ class AdminPageSimilarEstates
 		}
 
 		$this->addFormModel($pFormHidden);
+	}
+
+	/**
+	 *
+	 * @param InputModelRenderer $pInputModelRenderer
+	 * @param $pFormViewSearchFieldForFieldLists
+	 *
+	 */
+
+	private function renderSearchFieldForFieldLists(InputModelRenderer $pRenderer, $pFormViewSearchFieldForFieldLists)
+	{
+		echo '<div class="oo-search-field postbox">';
+		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Field list search', 'onoffice-for-wp-websites') . '</span></h2>';
+		echo '<div class="inside">';
+		$pRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);
+		echo '</div>';
+		echo '</div>';
+	}
+
+	/**
+	 *
+	 * @param $modules
+	 * @param FormModelBuilderSimilarEstateSettings $pFormModelBuilder
+	 * @param string $htmlType
+	 *
+	 */
+
+	private function addSearchFieldForFieldLists($module, FormModelBuilderSimilarEstateSettings $pFormModelBuilder, string $htmlType = InputModelBase::HTML_SEARCH_FIELD_FOR_FIELD_LISTS)
+	{
+		$pInputModelSearchFieldForFieldLists = $pFormModelBuilder->createSearchFieldForFieldLists($module, $htmlType);
+
+		$pFormModelFieldsConfig = new FormModel();
+		$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
+		$pFormModelFieldsConfig->setGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
+		$pFormModelFieldsConfig->addInputModel($pInputModelSearchFieldForFieldLists);
+		$this->addFormModel($pFormModelFieldsConfig);
 	}
 
 	/**
