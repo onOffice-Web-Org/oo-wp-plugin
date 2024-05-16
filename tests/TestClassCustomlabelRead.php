@@ -66,56 +66,52 @@ class TestClassCustomLabelRead
 	 * @dataProvider dataProviderField
 	 * @param int $formId
 	 * @param array $rows
-	 * @param CustomLabelModelField $pReference
 	 *
 	 */
 
-	public function testReadCustomLabelsField(int $formId, array $rows, CustomLabelModelField $pReference)
+	public function testReadCustomLabelsField(int $formId, array $rows)
 	{
 		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($rows));
 		$pField = new Field('testField', 'testModule');
+		$pResult = $this->_pSubject->readCustomLabelsField($formId, [$pField],'oo_plugin_fieldconfig_form_customs_labels','oo_plugin_fieldconfig_form_translated_labels');
 
-		$pResult = $this->_pSubject->readCustomLabelsField($formId, $pField,'oo_plugin_fieldconfig_form_customs_labels','oo_plugin_fieldconfig_form_translated_labels');
-		$this->assertInstanceOf(CustomLabelModelField::class, $pResult);
-		$this->assertEquals($pReference, $pResult);
+		$this->assertEquals($rows, $pResult);
 	}
 
 	/**
 	 *
-	 * @return Generator
+	 * @return array
 	 *
 	 */
 
-	public function dataProviderField(): Generator
+	public function dataProviderField()
 	{
-		$pField = new Field('testField', 'testModule');
-
-		$rows = [];
-		$pReference1 = new CustomLabelModelField(12, $pField);
-		yield [12, $rows, $pReference1];
-		$pReference2 = new CustomLabelModelField(13, $pField);
-		$pReference2->addValueByLocale('de_DE', 'Deutschland');
-		$pReference2->addValueByLocale('en_US', 'United States');
-		$pReference2->addValueByLocale('fr_BE', 'Belgique');
-
 		$rows = [
-			(object)[
-				'customs_labels_id' => 1337,
-				'locale' => 'de_DE',
-				'value' => 'Deutschland',
-			],
-			(object)[
-				'customs_labels_id' => 1338,
-				'locale' => 'en_US',
-				'value' => 'United States',
-			],
-			(object)[
-				'customs_labels_id' => 1339,
-				'locale' => 'fr_BE',
-				'value' => 'Belgique',
-			],
+			[123, ['customs_labels_id' => 1337, 'locale' => 'de_DE', 'value' => 'Deutschland', 'fieldname' => 'testField']]
 		];
-		yield [13, $rows, $pReference2];
+
+		return $rows;
 	}
 
+	/**
+	 *
+	 */
+	public function testGetCustomLabelsFieldsForAdmin()
+	{
+		$pField = new Field('testField', 'testModule');
+		$row = [
+			(object)[
+				'defaults_id' => '13',
+				'value' => 'Spider Man',
+				'fieldname' => 'testField',
+				'type' => 'text',
+				'locale' => 'en_US',
+			],
+		];
+
+		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($row));
+		$result = $this->_pSubject->getCustomLabelsFieldsForAdmin(13, [$pField], 'en_US', 'oo_plugin_fieldconfig_form_customs_labels','oo_plugin_fieldconfig_form_translated_labels');
+
+		$this->assertEquals(['testField' => ['native' => 'Spider Man']], $result);
+	}
 }

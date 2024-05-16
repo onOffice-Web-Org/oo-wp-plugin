@@ -98,6 +98,7 @@ class AdminPageAddressListSettings
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS, $this->_pFormModelBuilderAddress, $fieldNames);
 		$this->addSortableFieldsList(array(onOfficeSDK::MODULE_ADDRESS), $this->_pFormModelBuilderAddress,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ADDRESS, $this->_pFormModelBuilderAddress);
 
 		$this->addFormModelName();
 		$this->addFormModelPictureTypes();
@@ -356,6 +357,8 @@ class AdminPageAddressListSettings
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the list. Please make sure the name of the list is unique.', 'onoffice-for-wp-websites'),
 			self::ENQUEUE_DATA_MERGE => array(AdminPageSettingsBase::POST_RECORD_ID),
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
+			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
 		);
 	}
 
