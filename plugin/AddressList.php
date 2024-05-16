@@ -82,15 +82,14 @@ class AddressList
 
 
 	/**
-	 *
-	 * @param AddressListEnvironment $pEnvironment
-	 *
+	 * @param DataViewAddress|null $pDataViewAddress
+	 * @param AddressListEnvironment|null $pEnvironment
 	 */
 
 	public function __construct(DataViewAddress $pDataViewAddress = null, AddressListEnvironment $pEnvironment = null)
 	{
-		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
 		$this->_pDataViewAddress = $pDataViewAddress ?? new DataListViewAddress(0, 'default');
+		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
 	}
 
 	/**
@@ -194,7 +193,7 @@ class AddressList
 	 * @param array $elements
 	 * @return array
 	 */
-	public function collectAdditionalContactData(array $elements): array
+	protected function collectAdditionalContactData(array $elements): array
 	{
 		$additionalContactData = [];
 		foreach ($elements as $key => $value) {
@@ -229,7 +228,7 @@ class AddressList
 	/**
 	 * @param array $addressData
 	 */
-	public function setAddressById($addressData)
+	protected function setAddressById(array $addressData)
 	{
 		$this->_adressesById = $addressData;
 	}
@@ -237,7 +236,7 @@ class AddressList
 	/**
 	 * @return DataViewAddress
 	 */
-	public function getAddressDataView(): DataViewAddress
+	protected function getAddressDataView(): DataViewAddress
 	{
 		return $this->_pDataViewAddress; 
 	}
@@ -331,6 +330,6 @@ class AddressList
 	}
 
 	/** @return AddressListEnvironment */
-	public function getEnvironment(): AddressListEnvironment
+	protected function getEnvironment(): AddressListEnvironment
 		{ return $this->_pEnvironment; }
 }

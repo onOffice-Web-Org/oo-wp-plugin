@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2020 onOffice GmbH
+ *    Copyright (C) 2024 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -47,7 +47,7 @@ use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2020, onOffice(R) GmbH
+ * @copyright 2003-2024, onOffice(R) GmbH
  *
  * This class must not use InputModelOption!
  *
@@ -66,7 +66,7 @@ class FormModelBuilderAddressDetailSettings
 	private $_pFieldnames = null;
 
 	/**
-	 * @param Fieldnames $pFieldnames
+	 * @param Fieldnames|null $pFieldnames
 	 */
 
 	public function __construct(Fieldnames $pFieldnames = null)
@@ -101,38 +101,6 @@ class FormModelBuilderAddressDetailSettings
 	}
 
 	/**
-	 * @param string $field
-	 * @return InputModelOption
-	 * @throws ExceptionInputModelMissingField
-	 */
-	public function createInputModelTemplate(string $field = InputModelOptionFactoryAddressDetailView::INPUT_TEMPLATE)
-	{
-		$labelTemplate = __('Template', 'onoffice-for-wp-websites');
-		$pInputModelTemplate = $this->_pInputModelAddressDetailFactory->create($field, $labelTemplate);
-		$pInputModelTemplate->setHtmlType(InputModelBase::HTML_TYPE_TEMPLATE_LIST);
-		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('address'));
-		$pInputModelTemplate->setValue($this->getTemplateValueByField($field));
-
-		return $pInputModelTemplate;
-	}
-
-
-	/**
-	 * @param string $field
-	 * @return string
-	 */
-
-	private function getTemplateValueByField(string $field): string
-	{
-		switch ($field) {
-			case InputModelOptionFactoryAddressDetailView::INPUT_TEMPLATE:
-				return $this->_pDataAddressDetail->getTemplate();
-			default:
-				return '';
-		}
-	}
-
-	/**
 	 *
 	 * @return InputModelOption
 	 *
@@ -150,8 +118,7 @@ class FormModelBuilderAddressDetailSettings
 
 		if (null == $pictureTypes)
 		{
-			$pictureTypes = array(
-			);
+			$pictureTypes = array();
 		}
 
 		$pInputModelPictureTypes->setValue($pictureTypes);

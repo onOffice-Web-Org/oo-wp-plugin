@@ -36,12 +36,6 @@ class DataAddressDetailView
 	implements DataViewAddress
 {
 	/** */
-	const FIELDS = 'fields';
-
-	/** */
-	const TEMPLATE = 'template';
-
-	/** */
 	const PICTURES = 'pictures';
 
 	/** @var string[] */
@@ -105,9 +99,9 @@ class DataAddressDetailView
 
 	/** @param int $pageId */
 	public function addToPageIdsHaveDetailShortCode(int $pageId)
-		{ $this->_pageIdsHaveDetailShortCode[$pageId] = $pageId; }
+	{ $this->_pageIdsHaveDetailShortCode[$pageId] = $pageId; }
 
 	/** @param int $pageId */
 	public function removeFromPageIdsHaveDetailShortCode(int $pageId)
-		{ unset($this->_pageIdsHaveDetailShortCode[$pageId]); }
+	{ unset($this->_pageIdsHaveDetailShortCode[$pageId]); }
 }

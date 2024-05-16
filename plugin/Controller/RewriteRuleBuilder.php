@@ -39,6 +39,7 @@ class RewriteRuleBuilder
 	private $_pDataAddressDetailViewHandler;
 
 	/**
+	 * @param DataAddressDetailViewHandler $pDataAddressDetailView
 	 * @param DataDetailViewHandler $pDataDetailViewHandler
 	 * @param WPPageWrapper $pWPPageWrapper
 	 */
@@ -47,9 +48,9 @@ class RewriteRuleBuilder
 		DataDetailViewHandler $pDataDetailViewHandler,
 		WPPageWrapper $pWPPageWrapper)
 	{
+		$this->_pDataAddressDetailViewHandler = $pDataAddressDetailView;
 		$this->_pDataDetailViewHandler = $pDataDetailViewHandler;
 		$this->_pWPPageWrapper = $pWPPageWrapper;
-		$this->_pDataAddressDetailViewHandler = $pDataAddressDetailView;
 	}
 
 	public function addCustomRewriteTags()

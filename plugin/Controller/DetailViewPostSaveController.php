@@ -109,25 +109,25 @@ class DetailViewPostSaveController
 			$pAddressDetailView = $pDataAddressDetailViewHandler->getAddressDetailView();
 
 			$detailViewName = $pDetailView->getName();
+			$addressDetailViewName = $pAddressDetailView->getName();
 			$postContent = $pPost->post_content;
 			$postType = $pPost->post_type;
 			$metaKeys = get_post_meta($postId, '', true);
 
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
-			$addressDetailViewName = $pAddressDetailView->getName();
-			$viewContainedAddressDetail = $this->postContainsAddressDetailViewName($postContent, $addressDetailViewName);
-			$viewContainedAddressDetailCustomField = false;
-			$hasOtherShortcodeAddressDetailInPostContent = false;
+			$viewContainedAddressDetail = $this->postContainsViewName($postContent, $addressDetailViewName, 'oo_address');
 
 			$viewContainedCustomField = false;
 			$hasOtherShortcodeInPostContent = false;
+			$viewContainedAddressDetailCustomField = false;
+			$hasOtherAddressDetailShortcodeInPostContent = false;
 
 			if (!$viewContained && !empty($postContent) && $this->checkOtherShortcodeInPostContent($postContent, $detailViewName)) {
 				$hasOtherShortcodeInPostContent = true;
 			}
 
-			if (!$viewContainedAddressDetail && !empty($postContent) && $this->checkOtherShortcodeAddressDetailInPostContent($postContent, $addressDetailViewName)) {
-				$hasOtherShortcodeAddressDetailInPostContent = true;
+			if (!$viewContainedAddressDetail && !empty($postContent) && $this->checkOtherShortcodeInPostContent($postContent, $addressDetailViewName, 'oo_address')) {
+				$hasOtherAddressDetailShortcodeInPostContent = true;
 			}
 
 			foreach ($metaKeys as $metaKey) {
@@ -135,8 +135,8 @@ class DetailViewPostSaveController
 				if ($viewContainedMetaKey) {
 					$viewContainedCustomField = true;
 				}
-				$viewContainedAddressDetailMetaKey = $this->postContainsViewName($metaKey[0], $addressDetailViewName);
-				if ($viewContainedAddressDetailMetaKey) {
+				$viewAddressDetailContainedMetaKey = $this->postContainsViewName($metaKey[0], $addressDetailViewName);
+				if ($viewAddressDetailContainedMetaKey) {
 					$viewContainedAddressDetailCustomField = true;
 				}
 			}
@@ -162,10 +162,10 @@ class DetailViewPostSaveController
 				}
 			}
 
-			if (($viewContainedAddressDetail) || ($viewContainedAddressDetailCustomField && $viewContainedAddressDetail) || ($viewContainedAddressDetailCustomField && $hasOtherShortcodeAddressDetailInPostContent == false)) {
+			if (($viewContainedAddressDetail) || ($viewContainedAddressDetailCustomField && $hasOtherAddressDetailShortcodeInPostContent == false)) {
 				if ($postType == 'page') {
 					$pAddressDetailView->setPageId((int) $postId);
-					$pAddressDetailView->addToPageIdsHaveDetailShortCode( (int) $postId );
+					$pAddressDetailView->addToPageIdsHaveDetailShortCode((int) $postId);
 					$pDataAddressDetailViewHandler->saveAddressDetailView($pAddressDetailView);
 					$this->_pRewriteRuleBuilder->addDynamicRewriteRulesAddressDetail();
 					flush_rewrite_rules();
@@ -176,7 +176,7 @@ class DetailViewPostSaveController
 
 				if ($detailInPreviousRev || $pAddressDetailView->getPageId() === $postId) {
 					$pAddressDetailView->setPageId(0);
-					$pAddressDetailView->removeFromPageIdsHaveDetailShortCode( (int) $postId );
+					$pAddressDetailView->removeFromPageIdsHaveDetailShortCode((int) $postId);
 					$pDataAddressDetailViewHandler->saveAddressDetailView($pAddressDetailView);
 					$this->_pRewriteRuleBuilder->addDynamicRewriteRulesAddressDetail();
 					flush_rewrite_rules();
@@ -246,9 +246,13 @@ class DetailViewPostSaveController
 		$posts = $_GET['post'];
 		if ( isset( $posts ) ) {
 			$pDataDetailViewHandler = $this->_pContainer->get(DataDetailViewHandler::class);
+			$pDataAddressDetailViewHandler = $this->_pContainer->get(DataAddressDetailViewHandler::class);
 			$pDetailView            = $pDataDetailViewHandler->getDetailView();
 			$detailPageIds          = $pDetailView->getPageIdsHaveDetailShortCode();
+			$pAddressDetailView     = $pDataAddressDetailViewHandler->getAddressDetailView();
+			$addressDetailPageIds   = $pAddressDetailView->getPageIdsHaveDetailShortCode();
 			$hasDetailPost          = false;
+			$hasAddressDetailPost   = false;
 			if ( ! is_array( $posts ) ) {
 				$posts = [ $posts ];
 			}
@@ -257,17 +261,31 @@ class DetailViewPostSaveController
 					$pDetailView->removeFromPageIdsHaveDetailShortCode( (int) $postId );
 					$hasDetailPost = true;
 				}
+				if (in_array($postId, $addressDetailPageIds)) {
+					$pAddressDetailView->removeFromPageIdsHaveDetailShortCode((int) $postId);
+					$hasAddressDetailPost = true;
+				}
 				$pPost = get_post( $postId );
 				$this->deletePageUseShortCode( $pPost );
 			}
 			if ( $hasDetailPost ) {
-				if ( empty( $pDetailView->getPageIdsHaveDetailShortCode() ) ) {
-					$pDetailView->setPageId( 0 );
-				} elseif ( in_array( $pDetailView->getPageId(), $posts ) ) {
-					$firstDetailPageId = min( array_keys( $detailPageIds ) );
-					$pDetailView->setPageId( (int) $detailPageIds[ $firstDetailPageId ] );
+				if (empty($pDetailView->getPageIdsHaveDetailShortCode())) {
+					$pDetailView->setPageId(0);
+				} elseif (in_array($pDetailView->getPageId(), $posts)) {
+					$firstDetailPageId = min(array_keys($detailPageIds));
+					$pDetailView->setPageId((int) $detailPageIds[$firstDetailPageId]);
 				}
-				$pDataDetailViewHandler->saveDetailView( $pDetailView );
+				$pDataDetailViewHandler->saveDetailView($pDetailView);
+				flush_rewrite_rules();
+			}
+			if ( $hasAddressDetailPost ) {
+				if (empty($pAddressDetailView->getPageIdsHaveDetailShortCode())) {
+					$pAddressDetailView->setPageId(0);
+				} elseif (in_array($pAddressDetailView->getPageId(), $posts)) {
+					$firstDetailPageId = min(array_keys( $addressDetailPageIds ));
+					$pAddressDetailView->setPageId((int) $addressDetailPageIds[$firstDetailPageId]);
+				}
+				$pDataAddressDetailViewHandler->saveAddressDetailView($pAddressDetailView);
 				flush_rewrite_rules();
 			}
 		}
@@ -348,13 +366,14 @@ class DetailViewPostSaveController
 	 *
 	 * @param string $post
 	 * @param string $viewName
+	 * @param string $tagShortcode
 	 * @return bool
 	 *
 	 */
 
-	private function postContainsViewName($post, $viewName) {
+	private function postContainsViewName(string $post, string $viewName, string $tagShortcode = 'oo_estate') {
 		$matches = array();
-		$regex = get_shortcode_regex(array('oo_estate'));
+		$regex = get_shortcode_regex(array($tagShortcode));
 		preg_match_all('/'.$regex.'/ism', $post, $matches);
 
 		$detailviewCode = $this->generateDetailViewCode($viewName);
@@ -379,68 +398,14 @@ class DetailViewPostSaveController
 	 *
 	 * @param string $post
 	 * @param string $viewName
+	 * @param string $tagShortcode
 	 * @return bool
 	 *
 	 */
 
-	private function postContainsAddressDetailViewName($post, $viewName) {
+	private function checkOtherShortcodeInPostContent(string $post, string $viewName, string $tagShortcode = 'oo_estate') {
 		$matches = array();
-		$regex = get_shortcode_regex(array('oo_address'));
-		preg_match_all('/'.$regex.'/ism', $post, $matches);
-
-		$detailviewCode = $this->generateDetailViewCode($viewName);
-
-		if (!array_key_exists(3, $matches)) {
-			return false;
-		}
-
-		$view = $matches[3];
-		$view = str_replace('\u0022', '"', $view);
-		
-		foreach ($view as $tagParams) {
-			if (__String::getNew($tagParams)->contains($detailviewCode)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 *
-	 * @param string $post
-	 * @param string $viewName
-	 * @return bool
-	 *
-	 */
-
-	private function checkOtherShortcodeAddressDetailInPostContent($post, $viewName) {
-		$matches = array();
-		$regex   = get_shortcode_regex(array('oo_address'));
-		preg_match_all('/' . $regex . '/ism', $post, $matches);
-
-		$detailviewCode = $this->generateDetailViewCode($viewName);
-
-		foreach ($matches[3] as $tagParams) {
-			if ($tagParams !== $detailviewCode) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 *
-	 * @param string $post
-	 * @param string $viewName
-	 * @return bool
-	 *
-	 */
-
-	private function checkOtherShortcodeInPostContent($post, $viewName) {
-		$matches = array();
-		$regex   = get_shortcode_regex(array('oo_estate'));
+		$regex   = get_shortcode_regex(array($tagShortcode));
 		preg_match_all('/' . $regex . '/ism', $post, $matches);
 
 		$detailviewCode = $this->generateDetailViewCode($viewName);

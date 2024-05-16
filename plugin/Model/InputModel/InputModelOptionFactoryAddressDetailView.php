@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2024 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -28,30 +28,14 @@ use onOffice\WPlugin\Model\InputModelOption;
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
+ * @copyright 2003-2024, onOffice(R) GmbH
  *
  */
 
 class InputModelOptionFactoryAddressDetailView
 {
-
-	/** */
-	const INPUT_TEMPLATE = 'template';
-
-	/** */
-	const INPUT_SHOW_PRICE_ON_REQUEST = 'show_price_on_request';
-
-	/** */
-	const INPUT_FIELD_CONFIG = DataAddressDetailView::FIELDS;
-
 	/** */
 	const INPUT_PICTURE_TYPE = DataAddressDetailView::PICTURES;
-
-	/** */
-	const INPUT_SHORT_CODE_FORM = 'shortcodeform';
-
-	/** */
-	const INPUT_SHORT_CODE_ESTATE = 'shortcodeestate';
 
 	/** */
 	const KEY_TYPE = 'type';
@@ -62,19 +46,7 @@ class InputModelOptionFactoryAddressDetailView
 
 	/** @var array */
 	private $_inputConfig = [
-        self::INPUT_FIELD_CONFIG => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-        ],
 		self::INPUT_PICTURE_TYPE => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
-		self::INPUT_TEMPLATE => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
-		self::INPUT_SHORT_CODE_FORM => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
-		self::INPUT_SHORT_CODE_ESTATE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
 	];

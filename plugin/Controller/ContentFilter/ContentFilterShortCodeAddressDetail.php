@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2020 onOffice GmbH
+ *    Copyright (C) 2024 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -56,17 +56,17 @@ class ContentFilterShortCodeAddressDetail
 		AddressListFactory $pAddressListFactory,
 		WPQueryWrapper $pWPQueryWrapper)
 	{
-		$this->_pTemplate = $pTemplate;
 		$this->_pDataAddressDetailViewHandler = $pDataAddressDetailViewHandler;
+		$this->_pTemplate = $pTemplate;
 		$this->_pAddressListFactory = $pAddressListFactory;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 	}
 
 	/**
-	 * @param array $attributes
 	 * @return string
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws \onOffice\WPlugin\API\ApiClientException
 	 */
 	public function render(): string
 	{
@@ -74,7 +74,8 @@ class ContentFilterShortCodeAddressDetail
 		$pTemplate = $this->_pTemplate->withTemplateName($pDetailView->getTemplate());
 		$addressId = $this->_pWPQueryWrapper->getWPQuery()->query_vars['address_id'] ?? 0;
 		$pEstateDetailList = $this->_pAddressListFactory->createAddressDetail((int)$addressId);
-		$pEstateDetailList->loadSingleAddress($addressId);
+		$pEstateDetailList->loadAddressDetailView((int)$addressId);
+
 		return $pTemplate
 			->withAddressList($pEstateDetailList)
 			->render();

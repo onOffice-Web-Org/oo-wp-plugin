@@ -21,11 +21,10 @@
 
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\DataView\DataViewAddress;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
-use DI\DependencyException;
 use onOffice\WPlugin\Types\ImageTypes;
 
 /**
@@ -39,71 +38,21 @@ class AddressDetail
 	extends AddressList
 {
 	/** @var int */
-	private $_addressId = null;
+	private $_addressId = 0;
 
-	/** @var string */
-	private $_userName = '';
-
-	/** @var string */
-	const SHOW_PICTURE_TYPE_PASSPORT_PHOTO = 'PassportPhoto';
-
-	/** @var string */
-	const SHOW_PICTURE_TYPE_USER_PHOTO = 'UserPhoto';
+	/** @var int */
+	private $_userId = 0;
 
 	/**
-	 *
-	 * @return int
-	 *
-	 */
-
-	protected function getNumEstatePages()
-	{
-		return 1;
-	}
-
-
-	/**
-	 *
 	 * @param int $id
-	 *
+	 * @throws ApiClientException
 	 */
 
-	public function loadSingleAddress($id)
+	public function loadAddressDetailView(int $id)
 	{
 		$this->_addressId = $id;
-		$this->loadAddresses(1);
+		$this->loadAddressRecords();
 	}
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getShortCodeForm(): string
-	{
-		$result = '';
-
-		if ($this->getAddressDataView()->getShortCodeForm() == '') {
-			return '';
-		}
-
-		$result = $this->getAddressDataView()->getShortCodeForm();
-
-		return  '[oo_address view="' . $result . '"]';
-	}
-
-	/**
-	 *
-	 * @return int
-	 *
-	 */
-
-	protected function getRecordsPerPage()
-	{
-		return 1;
-	}
-
 
 	/**
 	 * @return ViewFieldModifierHandler
@@ -121,21 +70,20 @@ class AddressDetail
 			array_keys($this->getEnvironment()->getFieldnames()->getFieldList(onOfficeSDK::MODULE_ADDRESS)));
 
 		$pAddressFieldModifierHandler = $this->getEnvironment()->getViewFieldModifierHandler($fields);
+
 		return $pAddressFieldModifierHandler;
 	}
 
 	/**
-	 * @param int $inputPage
-	 * @throws DependencyException
-	 * @throws NotFoundException
 	 * @throws API\ApiClientException
 	 * @global int $page
 	 * @global bool $more
 	 * @global int $numpages
 	 * @global bool $multipage
 	 */
-	public function loadAddresses(int $inputPage = 1)
+	public function loadAddressRecords()
 	{
+		$pUserApiCall = null;
 		$this->getEnvironment()->getFieldnames()->loadLanguage();
 		$pModifier = $this->generateRecordModifier();
 
@@ -147,7 +95,12 @@ class AddressDetail
 			'formatoutput' => true,
 		);
 
-		$parameters['data'][] = 'Benutzer';
+		if ($this->isValidPictureType(ImageTypes::USERPHOTO)) {
+			$parameters['data'][] = 'Benutzer';
+			$pUserApiCall = new APIClientActionGeneric
+				($this->getEnvironment()->getSDKWrapper(), onOfficeSDK::ACTION_ID_GET, 'users');
+			$pUserApiCall->addRequestToQueue();
+		}
 
 		$pApiCall = new APIClientActionGeneric
 			($this->getEnvironment()->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
@@ -156,26 +109,18 @@ class AddressDetail
 		$pApiCall->addRequestToQueue()->sendRequests();
 
 		$records = $pApiCall->getResultRecords();
-		$elements = $records[0]['elements'];
-		$this->_userName = $elements['Benutzer'] ?? '';
+		$elements = $records[0]['elements'] ?? [];
+		$userName = !empty($elements) ? ($elements['Benutzer'] ?? '') : '';
+
+		if (!is_null($pUserApiCall) && !empty($pUserApiCall->getResultRecords()) && !empty($userName)) {
+			$this->_userId = $this->findUserIdByUsername($pUserApiCall->getResultRecords(), $userName);
+		}
 
 		$additionalContactData = $this->collectAdditionalContactData($elements);
 		unset($elements['id']);
-		$adressesById[$records[0]['id']] = array_merge($elements, $additionalContactData);
-		$this->setAddressById($adressesById);
+		$addressesById[$records[0]['id']] = array_merge($elements, $additionalContactData);
+		$this->setAddressById($addressesById);
 	}
-
-	/**
-	 *
-	 * @return int
-	 *
-	 */
-
-	public function getAddressId(): int
-	{
-		return $this->_addressId;
-	}
-
 
 	/**
 	 *
@@ -189,19 +134,19 @@ class AddressDetail
 	}
 
 	/**
-	 * @param int $userId
-	 *
-	 * @return void
+	 * @return string
 	 * @throws API\ApiClientException
 	 */
-	public function getUserPhoto(int $userId): string
+	public function getUserPhoto(): string
 	{
+		if ($this->_userId === 0) {
+			return '';
+		}
+
 		$pApiCall = new APIClientActionGeneric
 			($this->getEnvironment()->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'userphoto');
-		$pApiCall->setParameters([
-			'photosAsLinks' => true,
-		]);
-		$pApiCall->setResourceId($userId);
+		$pApiCall->setParameters(['photosAsLinks' => true]);
+		$pApiCall->setResourceId($this->_userId);
 		$pApiCall->addRequestToQueue()->sendRequests();
 		$userPhotoData = $pApiCall->getResultRecords();
 
@@ -209,18 +154,15 @@ class AddressDetail
 	}
 
 	/**
-	 * @return integer
-	 * @throws API\ApiClientException
+	 * @param array $listUserData
+	 * @param string $userName
+	 *
+	 * @return int
 	 */
-	public function getUserId(): int
+	public function findUserIdByUsername(array $listUserData, string $userName): int
 	{
-		$pApiCall = new APIClientActionGeneric
-			($this->getEnvironment()->getSDKWrapper(), onOfficeSDK::ACTION_ID_GET, 'users');
-		$pApiCall->addRequestToQueue()->sendRequests();
-
-		$listUserData = $pApiCall->getResultRecords();
 		foreach ($listUserData as $userData) {
-			if ($userData['elements']['username'] === $this->_userName) {
+			if ($userData['elements']['username'] === $userName) {
 				return $userData['elements']['id'];
 			}
 		}
@@ -229,13 +171,21 @@ class AddressDetail
 	}
 
 	/**
+	 * @return int
+	 */
+	public function getUserId(): int
+	{
+		return $this->_userId;
+	}
+
+	/**
 	 * @param string $pictureType
 	 *
 	 * @return bool
 	 */
-	public function getPictureTypesOption(string $pictureType): bool
+	public function isValidPictureType(string $pictureType): bool
 	{
-		$pictureTypes = get_option('onoffice-address-default-view')->getPictureTypes();
+		$pictureTypes = $this->getAddressDataView()->getPictureTypes();
 		if (in_array($pictureType, $pictureTypes)) {
 			return true;
 		}

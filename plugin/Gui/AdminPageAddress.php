@@ -231,6 +231,7 @@ class AdminPageAddress
 				$redirectTo = add_query_arg(['delete' => $itemsDeleted],
 					admin_url('admin.php?page=onoffice-addresses'));
 			}
+
 			return $redirectTo;
 		};
 
@@ -249,6 +250,7 @@ class AdminPageAddress
 				$listViewRootId = $_GET['listViewId'];
 				$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
 			}
+
 			return $redirectTo;
 		};
 
@@ -263,18 +265,18 @@ class AdminPageAddress
 	 *
 	 */
 
-    public function getSelectedAdminPage()
-    {
-        return $this->_pSelectedTab;
-    }
+	public function getSelectedAdminPage()
+	{
+		return $this->_pSelectedTab;
+	}
 
 
 	/**
 	 *
 	 */
 
-    public function doExtraEnqueues()
-    {
-        $this->_pSelectedTab->doExtraEnqueues();
-    }
+	public function doExtraEnqueues()
+	{
+		$this->_pSelectedTab->doExtraEnqueues();
+	}
 }

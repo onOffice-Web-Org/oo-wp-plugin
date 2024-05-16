@@ -1,7 +1,8 @@
 <?php
+use onOffice\WPlugin\Types\ImageTypes;
+use onOffice\WPlugin\AddressList;
 
-use onOffice\WPlugin\AddressDetail;
-
+/** @var AddressList $pAddressList */
 foreach ($pAddressList->getRows() as $addressId => $escapedValues) {
 	$imageUrl = $escapedValues['imageUrl'];
 	unset($escapedValues['imageUrl']);
@@ -10,13 +11,13 @@ foreach ($pAddressList->getRows() as $addressId => $escapedValues) {
 		echo $fieldLabel, ': ', (is_array($value) ? implode(', ', array_filter($value)) : $value), '<br>';
 	}
 
-	if ($pAddressList->getPictureTypesOption(AddressDetail::SHOW_PICTURE_TYPE_USER_PHOTO)) {
+	if ($pAddressList->isValidPictureType(ImageTypes::USERPHOTO)) {
 		$userId = $pAddressList->getUserId();
-		$userPhoto = $pAddressList->getUserPhoto($userId);
+		$userPhoto = $pAddressList->getUserPhoto();
 		echo esc_html_e('User photo', 'onoffice-for-wp-websites') . ': ' . $userPhoto . '<br>';
 	}
 
-	if ($pAddressList->getPictureTypesOption(AddressDetail::SHOW_PICTURE_TYPE_PASSPORT_PHOTO)) {
+	if ($pAddressList->isValidPictureType(ImageTypes::PASSPORTPHOTO)) {
 		echo esc_html_e('Passport photo', 'onoffice-for-wp-websites') . ': ' . $imageUrl . '<br>';
 	}
 }

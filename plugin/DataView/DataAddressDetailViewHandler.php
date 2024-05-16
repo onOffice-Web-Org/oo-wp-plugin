@@ -23,13 +23,11 @@ namespace onOffice\WPlugin\DataView;
 
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
-use onOffice\WPlugin\DataView\DataAddressDetailView;
-
 
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
+ * @copyright 2003-2024, onOffice(R) GmbH
  *
  */
 
@@ -43,7 +41,7 @@ class DataAddressDetailViewHandler
 
 
 	/**
-	 * @param WPOptionWrapperBase $pWPOptionWrapper
+	 * @param  WPOptionWrapperBase|null  $pWPOptionWrapper
 	 */
 	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
 	{
@@ -103,6 +101,7 @@ class DataAddressDetailViewHandler
 		$pDataAddressDetailView = $this->getAddressDetailView();
 		$pDataAddressDetailView->setTemplate( 'oo-wp-plugin/templates.dist/address/default_detail.php');
 		$pDataAddressDetailView->setPictureTypes($row[DataAddressDetailView::PICTURES] ?? []);
+
 		return $pDataAddressDetailView;
 	}
 }
