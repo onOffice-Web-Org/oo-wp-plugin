@@ -171,7 +171,7 @@ add_action('init', function() use ($pDI) {
 	$pRewriteRuleBuilder->addCustomRewriteTags();
 	$pRewriteRuleBuilder->addStaticRewriteRules();
 	$pRewriteRuleBuilder->addDynamicRewriteRules();
-	$pRewriteRuleBuilder->addCustomRewriteTagsAddressDetail();
+	$pRewriteRuleBuilder->addCustomRewriteTagsForAddressDetail();
 	$pRewriteRuleBuilder->addDynamicRewriteRulesForAddressDetail();
 });
 

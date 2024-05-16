@@ -77,7 +77,7 @@ class RewriteRuleBuilder
 		}
 	}
 
-	public function addCustomRewriteTagsAddressDetail()
+	public function addCustomRewriteTagsForAddressDetail()
 	{
 		add_rewrite_tag('%address_id%', '([^&]+)');
 		add_rewrite_tag('%view%', '([^&]+)');
