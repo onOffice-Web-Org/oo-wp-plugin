@@ -167,7 +167,7 @@ class DetailViewPostSaveController
 					$pAddressDetailView->setPageId((int) $postId);
 					$pAddressDetailView->addToPageIdsHaveDetailShortCode((int) $postId);
 					$pDataAddressDetailViewHandler->saveAddressDetailView($pAddressDetailView);
-					$this->_pRewriteRuleBuilder->addDynamicRewriteRulesAddressDetail();
+					$this->_pRewriteRuleBuilder->addDynamicRewriteRulesForAddressDetail();
 					flush_rewrite_rules();
 				}
 			} elseif ($pAddressDetailView->getPageId() !== 0) {
@@ -178,7 +178,7 @@ class DetailViewPostSaveController
 					$pAddressDetailView->setPageId(0);
 					$pAddressDetailView->removeFromPageIdsHaveDetailShortCode((int) $postId);
 					$pDataAddressDetailViewHandler->saveAddressDetailView($pAddressDetailView);
-					$this->_pRewriteRuleBuilder->addDynamicRewriteRulesAddressDetail();
+					$this->_pRewriteRuleBuilder->addDynamicRewriteRulesForAddressDetail();
 					flush_rewrite_rules();
 				}
 			}
