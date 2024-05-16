@@ -107,8 +107,10 @@ class InputVariableReaderParser
 		}
 
 		global $wp_locale;
-		$stringThousand = __String::getNew($floatString)->replace
-		($wp_locale->number_format['thousands_sep'], '');
+
+		$stringThousand = ($wp_locale->number_format['thousands_sep'] === ',')
+			? __String::getNew($floatString)->replace($wp_locale->number_format['thousands_sep'], '') : $floatString;
+
 		$stringDec = __String::getNew($stringThousand)->replace
 		($wp_locale->number_format['decimal_point'], '.');
 

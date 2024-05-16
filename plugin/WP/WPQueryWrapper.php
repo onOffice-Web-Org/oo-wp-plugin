@@ -33,17 +33,21 @@ class WPQueryWrapper
 {
 	/**
 	 *
+	 * @param int $pListViewId
 	 * @global \WP_Query $wp_query
 	 * @return WP_Query
 	 *
 	 */
 
-	public function getWPQuery(): WP_Query
+	public function getWPQuery(int $pListViewId = null): WP_Query
 	{
 		global $wp_query, $paged;
 		$wpquery = clone $wp_query;
 
-		if (get_query_var( 'paged' )) {
+		$pageParameter = 'page_of_id_' . $pListViewId;
+		if (isset($_GET[$pageParameter]) && is_numeric($_GET[$pageParameter])) {
+			$paged = (int) $_GET[$pageParameter];
+		} elseif (get_query_var( 'paged' )) {
 			$paged = get_query_var('paged');
 		}
 		elseif ( get_query_var('page')) {

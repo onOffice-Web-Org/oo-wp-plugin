@@ -67,6 +67,8 @@ class ScriptLoaderGenericConfigurationDefault
 			new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)),
 			new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath))
 		];
+        //ensure to load 3rd party styles on detail page before onOffice style
+        $values = array_merge($values, $this->renderStyleForEstateDetailPage($pluginPath, $style));
 		$styleVersion = $this->getOnOfficeStyleVersion();
 		$onOfficeStyleUri = $this->getStyleUriByVersion($styleVersion);
 		$values []= (new IncludeFileModel($style, $styleVersion, $onOfficeStyleUri));
@@ -104,7 +106,7 @@ class ScriptLoaderGenericConfigurationDefault
 		}
 
 		if ($this->isDetailEstatePage($pageContent) || !empty($shortcode['detail'])) {
-			$scripts = $this->renderScriptFormPageForEstateDetailPage($scripts, $pluginPath, $script, $style, $defer);
+			$scripts = $this->renderScriptForEstateDetailPage($scripts, $pluginPath, $script, $defer);
 		}
 
 		$shortcodeFormForDetailPage = !empty(get_option('onoffice-default-view')) ? get_option('onoffice-default-view')->getShortCodeForm() : '';
@@ -128,7 +130,10 @@ class ScriptLoaderGenericConfigurationDefault
 
 		$filteredMetaKeys = [];
 		array_walk($metaKeys, function($metaValueArray, $key) use (&$filteredMetaKeys) {
-			$metaValue = str_replace('\u0022', '"', $metaValueArray[0]);
+			$metaValue = '';
+			if (isset($metaValueArray[0])) {
+				$metaValue = str_replace('\u0022', '"', $metaValueArray[0]);
+			}
 			if ($this->isEstateListPage($metaValue)) {
 				$filteredMetaKeys['estate'] = $metaValue;
 			} elseif ($this->isDetailEstatePage($metaValue)) {
@@ -233,6 +238,13 @@ class ScriptLoaderGenericConfigurationDefault
 					->setLoadInFooter(true);
 		}
 
+		if (get_option('onoffice-settings-captcha-sitekey') !== '' && $this->checkCaptchaActive($forms) &&
+			$this->checkFormType($forms, [Form::TYPE_CONTACT, Form::TYPE_OWNER, Form::TYPE_INTEREST])) {
+			$scripts[] = (new IncludeFileModel($script, 'onoffice-captchacontrol', plugins_url('/dist/onoffice-captchacontrol.min.js', $pluginPath)))
+					->setDependencies(['jquery'])
+					->setLoadInFooter(true);
+		}
+
 		return $scripts;
 	}
 
@@ -246,6 +258,18 @@ class ScriptLoaderGenericConfigurationDefault
 	{
 		return !empty(array_filter($forms, function($form) use ($typeForm) {
 			return in_array($form->form_type, $typeForm);
+		}));
+	}
+
+	/**
+	 * @param array $forms
+	 *
+	 * @return bool
+	 */
+	private function checkCaptchaActive(array $forms): bool
+	{
+		return !empty(array_filter($forms, function($form) {
+			return $form->captcha = true;
 		}));
 	}
 
@@ -301,7 +325,7 @@ class ScriptLoaderGenericConfigurationDefault
 	 * @return array
 	 */
 
-	private function renderScriptFormPageForEstateDetailPage(array $scripts, string $pluginPath, string $script, string $style, string $defer): array
+	private function renderScriptForEstateDetailPage(array $scripts, string $pluginPath, string $script, string $defer): array
 	{
 		$scripts[] = (new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))
 				->setDependencies(['jquery'])
@@ -310,11 +334,31 @@ class ScriptLoaderGenericConfigurationDefault
 		$scripts[] = (new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/dist/onoffice_defaultview.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true);
-		$scripts[] = new IncludeFileModel($style, 'slick', plugins_url('/third_party/slick/slick.css', $pluginPath));
-		$scripts[] = new IncludeFileModel($style, 'slick-theme', plugins_url('/third_party/slick/slick-theme.css', $pluginPath));
 
 		return $scripts;
 	}
+
+    /**
+     * @param array $styles
+     * @param string $pluginPath
+     * @param string $style
+     * @return array
+     */
+
+    private function renderStyleForEstateDetailPage(string $pluginPath, string $style): array {
+        $styles = [];
+        $pageContent = get_the_content();
+        if (empty($pageContent)) {
+            return $styles;
+        }
+        $shortcode = $this->getShortcodeByPostMeta();
+        $pageContent = str_replace('\u0022', '"', $pageContent);
+        if ($this->isDetailEstatePage($pageContent) || !empty($shortcode['detail'])) {
+            $styles[] = new IncludeFileModel($style, 'slick', plugins_url('/third_party/slick/slick.css', $pluginPath));
+            $styles[] = new IncludeFileModel($style, 'slick-theme', plugins_url('/third_party/slick/slick-theme.css', $pluginPath));
+        }
+        return $styles;
+    }
 
 	/**
 	 * @param array $scripts

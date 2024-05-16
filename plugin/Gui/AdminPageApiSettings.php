@@ -28,7 +28,6 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\MapProvider;
-use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use function __;
 use function admin_url;
 use function do_settings_sections;
@@ -37,10 +36,9 @@ use function esc_html;
 use function get_option;
 use function json_encode;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
+use onOffice\WPlugin\WP\WPPluginChecker;
 use function settings_fields;
 use function submit_button;
-use onOffice\WPlugin\Controller\AdminViewController;
-use function wp_enqueue_style;
 use Parsedown;
 /**
  *
@@ -68,6 +66,7 @@ class AdminPageApiSettings
 		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleMapsKey();
 		$this->addFormModelGoogleCaptcha();
+		$this->addFormModelSocialMetaData();
 		$this->addFormModelHoneypot();
 		$this->addFormModelFavorites($pageSlug);
         $this->addFormModelDetailView($pageSlug);
@@ -166,9 +165,11 @@ class AdminPageApiSettings
 			('onoffice-settings', 'captcha-sitekey', $labelSiteKey, 'string');
 		$optionNameKey = $pInputModelCaptchaSiteKey->getIdentifier();
 		$pInputModelCaptchaSiteKey->setValue(get_option($optionNameKey));
+		$pInputModelCaptchaSiteKey->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
 		$pInputModelCaptchaPageSecret = new InputModelOption
 			('onoffice-settings', 'captcha-secretkey', $labelSecretKey, 'string');
 		$pInputModelCaptchaPageSecret->setIsPassword(true);
+		$pInputModelCaptchaPageSecret->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
 		$optionNameSecret = $pInputModelCaptchaPageSecret->getIdentifier();
 		$pInputModelCaptchaPageSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
 			return $this->checkPassword($password, $optionNameSecret);
@@ -190,6 +191,47 @@ class AdminPageApiSettings
 		$this->addFormModel($pFormModel);
 	}
 
+	/**
+	 *
+	 */
+
+	private function addFormModelSocialMetaData()
+	{
+		$labelOpenGraph = __('Enable Open Graph', 'onoffice-for-wp-websites');
+		$pInputModelOpenGraph = new InputModelOption
+			('onoffice-settings', 'opengraph', $labelOpenGraph, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$pInputModelOpenGraph->setValuesAvailable(1);
+		$pInputModelOpenGraph->setHtmlType(InputModelOption::HTML_TYPE_TOGGLE_SWITCH);
+		$pInputModelOpenGraph->setValue(get_option($pInputModelOpenGraph->getIdentifier()));
+
+		$labelTwitterCards = __('Enable Twitter Cards', 'onoffice-for-wp-websites');
+		$pInputModelTwitterCards = new InputModelOption
+			('onoffice-settings', 'twittercards', $labelTwitterCards, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$pInputModelTwitterCards->setValuesAvailable(1);
+		$pInputModelTwitterCards->setHtmlType(InputModelOption::HTML_TYPE_TOGGLE_SWITCH);
+		$pInputModelTwitterCards->setValue(get_option($pInputModelTwitterCards->getIdentifier()));
+
+        $WPPluginChecker = new WPPluginChecker;
+        $activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
+        if ($WPPluginChecker->isSEOPluginActive()) {
+            $listNamePluginSEO = implode(", ",$activeSEOPlugins);
+            $messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SocialMedia Data settings. Therefore they are disabled.','onoffice-for-wp-websites'), $listNamePluginSEO);
+            $descriptionNoticeSeo = sprintf('<p class="oo-description oo-description--notice">%s</p>', $messageNoticeSEO);
+
+            $pInputModelTwitterCards->setDeactivate(true);
+            $pInputModelOpenGraph->setHintHtml($descriptionNoticeSeo);
+            $pInputModelOpenGraph->setDeactivate(true);
+        }
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelTwitterCards);
+		$pFormModel->addInputModel($pInputModelOpenGraph);
+		$pFormModel->setGroupSlug('onoffice-settings');
+		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setLabel(__('Social MetaData', 'onoffice-for-wp-websites'));
+
+		$this->addFormModel($pFormModel);
+	}
 
 	/**
 	 *
@@ -214,22 +256,17 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleBotSettings()
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-		$pAdminViewController = $pContainer->get(AdminViewController::class);
-		$listPluginSEOActive = [];
-		$listPluginSEOActive = $pAdminViewController->getPluginSEOActive();
-		$listNamePluginSEO = implode(", ",$listPluginSEOActive);
+        $WPPluginChecker = new WPPluginChecker;
+        $activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
+		$listNamePluginSEO = implode(", ",$activeSEOPlugins);
 		$titleDoNotModify = esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites');
-		$summaryDetailDoNotModify = esc_html__( 'Custom fields', 'onoffice-for-wp-websites' );
-		$descriptionDetailDoNotModify = sprintf(esc_html__( 'When this option is active, you can use special custom fields to use data from onOffice enterprise in your SEO plugins.
-		To display the property number (fieldname %1$s) and title (fieldname %2$s) of the current estate in the detail page\'s title, you can use the custom fields %3$s and %4$s.
-		For information on how to use custom fields consult you SEO plugin\'s documentation.', 'onoffice-for-wp-websites' ), '<code>objektnr_extern</code>', '<code>objekttitel</code>', '<code>onoffice_objektnr_extern</code>', '<code>onoffice_objekttitel</code>');
-		$searchSupportDoNotModify = sprintf(esc_html__( 'To find out the fieldname of a field, look in the detail page\'s field list. When you expand a field, it shows you the "Key of Field" which you should put behind %s to form the custom field name. You can use any field that you have added to the estate field list on the right of the detail page.',
-			'onoffice-for-wp-websites' ), '<code>onoffice_</code>');
-		$titleEllipsisDoNotModify = sprintf(esc_html__( 'If you need to shorten a field to e.g. 50 characters, you can use %1$s. This will shorten the estate\'s description to at most 50 characters, including the ellipsis. It will not cut words in the middle, but leave them out if they are too long, so "This is too loooong" will never become "This is too looo…" but rather "This is too…". To display up to 150 characters, you can use %2$s.',
-			'onoffice-for-wp-websites' ), '<code>onoffice_ellipsis50_objektbeschreibung</code>', '<code>onoffice_ellipsis150_objektbeschreibung</code>');
+		$summaryDetailDoNotModify = esc_html__( 'Further information on custom fields', 'onoffice-for-wp-websites' );
+		$descriptionDetailDoNotModify = esc_html__( 'With the help of an SEO plugin, it is possible to use individual fields to insert data directly from onOffice enterprise into the title and metadata of your website.', 'onoffice-for-wp-websites' );
+		$guideUseCustomFieldsDoNotModify = esc_html__( 'These custom fields allow you to insert specific information, such as the property title and property number from onOffice enterprise. The corresponding field names can be found in the field list on the detail page. Please note that only fields that are active for the detail page, for example, can be output.',
+			'onoffice-for-wp-websites' );
+		$snippetVariablesExampleDoNotModify = sprintf(esc_html__( 'An example of integration with the Yoast SEO plugin would be:%1$s %2$s or%1$s %3$s or%1$s %4$s',
+			'onoffice-for-wp-websites' ), '<br>', '<code>%%cf_onoffice_objekttitel%%</code>', '<code>%%cf_onoffice_objektnr_extern%%</code>', '<code>%%cf_onoffice_objektbeschreibung%%</code>');
+		$referUseCustomFieldsInSeoPluginDocsDoNotModify = esc_html__( 'For information on how to use custom fields in your SEO plugin, please refer to its documentation.', 'onoffice-for-wp-websites' );
 		$titleDescriptionDoNotModify = sprintf(esc_html__( 'The title and description of the detail page are set using the %1$s and %2$s tags. They make it possible to show a summary of the page when you share a link.',
 			'onoffice-for-wp-websites' ), '<code>&lt;title&gt;</code>', '<code>&lt;meta name="description&gt;</code>');
 		$descriptionDoNotModify = sprintf( '<div class="do-not-modify">
@@ -241,10 +278,12 @@ class AdminPageApiSettings
 									<p>%4$s</p>
 									</br>
 									<p>%5$s</p>
+									</br>
+									<p>%6$s</p>									
 									</details>
 									</br>
-							</div> <p>%6$s</p>', $titleDoNotModify, $summaryDetailDoNotModify,
-			$descriptionDetailDoNotModify, $searchSupportDoNotModify, $titleEllipsisDoNotModify,
+							</div> <p>%7$s</p>', $titleDoNotModify, $summaryDetailDoNotModify,
+			$descriptionDetailDoNotModify, $guideUseCustomFieldsDoNotModify, $snippetVariablesExampleDoNotModify, $referUseCustomFieldsInSeoPluginDocsDoNotModify,
 			$titleDescriptionDoNotModify );
 		$messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.
 								We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites'), $listNamePluginSEO);
@@ -252,11 +291,11 @@ class AdminPageApiSettings
 			->setBreaksEnabled(true)->text(
 				$messageNoticeSEO
 			);
-		$descriptionNoticeSeo = sprintf('<div id="notice-seo">%s</div>', $messageNoticeSEO);
+		$descriptionNoticeSeo = sprintf('<div id="notice-seo" class="oo-description--notice">%s</div>', $messageNoticeSEO);
 		$descriptionFillOut = '<p class="description-notice">
 					'.esc_html__("This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.",'onoffice-for-wp-websites').'
 				 </p>';
-		if ( count($listPluginSEOActive) > 0 && get_option('onoffice-settings-title-and-description') == 0) {
+		if ( $WPPluginChecker->isSEOPluginActive() && get_option('onoffice-settings-title-and-description') == 0) {
 			$descriptionFillOut = $descriptionNoticeSeo.$descriptionFillOut;
 		}
 		$labelGoogleBotIndexPdfExpose = __('Allow indexing of PDF brochures', 'onoffice-for-wp-websites');

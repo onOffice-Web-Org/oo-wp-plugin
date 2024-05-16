@@ -293,7 +293,7 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	float: right;
 	margin-top: 20px;
 }
-#notice-seo {
+.oo-description--notice {
 	border: 1px solid #c3c4c7;
 	border-left: 4px solid #dba617;
 	background-color: #fff;
@@ -320,6 +320,11 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	list-style: disc;
 	margin-left: 25px;
 }
+
+.do-not-modify summary {
+	cursor: pointer;
+}
+
 input#onoffice-input-submit {
 	color: #2271b1;
 	border-color: #2271b1;
@@ -454,13 +459,6 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .options-menu li:hover a p{
 	color:#fff;
 }
-@media only screen and (max-width: 782px) {
-	.page-option-action summary{
-		padding: 10px 15px;
-		font-size: 14px;
-		white-space: nowrap;
-	}
-}
 
 /* new style */
 .oo-poststuff .custom-input-field {
@@ -572,6 +570,68 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	display: flex;
 }
 
+.oo-toggle-switch {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 28px;
+}
+
+.oo-toggle-switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.oo-toggle-switch .slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+
+.oo-toggle-switch .slider:before {
+	position: absolute;
+	content: "";
+	height: 20px;
+	width: 20px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+
+.oo-toggle-switch > input:checked + .slider {
+	background-color: #2271b1;
+}
+
+.oo-toggle-switch > input:focus + .slider {
+	box-shadow: 0 0 1px #2196F3;
+}
+
+.oo-toggle-switch > input:disabled + .slider {
+	background-color: #ccc;
+	cursor: not-allowed;
+}
+
+.oo-toggle-switch > input:checked + .slider:before {
+	transform: translateX(30px);
+}
+
+.oo-toggle-switch .slider.round {
+	border-radius: 34px;
+}
+
+.oo-toggle-switch .slider.round:before {
+	border-radius: 50%;
+}
+
 .oo-poststuff .custom-input-field .onoffice-input-radio {
 	border-radius: 4px;
 	width: 50%;
@@ -585,6 +645,147 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	display: flex;
 	justify-content: space-between;
 	margin: 10px;
+}
+
+.oo-poststuff .custom-input-field .field-item-detail {
+	margin-left: 5px;
+}
+
+.oo-search-field {
+	width: 100%;
+	float: left;
+}
+
+.oo-search-field .input-search{
+	width: 100%;
+	padding: 7px 15px;
+	border-radius: 0;
+	margin-bottom: 7px;
+}
+
+.oo-search-field .field-lists {
+	display: none;
+	width: 100%;
+	position: absolute;
+	z-index: 999;
+	left: -1px;
+	background-color: white;
+	margin-top: 2px;
+	box-sizing: content-box;
+	border: 1px solid #c3c4c7;
+	border-top: none;
+	border-bottom: 2px solid #747474;
+	box-shadow: 0 12px 6px #00000014;
+}
+
+.oo-search-field .field-lists .line-bottom-content {
+	margin: 15px 14px 0;
+	border-bottom: 1px solid #c3c4c7;
+}
+
+.oo-search-field .field-lists .search-field-list {
+	width: 100%;
+	overflow-y: auto;
+	max-height: 217px;
+}
+
+.oo-search-field .ui-sortable-handle {
+	border-bottom: 1px solid #c3c4c7;
+}
+
+.oo-search-field .field-lists .search-field-list .search-field-item {
+	cursor: pointer;
+	padding: 2px 8px;
+	margin: 2px;
+	list-style-type: none;
+	background-color: white;
+	box-sizing: border-box;
+}
+
+.oo-search-field .field-lists .search-field-list .search-field-item:hover {
+	background-color: #ddd;
+}
+
+.oo-search-field .field-lists .search-field-list .field-item {
+	display: flex;
+	align-items: center;
+}
+
+.oo-search-field .field-lists .search-field-list .field-item-detail .field-item-detail-category {
+	margin: 0 0 0 5px;
+	font-size: 12px;
+}
+
+.oo-search-field .field-lists .search-field-list .field-item-detail .field-item-detail-name {
+	margin: 0 0 0 5px;
+	font-size: 14px;
+	display: block;
+	font-weight: 600;
+}
+
+.oo-search-field .field-lists .search-field-list .action-remove {
+	color: #ff000091;
+}
+
+.oo-search-field .box-search {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+}
+
+.oo-search-field .box-search .clear-icon {
+	position: absolute;
+	top: 38%;
+	font-size: 27px;
+	right: 20px;
+	transform: translateY(-50%);
+	cursor: pointer;
+}
+
+.delete-google-recaptcha-keys-button.button {
+	border: 1px solid #ff0000;
+	color: #ff0000;
+	margin-top: 20px;
+}
+
+.delete-google-recaptcha-keys-button.button:hover,
+.delete-google-recaptcha-keys-button.button:focus {
+	border: 1px solid #ff0000;
+	color: #ffffff;
+	background-color: #ff0000;
+}
+
+.oo-google-recaptcha-key {
+	max-width: 380px;
+	position: relative;
+}
+
+.oo-google-recaptcha-key > button.button {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	background: none;
+	border: 1px solid transparent;
+	box-shadow: none;
+	width: 40px;
+	height: 30px;
+	min-width: 40px;
+}
+
+.oo-google-recaptcha-key > button.button:hover {
+	background: none;
+	border: 1px solid transparent;
+	transform: scale(1.2);
+}
+
+.oo-google-recaptcha-key > button.button:focus {
+	background: none;
+	border: 1px solid transparent;
+	box-shadow: none;
+}
+
+.oo-google-recaptcha-key > button > span {
+	margin-top: 5px;
 }
 
 @media only screen and (max-width: 1365px) {
@@ -646,5 +847,22 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 		text-align: left;
 		padding: 10px 10px 10px 10px;
 		margin: 0 !important;
+	}
+}
+
+@media only screen and (max-width: 782px) {
+	.page-option-action summary{
+		padding: 10px 15px;
+		font-size: 14px;
+		white-space: nowrap;
+	}
+
+	.oo-google-recaptcha-key {
+		max-width: none;
+		width: 100%;
+	}
+
+	.oo-google-recaptcha-key > button > span {
+		margin-top: 10px;
 	}
 }

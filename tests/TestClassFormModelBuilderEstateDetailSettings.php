@@ -38,6 +38,10 @@ use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
 use onOffice\WPlugin\DataView\DataDetailView;
 use wpdb;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use DI\Container;
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Types\Field;
 
 class TestClassFormModelBuilderEstateDetailSettings
 	extends WP_UnitTestCase
@@ -74,6 +78,15 @@ class TestClassFormModelBuilderEstateDetailSettings
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
+	/** @var Container */
+	private $_pContainer;
+
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
+
+	/** @var FormModelBuilderEstateDetailSettings */
+	private $_pFormModelBuilderEstateDetailSettings;
+
 	/**
 	 * @before
 	 */
@@ -96,6 +109,42 @@ class TestClassFormModelBuilderEstateDetailSettings
 				$fieldParameters, null, $responseGetFields);
 		$this->_pFieldnames = new Fieldnames(new FieldsCollection(), false, $this->_pFieldnamesEnvironment);
 		$this->_pInputModelDetailViewFactory = new InputModelOptionFactoryDetailView('onoffice');
+
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend',  'addFieldsEstateGeoPosisionBackend'])
+				->setConstructorArgs([$this->_pContainer])
+				->getMock();
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('objektnr_extern', onOfficeSDK::MODULE_ESTATE);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsEstateDecoratorReadAddressBackend')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('objektart', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+			
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsEstateGeoPosisionBackend')
+				->with($this->anything())
+				->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+			$pField1 = new Field('city', onOfficeSDK::MODULE_ESTATE);
+			$pFieldsCollection->addField($pField1);
+
+			return $this->_pFieldsCollectionBuilderShort;
+		}));
+		$this->_pFormModelBuilderEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pContainer, $this->_pFieldnames);
 	}
 	
 	/**
@@ -104,7 +153,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	
 	public function testConstruct()
 	{
-		$pInstance = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$pInstance = $this->_pFormModelBuilderEstateDetailSettings;
 		$this->assertInstanceOf(FormModelBuilderEstateDetailSettings::class, $pInstance);
 	}
 	
@@ -225,7 +274,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelOguloLinks()
 	{
-		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelOguloLinks();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
@@ -236,7 +285,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelObjectLinks()
 	{
-		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelObjectLinks();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
@@ -247,7 +296,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelLinks()
 	{
-		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelLinks();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
@@ -259,7 +308,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelShowStatus()
 	{
-		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelShowStatus();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
@@ -337,9 +386,39 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelShowPriceOnRequest()
 	{
-		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
 		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelShowPriceOnRequest();
+		$this->assertNotEmpty($pInputModelDB->getValuesAvailable());
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createSortableFieldList
+	 */
+	public function testCreateSortableFieldList()
+	{
+		$pFormModelBuilderEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
+		$pFormModelBuilderEstateDetailSettings->generate('test');
+		$pInputModelOption = $pFormModelBuilderEstateDetailSettings->createSortableFieldList('estate', 'complexSortableDetailList');
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'complexSortableDetailList');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createSearchFieldForFieldLists
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::getFieldsCollection
+	 */
+	public function testCreateSearchFieldForFieldLists()
+	{
+		$pFormModelBuilderEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
+		$pFormModelBuilderEstateDetailSettings->generate('test');
+		$pInputModelOption = $pFormModelBuilderEstateDetailSettings->createSearchFieldForFieldLists(['estate', 'address'], 'searchFieldForFieldLists');
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'searchFieldForFieldLists');
 	}
 }
