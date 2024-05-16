@@ -248,6 +248,12 @@ jQuery(document).ready(function($){
 			availableOptionEl.parent().remove();
 		}
 
+		if (fieldName !== 'ort') {
+			const selectors = ['oopluginfieldconfig-convertTextToSelectForCityField'];
+			let convertTextToSelectForCityField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
+			convertTextToSelectForCityField.parent().remove();
+		}
+
 		if(onOffice_loc_settings.modulelabels && module){
 			var inputModule = clonedElement.find('input[name^=oopluginformfieldconfig-module]');
 			inputModule.val(module);
