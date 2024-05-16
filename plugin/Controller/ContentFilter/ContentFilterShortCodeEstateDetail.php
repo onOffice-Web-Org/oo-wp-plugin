@@ -104,16 +104,16 @@ class ContentFilterShortCodeEstateDetail
 			$titleDefault     = __( 'Example estate', 'onoffice-for-wp-websites' );
 			$estateTitle      = $pDataEstateDetail['elements']["objekttitel"] !== '' ? $pDataEstateDetail['elements']["objekttitel"] : $titleDefault;
 			$linkEstateDetail = $this->getEstateLink( $pDataEstateDetail );
-			$linkEstateDetail = '<br><a href=' . $linkEstateDetail . '>' . $estateTitle . '</a>';
+			$linkEstateDetail = '<a class="oo-detailview-helper-link" href=' . $linkEstateDetail . '>' . $estateTitle . '</a>';
 			$description      = sprintf( __( 'Since you are logged in, here is a link to a random estate so that you can preview the detail page: %s',
 				'onoffice-for-wp-websites' ), $linkEstateDetail );
 		}
-		$html = '<div>';
-		$html .= '<p>' . __( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
+		$html = '<div class="oo-detailview-helper">';
+		$html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--default">' . __( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
 				'onoffice-for-wp-websites' ) . '</p>';
 
 		if ( is_user_logged_in() ) {
-			$html .= '<p>' . $description . '</p>';
+			$html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--admin">' . $description . '</p>';
 		}
 		$html .= '</div>';
 

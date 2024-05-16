@@ -111,4 +111,18 @@ class TestClassFormModelBuilderDBAddress
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'searchFieldForFieldLists');
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress::createInputModelRecordsPerPage
+	 */
+	public function testCreateInputModelRecordsPerPage()
+	{
+		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
+			->setConstructorArgs([new FieldsCollection()])
+			->getMock();
+		$pFormModelBuilderDBAddress = new FormModelBuilderDBAddress($pFieldnames);
+		$pInputModelDB = $pFormModelBuilderDBAddress->createInputModelRecordsPerPage();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'number');
+	}
 }

@@ -58,6 +58,9 @@ class InputFieldComplexSortableDetailListContentDefault
 			{
 				continue;
 			}
+			if ($key !== 'ort' && $pInputModel->getField() == 'convertTextToSelectForCityField' && !$isDummy) {
+				continue;
+			}
 			$pInputModel->setIgnore($isDummy);
 			$callbackValue = $pInputModel->getValueCallback();
 

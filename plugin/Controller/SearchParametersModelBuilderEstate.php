@@ -85,20 +85,43 @@ class SearchParametersModelBuilderEstate
 		}
 
 		if ($pSortListDataModel->isAdjustableSorting())	{
-			$this->addForAdjustableSorting($pModel);
+			$this->addForAdjustableSorting($pModel, $pDataView->getId());
 		}
+		$this->addParametersForPagination($pModel);
+
 		return $pModel;
+	}
+
+	/**
+	 * @param int $listViewId
+	 * @param SearchParametersModel $pSearchParametersModel
+	 */
+	private function addForAdjustableSorting(SearchParametersModel $pSearchParametersModel, int $listViewId)
+	{
+		foreach (SortListTypes::getSortUrlPrameter($listViewId) as $urlParameter) {
+			$pSearchParametersModel->addAllowedGetParameter($urlParameter);
+			$pSearchParametersModel->setParameter($urlParameter,
+				$this->_pRequestVariablesSanitizer->getFilteredGet($urlParameter));
+		}
 	}
 
 	/**
 	 * @param SearchParametersModel $pSearchParametersModel
 	 */
-	private function addForAdjustableSorting(SearchParametersModel $pSearchParametersModel)
+	private function addParametersForPagination(SearchParametersModel $pSearchParametersModel)
 	{
-		foreach (SortListTypes::getSortUrlPrameter() as $urlParameter) {
+		$pageParameters = [];
+
+		foreach ($_GET as $key => $value) {
+			if (strpos($key, 'page_of_id_') === 0) {
+				$pageParameters[] = $key;
+			}
+		}
+
+		foreach ($pageParameters as $urlParameter) {
 			$pSearchParametersModel->addAllowedGetParameter($urlParameter);
 			$pSearchParametersModel->setParameter($urlParameter,
-				$this->_pRequestVariablesSanitizer->getFilteredGet($urlParameter));
+			$this->_pRequestVariablesSanitizer->getFilteredGet($urlParameter));
 		}
 	}
 
