@@ -40,25 +40,22 @@ use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionFieldDuplicatorForGeoEstate;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModel;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
-use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\WP\WPPageWrapper;
-use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
 use function home_url;
 use function esc_attr;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldParkingLot;
 
@@ -204,7 +201,6 @@ class EstateList
 
 		$this->_numEstatePages = $this->getNumEstatePages();
 		$this->resetEstateIterator();
-		$this->doExtraEnqueues();
 	}
 
 	/**
@@ -507,6 +503,18 @@ class EstateList
 					? $this->limit_characters($recordModified["objektbeschreibung"]) : null) . '" />';
 			} );
 		}
+
+        $WPPluginChecker = new WPPluginChecker;
+        $isSEOPluginActive = $WPPluginChecker->isSEOPluginActive();
+		$openGraphStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-opengraph');
+		$twitterCardsStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-twittercards');
+		if ($checkEstateIdRequestGuard && $openGraphStatus && !$isSEOPluginActive) {
+			$this->addMetaTags(GenerateMetaDataSocial::OPEN_GRAPH_KEY, $recordModified);
+		}
+		if ($checkEstateIdRequestGuard && $twitterCardsStatus && !$isSEOPluginActive) {
+			$this->addMetaTags(GenerateMetaDataSocial::TWITTER_KEY, $recordModified);
+		}
+
 		$recordModified = new ArrayContainerEscape($recordModified);
 		if ($recordModified['multiParkingLot']) {
 			$parking = new FieldParkingLot();
@@ -514,15 +522,16 @@ class EstateList
 		}
 
 		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
-			if ($this->enableShowPriceOnRequestText() || isset($recordModified['preisAufAnfrage'])) {
+			if ($this->enableShowPriceOnRequestText() ) {
 				$priceFields = $this->_pDataView->getListFieldsShowPriceOnRequest();
 
 				foreach ($priceFields as $priceField) {
 					$this->displayTextPriceOnRequest($recordModified, $priceField);
 				}
-				unset($recordModified['preisAufAnfrage']);
 			}
 		}
+		// do not show priceOnRequest as single Field
+		unset($recordModified['preisAufAnfrage']);
 
 		return $recordModified;
 	}
@@ -836,6 +845,9 @@ class EstateList
 		$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$pFieldsCollectionBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		if (!empty($this->_pDataView->getConvertTextToSelectForCityField())) {
+			$pFieldsCollectionBuilderShort->addFieldEstateCityValues($pFieldsCollection, $this->getShowReferenceEstate());
+		}
 		$pFieldsCollection->merge
 			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection));
 		$pFieldsCollectionFieldDuplicatorForGeoEstate =
@@ -878,45 +890,89 @@ class EstateList
 		return false;
 	}
 
+
 	/**
-	 *
+	 * @param string $keySocial
+	 * @param array $recordModified
 	 */
+	private function addMetaTags(string $keySocial, array $recordModified)
+	{
+		$pGenerateMetaDataSocial = $this->_pEnvironment->getContainer()->get(GenerateMetaDataSocial::class);
+		$estateInformationForMetaData = $this->getEstateInformationForMetaData($recordModified);
+		$metaData = [];
 
-	private function doExtraEnqueues(){
-		if($this->_pDataView instanceof DataListView){
-			wp_register_script('onoffice-sort-list-selector', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-sort-list-selector.min.js', ['jquery'], '', true);
-			wp_register_script('onoffice-form-preview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-form-preview.min.js', ['jquery'], '', true);
-			wp_register_script('onoffice-custom-select', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-custom-select.min.js', ['jquery'], '', true);
-			wp_register_script('onoffice-multiselect', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-multiselect.min.js', [], '', true);
-			wp_register_script('onoffice-estatetype', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-estatetype.min.js', ['onoffice-multiselect'], '', true);
-			wp_enqueue_script('onoffice-sort-list-selector');
-			wp_enqueue_script('onoffice-form-preview');
-			wp_enqueue_script('onoffice-custom-select');
-			wp_enqueue_script('onoffice-multiselect');
-			wp_enqueue_script('onoffice-estatetype');
-			wp_script_add_data('onoffice-multiselect', IncludeFileModel::LOAD_ASYNC, true);
-			wp_script_add_data('onoffice-estatetype', IncludeFileModel::LOAD_ASYNC, true);
+		if ($keySocial === GenerateMetaDataSocial::OPEN_GRAPH_KEY) {
+			$metaData = $pGenerateMetaDataSocial->generateMetaDataSocial($estateInformationForMetaData, [GenerateMetaDataSocial::OPEN_GRAPH_KEY]);
+		}
 
-			wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
-				'amount_none' => __('0 matches', 'onoffice-for-wp-websites'),
-				'amount_one' => __('Show exact match', 'onoffice-for-wp-websites'),
-				/* translators: %s is the amount of results */
-				'amount_other' => __('Show %s matches', 'onoffice-for-wp-websites'),
-				'nonce_estate' => wp_create_nonce('onoffice-estate-preview'),
-				'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),
-			]);
+		if ($keySocial === GenerateMetaDataSocial::TWITTER_KEY) {
+			$metaData = $pGenerateMetaDataSocial->generateMetaDataSocial($estateInformationForMetaData, [GenerateMetaDataSocial::TWITTER_KEY]);
 		}
-		if($this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates){
-			wp_register_script('slick', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick.js', ['jquery'], '', true);
-			wp_enqueue_script('slick');
-			wp_script_add_data('slick', IncludeFileModel::LOAD_DEFER, true);
-			wp_register_script('onoffice_defaultview', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice_defaultview.min.js', ['jquery'], '', true);
-			wp_enqueue_script('onoffice_defaultview');
-			wp_register_style('slick', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick.css');
-			wp_register_style('slick-theme', plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'third_party/slick/slick-theme.css');
-			wp_enqueue_style('slick');
-			wp_enqueue_style('slick-theme');
+
+		if (!empty($metaData)) {
+			$this->addMetaTagsToWpHead($metaData, $keySocial);
 		}
+	}
+
+	/**
+	 * @param array $metaData
+	 * @param string $keySocial
+	 * @return void
+	 */
+	private function addMetaTagsToWpHead(array $metaData, string $keySocial)
+	{
+		add_action('wp_head', function () use ($metaData, $keySocial) {
+			foreach ($metaData as $metaKey => $metaValue) {
+				if ($keySocial === GenerateMetaDataSocial::TWITTER_KEY) {
+					echo '<meta name="'.GenerateMetaDataSocial::TWITTER_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '">';
+				} elseif ($keySocial === GenerateMetaDataSocial::OPEN_GRAPH_KEY) {
+					echo '<meta property="'.GenerateMetaDataSocial::OPEN_GRAPH_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '">';
+				}
+			}
+		}, 1);
+	}
+
+	/**
+	 * @param array $recordModified
+	 * @return array
+	 */
+	private function getEstateInformationForMetaData(array $recordModified): array
+	{
+		$image = $this->getImageForMetaData();
+		$title = $recordModified['objekttitel'] ?? '';
+		$url = $this->getEstateLink() ?? '';
+		$description = $recordModified['objektbeschreibung'] ?? '';
+
+		return [
+			'title' => $title,
+			'url' => $url,
+			'description' => $description,
+			'image' => $image
+		];
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getImageForMetaData(): string
+	{
+		$estatePicturesByEstateId = $this->_pEstateFiles->getEstatePictures($this->_currentEstate['id']);
+
+		if (empty($estatePicturesByEstateId)) {
+			return '';
+		}
+
+		$estatePictureUrl = '';
+		foreach ($estatePicturesByEstateId as $key => $estatePicture) {
+			if ($estatePicture['type'] === ImageTypes::TITLE) {
+				$estatePictureUrl = $estatePicture['url'];
+				break;
+			} elseif ($key === reset($estatePicturesByEstateId)) {
+				$estatePictureUrl = $estatePicture['url'];
+			}
+		}
+
+		return $estatePictureUrl;
 	}
 
 	/**

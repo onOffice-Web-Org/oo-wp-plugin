@@ -59,8 +59,12 @@ class InputFieldComplexSortableDetailListContentDefault
 				continue;
 			}
 
-			if (($key === 'DSGVOStatus' || $key === 'AGB_akzeptiert' || $key === 'gdprcheckbox') && $pInputModel->getField() === 'hidden_field')
-			{
+
+			if (($key === 'DSGVOStatus' || $key === 'AGB_akzeptiert' || $key === 'gdprcheckbox') && $pInputModel->getField() === 'hidden_field') {
+				continue;
+			}
+
+			if ($key !== 'ort' && $pInputModel->getField() == 'convertTextToSelectForCityField' && !$isDummy) {
 				continue;
 			}
 			$pInputModel->setIgnore($isDummy);

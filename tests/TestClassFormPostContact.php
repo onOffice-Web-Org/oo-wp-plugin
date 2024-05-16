@@ -232,7 +232,7 @@ class TestClassFormPostContact
 				'newsletter_aktiv' => true
 			],
 			'estateid' => 1337,
-			'message' => null,
+			'message' => '',
 			'subject' => '¡A new Contact!'.' '.FormPostContact::PORTALFILTER_IDENTIFIER,
 			'referrer' => '/test/page',
 			'formtype' => 'contact',
