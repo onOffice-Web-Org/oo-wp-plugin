@@ -64,7 +64,7 @@ class TestClassDataListViewFactory
 		'show_reference_estate' => '1',
 		'show_price_on_request' => true,
 		'show_map' => '1',
-		'convertTextToSelectForCityField' => ['ort']
+		'convertTextToSelectForCityField' => ['ort'],
 		'markedPropertiesSort' => 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz',
 		'sortByTags' => 'kaufpreis',
 		'sortByTagsDirection' => 'ASC'
