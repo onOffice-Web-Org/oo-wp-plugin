@@ -174,7 +174,7 @@ class TestClassAdminViewController
 		$adminPage = new AdminPageEstateDetail('admin_page_onoffice-editlistview');
 		$pWpHook->callbacks = [[['function' => [$adminPage]]]];
 		$pAdminViewController->enqueueExtraJs("admin_page_onoffice-editlistview");
-		$this->assertEquals(['handle-notification-actions', 'admin-js', 'postbox', 'oo-copy-shortcode','onoffice-custom-form-label-js','onoffice-multiselect'], wp_scripts()->queue);
+		$this->assertEquals(['handle-notification-actions', 'oo-unsaved-changes-message', 'admin-js', 'postbox', 'oo-copy-shortcode','onoffice-custom-form-label-js','onoffice-multiselect'], wp_scripts()->queue);
 	}
 
 	/**
@@ -192,7 +192,7 @@ class TestClassAdminViewController
 		$pWpHook = $wp_filter['admin_page_onoffice-editlistview'];
 		$pWpHook->callbacks = [[['function' => ['a']]]];
 		$pAdminViewController->enqueueExtraJs("admin_onoffice_test");
-		$this->assertCount(1, wp_scripts()->queue);
+		$this->assertCount(2, wp_scripts()->queue);
 	}
 
 	public function testAdminPageAjax()
@@ -352,6 +352,6 @@ We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?p
 		$adminPage = new AdminPageApiSettings('admin_page_onoffice-settings');
 		$pWpHook->callbacks = [[['function' => [$adminPage]]]];
 		$pAdminViewController->enqueueExtraJs("admin_page_onoffice-settings");
-		$this->assertEquals(['handle-notification-actions', 'handle-visibility-google-recaptcha-keys'], wp_scripts()->queue);
+		$this->assertEquals(['handle-notification-actions', 'oo-unsaved-changes-message', 'handle-visibility-google-recaptcha-keys'], wp_scripts()->queue);
 	}
 }
