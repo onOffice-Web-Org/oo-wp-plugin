@@ -46,6 +46,7 @@ use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
 use function __;
 use DI\DependencyException;
 use DI\NotFoundException;
+use DI\Container;
 
 /**
  *
@@ -81,13 +82,18 @@ class FormModelBuilderDBEstateListSettings
 		'kaltmiete',
 	);
 
+	/** @var Container */
+	private $_pContainer = null;
 
 	/**
-	 *
+	 * @param Container $pContainer
 	 */
 
-	public function __construct()
+	public function __construct(Container $pContainer = null)
 	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainer ?? $pContainerBuilder->build();
 		$pConfig = new InputModelDBFactoryConfigEstate();
 		$this->setInputModelDBFactory(new InputModelDBFactory($pConfig));
 
@@ -266,6 +272,25 @@ class FormModelBuilderDBEstateListSettings
 		return $pInputModel;
 	}
 
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function getInputModelConvertInputTextToSelectCityField()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Display as selection list instead of text input', 'onoffice-for-wp-websites');
+		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_CONVERT_TEXT_TO_SELECT_FOR_CITY_FIELD;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelConvertInputTextToSelectCityField'));
+
+		return $pInputModel;
+	}
 
 	/**
 	 *
@@ -318,6 +343,22 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel->setValuesAvailable($key);
 	}
 
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 *
+	 */
+
+	public function callbackValueInputModelConvertInputTextToSelectCityField(InputModelBase $pInputModel, string $key)
+	{
+		$valueFromConfig = $this->getValue('convertTextToSelectForCityField');
+
+		$convertTextToSelectForCityFields = is_array($valueFromConfig) ? $valueFromConfig : array();
+		$value = in_array($key, $convertTextToSelectForCityFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
 
 	/**
 	 *
@@ -330,7 +371,9 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createSortableFieldList($module, $htmlType, bool $isShow = true): InputModelDB
 	{
-		$pSortableFieldsList = parent::createSortableFieldList($module, $htmlType);
+		$pSortableFieldsList = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+		$pSortableFieldsList->setHtmlType($htmlType);
 		if (! $isShow) {
 			return $pSortableFieldsList;
 		}
@@ -358,9 +401,11 @@ class FormModelBuilderDBEstateListSettings
 		$pSortableFieldsList->setValue($fields);
 		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
 		$pInputModelIsHidden = $this->getInputModelIsHidden();
+		$pInputModelConvertInputTextToSelectCityField = $this->getInputModelConvertInputTextToSelectCityField();
 		$pInputModelIsAvailableOptions = $this->getInputModelAvailableOptions();
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
+		$pSortableFieldsList->addReferencedInputModel($pInputModelConvertInputTextToSelectCityField);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsAvailableOptions);
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
@@ -732,13 +777,9 @@ class FormModelBuilderDBEstateListSettings
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	private function getFieldsCollection(): FieldsCollection
+	protected function getFieldsCollection(): FieldsCollection
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-
-		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldsCollection = new FieldsCollection();
 
 		$pFieldsCollectionBuilder
@@ -805,5 +846,36 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModelShowPriceOnRequest->setValuesAvailable(1);
 
 		return $pInputModelShowPriceOnRequest;
+	}
+
+	/**
+	 *
+	 * @param $module
+	 * @param string $htmlType
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createSearchFieldForFieldLists($module, string $htmlType)
+	{
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+
+		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+		$pInputModelFieldsConfig->setValue($this->getValue(DataListView::FIELDS) ?? []);
+
+		return $pInputModelFieldsConfig;
 	}
 }

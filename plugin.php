@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.16
+Version: 4.19
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -78,6 +78,89 @@ $pDI = $pDIBuilder->build();
 
 $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = $pDI->get(DetailViewPostSaveController::class);
+
+add_action('save_post', [$pDetailViewPostSaveController, 'onSavePost']);
+add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
+
+add_action('admin_menu', [$pAdminViewController, 'register_menu']);
+add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_css']);
+add_action('init', [$pAdminViewController, 'onInit']);
+
+add_action('admin_bar_menu', function ( $wp_admin_bar ) {
+	if (is_network_admin()) {
+		return;
+	}
+	$user = wp_get_current_user();
+	$allowed_roles = array('editor', 'administrator');
+	if( array_intersect($allowed_roles, $user->roles ) ){
+		$toolBarConfig = [
+			[
+				'id'    => 'onoffice',
+				'title' => __('onOffice', 'onoffice-for-wp-websites'),
+				'href'  => admin_url('admin.php?page=onoffice'),
+				'meta'  => [ 'class' => 'onoffice' ]
+			],
+			[
+				'id'     => 'onoffice-clear-cache',
+				'title' => __('Clear onOffice cache', 'onoffice-for-wp-websites'),
+				'href'   => admin_url('admin.php?action=onoffice-clear-cache'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'onoffice-clear-cache' ]
+			],
+			[
+				'id'     => 'addresses',
+				'title' => __('Addresses', 'onoffice-for-wp-websites'),
+				'href'   => admin_url('admin.php?page=onoffice-addresses'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'addresses' ]
+			],
+			[
+				'id'     => 'estates',
+				'title' => __('Estates', 'onoffice-for-wp-websites'),
+				'href'   => admin_url('admin.php?page=onoffice-estates'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'estates' ]
+			],
+			[
+				'id'     => 'forms',
+				'title' => __('Forms', 'onoffice-for-wp-websites'),
+				'href'   => admin_url('admin.php?page=onoffice-forms'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'forms' ]
+			],
+			[
+				'id'     => 'settings',
+				'title' => __('Settings', 'onoffice-for-wp-websites'),
+				'href'   => admin_url('admin.php?page=onoffice-settings'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'settings' ]
+			]
+		];
+
+		foreach ( $toolBarConfig as $e ) {
+			$wp_admin_bar->add_node($e);
+		}
+	};
+}, 500);
+
+add_action('admin_init', function () use ( $pDI ) {
+	if ( strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
+		$pDI->get(CacheHandler::class)->clear();
+		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
+		update_option('onoffice-notice-cache-was-cleared', true);
+		wp_safe_redirect($location);
+		exit();
+	}
+});
+
+if (is_admin() && isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit') {
+	$post_id = $_GET['post'];
+	$post_type = get_post_type($post_id);
+	if ($post_type === 'page') {
+		return $pDI;
+	}
+}
+
 $pDI->get(ScriptLoaderRegistrator::class)->generate();
 
 add_action('plugins_loaded', function() use ($pDI) {
@@ -96,17 +179,12 @@ add_action('init', function() use ($pDI) {
 // https://codex.wordpress.org/Plugin_API/Action_Reference/wp
 add_action('wp', [FormPostHandler::class, 'initialCheck']);
 
-add_action('admin_menu', [$pAdminViewController, 'register_menu']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_ajax']);
-add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_css']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
-add_action('save_post', [$pDetailViewPostSaveController, 'onSavePost']);
-add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
 add_action('oo_cache_cleanup', function() use ($pDI) {
 	$pDI->get(CacheHandler::class)->clean();
 });
 add_action('admin_notices', [$pAdminViewController, 'generalAdminNoticeSEO']);
-add_action('init', [$pAdminViewController, 'onInit']);
 add_action('init', function() use ($pAdminViewController) {
 	$pAdminViewController->disableHideMetaboxes();
 }, 11);
@@ -334,23 +412,23 @@ function update_status_close_action_button_option()
 	echo true;
 	wp_die();
 }
+
+function delete_google_recaptcha_keys()
+{
+    update_option('onoffice-settings-captcha-sitekey', '');
+    update_option('onoffice-settings-captcha-secretkey', '');
+    echo true;
+    wp_die();
+}
+
 add_action('wp_ajax_update_active_plugin_seo_option', 'update_status_close_action_button_option');
 add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
+add_action('wp_ajax_delete_google_recaptcha_keys', 'delete_google_recaptcha_keys');
 
 add_action('wp', function () {
 	if (!get_option('add-detail-posts-to-rewrite-rules')) {
 		flush_rewrite_rules(false);
 		delete_option('add-detail-posts-to-rewrite-rules');
-	}
-});
-
-add_action('admin_init', function () use ( $pDI ) {
-	if ( strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
-		$pDI->get(CacheHandler::class)->clear();
-		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
-		update_option('onoffice-notice-cache-was-cleared', true);
-		wp_safe_redirect($location);
-		exit();
 	}
 });
 
@@ -362,63 +440,6 @@ add_action('admin_notices', function () {
 		update_option('onoffice-notice-cache-was-cleared', false);
 	}
 });
-
-add_action('admin_bar_menu', function ( $wp_admin_bar ) {
-	if (is_network_admin()) {
-		return;
-	}
-	$user = wp_get_current_user();
-	$allowed_roles = array('editor', 'administrator');
-	if( array_intersect($allowed_roles, $user->roles ) ){
-		$toolBarConfig = [
-			[
-				'id'    => 'onoffice',
-				'title' => __('onOffice', 'onoffice-for-wp-websites'),
-				'href'  => admin_url('admin.php?page=onoffice'),
-				'meta'  => [ 'class' => 'onoffice' ]
-			],
-			[
-				'id'     => 'onoffice-clear-cache',
-				'title' => __('Clear onOffice cache', 'onoffice-for-wp-websites'),
-				'href'   => admin_url('admin.php?action=onoffice-clear-cache'),
-				'parent' => 'onoffice',
-				'meta'   => [ 'class' => 'onoffice-clear-cache' ]
-			],
-			[
-				'id'     => 'addresses',
-				'title' => __('Addresses', 'onoffice-for-wp-websites'),
-				'href'   => admin_url('admin.php?page=onoffice-addresses'),
-				'parent' => 'onoffice',
-				'meta'   => [ 'class' => 'addresses' ]
-			],
-			[
-				'id'     => 'estates',
-				'title' => __('Estates', 'onoffice-for-wp-websites'),
-				'href'   => admin_url('admin.php?page=onoffice-estates'),
-				'parent' => 'onoffice',
-				'meta'   => [ 'class' => 'estates' ]
-			],
-			[
-				'id'     => 'forms',
-				'title' => __('Forms', 'onoffice-for-wp-websites'),
-				'href'   => admin_url('admin.php?page=onoffice-forms'),
-				'parent' => 'onoffice',
-				'meta'   => [ 'class' => 'forms' ]
-			],
-			[
-				'id'     => 'settings',
-				'title' => __('Settings', 'onoffice-for-wp-websites'),
-				'href'   => admin_url('admin.php?page=onoffice-settings'),
-				'parent' => 'onoffice',
-				'meta'   => [ 'class' => 'settings' ]
-			]
-		];
-
-		foreach ( $toolBarConfig as $e ) {
-			$wp_admin_bar->add_node($e);
-		}
-	};
-}, 500);
 
 add_filter('script_loader_tag', 'filter_script_loader_tag', 10, 2);
 function filter_script_loader_tag($tag, $handle) {

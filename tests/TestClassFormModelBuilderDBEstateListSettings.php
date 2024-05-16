@@ -37,18 +37,62 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Model\InputModelButtonShowPublishedProperites;
+use onOffice\WPlugin\Types\Field;
 
 class TestClassFormModelBuilderDBEstateListSettings
 	extends WP_UnitTestCase
 {
+	/** @var Container */
+	private $_pContainer;
+
 	/** @var InputModelDBFactory */
 	private $_pInputModelFactoryDBEntry;
+
+	/** @var FormModelBuilderDBEstateListSettings */
+	private $_pFormModelBuilderDBEstateListSettings;
+
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
 
 	/**
 	 * @before
 	 */
 	public function prepare()
 	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend',  'addFieldsEstateGeoPosisionBackend'])
+				->setConstructorArgs([$this->_pContainer])
+				->getMock();
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsEstateDecoratorReadAddressBackend')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('objektnr_extern', onOfficeSDK::MODULE_ESTATE);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+			
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsEstateGeoPosisionBackend')
+				->with($this->anything())
+				->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+			$pField1 = new Field('region_plz', onOfficeSDK::MODULE_ESTATE);
+			$pFieldsCollection->addField($pField1);
+
+			return $this->_pFieldsCollectionBuilderShort;
+		}));
+		$this->_pFormModelBuilderDBEstateListSettings = new FormModelBuilderDBEstateListSettings($this->_pContainer);
 		$this->_pInputModelFactoryDBEntry = new InputModelDBFactory(new InputModelDBFactoryConfigEstate);
 	}
 
@@ -709,5 +753,43 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals(InputModelBase::HTML_TYPE_BUTTON_SHOW_PUBLISHED_PROPERTIES, $pInputModelDB->getHtmlType());
 		$this->assertEquals('Show published properties', $pInputModelDB->getLabel());
 		$this->assertEquals('If the number of properties is zero, <a href="https://wp-plugin.onoffice.com/de/erste-schritte/einrichtung/" target="_blank">please publish it</a>.', $pInputModelDB->getHintHtml());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createSortableFieldList
+	 */
+	public function testCreateSortableFieldList()
+	{
+		$pInputModelDB = $this->_pFormModelBuilderDBEstateListSettings->createSortableFieldList('estate', 'complexSortableDetailList');
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertNotEmpty($pInputModelDB->getValuesAvailable());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'complexSortableDetailList');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createSearchFieldForFieldLists
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getFieldsCollection
+	 */
+	public function testCreateSearchFieldForFieldLists()
+	{
+		$pInputModelDB = $this->_pFormModelBuilderDBEstateListSettings->createSearchFieldForFieldLists('estate', 'searchFieldForFieldLists');
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertNotEmpty($pInputModelDB->getValuesAvailable());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'searchFieldForFieldLists');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getInputModelConvertInputTextToSelectCityField
+	 */
+	public function testGetInputModelConvertInputTextToSelectCityField()
+	{
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+
+		$pInputModelDB = $pInstance->getInputModelConvertInputTextToSelectCityField();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
+		$this->assertEquals([$pInstance, 'callbackValueInputModelConvertInputTextToSelectCityField'], $pInputModelDB->getValueCallback());
 	}
 }

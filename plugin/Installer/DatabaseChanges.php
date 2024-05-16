@@ -27,16 +27,12 @@ use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use Exception;
-use onOffice\WPlugin\Controller\AdminViewController;
-use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\ImageTypes;
-use onOffice\WPlugin\Utility\__String;
-use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
+use onOffice\WPlugin\WP\WPPluginChecker;
 use wpdb;
 use function dbDelta;
 use function esc_sql;
@@ -45,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 41;
+	const MAX_VERSION = 43;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -298,6 +294,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 41;
 		}
 
+		if ($dbversion == 41) {
+			$this->updateValueGeoFieldsForEsateList();
+			$dbversion = 42;
+		}
+
+		if ($dbversion == 42) {
+			dbDelta($this->getCreateQueryFieldConfig());
+			$dbversion = 43;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -459,6 +465,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`filterable` tinyint(1) NOT NULL DEFAULT '0',
 			`hidden` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
+			`convertTextToSelectForCityField` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`fieldconfig_id`)
 		) $charsetCollate;";
 
@@ -1007,10 +1014,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 */
 
 	public function updateDefaultSettingsTitleAndDescription() {
-		$pDataPluginSEOActive = new AdminViewController;
+        $WPPluginChecker = new WPPluginChecker;
 
 		if ( get_option('onoffice-settings-title-and-description') === false ) {
-			if (count($pDataPluginSEOActive->getPluginSEOActive()) >= 1) {
+			if ($WPPluginChecker->isSEOPluginActive()) {
 				update_option('onoffice-settings-title-and-description', 1);
 			} else {
 				update_option('onoffice-settings-title-and-description', 0);
@@ -1114,5 +1121,17 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$pDataDetailViewOptions->setShowPriceOnRequest(true);
 			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
 		}
+	}
+
+	/**
+	 * @return void
+	 */
+	public function updateValueGeoFieldsForEsateList()
+	{
+		$prefix = $this->getPrefix();
+		$sql = "UPDATE {$prefix}oo_plugin_listviews
+			SET country_active = 1, radius_active = 1";
+
+		$this->_pWPDB->query($sql);
 	}
 }

@@ -187,6 +187,8 @@ abstract class AdminPageEstateListSettingsBase
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
+			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
 		);
 	}
 
@@ -202,20 +204,13 @@ abstract class AdminPageEstateListSettingsBase
 		/** @var CustomLabelRead $pCustomLabelRead*/
 		$pCustomLabelRead = $this->getContainer()->get(CustomLabelRead::class);
 		$pLanguage = $this->getContainer()->get(Language::class);
+		$currentLocale = $pLanguage->getLocale();
 
-		foreach ($this->buildFieldsCollectionForCurrentEstate()->getAllFields() as $pField) {
-			$pCustomLabelModel = $pCustomLabelRead->readCustomLabelsField
-			((int)$this->getListViewId(), $pField, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS);
-			$valuesByLocale = $pCustomLabelModel->getValuesByLocale();
-
-			$currentLocale = $pLanguage->getLocale();
-
-			if (isset($valuesByLocale[$currentLocale])) {
-				$valuesByLocale['native'] = $valuesByLocale[$currentLocale];
-				unset($valuesByLocale[$currentLocale]);
-			}
-			$result[$pField->getName()] = $valuesByLocale;
-		}		
+		foreach (array_chunk($this->buildFieldsCollectionForCurrentEstate()->getAllFields(), 100) as $pField) {
+			$pCustomLabelModel = $pCustomLabelRead->getCustomLabelsFieldsForAdmin
+			((int)$this->getListViewId(), $pField, $currentLocale, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS);
+			if (count($pCustomLabelModel)) $result = array_merge($result, $pCustomLabelModel);
+		}
 
 		return $result;
 	}
