@@ -309,4 +309,16 @@ class TestClassDataListView
 		$this->_pSubject->setShowReferenceStatus(true);
 		$this->assertTrue($this->_pSubject->getShowReferenceStatus());
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testConvertTextToSelectForCityField()
+	{
+		$this->assertEquals([], $this->_pSubject->getConvertTextToSelectForCityField());
+		$this->_pSubject->setConvertTextToSelectForCityField(['ort']);
+		$this->assertEquals(['ort'], $this->_pSubject->getConvertTextToSelectForCityField());
+	}
 }
