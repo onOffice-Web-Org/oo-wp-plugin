@@ -73,11 +73,11 @@ class ContentFilterShortCodeAddressDetail
 		$pDetailView = $this->_pDataAddressDetailViewHandler->getAddressDetailView();
 		$pTemplate = $this->_pTemplate->withTemplateName($pDetailView->getTemplate());
 		$addressId = $this->_pWPQueryWrapper->getWPQuery()->query_vars['address_id'] ?? 0;
-		$pEstateDetailList = $this->_pAddressListFactory->createAddressDetail((int)$addressId);
-		$pEstateDetailList->loadAddressDetailView((int)$addressId);
+		$pAddressDetail = $this->_pAddressListFactory->createAddressDetail((int)$addressId);
+		$pAddressDetail->loadAddressDetailView((int)$addressId);
 
 		return $pTemplate
-			->withAddressList($pEstateDetailList)
+			->withAddressList($pAddressDetail)
 			->render();
 	}
 

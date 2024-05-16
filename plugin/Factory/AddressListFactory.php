@@ -64,9 +64,9 @@ class AddressListFactory
 	{
 		$pDataAddressDetailView = $this->_pDataAddressDetailViewHandler->getAddressDetailView();
 
-		$pEstateDetail = new AddressDetail($pDataAddressDetailView);
-		$pEstateDetail->setAddressId($addressId);
+		$pAddressDetail = new AddressDetail($pDataAddressDetailView);
+		$pAddressDetail->setAddressId($addressId);
 
-		return $pEstateDetail;
+		return $pAddressDetail;
 	}
 }
