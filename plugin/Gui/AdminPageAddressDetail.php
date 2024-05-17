@@ -25,7 +25,6 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
 use onOffice\WPlugin\Model\FormModel;
@@ -35,6 +34,9 @@ use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
+use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use function __;
 use function add_action;
 use function do_accordion_sections;
@@ -52,9 +54,6 @@ use function wp_nonce_field;
 use function wp_register_script;
 use function wp_verify_nonce;
 use const ONOFFICE_PLUGIN_DIR;
-use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
-use onOffice\WPlugin\Language;
-use onOffice\WPlugin\Field\UnknownFieldException;
 
 /**
  *
@@ -86,6 +85,7 @@ class AdminPageAddressDetail
 
 	/**
 	 *
+	 * @throws Exception
 	 */
 
 	public function renderContent()
@@ -236,11 +236,13 @@ class AdminPageAddressDetail
 		$this->addFormModel($pFormModel);
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
+		$pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShortCodeForm);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
@@ -446,7 +448,7 @@ class AdminPageAddressDetail
 	 *
 	 */
 
-	protected function generateGroupSlugByModuleCategory($module, $category)
+	protected function generateGroupSlugByModuleCategory($module, $category): string
 	{
 		return $module.'/'.$category;
 	}
@@ -510,7 +512,7 @@ class AdminPageAddressDetail
 	 * @param $values
 	 * @return array
 	 */
-	private function saveField(array $valuesPrefixless, $values)
+	private function saveField(array $valuesPrefixless, $values): array
 	{
 		$data = [];
 		$customLabel = (array) ($values->{'customlabel-lang'});

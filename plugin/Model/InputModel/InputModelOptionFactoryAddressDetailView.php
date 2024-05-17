@@ -45,6 +45,9 @@ class InputModelOptionFactoryAddressDetailView
 	const INPUT_PICTURE_TYPE = DataAddressDetailView::PICTURES;
 
 	/** */
+	const INPUT_SHORT_CODE_FORM = 'shortcodeform';
+
+	/** */
 	const KEY_TYPE = 'type';
 
 	/** @var string */
@@ -61,7 +64,10 @@ class InputModelOptionFactoryAddressDetailView
 		],
 		self::INPUT_TEMPLATE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		]
+		],
+		self::INPUT_SHORT_CODE_FORM => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
 	];
 
 

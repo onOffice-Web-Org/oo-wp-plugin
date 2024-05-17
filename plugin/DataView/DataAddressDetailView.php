@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\SDK\onOfficeSDK;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -71,6 +73,9 @@ class DataAddressDetailView
 	/** @var array */
 	private $_customLabel = [];
 
+	/** @var string */
+	private $_shortCodeForm = '';
+
 	/** @return int */
 	public function getPageId(): int
 		{ return $this->_pageId; }
@@ -106,6 +111,14 @@ class DataAddressDetailView
 	/** @param string $template */
 	public function setTemplate(string $template)
 		{ $this->_template = $template; }
+
+	/** @return string */
+	public function getShortCodeForm(): string
+	{ return $this->_shortCodeForm; }
+
+	/** @param string $shortCodeForm */
+	public function setShortCodeForm(string $shortCodeForm)
+	{ $this->_shortCodeForm = $shortCodeForm; }
 
 	/** @return array */
 	public function getPageIdsHaveDetailShortCode(): array

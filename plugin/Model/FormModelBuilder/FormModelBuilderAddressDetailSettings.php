@@ -31,6 +31,10 @@ use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\DataView\DataAddressDetailView;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
@@ -43,6 +47,10 @@ use DI\ContainerBuilder;
 use DI\Container;
 use onOffice\WPlugin\Types\Field;
 use Exception;
+use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 
 /**
  *
@@ -196,7 +204,7 @@ class FormModelBuilderAddressDetailSettings
 				return '';
 		}
 	}
-		
+
 	/**
 	 *
 	 * @param string $category
@@ -310,5 +318,50 @@ class FormModelBuilderAddressDetailSettings
 		});
 
 		return $pInputModel;
+	}
+
+	/**
+	 *
+	 * @return InputModelOption
+	 *
+	 * @throws UnknownFormException
+	 * @throws ExceptionInputModelMissingField
+	 */
+
+	public function createInputModelShortCodeForm()
+	{
+
+		$labelShortCodeForm = __('Select Contact Form', 'onoffice-for-wp-websites');
+		$pInputModelShortCodeForm = $this->_pInputModelAddressDetailFactory->create
+		(InputModelOptionFactoryAddressDetailView::INPUT_SHORT_CODE_FORM, $labelShortCodeForm);
+		$pInputModelShortCodeForm->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$nameShortCodeForms = array('' => __('No Contact Form', 'onoffice-for-wp-websites')) + $this->readNameShortCodeForm();
+		$pInputModelShortCodeForm->setValuesAvailable($nameShortCodeForms);
+
+		$pInputModelShortCodeForm->setValue($this->_pDataAddressDetail->getShortCodeForm());
+
+		return $pInputModelShortCodeForm;
+	}
+
+	/**
+	 *
+	 * @return array
+	 *
+	 * @throws UnknownFormException
+	 */
+
+	protected function readNameShortCodeForm(): array
+	{
+		$recordManagerReadForm = new RecordManagerReadForm();
+		$allRecordsForm = $recordManagerReadForm->getAllRecords();
+		$shortCodeForm = array();
+
+		foreach ($allRecordsForm as $value) {
+			$form_name = __String::getNew($value->name);
+			$shortCodeForm[$value->name] = '[oo_form form=&quot;'
+										   . esc_html($form_name) . '&quot;]';
+		}
+
+		return $shortCodeForm;
 	}
 }

@@ -104,6 +104,7 @@ class DataAddressDetailViewHandler
 		$pDataAddressDetailView->setFields($row[DataAddressDetailView::FIELDS] ?? []);
 		$pDataAddressDetailView->setPictureTypes($row[DataAddressDetailView::PICTURES] ?? []);
 		$pDataAddressDetailView->setCustomLabels($row[DataAddressDetailView::FIELD_CUSTOM_LABEL] ?? $pDataAddressDetailView->getCustomLabels());
+		$pDataAddressDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
 
 		return $pDataAddressDetailView;
 	}
