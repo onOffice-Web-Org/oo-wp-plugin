@@ -319,6 +319,17 @@ if (!wp_next_scheduled('oo_cache_cleanup')) {
 	wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_cleanup');
 }
 
+add_action('update_option_onoffice-settings-duration-cache', function($old_value, $value) {
+	if ($old_value !== $value) {
+		$timestamp = wp_next_scheduled('oo_cache_cleanup');
+		if ($timestamp) {
+			wp_unschedule_event($timestamp, 'oo_cache_cleanup');
+		}
+
+		wp_schedule_event(time(), $value, 'oo_cache_cleanup');
+	}
+}, 10, 2);
+
 // Gets triggered before we know if it has to be updated at all, so that no value has to be changed
 add_action('pre_update_option', function($value, $option) use ($pDI) {
 	if (__String::getNew($option)->startsWith('onoffice')) {
