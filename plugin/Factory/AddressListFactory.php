@@ -24,22 +24,17 @@ namespace onOffice\WPlugin\Factory;
 
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
-use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 
 class AddressListFactory
 {
 	/** @var AddressListEnvironment */
 	private $_pEnvironment;
 
-	/** @var DataAddressDetailViewHandler */
-	private $_pDataAddressDetailViewHandler;
-
 	/**
 	 * @param AddressListEnvironment $pEnvironment
 	 */
-	public function __construct(DataAddressDetailViewHandler $pDataAddressDetailViewHandler, AddressListEnvironment $pEnvironment)
+	public function __construct(AddressListEnvironment $pEnvironment)
 	{
-		$this->_pDataAddressDetailViewHandler = $pDataAddressDetailViewHandler;
 		$this->_pEnvironment = $pEnvironment;
 	}
 

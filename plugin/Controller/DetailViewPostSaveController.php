@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Controller;
 use DI\Container;
 use DI\ContainerBuilder;
 use Exception;
+use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;

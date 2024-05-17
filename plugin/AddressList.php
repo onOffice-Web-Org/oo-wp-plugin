@@ -42,7 +42,6 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function esc_html;
-use onOffice\WPlugin\DataView\DataViewAddress;
 
 /**
  *
@@ -77,19 +76,20 @@ class AddressList
 	/** @var AddressListEnvironment */
 	private $_pEnvironment = null;
 
-	/** @var DataViewAddress */
+	/** @var DataListViewAddress */
 	private $_pDataViewAddress = null;
 
 
 	/**
-	 * @param DataViewAddress|null $pDataViewAddress
-	 * @param AddressListEnvironment|null $pEnvironment
+	 *
+	 * @param AddressListEnvironment $pEnvironment
+	 *
 	 */
 
-	public function __construct(DataViewAddress $pDataViewAddress = null, AddressListEnvironment $pEnvironment = null)
+	public function __construct(AddressListEnvironment $pEnvironment = null)
 	{
-		$this->_pDataViewAddress = $pDataViewAddress ?? new DataListViewAddress(0, 'default');
 		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
+		$this->_pDataViewAddress = new DataListViewAddress(0, 'default');
 	}
 
 	/**
