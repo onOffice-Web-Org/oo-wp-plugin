@@ -287,6 +287,7 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 #onoffice-form-search-address{
 	display: flex;
 	float: right;
+	margin-top: -33px;
 }
 #onoffice-form-search-form {
 	display: flex;
@@ -816,10 +817,12 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 		width: 100%;
 	}
 
+	.oo-poststuff-address-detail .viewusage,
 	.oo-poststuff-estate-detail .viewusage {
 		width: 100%;
 	}
 
+	.oo-poststuff-address-detail .block-publish,
 	.oo-poststuff-estate-detail .block-publish,
 	.oo-poststuff-similar-estate .block-publish {
 		margin-top: 0;
