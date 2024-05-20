@@ -8,7 +8,7 @@ jQuery(document).ready(function($){
 		checkUnsavedChanges = true;
 	});
 
-	$('#poststuff span.dashicons, #poststuff li').on("click", function() {
+	$('#poststuff span, #poststuff li').on("click", function() {
 		checkUnsavedChanges = true;
 	});
 
