@@ -330,7 +330,6 @@ class FormModelBuilderAddressDetailSettings
 
 	public function createInputModelShortCodeForm()
 	{
-
 		$labelShortCodeForm = __('Select Contact Form', 'onoffice-for-wp-websites');
 		$pInputModelShortCodeForm = $this->_pInputModelAddressDetailFactory->create
 		(InputModelOptionFactoryAddressDetailView::INPUT_SHORT_CODE_FORM, $labelShortCodeForm);
@@ -350,7 +349,7 @@ class FormModelBuilderAddressDetailSettings
 	 * @throws UnknownFormException
 	 */
 
-	protected function readNameShortCodeForm(): array
+	private function readNameShortCodeForm(): array
 	{
 		$recordManagerReadForm = new RecordManagerReadForm();
 		$allRecordsForm = $recordManagerReadForm->getAllRecords();
@@ -358,8 +357,7 @@ class FormModelBuilderAddressDetailSettings
 
 		foreach ($allRecordsForm as $value) {
 			$form_name = __String::getNew($value->name);
-			$shortCodeForm[$value->name] = '[oo_form form=&quot;'
-										   . esc_html($form_name) . '&quot;]';
+			$shortCodeForm[$value->name] = '[oo_form form=&quot;' . esc_html($form_name) . '&quot;]';
 		}
 
 		return $shortCodeForm;
