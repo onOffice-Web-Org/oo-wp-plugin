@@ -196,4 +196,21 @@ class TestClassFormModelBuilderAddressDetailSettings
 		$this->assertEquals(['field1'], $inputModel->getValuesAvailable());
 		$this->assertInstanceOf(InputModelOption::class, $inputModel);
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelShortCodeForm
+	 */
+	public function testCreateInputModelShortCodeForm()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderAddressDetailSettings::class)
+			  ->disableOriginalConstructor()
+			  ->setMethods(['getValue', 'readNameShortCodeForm'])
+			  ->getMock();
+		$pInstance->expects($this->exactly(1))
+				  ->method('readNameShortCodeForm');
+
+		$pInstance->generate('test');
+		$pInputModelDB = $pInstance->createInputModelShortCodeForm();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
 }
