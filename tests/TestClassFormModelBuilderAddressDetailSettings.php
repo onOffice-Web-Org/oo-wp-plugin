@@ -24,6 +24,8 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use DI\Container;
+use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use WP_UnitTestCase;
 use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
@@ -49,6 +51,8 @@ class TestClassFormModelBuilderAddressDetailSettings
 	/** @var FormModelBuilderAddressDetailSettings */
 	private $_pFormModelBuilderAddressDetailSettings;
 
+	private $_pDataTest;
+
 	/**
 	 * @before
 	 */
@@ -56,12 +60,12 @@ class TestClassFormModelBuilderAddressDetailSettings
 	{
 		$this->_pFieldnamesEnvironment = new FieldnamesEnvironmentTest();
 		$fieldParameters = [
-				'labels' => true,
-				'showContent' => true,
-				'showTable' => true,
-				'language' => 'ENG',
-				'modules' => ['address', 'estate'],
-				'realDataTypes' => true,
+			'labels' => true,
+			'showContent' => true,
+			'showTable' => true,
+			'language' => 'ENG',
+			'modules' => ['address', 'estate'],
+			'realDataTypes' => true,
 		];
 		$pSDKWrapperMocker = $this->_pFieldnamesEnvironment->getSDKWrapper();
 		$responseGetFields = json_decode
@@ -74,7 +78,40 @@ class TestClassFormModelBuilderAddressDetailSettings
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
 
+		$pRecordManagerReadForm = $this->getMockBuilder(RecordManagerReadForm::class)->getMock();
+		$expectedObject = [(object) $this->getBaseRow(1, Form::TYPE_CONTACT)];
+		$pRecordManagerReadForm->method('getAllRecords')->willReturn($expectedObject);
+		$this->_pContainer->set(RecordManagerReadForm::class, $pRecordManagerReadForm);
+
 		$this->_pFormModelBuilderAddressDetailSettings = new FormModelBuilderAddressDetailSettings($this->_pContainer, $this->_pFieldnames);
+	}
+
+	/**
+	 * @param int $formId
+	 * @param string $formType
+	 *
+	 * @return array
+	 */
+	private function getBaseRow(int $formId, string $formType): array
+	{
+		return [
+			'form_id' => $formId,
+			'name' => 'testForm'.$formId,
+			'form_type' => $formType,
+			'template' => 'testtemplate.php',
+			'recipient' => 'test@my-onoffice.com',
+			'subject' => 'A Subject',
+			'createaddress' => '1',
+			'limitresults' => '30',
+			'checkduplicates' => '1',
+			'pages' => '3',
+			'captcha' => '1',
+			'newsletter' => '1',
+			'availableOptions' => '1',
+			'show_estate_context' => '0',
+			'contact_type' => '',
+			'default_recipient' => 'default@my-onoffice.com'
+		];
 	}
 
 	/**
@@ -200,17 +237,11 @@ class TestClassFormModelBuilderAddressDetailSettings
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelShortCodeForm
 	 */
-	public function testCreateInputModelShortCodeForm()
+	public function testCreateInputModelShortCodeForm1()
 	{
-		$pInstance = $this->getMockBuilder(FormModelBuilderAddressDetailSettings::class)
-			  ->disableOriginalConstructor()
-			  ->setMethods(['getValue', 'readNameShortCodeForm'])
-			  ->getMock();
-		$pInstance->expects($this->exactly(1))
-				  ->method('readNameShortCodeForm');
-
-		$pInstance->generate('test');
-		$pInputModelDB = $pInstance->createInputModelShortCodeForm();
+		$this->_pFormModelBuilderAddressDetailSettings->generate('test');
+		$pInputModelDB = $this->_pFormModelBuilderAddressDetailSettings->createInputModelShortCodeForm();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+		$this->assertEquals(2, count($pInputModelDB->getValuesAvailable()));
 	}
 }

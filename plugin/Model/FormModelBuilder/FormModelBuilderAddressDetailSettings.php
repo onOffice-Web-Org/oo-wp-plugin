@@ -351,7 +351,7 @@ class FormModelBuilderAddressDetailSettings
 
 	private function readNameShortCodeForm(): array
 	{
-		$recordManagerReadForm = new RecordManagerReadForm();
+		$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadForm::class);
 		$allRecordsForm = $recordManagerReadForm->getAllRecords();
 		$shortCodeForm = array();
 
