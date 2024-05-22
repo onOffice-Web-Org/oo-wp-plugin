@@ -42,7 +42,6 @@ class RequestVariablesSanitizer
 		return $this->getFiltered($_GET, $name, $filter, $option);
 	}
 
-
 	/**
 	 *
 	 * @param string $name

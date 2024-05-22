@@ -50,11 +50,13 @@ class SearchParameters
 	 * @param string $link
 	 * @param int $i
 	 * @param SearchParametersModel $pModel
+	 * @param int $pListViewId
+	 * @param bool $pCheckPaginationTheme
 	 * @return string
 	 * @global int $page
 	 * @global bool $more
 	 */
-	public function linkPagesLink(string $link, int $i, SearchParametersModel $pModel): string
+	public function linkPagesLink(string $link, int $i, SearchParametersModel $pModel, int $pListViewId=0, bool $pCheckPaginationTheme=false): string
 	{
 		global $paged, $more;
 
@@ -65,7 +67,9 @@ class SearchParameters
 			$link = $linkparams['link_before'].str_replace('%', $i, $linkparams['pagelink'])
 				.$linkparams['link_after'];
 			if ($i != $paged || ! $more && 1 == $paged) {
-				$url = $this->geturl( $i, $pModel->getParameters() );
+				$url = !$pCheckPaginationTheme && !empty($pListViewId) ? 
+					$this->getUrlByListViewId($i, $pModel->getParameters(), $pListViewId) : 
+					$this->geturl($i, $pModel->getParameters());
 				$output .= '<a href="'.esc_url($url).'">'.$link.'</a>';
 			} else {
 				$output .= $link;
@@ -105,12 +109,28 @@ class SearchParameters
 	}
 
 	/**
-	 * @param SearchParametersModel $pSearchParametersModel
+	 * @param int $i
+	 * @param array $parameters
+	 * @param int $id
+	 * @return string
 	 */
-	public function registerNewPageLinkArgs(SearchParametersModel $pSearchParametersModel)
+	private function getUrlByListViewId(int $i, array $parameters, int $pListViewId): string
 	{
-		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pSearchParametersModel): string {
-			return $this->linkPagesLink($link, $i, $pSearchParametersModel);
+		$url = get_permalink();
+		$parameter = $parameters;
+		$parameter['page_of_id_'.$pListViewId] = $i;
+		return add_query_arg($parameter, $url);
+	}
+
+	/**
+	 * @param SearchParametersModel $pSearchParametersModel
+	 * @param int $pListViewId
+	 * @param bool $pCheckPaginationTheme
+	 */
+	public function registerNewPageLinkArgs(SearchParametersModel $pSearchParametersModel, int $pListViewId, bool $pCheckPaginationTheme)
+	{
+		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pSearchParametersModel, $pListViewId, $pCheckPaginationTheme): string {
+			return $this->linkPagesLink($link, $i, $pSearchParametersModel, $pListViewId, $pCheckPaginationTheme);
 		}, 10, 2);
 		add_filter('wp_link_pages_args', [$pSearchParametersModel, 'populateDefaultLinkParams']);
 	}
