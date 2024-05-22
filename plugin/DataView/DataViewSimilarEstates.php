@@ -230,7 +230,7 @@ class DataViewSimilarEstates
 	{ $this->_showPriceOnRequest = $showPriceOnRequest; }
 
 	/**
-	 * @return array[]
+	 * @return array
 	 */
 	public function getListFieldsShowPriceOnRequest(): array
 	{
