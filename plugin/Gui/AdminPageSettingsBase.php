@@ -77,12 +77,20 @@ abstract class AdminPageSettingsBase
 
 	const FORM_VIEW_RECORDS_SORTING = 'viewrecordssorting';
 
+	/** */
+	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
 
 	/** */
 	const VIEW_SAVE_SUCCESSFUL_MESSAGE = 'view_save_success_message';
 
 	/** */
 	const VIEW_SAVE_FAIL_MESSAGE = 'view_save_fail_message';
+
+	/** */
+	const VIEW_UNSAVED_CHANGES_MESSAGE = 'view_unsaved_changes_message';
+
+	/** */
+	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
 
 	/** @var string */
 	private $_pageTitle = null;
@@ -160,6 +168,7 @@ abstract class AdminPageSettingsBase
 		$pInputModelRenderer     = $this->getContainer()->get( InputModelRenderer::class );
 		$pFormViewName           = $this->getFormModelByGroupSlug( self::FORM_RECORD_NAME );
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug( self::FORM_VIEW_SORTABLE_FIELDS_CONFIG );
+		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
 		$this->generatePageMainTitle( $this->getPageTitle() );
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
@@ -181,6 +190,8 @@ abstract class AdminPageSettingsBase
 		do_meta_boxes( get_current_screen()->id, 'side', null );
 		do_meta_boxes( get_current_screen()->id, 'advanced', null );
 		echo '</div>';
+		echo '<div class="clear"></div>';
+		$this->renderSearchFieldForFieldLists($pInputModelRenderer, $pFormViewSearchFieldForFieldLists);
 		echo '<div class="clear"></div>';
 		do_action( 'add_meta_boxes', get_current_screen()->id, null );
 		echo '<div style="float:left;">';
@@ -475,6 +486,41 @@ abstract class AdminPageSettingsBase
 		}
 	}
 
+	/**
+	 *
+	 * @param InputModelRenderer $pInputModelRenderer
+	 * @param $pFormViewSearchFieldForFieldLists
+	 *
+	 */
+
+	protected function renderSearchFieldForFieldLists(InputModelRenderer $pInputModelRenderer, $pFormViewSearchFieldForFieldLists)
+	{
+		echo '<div class="oo-search-field postbox">';
+		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Field list search', 'onoffice-for-wp-websites' ) . '</span></h2>';
+		echo '<div class="inside">';
+		$pInputModelRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);
+		echo '</div>';
+		echo '</div>';
+	}
+
+	/**
+	 *
+	 * @param $modules
+	 * @param FormModelBuilder $pFormModelBuilder
+	 * @param string $htmlType
+	 *
+	 */
+
+	protected function addSearchFieldForFieldLists($modules, FormModelBuilder $pFormModelBuilder,
+		string $htmlType = InputModelBase::HTML_SEARCH_FIELD_FOR_FIELD_LISTS)
+	{
+		$pInputModelSearchFieldForFieldLists = $pFormModelBuilder->createSearchFieldForFieldLists($modules, $htmlType);
+		$pFormModelFieldsConfig = new Model\FormModel();
+		$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
+		$pFormModelFieldsConfig->setGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
+		$pFormModelFieldsConfig->addInputModel($pInputModelSearchFieldForFieldLists);
+		$this->addFormModel($pFormModelFieldsConfig);
+	}
 
 	/**
 	 *
@@ -558,6 +604,10 @@ abstract class AdminPageSettingsBase
 		wp_register_script('oo-copy-shortcode',
 		plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-copycode.min.js',
 			['jquery'], '', true);
+
+		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
+			['jquery'], '', true);
+		wp_enqueue_script('oo-unsaved-changes-message');
 	}
 
 

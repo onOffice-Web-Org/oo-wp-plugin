@@ -192,6 +192,7 @@ class AdminPageEstateListSettings
 
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
 		$this->addSortableFieldsList([onOfficeSDK::MODULE_ESTATE], $pFormModelBuilder);
+		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder);
 	}
 
 
@@ -254,6 +255,7 @@ class AdminPageEstateListSettings
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE);
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_HIDDEN);
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_AVAILABLE_OPTIONS);
+		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_CONVERT_TEXT_TO_SELECT_FOR_CITY_FIELD);
 	}
 
 

@@ -106,6 +106,7 @@ class AdminPageEstateUnitSettings
 
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
 		$this->addSortableFieldsList(array(onOfficeSDK::MODULE_ESTATE), $pFormModelBuilder);
+		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder);
 	}
 
 
