@@ -30,6 +30,39 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
 /** @var EstateDetail $pEstates */
+
+// picture properties
+$image_height_xs = 400;
+$image_height_sm = 400;
+$image_height_md = 400;
+$image_height_lg = 400;
+$image_height_xl = 400;
+$image_height_xxl = 400;
+$image_height_xxxl = 400;
+
+$dimensions = [
+    '575' => [
+        'h' => $image_height_xs,
+    ],
+    '1600' => [
+        'h' => $image_height_xxxl,
+    ],
+    '1400' => [
+        'h' => $image_height_xxl,
+    ],
+    '1200' => [
+        'h' => $image_height_xl,
+    ],
+    '992' => [
+        'h' => $image_height_lg,
+    ],
+    '768' => [
+        'h' => $image_height_md,
+    ],
+    '576' => [
+        'h' => $image_height_sm,
+    ]
+];
 ?>
 <style>
 	ul.oo-listparking {
@@ -56,7 +89,28 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				$estatePictures = $pEstates->getEstatePictures();
 				foreach ($estatePictures as $id) {
 					echo '<div class="oo-detailspicture">';
-					$pEstates->generateEstatePictureTag($id);
+                    echo '<picture class="oo-picture">';
+                    /**
+                     * getResponsiveImageSource(
+                     * @param int $imageId
+                     * @param int $mediaBreakPoint
+                     * @param float|null $imageWidth for media breakpoint, optional
+                     * @param float|null $imageHeight for media breakpoint, optional
+                     * @param bool $maxWidth, default = false)
+                     * @return string for image source on various media
+                     */
+                    echo $pEstates->getResponsiveImageSource($id, 575, $dimensions['575']['w'], $dimensions['575']['h'], true);
+                    echo $pEstates->getResponsiveImageSource($id, 1600, $dimensions['1600']['w'], $dimensions['1600']['h']);
+                    echo $pEstates->getResponsiveImageSource($id, 1400, $dimensions['1400']['w'], $dimensions['1400']['h']);
+                    echo $pEstates->getResponsiveImageSource($id, 1200, $dimensions['1200']['w'], $dimensions['1200']['h']);
+                    echo $pEstates->getResponsiveImageSource($id, 992, $dimensions['992']['w'], $dimensions['992']['h']);
+                    echo $pEstates->getResponsiveImageSource($id, 768, $dimensions['768']['w'], $dimensions['768']['h']);
+                    echo $pEstates->getResponsiveImageSource($id, 576, $dimensions['576']['w'], $dimensions['576']['h']);
+                    echo '<img class="oo-responsive-image estate-status" ' .
+                        'src="' . esc_url($pEstates->getEstatePictureUrl($id, ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']])) . '" ' .
+                        'alt="' . esc_html($pEstates->getEstatePictureTitle($id) ?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
+                        'loading="lazy"/>';
+                    echo '</picture>';;
 					echo '</div>';
 				}
 				?>

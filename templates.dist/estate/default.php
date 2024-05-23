@@ -30,6 +30,58 @@ require 'SearchForm.php';
 
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
 
+// picture properties
+$image_width_xs = 539;
+$image_width_sm = 508;
+$image_width_md = 690;
+$image_width_lg = 444;
+$image_width_xl = 540;
+$image_width_xxl = 412;
+$image_width_xxxl = 456;
+$dimensions = [
+    '575' => [
+        'w' => $image_width_xs,
+        'h' => round(
+            ($image_width_xs * 2) / 3,
+        ),
+    ],
+    '1600' => [
+        'w' => $image_width_xxxl,
+        'h' => round(
+            ($image_width_xxxl * 2) / 3,
+        ),
+    ],
+    '1400' => [
+        'w' => $image_width_xxl,
+        'h' => round(
+            ($image_width_xxl * 2) / 3,
+        ),
+    ],
+    '1200' => [
+        'w' => $image_width_xl,
+        'h' => round(
+            ($image_width_xl * 2) / 3,
+        ),
+    ],
+    '992' => [
+        'w' => $image_width_lg,
+        'h' => round(
+            ($image_width_lg * 2) / 3,
+        ),
+    ],
+    '768' => [
+        'w' => $image_width_md,
+        'h' => round(
+            ($image_width_md * 2) / 3,
+        ),
+    ],
+    '576' => [
+        'w' => $image_width_sm,
+        'h' => round(
+            ($image_width_sm * 2) / 3,
+        ),
+    ]
+];
 ?>
 
 <style>
@@ -85,11 +137,31 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 
 					if ( $referenz === "1" && $pEstatesClone->getViewRestrict() ) {
 						echo '<div class="oo-listimage estate-status">';
-						$pEstatesClone->generateEstatePictureTag($id);
 					} else {
 						echo '<a class="oo-listimage estate-status" href="' . esc_url($pEstatesClone->getEstateLink()) . '">';
-						$pEstatesClone->generateEstatePictureTag($id);
 					}
+                    echo '<picture class="oo-picture">';
+                    /**
+                     * getResponsiveImageSource(
+                     * @param int $imageId
+                     * @param int $mediaBreakPoint
+                     * @param float|null $imageWidth for media breakpoint, optional
+                     * @param float|null $imageHeight for media breakpoint, optional
+                     * @param bool $maxWidth, default = false)
+                     * @return string for image source on various media
+                     */
+                    echo $pEstatesClone->getResponsiveImageSource($id, 575, $dimensions['575']['w'], $dimensions['575']['h'], true);
+                    echo $pEstatesClone->getResponsiveImageSource($id, 1600, $dimensions['1600']['w'], $dimensions['1600']['h']);
+                    echo $pEstatesClone->getResponsiveImageSource($id, 1400, $dimensions['1400']['w'], $dimensions['1400']['h']);
+                    echo $pEstatesClone->getResponsiveImageSource($id, 1200, $dimensions['1200']['w'], $dimensions['1200']['h']);
+                    echo $pEstatesClone->getResponsiveImageSource($id, 992, $dimensions['992']['w'], $dimensions['992']['h']);
+                    echo $pEstatesClone->getResponsiveImageSource($id, 768, $dimensions['768']['w'], $dimensions['768']['h']);
+                    echo $pEstatesClone->getResponsiveImageSource($id, 576, $dimensions['576']['w'], $dimensions['576']['h']);
+                    echo '<img class="oo-responsive-image estate-status" ' .
+                        'src="' . esc_url($pEstatesClone->getEstatePictureUrl($id, ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']])) . '" ' .
+                        'alt="' . esc_html($pEstatesClone->getEstatePictureTitle($id)?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
+                        'loading="lazy"/>';
+                    echo '</picture>';
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
 					}

@@ -67,18 +67,6 @@ class EstateList
 {
 	const DEFAULT_LIMIT_CHARACTER_DESCRIPTION = 150;
 
-	/** @var string */
-	const MIN_WIDTH_TEXT = 'min-width';
-
-	/** @var array */
-	const MIN_WIDTH_MEDIA_QUERY = [1600, 1400, 1200, 992, 768, 576];
-
-	/** @var string */
-	const MAX_WIDTH_TEXT = 'max-width';
-
-	/** @var array */
-	const MAX_WIDTH_MEDIA_QUERY = [575];
-
 	/** @var array */
 	private $_records = [];
 
@@ -709,49 +697,23 @@ class EstateList
 		return $this->_pEstateFiles->getEstatePictureTitle($imageId, $currentEstate);
 	}
 
-	/**
-	 * @param int $imageId
-	 * @return void
-	 */
-	public function generateEstatePictureTag(int $imageId)
-	{
-		$minWidthMediaQueries = self::MIN_WIDTH_MEDIA_QUERY;
-		$maxWidthMediaQueries = self::MAX_WIDTH_MEDIA_QUERY;
-		$height = $this->_pDataView instanceof DataDetailView ? 400 : 250;
-		$heightImageInDetailClass = $this->_pDataView instanceof DataDetailView ? 'oo-height-image-detail' : '';
-
-		echo '<picture>';
-		foreach ($minWidthMediaQueries as $minWidthMediaQuery) {
-			$this->generateSourceElementHtml($imageId, $height, $minWidthMediaQuery, self::MIN_WIDTH_TEXT);
-		}
-
-		foreach ($maxWidthMediaQueries as $maxWidthMediaQuery) {
-			$this->generateSourceElementHtml($imageId, $height, $maxWidthMediaQuery, self::MAX_WIDTH_TEXT);
-		}
-
-		echo '<img class="oo-responsive-image estate-status' . esc_html($heightImageInDetailClass) . '" ' .
-			'src="' . esc_url($this->getEstatePictureUrl($imageId, ['height' => $height])) . '" ' .
-			'alt="' . esc_html($this->_currentEstate["title"] ?? '') . '" ' .
-			'loading="lazy"/>';
-		echo '</picture>';
-	}
-
-	/**
-	 * @param int $imageId
-	 * @param int $height
-	 * @param int $mediaQuery
-	 * @param string $mediaFeature
-	 * @return void
-	 */
-	private function generateSourceElementHtml(int $imageId, int $height, int $mediaQuery, string $mediaFeature)
-	{
-		echo '<source media="(' . esc_html($mediaFeature) . ':' . esc_html($mediaQuery) . 'px' . ')" ' .
-			'srcset="' . esc_url($this->getEstatePictureUrl($imageId, ['height' => $height])) . ' 1x, ' .
-			esc_url($this->getEstatePictureUrl($imageId, ['height' => $height * 1.5])) . ' 1.5x, ' .
-			esc_url($this->getEstatePictureUrl($imageId, ['height' => $height * 2])) . ' 2x, ' .
-			esc_url($this->getEstatePictureUrl($imageId, ['height' => $height * 3])) . ' 3x" ' .
-			'/>';
-	}
+    /**
+     * @param int $imageId
+     * @param int $breakPoint
+     * @param float|null $width
+     * @param float|null $height
+     * @param bool $maxWidth
+     * @return string
+     */
+    public function getResponsiveImageSource(int $imageId, int $breakPoint, float $width = null, float $height = null, bool $maxWidth = false) {
+        $imageUrl = $this->getEstatePictureUrl( $imageId, ['width'=> $width, 'height'=>$height]);
+        $sourceTag = '<source media="(' . ($maxWidth ? 'max-width:' : 'min-width:') . $breakPoint . 'px)" srcset="';
+        return  $sourceTag .
+                $imageUrl . (isset($width) ? '&w=' . $width : '') . (isset($height) ? '&h=' . $height : '') . ' 1x,' .
+                $imageUrl . (isset($width) ? '&w=' . $width * 1.5 : '') . (isset($height) ? '&h=' . $height * 1.5 : '') . ' 1.5x,' .
+                $imageUrl . (isset($width) ? '&w=' . $width * 2 : '') . (isset($height) ? '&h=' . $height * 2 : '') . ' 2x,' .
+                $imageUrl . (isset($width) ? '&w=' . $width * 3 : '') . (isset($height) ? '&h=' . $height * 3 : '') . ' 3x">';
+    }
 
 	/**
 	 * @param int $imageId
