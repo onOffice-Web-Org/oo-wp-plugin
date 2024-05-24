@@ -537,6 +537,11 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	min-height: 30px;
 }
 
+.select2-dropdown.select2-dropdown--below,
+.select2-dropdown.select2-dropdown--above {
+	margin-top: 0 !important;
+}
+
 .oo-poststuff .custom-input-field input[name=oopluginlistviews-countryactive]:checked::before,
 .oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive]:checked::before {
 	filter: brightness(0) saturate(100%) invert(35%) sepia(4%) saturate(967%) hue-rotate(170deg) brightness(91%) contrast(94%);
@@ -649,6 +654,26 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 
 .oo-poststuff .custom-input-field .field-item-detail {
 	margin-left: 5px;
+}
+
+.oo-poststuff .custom-input-field .select2 {
+	width: 50% !important;
+}
+
+.oo-poststuff .custom-input-field .select2 .select2-selection {
+	display: flex;
+	border: 1px solid #8c8f94;
+	min-height: 30px;
+	height: 100%;
+}
+
+.oo-poststuff .custom-input-field textarea[name=oopluginformactivityconfig-remark] {
+	min-height: 100px;
+}
+
+.oo-poststuff .select2-container--default.select2-container--disabled .select2-selection--multiple {
+	background-color: #f6f7f7;
+	border-color: #dcdcde;
 }
 
 .oo-search-field {

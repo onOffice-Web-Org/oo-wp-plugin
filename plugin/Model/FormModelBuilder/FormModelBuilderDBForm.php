@@ -54,6 +54,10 @@ use function get_locale;
 use function get_option;
 use const ONOFFICE_DI_CONFIG_PATH;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Language;
+use onOffice\WPlugin\API\ApiClientException;
 
 /**
  *
@@ -70,6 +74,15 @@ class FormModelBuilderDBForm
 
 	/** @var Container */
 	private $_pContainer;
+
+	/** @var array */
+	private $_actionKind = [];
+
+	/** @var array */
+	private $_actionType = [];
+
+	/** @var array */
+	private $_characteristic = [];
 
 	/**
 	 * @param Container $pContainer
@@ -215,12 +228,19 @@ class FormModelBuilderDBForm
 		$values['fieldsRequired'] = $pDataFormConfiguration->getRequiredFields();
 		$values['fieldsAvailableOptions'] = $pDataFormConfiguration->getAvailableOptionsFields();
 		$values['fieldsMarkdown'] = $pDataFormConfiguration->getMarkdownFields();
+		$values['writeactivity'] = $pDataFormConfiguration->getWriteActivity();
+		$values['actionkind'] = $pDataFormConfiguration->getActionKind();
+		$values['actiontype'] = $pDataFormConfiguration->getActionType();
+		$values['characteristic'] = $pDataFormConfiguration->getCharacteristic();
+		$values['remark'] = $pDataFormConfiguration->getRemark();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Form', 'onoffice-for-wp-websites'));
 		$pFormModel->setGroupSlug('onoffice-form-settings');
 		$pFormModel->setPageSlug($pageSlug);
+
+		$this->fetchDataTypesOfActionAndCharacteristics();
 
 		return $pFormModel;
 	}
@@ -747,6 +767,136 @@ class FormModelBuilderDBForm
 		$pInputModelFieldsConfig->setValue($this->getValue(DataFormConfiguration::FIELDS) ?? []);
 
 		return $pInputModelFieldsConfig;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+
+	public function createInputModelWriteActivity(): InputModelDB
+	{
+		$labelWriteActivity = __('Write activity', 'onoffice-for-wp-websites');
+
+		$pInputModelWriteActivity = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_WRITE_ACTIVITY, $labelWriteActivity);
+		$pInputModelWriteActivity->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelWriteActivity->setValue($this->getValue('writeactivity'));
+		$pInputModelWriteActivity->setValuesAvailable(1);
+
+		return $pInputModelWriteActivity;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+
+	public function createInputModelActionKind(): InputModelDB
+	{
+		$labelActionKind = __('Type of action', 'onoffice-for-wp-websites');
+
+		$pInputModelActionKind = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_ACTION_KIND, $labelActionKind);
+		$pInputModelActionKind->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelActionKind->setValue($this->getValue('actionkind') ?? '');
+		$actionKind = ['' => __('Please choose', 'onoffice-for-wp-websites')]
+			+ $this->_actionKind;
+		$pInputModelActionKind->setValuesAvailable($actionKind);
+
+		return $pInputModelActionKind;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+
+	public function createInputModelActionType(): InputModelDB
+	{
+		$labelActionType = __('Kind of action', 'onoffice-for-wp-websites');
+
+		$pInputModelActionType = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_ACTION_TYPE, $labelActionType);
+		$pInputModelActionType->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelActionType->setValue($this->getValue('actiontype') ?? '');
+		$ationType = $this->_actionType[$this->getValue('actionkind')] ?? [];
+		$pInputModelActionType->setValuesAvailable($ationType);
+
+		return $pInputModelActionType;
+	}
+
+	/**
+	 * @return void
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws ApiClientException
+	 */
+
+	private function fetchDataTypesOfActionAndCharacteristics()
+	{
+		$language = Language::getDefault();
+		$pSDKWrapper = $this->_pContainer->get(SDKWrapper::class);
+		$pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'actionkindtypes');
+		$pApiClientAction->setParameters(['lang'=> $language]);
+		$pApiClientAction->addRequestToQueue();
+
+		$parameters = [
+			'language' => $language,
+			'fieldList' => ['merkmal'],
+			'modules' => ['agentsLog']
+		];
+
+		$pApiClientActionGetCharacteristic = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
+		$pApiClientActionGetCharacteristic->setParameters($parameters);
+		$pApiClientActionGetCharacteristic->addRequestToQueue()->sendRequests();
+
+		$resultAction = $pApiClientAction->getResultRecords();
+		$resultCharacteristic = $pApiClientActionGetCharacteristic->getResultRecords();
+
+		if (!empty($resultAction)) {
+			foreach ($resultAction as $record) {
+				$this->_actionKind[$record['elements']['key']] = $record['elements']['label'];
+				$this->_actionType[$record['elements']['key']] = $record['elements']['types'];
+			}
+		}
+		if (!empty($resultCharacteristic)) {
+			$this->_characteristic = $resultCharacteristic[0]['elements'];
+		}
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+
+	public function createInputModelCharacteristic(): InputModelDB
+	{
+		$labelCharacteristic = __('Characteristic', 'onoffice-for-wp-websites');
+
+		$pInputModelCharacteristic = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_CHARACTERISTIC, $labelCharacteristic);
+		$pInputModelCharacteristic->setHtmlType(InputModelBase::HTML_TYPE_SELECT_TWO);
+		$characteristicArray = explode(',', $this->getValue('characteristic')) ?? [];
+		$pInputModelCharacteristic->setIsMulti(true);
+		$pInputModelCharacteristic->setValue($characteristicArray);
+		$pInputModelCharacteristic->setValuesAvailable($this->_characteristic['merkmal']['permittedvalues'] ?? []);
+
+		return $pInputModelCharacteristic;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+
+	public function createInputModelRemark(): InputModelDB
+	{
+		$labelRemark = __('Comment', 'onoffice-for-wp-websites');
+
+		$pInputModelRemark = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_REMARK, $labelRemark);
+		$pInputModelRemark->setHtmlType(InputModelBase::HTML_TYPE_TEXTAREA);
+		$pInputModelRemark->setValue($this->getValue('remark') ?? '');
+
+		return $pInputModelRemark;
 	}
 
 	/** @return string */

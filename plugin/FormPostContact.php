@@ -137,6 +137,7 @@ class FormPostContact
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
+		$writeActivity = $pFormConfig->getWriteActivity();
 		$contactType = $pFormConfig->getContactType();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
@@ -148,6 +149,9 @@ class FormPostContact
 			->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType, $estateId);
 		$this->_messageDuplicateAddressData = $this->_pFormPostContactConfiguration->getFormAddressCreator()
 			->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
+		if ($writeActivity) {
+			$this->_pFormPostContactConfiguration->getFormAddressCreator()->createAgentsLog($pFormConfig, $addressId, $estateId);
+		}
 
 		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
 			// No subscription for newsletter, which is ok

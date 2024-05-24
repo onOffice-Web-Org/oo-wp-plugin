@@ -98,6 +98,20 @@ class InputModelDBFactoryConfigForm
     /** */
     const INPUT_FORM_CONTACT_TYPE = 'contactType';
 
+	/** */
+	const INPUT_FORM_WRITE_ACTIVITY = 'writeActivity';
+
+	/** */
+	const INPUT_FORM_ACTION_KIND = 'actionKind';
+
+	/** */
+	const INPUT_FORM_ACTION_TYPE = 'actionType';
+
+	/** */
+	const INPUT_FORM_CHARACTERISTIC = 'characteristic';
+
+	/** */
+	const INPUT_FORM_REMARK = 'remark';
 
 	/** @var array */
 	private $_inputConfig = [
@@ -197,6 +211,26 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_MARK_DOWN => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'markdown',
+		],
+		self::INPUT_FORM_WRITE_ACTIVITY => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'write_activity',
+		],
+		self::INPUT_FORM_ACTION_KIND => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'action_kind',
+		],
+		self::INPUT_FORM_ACTION_TYPE => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'action_type',
+		],
+		self::INPUT_FORM_CHARACTERISTIC => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'characteristic',
+		],
+		self::INPUT_FORM_REMARK => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'remark',
 		],
 	];
 
