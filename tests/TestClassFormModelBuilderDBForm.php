@@ -108,6 +108,7 @@ class TestClassFormModelBuilderDBForm
 			(onOfficeSDK::ACTION_ID_GET, 'actionkindtypes', '', ['lang'=> "ENG"], null, $response);
 
 		$parameters = [
+			'labels' => true,
 			'language' => "ENG",
 			'fieldList' => ['merkmal'],
 			'modules' => ['agentsLog']
@@ -434,6 +435,7 @@ class TestClassFormModelBuilderDBForm
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelCharacteristic
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::generate
 	 */
 	public function testCreateInputModelCharacteristic()
 	{
@@ -451,6 +453,7 @@ class TestClassFormModelBuilderDBForm
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelActionKind
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::generate
 	 */
 	public function testCreateInputModelActionKind()
 	{
@@ -475,6 +478,7 @@ class TestClassFormModelBuilderDBForm
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelActionType
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::generate
 	 */
 	public function testCreateInputModelActionType()
 	{
@@ -485,6 +489,34 @@ class TestClassFormModelBuilderDBForm
 
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelWriteActivity
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 */
+	public function testCreateInputModelWriteActivity()
+	{
+		$this->_pInstance->setFormType('contact');
+
+		$pInputModelDB = $this->_pInstance->createInputModelWriteActivity();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelRemark
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 */
+	public function testCreateInputModelRemark()
+	{
+		$this->_pInstance->setFormType('contact');
+
+		$pInputModelDB = $this->_pInstance->createInputModelRemark();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'textarea');
 	}
 
 	/**

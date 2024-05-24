@@ -840,6 +840,7 @@ class FormModelBuilderDBForm
 		$pApiClientAction->addRequestToQueue();
 
 		$parameters = [
+			'labels' => true,
 			'language' => $language,
 			'fieldList' => ['merkmal'],
 			'modules' => ['agentsLog']
