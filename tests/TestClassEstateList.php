@@ -1051,9 +1051,7 @@ class TestClassEstateList
 	{
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
-		ob_start();
-		$this->_pEstateList->getResponsiveImageSource(2, 1600, 456, round((456* 2) / 3));
-		$output = ob_get_clean();
+		$output = $this->_pEstateList->getResponsiveImageSource(2, 1600, 456, round((456* 2) / 3));
 		$this->assertEquals($output,
 			'<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@456x304&w=456&h=304 1x, https://test.url/image/2.jpg@456x304&w=684&h=456 1.5x, https://test.url/image/2.jpg@456x304&w=912&h=608 2x, https://test.url/image/2.jpg@456x304&w=1368&h=912 3x" />'
 		);
@@ -1063,9 +1061,7 @@ class TestClassEstateList
     {
         $this->_pEstateList->loadEstates();
         $this->_pEstateList->estateIterator();
-        ob_start();
-        $this->_pEstateList->getResponsiveImageSource(2, 575, 456, round((456* 2) / 3), true);
-        $output = ob_get_clean();
+        $output = $this->_pEstateList->getResponsiveImageSource(2, 575, 456, round((456* 2) / 3), true);
         $this->assertEquals($output,
             '<source media="(max-width:575px)" srcset="https://test.url/image/2.jpg@456x304&w=456&h=304 1x, https://test.url/image/2.jpg@456x304&w=684&h=456 1.5x, https://test.url/image/2.jpg@456x304&w=912&h=608 2x, https://test.url/image/2.jpg@456x304&w=1368&h=912 3x" />'
         );
@@ -1075,9 +1071,7 @@ class TestClassEstateList
     {
         $this->_pEstateList->loadEstates();
         $this->_pEstateList->estateIterator();
-        ob_start();
-        $this->_pEstateList->getResponsiveImageSource(2, 1600, null, 400);
-        $output = ob_get_clean();
+        $output = $this->_pEstateList->getResponsiveImageSource(2, 1600, null, 400);
         $this->assertEquals($output,
             '<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@400&h=400 1x, https://test.url/image/2.jpg@400&h=600 1.5x, https://test.url/image/2.jpg@400&h=800 2x, https://test.url/image/2.jpg@400&h=1200 3x" />'
         );
@@ -1087,9 +1081,7 @@ class TestClassEstateList
     {
         $this->_pEstateList->loadEstates();
         $this->_pEstateList->estateIterator();
-        ob_start();
-        $this->_pEstateList->getResponsiveImageSource(2, 1600, 456);
-        $output = ob_get_clean();
+        $output = $this->_pEstateList->getResponsiveImageSource(2, 1600, 456);
         $this->assertEquals($output,
             '<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@456&w=456 1x, https://test.url/image/2.jpg@456&w=684 1.5x, https://test.url/image/2.jpg@456&w=912 2x, https://test.url/image/2.jpg@456&w=1368 3x" />'
         );
