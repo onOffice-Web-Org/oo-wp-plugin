@@ -1047,7 +1047,7 @@ class TestClassEstateList
 	/**
 	 *
 	 */
-	public function getResponsiveImageSource()
+	public function testGetResponsiveImageSource()
 	{
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
@@ -1059,7 +1059,7 @@ class TestClassEstateList
 		);
 	}
 
-    public function getResponsiveImageSourceForMobile()
+    public function testGetResponsiveImageSourceForMobile()
     {
         $this->_pEstateList->loadEstates();
         $this->_pEstateList->estateIterator();
@@ -1071,7 +1071,7 @@ class TestClassEstateList
         );
     }
 
-    public function getResponsiveImageSourceWithoutWidth()
+    public function testGetResponsiveImageSourceWithoutWidth()
     {
         $this->_pEstateList->loadEstates();
         $this->_pEstateList->estateIterator();
@@ -1083,7 +1083,7 @@ class TestClassEstateList
         );
     }
 
-    public function getResponsiveImageSourceWithoutHeight()
+    public function testGetResponsiveImageSourceWithoutHeight()
     {
         $this->_pEstateList->loadEstates();
         $this->_pEstateList->estateIterator();
