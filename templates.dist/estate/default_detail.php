@@ -43,31 +43,31 @@ $image_height_xxxl = 400;
 $dimensions = [
     '575' => [
         'w' => null,
-        'h' => $image_height_xs,
+        'h' => $image_height_xs
     ],
     '1600' => [
         'w' => null,
-        'h' => $image_height_xxxl,
+        'h' => $image_height_xxxl
     ],
     '1400' => [
         'w' => null,
-        'h' => $image_height_xxl,
+        'h' => $image_height_xxl
     ],
     '1200' => [
         'w' => null,
-        'h' => $image_height_xl,
+        'h' => $image_height_xl
     ],
     '992' => [
         'w' => null,
-        'h' => $image_height_lg,
+        'h' => $image_height_lg
     ],
     '768' => [
         'w' => null,
-        'h' => $image_height_md,
+        'h' => $image_height_md
     ],
     '576' => [
         'w' => null,
-        'h' => $image_height_sm,
+        'h' => $image_height_sm
     ]
 ];
 ?>

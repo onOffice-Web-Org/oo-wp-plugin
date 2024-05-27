@@ -42,44 +42,44 @@ $dimensions = [
     '575' => [
         'w' => $image_width_xs,
         'h' => round(
-            ($image_width_xs * 2) / 3,
-        ),
+            ($image_width_xs * 2) / 3
+        )
     ],
     '1600' => [
         'w' => $image_width_xxxl,
         'h' => round(
-            ($image_width_xxxl * 2) / 3,
-        ),
+            ($image_width_xxxl * 2) / 3
+        )
     ],
     '1400' => [
         'w' => $image_width_xxl,
         'h' => round(
-            ($image_width_xxl * 2) / 3,
-        ),
+            ($image_width_xxl * 2) / 3
+        )
     ],
     '1200' => [
         'w' => $image_width_xl,
         'h' => round(
-            ($image_width_xl * 2) / 3,
-        ),
+            ($image_width_xl * 2) / 3
+        )
     ],
     '992' => [
         'w' => $image_width_lg,
         'h' => round(
-            ($image_width_lg * 2) / 3,
-        ),
+            ($image_width_lg * 2) / 3
+        )
     ],
     '768' => [
         'w' => $image_width_md,
         'h' => round(
-            ($image_width_md * 2) / 3,
-        ),
+            ($image_width_md * 2) / 3
+        )
     ],
     '576' => [
         'w' => $image_width_sm,
         'h' => round(
-            ($image_width_sm * 2) / 3,
-        ),
+            ($image_width_sm * 2) / 3
+        )
     ]
 ];
 ?>
