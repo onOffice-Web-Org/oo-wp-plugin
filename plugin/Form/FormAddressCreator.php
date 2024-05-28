@@ -412,6 +412,9 @@ class FormAddressCreator
 	 */
 	public function createAgentsLog(DataFormConfiguration $pFormConfig, int $addressId, int $estateId = null)
 	{
+		if (empty($pFormConfig->getActionKind()) && empty($pFormConfig->getActionType()) && empty($pFormConfig->getCharacteristic()) && empty($pFormConfig->getRemark())) {
+			return;
+		}
 		$requestParams = [
 			'addressids' => [$addressId],
 			'actionkind' => $pFormConfig->getActionKind() ?: null,
