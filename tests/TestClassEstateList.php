@@ -1053,7 +1053,7 @@ class TestClassEstateList
 		$this->_pEstateList->estateIterator();
 		$output = $this->_pEstateList->getResponsiveImageSource(2, 1600, 456, round((456* 2) / 3));
 		$this->assertEquals($output,
-			'<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@456x304&w=456&h=304 1x,https://test.url/image/2.jpg@456x304&w=684&h=456 1.5x,https://test.url/image/2.jpg@456x304&w=912&h=608 2x,https://test.url/image/2.jpg@456x304&w=1368&h=912 3x">'
+			'<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@456x304&w=456&h=304 1x,https://test.url/image/2.jpg@684x456&w=684&h=456 1.5x,https://test.url/image/2.jpg@912x608&w=912&h=608 2x,https://test.url/image/2.jpg@1368x912&w=1368&h=912 3x">'
 		);
 	}
 
@@ -1063,7 +1063,7 @@ class TestClassEstateList
         $this->_pEstateList->estateIterator();
         $output = $this->_pEstateList->getResponsiveImageSource(2, 575, 456, round((456* 2) / 3), true);
         $this->assertEquals($output,
-            '<source media="(max-width:575px)" srcset="https://test.url/image/2.jpg@456x304&w=456&h=304 1x,https://test.url/image/2.jpg@456x304&w=684&h=456 1.5x,https://test.url/image/2.jpg@456x304&w=912&h=608 2x,https://test.url/image/2.jpg@456x304&w=1368&h=912 3x">'
+            '<source media="(max-width:575px)" srcset="https://test.url/image/2.jpg@456x304&w=456&h=304 1x,https://test.url/image/2.jpg@684x456&w=684&h=456 1.5x,https://test.url/image/2.jpg@912x608&w=912&h=608 2x,https://test.url/image/2.jpg@1368x912&w=1368&h=912 3x">'
         );
     }
 
@@ -1073,7 +1073,7 @@ class TestClassEstateList
         $this->_pEstateList->estateIterator();
         $output = $this->_pEstateList->getResponsiveImageSource(2, 1600, null, 400);
         $this->assertEquals($output,
-            '<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@x400&h=400 1x,https://test.url/image/2.jpg@x400&h=600 1.5x,https://test.url/image/2.jpg@x400&h=800 2x,https://test.url/image/2.jpg@x400&h=1200 3x">'
+            '<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@x400&h=400 1x,https://test.url/image/2.jpg@x600&h=600 1.5x,https://test.url/image/2.jpg@x800&h=800 2x,https://test.url/image/2.jpg@x1200&h=1200 3x">'
         );
     }
 
@@ -1083,7 +1083,17 @@ class TestClassEstateList
         $this->_pEstateList->estateIterator();
         $output = $this->_pEstateList->getResponsiveImageSource(2, 1600, 456);
         $this->assertEquals($output,
-            '<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@456x&w=456 1x,https://test.url/image/2.jpg@456x&w=684 1.5x,https://test.url/image/2.jpg@456x&w=912 2x,https://test.url/image/2.jpg@456x&w=1368 3x">'
+            '<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@456x&w=456 1x,https://test.url/image/2.jpg@684x&w=684 1.5x,https://test.url/image/2.jpg@912x&w=912 2x,https://test.url/image/2.jpg@1368x&w=1368 3x">'
+        );
+    }
+
+    public function testGetResponsiveImageSourceWithoutWidthWithoutHeight()
+    {
+        $this->_pEstateList->loadEstates();
+        $this->_pEstateList->estateIterator();
+        $output = $this->_pEstateList->getResponsiveImageSource(2, 1600);
+        $this->assertEquals($output,
+            '<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg 1x,https://test.url/image/2.jpg 1.5x,https://test.url/image/2.jpg@ 2x,https://test.url/image/2.jpg 3x">'
         );
     }
 }

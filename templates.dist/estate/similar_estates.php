@@ -1,55 +1,50 @@
 <?php $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
-,
-    // picture properties
-$image_width_xs = 539;
-$image_width_sm = 508;
-$image_width_md = 690;
-$image_width_lg = 444;
-$image_width_xl = 540;
-$image_width_xxl = 412;
-$image_width_xxxl = 456;
+
+/*  responsive picture properties
+ *  customizable widths and heights for individual layouts
+ */
+$image_width_xs = 545;
+$image_width_sm = 355;
+$image_width_md = 465;
+$image_width_lg = 370;
+$image_width_xl = 440;
+$image_width_xxl = 500;
+$image_width_xxxl = 605;
+$image_height_xs = null;
+$image_height_sm = null;
+$image_height_md = null;
+$image_height_lg = null;
+$image_height_xl = null;
+$image_height_xxl = null;
+$image_height_xxxl = null;
 $dimensions = [
     '575' => [
         'w' => $image_width_xs,
-        'h' => round(
-            ($image_width_xs * 2) / 3
-        )
+        'h' => $image_height_xs
     ],
     '1600' => [
         'w' => $image_width_xxxl,
-        'h' => round(
-            ($image_width_xxxl * 2) / 3
-        )
+        'h' => $image_height_xxxl
     ],
     '1400' => [
         'w' => $image_width_xxl,
-        'h' => round(
-            ($image_width_xxl * 2) / 3
-        )
+        'h' => $image_height_xxl
     ],
     '1200' => [
         'w' => $image_width_xl,
-        'h' => round(
-            ($image_width_xl * 2) / 3
-        )
+        'h' => $image_height_xl
     ],
     '992' => [
         'w' => $image_width_lg,
-        'h' => round(
-            ($image_width_lg * 2) / 3
-        )
+        'h' => $image_height_lg
     ],
     '768' => [
         'w' => $image_width_md,
-        'h' => round(
-            ($image_width_md * 2) / 3
-        )
+        'h' => $image_height_md
     ],
     '576' => [
         'w' => $image_width_sm,
-        'h' => round(
-            ($image_width_sm * 2) / 3
-        )
+        'h' => $image_height_sm
     ]
 ];
 ?>
@@ -103,7 +98,7 @@ $dimensions = [
                     echo $pEstates->getResponsiveImageSource($id, 768, $dimensions['768']['w'], $dimensions['768']['h']);
                     echo $pEstates->getResponsiveImageSource($id, 576, $dimensions['576']['w'], $dimensions['576']['h']);
                     echo '<img class="oo-responsive-image estate-status" ' .
-                        'src="' . esc_url($pEstates->getEstatePictureUrl($id, ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']])) . '" ' .
+                        'src="' . esc_url($pEstates->getEstatePictureUrl($id, isset($dimensions['1600']['w']) || isset($dimensions['1600']['h']) ? ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']] : null)) . '" ' .
                         'alt="' . esc_html($pEstates->getEstatePictureTitle($id) ?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
                         'loading="lazy"/>';
                     echo '</picture>';
