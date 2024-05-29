@@ -86,6 +86,6 @@ class TestClassDataAddressDetailView
 		$this->assertEquals(1, $pDataAddressDetailView->getShowPriceOnRequest());
 		$pDataAddressDetailView->setShowEstateMap(1);
 		$this->assertEquals(1, $pDataAddressDetailView->getShowEstateMap());
-		$pDataAddressDetailView->setShowReferenceEstates('');
+		$pDataAddressDetailView->setShowReferenceEstate('');
 	}
 }

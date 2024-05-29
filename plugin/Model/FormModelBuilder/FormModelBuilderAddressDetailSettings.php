@@ -353,20 +353,20 @@ class FormModelBuilderAddressDetailSettings
 	 * @return InputModelOption
 	 * @throws ExceptionInputModelMissingField
 	 */
-	public function createInputModelShowLinkEstates(): InputModelOption
+	public function createInputModelEnableLinkedEstates(): InputModelOption
 	{
-		$labelShowStatus = __('Show Linked Estates', 'onoffice-for-wp-websites');
+		$labelEnableLinkedEstates = __('Show Linked Estates', 'onoffice-for-wp-websites');
 
-		$pInputModelShowStatus = $this->_pInputModelAddressDetailFactory->create
-		(InputModelOptionFactoryAddressDetailView::INPUT_SHOW_LINK_ESTATES, $labelShowStatus);
-		$pInputModelShowStatus->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelEnableLinkedEstates = $this->_pInputModelAddressDetailFactory->create
+		(InputModelOptionFactoryAddressDetailView::INPUT_ENABLE_LINKED_ESTATES, $labelEnableLinkedEstates);
+		$pInputModelEnableLinkedEstates->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
 
-		$showEstateStatus = $this->_pDataAddressDetail->getShowLinkEstates();
+		$showEstateStatus = $this->_pDataAddressDetail->getEnableLinkedEstates();
 
-		$pInputModelShowStatus->setValue($showEstateStatus);
-		$pInputModelShowStatus->setValuesAvailable(1);
+		$pInputModelEnableLinkedEstates->setValue($showEstateStatus);
+		$pInputModelEnableLinkedEstates->setValuesAvailable(1);
 
-		return $pInputModelShowStatus;
+		return $pInputModelEnableLinkedEstates;
 	}
 
 	/**

@@ -49,7 +49,7 @@ class DataAddressDetailView
 	const SHOW_ESTATES_STATUS = 'showEstatesStatus';
 
 	/** */
-	const SHOW_LINK_ESTATES = 'showLinkEstates';
+	const ENABLE_LINKED_ESTATES = 'enableLinkedEstates';
 
 	/** */
 	const REFERENCE_ESTATES = 'referenceEstates';
@@ -129,7 +129,7 @@ class DataAddressDetailView
 	private $_showEstateStatus = 0;
 
 	/** @var int */
-	private $_showLinkEstates = 0;
+	private $_enableLinkedEstates = 0;
 
 	/** @var string */
 	private $_showReferenceEstates = '0';
@@ -138,7 +138,7 @@ class DataAddressDetailView
 	private $_filter = '';
 
 	/** @var int */
-	private $_numberRecordsPerPage = 5;
+	private $_numberRecordsPerPage = 12;
 
 	/** @var int */
 	private $_showPriceOnRequest = 0;
@@ -219,12 +219,12 @@ class DataAddressDetailView
 		{ $this->_showEstateStatus = $estateStatus; }
 
 	/** @return int */
-	public function getShowLinkEstates(): int
-		{ return $this->_showLinkEstates; }
+	public function getEnableLinkedEstates(): int
+		{ return $this->_enableLinkedEstates; }
 
-	/** @param int $showLinkEstates */
-	public function setShowLinkEstates(int $showLinkEstates)
-		{ $this->_showLinkEstates = $showLinkEstates; }
+	/** @param int $enableLinkedEstates */
+	public function setEnableLinkedEstates(int $enableLinkedEstates)
+		{ $this->_enableLinkedEstates = $enableLinkedEstates; }
 
 	/** @return string */
 	public function getShowReferenceEstate(): string

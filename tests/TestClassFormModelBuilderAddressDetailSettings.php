@@ -108,7 +108,7 @@ class TestClassFormModelBuilderAddressDetailSettings
 	{
 		$pFormModelBuilderAddressDetailSettings = $this->_pFormModelBuilderAddressDetailSettings;
 		$pFormModelBuilderAddressDetailSettings->generate('test');
-		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createSearchFieldForFieldLists('address', 'searchFieldForFieldLists');
+		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createSearchFieldForFieldLists(['address', 'estate'], 'searchFieldForFieldLists');
 
 		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
 		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());

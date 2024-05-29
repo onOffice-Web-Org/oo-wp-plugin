@@ -51,7 +51,7 @@ class InputModelOptionFactoryAddressDetailView
 	const INPUT_SHOW_ESTATES_STATUS = 'showEstatesStatus';
 
 	/** @var string */
-	const INPUT_SHOW_LINK_ESTATES = 'showLinkEstates';
+	const INPUT_ENABLE_LINKED_ESTATES = 'enableLinkedEstates';
 
 	/** @var string */
 	const INPUT_SHOW_REFERENCE_ESTATE = 'referenceEstates';
@@ -89,7 +89,7 @@ class InputModelOptionFactoryAddressDetailView
 		self::INPUT_ESTATE_FIELD_CONFIG => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-		self::INPUT_SHOW_LINK_ESTATES => [
+		self::INPUT_ENABLE_LINKED_ESTATES => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
 		],
 		self::INPUT_SHOW_ESTATES_STATUS => [
