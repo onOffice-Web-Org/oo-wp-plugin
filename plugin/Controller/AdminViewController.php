@@ -38,10 +38,10 @@ use onOffice\WPlugin\Gui\AdminPageEstateUnitList;
 use onOffice\WPlugin\Gui\AdminPageEstateUnitSettings;
 use onOffice\WPlugin\Gui\AdminPageFormList;
 use onOffice\WPlugin\Gui\AdminPageFormSettingsMain;
-use onOffice\WPlugin\Gui\AdminPageModules;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\Gui\AdminPageAddress;
 use Parsedown;
@@ -491,11 +491,11 @@ class AdminViewController
 		$urlOnofficeSetting = admin_url().'admin.php?page=onoffice-settings#notice-seo';
 		$nameOnofficeSetting = esc_html__('onOffice plugin settings','onoffice-for-wp-websites');
 		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
-		
-		$listPluginSEOActive = [];
-		$listPluginSEOActive = $this->getPluginSEOActive();
-		$listNamePluginSEO = implode(", ", $listPluginSEOActive);
-		if (count($listPluginSEOActive) > 0) {
+
+        $WPPluginChecker = new WPPluginChecker;
+		$activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
+		$listNamePluginSEO = implode(", ", $activeSEOPlugins);
+		if ($WPPluginChecker->isSEOPluginActive()) {
 			if (get_option('onoffice-click-button-close-action') == 0
 				&& get_current_screen()->id !== 'onoffice_page_onoffice-settings'
 				&& get_option('onoffice-settings-title-and-description') == 0) {
@@ -514,32 +514,6 @@ class AdminViewController
 		} else {
 			update_option('onoffice-click-button-close-action', 0);
 		}
-	}
-	
-	/**
-	 * @return array
-	 */
-	public function getPluginSEOActive():array
-	{
-		$listPluginSEOActive = [];
-		
-		$listPluginSEO = [
-			"wpseo/wp-seo.php" => "wpSEO",
-			"seo-by-rank-math/rank-math.php" => "Rank Math SEO",
-			"wordpress-seo/wp-seo.php" => "Yoast SEO",
-			"all-in-one-seo-pack/all_in_one_seo_pack.php" => "All in One SEO",
-			"autodescription/autodescription.php" => "SEO Framework",
-			"wp-seopress/seopress.php" => "SEOPress",
-			"squirrly-seo/squirrly.php" => "Squirrly SEO"
-		];
-		foreach ($listPluginSEO as $keyPluginSeo => $namePluginSEO)
-		{
-			if( in_array( $keyPluginSeo ,get_option("active_plugins") ) )
-			{
-				array_push($listPluginSEOActive,$namePluginSEO);
-			}
-		}
-		return $listPluginSEOActive;
 	}
 	
 	public function displayUsingEmptyDefaultEmailError()

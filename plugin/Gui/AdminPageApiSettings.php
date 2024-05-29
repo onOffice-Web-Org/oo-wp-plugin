@@ -27,7 +27,6 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\MapProvider;
-use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use function __;
 use function admin_url;
 use function do_settings_sections;
@@ -36,10 +35,9 @@ use function esc_html;
 use function get_option;
 use function json_encode;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
+use onOffice\WPlugin\WP\WPPluginChecker;
 use function settings_fields;
 use function submit_button;
-use onOffice\WPlugin\Controller\AdminViewController;
-use function wp_enqueue_style;
 use Parsedown;
 /**
  *
@@ -67,6 +65,7 @@ class AdminPageApiSettings
 		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleMapsKey();
 		$this->addFormModelGoogleCaptcha();
+		$this->addFormModelSocialMetaData();
 		$this->addFormModelHoneypot();
 		$this->addFormModelFavorites($pageSlug);
         $this->addFormModelDetailView($pageSlug);
@@ -190,6 +189,47 @@ class AdminPageApiSettings
 		$this->addFormModel($pFormModel);
 	}
 
+	/**
+	 *
+	 */
+
+	private function addFormModelSocialMetaData()
+	{
+		$labelOpenGraph = __('Enable Open Graph', 'onoffice-for-wp-websites');
+		$pInputModelOpenGraph = new InputModelOption
+			('onoffice-settings', 'opengraph', $labelOpenGraph, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$pInputModelOpenGraph->setValuesAvailable(1);
+		$pInputModelOpenGraph->setHtmlType(InputModelOption::HTML_TYPE_TOGGLE_SWITCH);
+		$pInputModelOpenGraph->setValue(get_option($pInputModelOpenGraph->getIdentifier()));
+
+		$labelTwitterCards = __('Enable Twitter Cards', 'onoffice-for-wp-websites');
+		$pInputModelTwitterCards = new InputModelOption
+			('onoffice-settings', 'twittercards', $labelTwitterCards, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$pInputModelTwitterCards->setValuesAvailable(1);
+		$pInputModelTwitterCards->setHtmlType(InputModelOption::HTML_TYPE_TOGGLE_SWITCH);
+		$pInputModelTwitterCards->setValue(get_option($pInputModelTwitterCards->getIdentifier()));
+
+        $WPPluginChecker = new WPPluginChecker;
+        $activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
+        if ($WPPluginChecker->isSEOPluginActive()) {
+            $listNamePluginSEO = implode(", ",$activeSEOPlugins);
+            $messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SocialMedia Data settings. Therefore they are disabled.','onoffice-for-wp-websites'), $listNamePluginSEO);
+            $descriptionNoticeSeo = sprintf('<p class="oo-description oo-description--notice">%s</p>', $messageNoticeSEO);
+
+            $pInputModelTwitterCards->setDeactivate(true);
+            $pInputModelOpenGraph->setHintHtml($descriptionNoticeSeo);
+            $pInputModelOpenGraph->setDeactivate(true);
+        }
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelTwitterCards);
+		$pFormModel->addInputModel($pInputModelOpenGraph);
+		$pFormModel->setGroupSlug('onoffice-settings');
+		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setLabel(__('Social MetaData', 'onoffice-for-wp-websites'));
+
+		$this->addFormModel($pFormModel);
+	}
 
 	/**
 	 *
@@ -214,13 +254,9 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleBotSettings()
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-		$pAdminViewController = $pContainer->get(AdminViewController::class);
-		$listPluginSEOActive = [];
-		$listPluginSEOActive = $pAdminViewController->getPluginSEOActive();
-		$listNamePluginSEO = implode(", ",$listPluginSEOActive);
+        $WPPluginChecker = new WPPluginChecker;
+        $activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
+		$listNamePluginSEO = implode(", ",$activeSEOPlugins);
 		$titleDoNotModify = esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites');
 		$summaryDetailDoNotModify = esc_html__( 'Further information on custom fields', 'onoffice-for-wp-websites' );
 		$descriptionDetailDoNotModify = esc_html__( 'With the help of an SEO plugin, it is possible to use individual fields to insert data directly from onOffice enterprise into the title and metadata of your website.', 'onoffice-for-wp-websites' );
@@ -253,11 +289,11 @@ class AdminPageApiSettings
 			->setBreaksEnabled(true)->text(
 				$messageNoticeSEO
 			);
-		$descriptionNoticeSeo = sprintf('<div id="notice-seo">%s</div>', $messageNoticeSEO);
+		$descriptionNoticeSeo = sprintf('<div id="notice-seo" class="oo-description--notice">%s</div>', $messageNoticeSEO);
 		$descriptionFillOut = '<p class="description-notice">
 					'.esc_html__("This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.",'onoffice-for-wp-websites').'
 				 </p>';
-		if ( count($listPluginSEOActive) > 0 && get_option('onoffice-settings-title-and-description') == 0) {
+		if ( $WPPluginChecker->isSEOPluginActive() && get_option('onoffice-settings-title-and-description') == 0) {
 			$descriptionFillOut = $descriptionNoticeSeo.$descriptionFillOut;
 		}
 		$labelGoogleBotIndexPdfExpose = __('Allow indexing of PDF brochures', 'onoffice-for-wp-websites');
