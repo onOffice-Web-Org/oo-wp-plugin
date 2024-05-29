@@ -257,22 +257,6 @@
 #oo-similarframe .oo-listobject {
 	width: inherit;
 }
-
-.oo-picture {
-	display: block;
-	height: 100%;
-	width: 100%;
-	line-height: 0;
-	overflow: hidden;
-}
-
-.oo-responsive-image {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	object-position: center center;
-}
-
 /* responsive */
 @media only screen and (max-width: 991px) {
 	.oo-listobject, .oo-searchformfield {
