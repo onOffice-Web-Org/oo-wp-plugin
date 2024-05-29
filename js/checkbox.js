@@ -44,6 +44,34 @@ onOffice.checkboxAdmin = function() {
 				element: "input[name=oopluginforms-recipient]",
 				invert: true
 			}
+		],
+
+		// view: address detail view
+		"input[name=onoffice-showLinkEstates]": [
+			{
+				element: "select[name=onoffice-referenceEstates]",
+				invert: false
+			},
+			{
+				element: "select[name=onoffice-filterId]",
+				invert: false
+			},
+			{
+				element: "input[name=onoffice-recordsPerPage]",
+				invert: false
+			},
+			{
+				element: "input[name=onoffice-showEstatesStatus]",
+				invert: false
+			},
+			{
+				element: "input[name=onoffice-showPriceOnRequest]",
+				invert: false
+			},
+			{
+				element: "input[name=onoffice-showMap]",
+				invert: false
+			},
 		]
 	};
 };
