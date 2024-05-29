@@ -716,12 +716,6 @@ class EstateList
      */
     public function getResponsiveImageSource(int $imageId, int $breakPoint, float $width = null, float $height = null, bool $maxWidth = false) {
         $sourceTag = '<source media="(' . ($maxWidth ? 'max-width:' : 'min-width:') . $breakPoint . 'px)" srcset="';
-        $width15 = round($width * 1.5);
-        $width2 = round($width * 2);
-        $width3 = round($width * 3);
-        $height15 = round($height * 1.5);
-        $height2 = round($height * 2);
-        $height3 = round($height * 3);
         $pictureOptions1 = null;
         $pictureOptions15 = null;
         $pictureOptions2 = null;
@@ -729,16 +723,16 @@ class EstateList
 
         if(isset($width) || isset($height)) {
             $pictureOptions1 = ['width'=> isset($width) ? $width : null, 'height'=> isset($height) ? $height : null];
-            $pictureOptions15 = ['width'=> isset($width) ? $width15 : null, 'height'=>isset($height) ? $height15 : null];
-            $pictureOptions2 = ['width'=> isset($width) ? $width2 : null, 'height'=>isset($height) ? $height2 : null];
-            $pictureOptions3 = ['width'=> isset($width) ? $width3 : null, 'height'=>isset($height) ? $height3 : null];
+            $pictureOptions15 = ['width'=> isset($width) ? round($width * 1.5) : null, 'height'=>isset($height) ? round($height * 1.5) : null];
+            $pictureOptions2 = ['width'=> isset($width) ? round($width * 2) : null, 'height'=>isset($height) ? round($height * 2) : null];
+            $pictureOptions3 = ['width'=> isset($width) ?  round($width * 3) : null, 'height'=>isset($height) ? round($height * 3) : null];
         }
 
         return  $sourceTag .
-            $this->getEstatePictureUrl($imageId, $pictureOptions1) . (isset($width) ? '&w=' . $width : '') . (isset($height) ? '&h=' . $height : '') . ' 1x,' .
-            $this->getEstatePictureUrl($imageId, $pictureOptions15) . (isset($width) ? '&w=' . $width15 : '') . (isset($height) ? '&h=' . $height15 : '') . ' 1.5x,' .
-            $this->getEstatePictureUrl($imageId, $pictureOptions2) . (isset($width) ? '&w=' . $width2 : '') . (isset($height) ? '&h=' . $height2 : '') . ' 2x,' .
-            $this->getEstatePictureUrl($imageId, $pictureOptions3) . (isset($width) ? '&w=' . $width3 : '') . (isset($height) ? '&h=' . $height3 : '') . ' 3x">';
+            $this->getEstatePictureUrl($imageId, $pictureOptions1) . ' 1x,' .
+            $this->getEstatePictureUrl($imageId, $pictureOptions15) . ' 1.5x,' .
+            $this->getEstatePictureUrl($imageId, $pictureOptions2) . ' 2x,' .
+            $this->getEstatePictureUrl($imageId, $pictureOptions3) . ' 3x">';
     }
 
 	/**
