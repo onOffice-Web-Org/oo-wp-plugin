@@ -86,6 +86,7 @@ class TestClassFormModelBuilderAddressDetailSettings
 		$pInstance = $this->_pFormModelBuilderAddressDetailSettings;
 		$this->assertInstanceOf(FormModelBuilderAddressDetailSettings::class, $pInstance);
 	}
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createSortableFieldList
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::getInputModelCustomLabel
@@ -108,7 +109,7 @@ class TestClassFormModelBuilderAddressDetailSettings
 	{
 		$pFormModelBuilderAddressDetailSettings = $this->_pFormModelBuilderAddressDetailSettings;
 		$pFormModelBuilderAddressDetailSettings->generate('test');
-		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createSearchFieldForFieldLists('address', 'searchFieldForFieldLists');
+		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createSearchFieldForFieldLists(['address', 'estate'], 'searchFieldForFieldLists');
 
 		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
 		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
@@ -195,5 +196,88 @@ class TestClassFormModelBuilderAddressDetailSettings
 		$this->assertEquals('1', $inputModel->getId());
 		$this->assertEquals(['field1'], $inputModel->getValuesAvailable());
 		$this->assertInstanceOf(InputModelOption::class, $inputModel);
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelEnableLinkedEstates
+	 */
+	public function testCreateInputModelEnableLinkedEstates()
+	{
+		$pFormModelBuilderAddressDetailSettings = $this->_pFormModelBuilderAddressDetailSettings;
+		$pFormModelBuilderAddressDetailSettings->generate('test');
+		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createInputModelEnableLinkedEstates();
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelShowEstatesStatus
+	 */
+	public function testCreateInputModelShowEstatesStatus()
+	{
+		$pFormModelBuilderAddressDetailSettings = $this->_pFormModelBuilderAddressDetailSettings;
+		$pFormModelBuilderAddressDetailSettings->generate('test');
+		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createInputModelShowEstatesStatus();
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelShowReferenceEstates
+	 */
+	public function testCreateInputModelShowReferenceEstates()
+	{
+		$pFormModelBuilderAddressDetailSettings = $this->_pFormModelBuilderAddressDetailSettings;
+		$pFormModelBuilderAddressDetailSettings->generate('test');
+		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createInputModelShowReferenceEstates();
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'select');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelRecordsPerPage
+	 */
+	public function testCreateInputModelRecordsPerPage()
+	{
+		$pFormModelBuilderAddressDetailSettings = $this->_pFormModelBuilderAddressDetailSettings;
+		$pFormModelBuilderAddressDetailSettings->generate('test');
+		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createInputModelRecordsPerPage();
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'number');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelShowPriceOnRequest
+	 */
+	public function testCreateInputModelShowPriceOnRequest()
+	{
+		$pFormModelBuilderAddressDetailSettings = $this->_pFormModelBuilderAddressDetailSettings;
+		$pFormModelBuilderAddressDetailSettings->generate('test');
+		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createInputModelShowPriceOnRequest();
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelShowMap
+	 */
+	public function testCreateInputModelShowMap()
+	{
+		$pFormModelBuilderAddressDetailSettings = $this->_pFormModelBuilderAddressDetailSettings;
+		$pFormModelBuilderAddressDetailSettings->generate('test');
+		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createInputModelShowMap();
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'checkbox');
 	}
 }

@@ -47,7 +47,7 @@ onOffice.checkboxAdmin = function() {
 		],
 
 		// view: address detail view
-		"input[name=onoffice-showLinkEstates]": [
+		"input[name=onoffice-enableLinkedEstates]": [
 			{
 				element: "select[name=onoffice-referenceEstates]",
 				invert: false

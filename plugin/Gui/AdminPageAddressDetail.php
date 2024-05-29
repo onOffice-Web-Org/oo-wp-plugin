@@ -289,7 +289,7 @@ class AdminPageAddressDetail
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
 
-		$pInputModelLinkEstates = $pFormModelBuilder->createInputModelShowLinkEstates();
+		$pInputModelLinkEstates = $pFormModelBuilder->createInputModelEnableLinkedEstates();
 		$pInputModelEstatesStatus = $pFormModelBuilder->createInputModelShowEstatesStatus();
 		$pInputModelListReferenceEstates = $pFormModelBuilder->createInputModelShowReferenceEstates();
 		$pInputModelFilters = $pFormModelBuilder->createInputModelFilter();

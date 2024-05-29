@@ -51,7 +51,7 @@ class InputModelOptionFactoryAddressDetailView
 	const INPUT_SHOW_ESTATES_STATUS = 'showEstatesStatus';
 
 	/** @var string */
-	const INPUT_SHOW_LINK_ESTATES = 'showLinkEstates';
+	const INPUT_ENABLE_LINKED_ESTATES = 'enableLinkedEstates';
 
 	/** @var string */
 	const INPUT_SHOW_REFERENCE_ESTATE = 'referenceEstates';
@@ -89,26 +89,26 @@ class InputModelOptionFactoryAddressDetailView
 		self::INPUT_ESTATE_FIELD_CONFIG => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-		self::INPUT_SHOW_LINK_ESTATES => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
-		],
-		self::INPUT_SHOW_ESTATES_STATUS => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+		self::INPUT_ENABLE_LINKED_ESTATES => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
 		self::INPUT_SHOW_REFERENCE_ESTATE => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
 		self::INPUT_FILTERID => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
 		],
 		self::INPUT_RECORDS_PER_PAGE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+		],
+		self::INPUT_SHOW_ESTATES_STATUS => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
 		self::INPUT_SHOW_PRICE_ON_REQUEST => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
 		self::INPUT_SHOW_MAP => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
 	];
 

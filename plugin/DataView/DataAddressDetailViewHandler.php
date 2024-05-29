@@ -105,13 +105,13 @@ class DataAddressDetailViewHandler
 		$pDataAddressDetailView->setEstateFields($row[DataAddressDetailView::ESTATE_FIELDS] ?? []);
 		$pDataAddressDetailView->setPictureTypes($row[DataAddressDetailView::PICTURES] ?? []);
 		$pDataAddressDetailView->setCustomLabels($row[DataAddressDetailView::FIELD_CUSTOM_LABEL] ?? $pDataAddressDetailView->getCustomLabels());
-		$pDataAddressDetailView->setShowEstateStatus($row[DataAddressDetailView::SHOW_ESTATES_STATUS] ?? 0);
-		$pDataAddressDetailView->setShowLinkEstates($row[DataAddressDetailView::SHOW_LINK_ESTATES] ?? 0);
+		$pDataAddressDetailView->setEnableLinkedEstates($row[DataAddressDetailView::ENABLE_LINKED_ESTATES] ?? false);
+		$pDataAddressDetailView->setShowEstateStatus($row[DataAddressDetailView::SHOW_ESTATES_STATUS] ?? false);
 		$pDataAddressDetailView->setShowReferenceEstate($row[DataAddressDetailView::REFERENCE_ESTATES] ?? '0');
-		$pDataAddressDetailView->setFilter($row[DataAddressDetailView::INPUT_FILTERID] ?? '');
+		$pDataAddressDetailView->setFilterId($row[DataAddressDetailView::INPUT_FILTERID] ?? 0);
 		$pDataAddressDetailView->setRecordsPerPage($row[DataAddressDetailView::RECORDS_PER_PAGE] ?? 0);
-		$pDataAddressDetailView->setShowPriceOnRequest($row[DataAddressDetailView::SHOW_PRICE_ON_REQUEST] ?? 0);
-		$pDataAddressDetailView->setShowEstateMap($row[DataAddressDetailView::SHOW_ESTATES_MAP] ?? 0);
+		$pDataAddressDetailView->setShowPriceOnRequest($row[DataAddressDetailView::SHOW_PRICE_ON_REQUEST] ?? false);
+		$pDataAddressDetailView->setShowEstateMap($row[DataAddressDetailView::SHOW_ESTATES_MAP] ?? false);
 
 		return $pDataAddressDetailView;
 	}

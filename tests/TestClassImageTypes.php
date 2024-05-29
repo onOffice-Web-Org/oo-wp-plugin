@@ -60,7 +60,7 @@ class TestClassImageTypes
 		$pReflection = new ReflectionClass(ImageTypes::class);
 		$nameConstants = $pReflection->getConstants();
 		unset($nameConstants['IMAGE_TYPES']);
-		unset($nameConstants['PASSPORTPHOTO']);
+		unset($nameConstants['PASSPORT_PHOTO']);
 		$this->assertEqualSets($nameConstants, array_keys(ImageTypes::getAllImageTypesTranslated()));
 	}
 

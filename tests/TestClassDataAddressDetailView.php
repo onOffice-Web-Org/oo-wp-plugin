@@ -54,6 +54,12 @@ class TestClassDataAddressDetailView
 		$this->assertEquals('', $pDataAddressDetailView->getTemplate());
 		$this->assertEquals([], $pDataAddressDetailView->getPageIdsHaveDetailShortCode());
 		$this->assertEquals([], $pDataAddressDetailView->getCustomLabels());
+		$this->assertEquals(false, $pDataAddressDetailView->getShowPriceOnRequest());
+		$this->assertEquals(false, $pDataAddressDetailView->getShowEstateMap());
+		$this->assertEquals('0', $pDataAddressDetailView->getShowReferenceEstate());
+		$this->assertEquals(0, $pDataAddressDetailView->getFilterId());
+		$this->assertEquals(12, $pDataAddressDetailView->getRecordsPerPage());
+		$this->assertEquals(false, $pDataAddressDetailView->getEnableLinkedEstates());
 	}
 
 	/**
@@ -82,10 +88,17 @@ class TestClassDataAddressDetailView
 		$this->assertEquals([], $pDataAddressDetailView->getPageIdsHaveDetailShortCode());
 		$pDataAddressDetailView->setCustomLabels(['field1']);
 		$this->assertEquals(['field1'], $pDataAddressDetailView->getCustomLabels());
-		$pDataAddressDetailView->setShowPriceOnRequest(1);
-		$this->assertEquals(1, $pDataAddressDetailView->getShowPriceOnRequest());
-		$pDataAddressDetailView->setShowEstateMap(1);
-		$this->assertEquals(1, $pDataAddressDetailView->getShowEstateMap());
-		$pDataAddressDetailView->setShowReferenceEstates('');
+		$pDataAddressDetailView->setShowPriceOnRequest(true);
+		$this->assertTrue($pDataAddressDetailView->getShowPriceOnRequest());
+		$pDataAddressDetailView->setShowEstateMap(true);
+		$this->assertTrue($pDataAddressDetailView->getShowEstateMap());
+		$pDataAddressDetailView->setShowReferenceEstate('0');
+		$this->assertEquals('0', $pDataAddressDetailView->getShowReferenceEstate());
+		$pDataAddressDetailView->setFilterId(1);
+		$this->assertEquals(1, $pDataAddressDetailView->getFilterId());
+		$pDataAddressDetailView->setRecordsPerPage(20);
+		$this->assertEquals(20, $pDataAddressDetailView->getRecordsPerPage());
+		$pDataAddressDetailView->setEnableLinkedEstates(true);
+		$this->assertTrue($pDataAddressDetailView->getEnableLinkedEstates());
 	}
 }

@@ -49,7 +49,7 @@ class DataAddressDetailView
 	const SHOW_ESTATES_STATUS = 'showEstatesStatus';
 
 	/** */
-	const SHOW_LINK_ESTATES = 'showLinkEstates';
+	const ENABLE_LINKED_ESTATES = 'enableLinkedEstates';
 
 	/** */
 	const REFERENCE_ESTATES = 'referenceEstates';
@@ -125,26 +125,26 @@ class DataAddressDetailView
 	/** @var array */
 	private $_customLabel = [];
 
-	/** @var int */
-	private $_showEstateStatus = 0;
-
-	/** @var int */
-	private $_showLinkEstates = 0;
+	/** @var bool */
+	private $_enableLinkedEstates = false;
 
 	/** @var string */
 	private $_showReferenceEstates = '0';
 
 	/** @var int */
-	private $_filter = '';
+	private $_filterId = 0;
 
 	/** @var int */
-	private $_numberRecordsPerPage = 5;
+	private $_numberRecordsPerPage = 12;
 
-	/** @var int */
-	private $_showPriceOnRequest = 0;
+	/** @var bool */
+	private $_showEstateStatus = false;
 
-	/** @var int */
-	private $_showEstatesMap = 0;
+	/** @var bool */
+	private $_showPriceOnRequest = false;
+
+	/** @var bool */
+	private $_showEstatesMap = false;
 
 	/** @return int */
 	public function getPageId(): int
@@ -210,21 +210,13 @@ class DataAddressDetailView
 	public function setCustomLabels(array $customLabel)
 		{ $this->_customLabel = $customLabel; }
 
-	/** @return int */
-	public function getShowEstateStatus(): int
-		{ return $this->_showEstateStatus;}
+	/** @return bool */
+	public function getEnableLinkedEstates(): bool
+		{ return $this->_enableLinkedEstates; }
 
-	/** @param int $estateStatus */
-	public function setShowEstateStatus(int $estateStatus)
-		{ $this->_showEstateStatus = $estateStatus; }
-
-	/** @return int */
-	public function getShowLinkEstates(): int
-		{ return $this->_showLinkEstates; }
-
-	/** @param int $showLinkEstates */
-	public function setShowLinkEstates(int $showLinkEstates)
-		{ $this->_showLinkEstates = $showLinkEstates; }
+	/** @param bool $enableLinkedEstates */
+	public function setEnableLinkedEstates(bool $enableLinkedEstates)
+		{ $this->_enableLinkedEstates = $enableLinkedEstates; }
 
 	/** @return string */
 	public function getShowReferenceEstate(): string
@@ -234,13 +226,13 @@ class DataAddressDetailView
 	public function setShowReferenceEstate(string $referenceEstate)
 		{ $this->_showReferenceEstates = $referenceEstate; }
 
-	/** @return string */
-	public function getFilter(): string
-		{ return $this->_filter; }
+	/** @return int */
+	public function getFilterId(): int
+		{ return $this->_filterId; }
 
-	/** @param string $filter */
-	public function setFilter(string $filter)
-		{ $this->_filter = $filter; }
+	/** @param int $filterId */
+	public function setFilterId(int $filterId)
+		{ $this->_filterId = $filterId; }
 
 	/** @return int */
 	public function getRecordsPerPage(): int
@@ -250,19 +242,27 @@ class DataAddressDetailView
 	public function setRecordsPerPage(int $numberRecords)
 		{ $this->_numberRecordsPerPage = $numberRecords; }
 
-	/** @return int */
-	public function getShowPriceOnRequest(): int
+	/** @return bool */
+	public function getShowEstateStatus(): bool
+		{ return $this->_showEstateStatus;}
+
+	/** @param bool $estateStatus */
+	public function setShowEstateStatus(bool $estateStatus)
+		{ $this->_showEstateStatus = $estateStatus; }
+
+	/** @return bool */
+	public function getShowPriceOnRequest(): bool
 		{ return $this->_showPriceOnRequest; }
 
-	/** @param int $showPriceOnRequest */
-	public function setShowPriceOnRequest(int $showPriceOnRequest)
+	/** @param bool $showPriceOnRequest */
+	public function setShowPriceOnRequest(bool $showPriceOnRequest)
 		{ $this->_showPriceOnRequest = $showPriceOnRequest; }
 
-	/** @return int */
-	public function getShowEstateMap(): int
+	/** @return bool */
+	public function getShowEstateMap(): bool
 		{ return $this->_showEstatesMap; }
 
-	/** @param int $showEstatesMap */
-	public function setShowEstateMap(int $showEstatesMap)
+	/** @param bool $showEstatesMap */
+	public function setShowEstateMap(bool $showEstatesMap)
 		{ $this->_showEstatesMap = $showEstatesMap; }
 }

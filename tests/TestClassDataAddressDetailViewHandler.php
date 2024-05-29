@@ -48,7 +48,7 @@ class TestClassDataAddressDetailViewHandler
 			'kaufpreis',
 		],
 		'pictures' => [
-			ImageTypes::PASSPORTPHOTO,
+			ImageTypes::PASSPORT_PHOTO,
 		],
 		'oo_plugin_fieldconfig_address_translated_labels' => ['field']
 	];
