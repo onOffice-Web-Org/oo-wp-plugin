@@ -37,6 +37,7 @@ use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\EstateList;
 
 /**
  *
@@ -127,4 +128,9 @@ class AddressListEnvironmentDefault
 		return new ViewFieldModifierHandler($fields, onOfficeSDK::MODULE_ADDRESS,
 			AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
 	}
+
+    public function getEstateList(): EstateList
+    {
+        return $this->_pContainer->get(EstateList::class);
+    }
 }

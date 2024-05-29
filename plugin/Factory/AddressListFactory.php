@@ -23,18 +23,24 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Factory;
 
 use onOffice\WPlugin\AddressList;
+use onOffice\WPlugin\AddressDetail;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
+use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 
 class AddressListFactory
 {
 	/** @var AddressListEnvironment */
 	private $_pEnvironment;
 
+	/** @var DataAddressDetailViewHandler */
+	private $_pDataAddressDetailViewHandler;
+
 	/**
 	 * @param AddressListEnvironment $pEnvironment
 	 */
-	public function __construct(AddressListEnvironment $pEnvironment)
+	public function __construct(DataAddressDetailViewHandler $pDataAddressDetailViewHandler, AddressListEnvironment $pEnvironment)
 	{
+		$this->_pDataAddressDetailViewHandler = $pDataAddressDetailViewHandler;
 		$this->_pEnvironment = $pEnvironment;
 	}
 
@@ -43,6 +49,24 @@ class AddressListFactory
 	 */
 	public function create()
 	{
-		return new AddressList($this->_pEnvironment);
+		return new AddressList(null, $this->_pEnvironment);
+	}
+
+
+	/**
+	 *
+	 * @param int $addressId
+	 * @return AddressDetail
+	 *
+	 */
+
+	public function createAddressDetail(int $addressId): AddressDetail
+	{
+		$pDataAddressDetailView = $this->_pDataAddressDetailViewHandler->getAddressDetailView();
+
+		$pAddressDetail = new AddressDetail($pDataAddressDetailView);
+		$pAddressDetail->setAddressId($addressId);
+
+		return $pAddressDetail;
 	}
 }

@@ -31,6 +31,7 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\EstateList;
 
 /**
  *
@@ -74,4 +75,9 @@ interface AddressListEnvironment
 	 * @return FieldsCollectionBuilderShort
 	 */
 	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort;
+
+	/**
+	 * @return EstateList
+	 */
+	public function getEstateList(): EstateList;
 }

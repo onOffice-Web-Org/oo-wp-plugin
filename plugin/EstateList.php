@@ -58,6 +58,8 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldParkingLot;
+use onOffice\WPlugin\DataView\DataViewAddress;
+use onOffice\WPlugin\DataView\DataAddressDetailView;
 
 class EstateList
 	implements EstateListBase
@@ -111,13 +113,16 @@ class EstateList
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
 
+	/** @var DataViewAddress */
+	private $_pAddressDataView = null;
+
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function __construct(DataView $pDataView, EstateListEnvironment $pEnvironment = null)
+	public function __construct(DataView $pDataView = null, EstateListEnvironment $pEnvironment = null)
 	{
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -390,6 +395,24 @@ class EstateList
 		}
 
 		return $requestParams;
+	}
+
+	/**
+	 * @param int $currentPage
+	 * @param array $estateIds
+	 * @param DataViewAddress $addressDataView
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws API\ApiClientException
+	 */
+	public function loadEstateByAddressId(int $currentPage, array $estateIds, DataViewAddress $pAddressDataView)
+	{
+        $estateLoader = new EstateLoader($this->_pApiClientAction, $this->_formatOutput, $this->_pEnvironment);
+        $estateLoader->loadEstateByAddressId($currentPage, $estateIds, $pAddressDataView);
+		$this->_currentEstatePage = $currentPage;
+		$this->_pAddressDataView = $pAddressDataView;
+        $this->_records = $estateLoader->getRecords();
+        $this->_recordsRaw = $estateLoader->getRecordsRaw();
 	}
 
 	/**
@@ -973,6 +996,68 @@ class EstateList
 		}
 
 		return $estatePictureUrl;
+	}
+
+	/**
+	 * @param string $modifier
+	 * @param bool $checkEstateIdRequestGuard
+	 * @throws UnknownFieldException
+	 */
+	public function estateAddressOwnerIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, $checkEstateIdRequestGuard  = false)
+	{
+		global $numpages, $multipage, $more, $paged;
+
+		if (null !== $this->_numEstatePages &&
+			!$this->_pDataView->getRandom()) {
+			$multipage = true;
+
+			$paged = $this->_currentEstatePage;
+			$more = true;
+			$numpages = $this->_numEstatePages;
+		}
+
+		$pEstateFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
+			($this->_pAddressDataView->getEstateFields(), $modifier);
+
+		$currentRecord = current($this->_records);
+		next($this->_records);
+
+		if (false === $currentRecord) {
+			return false;
+		}
+		$this->_currentEstate['id'] = $currentRecord['id'];
+		$recordElements = $currentRecord['elements'];
+		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
+			$this->_currentEstate['id'];
+		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
+
+		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
+
+		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'] ?? [];
+
+		if ($this->getShowEstateMarketingStatus()) {
+			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
+			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
+		}
+
+		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pAddressDataView instanceof DataAddressDetailView) {
+			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
+		}
+
+		$recordModified = new ArrayContainerEscape($recordModified);
+		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
+			if ($this->_pAddressDataView->getShowPriceOnRequest()) {
+				$priceFields = $this->_pAddressDataView->getListFieldsShowPriceOnRequest();
+
+				foreach ($priceFields as $priceField) {
+					$this->displayTextPriceOnRequest($recordModified, $priceField);
+				}
+			}
+		}
+		// do not show priceOnRequest as single Field
+		unset($recordModified['preisAufAnfrage']);
+
+		return $recordModified;
 	}
 
 	/**

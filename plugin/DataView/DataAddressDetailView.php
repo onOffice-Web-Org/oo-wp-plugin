@@ -111,6 +111,21 @@ class DataAddressDetailView
 	];
 
 	/** @var string[] */
+	private $_priceFields = [
+		'kaufpreis',
+		'erbpacht',
+		'nettokaltmiete',
+		'warmmiete',
+		'pacht',
+		'kaltmiete',
+		'miete_pauschal',
+		'saisonmiete',
+		'wochmietbto',
+		'kaufpreis_pro_qm',
+		'mietpreis_pro_qm',
+	];
+
+	/** @var string[] */
 	private $_pictureTypes = [];
 
 	/** @var string */
@@ -265,4 +280,12 @@ class DataAddressDetailView
 	/** @param int $showEstatesMap */
 	public function setShowEstateMap(int $showEstatesMap)
 		{ $this->_showEstatesMap = $showEstatesMap; }
+
+	/**
+	 * @return array
+	 */
+	public function getListFieldsShowPriceOnRequest(): array
+	{
+		return $this->_priceFields;
+	}
 }
