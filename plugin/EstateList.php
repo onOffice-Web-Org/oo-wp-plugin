@@ -728,7 +728,7 @@ class EstateList
         $pictureOptions3 = null;
 
         if(isset($width) || isset($height)) {
-            $pictureOptions1 = ['width'=> isset($width) ? $width : null, 'height'=> isset($height) ? $width : null];
+            $pictureOptions1 = ['width'=> isset($width) ? $width : null, 'height'=> isset($height) ? $height : null];
             $pictureOptions15 = ['width'=> isset($width) ? $width15 : null, 'height'=>isset($height) ? $height15 : null];
             $pictureOptions2 = ['width'=> isset($width) ? $width2 : null, 'height'=>isset($height) ? $height2 : null];
             $pictureOptions3 = ['width'=> isset($width) ? $width3 : null, 'height'=>isset($height) ? $height3 : null];
