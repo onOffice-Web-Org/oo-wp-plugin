@@ -131,7 +131,10 @@ class ScriptLoaderGenericConfigurationDefault
 
 		$filteredMetaKeys = [];
 		array_walk($metaKeys, function($metaValueArray, $key) use (&$filteredMetaKeys) {
-			$metaValue = str_replace('\u0022', '"', $metaValueArray[0]);
+			$metaValue = '';
+			if (isset($metaValueArray[0])) {
+				$metaValue = str_replace('\u0022', '"', $metaValueArray[0]);
+			}
 			if ($this->isEstateListPage($metaValue)) {
 				$filteredMetaKeys['estate'] = $metaValue;
 			} elseif ($this->isDetailEstatePage($metaValue)) {
@@ -230,6 +233,13 @@ class ScriptLoaderGenericConfigurationDefault
 					->setLoadInFooter(true);
 		}
 
+		if (get_option('onoffice-settings-captcha-sitekey') !== '' && $this->checkCaptchaActive($forms) &&
+			$this->checkFormType($forms, [Form::TYPE_CONTACT, Form::TYPE_OWNER, Form::TYPE_INTEREST])) {
+			$scripts[] = (new IncludeFileModel($script, 'onoffice-captchacontrol', plugins_url('/dist/onoffice-captchacontrol.min.js', $pluginPath)))
+					->setDependencies(['jquery'])
+					->setLoadInFooter(true);
+		}
+
 		return $scripts;
 	}
 
@@ -243,6 +253,18 @@ class ScriptLoaderGenericConfigurationDefault
 	{
 		return !empty(array_filter($forms, function($form) use ($typeForm) {
 			return in_array($form->form_type, $typeForm);
+		}));
+	}
+
+	/**
+	 * @param array $forms
+	 *
+	 * @return bool
+	 */
+	private function checkCaptchaActive(array $forms): bool
+	{
+		return !empty(array_filter($forms, function($form) {
+			return $form->captcha = true;
 		}));
 	}
 

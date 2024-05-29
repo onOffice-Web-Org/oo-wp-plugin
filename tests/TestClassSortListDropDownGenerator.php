@@ -103,7 +103,7 @@ class TestClassSortListDropDownGenerator
 	 */
 	public function test()
 	{
-		$expected = '<select name="userDefinedSelection" id="onofficeSortListSelector"><option value="kaltmiete#ASC"  selected>Kaltmiete (ascending)</option><option value="kaltmiete#DESC" >Kaltmiete (descending)</option><option value="kaufpreis#ASC" >Kaufpreis (ascending)</option><option value="kaufpreis#DESC" >Kaufpreis (descending)</option></select>';
+		$expected = '<select name="userDefinedSelection" data-sort-listviewid="1" class="onofficeSortListSelector"><option value="kaltmiete#ASC"  selected>Kaltmiete (ascending)</option><option value="kaltmiete#DESC" >Kaltmiete (descending)</option><option value="kaufpreis#ASC" >Kaufpreis (ascending)</option><option value="kaufpreis#DESC" >Kaufpreis (descending)</option></select>';
 		$pInstance = new SortListDropDownGenerator($this->_pSortListBuilder, $this->_pSortListRenderer, $this->_pDataListViewFactory);
 		$this->assertInstanceOf(SortListDropDownGenerator::class, $pInstance);
 
