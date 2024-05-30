@@ -29,7 +29,7 @@ use onOffice\WPlugin\AddressList;
 use Exception;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\DataView\DataSimilarView;
