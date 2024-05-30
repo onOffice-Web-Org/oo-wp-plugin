@@ -49,7 +49,7 @@ onOffice.checkboxAdmin = function() {
 		// view: address detail view
 		"input[name=onoffice-enableLinkedEstates]": [
 			{
-				element: "select[name=onoffice-referenceEstates]",
+				element: "select[name=onoffice-showReferenceEstate]",
 				invert: false
 			},
 			{
@@ -61,7 +61,7 @@ onOffice.checkboxAdmin = function() {
 				invert: false
 			},
 			{
-				element: "input[name=onoffice-showEstatesStatus]",
+				element: "input[name=onoffice-showStatus]",
 				invert: false
 			},
 			{
@@ -71,7 +71,7 @@ onOffice.checkboxAdmin = function() {
 			{
 				element: "input[name=onoffice-showMap]",
 				invert: false
-			},
+			}
 		]
 	};
 };

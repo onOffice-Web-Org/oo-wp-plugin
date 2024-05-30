@@ -46,16 +46,16 @@ class DataAddressDetailView
 	const PICTURES = 'pictures';
 
 	/** */
-	const SHOW_ESTATES_STATUS = 'showEstatesStatus';
+	const SHOW_STATUS = 'showStatus';
 
 	/** */
 	const ENABLE_LINKED_ESTATES = 'enableLinkedEstates';
 
 	/** */
-	const REFERENCE_ESTATES = 'referenceEstates';
+	const ENABLE_REFERENCE_ESTATE = 'showReferenceEstate';
 
 	/** */
-	const INPUT_FILTERID = 'filterId';
+	const FILTERID = 'filterId';
 
 	/** */
 	const RECORDS_PER_PAGE = 'recordsPerPage';
@@ -64,7 +64,7 @@ class DataAddressDetailView
 	const SHOW_PRICE_ON_REQUEST = 'showPriceOnRequest';
 
 	/** */
-	const SHOW_ESTATES_MAP = 'showMap';
+	const SHOW_MAP = 'showMap';
 
 	/** */
 	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_address_translated_labels';
@@ -129,22 +129,22 @@ class DataAddressDetailView
 	private $_enableLinkedEstates = false;
 
 	/** @var string */
-	private $_showReferenceEstates = '0';
+	private $_showReferenceEstate = '0';
 
 	/** @var int */
 	private $_filterId = 0;
 
 	/** @var int */
-	private $_numberRecordsPerPage = 12;
+	private $_recordsPerPage = 12;
 
 	/** @var bool */
-	private $_showEstateStatus = false;
+	private $_showStatus = false;
 
 	/** @var bool */
 	private $_showPriceOnRequest = false;
 
 	/** @var bool */
-	private $_showEstatesMap = false;
+	private $_showMap = false;
 
 	/** @return int */
 	public function getPageId(): int
@@ -220,11 +220,11 @@ class DataAddressDetailView
 
 	/** @return string */
 	public function getShowReferenceEstate(): string
-	{ return $this->_showReferenceEstates; }
+	{ return $this->_showReferenceEstate; }
 
-	/** @param string $referenceEstate */
-	public function setShowReferenceEstate(string $referenceEstate)
-		{ $this->_showReferenceEstates = $referenceEstate; }
+	/** @param string $showReferenceEstate */
+	public function setShowReferenceEstate(string $showReferenceEstate)
+		{ $this->_showReferenceEstate = $showReferenceEstate; }
 
 	/** @return int */
 	public function getFilterId(): int
@@ -236,19 +236,19 @@ class DataAddressDetailView
 
 	/** @return int */
 	public function getRecordsPerPage(): int
-		{ return $this->_numberRecordsPerPage; }
+		{ return $this->_recordsPerPage; }
 
-	/** @param int $numberRecords */
-	public function setRecordsPerPage(int $numberRecords)
-		{ $this->_numberRecordsPerPage = $numberRecords; }
+	/** @param int $recordsPerPage */
+	public function setRecordsPerPage(int $recordsPerPage)
+		{ $this->_recordsPerPage = $recordsPerPage; }
 
 	/** @return bool */
-	public function getShowEstateStatus(): bool
-		{ return $this->_showEstateStatus;}
+	public function getShowStatus(): bool
+		{ return $this->_showStatus;}
 
-	/** @param bool $estateStatus */
-	public function setShowEstateStatus(bool $estateStatus)
-		{ $this->_showEstateStatus = $estateStatus; }
+	/** @param bool $showStatus */
+	public function setShowStatus(bool $showStatus)
+		{ $this->_showStatus = $showStatus; }
 
 	/** @return bool */
 	public function getShowPriceOnRequest(): bool
@@ -259,10 +259,10 @@ class DataAddressDetailView
 		{ $this->_showPriceOnRequest = $showPriceOnRequest; }
 
 	/** @return bool */
-	public function getShowEstateMap(): bool
-		{ return $this->_showEstatesMap; }
+	public function getShowMap(): bool
+		{ return $this->_showMap; }
 
-	/** @param bool $showEstatesMap */
-	public function setShowEstateMap(bool $showEstatesMap)
-		{ $this->_showEstatesMap = $showEstatesMap; }
+	/** @param bool $showMap */
+	public function setShowMap(bool $showMap)
+		{ $this->_showMap = $showMap; }
 }

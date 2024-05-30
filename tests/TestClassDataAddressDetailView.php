@@ -55,7 +55,7 @@ class TestClassDataAddressDetailView
 		$this->assertEquals([], $pDataAddressDetailView->getPageIdsHaveDetailShortCode());
 		$this->assertEquals([], $pDataAddressDetailView->getCustomLabels());
 		$this->assertEquals(false, $pDataAddressDetailView->getShowPriceOnRequest());
-		$this->assertEquals(false, $pDataAddressDetailView->getShowEstateMap());
+		$this->assertEquals(false, $pDataAddressDetailView->getShowMap());
 		$this->assertEquals('0', $pDataAddressDetailView->getShowReferenceEstate());
 		$this->assertEquals(0, $pDataAddressDetailView->getFilterId());
 		$this->assertEquals(12, $pDataAddressDetailView->getRecordsPerPage());
@@ -90,8 +90,8 @@ class TestClassDataAddressDetailView
 		$this->assertEquals(['field1'], $pDataAddressDetailView->getCustomLabels());
 		$pDataAddressDetailView->setShowPriceOnRequest(true);
 		$this->assertTrue($pDataAddressDetailView->getShowPriceOnRequest());
-		$pDataAddressDetailView->setShowEstateMap(true);
-		$this->assertTrue($pDataAddressDetailView->getShowEstateMap());
+		$pDataAddressDetailView->setShowMap(true);
+		$this->assertTrue($pDataAddressDetailView->getShowMap());
 		$pDataAddressDetailView->setShowReferenceEstate('0');
 		$this->assertEquals('0', $pDataAddressDetailView->getShowReferenceEstate());
 		$pDataAddressDetailView->setFilterId(1);

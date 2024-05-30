@@ -213,13 +213,13 @@ class TestClassFormModelBuilderAddressDetailSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelShowEstatesStatus
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelShowEstateStatus
 	 */
 	public function testCreateInputModelShowEstatesStatus()
 	{
 		$pFormModelBuilderAddressDetailSettings = $this->_pFormModelBuilderAddressDetailSettings;
 		$pFormModelBuilderAddressDetailSettings->generate('test');
-		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createInputModelShowEstatesStatus();
+		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createInputModelShowEstateStatus();
 
 		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
 		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
