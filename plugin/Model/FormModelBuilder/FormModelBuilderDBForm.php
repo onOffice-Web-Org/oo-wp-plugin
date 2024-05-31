@@ -907,11 +907,10 @@ class FormModelBuilderDBForm
 	{
 		$labelTaskStatus = __('Status', 'onoffice-for-wp-websites');
 		$pInputModelTaskStatus = $this->getInputModelDBFactory()->create
-		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_STATUS, $labelTaskStatus . '*');
+		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_STATUS, $labelTaskStatus);
 		$pInputModelTaskStatus->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 		$pInputModelTaskStatus->setValue($this->getValue('status') ?? 0);
-		$taskStatus = ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->getTasksStatus();
-		$pInputModelTaskStatus->setValuesAvailable($taskStatus);
+		$pInputModelTaskStatus->setValuesAvailable($this->getTasksStatus());
 
 		return $pInputModelTaskStatus;
 	}

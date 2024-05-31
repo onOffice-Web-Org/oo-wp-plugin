@@ -75,8 +75,7 @@ onOffice.checkboxAdmin = function() {
 			},
 			{
 				element: "select[name=oopluginformtaskconfig-status]",
-				invert: false,
-				required: true
+				invert: false
 			},
 		],
 	};
