@@ -42,9 +42,6 @@ class AddressDetail
 	/** @var int */
 	private $_addressId = 0;
 
-	/** @var int */
-	private $_userId = 0;
-
 	/**
 	 * @param int $id
 	 * @throws ApiClientException
@@ -120,66 +117,6 @@ class AddressDetail
 	public function setAddressId(int $addressId)
 	{
 		$this->_addressId = $addressId;
-	}
-
-	/**
-	 * @return string
-	 * @throws API\ApiClientException
-	 */
-	public function getUserPhoto(): string
-	{
-		if ($this->_userId === 0) {
-			return '';
-		}
-
-		$pApiCall = new APIClientActionGeneric
-			($this->getEnvironment()->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'userphoto');
-		$pApiCall->setParameters(['photosAsLinks' => true]);
-		$pApiCall->setResourceId($this->_userId);
-		$pApiCall->addRequestToQueue()->sendRequests();
-		$userPhotoData = $pApiCall->getResultRecords();
-
-		return $userPhotoData[0]['elements']['photo'] ?? '';
-	}
-
-	/**
-	 * @param array $listUserData
-	 * @param string $userName
-	 *
-	 * @return int
-	 */
-	public function findUserIdByUsername(array $listUserData, string $userName): int
-	{
-		foreach ($listUserData as $userData) {
-			if ($userData['elements']['username'] === $userName) {
-				return $userData['elements']['id'];
-			}
-		}
-
-		return 0;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getUserId(): int
-	{
-		return $this->_userId;
-	}
-
-	/**
-	 * @param string $pictureType
-	 *
-	 * @return bool
-	 */
-	public function isValidPictureType(string $pictureType): bool
-	{
-		$pictureTypes = $this->getAddressDataView()->getPictureTypes();
-		if (in_array($pictureType, $pictureTypes)) {
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
