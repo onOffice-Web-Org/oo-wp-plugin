@@ -46,16 +46,16 @@ class DataAddressDetailView
 	const PICTURES = 'pictures';
 
 	/** */
-	const SHOW_ESTATES_STATUS = 'showEstatesStatus';
+	const SHOW_STATUS = 'showStatus';
 
 	/** */
 	const ENABLE_LINKED_ESTATES = 'enableLinkedEstates';
 
 	/** */
-	const REFERENCE_ESTATES = 'referenceEstates';
+	const ENABLE_REFERENCE_ESTATE = 'showReferenceEstate';
 
 	/** */
-	const INPUT_FILTERID = 'filterId';
+	const FILTERID = 'filterId';
 
 	/** */
 	const RECORDS_PER_PAGE = 'recordsPerPage';
@@ -64,7 +64,7 @@ class DataAddressDetailView
 	const SHOW_PRICE_ON_REQUEST = 'showPriceOnRequest';
 
 	/** */
-	const SHOW_ESTATES_MAP = 'showMap';
+	const SHOW_MAP = 'showMap';
 
 	/** */
 	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_address_translated_labels';
@@ -111,21 +111,6 @@ class DataAddressDetailView
 	];
 
 	/** @var string[] */
-	private $_priceFields = [
-		'kaufpreis',
-		'erbpacht',
-		'nettokaltmiete',
-		'warmmiete',
-		'pacht',
-		'kaltmiete',
-		'miete_pauschal',
-		'saisonmiete',
-		'wochmietbto',
-		'kaufpreis_pro_qm',
-		'mietpreis_pro_qm',
-	];
-
-	/** @var string[] */
 	private $_pictureTypes = [];
 
 	/** @var string */
@@ -140,26 +125,26 @@ class DataAddressDetailView
 	/** @var array */
 	private $_customLabel = [];
 
-	/** @var int */
-	private $_showEstateStatus = 0;
-
-	/** @var int */
-	private $_enableLinkedEstates = 0;
+	/** @var bool */
+	private $_enableLinkedEstates = false;
 
 	/** @var string */
-	private $_showReferenceEstates = '0';
+	private $_showReferenceEstate = '0';
 
 	/** @var int */
-	private $_filter = '';
+	private $_filterId = 0;
 
 	/** @var int */
-	private $_numberRecordsPerPage = 12;
+	private $_recordsPerPage = 12;
 
-	/** @var int */
-	private $_showPriceOnRequest = 0;
+	/** @var bool */
+	private $_showStatus = false;
 
-	/** @var int */
-	private $_showEstatesMap = 0;
+	/** @var bool */
+	private $_showPriceOnRequest = false;
+
+	/** @var bool */
+	private $_showMap = false;
 
 	/** @return int */
 	public function getPageId(): int
@@ -225,67 +210,59 @@ class DataAddressDetailView
 	public function setCustomLabels(array $customLabel)
 		{ $this->_customLabel = $customLabel; }
 
-	/** @return int */
-	public function getShowEstateStatus(): int
-		{ return $this->_showEstateStatus;}
-
-	/** @param int $estateStatus */
-	public function setShowEstateStatus(int $estateStatus)
-		{ $this->_showEstateStatus = $estateStatus; }
-
-	/** @return int */
-	public function getEnableLinkedEstates(): int
+	/** @return bool */
+	public function getEnableLinkedEstates(): bool
 		{ return $this->_enableLinkedEstates; }
 
-	/** @param int $enableLinkedEstates */
-	public function setEnableLinkedEstates(int $enableLinkedEstates)
+	/** @param bool $enableLinkedEstates */
+	public function setEnableLinkedEstates(bool $enableLinkedEstates)
 		{ $this->_enableLinkedEstates = $enableLinkedEstates; }
 
 	/** @return string */
 	public function getShowReferenceEstate(): string
-	{ return $this->_showReferenceEstates; }
+	{ return $this->_showReferenceEstate; }
 
-	/** @param string $referenceEstate */
-	public function setShowReferenceEstate(string $referenceEstate)
-		{ $this->_showReferenceEstates = $referenceEstate; }
+	/** @param string $showReferenceEstate */
+	public function setShowReferenceEstate(string $showReferenceEstate)
+		{ $this->_showReferenceEstate = $showReferenceEstate; }
 
-	/** @return string */
-	public function getFilter(): string
-		{ return $this->_filter; }
+	/** @return int */
+	public function getFilterId(): int
+		{ return $this->_filterId; }
 
-	/** @param string $filter */
-	public function setFilter(string $filter)
-		{ $this->_filter = $filter; }
+	/** @param int $filterId */
+	public function setFilterId(int $filterId)
+		{ $this->_filterId = $filterId; }
 
 	/** @return int */
 	public function getRecordsPerPage(): int
-		{ return $this->_numberRecordsPerPage; }
+		{ return $this->_recordsPerPage; }
 
-	/** @param int $numberRecords */
-	public function setRecordsPerPage(int $numberRecords)
-		{ $this->_numberRecordsPerPage = $numberRecords; }
+	/** @param int $recordsPerPage */
+	public function setRecordsPerPage(int $recordsPerPage)
+		{ $this->_recordsPerPage = $recordsPerPage; }
 
-	/** @return int */
-	public function getShowPriceOnRequest(): int
+	/** @return bool */
+	public function getShowStatus(): bool
+		{ return $this->_showStatus;}
+
+	/** @param bool $showStatus */
+	public function setShowStatus(bool $showStatus)
+		{ $this->_showStatus = $showStatus; }
+
+	/** @return bool */
+	public function getShowPriceOnRequest(): bool
 		{ return $this->_showPriceOnRequest; }
 
-	/** @param int $showPriceOnRequest */
-	public function setShowPriceOnRequest(int $showPriceOnRequest)
+	/** @param bool $showPriceOnRequest */
+	public function setShowPriceOnRequest(bool $showPriceOnRequest)
 		{ $this->_showPriceOnRequest = $showPriceOnRequest; }
 
-	/** @return int */
-	public function getShowEstateMap(): int
-		{ return $this->_showEstatesMap; }
+	/** @return bool */
+	public function getShowMap(): bool
+		{ return $this->_showMap; }
 
-	/** @param int $showEstatesMap */
-	public function setShowEstateMap(int $showEstatesMap)
-		{ $this->_showEstatesMap = $showEstatesMap; }
-
-	/**
-	 * @return array
-	 */
-	public function getListFieldsShowPriceOnRequest(): array
-	{
-		return $this->_priceFields;
-	}
+	/** @param bool $showMap */
+	public function setShowMap(bool $showMap)
+		{ $this->_showMap = $showMap; }
 }

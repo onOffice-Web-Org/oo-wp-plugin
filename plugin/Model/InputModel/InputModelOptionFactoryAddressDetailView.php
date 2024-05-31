@@ -48,13 +48,13 @@ class InputModelOptionFactoryAddressDetailView
 	const INPUT_PICTURE_TYPE = DataAddressDetailView::PICTURES;
 
 	/** @var string */
-	const INPUT_SHOW_ESTATES_STATUS = 'showEstatesStatus';
-
-	/** @var string */
 	const INPUT_ENABLE_LINKED_ESTATES = 'enableLinkedEstates';
 
 	/** @var string */
-	const INPUT_SHOW_REFERENCE_ESTATE = 'referenceEstates';
+	const INPUT_SHOW_STATUS = 'showStatus';
+
+	/** @var string */
+	const INPUT_SHOW_REFERENCE_ESTATE = 'showReferenceEstate';
 
 	/** @var string */
 	const INPUT_FILTERID = 'filterId';
@@ -90,25 +90,25 @@ class InputModelOptionFactoryAddressDetailView
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
 		self::INPUT_ENABLE_LINKED_ESTATES => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
-		],
-		self::INPUT_SHOW_ESTATES_STATUS => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
 		self::INPUT_SHOW_REFERENCE_ESTATE => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
 		self::INPUT_FILTERID => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
 		],
 		self::INPUT_RECORDS_PER_PAGE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+		],
+		self::INPUT_SHOW_STATUS => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
 		self::INPUT_SHOW_PRICE_ON_REQUEST => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
 		self::INPUT_SHOW_MAP => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
 	];
 

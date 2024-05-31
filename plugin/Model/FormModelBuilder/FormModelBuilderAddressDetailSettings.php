@@ -343,9 +343,9 @@ class FormModelBuilderAddressDetailSettings
 	static public function getListViewReferenceEstates(): array
 	{
 		return array(
-			DataListView::HIDE_REFERENCE_ESTATE => __( 'Hide reference estates', 'onoffice-for-wp-websites' ),
-			DataListView::SHOW_REFERENCE_ESTATE => __( 'Show reference estates (alongside others)', 'onoffice-for-wp-websites' ),
-			DataListView::SHOW_ONLY_REFERENCE_ESTATE => __( 'Show only reference estates (filter out all others)', 'onoffice-for-wp-websites' ),
+			DataListView::HIDE_REFERENCE_ESTATE => __('Hide reference estates', 'onoffice-for-wp-websites'),
+			DataListView::SHOW_REFERENCE_ESTATE => __('Show reference estates (alongside others)', 'onoffice-for-wp-websites'),
+			DataListView::SHOW_ONLY_REFERENCE_ESTATE => __('Show only reference estates (filter out all others)', 'onoffice-for-wp-websites'),
 		);
 	}
 
@@ -361,9 +361,7 @@ class FormModelBuilderAddressDetailSettings
 		(InputModelOptionFactoryAddressDetailView::INPUT_ENABLE_LINKED_ESTATES, $labelEnableLinkedEstates);
 		$pInputModelEnableLinkedEstates->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
 
-		$showEstateStatus = $this->_pDataAddressDetail->getEnableLinkedEstates();
-
-		$pInputModelEnableLinkedEstates->setValue($showEstateStatus);
+		$pInputModelEnableLinkedEstates->setValue($this->_pDataAddressDetail->getEnableLinkedEstates());
 		$pInputModelEnableLinkedEstates->setValuesAvailable(1);
 
 		return $pInputModelEnableLinkedEstates;
@@ -373,17 +371,14 @@ class FormModelBuilderAddressDetailSettings
 	 * @return InputModelOption
 	 * @throws ExceptionInputModelMissingField
 	 */
-	public function createInputModelShowEstatesStatus(): InputModelOption
+	public function createInputModelShowEstateStatus(): InputModelOption
 	{
-		$labelShowStatus = __('Show Estates Status', 'onoffice-for-wp-websites');
+		$labelShowStatus = __('Show Estate Status', 'onoffice-for-wp-websites');
 
 		$pInputModelShowStatus = $this->_pInputModelAddressDetailFactory->create
-		(InputModelOptionFactoryAddressDetailView::INPUT_SHOW_ESTATES_STATUS, $labelShowStatus);
+		(InputModelOptionFactoryAddressDetailView::INPUT_SHOW_STATUS, $labelShowStatus);
 		$pInputModelShowStatus->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
-
-		$showEstateStatus = $this->_pDataAddressDetail->getShowEstateStatus();
-
-		$pInputModelShowStatus->setValue($showEstateStatus);
+		$pInputModelShowStatus->setValue($this->_pDataAddressDetail->getShowStatus());
 		$pInputModelShowStatus->setValuesAvailable(1);
 
 		return $pInputModelShowStatus;
@@ -400,10 +395,7 @@ class FormModelBuilderAddressDetailSettings
 		$pInputModelShowReferenceEstate = $this->_pInputModelAddressDetailFactory->create
 		(InputModelOptionFactoryAddressDetailView::INPUT_SHOW_REFERENCE_ESTATE, $labelShowReferenceEstate);
 		$pInputModelShowReferenceEstate->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-
-		$showReferenceEstate = $this->_pDataAddressDetail->getShowReferenceEstate();
-
-		$pInputModelShowReferenceEstate->setValue($showReferenceEstate);
+		$pInputModelShowReferenceEstate->setValue($this->_pDataAddressDetail->getShowReferenceEstate());
 		$pInputModelShowReferenceEstate->setValuesAvailable(self::getListViewReferenceEstates());
 
 		return $pInputModelShowReferenceEstate;
@@ -416,15 +408,13 @@ class FormModelBuilderAddressDetailSettings
 	public function createInputModelFilter(): InputModelOption
 	{
 		$labelFilterName = __('Filter', 'onoffice-for-wp-websites');
+
 		$pInputModelFilterName = $this->_pInputModelAddressDetailFactory->create
 		(InputModelOptionFactoryAddressDetailView::INPUT_FILTERID, $labelFilterName);
 		$pInputModelFilterName->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-
 		$availableFilters = array(0 => '') + $this->readFilters(onOfficeSDK::MODULE_ESTATE);
-		$filterIdSelected = $this->_pDataAddressDetail->getFilter();
-
 		$pInputModelFilterName->setValuesAvailable($availableFilters);
-		$pInputModelFilterName->setValue($filterIdSelected);
+		$pInputModelFilterName->setValue($this->_pDataAddressDetail->getFilterId());
 
 		return $pInputModelFilterName;
 	}
@@ -436,6 +426,7 @@ class FormModelBuilderAddressDetailSettings
 	public function createInputModelRecordsPerPage(): InputModelOption
 	{
 		$labelRecordsPerPage = __('Estates per page', 'onoffice-for-wp-websites');
+
 		$pInputModelRecordsPerPage = $this->_pInputModelAddressDetailFactory->create
 		(InputModelOptionFactoryAddressDetailView::INPUT_RECORDS_PER_PAGE, $labelRecordsPerPage);
 		$pInputModelRecordsPerPage->setHtmlType(InputModelBase::HTML_TYPE_NUMBER);
@@ -474,7 +465,7 @@ class FormModelBuilderAddressDetailSettings
 		$pInputModelShowMap = $this->_pInputModelAddressDetailFactory->create
 		(InputModelOptionFactoryAddressDetailView::INPUT_SHOW_MAP, $labelShowMap);
 		$pInputModelShowMap->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
-		$pInputModelShowMap->setValue($this->_pDataAddressDetail->getShowEstateMap() ?? true);
+		$pInputModelShowMap->setValue($this->_pDataAddressDetail->getShowMap());
 		$pInputModelShowMap->setValuesAvailable(1);
 
 		return $pInputModelShowMap;

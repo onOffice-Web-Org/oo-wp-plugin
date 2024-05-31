@@ -80,8 +80,8 @@ class EstateLoader
             'listoffset' => $offset
         ];
 
-        if (!empty($addressDataView->getFilter())) {
-            $requestParams['filterid'] = $addressDataView->getFilter();
+        if (!empty($addressDataView->getFilterId())) {
+            $requestParams['filterid'] = $addressDataView->getFilterId();
         }
         return $requestParams;
     }

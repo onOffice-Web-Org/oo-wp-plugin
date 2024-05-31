@@ -289,24 +289,24 @@ class AdminPageAddressDetail
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
 
-		$pInputModelLinkEstates = $pFormModelBuilder->createInputModelEnableLinkedEstates();
-		$pInputModelEstatesStatus = $pFormModelBuilder->createInputModelShowEstatesStatus();
-		$pInputModelListReferenceEstates = $pFormModelBuilder->createInputModelShowReferenceEstates();
+		$pInputModelEnableLinkedEstates= $pFormModelBuilder->createInputModelEnableLinkedEstates();
+		$pInputModelShowEstateStatus = $pFormModelBuilder->createInputModelShowEstateStatus();
+		$pInputModelShowReferenceEstates = $pFormModelBuilder->createInputModelShowReferenceEstates();
 		$pInputModelFilters = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
-		$pInputModelPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
-		$pInputModelEstateMap = $pFormModelBuilder->createInputModelShowMap();
+		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
+		$pInputModelShowEstateMap = $pFormModelBuilder->createInputModelShowMap();
 		$pFormModelEstates = new FormModel();
 		$pFormModelEstates->setPageSlug($this->getPageSlug());
 		$pFormModelEstates->setGroupSlug(self::FORM_VIEW_ESTATE_CONFIG);
 		$pFormModelEstates->setLabel(__('Estates', 'onoffice-for-wp-websites'));
-		$pFormModelEstates->addInputModel($pInputModelLinkEstates);
-		$pFormModelEstates->addInputModel($pInputModelListReferenceEstates);
+		$pFormModelEstates->addInputModel($pInputModelEnableLinkedEstates);
+		$pFormModelEstates->addInputModel($pInputModelShowReferenceEstates);
 		$pFormModelEstates->addInputModel($pInputModelFilters);
 		$pFormModelEstates->addInputModel($pInputModelRecordsPerPage);
-		$pFormModelEstates->addInputModel($pInputModelEstatesStatus);
-		$pFormModelEstates->addInputModel($pInputModelPriceOnRequest);
-		$pFormModelEstates->addInputModel($pInputModelEstateMap);
+		$pFormModelEstates->addInputModel($pInputModelShowEstateStatus);
+		$pFormModelEstates->addInputModel($pInputModelShowPriceOnRequest);
+		$pFormModelEstates->addInputModel($pInputModelShowEstateMap);
 		$this->addFormModel($pFormModelEstates);
 
 		$pEnvironment = new AddressListEnvironmentDefault();
