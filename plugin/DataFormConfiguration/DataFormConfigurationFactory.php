@@ -180,6 +180,11 @@ class DataFormConfigurationFactory
 		$this->_pGeoPositionFieldHandler->readValues($pConfig);
 		$rowFields = $this->configureGeoFields($rowFields);
 
+		if ($this->_type !== Form::TYPE_APPLICANT_SEARCH){
+			$rowTaskConfig = $this->_pRecordManagerRead->readFormTaskConfigByFormId($formId);
+			$this->configureTask($pConfig, $rowTaskConfig);
+		}
+
 		foreach ($rowFields as $fieldRow) {
 			$this->configureFieldsByRow($fieldRow, $pConfig);
 		}
@@ -257,6 +262,27 @@ class DataFormConfigurationFactory
 		}
 
 		return $result;
+	}
+
+	/**
+	 * @param DataFormConfiguration\DataFormConfiguration $pFormConfiguration
+	 * @param array|null $row
+	 * @return void
+	 */
+	private function configureTask(DataFormConfiguration\DataFormConfiguration $pFormConfiguration, array $row = null)
+	{
+		if (empty($row)) {
+			return;
+		}
+
+		$pFormConfiguration->setEnableCreateTask($row['enable_create_task'] ?? false);
+		$pFormConfiguration->setTaskResponsibility($row['responsibility'] ?? '');
+		$pFormConfiguration->setTaskProcessor($row['processor'] ?? '');
+		$pFormConfiguration->setTaskType($row['type'] ?? 0);
+		$pFormConfiguration->setTaskPriority($row['priority'] ?? 0);
+		$pFormConfiguration->setTaskSubject($row['subject'] ?? '');
+		$pFormConfiguration->setTaskDescription($row['description'] ?? '');
+		$pFormConfiguration->setTaskStatus($row['status'] ?? 0);
 	}
 
 

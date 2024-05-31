@@ -288,6 +288,11 @@ class InputModelRenderer
                 }
 				$pInstance->setCheckedValues($pInputModel->getValue());
 			break;
+
+			case InputModelBase::HTML_TYPE_TEXTAREA:
+				$pInstance = new InputFieldTextAreaRenderer('textarea', $elementName);
+				$pInstance->setValue($pInputModel->getValue());
+				break;
 		}
 
 		if ($pInstance !== null) {

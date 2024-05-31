@@ -651,6 +651,10 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	margin-left: 5px;
 }
 
+.oo-poststuff .custom-input-field textarea[name=oopluginformtaskconfig-description] {
+	min-height: 100px;
+}
+
 .oo-search-field {
 	width: 100%;
 	float: left;

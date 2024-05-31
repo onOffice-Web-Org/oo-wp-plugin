@@ -87,6 +87,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_GOOGLE_RECAPTCHA_ACCOUNT = 'googleRecaptchaAccount';
 
+	/** */
+	const HTML_TYPE_TEXTAREA = 'textarea';
+
 	/** @var string */
 	private $_name = null;
 

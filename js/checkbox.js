@@ -44,7 +44,39 @@ onOffice.checkboxAdmin = function() {
 				element: "input[name=oopluginforms-recipient]",
 				invert: true
 			}
-		]
+		],
+
+		// view: create new [task] form
+		"input[name=oopluginformtaskconfig-enablecreatetask]": [
+			{
+				element: "select[name=oopluginformtaskconfig-responsibility]",
+				invert: false
+			},
+			{
+				element: "select[name=oopluginformtaskconfig-processor]",
+				invert: false
+			},
+			{
+				element: "select[name=oopluginformtaskconfig-type]",
+				invert: false
+			},
+			{
+				element: "select[name=oopluginformtaskconfig-priority]",
+				invert: false
+			},
+			{
+				element: "input[name=oopluginformtaskconfig-subject]",
+				invert: false
+			},
+			{
+				element: "textarea[name=oopluginformtaskconfig-description]",
+				invert: false
+			},
+			{
+				element: "select[name=oopluginformtaskconfig-status]",
+				invert: false
+			},
+		],
 	};
 };
 

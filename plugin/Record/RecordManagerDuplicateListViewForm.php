@@ -163,6 +163,15 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 							$tableFieldFormTranslatedLabel, 'input_id', 'translated_label_id' );
 					}
 				}
+
+				//duplicate data related oo_plugin_form_taskconfig table
+				$tableTaskConfig = $prefix . self::TABLENAME_TASKCONFIG_FORMS;
+				$taskConfigByFormId = "SELECT * FROM {$this->_pWPDB->_escape($tableTaskConfig)} WHERE form_id='{$this->_pWPDB->_escape($listViewRoot['form_id'])}'";
+				$taskConfigRows = $this->_pWPDB->get_results($taskConfigByFormId, 'ARRAY_A');
+				if (!empty($taskConfigRows) && (count($taskConfigRows) !== 0)) {
+					$this->duplicateDataRelated($duplicateListViewId, $taskConfigRows,
+						$tableTaskConfig, 'form_id', 'form_taskconfig_id');
+				}
 			}
 		}
 	}
