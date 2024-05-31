@@ -58,7 +58,8 @@ onOffice.checkboxAdmin = function() {
 			},
 			{
 				element: "select[name=oopluginformtaskconfig-type]",
-				invert: false
+				invert: false,
+				required: true
 			},
 			{
 				element: "select[name=oopluginformtaskconfig-priority]",
@@ -74,7 +75,8 @@ onOffice.checkboxAdmin = function() {
 			},
 			{
 				element: "select[name=oopluginformtaskconfig-status]",
-				invert: false
+				invert: false,
+				required: true
 			},
 		],
 	};
@@ -88,6 +90,7 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 			var receiver = receivers[i];
 			var receiverElement = mainElement.parent().parent().find(receiver.element);
 			var invert = receiver.invert;
+			let required = receiver.required;
 
 			if (receiverElement.length) {
 				var isChosen = receiverElement[0].classList.contains("chosen-select");
@@ -102,6 +105,9 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 							receiverElement.trigger("chosen:updated");
 						}
 					}
+					if (required) {
+						receiverElement.attr('required', 'required');
+					}
 				} else {
 					if (!invert) {
 						receiverElement.prop('disabled', 'disabled');
@@ -111,6 +117,9 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 						if (isChosen) {
 							receiverElement.trigger("chosen:updated");
 						}
+					}
+					if (required) {
+						receiverElement.attr('required', 'required');
 					}
 				}
 			}

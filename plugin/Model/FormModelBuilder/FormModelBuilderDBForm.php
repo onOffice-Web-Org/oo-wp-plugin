@@ -847,10 +847,11 @@ class FormModelBuilderDBForm
 		$labelTaskType = __('Type', 'onoffice-for-wp-websites');
 
 		$pInputModelTaskType = $this->getInputModelDBFactory()->create
-		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_TYPE, $labelTaskType);
+		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_TYPE, $labelTaskType . '*');
 		$pInputModelTaskType->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 		$pInputModelTaskType->setValue($this->getValue('type'));
-		$pInputModelTaskType->setValuesAvailable($this->_taskType);
+		$taskType = ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->_taskType;
+		$pInputModelTaskType->setValuesAvailable($taskType);
 
 		return $pInputModelTaskType;
 	}
@@ -906,10 +907,11 @@ class FormModelBuilderDBForm
 	{
 		$labelTaskStatus = __('Status', 'onoffice-for-wp-websites');
 		$pInputModelTaskStatus = $this->getInputModelDBFactory()->create
-		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_STATUS, $labelTaskStatus);
+		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_STATUS, $labelTaskStatus . '*');
 		$pInputModelTaskStatus->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 		$pInputModelTaskStatus->setValue($this->getValue('status') ?? 0);
-		$pInputModelTaskStatus->setValuesAvailable($this->getTasksStatus());
+		$taskStatus = ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->getTasksStatus();
+		$pInputModelTaskStatus->setValuesAvailable($taskStatus);
 
 		return $pInputModelTaskStatus;
 	}

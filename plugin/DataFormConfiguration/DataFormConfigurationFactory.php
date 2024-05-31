@@ -275,14 +275,14 @@ class DataFormConfigurationFactory
 			return;
 		}
 
-		$pFormConfiguration->setEnableCreateTask($row['enable_create_task'] ?? false);
-		$pFormConfiguration->setTaskResponsibility($row['responsibility'] ?? '');
-		$pFormConfiguration->setTaskProcessor($row['processor'] ?? '');
-		$pFormConfiguration->setTaskType($row['type'] ?? 0);
-		$pFormConfiguration->setTaskPriority($row['priority'] ?? 0);
-		$pFormConfiguration->setTaskSubject($row['subject'] ?? '');
-		$pFormConfiguration->setTaskDescription($row['description'] ?? '');
-		$pFormConfiguration->setTaskStatus($row['status'] ?? 0);
+		$pFormConfiguration->setEnableCreateTask((bool)$row['enable_create_task']);
+		$pFormConfiguration->setTaskResponsibility($row['responsibility']);
+		$pFormConfiguration->setTaskProcessor($row['processor']);
+		$pFormConfiguration->setTaskType($row['type']);
+		$pFormConfiguration->setTaskPriority($row['priority']);
+		$pFormConfiguration->setTaskSubject($row['subject']);
+		$pFormConfiguration->setTaskDescription($row['description']);
+		$pFormConfiguration->setTaskStatus($row['status']);
 	}
 
 
