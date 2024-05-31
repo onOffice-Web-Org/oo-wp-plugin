@@ -60,6 +60,10 @@ class CacheHandler
 
 	public function clear()
 	{
+		foreach ($this->_pSDKWrapper->getCache() as $pCache) {
+			/* @var $pCache onOfficeSDKCache */
+			$pCache->clearAll();
+		}
 	}
 
 
@@ -70,5 +74,11 @@ class CacheHandler
 
 	public function clean()
 	{
+		if($this->_pApiChecker->isAvailable()){
+			foreach ($this->_pSDKWrapper->getCache() as $pCache) {
+				/* @var $pCache onOfficeSDKCache */
+				$pCache->cleanup();
+			}
+		}
 	}
 }

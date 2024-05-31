@@ -40,7 +40,7 @@ class AddressDetail
 	extends AddressList
 {
 	/** @var int */
-	private $_addressId = 0;
+	private $_addressId = null;
 
 	/**
 	 * @param int $id
