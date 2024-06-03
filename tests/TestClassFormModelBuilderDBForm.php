@@ -457,6 +457,7 @@ class TestClassFormModelBuilderDBForm
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskStatus
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getTasksStatus
 	 */
 	public function testCreateInputModelTaskStatus()
 	{
@@ -479,7 +480,8 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskStatus
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskPriority
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getTasksPriority
 	 */
 	public function testCreateInputModelTaskPriority()
 	{
@@ -524,9 +526,7 @@ class TestClassFormModelBuilderDBForm
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskType
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws \Exception
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfAction
 	 */
 	public function testCreateInputModelTaskType()
 	{
@@ -546,9 +546,7 @@ class TestClassFormModelBuilderDBForm
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskResponsibility
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws \Exception
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getSupervisorData
 	 */
 	public function	testCreateInputModelTaskResponsibility()
 	{
@@ -571,9 +569,7 @@ class TestClassFormModelBuilderDBForm
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskProcessor
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws \Exception
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getSupervisorData
 	 */
 	public function	testCreateInputModelTaskProcessor()
 	{
