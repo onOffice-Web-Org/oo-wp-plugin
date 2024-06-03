@@ -1,0 +1,103 @@
+{
+  "actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+  "resourceid": "",
+  "resourcetype": "actionkindtypes",
+  "cacheable": true,
+  "identifier": "",
+  "data": {
+    "meta": {
+      "cntabsolute": null
+    },
+    "records": [
+      {
+        "id": 0,
+        "type": "actionkind",
+        "elements": {
+          "key": "Immofeedback / Terminnachbereitung",
+          "label": "Immofeedback / Terminnachbereitung",
+          "types": {
+            "Neuer Aktionstyp": "Neuer Aktionstyp",
+            "Neuer Aktionstypd": "Neuer Aktionstypd",
+            "Neuer Aktionstypa": "Neuer Aktionstypa"
+          },
+          "default": "Neuer Aktionstyp"
+        }
+      },
+      {
+        "id": 1,
+        "type": "actionkind",
+        "elements": {
+          "key": "Termin",
+          "label": "Termin",
+          "types": {
+            "Besuch des Kunden im Beratungsbüro": "Besuch des Kunden im Beratungsbüro",
+            "Besuch beim Kunden zu Hause": "Besuch beim Kunden zu Hause",
+            "Kunde auf Baustelle getroffen": "Kunde auf Baustelle getroffen",
+            "Besichtigung": "Besichtigung",
+            "Notartermin": "Notartermin",
+            "Objektaufnahme": "Objektaufnahme",
+            "Beratung": "Beratung",
+            "Vertragstermin": "Vertragstermin",
+            "Urlaub": "Urlaub",
+            "Folgebesichtigung": "Folgebesichtigung"
+          },
+          "default": "Besuch des Kunden im Beratungsbüro"
+        }
+      },
+      {
+        "id": 2,
+        "type": "actionkind",
+        "elements": {
+          "key": "AGB bestätigt",
+          "label": "AGB bestätigt",
+          "types": [],
+          "default": null
+        }
+      },
+      {
+        "id": 3,
+        "type": "actionkind",
+        "elements": {
+          "key": "Kaufpreisangebot",
+          "label": "Kaufpreisangebot",
+          "types": [],
+          "default": null
+        }
+      },
+      {
+        "id": 4,
+        "type": "actionkind",
+        "elements": {
+          "key": "Widerruf bestätigt",
+          "label": "Widerruf bestätigt",
+          "types": {
+            "Kein vorzeitiger Beginn": "Kein vorzeitiger Beginn",
+            "Vorzeitiger Beginn": "Vorzeitiger Beginn"
+          },
+          "default": "Kein vorzeitiger Beginn"
+        }
+      },
+      {
+        "id": 4,
+        "type": "actionkind",
+        "elements": {
+          "key": "Aufgabe",
+          "label": "Aufgabe",
+          "types": {
+            "Angebot erstellen": "Angebot erstellen",
+            "Objektaufnahme": "Objektaufnahme"
+          },
+          "default": "Telefax",
+          "typesByDatabaseId": {
+            "217": "Objektaufnahme",
+            "215": "Angebot erstellen"
+          }
+        }
+      }
+    ]
+  },
+  "status": {
+    "errorcode": 0,
+    "message": "OK"
+  }
+}
