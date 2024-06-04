@@ -111,6 +111,12 @@ class EstateList
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
 
+	/** @var FieldsCollection */
+	private $_pFieldsCollection;
+
+	/** @var string */
+	private $_energyCertificate;
+
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
@@ -200,7 +206,22 @@ class EstateList
 		}
 
 		$this->_numEstatePages = $this->getNumEstatePages();
-		$this->resetEstateIterator();
+		$this->resetEstateIterator();		
+		$this->buildFieldsCollectionForEstate();
+	}
+
+	/**
+	 *
+	 */
+	private function buildFieldsCollectionForEstate()
+	{
+		$this->_pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($this->_pFieldsCollection)
+			->addFieldsEstateGeoPositionFrontend($this->_pFieldsCollection)
+			->addCustomLabelFieldsEstateFrontend($this->_pFieldsCollection, $this->_pDataView->getName(), $listType);
 	}
 
 	/**
@@ -218,6 +239,9 @@ class EstateList
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'] []= 'vermarktungsart';
 		$estateParametersRaw['data'] []= 'preisAufAnfrage';
+		$estateParametersRaw['data'] []= 'energieausweistyp';
+		$estateParametersRaw['data'] []= 'endenergiebedarf';
+		$estateParametersRaw['data'] []= 'energieverbrauchskennwert';
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
@@ -491,7 +515,11 @@ class EstateList
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
-
+		if (!empty($recordRaw['energieausweistyp'])) {
+			$this->setEnergyCertificate($recordRaw['energieausweistyp']);
+			$recordModified['endenergiebedarf'] = $recordRaw['endenergiebedarf'];
+			$recordModified['energieverbrauchskennwert'] = $recordRaw['energieverbrauchskennwert'];
+		}
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
 			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
 		}
@@ -593,18 +621,10 @@ class EstateList
 	public function getFieldLabel($field): string
 	{
 		$recordType = onOfficeSDK::MODULE_ESTATE;
-		$pFieldsCollection = new FieldsCollection();
 		$pLanguage = $this->_pEnvironment->getContainer()->get( Language::class )->getLocale();
-		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
-		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
-		$pFieldBuilderShort
-			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
-			->addFieldsEstateGeoPositionFrontend($pFieldsCollection)
-			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
 
 		try {
-			$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+			$label = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 		} catch (UnknownFieldException $pE) {
 			$label = $this->getEnvironment()->getFieldnames()->getFieldLabel($field, $recordType);
 		}
@@ -618,6 +638,22 @@ class EstateList
 
 		$fieldNewName = esc_html($label);
 		return $fieldNewName;
+	}
+
+	/**
+	 * @param string $field
+	 * @return array
+	 */
+	public function getFieldPermittedvalues($field): array
+	{
+		$recordType = onOfficeSDK::MODULE_ESTATE;
+
+		try {
+			$permittedvalues = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getPermittedvalues();
+		} catch (UnknownFieldException $pE) {
+		}
+
+		return $permittedvalues;
 	}
 
 	/**
@@ -1084,4 +1120,13 @@ class EstateList
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
 		{ return $this->_pEnvironment; }
+
+	/** @return string */
+	public function getEnergyCertificate(): string
+		{ return $this->_energyCertificate; }
+
+	/** @param string $energyCertificate */
+	public function setEnergyCertificate(string $energyCertificate)
+		{ $this->_energyCertificate = $energyCertificate; }
+
 }
