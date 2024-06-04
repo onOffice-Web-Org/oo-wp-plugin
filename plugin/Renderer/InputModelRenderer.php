@@ -226,9 +226,16 @@ class InputModelRenderer
 				break;
 
 			case InputModelBase::HTML_TYPE_SELECT_TWO:
+			    $isMultiple = $pInputModel->getIsMulti();
+			    $cssClasses = 'select2 oo-custom-select2';
 				$pInstance = new InputFieldSelectTwoRenderer($pInputModel->getIdentifier(), $pInputModel->getValuesAvailable());
-				$pInstance->addAdditionalAttribute('class', 'select2 onoffice-custom-select2');
-				$pInstance->setMultiple($pInputModel->getIsMulti());
+				if($isMultiple) {
+                    $cssClasses .= ' oo-custom-select2--multiple';
+                } else {
+                    $cssClasses .= ' oo-custom-select2--single';
+                }
+                $pInstance->addAdditionalAttribute('class', $cssClasses);
+                $pInstance->setMultiple($isMultiple);
 				$pInstance->setSelectedValue($pInputModel->getValue());
 				break;
 
