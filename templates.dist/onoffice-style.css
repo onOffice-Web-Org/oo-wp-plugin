@@ -297,6 +297,12 @@
     }
 }
 
+.oo-details-energy-certificate,
+.oo-details-energy {
+	width: 100%;
+	margin-bottom: 30px;
+}
+
 .segmented-bar {
 	display: flex;
 	align-items: flex-end;
@@ -337,10 +343,4 @@
 .segment.selected span{
 	background: none;
     color: #fff;
-}
-
-
-.oo-details-energy {
-	width: 100%;
-	margin-bottom: 30px;
 }

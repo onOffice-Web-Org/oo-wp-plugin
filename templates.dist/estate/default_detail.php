@@ -137,7 +137,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		<div class="oo-details-energy">
 			<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
 			<?php if ($pEstates->getEnergyCertificate() === "Endenergiebedarf") { ?>
-				<div class="oo-details-energy">
+				<div class="oo-details-energy-certificate">
 					<?php $selectedSegment = $currentEstate['energyClass']; ?>
 					<div class="segmented-bar">
 						<?php
@@ -153,8 +153,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					</div>
 				</div>
 			<?php } ?>
-			<?php if ($pEstates->getEnergyCertificate()=== "Energieverbrauchskennwert") { ?>
-				<div class="oo-details-energy">
+			<?php if ($pEstates->getEnergyCertificate()=== "Energieverbrauchskennwert" && !empty($currentEstate['energyClass'])) { ?>
+				<div class="oo-details-energy-certificate">
 					<?php $selectedSegment = $currentEstate['energyClass']; ?>
 					<div class="segmented-bar">
 						<?php
@@ -171,37 +171,32 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php } ?>
 			<div class="oo-detailstable">
 				<?php
-					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel('baujahr')) . '</div>' . "\n"
-								. '<div class="oo-detailslisttd">'
-								. (is_array($currentEstate['baujahr']) ? esc_html(implode(', ', $currentEstate['baujahr'])) : esc_html($currentEstate['baujahr']))
-								. '</div>' . "\n";
-					if ($pEstates->getEnergyCertificate() === "Endenergiebedarf") {
-					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel('endenergiebedarf')) . '</div>' . "\n"
-								. '<div class="oo-detailslisttd">'
-								. (is_array($currentEstate['endenergiebedarf']) ? esc_html(implode(', ', $currentEstate['endenergiebedarf'])) : esc_html($currentEstate['endenergiebedarf']))
-								. '</div>' . "\n";
-					} else if ($pEstates->getEnergyCertificate() === "Energieverbrauchskennwert") {
-						echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel('energieverbrauchskennwert')) . '</div>' . "\n"
-									. '<div class="oo-detailslisttd">'
-									. (is_array($currentEstate['energieverbrauchskennwert']) ? esc_html(implode(', ', $currentEstate['energieverbrauchskennwert'])) : esc_html($currentEstate['energieverbrauchskennwert']))
-									. '</div>' . "\n";
+				$fields = [
+					'baujahr',
+					'endenergiebedarf' => $pEstates->getEnergyCertificate() === "Endenergiebedarf",
+					'energieverbrauchskennwert' => $pEstates->getEnergyCertificate() === "Energieverbrauchskennwert",
+					'energieausweistyp',
+					'energieausweis_gueltig_bis',
+					'energyClass',
+					'energietraeger'
+				];
+
+				foreach ($fields as $field => $condition) {
+					if (is_int($field)) {
+						$field = $condition;
+						$condition = true;
 					}
-					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel('energieausweistyp')) . '</div>' . "\n"
-								. '<div class="oo-detailslisttd">'
-								. (is_array($currentEstate['energieausweistyp']) ? esc_html(implode(', ', $currentEstate['energieausweistyp'])) : esc_html($currentEstate['energieausweistyp']))
-								. '</div>' . "\n";
-					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel('energieausweis_gueltig_bis')) . '</div>' . "\n"
-								. '<div class="oo-detailslisttd">'
-								. (is_array($currentEstate['energieausweis_gueltig_bis']) ? esc_html(implode(', ', $currentEstate['energieausweis_gueltig_bis'])) : esc_html($currentEstate['energieausweis_gueltig_bis']))
-								. '</div>' . "\n";
-					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel('energyClass')) . '</div>' . "\n"
-								. '<div class="oo-detailslisttd">'
-								. (is_array($currentEstate['energyClass']) ? esc_html(implode(', ', $currentEstate['energyClass'])) : esc_html($currentEstate['energyClass']))
-								. '</div>' . "\n";
-					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel('energietraeger')) . '</div>' . "\n"
-								. '<div class="oo-detailslisttd">'
-								. (is_array($currentEstate['energietraeger']) ? esc_html(implode(', ', $currentEstate['energietraeger'])) : esc_html($currentEstate['energietraeger']))
-								. '</div>' . "\n";
+					if (empty($currentEstate[$field])) {
+						continue;
+					}
+
+					if ($condition) {
+						echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
+							. '<div class="oo-detailslisttd">'
+							. (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field]))
+							. '</div>' . "\n";
+					}
+				}
 				?>
 			</div>
 		</div>
