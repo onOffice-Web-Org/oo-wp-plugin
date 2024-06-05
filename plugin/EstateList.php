@@ -115,7 +115,7 @@ class EstateList
 	private $_pFieldsCollection;
 
 	/** @var string */
-	private $_energyCertificate;
+	private $_energyCertificate = '';
 
 	/**
 	 * @param DataView $pDataView
