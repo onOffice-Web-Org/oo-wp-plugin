@@ -5,15 +5,15 @@ jQuery(document).ready(function($){
 	let checkNavigationTriggered = false;
 	const $filterFieldsList =  $('.filter-fields-list');
 
-	$('#poststuff :input, form[action="options.php"] :input').on("change", function() {
+	$('.oo-poststuff :input, .oo-page-api-settings :input').on("change", function() {
 		checkUnsavedChanges = true;
 	});
 
-	$('#poststuff span, #poststuff li').on("click", function() {
+	$('.oo-poststuff span.dashicons, .oo-poststuff li').on("click", function() {
 		checkUnsavedChanges = true;
 	});
 
-	if($filterFieldsList.length > 0) {
+	if ($filterFieldsList.length) {
 		$filterFieldsList.sortable({
 			update: function() {
 				checkUnsavedChanges = true;
