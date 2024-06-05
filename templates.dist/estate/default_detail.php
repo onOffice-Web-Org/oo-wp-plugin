@@ -134,72 +134,67 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			</div>
 		</div>
 		
-		<div class="oo-details-energy">
-			<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
-			<?php if ($pEstates->getEnergyCertificate() === "Endenergiebedarf") { ?>
-				<div class="oo-details-energy-certificate">
-					<?php $selectedSegment = $currentEstate['energyClass']; ?>
-					<div class="segmented-bar">
-						<?php
-						$segments = $pEstates->getFieldPermittedvalues('energyClass');
-						$labels = [0, 25, 50, 75, 100, 125, 150, 175, 200, '>225'];
-	
-						foreach ($segments as $key => $label) {
-							echo '<div class="energy-certificate-labels"><span>' . $labels[array_search($key, array_keys($segments))] . '</span></div>';
-							echo '<div class="segment ' . $key . ($selectedSegment == $key ? ' selected' : '') . '"><span>' . $label . '</span></div>';
-						}
-						?>
-						<div class="energy-certificate-labels"><span>>225</span></div>
-					</div>
-				</div>
-			<?php } ?>
-			<?php if ($pEstates->getEnergyCertificate()=== "Energieverbrauchskennwert" && !empty($currentEstate['energyClass'])) { ?>
-				<div class="oo-details-energy-certificate">
-					<?php $selectedSegment = $currentEstate['energyClass']; ?>
-					<div class="segmented-bar">
-						<?php
-						$segments = $pEstates->getFieldPermittedvalues('energyClass');
-						$labels = [0, 50, 100, 150, 200, 250, 300, 350, 400];
-	
-						foreach ($segments as $key => $label) {
-							echo '<div class="energy-certificate-labels"><span>' . $labels[array_search($key, array_keys($segments))] . '</span></div>';
-							echo '<div class="segment ' . $key . ($selectedSegment == $key ? ' selected' : '') . '"><span>' . $label . '</span></div>';
-						}
-						?>
-					</div>
-				</div>
-			<?php } ?>
-			<div class="oo-detailstable">
+		<?php if ($pEstates->getShowEnergyCertificate()) { ?>
+			<div class="oo-details-energy">
+				<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
 				<?php
-				$fields = [
-					'baujahr',
-					'endenergiebedarf' => $pEstates->getEnergyCertificate() === "Endenergiebedarf",
-					'energieverbrauchskennwert' => $pEstates->getEnergyCertificate() === "Energieverbrauchskennwert",
-					'energieausweistyp',
-					'energieausweis_gueltig_bis',
-					'energyClass',
-					'energietraeger'
-				];
-
-				foreach ($fields as $field => $condition) {
-					if (is_int($field)) {
-						$field = $condition;
-						$condition = true;
-					}
-					if (empty($currentEstate[$field])) {
-						continue;
-					}
-
-					if ($condition) {
-						echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
-							. '<div class="oo-detailslisttd">'
-							. (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field]))
-							. '</div>' . "\n";
+				function renderEnergyCertificate($pEstates, $currentEstate, $energyCertificateType, $labels) {
+					if ($pEstates->getEnergyCertificate() === $energyCertificateType && !empty($currentEstate['energyClass'])) {
+						?>
+						<div class="oo-details-energy-certificate">
+							<?php $selectedSegment = $currentEstate['energyClass']; ?>
+							<div class="segmented-bar">
+								<?php
+								$segments = $pEstates->getFieldPermittedvalues('energyClass');
+								foreach ($segments as $key => $label) {
+									echo '<div class="energy-certificate-labels"><span>' . $labels[array_search($key, array_keys($segments))] . '</span></div>';
+									echo '<div class="segment ' . $key . ($selectedSegment == $key ? ' selected' : '') . '"><span>' . $label . '</span></div>';
+								}
+								if ($energyCertificateType === "Endenergiebedarf") {
+									echo '<div class="energy-certificate-labels"><span>>225</span></div>';
+								}
+								?>
+							</div>
+						</div>
+						<?php
 					}
 				}
+
+				renderEnergyCertificate($pEstates, $currentEstate, "Endenergiebedarf", [0, 25, 50, 75, 100, 125, 150, 175, 200, '>225']);
+				renderEnergyCertificate($pEstates, $currentEstate, "Energieverbrauchskennwert", [0, 50, 100, 150, 200, 250, 300, 350, 400]);
 				?>
+				<div class="oo-detailstable">
+					<?php
+					$fields = [
+						'baujahr',
+						'endenergiebedarf' => $pEstates->getEnergyCertificate() === "Endenergiebedarf",
+						'energieverbrauchskennwert' => $pEstates->getEnergyCertificate() === "Energieverbrauchskennwert",
+						'energieausweistyp',
+						'energieausweis_gueltig_bis',
+						'energyClass',
+						'energietraeger'
+					];
+
+					foreach ($fields as $field => $condition) {
+						if (is_int($field)) {
+							$field = $condition;
+							$condition = true;
+						}
+						if (empty($currentEstate[$field])) {
+							continue;
+						}
+
+						if ($condition) {
+							echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
+								. '<div class="oo-detailslisttd">'
+								. (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field]))
+								. '</div>' . "\n";
+						}
+					}
+					?>
+				</div>
 			</div>
-		</div>
+		<?php } ?>
 		<div class="oo-details-sidebar">
 			<div class="oo-asp">
 				<h2><?php echo esc_html__('Contact person', 'onoffice-for-wp-websites'); ?></h2>

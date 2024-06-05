@@ -118,6 +118,7 @@ class DataDetailViewHandler
 		$pDataDetailView->setShowStatus($row['show_status'] ?? false);
 		$pDataDetailView->setCustomLabels($row[DataDetailView::FIELD_CUSTOM_LABEL] ?? []);
 		$pDataDetailView->setShowPriceOnRequest($row[DataDetailView::FIELD_PRICE_ON_REQUEST] ?? false);
+		$pDataDetailView->setShowEnergyCertificate($row['show_energy_certificate'] ?? false);
 		return $pDataDetailView;
 	}
 }

@@ -517,8 +517,6 @@ class EstateList
 		}
 		if (!empty($recordRaw['energieausweistyp'])) {
 			$this->setEnergyCertificate($recordRaw['energieausweistyp']);
-			$recordModified['endenergiebedarf'] = $recordRaw['endenergiebedarf'];
-			$recordModified['energieverbrauchskennwert'] = $recordRaw['energieverbrauchskennwert'];
 		}
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
 			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
@@ -1072,6 +1070,12 @@ class EstateList
 		} else {
 			return false;
 		}
+	}
+
+	/** @return bool */
+	public function getShowEnergyCertificate()
+	{
+		return $this->_pDataView->getShowEnergyCertificate();
 	}
 
 	/** @return EstateFiles */
