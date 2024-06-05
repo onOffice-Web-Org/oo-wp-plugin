@@ -138,7 +138,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
 			<?php if ($pEstates->getEnergyCertificate() === "Endenergiebedarf") { ?>
 				<div class="oo-details-energy">
-					<?php $selectedSegment = 'h'; ?>
+					<?php $selectedSegment = $currentEstate['energyClass']; ?>
 					<div class="segmented-bar">
 						<?php
 						$segments = $pEstates->getFieldPermittedvalues('energyClass');
@@ -155,7 +155,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php } ?>
 			<?php if ($pEstates->getEnergyCertificate()=== "Energieverbrauchskennwert") { ?>
 				<div class="oo-details-energy">
-					<?php $selectedSegment = 'h'; ?>
+					<?php $selectedSegment = $currentEstate['energyClass']; ?>
 					<div class="segmented-bar">
 						<?php
 						$segments = $pEstates->getFieldPermittedvalues('energyClass');
