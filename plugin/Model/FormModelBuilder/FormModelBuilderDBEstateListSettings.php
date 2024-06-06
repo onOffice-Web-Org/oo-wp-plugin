@@ -890,7 +890,7 @@ class FormModelBuilderDBEstateListSettings
 		$label = __( 'Sort criteria within same selection', 'onoffice-for-wp-websites' );
 		$pInputModel = $this->getInputModelDBFactory()->create
 		( InputModelDBFactory::INPUT_SORT_BY_TAGS, $label, true );
-		$pInputModel->setHtmlType( InputModelOption::HTML_TYPE_CHOSEN );
+		$pInputModel->setHtmlType( InputModelOption::HTML_TYPE_SELECT_TWO );
 		$pInputModel->setIsMulti( false );
 		$pInputModel->setValuesAvailable( $this->getDataOfSortByInput() );
 		$value = $this->getValue( DataListView::SORT_BY_TAGS );
