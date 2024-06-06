@@ -61,9 +61,6 @@ abstract class InputModelBase
 	const HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST = 'complexSortableDetailList';
 
 	/** */
-	const HTML_TYPE_CHOSEN = 'chosen';
-
-	/** */
 	const HTML_TYPE_NUMBER = 'number';
 
 	/** */
@@ -80,6 +77,9 @@ abstract class InputModelBase
 
 	/** */
 	const HTML_TYPE_SORTABLE_TAGS = 'sortabletags';
+
+  /** */
+	const HTML_TYPE_SELECT_TWO = 'select2';
 
 	/** */
 	const HTML_SEARCH_FIELD_FOR_FIELD_LISTS = 'searchFieldForFieldLists';

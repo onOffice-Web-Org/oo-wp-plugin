@@ -76,7 +76,7 @@ class InputModelDBFactory
 	const INPUT_SORT_BY_SETTING = 'sortBySetting';
 
 	/** */
-	const INPUT_SORT_BY_CHOSEN = 'sortbyuservalue';
+	const INPUT_SORT_BY_SELECT_TWO = 'sortbyuservalue';
 
 	/** */
 	const INPUT_SORT_BY_DEFAULT = 'sortByDefault';
