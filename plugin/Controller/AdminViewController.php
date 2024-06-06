@@ -97,12 +97,6 @@ class AdminViewController
 	/** @var AdminPageAddress */
 	private $_pAdminPageAddresses = null;
 
-	/** */
-	const VIEW_UNSAVED_CHANGES_MESSAGE = 'view_unsaved_changes_message';
-
-	/** */
-	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
-
 	/**
 	 *
 	 */
@@ -180,7 +174,7 @@ class AdminViewController
 
 		// Addresses
 		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice-for-wp-websites'),
-			__('Addresses', 'onoffice-for-wp-websites'), $roleAddress, 
+			__('Addresses', 'onoffice-for-wp-websites'), $roleAddress,
 			$this->_pageSlug.'-addresses', array($this->_pAdminPageAddresses, 'render'));
 		add_action('load-'.$hookAddresses, [$this->_pAdminPageAddresses, 'handleAdminNotices']);
 		$pSelectedSubPageForAddress = $this->_pAdminPageAddresses->getSelectedAdminPage();
@@ -335,9 +329,6 @@ class AdminViewController
 	{
 		wp_enqueue_style('onoffice-admin-css',
 			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
-
-		wp_enqueue_style('chosen-admin-css',
-			plugins_url('/third_party/chosen/chosen.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
 	}
 
 
@@ -357,13 +348,6 @@ class AdminViewController
 		wp_localize_script('handle-notification-actions', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_localize_script('handle-notification-actions', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_enqueue_script('handle-notification-actions');
-		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-unsaved-changes-message.min.js',
-			['jquery'], '', true);
-		wp_enqueue_script('oo-unsaved-changes-message');
-		wp_localize_script('oo-unsaved-changes-message', 'onOffice_unsaved_changes_message', [
-			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
-			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites')
-		]);
 
 		if (__String::getNew($hook)->contains($this->_pageSlug.'-settings')) {
 			wp_register_script('handle-visibility-google-recaptcha-keys', plugins_url('dist/onoffice-handle-visibility-google-recaptcha-keys.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
