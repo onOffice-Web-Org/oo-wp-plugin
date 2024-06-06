@@ -27,6 +27,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\DataView\DataSimilarEstatesSettingsHandler;
 use onOffice\WPlugin\DataView\DataSimilarView;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactorySimilarView;
 use onOffice\WPlugin\DataView\DataDetailView;
@@ -385,5 +386,38 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
 		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
 		$this->assertEquals($pInputModelOption->getHtmlType(), 'searchFieldForFieldLists');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelShowReferenceEstates
+	 */
+	public function testCreateInputModelShowReferenceEstates1()
+	{
+		$pFormModelBuilderSimilarEstateSettings = new FormModelBuilderSimilarEstateSettings($this->_pContainer);
+		$pFormModelBuilderSimilarEstateSettings->generate('test');
+		$pInputModelOption = $pFormModelBuilderSimilarEstateSettings->createInputModelShowReferenceEstates();
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'select');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelFilter
+	 */
+	public function testCreateInputModelFilter()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
+				->disableOriginalConstructor()
+				->setMethods(['getInputModelDBFactory', 'readFilters'])
+				->getMock();
+		$pInstance->method('readFilters')->willReturn(['a']);
+		$pInstance->generate('test');
+
+		$pInputModelOption = $pInstance->createInputModelFilter();
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'select');
+		$this->assertEquals('Choose an estate filter from onOffice enterprise. <a href="https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en" target="_blank">Learn more.</a>', $pInputModelOption->getHintHtml());
 	}
 }
