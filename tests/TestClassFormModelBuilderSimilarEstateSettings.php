@@ -390,8 +390,9 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelShowReferenceEstates
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::getListViewReferenceEstates
 	 */
-	public function testCreateInputModelShowReferenceEstates1()
+	public function testCreateInputModelShowReferenceEstates()
 	{
 		$pFormModelBuilderSimilarEstateSettings = new FormModelBuilderSimilarEstateSettings($this->_pContainer);
 		$pFormModelBuilderSimilarEstateSettings->generate('test');
