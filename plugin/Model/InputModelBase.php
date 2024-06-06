@@ -61,9 +61,6 @@ abstract class InputModelBase
 	const HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST = 'complexSortableDetailList';
 
 	/** */
-	const HTML_TYPE_CHOSEN = 'chosen';
-
-	/** */
 	const HTML_TYPE_NUMBER = 'number';
 
 	/** */
@@ -79,7 +76,7 @@ abstract class InputModelBase
 	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
 
 	/** */
-	const HTML_TYPE_BUTTON_SHOW_PUBLISHED_PROPERTIES = 'buttonShowPublishedProperties';
+	const HTML_TYPE_SELECT_TWO = 'select2';
 
 	/** */
 	const HTML_SEARCH_FIELD_FOR_FIELD_LISTS = 'searchFieldForFieldLists';
@@ -89,6 +86,9 @@ abstract class InputModelBase
 
 	/** */
 	const HTML_GOOGLE_RECAPTCHA_ACCOUNT = 'googleRecaptchaAccount';
+
+	/** */
+	const HTML_TYPE_BUTTON_SHOW_PUBLISHED_PROPERTIES = 'buttonShowPublishedProperties';
 
 	/** @var string */
 	private $_name = null;

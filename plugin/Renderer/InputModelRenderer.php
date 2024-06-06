@@ -225,18 +225,17 @@ class InputModelRenderer
 				$pInstance->setLabel($pInputModel->getLabel());
 				break;
 
-			case InputModelBase::HTML_TYPE_BUTTON_SHOW_PUBLISHED_PROPERTIES:
-				$pInstance = new InputFieldButtonShowPublishedPropertiesRenderer('button', '');
-				$pInstance->setLabel($pInputModel->getLabel());
-				$pInstance->setHint($pInputModel->getHintHtml());
-				break;
-
-			case InputModelBase::HTML_TYPE_CHOSEN:
-			$pInstance = new InputFieldChosenRenderer(
-					$pInputModel->getIdentifier(),
-					$pInputModel->getValuesAvailable());
-				$pInstance->addAdditionalAttribute('class', 'chosen-select');
-				$pInstance->setMultiple($pInputModel->getIsMulti());
+			case InputModelBase::HTML_TYPE_SELECT_TWO:
+			    $isMultiple = $pInputModel->getIsMulti();
+			    $cssClasses = 'select2 oo-custom-select2';
+				$pInstance = new InputFieldSelectTwoRenderer($pInputModel->getIdentifier(), $pInputModel->getValuesAvailable());
+				if($isMultiple) {
+                    $cssClasses .= ' oo-custom-select2--multiple';
+                } else {
+                    $cssClasses .= ' oo-custom-select2--single';
+                }
+                $pInstance->addAdditionalAttribute('class', $cssClasses);
+                $pInstance->setMultiple($isMultiple);
 				$pInstance->setSelectedValue($pInputModel->getValue());
 				break;
 
@@ -294,6 +293,12 @@ class InputModelRenderer
                 }
 				$pInstance->setCheckedValues($pInputModel->getValue());
 			break;
+
+			case InputModelBase::HTML_TYPE_BUTTON_SHOW_PUBLISHED_PROPERTIES:
+				$pInstance = new InputFieldButtonShowPublishedPropertiesRenderer('button', '');
+				$pInstance->setLabel($pInputModel->getLabel());
+				$pInstance->setHint($pInputModel->getHintHtml());
+				break;
 		}
 
 		if ($pInstance !== null) {
