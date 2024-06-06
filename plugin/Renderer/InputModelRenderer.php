@@ -298,13 +298,6 @@ class InputModelRenderer
 				$pInstance = new InputFieldTextAreaRenderer('textarea', $elementName);
 				$pInstance->setValue($pInputModel->getValue());
 				break;
-
-			case InputModelBase::HTML_TYPE_SELECT_TWO:
-				$pInstance = new InputFieldMultipleSelectTwoRenderer($pInputModel->getIdentifier(), $pInputModel->getValuesAvailable());
-				$pInstance->addAdditionalAttribute('class', 'select2 custom-multi-select2');
-				$pInstance->setMultiple($pInputModel->getIsMulti());
-				$pInstance->setSelectedValue($pInputModel->getValue());
-				break;
 		}
 
 		if ($pInstance !== null) {
