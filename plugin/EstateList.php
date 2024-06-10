@@ -515,9 +515,7 @@ class EstateList
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
-		if (!empty($recordRaw['energieausweistyp'])) {
-			$this->setEnergyCertificate($recordRaw['energieausweistyp']);
-		}
+
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
 			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
 		}
@@ -1124,13 +1122,4 @@ class EstateList
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
 		{ return $this->_pEnvironment; }
-
-	/** @return string */
-	public function getEnergyCertificate(): string
-		{ return $this->_energyCertificate; }
-
-	/** @param string $energyCertificate */
-	public function setEnergyCertificate(string $energyCertificate)
-		{ $this->_energyCertificate = $energyCertificate; }
-
 }
