@@ -302,13 +302,13 @@
     height: auto;
 }
 
-.oo-details-energy-certificate {
+.oo-details-energy .oo-details-energy-certificate {
     width: 100%;
     margin-top: 1.5rem;
     margin-bottom: 2.5rem;
 }
 
-.segmented-bar {
+.oo-details-energy .segmented-bar {
     display: flex;
     align-items: flex-end;
     width: 100%;
@@ -317,7 +317,7 @@
     background: linear-gradient(to right, #8aff43, #ff5500f5)
 }
 
-.segment {
+.oo-details-energy .segment {
     border-left: 6px solid #fff;
     flex: 1;
     text-align: center;
@@ -325,11 +325,11 @@
     position: relative;
 }
 
-.energy-certificate-labels {
+.oo-details-energy .energy-certificate-labels {
     position: relative;
 }
 
-.segment span {
+.oo-details-energy .segment span {
     position: absolute;
     background-color: #fff;
     width: 110%;
@@ -339,13 +339,13 @@
     color: black;
 }
 
-.energy-certificate-labels span {
+.oo-details-energy .energy-certificate-labels span {
     position: absolute;
     transform: translateX(-50%);
     color: black;
 }
 
-.segment.selected span{
+.oo-details-energy .segment.selected span{
     background: none;
     color: #fff;
 }

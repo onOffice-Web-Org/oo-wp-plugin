@@ -634,7 +634,7 @@ class FormModelBuilderEstateDetailSettings
 	 *
 	 */
 
-	public function createInputModelShowEnergyCertificate()
+	public function createInputModelShowEnergyCertificate(): InputModelOption
 	{
 		$labelShowEnergyCertificate = __('Show energy certificate with a scale', 'onoffice-for-wp-websites');
 

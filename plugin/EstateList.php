@@ -640,7 +640,7 @@ class EstateList
 	 * @param string $field
 	 * @return array
 	 */
-	public function getFieldPermittedvalues($field): array
+	public function getFieldPermittedValues(string $field): array
 	{
 		$recordType = onOfficeSDK::MODULE_ESTATE;
 
@@ -1071,7 +1071,7 @@ class EstateList
 	}
 
 	/** @return bool */
-	public function getShowEnergyCertificate()
+	public function getShowEnergyCertificate(): bool
 	{
 		return $this->_pDataView->getShowEnergyCertificate();
 	}
