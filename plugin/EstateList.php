@@ -644,12 +644,7 @@ class EstateList
 	{
 		$recordType = onOfficeSDK::MODULE_ESTATE;
 
-		try {
-			$permittedvalues = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getPermittedvalues();
-		} catch (UnknownFieldException $pE) {
-		}
-
-		return $permittedvalues;
+		return $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getPermittedvalues();
 	}
 
 	/**
