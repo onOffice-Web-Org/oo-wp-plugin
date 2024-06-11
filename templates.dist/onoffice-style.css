@@ -270,33 +270,6 @@
     width: 100%;
 }
 
-/* responsive */
-@media only screen and (max-width: 991px) {
-    .oo-listobject, .oo-searchformfield {
-        width: 50%;
-    }
-
-    .oo-details-main {
-        width: 100%;
-    }
-
-    .oo-details-sidebar {
-        width: 50%;
-    }
-}
-
-@media only screen and (max-width: 700px) {
-    .oo-detailslisttd {
-        width: 50%;
-    }
-}
-
-@media only screen and (max-width: 575px) {
-    .oo-listobject, .oo-searchformfield, .oo-details-sidebar {
-        width: 100%;
-    }
-}
-
 .oo-details-energy-certificate {
     position: relative;
     height: auto;
@@ -344,6 +317,32 @@
 }
 
 .oo-details-energy-certificate .segment.selected span {
-    background: none;
     color: #fff;
+}
+
+/* responsive */
+@media only screen and (max-width: 991px) {
+    .oo-listobject, .oo-searchformfield {
+        width: 50%;
+    }
+
+    .oo-details-main {
+        width: 100%;
+    }
+
+    .oo-details-sidebar {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .oo-detailslisttd {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    .oo-listobject, .oo-searchformfield, .oo-details-sidebar {
+        width: 100%;
+    }
 }

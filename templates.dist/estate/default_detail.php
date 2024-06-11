@@ -137,7 +137,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 									$segments = $pEstates->getFieldPermittedvalues('energyClass');
 									foreach ($segments as $key => $label) {
 										echo '<div class="energy-certificate-labels"><span>' . $labels[array_search($key, array_keys($segments))] . '</span></div>';
-										echo '<div class="segment ' . $key . ($selectedSegment == $key ? ' selected' : '') . '"><span>' . $label . '</span></div>';
+										echo '<div class="segment'. ($selectedSegment == $key ? ' selected' : '') . '"><span>' . $label . '</span></div>';
 									}
 									if ($energyCertificateType === "Endenergiebedarf") {
 										echo '<div class="energy-certificate-labels"><span>'.end($labels).'</span></div>';
@@ -203,7 +203,6 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				<?php echo $pEstates->getEstateUnits(); ?>
 			</div>
 		</div>
-
 		<div class="oo-details-sidebar">
 			<div class="oo-asp">
 				<h2><?php echo esc_html__('Contact person', 'onoffice-for-wp-websites'); ?></h2>
