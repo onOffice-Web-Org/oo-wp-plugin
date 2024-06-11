@@ -46,6 +46,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		$estateId = $pEstates->getCurrentEstateId();
 		$rawValues = $pEstates->getRawValues();
 		$energyCertificate = $rawValues->getValueRaw($estateId)['elements']['energieausweistyp'];
+		$energyCertificateFields = ["baujahr","endenergiebedarf","energieverbrauchskennwert","energieausweistyp","energieausweis_gueltig_bis","energyClass","energietraeger"];
 		?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
@@ -69,7 +70,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<div class="oo-detailstable">
 				<?php
 				foreach ($currentEstate as $field => $value) {
-					if ($pEstates->getShowEnergyCertificate() && in_array($field, ["baujahr","endenergiebedarf","energieverbrauchskennwert","energieausweistyp","energieausweis_gueltig_bis","energyClass","energietraeger"])) {
+					if ($pEstates->getShowEnergyCertificate() && in_array($field, $energyCertificateFields)) {
 						continue;
 					}
 					if (is_numeric($value) && 0 == $value) {
