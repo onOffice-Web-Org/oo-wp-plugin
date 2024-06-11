@@ -123,13 +123,13 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php } ?>
 		
 			<?php if ($pEstates->getShowEnergyCertificate()) { ?>
-				<div class="oo-details-energy">
+				<div class="oo-details-energy-certificate">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
 					<?php
 					function renderEnergyCertificate($energyCertificate, $pEstates, $currentEstate, $energyCertificateType, $labels) {
 						if ($energyCertificate === $energyCertificateType && !empty($currentEstate['energyClass'])) {
 							?>
-							<div class="oo-details-energy-certificate">
+							<div class="energy-certificate-container">
 								<?php $selectedSegment = $currentEstate['energyClass']; ?>
 								<div class="segmented-bar">
 									<?php

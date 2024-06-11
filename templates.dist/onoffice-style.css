@@ -297,55 +297,53 @@
     }
 }
 
-.oo-details-energy {
+.oo-details-energy-certificate {
     position: relative;
     height: auto;
 }
 
-.oo-details-energy .oo-details-energy-certificate {
+.oo-details-energy-certificate .energy-certificate-container {
     width: 100%;
     margin-top: 1.5rem;
     margin-bottom: 2.5rem;
 }
 
-.oo-details-energy .segmented-bar {
+.oo-details-energy-certificate .segmented-bar {
     display: flex;
+    white-space: nowrap;
     align-items: flex-end;
-    width: 100%;
-    height: 30px;
-    position: relative;
-    background: linear-gradient(to right, #28a745, #ff5500f5)
 }
 
-.oo-details-energy .segment {
-    border-left: 6px solid #fff;
+.oo-details-energy-certificate .segment {
     flex: 1;
     text-align: center;
-    height: 34px;
+    height: 5px;
     position: relative;
+    border-left: 1px solid #fff;
 }
 
-.oo-details-energy .energy-certificate-labels {
-    position: relative;
+.oo-details-energy-certificate .segment:first-child {
+    border-left: none;
 }
 
-.oo-details-energy .segment span {
+.oo-details-energy-certificate .segment span {
+    height: 28px;
     position: absolute;
-    background-color: #fff;
-    width: 110%;
     bottom: 5px;
     left: 50%;
     transform: translateX(-50%);
-    color: black;
 }
 
-.oo-details-energy .energy-certificate-labels span {
+.oo-details-energy-certificate .energy-certificate-labels span {
     position: absolute;
     transform: translateX(-50%);
-    color: black;
 }
 
-.oo-details-energy .segment.selected span{
+.oo-details-energy-certificate .segment.selected {
+    height: 34px;
+}
+
+.oo-details-energy-certificate .segment.selected span {
     background: none;
     color: #fff;
 }
