@@ -34,13 +34,13 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 /*  responsive picture properties
  *  customizable widths and heights for individual layouts
  */
-$image_width_xs = 545;
-$image_width_sm = 740;
-$image_width_md = 960;
-$image_width_lg = 870;
-$image_width_xl = 1020;
-$image_width_xxl = 1170;
-$image_width_xxxl = 1400;
+$image_width_xs = 400;
+$image_width_sm = 600;
+$image_width_md = 900;
+$image_width_lg = 500;
+$image_width_xl = 500;
+$image_width_xxl = 500;
+$image_width_xxxl = 500;
 $image_height_xs = null;
 $image_height_sm = null;
 $image_height_md = null;
