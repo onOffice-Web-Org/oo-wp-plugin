@@ -88,6 +88,7 @@ $dimensions = [
 		width: 25%;
 	}
 </style>
+
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
