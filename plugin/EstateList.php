@@ -708,14 +708,14 @@ class EstateList
 
     /**
      * @param int $imageId
-     * @param int $breakPoint
+     * @param int $breakpoint
      * @param float|null $width
      * @param float|null $height
      * @param bool $maxWidth
      * @return string
      */
-    public function getResponsiveImageSource(int $imageId, int $breakPoint, float $width = null, float $height = null, bool $maxWidth = false) {
-        $sourceTag = '<source media="(' . ($maxWidth ? 'max-width:' : 'min-width:') . $breakPoint . 'px)" srcset="';
+    public function getResponsiveImageSource(int $imageId, int $breakpoint, float $width = null, float $height = null, bool $maxWidth = false) {
+        $sourceTag = '<source media="(' . ($maxWidth ? 'max-width:' : 'min-width:') . $breakpoint . 'px)" srcset="';
         $pictureOptions1 = null;
         $pictureOptions15 = null;
         $pictureOptions2 = null;
