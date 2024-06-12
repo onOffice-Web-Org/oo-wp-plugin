@@ -87,9 +87,7 @@ $dimensions = [
 	.clear {
 		width: 25%;
 	}
-</style>
-
-<div class="oo-detailview">
+</style><div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
 	while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)) { ?>
