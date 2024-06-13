@@ -13,7 +13,9 @@
 			"courtage_frei",
 			"objekt_des_tages",
 			"vermarktungsart",
-			"preisAufAnfrage"
+			"preisAufAnfrage",
+			"energieausweistyp",
+			"energyClass"
 		],
 		"filter": {
 			"veroeffentlichen": [

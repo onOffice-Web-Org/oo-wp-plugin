@@ -123,7 +123,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php } ?>
 		
 			<?php if ($pEstates->getShowEnergyCertificate()) { 
-				$energyClass = $currentEstate['energyClass'] ?? '';
+				$energyClass = $rawValues->getValueRaw($estateId)['elements']['energyClass'] ?? '';
 				$energyClassPermittedValues = $pEstates->getPermittedValues('energyClass');
 				$energyCertificateType = $rawValues->getValueRaw($estateId)['elements']['energieausweistyp'] ?? '';
 				$energyCertificateValueRanges = [

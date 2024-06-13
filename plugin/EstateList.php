@@ -240,6 +240,7 @@ class EstateList
 		$estateParametersRaw['data'] []= 'vermarktungsart';
 		$estateParametersRaw['data'] []= 'preisAufAnfrage';
 		$estateParametersRaw['data'] []= 'energieausweistyp';
+		$estateParametersRaw['data'] []= 'energyClass';
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
