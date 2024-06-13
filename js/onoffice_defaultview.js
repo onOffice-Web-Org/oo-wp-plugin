@@ -28,7 +28,8 @@
             applyGradientToSegments();
 
             function applyGradientToSegments() {
-                const segments = $('.energy-certificate-container .segment');
+                const segments = $('.oo-details-energy-certificate .energy-certificate-container .segment');
+
                 if (segments.length === 0) return;
 
                 const colors = {
@@ -38,18 +39,18 @@
                 };
 
                 segments.each(function(index) {
-                    const ratio = index / (segments.length - 1);
-                    const isFirstHalf = ratio < 0.5;
-                    const adjustedRatio = isFirstHalf ? ratio * 2 : (ratio - 0.5) * 2;
-                    const color = calculateColor(isFirstHalf ? colors.start : colors.middle, isFirstHalf ? colors.middle : colors.end, adjustedRatio);
-                    const nextColor = calculateColor(isFirstHalf ? colors.start : colors.middle, isFirstHalf ? colors.middle : colors.end, adjustedRatio + 1 / (segments.length - 1));
+                    const positionRatio = index / (segments.length - 1);
+                    const isInInitialSegment = positionRatio < 0.5;
+                    const normalizedPosition = isInInitialSegment ? positionRatio * 2 : (positionRatio - 0.5) * 2;
+                    const color = calculateColor(isInInitialSegment ? colors.start : colors.middle, isInInitialSegment ? colors.middle : colors.end, normalizedPosition);
+                    const nextColor = calculateColor(isInInitialSegment ? colors.start : colors.middle, isInInitialSegment ? colors.middle : colors.end, normalizedPosition + 1 / (segments.length - 1));
 
                     $(this).css('background', `linear-gradient(to right, rgb(${color.join(',')}), rgb(${nextColor.join(',')}))`);
                 });
             }
 
-            function calculateColor(start, end, ratio) {
-                return start.map((startValue, i) => Math.round(startValue + ratio * (end[i] - startValue)));
+            function calculateColor(start, end, positionRatio) {
+                return start.map((startValue, i) => Math.round(startValue + positionRatio * (end[i] - startValue)));
             }
         });
     });
