@@ -638,9 +638,12 @@ class EstateList
 	 * @param string $field
 	 * @return array
 	 */
-	public function getFieldPermittedValues(string $field): array
+	public function getPermittedValues(string $field): array
 	{
 		$recordType = onOfficeSDK::MODULE_ESTATE;
+		if (!$this->_pFieldsCollection->containsFieldByModule($recordType, $field)) {
+			return [];
+		}
 
 		return $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getPermittedvalues();
 	}
