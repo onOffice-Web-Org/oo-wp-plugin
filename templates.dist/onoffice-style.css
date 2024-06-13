@@ -307,7 +307,7 @@
     transform: translateX(-50%);
 }
 
-.oo-details-energy-certificate .energy-certificate-labels span {
+.oo-details-energy-certificate .energy-certificate-label span {
     position: absolute;
     transform: translateX(-50%);
 }

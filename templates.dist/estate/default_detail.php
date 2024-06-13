@@ -142,11 +142,11 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 									<?php
 									foreach ($energyClassPermittedValues as $key => $label) {
 										$labelIndex = array_search($key, array_keys($energyClassPermittedValues));
-										echo '<div class="energy-certificate-labels"><span>' . $labels[$labelIndex] . '</span></div>';
+										echo '<div class="energy-certificate-label"><span>' . $labels[$labelIndex] . '</span></div>';
 										echo '<div class="segment'. ($energyClass == $key ? ' selected' : '') . '"><span>' . $label . '</span></div>';
 									}
 									if ($type === "Endenergiebedarf") {
-										echo '<div class="energy-certificate-labels"><span>'.end($labels).'</span></div>';
+										echo '<div class="energy-certificate-label"><span>'.end($labels).'</span></div>';
 									}
 									?>
 								</div>
@@ -164,29 +164,27 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 						<?php
 						$fields = [
 							'baujahr',
-							'endenergiebedarf' => $energyCertificateType === "Endenergiebedarf",
-							'energieverbrauchskennwert' => $energyCertificateType === "Energieverbrauchskennwert",
 							'energieausweistyp',
 							'energieausweis_gueltig_bis',
 							'energyClass',
 							'energietraeger'
 						];
 
-						foreach ($fields as $field => $condition) {
-							if (is_int($field)) {
-								$field = $condition;
-								$condition = true;
-							}
+						if ($energyCertificateType === "Endenergiebedarf") {
+							$fields[] = 'endenergiebedarf';
+						} elseif ($energyCertificateType === "Energieverbrauchskennwert") {
+							$fields[] = 'energieverbrauchskennwert';
+						}
+
+						foreach ($fields as $field) {
 							if (empty($currentEstate[$field])) {
 								continue;
 							}
 
-							if ($condition) {
-								echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
-									. '<div class="oo-detailslisttd">'
-									. (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field]))
-									. '</div>' . "\n";
-							}
+							echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
+								. '<div class="oo-detailslisttd">'
+								. (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field]))
+								. '</div>' . "\n";
 						}
 						?>
 					</div>
