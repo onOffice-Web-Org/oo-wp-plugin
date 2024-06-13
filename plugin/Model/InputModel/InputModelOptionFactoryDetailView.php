@@ -81,6 +81,9 @@ class InputModelOptionFactoryDetailView
 	const INPUT_SHOW_PRICE_ON_REQUEST = 'show_price_on_request';
 
 	/** @var string */
+	const INPUT_SHOW_ENERGY_CERTIFICATE = 'show_energy_certificate';
+
+	/** @var string */
 	private $_optionGroup = null;
 
 
@@ -126,6 +129,9 @@ class InputModelOptionFactoryDetailView
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
 		],
 		self::INPUT_SHOW_PRICE_ON_REQUEST => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
+		],
+		self::INPUT_SHOW_ENERGY_CERTIFICATE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
 		]
 	];
