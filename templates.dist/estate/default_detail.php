@@ -130,13 +130,12 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					"Endenergiebedarf" => ["0", "25", "50", "75", "100", "125", "150", "175", "200", ">200"],
 					"Energieverbrauchskennwert" => ["0", "50", "100", "150", "200", "250", "300", "350", "400"]
 				];
-				?>
+			?>
 				<div class="oo-details-energy-certificate">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
 					<?php
-					function renderEnergyCertificate(string $energyCertificateType, array $energyClassPermittedValues, $energyClass, string $type, array $labels) {
-						if ($energyCertificateType === $type) {
-							?>
+					function renderEnergyCertificate(string $energyCertificateType, array $energyClassPermittedValues, string $energyClass, string $type, array $labels) {
+						if ($energyCertificateType === $type) { ?>
 							<div class="energy-certificate-container">
 								<div class="segmented-bar">
 									<?php
