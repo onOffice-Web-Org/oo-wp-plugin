@@ -1,28 +1,31 @@
-var onOffice = typeof onOffice_loc_settings !== 'undefined' ? onOffice_loc_settings : onOffice_unsaved_changes_message;
+const onOfficeLocalized = typeof onOffice_loc_settings !== 'undefined' ? onOffice_loc_settings : onOffice_unsaved_changes_message;
 
 jQuery(document).ready(function($){
 	let checkUnsavedChanges = false;
 	let checkNavigationTriggered = false;
+	const $filterFieldsList =  $('.filter-fields-list');
 
-	$('#poststuff :input, form[action="options.php"] :input').on("change", function() {
+	$('.oo-poststuff :input, .oo-page-api-settings :input').on("change", function() {
 		checkUnsavedChanges = true;
 	});
 
-	$('#poststuff span, #poststuff li').on("click", function() {
+	$('.oo-poststuff span.dashicons, .oo-poststuff li').on("click", function() {
 		checkUnsavedChanges = true;
 	});
 
-	$('.filter-fields-list').sortable({
-		update: function() {
-			checkUnsavedChanges = true;
-		}
-	});
+	if ($filterFieldsList.length) {
+		$filterFieldsList.sortable({
+			update: function() {
+				checkUnsavedChanges = true;
+			}
+		});
+	}
 
 	function generateUnsavedChangesMessage(href) {
 		return $(`
 			<div class='notice notice-error is-dismissible notice-unsaved-changes-message'>
-				<p>${onOffice.view_unsaved_changes_message} 
-				<a id='leaveWithoutSaving' href='${href}'>${onOffice.view_leave_without_saving_text}</a></p>
+				<p>${onOfficeLocalized.view_unsaved_changes_message} 
+				<a id='leaveWithoutSaving' href='${href}'>${onOfficeLocalized.view_leave_without_saving_text}</a></p>
 				<button type='button' class='notice-dismiss notice-save-view'></button>
 			</div>
 		`);
@@ -40,13 +43,8 @@ jQuery(document).ready(function($){
 		}
 	}
 
-	$('a[href]').on('click', function(e) {
-		if (!$(this).closest('#adminmenu, #wpadminbar').length) {
-			checkNavigationTriggered = true;
-		}
-	});
-
-	$('#adminmenu a[href], #wpadminbar a[href]').on('click', function(e) {
+	$('#adminmenu a[href], #wpadminbar a[href], .oo-admin-tab').on('click', function(e) {
+		checkNavigationTriggered = true;
 		if ($(this).attr('target') === '_blank') {
 			return;
 		}
@@ -55,7 +53,7 @@ jQuery(document).ready(function($){
 
 	window.onbeforeunload = function() {
 		if (checkUnsavedChanges && !checkNavigationTriggered) {
-			return onOffice.view_unsaved_changes_message;
+			return onOfficeLocalized.view_unsaved_changes_message;
 		}
 	};
 
