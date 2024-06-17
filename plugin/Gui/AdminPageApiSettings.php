@@ -46,6 +46,12 @@ use Parsedown;
 class AdminPageApiSettings
 	extends AdminPage
 {
+    /** */
+    const VIEW_UNSAVED_CHANGES_MESSAGE = 'view_unsaved_changes_message';
+
+    /** */
+    const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
+
 	/**
 	 * @var SymmetricEncryption
 	 */
@@ -397,7 +403,7 @@ class AdminPageApiSettings
 	{
 		$this->generatePageMainTitle(__('Settings', 'onoffice-for-wp-websites'));
 
-		echo '<form method="post" action="options.php">';
+		echo '<form method="post" action="options.php" class="oo-page-api-settings">';
 
 		/* @var $pInputModelRenderer InputModelRenderer */
 		$pInputModelRenderer = $this->getContainer()->get(InputModelRenderer::class);
@@ -425,6 +431,17 @@ class AdminPageApiSettings
 
 		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
 	}
+
+    public function doExtraEnqueues()
+    {
+        wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
+            ['jquery'], '', true);
+        wp_enqueue_script('oo-unsaved-changes-message');
+        wp_localize_script('oo-unsaved-changes-message', 'onOffice_unsaved_changes_message', [
+            self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+            self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites')
+        ]);
+    }
 
     /**
      *
