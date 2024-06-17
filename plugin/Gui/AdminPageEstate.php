@@ -115,7 +115,7 @@ class AdminPageEstate
 		{
 			$newAdminUrl = ($index != $defaultTab) ? add_query_arg('tab', $index, $adminUrl) : $adminUrl;
 			$class = ($index === $selectedTab) ? ' nav-tab-active' : '';
-			echo '<a href="'.$newAdminUrl.'" class="nav-tab'.$class.'">'.esc_html($label).'</a>';
+			echo '<a href="'.$newAdminUrl.'" class="nav-tab oo-admin-tab'.$class.'">'.esc_html($label).'</a>';
 		}
 		echo '</h2>';
 
