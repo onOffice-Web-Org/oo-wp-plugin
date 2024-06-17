@@ -1,5 +1,4 @@
-onOffice = onOffice || {};
-onOffice.custom_select2_translation = onOffice.custom_select2_translation || [];
+const custom_select2 = (typeof custom_select2_translation !== 'undefined') ? custom_select2_translation : {};
 jQuery(document).ready(function ($) {
 	const $multiSelectAdminSorting = $('#viewrecordssorting .oo-custom-select2.oo-custom-select2--multiple');
 	const $singleSelectAdminSorting = $("#viewrecordssorting .oo-custom-select2.oo-custom-select2--single");
@@ -13,13 +12,17 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
-	$multiSelectAdminSorting.select2({
-		placeholder: custom_select2_translation.multipleSelectOptions,
-		width: '50%'
-	});
+	if ($multiSelectAdminSorting.length) {
+		$multiSelectAdminSorting.select2({
+			placeholder: custom_select2.multipleSelectOptions,
+			width: '50%'
+		});
+	}
 
-	$singleSelectAdminSorting.select2({
-		placeholder: custom_select2_translation.singleSelectOption,
-		width: '50%'
-	});
+	if ($singleSelectAdminSorting.length) {
+		$singleSelectAdminSorting.select2({
+			placeholder: custom_select2.singleSelectOption,
+			width: '50%'
+		});
+	}
 });
