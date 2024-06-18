@@ -33,7 +33,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 /*  responsive picture properties
  *  customizable widths and heights for individual layouts
  */
-$image_width_xs = 545;
+$image_width_xs = 382;
 $image_width_sm = 355;
 $image_width_md = 465;
 $image_width_lg = 370;
