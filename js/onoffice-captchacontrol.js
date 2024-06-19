@@ -26,7 +26,9 @@ var CaptchaCallback = function () {
 			if (!formElement.checkValidity() && !_isMSIE()) {
 				formElement.reportValidity();
 			} else {
-				window.grecaptcha.execute(grecaptchaId);
+				if (window.grecaptcha && typeof window.grecaptcha.execute === 'function') {
+					window.grecaptcha.execute(grecaptchaId);
+				}
 			};
 		};
 	};
