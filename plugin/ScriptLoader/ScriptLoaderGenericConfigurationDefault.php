@@ -237,7 +237,7 @@ class ScriptLoaderGenericConfigurationDefault
 			$this->checkFormType($forms, [Form::TYPE_CONTACT, Form::TYPE_OWNER, Form::TYPE_INTEREST])) {
 			$scripts[] = (new IncludeFileModel($script, 'onoffice-captchacontrol', plugins_url('/dist/onoffice-captchacontrol.min.js', $pluginPath)))
 					->setDependencies(['jquery'])
-					->setLoadInFooter(true);
+					->setLoadInFooter(false);
 		}
 
 		return $scripts;
@@ -264,7 +264,7 @@ class ScriptLoaderGenericConfigurationDefault
 	private function checkCaptchaActive(array $forms): bool
 	{
 		return !empty(array_filter($forms, function($form) {
-			return $form->captcha = true;
+			return (bool) $form->captcha;
 		}));
 	}
 
@@ -295,6 +295,7 @@ class ScriptLoaderGenericConfigurationDefault
 
 		$pRecordManagerReadForm = $pContainer->get(RecordManagerReadForm::class);
 		$pRecordManagerReadForm->addColumn('form_type');
+		$pRecordManagerReadForm->addColumn('captcha');
 		$pRecordManagerReadForm->addWhere("`name` IN(" . $names . ")");
 
 		return $pRecordManagerReadForm->getRecords();
