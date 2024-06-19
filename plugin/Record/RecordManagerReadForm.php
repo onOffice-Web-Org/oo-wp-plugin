@@ -167,6 +167,8 @@ class RecordManagerReadForm
 		$result['filterable'] = array_keys(array_filter(array_column($resultFieldConfig, 'filterable', 'fieldname')));
 		$result['hidden'] = array_keys(array_filter(array_column($resultFieldConfig, 'hidden', 'fieldname')));
 
+		$result['contact_type'] = $this->readContactTypesByFormId($result['form_id']);
+
 		return $result;
 	}
 

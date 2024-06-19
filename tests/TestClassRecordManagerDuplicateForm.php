@@ -90,7 +90,8 @@ class TestClassRecordManagerDuplicateForm
 			],
 			'filterable' => [],
 			'hidden' => [],
-			'availableOptions' => []
+			'availableOptions' => [],
+			'contact_type' => ['Owner']
 		];
 
 		$this->_pWPDB = $this->getMockBuilder(wpdb::class)

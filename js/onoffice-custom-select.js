@@ -6,6 +6,11 @@ jQuery(document).ready(function ($) {
 	$('.custom-multiple-select, .custom-single-select').select2({
 		width: '100%'
 	});
+	if ($('.oo-poststuff .custom-input-field .oo-custom-select2').length > 0) {
+		$('.oo-poststuff .custom-input-field .oo-custom-select2').select2({
+			width: '50%'
+		});
+	}
 
 	if ($multiSelectAdminSorting.length) {
 		$multiSelectAdminSorting.select2({
