@@ -57,7 +57,7 @@ class DataListViewFactory
 	public function createListViewByRow(array $row): DataViewFilterableFields
 	{
 		$pListView = new DataListView($row['listview_id'], $row['name']);
-		$pListView->setExpose($row['expose']);
+		$pListView->setExpose($row['expose'] ?? '');
 		$pListView->setFields($row[DataListView::FIELDS]);
 		$pListView->setFilterId($row['filterId'] ?? 0);
 		$pListView->setShowReferenceEstate( $row['show_reference_estate'] );
