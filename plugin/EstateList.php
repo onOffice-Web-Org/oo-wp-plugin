@@ -839,6 +839,35 @@ class EstateList
 		return $this->_pEstateFiles->getEstatePictureTitle($imageId, $currentEstate);
 	}
 
+    /**
+     * @param int $imageId
+     * @param int $breakpoint
+     * @param float|null $width
+     * @param float|null $height
+     * @param bool $maxWidth
+     * @return string
+     */
+    public function getResponsiveImageSource(int $imageId, int $breakpoint, float $width = null, float $height = null, bool $maxWidth = false) {
+        $sourceTag = '<source media="(' . ($maxWidth ? 'max-width:' : 'min-width:') . $breakpoint . 'px)" srcset="';
+        $pictureOptions1 = null;
+        $pictureOptions15 = null;
+        $pictureOptions2 = null;
+        $pictureOptions3 = null;
+
+        if(isset($width) || isset($height)) {
+            $pictureOptions1 = ['width'=> isset($width) ? $width : null, 'height'=> isset($height) ? $height : null];
+            $pictureOptions15 = ['width'=> isset($width) ? round($width * 1.5) : null, 'height'=>isset($height) ? round($height * 1.5) : null];
+            $pictureOptions2 = ['width'=> isset($width) ? round($width * 2) : null, 'height'=>isset($height) ? round($height * 2) : null];
+            $pictureOptions3 = ['width'=> isset($width) ?  round($width * 3) : null, 'height'=>isset($height) ? round($height * 3) : null];
+        }
+
+        return  $sourceTag .
+            $this->getEstatePictureUrl($imageId, $pictureOptions1) . ' 1x,' .
+            $this->getEstatePictureUrl($imageId, $pictureOptions15) . ' 1.5x,' .
+            $this->getEstatePictureUrl($imageId, $pictureOptions2) . ' 2x,' .
+            $this->getEstatePictureUrl($imageId, $pictureOptions3) . ' 3x">';
+    }
+
 	/**
 	 * @param int $imageId
 	 * @return string
