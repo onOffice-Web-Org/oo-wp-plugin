@@ -80,6 +80,9 @@ class InputModelOptionFactoryDetailView
 	/** @var string */
 	const INPUT_SHOW_PRICE_ON_REQUEST = 'show_price_on_request';
 
+	/** */
+	const INPUT_CONTACT_PERSON = 'contact_person';
+
 	/** @var string */
 	private $_optionGroup = null;
 
@@ -127,6 +130,9 @@ class InputModelOptionFactoryDetailView
 		],
 		self::INPUT_SHOW_PRICE_ON_REQUEST => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
+		],
+		self::INPUT_CONTACT_PERSON => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
 		]
 	];
 

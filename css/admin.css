@@ -852,6 +852,14 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	}
 }
 
+.oo-poststuff .oo-vertical-radio {
+	margin-top: 13px;
+}
+
+.oo-poststuff .oo-vertical-radio .oo-information-text {
+	margin-bottom: 0;
+}
+
 @media only screen and (max-width: 782px) {
 	.page-option-action summary{
 		padding: 10px 15px;
