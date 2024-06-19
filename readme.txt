@@ -76,6 +76,29 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.20 (2024-06-18) =
+
+**Added**
+
+* OpenGraph support
+* Adaptive image resolution in property list, detail view of property and similar estates
+* Notification of unsaved changes
+
+**Changed**
+
+* Filter option in property list overview and form overview
+* Some text changes
+
+**Fixed**
+
+* Sorting of multiple property lists on same page
+* Pagination of multiple property lists on same page
+* Loading forms with activated reCAPTCHA in Elementor
+
+**Removed**
+
+* Unused JS library: chosen
+
 = 4.19 (2024-04-18) =
 
 **Added**
