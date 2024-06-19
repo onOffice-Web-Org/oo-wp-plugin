@@ -184,6 +184,7 @@ class InputModelRenderer
 				$pInstance = new InputFieldTemplateListRenderer($elementName,
 					$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValue($pInputModel->getValue());
+				$pInstance->setTemplateDirectory($pInputModel->getTemplateDirectory());
 				break;
 
 			case InputModelOption::HTML_TYPE_TEXT:
