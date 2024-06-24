@@ -25,6 +25,42 @@
                     }
                 }]
             });
+
+            if ($('.oo-cost-details').length) {
+                initializeDonutChart();
+            }
+
+            function initializeDonutChart() {
+                const colors = ['#00a1e0', '#3ac411', '#8a56e2', '#ff6f61', '#ffc72c'];
+                const data = [];
+                let totalCost = 0;
+    
+                $('.oo-cost-details > div').each(function(index) {
+                    const value = $(this).attr('data-value');
+                    const totalCosts = $(this).attr('total-value');
+                    if (!isNaN(value)) {
+                        data.push({
+                            value: value,
+                            color: colors[index]
+                        });
+                        $(this).find('.color-indicator').css('background-color', colors[index]);
+                    }
+                    if (!isNaN(totalCosts))
+                    totalCost = totalCosts;
+                });
+    
+                let start = 0;
+                let gradientString = 'conic-gradient(';
+                data.forEach((item) => {
+                    const percentage = (item.value / totalCost) * 100;
+                    const end = start + percentage;
+                    gradientString += `${item.color} ${start.toFixed(2)}% ${end.toFixed(2)}%, `;
+                    start = end;
+                });
+    
+                gradientString = gradientString.slice(0, -2) + ')';
+                $('.oo-donut-chart').css('background', gradientString);
+            }
         });
     });
 })(jQuery);

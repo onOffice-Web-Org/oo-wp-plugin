@@ -270,6 +270,64 @@
     width: 100%;
 }
 
+.oo-donut-chart {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+}
+
+.oo-donut-chart::before {
+    content: '';
+    position: absolute;
+    background: white;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.oo-cost-details {
+    width: 50%;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.oo-cost-details > div {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.oo-cost-details .oo-label-price,
+.oo-cost-details .oo-costs-info {
+    display: flex;
+    align-items: center;
+}
+
+.oo-cost-details .oo-label-price {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.oo-cost-details .oo-total-costs-label {
+    margin-left: 12px;
+}
+
+
+.oo-cost-details .color-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
 /* responsive */
 @media only screen and (max-width: 991px) {
     .oo-listobject, .oo-searchformfield {
