@@ -138,7 +138,6 @@ class TestClassEstateViewFieldModifierTypeTitle
 			'energyClass',
 			'aussen_courtage',
 			'kaution',
-			'preisAufAnfrage',
 		];
 		
 		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
@@ -179,7 +178,6 @@ class TestClassEstateViewFieldModifierTypeTitle
 			'energyClass',
 			'aussen_courtage',
 			'kaution',
-			'preisAufAnfrage',
 		];
 		
 		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
