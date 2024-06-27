@@ -305,7 +305,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 43) {
-			$this->getCreateQueryFormFieldConfig();
+			dbDelta($this->getCreateQueryFormFieldConfig());
 			$dbversion = 44;
 		}
 
