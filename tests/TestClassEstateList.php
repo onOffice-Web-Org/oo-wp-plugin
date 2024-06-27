@@ -166,6 +166,8 @@ class TestClassEstateList
 
 	public function testEstateIterator()
 	{
+		update_option('onoffice-settings-opengraph', 1);
+		update_option('onoffice-settings-twittercards', 1);
 		$this->_pEstateList->loadEstates();
 
 		foreach (range(0, 4) as $iter) {
@@ -410,6 +412,64 @@ class TestClassEstateList
 		$this->assertEquals($expectedResults[0], $this->_pEstateList->$methodName(2));
 		$this->assertEquals($expectedResults[1], $this->_pEstateList->$methodName(3));
 	}
+
+    /**
+     *
+     */
+    public function testGetResponsiveImageSource()
+    {
+        $this->_pEstateList->loadEstates();
+        $this->_pEstateList->estateIterator();
+        $output = $this->_pEstateList->getResponsiveImageSource(2, 1600, 456, round((456* 2) / 3));
+        $this->assertEquals(
+            '<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@456x304 1x,https://test.url/image/2.jpg@684x456 1.5x,https://test.url/image/2.jpg@912x608 2x,https://test.url/image/2.jpg@1368x912 3x">',
+            $output
+        );
+    }
+
+    public function testGetResponsiveImageSourceForMobile()
+    {
+        $this->_pEstateList->loadEstates();
+        $this->_pEstateList->estateIterator();
+        $output = $this->_pEstateList->getResponsiveImageSource(2, 575, 456, round((456* 2) / 3), true);
+        $this->assertEquals(
+            '<source media="(max-width:575px)" srcset="https://test.url/image/2.jpg@456x304 1x,https://test.url/image/2.jpg@684x456 1.5x,https://test.url/image/2.jpg@912x608 2x,https://test.url/image/2.jpg@1368x912 3x">',
+            $output
+        );
+    }
+
+    public function testGetResponsiveImageSourceWithoutWidth()
+    {
+        $this->_pEstateList->loadEstates();
+        $this->_pEstateList->estateIterator();
+        $output = $this->_pEstateList->getResponsiveImageSource(2, 1600, null, 400);
+        $this->assertEquals(
+            '<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@x400 1x,https://test.url/image/2.jpg@x600 1.5x,https://test.url/image/2.jpg@x800 2x,https://test.url/image/2.jpg@x1200 3x">',
+            $output
+        );
+    }
+
+    public function testGetResponsiveImageSourceWithoutHeight()
+    {
+        $this->_pEstateList->loadEstates();
+        $this->_pEstateList->estateIterator();
+        $output = $this->_pEstateList->getResponsiveImageSource(2, 1600, 456);
+        $this->assertEquals(
+            '<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg@456x 1x,https://test.url/image/2.jpg@684x 1.5x,https://test.url/image/2.jpg@912x 2x,https://test.url/image/2.jpg@1368x 3x">',
+            $output
+        );
+    }
+
+    public function testGetResponsiveImageSourceWithoutWidthWithoutHeight()
+    {
+        $this->_pEstateList->loadEstates();
+        $this->_pEstateList->estateIterator();
+        $output = $this->_pEstateList->getResponsiveImageSource(2, 1600);
+        $this->assertEquals(
+            '<source media="(min-width:1600px)" srcset="https://test.url/image/2.jpg 1x,https://test.url/image/2.jpg 1.5x,https://test.url/image/2.jpg 2x,https://test.url/image/2.jpg 3x">',
+            $output
+        );
+    }
 
 
 	/**

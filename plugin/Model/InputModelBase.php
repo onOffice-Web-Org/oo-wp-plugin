@@ -61,9 +61,6 @@ abstract class InputModelBase
 	const HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST = 'complexSortableDetailList';
 
 	/** */
-	const HTML_TYPE_CHOSEN = 'chosen';
-
-	/** */
 	const HTML_TYPE_NUMBER = 'number';
 
 	/** */
@@ -75,10 +72,17 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_BUTTON_FIELD = 'buttonHandleField';
 
+	/** */
 	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
 
 	/** */
+	const HTML_TYPE_SELECT_TWO = 'select2';
+
+	/** */
 	const HTML_SEARCH_FIELD_FOR_FIELD_LISTS = 'searchFieldForFieldLists';
+
+	/** */
+	const HTML_TYPE_TOGGLE_SWITCH = 'toggleSwitch';
 
 	/** */
 	const HTML_GOOGLE_RECAPTCHA_ACCOUNT = 'googleRecaptchaAccount';
@@ -89,7 +93,7 @@ abstract class InputModelBase
 	/** @var mixed */
 	private $_value = null;
 
-	/** @var mixed */
+	/** @var bool */
 	private $_deactivate = false;
 
 	/** @var string */
@@ -194,11 +198,11 @@ abstract class InputModelBase
 	public function setValue($value)
 		{ $this->_value = $value; }
 
-	/** @param mixed $deactivate */
+	/** @param bool $deactivate */
 	public function setDeactivate($deactivate)
 		{ $this->_deactivate = $deactivate; }
 
-	/** @return mixed */
+	/** @return bool */
 	public function isDeactivate()
 		{ return $this->_deactivate; }
 

@@ -40,25 +40,22 @@ use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionFieldDuplicatorForGeoEstate;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModel;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
-use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\WP\WPPageWrapper;
-use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
 use function home_url;
 use function esc_attr;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldParkingLot;
 
@@ -506,6 +503,18 @@ class EstateList
 					? $this->limit_characters($recordModified["objektbeschreibung"]) : null) . '" />';
 			} );
 		}
+
+        $WPPluginChecker = new WPPluginChecker;
+        $isSEOPluginActive = $WPPluginChecker->isSEOPluginActive();
+		$openGraphStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-opengraph');
+		$twitterCardsStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-twittercards');
+		if ($checkEstateIdRequestGuard && $openGraphStatus && !$isSEOPluginActive) {
+			$this->addMetaTags(GenerateMetaDataSocial::OPEN_GRAPH_KEY, $recordModified);
+		}
+		if ($checkEstateIdRequestGuard && $twitterCardsStatus && !$isSEOPluginActive) {
+			$this->addMetaTags(GenerateMetaDataSocial::TWITTER_KEY, $recordModified);
+		}
+
 		$recordModified = new ArrayContainerEscape($recordModified);
 		if ($recordModified['multiParkingLot']) {
 			$parking = new FieldParkingLot();
@@ -697,6 +706,35 @@ class EstateList
 		return $this->_pEstateFiles->getEstatePictureTitle($imageId, $currentEstate);
 	}
 
+    /**
+     * @param int $imageId
+     * @param int $breakpoint
+     * @param float|null $width
+     * @param float|null $height
+     * @param bool $maxWidth
+     * @return string
+     */
+    public function getResponsiveImageSource(int $imageId, int $breakpoint, float $width = null, float $height = null, bool $maxWidth = false) {
+        $sourceTag = '<source media="(' . ($maxWidth ? 'max-width:' : 'min-width:') . $breakpoint . 'px)" srcset="';
+        $pictureOptions1 = null;
+        $pictureOptions15 = null;
+        $pictureOptions2 = null;
+        $pictureOptions3 = null;
+
+        if(isset($width) || isset($height)) {
+            $pictureOptions1 = ['width'=> isset($width) ? $width : null, 'height'=> isset($height) ? $height : null];
+            $pictureOptions15 = ['width'=> isset($width) ? round($width * 1.5) : null, 'height'=>isset($height) ? round($height * 1.5) : null];
+            $pictureOptions2 = ['width'=> isset($width) ? round($width * 2) : null, 'height'=>isset($height) ? round($height * 2) : null];
+            $pictureOptions3 = ['width'=> isset($width) ?  round($width * 3) : null, 'height'=>isset($height) ? round($height * 3) : null];
+        }
+
+        return  $sourceTag .
+            $this->getEstatePictureUrl($imageId, $pictureOptions1) . ' 1x,' .
+            $this->getEstatePictureUrl($imageId, $pictureOptions15) . ' 1.5x,' .
+            $this->getEstatePictureUrl($imageId, $pictureOptions2) . ' 2x,' .
+            $this->getEstatePictureUrl($imageId, $pictureOptions3) . ' 3x">';
+    }
+
 	/**
 	 * @param int $imageId
 	 * @return string
@@ -881,6 +919,90 @@ class EstateList
 		return false;
 	}
 
+
+	/**
+	 * @param string $keySocial
+	 * @param array $recordModified
+	 */
+	private function addMetaTags(string $keySocial, array $recordModified)
+	{
+		$pGenerateMetaDataSocial = $this->_pEnvironment->getContainer()->get(GenerateMetaDataSocial::class);
+		$estateInformationForMetaData = $this->getEstateInformationForMetaData($recordModified);
+		$metaData = [];
+
+		if ($keySocial === GenerateMetaDataSocial::OPEN_GRAPH_KEY) {
+			$metaData = $pGenerateMetaDataSocial->generateMetaDataSocial($estateInformationForMetaData, [GenerateMetaDataSocial::OPEN_GRAPH_KEY]);
+		}
+
+		if ($keySocial === GenerateMetaDataSocial::TWITTER_KEY) {
+			$metaData = $pGenerateMetaDataSocial->generateMetaDataSocial($estateInformationForMetaData, [GenerateMetaDataSocial::TWITTER_KEY]);
+		}
+
+		if (!empty($metaData)) {
+			$this->addMetaTagsToWpHead($metaData, $keySocial);
+		}
+	}
+
+	/**
+	 * @param array $metaData
+	 * @param string $keySocial
+	 * @return void
+	 */
+	private function addMetaTagsToWpHead(array $metaData, string $keySocial)
+	{
+		add_action('wp_head', function () use ($metaData, $keySocial) {
+			foreach ($metaData as $metaKey => $metaValue) {
+				if ($keySocial === GenerateMetaDataSocial::TWITTER_KEY) {
+					echo '<meta name="'.GenerateMetaDataSocial::TWITTER_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '">';
+				} elseif ($keySocial === GenerateMetaDataSocial::OPEN_GRAPH_KEY) {
+					echo '<meta property="'.GenerateMetaDataSocial::OPEN_GRAPH_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '">';
+				}
+			}
+		}, 1);
+	}
+
+	/**
+	 * @param array $recordModified
+	 * @return array
+	 */
+	private function getEstateInformationForMetaData(array $recordModified): array
+	{
+		$image = $this->getImageForMetaData();
+		$title = $recordModified['objekttitel'] ?? '';
+		$url = $this->getEstateLink() ?? '';
+		$description = $recordModified['objektbeschreibung'] ?? '';
+
+		return [
+			'title' => $title,
+			'url' => $url,
+			'description' => $description,
+			'image' => $image
+		];
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getImageForMetaData(): string
+	{
+		$estatePicturesByEstateId = $this->_pEstateFiles->getEstatePictures($this->_currentEstate['id']);
+
+		if (empty($estatePicturesByEstateId)) {
+			return '';
+		}
+
+		$estatePictureUrl = '';
+		foreach ($estatePicturesByEstateId as $key => $estatePicture) {
+			if ($estatePicture['type'] === ImageTypes::TITLE) {
+				$estatePictureUrl = $estatePicture['url'];
+				break;
+			} elseif ($key === reset($estatePicturesByEstateId)) {
+				$estatePictureUrl = $estatePicture['url'];
+			}
+		}
+
+		return $estatePictureUrl;
+	}
 
 	/**
 	 *
