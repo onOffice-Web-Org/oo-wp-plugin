@@ -366,10 +366,6 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 	}
 });
 
-add_filter('oo_is_detailpage_redirection', function($value) {
-	return $value;
-});
-
 $pEstateRedirection = apply_filters('oo_is_detailpage_redirection', true);
 
 add_action('parse_request', function(WP $pWP) use ($pDI, $pEstateRedirection) {
