@@ -224,7 +224,7 @@ class EstateList
 		$estateParametersRaw['data'] []= 'preisAufAnfrage';
 
 		if ($this->getShowTotalCostsCalculator()) {
-			$fields = ['kaufpreis', 'aussen_courtage', 'bundesland', 'waehrung'];	
+			$fields = ['kaufpreis', 'aussen_courtage', 'bundesland', 'waehrung'];
 			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $fields);
 		}
 

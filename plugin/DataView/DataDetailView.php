@@ -401,10 +401,6 @@ class DataDetailView
 	public function setShowPriceOnRequest(bool $priceOnRequest)
 	{ $this->_showPriceOnRequest = $priceOnRequest; }
 
-	/** @return array */
-	public function getPropertyTransferTax(): array
-		{ return $this->_propertyTransferTax; }
-
     /**
      * @return array
      */
@@ -412,6 +408,10 @@ class DataDetailView
     {
         return $this->_priceFields;
     }
+
+	/** @return array */
+	public function getPropertyTransferTax(): array
+		{ return $this->_propertyTransferTax; }
 
 	/** @return bool */
 	public function getShowTotalCostsCalculator(): bool

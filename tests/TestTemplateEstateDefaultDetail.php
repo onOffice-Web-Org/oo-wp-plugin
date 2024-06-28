@@ -66,6 +66,7 @@ class TestTemplateEstateDefaultDetail
 				'getEstateLinks',
 				'getLinkEmbedPlayers',
 				'getDetailView',
+				'getTotalCostsData',
 			])
 			->setConstructorArgs([$pDataView])
 			->getMock();
@@ -90,6 +91,33 @@ class TestTemplateEstateDefaultDetail
 			'MPAreaButlerUrlWithAddress' => 'areabutler.de',
 		];
 
+		$totalCostsData = [
+			'kaufpreis' => [
+				'raw' => 123456.56,
+				'default' => '123.456,56 €'
+			],
+			'bundesland' => [
+				'raw' => 4321,
+				'default' => '4.321 €'
+			],
+			'aussen_courtage' => [
+				'raw' => 22222,
+				'default' => '22.222 €'
+			],
+			'notary_fees' => [
+				'raw' => 1852,
+				'default' => '1.852 €'
+			],
+			'land_register_entry' => [
+				'raw' => 617,
+				'default' => '617 €'
+			],
+			'total_costs' => [
+				'raw' => 152468.56,
+				'default' => '152.468,56 €'
+			]
+		];
+
 		$pArrayContainerEstateDetail = new ArrayContainerEscape($estateData);
 
 		$this->_pEstate->setEstateId(52);
@@ -99,6 +127,7 @@ class TestTemplateEstateDefaultDetail
 			->will($this->returnCallback(function(string $field): string {
 				return 'label-'.$field;
 			}));
+		$this->_pEstate->method('getTotalCostsData')->willReturn($totalCostsData);
 
 		$contactData = [
 			'Name' => 'Parker',

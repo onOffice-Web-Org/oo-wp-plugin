@@ -127,19 +127,19 @@ class CostsCalculator
 
 	private function getCurrencySymbol()
 	{
-		$parametersGetFieldList = [
+		$parameters = [
 			'labels' => true,
-			'fieldList' => ['waehrung'],
+			'fieldList' => ['weahrung'],
 			'language' => 'DEU',
 			'modules' => [onOfficeSDK::MODULE_ESTATE],
 		];
 
-		$pApiClientActionFields = new APIClientActionGeneric
+		$pAPIClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
-		$pApiClientActionFields->setParameters($parametersGetFieldList);
-		$pApiClientActionFields->addRequestToQueue();
+		$pAPIClientAction->setParameters($parameters);
+		$pAPIClientAction->addRequestToQueue();
 		$this->_pSDKWrapper->sendRequests();
-		$result = $pApiClientActionFields->getResultRecords();
+		$result = $pAPIClientAction->getResultRecords();
 
 		return $result[0]['elements']['waehrung']['permittedvalues'] ?? [];
 	}
