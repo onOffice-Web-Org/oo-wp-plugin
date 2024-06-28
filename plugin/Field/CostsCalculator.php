@@ -119,14 +119,15 @@ class CostsCalculator
 	private function formatCurrency(float $amount, string $currency): string
 	{
 		$decimalPlaces = floor($amount) == $amount ? 0 : 2;
+
 		return number_format($amount, $decimalPlaces, ',', '.') . ' ' . $currency;
 	}
 
 	/**
-	 *
+	 * @return array
 	 */
 
-	private function getCurrencySymbol()
+	private function getCurrencySymbol(): array
 	{
 		$parameters = [
 			'labels' => true,

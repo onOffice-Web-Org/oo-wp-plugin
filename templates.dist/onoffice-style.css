@@ -277,14 +277,14 @@
     align-items: flex-start;
 }
 
-.oo-donut-chart {
+.oo-costs-container .oo-donut-chart {
     width: 40%;
     padding-bottom: 40%;
     border-radius: 50%;
     position: relative;
 }
 
-.oo-donut-chart::before {
+.oo-costs-container .oo-donut-chart::before {
     content: '';
     position: absolute;
     background: white;
@@ -296,30 +296,30 @@
     transform: translate(-50%, -50%);
 }
 
-.oo-costs-overview {
+.oo-costs-container .oo-costs-overview {
     width: 50%;
 }
 
-.oo-costs-overview > div {
+.oo-costs-container .oo-costs-overview > div {
     margin-bottom: 5px;
 }
 
-.oo-costs-overview .oo-price-label,
-.oo-costs-overview .oo-costs-item {
+.oo-costs-container .oo-costs-overview .oo-price-label,
+.oo-costs-container .oo-costs-overview .oo-costs-item {
     display: flex;
     align-items: center;
 }
 
-.oo-costs-overview .oo-price-label {
+.oo-costs-container .oo-costs-overview .oo-price-label {
     width: 100%;
     justify-content: space-between;
 }
 
-.oo-costs-overview .oo-total-costs-label {
+.oo-costs-container .oo-costs-overview .oo-total-costs-label {
     margin-left: 12px;
 }
 
-.oo-costs-overview .color-indicator {
+.oo-costs-container .oo-costs-overview .color-indicator {
     display: inline-block;
     width: 10px;
     height: 10px;
