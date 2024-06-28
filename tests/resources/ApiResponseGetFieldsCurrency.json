@@ -1,7 +1,7 @@
 {
 	"parameters": {
 		"labels": true,
-		"fieldList": ["weahrung"],
+		"fieldList": ["waehrung"],
 		"language": "DEU",
 		"modules": ["estate"]
 	},

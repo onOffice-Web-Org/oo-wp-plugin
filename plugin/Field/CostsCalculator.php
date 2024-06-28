@@ -45,12 +45,13 @@ class CostsCalculator
 	public function getTotalCosts(array $recordRaw, array $propertyTransferTax, float $externalCommission): array
 	{
 		$totalCostsData = $this->calculateRawCosts($recordRaw, $propertyTransferTax, $externalCommission);
+		$currencySymbol = $this->getCurrencySymbol();
 
-		if (empty($this->getCurrencySymbol())) {
+		if (empty($currencySymbol)) {
 			return [];
 		}
 
-		$currency = $this->getCurrencySymbol()[$recordRaw['waehrung']];
+		$currency = $currencySymbol[$recordRaw['waehrung']];
 
 		return $this->formatPrice($totalCostsData, $currency);
 	}
@@ -129,7 +130,7 @@ class CostsCalculator
 	{
 		$parameters = [
 			'labels' => true,
-			'fieldList' => ['weahrung'],
+			'fieldList' => ['waehrung'],
 			'language' => 'DEU',
 			'modules' => [onOfficeSDK::MODULE_ESTATE],
 		];
