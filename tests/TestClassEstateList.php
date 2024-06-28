@@ -997,10 +997,10 @@ class TestClassEstateList
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetIdsFromRelation.json'), true);
 		$responseGetEstatePictures = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetEstatePictures.json'), true);
-		$dataReadEstateShowTotalCostsCalculatorRaw = json_decode
-			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENGCostsCalculatorRaw.json'), true);
-		$responseReadEstateShowTotalCostsCalculatorRaw = $dataReadEstateShowTotalCostsCalculatorRaw['response'];
-		$parametersReadEstateShowTotalCostsCalculatorRaw = $dataReadEstateShowTotalCostsCalculatorRaw['parameters'];
+		$dataReadEstatesPublishedENGCostsCalculatorRaw = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesCostsCalculatorRaw.json'), true);
+		$responseReadEstatesCostsCalculatorRaw = $dataReadEstatesPublishedENGCostsCalculatorRaw['response'];
+		$parametersReadEstatesCostsCalculatorRaw = $dataReadEstatesPublishedENGCostsCalculatorRaw['parameters'];
 		$dataGetFieldCurrency = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetFieldsCurrency.json'), true);
 		$responseGetFieldCurrency = $dataGetFieldCurrency['response'];
@@ -1011,7 +1011,7 @@ class TestClassEstateList
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
 		$this->_pSDKWrapperMocker->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateShowTotalCostsCalculatorRaw, null, $responseReadEstateShowTotalCostsCalculatorRaw);
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstatesCostsCalculatorRaw, null, $responseReadEstatesCostsCalculatorRaw);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'fields', '', $parametersGetFieldCurrency, null, $responseGetFieldCurrency);
 
