@@ -198,53 +198,55 @@ $dimensions = [
 				</div>
 			<?php } ?>
 
-			<?php if (!empty($pEstates->getTotalCosts())) { 
-				$totalCosts = $pEstates->getTotalCosts();
+			<?php if (!empty($pEstates->getTotalCostsData())) { 
+				$totalCostsData = $pEstates->getTotalCostsData();
 				?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Total costs', 'onoffice-for-wp-websites'); ?></h2>
-					<div class="oo-donut-chart"></div>
-					<div class="oo-cost-details">
-						<h3><?php esc_html_e('Overview of costs', 'onoffice-for-wp-websites'); ?></h3>
-						<div class="oo-costs-info" data-value="<?php echo $totalCosts['kaufpreis']['raw']; ?>">
-							<span class="color-indicator"></span>
-							<div class="oo-label-price">
-								<div><b><?php echo esc_html($pEstates->getFieldLabel('kaufpreis')); ?></b></div>
-								<div><b><?php echo $totalCosts['kaufpreis']['default']; ?></b></div>
+					<div class="oo-costs-container">
+						<div class="oo-donut-chart"></div>
+						<div class="oo-costs-overview">
+							<h3><?php esc_html_e('Overview of costs', 'onoffice-for-wp-websites'); ?></h3>
+							<div class="oo-costs-item" data-value="<?php echo esc_attr(($totalCostsData['kaufpreis']['raw'])); ?>">
+								<span class="color-indicator"></span>
+								<div class="oo-price-label">
+									<div><b><?php echo esc_html($pEstates->getFieldLabel('kaufpreis')); ?></b></div>
+									<div><b><?php echo esc_html($totalCostsData['kaufpreis']['default']); ?></b></div>
+								</div>
 							</div>
-						</div>
-						<div class="oo-costs-info" data-value="<?php echo $totalCosts['bundesland']['raw']; ?>">
-							<span class="color-indicator"></span>
-							<div class="oo-label-price">
-								<div><?php esc_html_e('Property transfer tax', 'onoffice-for-wp-websites'); ?></div>
-								<div><?php echo $totalCosts['bundesland']['default']; ?></div>
+							<div class="oo-costs-item" data-value="<?php echo esc_attr($totalCostsData['bundesland']['raw']); ?>">
+								<span class="color-indicator"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Property transfer tax', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['bundesland']['default']); ?></div>
+								</div>
 							</div>
-						</div>
-						<div class="oo-costs-info" data-value="<?php echo $totalCosts['aussen_courtage']['raw']; ?>">
-							<span class="color-indicator"></span>
-							<div class="oo-label-price">
-								<div><?php esc_html_e('Broker commission', 'onoffice-for-wp-websites'); ?></div>
-								<div><?php echo $totalCosts['aussen_courtage']['default']; ?></div>
+							<div class="oo-costs-item" data-value="<?php echo esc_attr($totalCostsData['aussen_courtage']['raw']); ?>">
+								<span class="color-indicator"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Broker commission', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['aussen_courtage']['default']); ?></div>
+								</div>
 							</div>
-						</div>
-						<div class="oo-costs-info" data-value="<?php echo $totalCosts['notary_fees']['raw']; ?>">
-							<span class="color-indicator"></span>
-							<div class="oo-label-price">
-								<div><?php esc_html_e('Notary Fees', 'onoffice-for-wp-websites'); ?></div>
-								<div><?php echo $totalCosts['notary_fees']['default']; ?></div>
+							<div class="oo-costs-item" data-value="<?php echo esc_attr($totalCostsData['notary_fees']['raw']); ?>">
+								<span class="color-indicator"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Notary Fees', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['notary_fees']['default']); ?></div>
+								</div>
 							</div>
-						</div>
-						<div class="oo-costs-info" data-value="<?php echo $totalCosts['land_register_entry']['raw']; ?>">
-							<span class="color-indicator"></span>
-							<div class="oo-label-price">
-								<div><?php esc_html_e('Land Register Entry', 'onoffice-for-wp-websites'); ?></div>
-								<div><?php echo $totalCosts['land_register_entry']['default']; ?></div>
+							<div class="oo-costs-item" data-value="<?php echo esc_attr($totalCostsData['land_register_entry']['raw']); ?>">
+								<span class="color-indicator"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Land Register Entry', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['land_register_entry']['default']); ?></div>
+								</div>
 							</div>
-						</div>
-						<div total-value="<?php echo $totalCosts['total_costs']['raw']; ?>">
-							<div class="oo-label-price">
-								<div class="oo-total-costs-label"><b><?php esc_html_e('Total costs', 'onoffice-for-wp-websites'); ?></b></div>
-								<div><b><?php echo $totalCosts['total_costs']['default']; ?></b></div>
+							<div total-costs-value="<?php echo esc_attr($totalCostsData['total_costs']['raw']); ?>">
+								<div class="oo-price-label">
+									<div class="oo-total-costs-label"><b><?php esc_html_e('Total costs', 'onoffice-for-wp-websites'); ?></b></div>
+									<div><b><?php echo esc_html($totalCostsData['total_costs']['default']); ?></b></div>
+								</div>
 							</div>
 						</div>
 					</div>

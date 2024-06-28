@@ -26,18 +26,18 @@
                 }]
             });
 
-            if ($('.oo-cost-details').length) {
+            if ($('.oo-costs-overview').length) {
                 initializeDonutChart();
             }
 
             function initializeDonutChart() {
                 const colors = ['#00a1e0', '#3ac411', '#8a56e2', '#ff6f61', '#ffc72c'];
                 const data = [];
-                let totalCost = 0;
+                let totalCosts = 0;
     
-                $('.oo-cost-details > div').each(function(index) {
+                $('.oo-costs-overview > div').each(function(index) {
                     const value = $(this).attr('data-value');
-                    const totalCosts = $(this).attr('total-value');
+                    const totalCostsValue = $(this).attr('total-costs-value');
                     if (!isNaN(value)) {
                         data.push({
                             value: value,
@@ -45,14 +45,15 @@
                         });
                         $(this).find('.color-indicator').css('background-color', colors[index]);
                     }
-                    if (!isNaN(totalCosts))
-                    totalCost = totalCosts;
+                    if (!isNaN(totalCostsValue)) {
+                        totalCosts = totalCostsValue;
+                    }
                 });
     
                 let start = 0;
                 let gradientString = 'conic-gradient(';
                 data.forEach((item) => {
-                    const percentage = (item.value / totalCost) * 100;
+                    const percentage = (item.value / totalCosts) * 100;
                     const end = start + percentage;
                     gradientString += `${item.color} ${start.toFixed(2)}% ${end.toFixed(2)}%, `;
                     start = end;

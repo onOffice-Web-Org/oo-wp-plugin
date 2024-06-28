@@ -417,7 +417,7 @@ class DataDetailView
 	public function getShowTotalCostsCalculator(): bool
 		{ return $this->_showTotalCostsCalculator; }
 
-	/** @param bool $costCalculator */
-	public function setShowTotalCostsCalculator(bool $costCalculator)
-		{ $this->_showTotalCostsCalculator = $costCalculator; }
+	/** @param bool $costsCalculator */
+	public function setShowTotalCostsCalculator(bool $costsCalculator)
+		{ $this->_showTotalCostsCalculator = $costsCalculator; }
 }

@@ -642,10 +642,11 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelShowTotalCostsCalculator->setValuesAvailable(1);
 
 		$fields = ['kaufpreis', 'aussen_courtage', 'bundesland'];
+		$pFieldsCollection = $this->getFieldsCollection();
 		$result = [];
 		foreach ($fields as $field) {
-			if ($this->getFieldsCollection()->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $field)) {
-				$result[$field] = $this->getFieldsCollection()->getFieldByKeyUnsafe($field)->getLabel();
+			if ($pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $field)) {
+				$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)->getLabel();
 			} else {
 				$result[$field] = $field;
 			}

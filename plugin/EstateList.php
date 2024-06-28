@@ -58,7 +58,7 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldParkingLot;
-use onOffice\WPlugin\Field\CostCalculator;
+use onOffice\WPlugin\Field\CostsCalculator;
 
 class EstateList
 	implements EstateListBase
@@ -113,7 +113,7 @@ class EstateList
 	private $_redirectIfOldUrl;
 
 	/** @var array */
-	private $_totalCosts = [];
+	private $_totalCostsData = [];
 
 	/**
 	 * @param DataView $pDataView
@@ -223,9 +223,9 @@ class EstateList
 		$estateParametersRaw['data'] []= 'vermarktungsart';
 		$estateParametersRaw['data'] []= 'preisAufAnfrage';
 
-		if ($this->_pDataView instanceof DataDetailView) {
-			$data = ['kaufpreis', 'aussen_courtage', 'bundesland', 'waehrung'];	
-			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $data);
+		if ($this->getShowTotalCostsCalculator()) {
+			$fields = ['kaufpreis', 'aussen_courtage', 'bundesland', 'waehrung'];	
+			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $fields);
 		}
 
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
@@ -502,11 +502,12 @@ class EstateList
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
 
-		if ($this->_pDataView instanceof DataDetailView && $this->_pDataView->getShowTotalCostsCalculator()) {
-			$externalCommission = $this->getExternalCommission($recordRaw);
-			if (!empty((float) $recordRaw['kaufpreis']) && !empty($recordRaw['bundesland']) && !empty($externalCommission)) {
-				$costCalculator = new CostCalculator($this->getDataView(), $recordRaw['waehrung'] ?? 'EUR', $externalCommission);
-				$this->_totalCosts = $costCalculator->getTotalCosts($recordRaw);
+		if ($this->getShowTotalCostsCalculator()) {
+			$externalCommission = $this->getExternalCommission($recordRaw['aussen_courtage'] ?? '');
+			$propertyTransferTax = $this->_pDataView->getPropertyTransferTax();
+			if (!empty((float) $recordRaw['kaufpreis']) && !empty($recordRaw['bundesland']) && $externalCommission !== null) {
+				$costsCalculator = $this->_pEnvironment->getContainer()->get(CostsCalculator::class);
+				$this->_totalCostsData = $costsCalculator->getTotalCosts($recordRaw, $propertyTransferTax, $externalCommission);
 			}
 		}
 
@@ -546,6 +547,7 @@ class EstateList
 				foreach ($priceFields as $priceField) {
 					$this->displayTextPriceOnRequest($recordModified, $priceField);
 				}
+				$this->_totalCostsData = [];
 			}
 		}
 		// do not show priceOnRequest as single Field
@@ -555,25 +557,24 @@ class EstateList
 	}
 
 	/**
-	 * @param array $recordRaw
-	 * @return float
+	 * @param string $externalCommission
+	 * @return mixed
 	 */
-	private function getExternalCommission(array $recordRaw): float
+	private function getExternalCommission(string $externalCommission)
 	{
-		if (isset($recordRaw['aussen_courtage']) && !empty($recordRaw['aussen_courtage'])){
-			if (preg_match('/(\d+,\d+)\s*%/', $recordRaw['aussen_courtage'], $matches)) {
-				return floatval(str_replace(',', '.', $matches[1]));
-			}
+		if (preg_match('/(\d+[,]?\d*)\s*%/', $externalCommission, $matches)) {
+			return floatval(str_replace(',', '.', $matches[1]));
 		}
-		return 0;
+
+		return null;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getTotalCosts(): array
+	public function getTotalCostsData(): array
 	{
-		return $this->_totalCosts;
+		return $this->_totalCostsData;
 	}
 
 	/**
@@ -1153,4 +1154,17 @@ class EstateList
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
 		{ return $this->_pEnvironment; }
+
+	/**
+	 * @return bool
+	 */
+	public function getShowTotalCostsCalculator(): bool
+	{
+		if ($this->_pDataView instanceof DataDetailView) {
+			return $this->_pDataView->getShowTotalCostsCalculator();
+		}
+
+		return false;
+	}
+
 }

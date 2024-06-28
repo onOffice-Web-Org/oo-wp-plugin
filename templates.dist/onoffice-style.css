@@ -270,11 +270,17 @@
     width: 100%;
 }
 
+.oo-costs-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
 .oo-donut-chart {
-    width: 250px;
-    height: 250px;
+    width: 40%;
+    padding-bottom: 40%;
     border-radius: 50%;
-    display: inline-block;
     position: relative;
 }
 
@@ -282,44 +288,38 @@
     content: '';
     position: absolute;
     background: white;
-    width: 180px;
-    height: 180px;
+    width: 70%;
+    height: 70%;
     border-radius: 50%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-.oo-cost-details {
+.oo-costs-overview {
     width: 50%;
-    display: inline-block;
-    vertical-align: top;
-    margin-left: 20px;
-    font-family: Arial, sans-serif;
 }
 
-.oo-cost-details > div {
+.oo-costs-overview > div {
     margin-bottom: 5px;
-    font-size: 16px;
 }
 
-.oo-cost-details .oo-label-price,
-.oo-cost-details .oo-costs-info {
+.oo-costs-overview .oo-price-label,
+.oo-costs-overview .oo-costs-item {
     display: flex;
     align-items: center;
 }
 
-.oo-cost-details .oo-label-price {
+.oo-costs-overview .oo-price-label {
     width: 100%;
     justify-content: space-between;
 }
 
-.oo-cost-details .oo-total-costs-label {
+.oo-costs-overview .oo-total-costs-label {
     margin-left: 12px;
 }
 
-
-.oo-cost-details .color-indicator {
+.oo-costs-overview .color-indicator {
     display: inline-block;
     width: 10px;
     height: 10px;
