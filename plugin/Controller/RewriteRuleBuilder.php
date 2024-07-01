@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\WP\WPPageWrapper;
+use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 
 class RewriteRuleBuilder
 {
@@ -34,16 +35,21 @@ class RewriteRuleBuilder
 	/** @var WPPageWrapper */
 	private $_pWPPageWrapper;
 
+	/** @var DataAddressDetailViewHandler */
+	private $_pDataAddressDetailViewHandler;
+
 	/**
 	 * @param DataDetailViewHandler $pDataDetailViewHandler
 	 * @param WPPageWrapper $pWPPageWrapper
 	 */
 	public function __construct(
 		DataDetailViewHandler $pDataDetailViewHandler,
-		WPPageWrapper $pWPPageWrapper)
+		WPPageWrapper $pWPPageWrapper,
+		DataAddressDetailViewHandler $pDataAddressDetailViewHandler)
 	{
 		$this->_pDataDetailViewHandler = $pDataDetailViewHandler;
 		$this->_pWPPageWrapper = $pWPPageWrapper;
+		$this->_pDataAddressDetailViewHandler = $pDataAddressDetailViewHandler;
 	}
 
 	public function addCustomRewriteTags()
@@ -68,6 +74,22 @@ class RewriteRuleBuilder
 			$pageName = $this->_pWPPageWrapper->getPageUriByPageId( $detailPageId );
 			add_rewrite_rule( '^(' . preg_quote( $pageName ) . ')/([0-9]+)(-([^$]+)?)?/?$',
 				'index.php?pagename=' . urlencode( $pageName ) . '&view=$matches[1]&estate_id=$matches[2]', 'top' );
+		}
+	}
+
+	public function addCustomRewriteTagsForAddressDetail()
+	{
+		add_rewrite_tag('%address_id%', '([^&]+)');
+		add_rewrite_tag('%view%', '([^&]+)');
+	}
+
+	public function addDynamicRewriteRulesForAddressDetail()
+	{
+		$detailPageIds = $this->_pDataAddressDetailViewHandler->getAddressDetailView()->getPageIdsHaveDetailShortCode();
+		foreach ( $detailPageIds as $detailPageId ) {
+			$pageName = $this->_pWPPageWrapper->getPageUriByPageId( $detailPageId );
+			add_rewrite_rule( '^(' . preg_quote( $pageName ) . ')/([0-9]+)(-([^$]+)?)?/?$',
+				'index.php?pagename=' . urlencode( $pageName ) . '&view=$matches[1]&address_id=$matches[2]', 'top' );
 		}
 	}
 }
