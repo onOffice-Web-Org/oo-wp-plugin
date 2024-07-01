@@ -31,7 +31,7 @@
             }
 
             function initializeDonutChart() {
-                const colors = ['#00a1e0', '#3ac411', '#8a56e2', '#ff6f61', '#ffc72c'];
+                const colors = ['#3F9DE4', '#3ac411', '#9C27B0', '#D81B60', '#FEC800'];
                 const data = [];
                 let totalCosts = 0;
     
