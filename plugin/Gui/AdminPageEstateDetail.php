@@ -110,6 +110,9 @@ class AdminPageEstateDetail
 	/** */
 	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
 
+	/** */
+	const FORM_VIEW_TOTAL_COSTS_CALCULATOR = 'viewtotalcostscalculator';
+
 	/**
 	 *
 	 */
@@ -257,6 +260,8 @@ class AdminPageEstateDetail
 		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_ADDITIONAL_MEDIA);
 		$this->createMetaBoxByForm($pFormDocumentTypes, 'side');
 
+		$pFormTotalCostsCalculator = $this->getFormModelByGroupSlug(self::FORM_VIEW_TOTAL_COSTS_CALCULATOR);
+		$this->createMetaBoxByForm($pFormTotalCostsCalculator, 'normal');
 	}
 
 	/**
@@ -329,6 +334,14 @@ class AdminPageEstateDetail
 		$pFormModelAccessControl->setLabel( __( 'Access Control', 'onoffice-for-wp-websites' ) );
 		$pFormModelAccessControl->addInputModel( $pInputModelAccessControl );
 		$this->addFormModel( $pFormModelAccessControl );
+
+		$pInputModelTotalCostsCalculator = $pFormModelBuilder->createInputModelTotalCostsCalculator();
+		$pFormModelTotalCostsCalculator = new FormModel();
+		$pFormModelTotalCostsCalculator->setPageSlug($this->getPageSlug());
+		$pFormModelTotalCostsCalculator->setGroupSlug(self::FORM_VIEW_TOTAL_COSTS_CALCULATOR);
+		$pFormModelTotalCostsCalculator->setLabel(__('Total costs calculator', 'onoffice-for-wp-websites'));
+		$pFormModelTotalCostsCalculator->addInputModel($pInputModelTotalCostsCalculator);
+		$this->addFormModel($pFormModelTotalCostsCalculator);
 
 		$pInputModelDocumentTypes = $pFormModelBuilder->createInputModelExpose();
 		$pInputModelMovieLinks = $pFormModelBuilder->createInputModelMovieLinks();

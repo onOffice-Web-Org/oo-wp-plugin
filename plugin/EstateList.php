@@ -58,6 +58,7 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldParkingLot;
+use onOffice\WPlugin\Field\CostsCalculator;
 
 class EstateList
 	implements EstateListBase
@@ -110,6 +111,9 @@ class EstateList
 
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
+
+	/** @var array */
+	private $_totalCostsData = [];
 
 	/**
 	 * @param DataView $pDataView
@@ -218,6 +222,12 @@ class EstateList
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'] []= 'vermarktungsart';
 		$estateParametersRaw['data'] []= 'preisAufAnfrage';
+
+		if ($this->getShowTotalCostsCalculator()) {
+			$fields = ['kaufpreis', 'aussen_courtage', 'bundesland', 'waehrung'];
+			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $fields);
+		}
+
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
@@ -492,6 +502,15 @@ class EstateList
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
 
+		if ($this->getShowTotalCostsCalculator()) {
+			$externalCommission = $this->getExternalCommission($recordRaw['aussen_courtage'] ?? '');
+			$propertyTransferTax = $this->_pDataView->getPropertyTransferTax();
+			if (!empty((float) $recordRaw['kaufpreis']) && !empty($recordRaw['bundesland']) && $externalCommission !== null) {
+				$costsCalculator = $this->_pEnvironment->getContainer()->get(CostsCalculator::class);
+				$this->_totalCostsData = $costsCalculator->getTotalCosts($recordRaw, $propertyTransferTax, $externalCommission);
+			}
+		}
+
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
 			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
 		}
@@ -528,12 +547,34 @@ class EstateList
 				foreach ($priceFields as $priceField) {
 					$this->displayTextPriceOnRequest($recordModified, $priceField);
 				}
+				$this->_totalCostsData = [];
 			}
 		}
 		// do not show priceOnRequest as single Field
 		unset($recordModified['preisAufAnfrage']);
 
 		return $recordModified;
+	}
+
+	/**
+	 * @param string $externalCommission
+	 * @return mixed
+	 */
+	private function getExternalCommission(string $externalCommission)
+	{
+		if (preg_match('/(\d+[,]?\d*)\s*%/', $externalCommission, $matches)) {
+			return floatval(str_replace(',', '.', $matches[1]));
+		}
+
+		return null;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getTotalCostsData(): array
+	{
+		return $this->_totalCostsData;
 	}
 
 	/**
@@ -1113,4 +1154,17 @@ class EstateList
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
 		{ return $this->_pEnvironment; }
+
+	/**
+	 * @return bool
+	 */
+	public function getShowTotalCostsCalculator(): bool
+	{
+		if ($this->_pDataView instanceof DataDetailView) {
+			return $this->_pDataView->getShowTotalCostsCalculator();
+		}
+
+		return false;
+	}
+
 }
