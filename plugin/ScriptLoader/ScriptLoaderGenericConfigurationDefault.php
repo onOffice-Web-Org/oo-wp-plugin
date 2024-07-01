@@ -219,6 +219,9 @@ class ScriptLoaderGenericConfigurationDefault
 		$scripts[] = (new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/dist/onoffice-prevent-double-form-submission.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true);
+		$scripts[] = (new IncludeFileModel($script, 'onoffice-hidden-field', plugins_url('/dist/onoffice-hidden-field.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
 
 		if ($this->checkFormType($forms, [Form::TYPE_APPLICANT_SEARCH])) {
 			$scripts[] = (new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/dist/onoffice-form-preview.min.js', $pluginPath)))

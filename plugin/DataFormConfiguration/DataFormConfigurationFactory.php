@@ -213,6 +213,10 @@ class DataFormConfigurationFactory
 		if (array_key_exists('markdown', $row) && $row['markdown'] == 1) {
 			$pFormConfiguration->addMarkdownFields($fieldName);
 		}
+
+		if (array_key_exists('hidden_field', $row) && $row['hidden_field'] == 1) {
+			$pFormConfiguration->addHiddenFields($fieldName);
+		}
 	}
 
 

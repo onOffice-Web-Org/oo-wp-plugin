@@ -66,6 +66,7 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->setMarkdownFields(['test1', 'test2']);
 		$pDataFormConfiguration->addMarkdownFields('test3');
 		$pDataFormConfiguration->setShowEstateContext(true);
+		$pDataFormConfiguration->addHiddenFields('test-hidden');
 
 		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 	}
@@ -101,6 +102,7 @@ class TestClassDataFormConfiguration
 			$pDataFormConfiguration->getMarkdownFields());
 		$this->assertEquals('form', $pDataFormConfiguration->getModule());
 		$this->assertTrue($pDataFormConfiguration->getShowEstateContext());
+		$this->assertEquals(['test-hidden'], $pDataFormConfiguration->getHiddenFields());
 	}
 
 
