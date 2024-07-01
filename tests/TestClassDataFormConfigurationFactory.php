@@ -99,6 +99,12 @@ class TestClassDataFormConfigurationFactory
 			['testForm3', $this->getBaseRow(3, Form::TYPE_INTEREST)],
 			['testForm4', $this->getBaseRow(4, Form::TYPE_APPLICANT_SEARCH)],
 		]));
+		$this->_pRecordManagerReadForm->method('readActivityConfigByFormId')->will($this->returnValueMap([
+			[1, $this->getActivityConfigRow(1)],
+			[2, $this->getActivityConfigRow(2)],
+			[3, $this->getActivityConfigRow(3)],
+			[6, $this->getActivityConfigRow(6)]
+		]));
 
 		$this->_pGeoPositionFieldHandler->method('getActiveFields')->will($this->returnValue([
 			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,
@@ -319,6 +325,11 @@ class TestClassDataFormConfigurationFactory
 					$this->assertTrue($pDataFormConfiguration->getCheckDuplicateOnCreateAddress());
 					$this->assertTrue($pDataFormConfiguration->getCreateAddress());
 					$this->assertEquals(['contactSpecialField1'], $pDataFormConfiguration->getAvailableOptionsFields());
+					$this->assertTrue($pDataFormConfiguration->getWriteActivity());
+					$this->assertEquals('action_kind1', $pDataFormConfiguration->getActionKind());
+					$this->assertEquals('action_type1', $pDataFormConfiguration->getActionType());
+					$this->assertEquals('action_kind1, action_type1', $pDataFormConfiguration->getCharacteristic());
+					$this->assertEquals('comment', $pDataFormConfiguration->getRemark());
 					break;
 				case Form::TYPE_OWNER:
 					/* @var $pDataFormConfiguration DataFormConfigurationOwner */
@@ -327,12 +338,22 @@ class TestClassDataFormConfigurationFactory
 					$this->assertEquals('A Subject', $pDataFormConfiguration->getSubject());
 					$this->assertEquals('test@my-onoffice.com', $pDataFormConfiguration->getRecipient());
 					$this->assertEquals(['ownerSpecialField1'], $pDataFormConfiguration->getAvailableOptionsFields());
+					$this->assertTrue($pDataFormConfiguration->getWriteActivity());
+					$this->assertEquals('action_kind1', $pDataFormConfiguration->getActionKind());
+					$this->assertEquals('action_type1', $pDataFormConfiguration->getActionType());
+					$this->assertEquals('action_kind1, action_type1', $pDataFormConfiguration->getCharacteristic());
+					$this->assertEquals('comment', $pDataFormConfiguration->getRemark());
 					break;
 				case Form::TYPE_INTEREST:
 					/* @var $pDataFormConfiguration DataFormConfigurationInterest */
 					$this->assertTrue($pDataFormConfiguration->getCheckDuplicateOnCreateAddress());
 					$this->assertEquals('A Subject', $pDataFormConfiguration->getSubject());
 					$this->assertEquals('test@my-onoffice.com', $pDataFormConfiguration->getRecipient());
+					$this->assertTrue($pDataFormConfiguration->getWriteActivity());
+					$this->assertEquals('action_kind1', $pDataFormConfiguration->getActionKind());
+					$this->assertEquals('action_type1', $pDataFormConfiguration->getActionType());
+					$this->assertEquals('action_kind1, action_type1', $pDataFormConfiguration->getCharacteristic());
+					$this->assertEquals('comment', $pDataFormConfiguration->getRemark());
 					break;
 				case Form::TYPE_APPLICANT_SEARCH:
 					/* @var $pDataFormConfiguration DataFormConfigurationApplicantSearch */
@@ -445,6 +466,26 @@ class TestClassDataFormConfigurationFactory
 			'show_estate_context' => '0',
 			'contact_type' => '',
             'default_recipient' => 'default@my-onoffice.com'
+		];
+	}
+
+	/**
+	 *
+	 * @param int $formId
+	 * @return array
+	 *
+	 */
+
+	private function getActivityConfigRow(int $formId): array
+	{
+		return [
+			'form_activityconfig_id' => 1,
+			'form_id' => $formId,
+			'write_activity' => '1',
+			'action_kind' => 'action_kind1',
+			'action_type' => 'action_type1',
+			'characteristic' => 'action_kind1, action_type1',
+			'remark' => 'comment'
 		];
 	}
 }

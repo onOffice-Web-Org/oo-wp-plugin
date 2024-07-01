@@ -75,6 +75,9 @@ abstract class AdminPageFormSettingsBase
 	const FORM_VIEW_FORM_SPECIFIC = 'viewformspecific';
 
 	/** */
+	const FORM_VIEW_FORM_ACTIVITYCONFIG = 'viewformactivityconfig';
+
+	/** */
 	const MODULE_LABELS = 'modulelabels';
 
 	/** */
@@ -200,6 +203,10 @@ abstract class AdminPageFormSettingsBase
 			$row[RecordManager::TABLENAME_FORMS]['name'] = $this->sanitizeShortcodeName(
 				$row[RecordManager::TABLENAME_FORMS]['name']);
 		}
+		
+		if (array_key_exists(RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM, $row) && !empty($row[RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM])) {
+			$row[RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM] = $this->convertCharacteristicActivityConfigData($row);
+		}
 
 		if ($recordId != 0) {
 			$action = RecordManagerFactory::ACTION_UPDATE;
@@ -210,6 +217,11 @@ abstract class AdminPageFormSettingsBase
 			if (array_key_exists(RecordManager::TABLENAME_FIELDCONFIG_FORMS, $row)) {
 				$result = $result && $pRecordManagerUpdateForm->updateFieldConfigByRow
 					($row[RecordManager::TABLENAME_FIELDCONFIG_FORMS]);
+			}
+
+			if (array_key_exists(RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM, $row)) {
+				$result = $result && $pRecordManagerUpdateForm->updateActivityConfigByRow
+					($row[RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM]);
 			}
 		} else {
 			$action = RecordManagerFactory::ACTION_INSERT;
@@ -223,6 +235,8 @@ abstract class AdminPageFormSettingsBase
 				$rowFieldConfig = $this->prepareRelationValues
 					(RecordManager::TABLENAME_FIELDCONFIG_FORMS, 'form_id', $row, $recordId);
 				$row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] = $rowFieldConfig;
+				$row[RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM]['form_id'] = $recordId;
+				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM);
 				$pRecordManagerInsertForm->insertAdditionalValues($row);
 				$result = true;
 			} catch (RecordManagerInsertException $pException) {
@@ -240,6 +254,24 @@ abstract class AdminPageFormSettingsBase
 		$pResult->record_id = $recordId;
 	}
 
+	/**
+	 * @param array $row
+	 * @return array
+	 */
+	private function convertCharacteristicActivityConfigData(array $row): array
+	{
+		$rowActivityConfig = $row[RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM];
+		$data = [];
+		foreach ($rowActivityConfig as $key => $value) {
+			if (is_array($value)) {
+				$data[] = $value['characteristic'];
+				unset($rowActivityConfig[$key]);
+			}
+		}
+		$rowActivityConfig['characteristic'] = implode(',', $data);
+
+		return $rowActivityConfig;
+	}
 
 	/**
 	 *
