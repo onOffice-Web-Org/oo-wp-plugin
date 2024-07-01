@@ -3,6 +3,9 @@ jQuery(document).ready(function ($) {
         if (this.nextSibling && this.nextSibling.nodeType === 3) {
             $(this.nextSibling).remove();
         }
-        $(this).next('br').remove();
+        const nextBr = $(this).next('br');
+        if (nextBr.length) {
+            nextBr.remove();
+        }
     });
 });

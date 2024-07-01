@@ -68,7 +68,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage   = $isRequiredMessage ? '*' : '';
 			$isHiddenField = $pForm->isHiddenField('message');
-			$additionHidden = $isHiddenField ? 'class="hidden-field"' : '';
+			$additionHidden = $isHiddenField ? 'class="hidden-field" disabled' : '';
 			if (!$isHiddenField) {
 				echo $pForm->getFieldLabel( 'message' );
 				echo $additionMessage . ':<br>';
