@@ -60,6 +60,28 @@ class TestClassImageTypes
 		$pReflection = new ReflectionClass(ImageTypes::class);
 		$nameConstants = $pReflection->getConstants();
 		unset($nameConstants['IMAGE_TYPES']);
+		unset($nameConstants['PASSPORTPHOTO']);
+		unset($nameConstants['USERPHOTO']);
 		$this->assertEqualSets($nameConstants, array_keys(ImageTypes::getAllImageTypesTranslated()));
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetImageTypesForAddress()
+	{
+		$pReflection = new ReflectionClass(ImageTypes::class);
+		$nameConstants = $pReflection->getConstants();
+		unset($nameConstants['TITLE']);
+		unset($nameConstants['PHOTO']);
+		unset($nameConstants['PHOTO_BIG']);
+		unset($nameConstants['PANORAMA']);
+		unset($nameConstants['GROUNDPLAN']);
+		unset($nameConstants['LOCATION_MAP']);
+		unset($nameConstants['ENERGY_PASS_RANGE']);
+		unset($nameConstants['IMAGE_TYPES']);
+		$this->assertEqualSets($nameConstants, array_keys(ImageTypes::getImageTypesForAddress()));
 	}
 }
