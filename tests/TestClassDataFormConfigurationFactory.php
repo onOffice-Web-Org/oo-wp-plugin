@@ -100,6 +100,13 @@ class TestClassDataFormConfigurationFactory
 			['testForm4', $this->getBaseRow(4, Form::TYPE_APPLICANT_SEARCH)],
 		]));
 
+		$this->_pRecordManagerReadForm->method('readFormTaskConfigByFormId')->will($this->returnValueMap([
+			[1, $this->getTaskConfigRowByFormId(1)],
+			[2, $this->getTaskConfigRowByFormId(2)],
+			[3, $this->getTaskConfigRowByFormId(3)],
+			[6, $this->getTaskConfigRowByFormId(6)]
+		]));
+
 		$this->_pGeoPositionFieldHandler->method('getActiveFields')->will($this->returnValue([
 			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,
 			GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
@@ -319,6 +326,14 @@ class TestClassDataFormConfigurationFactory
 					$this->assertTrue($pDataFormConfiguration->getCheckDuplicateOnCreateAddress());
 					$this->assertTrue($pDataFormConfiguration->getCreateAddress());
 					$this->assertEquals(['contactSpecialField1'], $pDataFormConfiguration->getAvailableOptionsFields());
+					$this->assertTrue($pDataFormConfiguration->getEnableCreateTask());
+					$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskResponsibility());
+					$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskProcessor());
+					$this->assertEquals(1, $pDataFormConfiguration->getTaskType());
+					$this->assertEquals(1, $pDataFormConfiguration->getTaskStatus());
+					$this->assertEquals(1, $pDataFormConfiguration->getTaskPriority());
+					$this->assertEquals('Test description', $pDataFormConfiguration->getTaskDescription());
+					$this->assertEquals('Test subject', $pDataFormConfiguration->getTaskSubject());
 					break;
 				case Form::TYPE_OWNER:
 					/* @var $pDataFormConfiguration DataFormConfigurationOwner */
@@ -327,12 +342,26 @@ class TestClassDataFormConfigurationFactory
 					$this->assertEquals('A Subject', $pDataFormConfiguration->getSubject());
 					$this->assertEquals('test@my-onoffice.com', $pDataFormConfiguration->getRecipient());
 					$this->assertEquals(['ownerSpecialField1'], $pDataFormConfiguration->getAvailableOptionsFields());
+					$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskResponsibility());
+					$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskProcessor());
+					$this->assertEquals(1, $pDataFormConfiguration->getTaskType());
+					$this->assertEquals(1, $pDataFormConfiguration->getTaskStatus());
+					$this->assertEquals(1, $pDataFormConfiguration->getTaskPriority());
+					$this->assertEquals('Test description', $pDataFormConfiguration->getTaskDescription());
+					$this->assertEquals('Test subject', $pDataFormConfiguration->getTaskSubject());
 					break;
 				case Form::TYPE_INTEREST:
 					/* @var $pDataFormConfiguration DataFormConfigurationInterest */
 					$this->assertTrue($pDataFormConfiguration->getCheckDuplicateOnCreateAddress());
 					$this->assertEquals('A Subject', $pDataFormConfiguration->getSubject());
 					$this->assertEquals('test@my-onoffice.com', $pDataFormConfiguration->getRecipient());
+					$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskResponsibility());
+					$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskProcessor());
+					$this->assertEquals(1, $pDataFormConfiguration->getTaskType());
+					$this->assertEquals(1, $pDataFormConfiguration->getTaskStatus());
+					$this->assertEquals(1, $pDataFormConfiguration->getTaskPriority());
+					$this->assertEquals('Test description', $pDataFormConfiguration->getTaskDescription());
+					$this->assertEquals('Test subject', $pDataFormConfiguration->getTaskSubject());
 					break;
 				case Form::TYPE_APPLICANT_SEARCH:
 					/* @var $pDataFormConfiguration DataFormConfigurationApplicantSearch */
@@ -445,6 +474,29 @@ class TestClassDataFormConfigurationFactory
 			'show_estate_context' => '0',
 			'contact_type' => '',
             'default_recipient' => 'default@my-onoffice.com'
+		];
+	}
+
+	/**
+	 *
+	 * @param int $formId
+	 * @return array
+	 *
+	 */
+
+	private function getTaskConfigRowByFormId(int $formId): array
+	{
+		return [
+			'form_taskconfig_id ' => 1,
+			'form_id' => $formId,
+			'enable_create_task' => true,
+			'responsibility' => 'Tobias',
+			'processor' => 'Tobias',
+			'type' => 1,
+			'priority' => 1,
+			'subject' => 'Test subject',
+			'description' => 'Test description',
+			'status' => 1,
 		];
 	}
 }

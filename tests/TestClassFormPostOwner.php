@@ -342,6 +342,45 @@ class TestClassFormPostOwner
 		$this->assertEquals(FormPost::MESSAGE_ERROR, $pFormData->getStatus());
 	}
 
+	/**
+	 *
+	 */
+	public function testCreateTask()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'ArtDaten' => 'Eigentümer',
+			'Telefon1' => '0815 234567890',
+			'objektart' => 'haus',
+			'objekttyp' => 'stadthaus',
+			'energieausweistyp' => 'Bedarfsausweis',
+			'wohnflaeche' => 800,
+			'kabel_sat_tv' => 'y',
+			'message' => 'Hello! I am interested in selling my property!',
+			'gdprcheckbox' => 'y'
+		];
+		$this->prepareMockerForAddressCreationSuccess();
+		$this->prepareMockerForEstateCreationSuccess();
+		$this->prepareMockerForRelationSuccess();
+		$this->prepareSDKWrapperForCreateTask();
+		$this->prepareMockerForContactSuccess();
+		$pDataFormConfiguration = $this->getDataFormConfiguration();
+		$pDataFormConfiguration->setCreateOwner(true);
+		$pDataFormConfiguration->setEnableCreateTask(true);
+		$pDataFormConfiguration->setTaskResponsibility('Tobias');
+		$pDataFormConfiguration->setTaskProcessor('Tobias');
+		$pDataFormConfiguration->setTaskPriority(3);
+		$pDataFormConfiguration->setTaskType(1);
+		$pDataFormConfiguration->setTaskSubject('Task subject');
+		$pDataFormConfiguration->setTaskDescription('Task description');
+		$pDataFormConfiguration->setTaskStatus(1);
+		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 2);
+
+		$pFormData = $this->_pFormPostOwner->getFormDataInstance('test', 2);
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+	}
 
 
 	/**
@@ -752,5 +791,31 @@ class TestClassFormPostOwner
 
 		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_DO,
 				'contactaddress', '', $parameters, null, $response);
+	}
+
+	/**
+	 *
+	 */
+	public function prepareSDKWrapperForCreateTask()
+	{
+		$parameters = [
+			'data' => [
+				'Prio' => 3,
+				'Verantwortung' => 'Tobias',
+				'Art' => 1,
+				'Status' => 1,
+				'Bearbeiter' => 'Tobias',
+				'Betreff' => 'Task subject',
+				'Aufgabe' => 'Task description'
+			],
+			'relatedAddressId' => 281,
+			'relatedEstateId' => 5590
+		];
+
+		$responseJson = file_get_contents(__DIR__.'/resources/ApiResponseCreateTask.json');
+		$response = json_decode($responseJson, true);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_CREATE, 'task', '', $parameters, null, $response);
 	}
 }

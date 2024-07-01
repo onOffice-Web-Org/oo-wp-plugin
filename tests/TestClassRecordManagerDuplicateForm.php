@@ -153,6 +153,21 @@ class TestClassRecordManagerDuplicateForm
 			]
 		];
 
+		$sampleTaskConfig = [
+			[
+				'form_taskconfig_id ' => 1,
+				'form_id' => 1,
+				'enable_create_task' => true,
+				'responsibility' => 'Tobias',
+				'processor' => 'Tobias',
+				'type' => 1,
+				'priority' => 1,
+				'subject' => 'Test subject',
+				'description' => 'Test description',
+				'status' => 1,
+			]
+		];
+
 		$recordRootCopy = (object) [
 			'form_id' => 22,
 			'name'    => 'list view root - Copy 1',
@@ -173,16 +188,17 @@ class TestClassRecordManagerDuplicateForm
 					 ->method( 'get_row' )
 					 ->willReturnOnConsecutiveCalls( $recordRootCopy );
 
-		$this->_pWPDB->expects($this->exactly(4))
+		$this->_pWPDB->expects($this->exactly(5))
 			->method('get_col')
 			->willReturnOnConsecutiveCalls(
+				$colData,
 				$colData,
 				$colData,
 				$colData,
 				$colData
 			);
 
-		$this->_pWPDB->expects( $this->exactly( 6 ) )
+		$this->_pWPDB->expects( $this->exactly( 7 ) )
 					 ->method( 'get_results' )
 					 ->willReturnOnConsecutiveCalls(
 						 $fieldConfigRecordOutputArr,
@@ -190,7 +206,8 @@ class TestClassRecordManagerDuplicateForm
 						 $sampleDataObj,
 						 $sampleDataArr,
 						 $sampleDataObj,
-						 $sampleDataArr
+						 $sampleDataArr,
+						 $sampleTaskConfig
 					 );
 
 		$this->_pWPDB->insert_id = 23;

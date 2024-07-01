@@ -110,4 +110,21 @@ class RecordManagerInsertGeneric
 
 		$this->_pWPDB->suppress_errors($suppressErrors);
 	}
+
+	/**
+	 * @param array $values
+	 * @param string $table
+	 * @throws RecordManagerInsertException
+	 */
+
+	public function insertSingleRow(array $values, string $table)
+	{
+		$suppressErrors = $this->_pWPDB->suppress_errors();
+
+		if (false === $this->_pWPDB->insert($this->_pWPDB->prefix.$table, $values[$table])) {
+			$this->_pWPDB->suppress_errors($suppressErrors);
+			throw new RecordManagerInsertException();
+		}
+		$this->_pWPDB->suppress_errors($suppressErrors);
+	}
 }
