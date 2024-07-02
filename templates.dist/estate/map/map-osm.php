@@ -50,7 +50,7 @@ return (function(EstateList $pEstatesClone) {
 		}
 	}
 
-    $mapId = 'map' . esc_attr($listViewId);
+	$mapId = 'map' . esc_attr($listViewId);
 
 	if ($estateData === []) {
 		return;
