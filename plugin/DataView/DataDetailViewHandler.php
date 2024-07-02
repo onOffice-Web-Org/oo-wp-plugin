@@ -63,14 +63,42 @@ class DataDetailViewHandler
 	{
 		$optionKey = self::DEFAULT_VIEW_OPTION_KEY;
 		$pAlternate = new DataDetailView();
-		$pResult = $this->_pWPOptionWrapper->getOption($optionKey, $pAlternate);
+		$pExpandAlternate = $this->getEnergyFields($pAlternate, $optionKey);
+
+		$pResult = $this->_pWPOptionWrapper->getOption($optionKey, $pExpandAlternate);
 
 		if ($pResult == null)
 		{
-			$pResult = $pAlternate;
+			$pResult = $pExpandAlternate;
 		}
 
 		return $pResult;
+	}
+
+	/**
+	 * @param DataDetailView $pDataDetailView
+	 * @param string $optionKey
+	 *
+	 * @return DataDetailView
+	 */
+	private function getEnergyFields(DataDetailView $pDataDetailView, string $optionKey): DataDetailView
+	{
+		$rootFields = $pDataDetailView->getFields();
+		if (!$this->_pWPOptionWrapper->getOption($optionKey)) {
+			$generalEnergyFields = array_diff(DataDetailView::GENERAL_ENERGY_FIELDS, $pDataDetailView->getFields());
+			$privateEnergyFields = array_diff(DataDetailView::PRIVATE_ENERGY_FIELDS, $pDataDetailView->getFields());
+			$defaultFields = array_diff($rootFields, DataDetailView::GENERAL_ENERGY_FIELDS);
+
+			if (get_locale() === DataDetailView::AUSTRIA_LANGUAGE_CODE) {
+				$austriaEnergyAllFields = array_merge($privateEnergyFields, DataDetailView::AUSTRIA_ENERGY_FIELDS);
+				$pDataDetailView->setFields(array_merge($defaultFields, $austriaEnergyAllFields));
+			} elseif (in_array(get_locale(), DataDetailView::LANGUAGE_CODE_EU_COUNTRIES)) {
+				$energyAllFields = array_merge($privateEnergyFields, $generalEnergyFields);
+				$pDataDetailView->setFields(array_merge($rootFields, $energyAllFields));
+			}
+		}
+
+		return $pDataDetailView;
 	}
 
 
