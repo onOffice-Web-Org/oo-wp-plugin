@@ -29,7 +29,11 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 return (function(EstateList $pEstatesClone) {
 	$pEstatesClone->resetEstateIterator();
 	$estateData = [];
-    $shortCodeId = $pEstatesClone->getDataView()->getId();
+	$shortCodeId = 0;
+    if ($pEstatesClone->getDataView() instanceof \onOffice\WPlugin\DataView\DataListView) {
+		$shortCodeId = $pEstatesClone->getDataView()->getId();
+    }
+
 	while ($currentEstateMap = $pEstatesClone->estateIterator
 		(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
 		$virtualAddressSet = (bool)$currentEstateMap['virtualAddress'];
