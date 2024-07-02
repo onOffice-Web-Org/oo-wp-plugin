@@ -239,8 +239,12 @@ class EstateList
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'] []= 'vermarktungsart';
 		$estateParametersRaw['data'] []= 'preisAufAnfrage';
-		$estateParametersRaw['data'] []= 'energieausweistyp';
-		$estateParametersRaw['data'] []= 'energyClass';
+
+		if ($this->getShowEnergyCertificate()) {
+			$energyCertificateFields = ['energieausweistyp', 'energyClass'];
+			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $energyCertificateFields);
+		}
+
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
@@ -1099,7 +1103,7 @@ class EstateList
 	/** @return bool */
 	public function getShowEnergyCertificate(): bool
 	{
-		return $this->_pDataView->getShowEnergyCertificate();
+		return $this->_pDataView instanceof DataDetailView && $this->_pDataView->getShowEnergyCertificate();
 	}
 
 	/** @return EstateFiles */
