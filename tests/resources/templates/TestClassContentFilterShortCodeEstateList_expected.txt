@@ -1,4 +1,4 @@
-<div id="test_view_list">#: Show Details
+#: Show Details
 label-objekttitel: flach begrüntes Grundstück
 label-objektart: Grundstück
 label-objekttyp: Wohnen
@@ -12,4 +12,3 @@ label-objektbeschreibung: große Freifläche
 label-lage: Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.
 label-ausstatt_beschr: teilweise mit einer alten Mauer aus Findlingen umgeben
 label-sonstige_angaben: Vereinbaren Sie noch heute einen Besichtigungstermin
-</div>

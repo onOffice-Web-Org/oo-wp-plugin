@@ -134,9 +134,7 @@ class ContentFilterShortCodeEstateList
 			$pTemplate = $this->_pTemplate
 				->withTemplateName($pListViewWithSortParams->getTemplate())
 				->withEstateList($pEstateList);
-			$result = '<div id="'.str_replace(' ', '-', $attributes['view']).'">';
-			$result .= $pTemplate->render();
-			$result .= '</div>';
+			$result = $pTemplate->render();
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel, true);
 		}
 		return $result;
