@@ -29,10 +29,7 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 return (function(EstateList $pEstatesClone) {
 	$pEstatesClone->resetEstateIterator();
 	$estateData = [];
-	$shortCodeId = 0;
-    if ($pEstatesClone->getDataView() instanceof \onOffice\WPlugin\DataView\DataListView) {
-		$shortCodeId = $pEstatesClone->getDataView()->getId();
-    }
+	$listViewId = $pEstatesClone->getListViewIdForOsm();
 
 	while ($currentEstateMap = $pEstatesClone->estateIterator
 		(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
@@ -53,7 +50,7 @@ return (function(EstateList $pEstatesClone) {
 		}
 	}
 
-    $mapId = 'map' . esc_attr($shortCodeId);
+    $mapId = 'map' . esc_attr($listViewId);
 
 	if ($estateData === []) {
 		return;
