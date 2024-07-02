@@ -167,6 +167,9 @@ class DataDetailView
 	/** @var bool */
 	private $_showPriceOnRequest = false;
 
+	/** @var bool */
+	private $_showEnergyCertificate = false;
+
     /** @var string[] */
     private $_priceFields = [
         'kaufpreis',
@@ -368,6 +371,14 @@ class DataDetailView
 	/** @param bool $priceOnRequest */
 	public function setShowPriceOnRequest(bool $priceOnRequest)
 	{ $this->_showPriceOnRequest = $priceOnRequest; }
+
+	/** @return bool */
+	public function getShowEnergyCertificate(): bool
+	{ return $this->_showEnergyCertificate; }
+
+	/** @param bool $showEnergyCertificate */
+	public function setShowEnergyCertificate(bool $showEnergyCertificate)
+	{ $this->_showEnergyCertificate = $showEnergyCertificate; }
 
 
     /**
