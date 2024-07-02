@@ -61,11 +61,11 @@
     height: auto;
 }
 
-.oo-detailsmap #map, .oo-estate-map #map, .oo-detailsmap #gmap, .oo-estate-map #gmap  {
+.oo-detailsmap #map, .oo-estate-map .map, .oo-detailsmap #gmap, .oo-estate-map #gmap  {
     height: 300px !important;
 }
 
-.oo-estate-map #map .leaflet-top, .oo-estate-map #map .leaflet-bottom {
+.oo-estate-map .map .leaflet-top, .oo-estate-map .map .leaflet-bottom {
     z-index: 888;
 }
 

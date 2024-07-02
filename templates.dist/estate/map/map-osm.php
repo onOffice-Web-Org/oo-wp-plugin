@@ -29,7 +29,7 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 return (function(EstateList $pEstatesClone) {
 	$pEstatesClone->resetEstateIterator();
 	$estateData = [];
-
+    $shortCodeId = $pEstatesClone->getDataView()->getId();
 	while ($currentEstateMap = $pEstatesClone->estateIterator
 		(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
 		$virtualAddressSet = (bool)$currentEstateMap['virtualAddress'];
@@ -49,14 +49,17 @@ return (function(EstateList $pEstatesClone) {
 		}
 	}
 
+    $mapId = 'map' . esc_attr($shortCodeId);
+
 	if ($estateData === []) {
 		return;
 	} ?>
-    <div id="map" style="width: 100%; height: 100%;"></div>
+    <div class="map" id="<?php echo $mapId ?>" style="width: 100%; height: 100%;"></div>
     <script>
     (function() {
         var estateMarkers = <?php echo json_encode($estateData); ?>;
-        var map = L.map('map', {
+        var mapId = <?php echo $mapId; ?>;
+        var map = L.map(mapId, {
             center: [50.8, 10.0],
             zoom: 5
         });
