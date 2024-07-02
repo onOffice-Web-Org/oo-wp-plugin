@@ -29,7 +29,6 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 return (function(EstateList $pEstatesClone) {
 	$pEstatesClone->resetEstateIterator();
 	$estateData = [];
-	$listViewId = $pEstatesClone->getListViewIdForOsm();
 
 	while ($currentEstateMap = $pEstatesClone->estateIterator
 		(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
@@ -50,11 +49,12 @@ return (function(EstateList $pEstatesClone) {
 		}
 	}
 
-	$mapId = 'map' . esc_attr($listViewId);
-
 	if ($estateData === []) {
 		return;
-	} ?>
+	}
+	$listViewId = $pEstatesClone->getListViewId();
+	$mapId = 'map' . esc_attr($listViewId);
+	?>
     <div class="map" id="<?php echo $mapId ?>" style="width: 100%; height: 100%;"></div>
     <script>
     (function() {
