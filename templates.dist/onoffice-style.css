@@ -69,6 +69,15 @@
     z-index: 888;
 }
 
+/* estate map for new users */
+.oo-detailsmap .oo-map, .oo-estate-map .oo-map {
+    height: 300px !important;
+}
+
+.oo-estate-map .oo-map .leaflet-top, .oo-estate-map .oo-map .leaflet-bottom {
+    z-index: 888;
+}
+
 /* estate sort */
 .oo-estate-sort {
     padding: 15px;
