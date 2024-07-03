@@ -69,7 +69,6 @@
     z-index: 888;
 }
 
-/* estate map for new users */
 .oo-detailsmap .oo-map, .oo-estate-map .oo-map {
     height: 300px !important;
 }

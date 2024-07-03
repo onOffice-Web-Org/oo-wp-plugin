@@ -30,7 +30,6 @@ use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstateDetail
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
-use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\EstateDetail;
@@ -147,7 +146,7 @@ class TestClassContentFilterShortCodeEstateDetail
 		$this->_pEstate->method('getListViewId')->willReturn('estate_detail');
 	}
 
-	public function testRender123()
+	public function testRender()
 	{
 		$pTemplateMocker = new TemplateMocker();
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
