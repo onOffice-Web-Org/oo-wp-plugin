@@ -1119,7 +1119,7 @@ class EstateList
 	 */
 	public function getListViewId()
 	{
-		if($this->getDataView() instanceof DataListView) {
+		if ($this->getDataView() instanceof DataListView) {
 			return $this->getDataView()->getId();
 		}
 
