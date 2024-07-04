@@ -69,7 +69,7 @@
     z-index: 888;
 }
 
-.oo-detailsmap .oo-map, .oo-estate-map .oo-map {
+.oo-detailsmap .oo-map, .oo-estate-map .oo-map, .oo-detailsmap .oo-gmap, .oo-estate-map .oo-gmap {
     height: 300px !important;
 }
 
