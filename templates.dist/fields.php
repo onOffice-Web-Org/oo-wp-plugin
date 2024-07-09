@@ -135,7 +135,7 @@ if (!function_exists('renderFormField')) {
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
 			$output .= '<select size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute;
-			$output .= $isHiddenField ? 'class="hidden-field" disabled ' : 'class="custom-single-select"';
+			$output .= $isHiddenField ? 'class="oo-hidden-field" disabled ' : 'class="custom-single-select"';
 			$output .= '>';
 			/* translators: %s will be replaced with the translated field name. */
 			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
@@ -176,14 +176,14 @@ if (!function_exists('renderFormField')) {
 				$htmlOptions .= '<option value="' . esc_attr($key) . '".' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
 			$output = '<select name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute;
-			$output .= $isHiddenField ? 'class="hidden-field" disabled ' : 'class="custom-multiple-select form-control"' . '>';
+			$output .= $isHiddenField ? 'class="oo-hidden-field" disabled ' : 'class="custom-multiple-select form-control"' . '>';
 			$output .= $htmlOptions;
 			$output .= '</select>';
 		} else {
 			$inputType = 'type="text" ';
 			$value = 'value="' . esc_attr($pForm->getFieldValue($fieldName, true)) . '"';
 			if ($isHiddenField === true) {
-				$inputType .= 'class="hidden-field" disabled ';
+				$inputType .= 'class="oo-hidden-field" disabled ';
 			} elseif ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" ';
 				$value = 'value="y" ' . ($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
@@ -219,7 +219,7 @@ if (!function_exists('renderFormField')) {
 						. $value . ' placeholder="' . esc_attr($rangeDescription) . '">';
 				}
 			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
-				$additionHidden = $isHiddenField === true ? 'class="hidden-field" disabled ' : '';
+				$additionHidden = $isHiddenField === true ? 'class="oo-hidden-field" disabled ' : '';
 				$output = '<fieldset '.$additionHidden.'>
 					<input type="radio" id="' . esc_attr($fieldName) . '_u" name="' . esc_attr($fieldName) . '" value=""
 						' . ($selectedValue == '' ? ' checked' : '') . '>
@@ -253,7 +253,7 @@ if (!function_exists('renderRegionalAddition')) {
 		}
 
 		$output .= '<select name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute ;
-		$output .= $isHiddenField ? 'class="hidden-field" disabled ' : '';
+		$output .= $isHiddenField ? 'class="oo-hidden-field" disabled ' : '';
 		$output .= '>';
 		$pRegionController = new RegionController();
 

@@ -31,6 +31,7 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 
 $addressValues = array();
 $estateValues = array();
+$hiddenValues  = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo esc_html__('SUCCESS!', 'onoffice-for-wp-websites');
@@ -43,6 +44,10 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
+		if ($pForm->isHiddenField($input)) {
+			$hiddenValues []= renderFormField($input, $pForm);
+			continue;
+		}
 		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
 		$isHiddenField = $pForm->isHiddenField($input);
@@ -54,16 +59,14 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 		}
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-			$isHiddenField = $pForm->isHiddenField('gdprcheckbox');
-			$fieldLabel = $pForm->getFieldLabel('gdprcheckbox');
 			$line = renderFormField( 'gdprcheckbox', $pForm );
-			$line .= !$isHiddenField ? $fieldLabel : '';
+			$line .= $pForm->getFieldLabel( 'gdprcheckbox' );
 		}
 		if ( in_array( $input, array( 'message' )) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage = $isRequiredMessage ? '*' : '';
 			$isHiddenField = $pForm->isHiddenField('message');
-			$additionHidden = $isHiddenField ? 'class="hidden-field" disabled' : '';
+			$additionHidden = $isHiddenField ? 'class="oo-hidden-field" disabled' : '';
 
 			$line = $pForm->getFieldLabel('message').$additionMessage.':<br>';
 			$line = !$isHiddenField ? $line : '';
@@ -90,6 +93,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		<p>';
 	echo implode('<br>', $estateValues);
 	echo '</p>';
+	echo implode($hiddenValues);
 
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }
