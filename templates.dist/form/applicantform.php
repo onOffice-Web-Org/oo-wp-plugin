@@ -61,7 +61,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 	if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
 		$line             = renderFormField( 'gdprcheckbox', $pForm );
-		$line            .= $pForm->getFieldLabel( 'gdprcheckbox' );
+		$line             .= $pForm->getFieldLabel( 'gdprcheckbox' );
 	}
 	if ($table == 'address') {
 		$addressValues []= $line;
