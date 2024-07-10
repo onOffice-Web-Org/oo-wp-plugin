@@ -600,15 +600,12 @@ class AdminPageApiSettings
 			'daily' => __('24 hours', 'onoffice-for-wp-websites'),
 		]);
 		$pInputModelCache->setValue(get_option($pInputModelCache->getIdentifier()));
+        $pInputModelCache->setDescriptionTextHTML(__('The Cache duration value determines the period of time after which the plugin cache of your page is refreshed. This value is set to 1 hour by default.', 'onoffice-for-wp-websites'));
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelCache);
 		$pFormModel->setGroupSlug('onoffice-cache');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		$cacheTitle = esc_html__('Cache', 'onoffice-for-wp-websites');
-		$description = esc_html__('The Cache duration value determines the period of time after which the plugin cache of your page is refreshed. This value is set to 1 hour by default.', 'onoffice-for-wp-websites');
-		$descriptionHtml = '<p class="description cache-description"><br>' .  $description . '</p>';
-		$label = sprintf('%1$s %2$s', $cacheTitle, $descriptionHtml);
-		$pFormModel->setLabel($label);
+		$pFormModel->setLabel(__('Cache', 'onoffice-for-wp-websites'));
 		$this->addFormModel($pFormModel);
 	}
 }

@@ -300,10 +300,6 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	margin-left: 20px;
 }
 
-.cache-description {
-	font-weight: normal;
-}
-
 #viewformspecific .hint-text {
 	color: #646970;
 	font-style: italic;
@@ -458,7 +454,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	color:#fff;
 }
 
-select[name="onoffice-settings-duration-cache"] {
+.oo-page-api-settings select.onoffice-input {
 	width: 100%;
 	max-width: 368px;
 }
