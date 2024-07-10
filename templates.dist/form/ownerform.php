@@ -44,15 +44,13 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
-		if ($pForm->isHiddenField($input)) {
+		if ($pForm->isHiddenField($input) && $input !== 'message') {
 			$hiddenValues []= renderFormField($input, $pForm);
 			continue;
 		}
 		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
-		$isHiddenField = $pForm->isHiddenField($input);
 		$line = $pForm->getFieldLabel($input).$addition.': ';
-		$line = !$isHiddenField ? $line : '';
 		$line .= renderFormField($input, $pForm);
 
 		if ( $pForm->isMissingField( $input ) ) {
@@ -66,11 +64,13 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage = $isRequiredMessage ? '*' : '';
 			$isHiddenField = $pForm->isHiddenField('message');
-			$additionHidden = $isHiddenField ? 'class="oo-hidden-field" disabled' : '';
-
-			$line = $pForm->getFieldLabel('message').$additionMessage.':<br>';
-			$line = !$isHiddenField ? $line : '';
-			$line .= '<textarea name="message" '.$additionHidden.'>'.$pForm->getFieldValue('message').'</textarea><br>';
+			if (!$isHiddenField) {
+				$line = $pForm->getFieldLabel( 'message' );
+				$line .= $additionMessage . ':<br>';
+				$line .= '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea><br>';
+			} else {
+				$line = '<textarea name="message" class="oo-hidden-field" disabled">'.$pForm->getFieldValue('message').'</textarea><br>';
+			}
 		}
 		if ($table == 'address') {
 			$addressValues []= $line;

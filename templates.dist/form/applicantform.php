@@ -50,9 +50,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
-	$isHiddenField = $pForm->isHiddenField($input);
 	$line = $pForm->getFieldLabel($input).$addition.': ';
-	$line = !$isHiddenField ? $line : '';
 	$line .= renderFormField($input, $pForm);
 
 	if ( $pForm->isMissingField( $input ) ) {
