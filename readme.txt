@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.4.3
 Requires PHP: 7.3
-Stable tag: 4.19
+Stable tag: 4.20
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,29 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.20 (2024-06-26) =
+
+**Added**
+
+* OpenGraph support
+* Adaptive image resolution in property list, detail view of property and similar estates
+* Notification of unsaved changes
+
+**Changed**
+
+* Filter option in property list overview and form overview
+* Some text changes
+
+**Fixed**
+
+* Sorting of multiple property lists on same page
+* Pagination of multiple property lists on same page
+* Loading forms with activated reCAPTCHA in Elementor
+
+**Removed**
+
+* Unused JS library: chosen
 
 = 4.19 (2024-04-18) =
 
