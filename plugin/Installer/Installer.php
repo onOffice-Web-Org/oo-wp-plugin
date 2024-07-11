@@ -116,6 +116,7 @@ class Installer
 		delete_option('onoffice-apply-thousand-separator');
 		delete_option('onoffice-settings-opengraph');
 		delete_option('onoffice-settings-twittercards');
+		delete_option('onoffice-settings-duration-cache');
 
 		self::flushRules();
 	}
