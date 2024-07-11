@@ -114,12 +114,8 @@ class InputVariableReaderFormatter
 	{
 		$onofficeSettingsThousandSeparator = get_option('onoffice-settings-thousand-separator');
 
-		if ($onofficeSettingsThousandSeparator === self::COMMA_THOUSAND_SEPARATOR) {
-			$parts = explode(',', $value);
-
-			return number_format($parts[0], 2, '.', '');
-		} elseif ($onofficeSettingsThousandSeparator === self::DOT_THOUSAND_SEPARATOR) {
-			return number_format($value, 2, ',', '');
+		if ($onofficeSettingsThousandSeparator === self::COMMA_THOUSAND_SEPARATOR || $onofficeSettingsThousandSeparator === self::DOT_THOUSAND_SEPARATOR) {
+			return $value;
 		}
 
 		return number_format_i18n($value, 2);

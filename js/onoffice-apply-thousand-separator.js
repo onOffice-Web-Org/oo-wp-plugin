@@ -4,28 +4,25 @@ jQuery(document).ready(($) => {
 
     const getSeparators = (separatorFormat) => ({
         thousandSeparator: separatorFormat === 'comma-separator' ? ',' : '.',
-        decimalSeparator: separatorFormat === 'comma-separator' ? '.' : ','
     });
 
-    const cleanInputValue = (value, separatorFormat) => {
-        return separatorFormat === 'comma-separator' ? value.replace(/[^0-9.]/g, '') : value.replace(/[^0-9,]/g, '');
-    };
+    const cleanInputValue = (value) => value.replace(/[^0-9]/g, '');
 
-    const processSeparator = (value, thousandSeparator, decimalSeparator) => {
+    const processSeparator = (value, thousandSeparator) => {
         let parts = value.split(/[,.]/);
         if (parts.length > 2) {
             let integerPart = parts.shift();
             let decimalPart = parts.join('');
-            value = integerPart + '.' + decimalPart;
+            value = integerPart + decimalPart;
         }
 
         let match = value.match(/^(\d+)[,.](\d+)$/);
-        return match ? match[1].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator) + decimalSeparator + match[2] : value.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+        return match ? match[1].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator) + match[2] : value.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
     };
 
     const formatForThousandSeparator = (fieldKey, fieldValue, separatorFormat) => {
-        const { thousandSeparator, decimalSeparator } = getSeparators(separatorFormat);
-        let value = processSeparator(fieldValue, thousandSeparator, decimalSeparator);
+        const { thousandSeparator } = getSeparators(separatorFormat);
+        let value = processSeparator(fieldValue, thousandSeparator);
         $(`input[name="${fieldKey}"]`).val(value);
     };
 
@@ -42,15 +39,7 @@ jQuery(document).ready(($) => {
         formatForThousandSeparator(inputName, inputValue, thousandSeparatorFormat);
     };
 
-    const normalizeInputValue = () => {
-        const { decimalSeparator } = getSeparators(thousandSeparatorFormat);
-        $('.apply-thousand-separator-format').each(function() {
-            let value = $(this).val().replace(new RegExp(`\\${decimalSeparator}$`), '');
-            $(this).val(value);
-        });
-    };
-
-    $('.apply-thousand-separator-format').on('blur', normalizeInputValue).on('input', function() {
+    $('.apply-thousand-separator-format').on('input', function() {
         applyThousandSeparatorFormat(this);
     }).each(function() {
         applyThousandSeparatorFormat(this);
