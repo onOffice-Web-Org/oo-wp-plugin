@@ -598,8 +598,9 @@ class AdminPageApiSettings
 		$selectedThousandValue = get_option($pInputModelSeparatorCharacterFormat->getIdentifier(), '.');
 		$pInputModelSeparatorCharacterFormat->setValue($selectedThousandValue);
 		$pInputModelSeparatorCharacterFormat->setValuesAvailable([
-			InputVariableReaderFormatter::DOT_THOUSAND_SEPARATOR => __("Dot (ex: 123.456,78)", 'onoffice-for-wp-websites'),
-			InputVariableReaderFormatter::COMMA_THOUSAND_SEPARATOR => __("Comma (ex: 123,456.78)", 'onoffice-for-wp-websites'),
+			'' => __('Please choose', 'onoffice-for-wp-websites'),
+			InputVariableReaderFormatter::DOT_THOUSAND_SEPARATOR => __('Dot (ex: 123.456.789)', 'onoffice-for-wp-websites'),
+			InputVariableReaderFormatter::COMMA_THOUSAND_SEPARATOR => __('Comma (ex: 123,456,789)', 'onoffice-for-wp-websites'),
 		]);
 
 		$pFormModel = new FormModel();

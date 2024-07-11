@@ -18,8 +18,8 @@ class TestClassInputVariableReaderFormatter
 		$pInstance = new InputVariableReaderFormatter;
 		update_option('onoffice-settings-thousand-separator', 'comma-separator');
 
-		$this->assertEquals('3948.00', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
-		$this->assertEquals('3948.00', $pInstance->formatFloatValue(3948.00));
+		$this->assertEquals('3948', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals('3948', $pInstance->formatFloatValue(3948.00));
 	}
 
 	/**
@@ -31,8 +31,8 @@ class TestClassInputVariableReaderFormatter
 		$pInstance = new InputVariableReaderFormatter;
 		update_option('onoffice-settings-thousand-separator', 'dot-separator');
 
-		$this->assertEquals('3948,00', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
-		$this->assertEquals('3948,00', $pInstance->formatFloatValue(3948.00));
+		$this->assertEquals('3948', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals('3948', $pInstance->formatFloatValue(3948.00));
 	}
 
 	/**
@@ -57,7 +57,7 @@ class TestClassInputVariableReaderFormatter
 		$pInstance = new InputVariableReaderFormatter;
 		update_option('onoffice-settings-thousand-separator', 'comma-separator');
 
-		$this->assertEquals(['3948.00'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals(['3948'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
 	}
 
 	/**
@@ -68,6 +68,6 @@ class TestClassInputVariableReaderFormatter
 		$pInstance = new InputVariableReaderFormatter;
 		update_option('onoffice-settings-thousand-separator', 'dot-separator');
 
-		$this->assertEquals(['3948,00'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals(['3948'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
 	}
 }

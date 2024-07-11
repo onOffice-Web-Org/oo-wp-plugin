@@ -487,8 +487,7 @@ class ScriptLoaderGenericConfigurationDefault
 	 */
 	private function localizeApplyThousandSeparatorScript()
 	{
-		wp_localize_script('onoffice-apply-thousand-separator', 'onoffice_setting', [
-			'status' => true,
+		wp_localize_script('onoffice-apply-thousand-separator', 'onoffice_apply_thousand_separator', [
 			'thousand_separator_format' => get_option('onoffice-settings-thousand-separator')
 		]);
 	}

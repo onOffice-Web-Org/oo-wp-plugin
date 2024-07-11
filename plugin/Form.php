@@ -586,7 +586,8 @@ class Form
 	 */
 	public function isApplyThousandSeparatorField(string $field): bool
 	{
-		return in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS);
+		return in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS) && 
+			!empty(get_option('onoffice-settings-thousand-separator'));
 	}
 
 

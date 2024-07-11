@@ -116,13 +116,9 @@ class InputVariableReaderParser
 
 		$onofficeSettingsThousandSeparator = get_option('onoffice-settings-thousand-separator');
 		if ($onofficeSettingsThousandSeparator === InputVariableReaderFormatter::DOT_THOUSAND_SEPARATOR) {
-			$stringThousand = str_replace('.', '', $floatString);
-			$stringDec = __String::getNew($stringThousand)->replace
-			($wp_locale->number_format['thousands_sep'], '.');
+			$stringDec = str_replace('.', '', $floatString);
 		} elseif ($onofficeSettingsThousandSeparator === InputVariableReaderFormatter::COMMA_THOUSAND_SEPARATOR) {
-			$stringThousand = str_replace(',', '', $floatString);
-			$stringDec = __String::getNew($stringThousand)->replace
-			($wp_locale->number_format['decimal_point'], '.');
+			$stringDec = str_replace(',', '', $floatString);
 		}
 
 		return floatval($stringDec);

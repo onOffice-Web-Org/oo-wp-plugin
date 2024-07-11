@@ -1,6 +1,5 @@
-onoffice_setting = onoffice_setting || [];
 jQuery(document).ready(($) => {
-    const thousandSeparatorFormat = onoffice_setting.thousand_separator_format || '';
+    const thousandSeparatorFormat = onoffice_apply_thousand_separator.thousand_separator_format || '';
 
     const getSeparators = (separatorFormat) => ({
         thousandSeparator: separatorFormat === 'comma-separator' ? ',' : '.',
@@ -9,15 +8,8 @@ jQuery(document).ready(($) => {
     const cleanInputValue = (value) => value.replace(/[^0-9]/g, '');
 
     const processSeparator = (value, thousandSeparator) => {
-        let parts = value.split(/[,.]/);
-        if (parts.length > 2) {
-            let integerPart = parts.shift();
-            let decimalPart = parts.join('');
-            value = integerPart + decimalPart;
-        }
-
-        let match = value.match(/^(\d+)[,.](\d+)$/);
-        return match ? match[1].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator) + match[2] : value.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+        value = value.replace(/[,.]/g, '');
+        return value.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
     };
 
     const formatForThousandSeparator = (fieldKey, fieldValue, separatorFormat) => {
@@ -28,20 +20,15 @@ jQuery(document).ready(($) => {
 
     const applyThousandSeparatorFormat = (element) => {
         let inputName = $(element).attr('name');
-        let inputValue = cleanInputValue($(element).val(), thousandSeparatorFormat);
-        if ($(element).data('step') === 1) {
-            let numericValue = parseFloat(inputValue.replace(/,/g, '.'));
-            if (!isNaN(numericValue)) {
-                numericValue = Math.round(numericValue);
-                inputValue = numericValue.toString();
-            }
-        }
+        let inputValue = cleanInputValue($(element).val());
         formatForThousandSeparator(inputName, inputValue, thousandSeparatorFormat);
     };
 
-    $('.apply-thousand-separator-format').on('input', function() {
-        applyThousandSeparatorFormat(this);
-    }).each(function() {
-        applyThousandSeparatorFormat(this);
-    });
+    if ($('.apply-thousand-separator-format').length) {
+        $('.apply-thousand-separator-format').on('input', function() {
+            applyThousandSeparatorFormat(this);
+        }).each(function() {
+            applyThousandSeparatorFormat(this);
+        });
+    }
 });
