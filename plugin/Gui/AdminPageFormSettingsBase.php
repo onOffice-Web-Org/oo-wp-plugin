@@ -60,6 +60,7 @@ use stdClass;
 use function __;
 use function esc_sql;
 use function wp_enqueue_script;
+use function esc_attr;
 
 /**
  *
@@ -762,7 +763,7 @@ abstract class AdminPageFormSettingsBase
 		$this->generatePageMainTitle( $this->getPageTitle() );
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
-		echo '<input type="hidden" name="record_id" value="' . ( $_GET['id'] ?? 0 ) . '" />';
+		echo '<input type="hidden" name="record_id" value="' . esc_attr( $_GET['id'] ?? 0 ) . '" />';
 		echo '<input type="hidden" name="type" value="' . $this->getType() . '" />';
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
