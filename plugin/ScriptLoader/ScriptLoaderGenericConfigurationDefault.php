@@ -106,7 +106,7 @@ class ScriptLoaderGenericConfigurationDefault
 			$scripts = $this->renderScriptForEstateListPage($scripts, $pluginPath, $script, $async);
 		}
 
-		$isDetailEstatePage = $this->isDetailEstatePage($pageContent) || !empty($shortcode['detail']) ? true : false;
+		$isDetailEstatePage = $this->isDetailEstatePage($pageContent) || !empty($shortcode['detail']);
 		if ($isDetailEstatePage) {
 			$scripts = $this->renderScriptForEstateDetailPage($scripts, $pluginPath, $script, $defer);
 		}
