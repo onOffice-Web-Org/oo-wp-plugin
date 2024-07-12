@@ -93,7 +93,7 @@ class ScriptLoaderGenericConfigurationDefault
 	private function addScripts(string $pluginPath, string $script, string $style, string $defer, string $async): array
 	{
 		$scripts = [];
-		$pageContent = get_the_content();
+		$pageContent = $this->getCurrentPostContent();
 
 		$shortcode = $this->getShortcodeByPostMeta();
 
@@ -146,6 +146,21 @@ class ScriptLoaderGenericConfigurationDefault
 		});
 
 		return $filteredMetaKeys;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCurrentPostContent(): string
+	{
+		$post_id = get_the_ID();
+		if ($post_id) {
+			$post = get_post($post_id);
+
+			return $post->post_content;
+		}
+
+		return '';
 	}
 
 	/**
@@ -346,7 +361,8 @@ class ScriptLoaderGenericConfigurationDefault
 
     private function renderStyleForEstateDetailPage(string $pluginPath, string $style): array {
         $styles = [];
-        $pageContent = get_the_content();
+        $pageContent = $this->getCurrentPostContent();
+
         if (empty($pageContent)) {
             return $styles;
         }
