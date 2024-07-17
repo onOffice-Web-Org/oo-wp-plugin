@@ -108,6 +108,7 @@ class FieldsCollectionBuilderShort
 
 	public function addFieldsFormBackend(FieldsCollection $pFieldsCollection,string $typeForm): self
 	{
+		if ($typeForm == Form::TYPE_ADDRESS_COMPLETION) return $this;
 		if ($typeForm == Form::TYPE_APPLICANT_SEARCH)
 		{
 			$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorInternalAnnotations
@@ -320,4 +321,22 @@ class FieldsCollectionBuilderShort
 		$pFieldsCollection->merge($pFieldCollectionSupervisor);
 		return $this;
 	}
+
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	 public function addFieldsAddressCompletion(FieldsCollection $pFieldsCollection): self
+	 {
+		 $pFieldLoader = $this->_pContainer->get(FieldLoaderGenericAddressCompletion::class);
+		 $pFieldCollectionAddressCompletion = $this->_pContainer->get(FieldsCollectionBuilder::class)
+			 ->buildFieldsCollection($pFieldLoader);
+		 $pFieldsCollection->merge($pFieldCollectionAddressCompletion);
+		 return $this;
+	 }
+ 
 }

@@ -149,6 +149,11 @@ class FormModelBuilderDBForm
 		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldsCollection = new FieldsCollection();
 
+		if ($this->getFormType() === Form::TYPE_ADDRESS_COMPLETION) {
+			$pFieldsCollectionBuilder->addFieldsAddressCompletion($pFieldsCollection);
+			return $pFieldsCollection;
+		}
+
 		$pFieldsCollectionBuilder
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsSearchCriteria($pFieldsCollection)

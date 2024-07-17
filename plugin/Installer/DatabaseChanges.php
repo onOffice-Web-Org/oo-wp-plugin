@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 43;
+	const MAX_VERSION = 44;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -304,6 +304,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 43;
 		}
 
+		if ($dbversion == 43) {
+			dbDelta($this->getCreateQueryForms());
+			$dbversion = 44;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -418,7 +423,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$sql = "CREATE TABLE $tableName (
 			`form_id` int(11) NOT NULL AUTO_INCREMENT,
 			`name` varchar(191) NOT NULL,
-			`form_type` enum('owner', 'interest', 'contact', 'applicantsearch') NOT NULL DEFAULT 'contact',
+			`form_type` enum('owner', 'interest', 'contact', 'addresscompletion', 'applicantsearch') NOT NULL DEFAULT 'contact',
 			`template` tinytext NOT NULL,
 			`recipient` varchar(255) NULL,
 			`subject` mediumtext NULL,

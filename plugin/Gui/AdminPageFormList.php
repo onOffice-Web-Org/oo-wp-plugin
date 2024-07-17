@@ -213,6 +213,8 @@ class AdminPageFormList
 			admin_url( 'admin.php?page=onoffice-editform' ) );
 		$linkAddNewOwnerForm = add_query_arg( $typeParam, Form::TYPE_OWNER,
 			admin_url( 'admin.php?page=onoffice-editform' ) );
+		$linkAddNewAddressForm = add_query_arg( $typeParam, Form::TYPE_ADDRESS_COMPLETION,
+			admin_url( 'admin.php?page=onoffice-editform' ) );
 		$linkAddNewApplicantSearchForm = add_query_arg( $typeParam, Form::TYPE_APPLICANT_SEARCH,
 			admin_url( 'admin.php?page=onoffice-editform' ) );
 
@@ -233,6 +235,8 @@ class AdminPageFormList
 			     . '<li><a href="' . $linkAddNewInterestForm . '"><p>' . esc_html__( 'Interest Form',
 					'onoffice-for-wp-websites' ) . '</p></a></li>'
 			     . '<li><a href="' . $linkAddNewOwnerForm . '"><p>' . esc_html__( 'Owner Form',
+					'onoffice-for-wp-websites' ) . '</p></a></li>'
+			     . '<li><a href="' . $linkAddNewAddressForm . '"><p>' . esc_html__( 'Address Completion Form',
 					'onoffice-for-wp-websites' ) . '</p></a></li>'
 			     . '<li><a href="' . $linkAddNewApplicantSearchForm . '"><p>' . esc_html__( 'Applicant Search Form',
 					'onoffice-for-wp-websites' ) . '</p></a></li>'

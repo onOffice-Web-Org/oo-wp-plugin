@@ -51,6 +51,7 @@ class DataFormConfigurationFactory
 		Form::TYPE_CONTACT => DataFormConfigurationContact::class,
 		Form::TYPE_OWNER => DataFormConfigurationOwner::class,
 		Form::TYPE_INTEREST => DataFormConfigurationInterest::class,
+		Form::TYPE_ADDRESS_COMPLETION => DataFormConfigurationAddressCompletion::class,
 		Form::TYPE_APPLICANT_SEARCH => DataFormConfigurationApplicantSearch::class,
 	];
 
@@ -172,6 +173,9 @@ class DataFormConfigurationFactory
 				break;
 			case Form::TYPE_APPLICANT_SEARCH:
 				$this->configureApplicantSearch($row, $pConfig);
+				break;
+			case Form::TYPE_ADDRESS_COMPLETION:
+				$this->configureAddressCompletion($row, $pConfig);
 				break;
 		}
 
@@ -347,6 +351,22 @@ class DataFormConfigurationFactory
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCreateInterest((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
+		$pConfig->setContactTypeField($row['contact_type'] ?? '');
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @param DataFormConfigurationAddressCompletion $pConfig
+	 *
+	 */
+
+	private function configureAddressCompletion(array $row, DataFormConfigurationAddressCompletion $pConfig)
+	{
+		$pConfig->setRecipient($row['recipient']);
+		$pConfig->setDefaultRecipient($row['default_recipient']);
+		$pConfig->setSubject($row['subject']);
 		$pConfig->setContactTypeField($row['contact_type'] ?? '');
 	}
 

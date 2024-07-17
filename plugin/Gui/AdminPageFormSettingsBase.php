@@ -114,6 +114,9 @@ abstract class AdminPageFormSettingsBase
 	/** @var bool message field has no module */
 	private $_showMessageInput = false;
 
+	/** @var bool */
+	private $_showAddressCompletionFields = false;
+
 	/**
 	 * @param string $pageSlug
 	 * @throws Exception
@@ -517,6 +520,10 @@ abstract class AdminPageFormSettingsBase
 				->addFieldSupervisorForSearchCriteria($pDefaultFieldsCollection);
 		}
 
+		if ($this->_showAddressCompletionFields) {
+			$pFieldsCollectionBuilder->addFieldsAddressCompletion($pDefaultFieldsCollection);
+		}
+
 		$pFieldsCollectionBuilder->addFieldsFormBackend($pDefaultFieldsCollection,$this->getType());
 
 		foreach ($pDefaultFieldsCollection->getAllFields() as $pField) {
@@ -909,4 +916,8 @@ abstract class AdminPageFormSettingsBase
 	/** @param bool $showMessageInput */
 	public function setShowMessageInput(bool $showMessageInput)
 	{ $this->_showMessageInput = $showMessageInput; }
+
+	/** @param bool $showAddressCompletionFields */
+	public function setShowAddressCompletionFields(bool $showAddressCompletionFields)
+		{ $this->_showAddressCompletionFields = $showAddressCompletionFields; }
 }

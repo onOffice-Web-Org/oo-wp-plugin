@@ -44,6 +44,7 @@ class InputFieldTemplateListRenderer
 			'contact'         => 'defaultform.php',
 			'interest'        => 'applicantform.php',
 			'owner'           => 'ownerform.php',
+			'addresscompletion' => 'addresscompletionform.php',
 			'applicantsearch' => 'applicantsearchform.php',
 		]
 	];

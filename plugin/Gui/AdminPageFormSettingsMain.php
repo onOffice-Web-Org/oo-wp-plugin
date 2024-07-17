@@ -46,6 +46,7 @@ class AdminPageFormSettingsMain
 		Form::TYPE_CONTACT => AdminPageFormSettingsInquiry::class,
 		Form::TYPE_APPLICANT_SEARCH => AdminPageFormSettingsApplicantSearch::class,
 		Form::TYPE_INTEREST => AdminPageFormSettingsInquiry::class,
+		Form::TYPE_ADDRESS_COMPLETION => AdminPageFormSettingsInquiry::class,
 		Form::TYPE_OWNER => AdminPageFormSettingsInquiry::class,
 	];
 
@@ -143,6 +144,10 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowNewsletterCheckbox(true);
 				$pAdminPage->setShowEstateContextCheckbox(true);
 				$pAdminPage->setShowContactTypeSelect(true);
+				break;
+			case Form::TYPE_ADDRESS_COMPLETION:
+				/* @var $pAdminPage AdminPageFormSettingsContact */
+				$pAdminPage->setShowAddressCompletionFields(true);
 				break;
 			case Form::TYPE_APPLICANT_SEARCH:
 				/* @var $pAdminPage AdminPageFormSettingsApplicantSearch */

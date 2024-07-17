@@ -69,6 +69,9 @@ class Form
 	/** applicant-search form */
 	const TYPE_APPLICANT_SEARCH = 'applicantsearch';
 
+	/** address-completion form */
+	const TYPE_ADDRESS_COMPLETION = 'addresscompletion';
+
 	/** @var int */
 	private $_formNo = null;
 
