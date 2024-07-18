@@ -117,6 +117,6 @@ class Redirector
 	public function getCurrentLink(): string
 	{
 		global $wp;
-		return home_url(add_query_arg($_GET, trailingslashit($wp->request)));
+		return home_url(add_query_arg($_GET, $wp->request));
 	}
 }
