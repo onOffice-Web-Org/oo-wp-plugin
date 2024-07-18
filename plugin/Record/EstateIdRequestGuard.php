@@ -23,9 +23,14 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
+use DI\ContainerBuilder;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
+use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\Factory\EstateListFactory;
+use onOffice\WPlugin\Language;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Utility\Redirector;
 
@@ -43,6 +48,8 @@ class EstateIdRequestGuard
 	/** * @var ArrayContainerEscape */
 	private $_estateData;
 
+	/** @var array */
+	private $_estateDataWPML = [];
 
 	/**
 	 *
@@ -68,6 +75,11 @@ class EstateIdRequestGuard
 		$pEstateDetail = $this->_pEstateDetailFactory->createEstateDetail($estateId);
 		$pEstateDetail->loadEstates();
 		$this->_estateData = $pEstateDetail->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, true);
+		$isActiveWPML = is_plugin_active('sitepress-multilingual-cms/sitepress.php');
+		if ($estateId > 0 && !empty($this->_estateData) && $isActiveWPML) {
+			$this->getEstateDataForWPML($estateId);
+		}
+
 		return $this->_estateData !== false;
 	}
 
@@ -91,16 +103,86 @@ class EstateIdRequestGuard
 	 * @param int $estateId
 	 * @param EstateDetailUrl $pEstateDetailUrl
 	 * @param string $oldUrl
+	 * @param string $switchLanguage
 	 *
 	 * @return string
 	 */
-	public function createEstateDetailLinkForSwitchLanguageWPML(string $url, int $estateId, EstateDetailUrl $pEstateDetailUrl, string $oldUrl): string
+	public function createEstateDetailLinkForSwitchLanguageWPML(string $url, int $estateId, EstateDetailUrl $pEstateDetailUrl, string $oldUrl, string $switchLanguage): string
 	{
 		$estateDetailTitle = '';
-		if ($estateId > 0 && $this->isValid($estateId)) {
+		$locale = get_locale();
+		if ($estateId > 0 && !empty($this->_estateData) && $switchLanguage !== get_locale()) {
+			switch_to_locale($switchLanguage);
+			$estateDetailTitle = $this->_estateDataWPML[$switchLanguage];
+		} elseif ($estateId > 0 && !empty($this->_estateData) && $switchLanguage === get_locale()) {
 			$estateDetailTitle = $this->_estateData->getValue('objekttitel');
 		}
+		$url = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true);
+		switch_to_locale($locale);
 
-		return $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl);
+		return $url;
+	}
+
+	/**
+	 * @param array $languages
+	 * @return array
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	private function getEstateTitleByLanguage(array $languages, int $estateId): array
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pEnvironment = new EstateListEnvironmentDefault($pContainer);
+		$pSDKWrapper = $pEnvironment->getSDKWrapper();
+		$pApiClientAction = new APIClientActionGeneric
+		($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+		$pApiClientActionClone = null;
+		$filter = [
+			'Id' => [['op' => '=', 'val' => $estateId]]
+		];
+		$results = [];
+		$listRequestInQueue = [];
+		foreach ($languages as $key => $language) {
+			$isoLanguage = Language::LOCALE_MAPPING[$language] ?? 'DEU';
+			$estateParameters = [
+				'data' => ['objekttitel'],
+				'filter' => $filter,
+				'estatelanguage' => $isoLanguage,
+				'outputlanguage' => $isoLanguage,
+				'formatoutput' => false,
+			];
+			$pApiClientActionClone = clone $pApiClientAction;
+			$pApiClientActionClone->setParameters($estateParameters);
+			$pApiClientActionClone->addRequestToQueue();
+			$listRequestInQueue[$language] = $pApiClientActionClone;
+		}
+		$pApiClientActionClone->sendRequests();
+		if (!$pApiClientActionClone->getResultStatus() || empty($pApiClientActionClone->getResultRecords())) {
+			return [];
+		}
+		foreach($listRequestInQueue as $key => $pApiClientAction) {
+			$results[$key] = $pApiClientAction->getResultRecords()[0]['elements']['objekttitel'];
+		}
+
+		return $results;
+	}
+
+	/**
+	 * @param int $estateId
+	 * @return void
+	 */
+	private function getEstateDataForWPML(int $estateId)
+	{
+		$languages = apply_filters('wpml_active_languages', null);
+		$default_locales = [];
+		foreach ($languages as $language) {
+			if (isset($language['default_locale']) && $language['default_locale'] !== get_locale()) {
+				$default_locales[] = $language['default_locale'];
+			}
+		}
+
+		$this->_estateDataWPML = $this->getEstateTitleByLanguage($default_locales, $estateId);
 	}
 }

@@ -42,10 +42,11 @@ class EstateDetailUrl
 		string $url,
 		int $estateId,
 		string $title = null,
-		string $oldUrl = null ): string
+		string $oldUrl = null,
+		bool $isSlash = false): string
 	{
 		$urlLsSwitcher = $url;
-		$slashChar     = '';
+		$slashChar     = $isSlash ? '/' : '';
 
 		if ( $estateId !== 0 ) {
 			$urlElements   = parse_url( $url );
