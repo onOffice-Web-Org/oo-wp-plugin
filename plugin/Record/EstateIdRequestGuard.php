@@ -75,8 +75,7 @@ class EstateIdRequestGuard
 		$pEstateDetail = $this->_pEstateDetailFactory->createEstateDetail($estateId);
 		$pEstateDetail->loadEstates();
 		$this->_estateData = $pEstateDetail->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, true);
-		$isActiveWPML = is_plugin_active('sitepress-multilingual-cms/sitepress.php');
-		if ($estateId > 0 && !empty($this->_estateData) && $isActiveWPML) {
+		if ($estateId > 0 && !empty($this->_estateData) && $this->isActiveWPML()) {
 			$this->getEstateDataForWPML($estateId);
 		}
 
@@ -134,28 +133,25 @@ class EstateIdRequestGuard
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
-		$pEnvironment = new EstateListEnvironmentDefault($pContainer);
-		$pSDKWrapper = $pEnvironment->getSDKWrapper();
+		$pSDKWrapper = $pContainer->get(EstateListEnvironmentDefault::class)->getSDKWrapper();
 		$pApiClientAction = new APIClientActionGeneric
 		($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$pApiClientActionClone = null;
-		$filter = [
-			'Id' => [['op' => '=', 'val' => $estateId]]
-		];
 		$results = [];
 		$listRequestInQueue = [];
 		foreach ($languages as $key => $language) {
 			$isoLanguage = Language::LOCALE_MAPPING[$language] ?? 'DEU';
 			$estateParameters = [
 				'data' => ['objekttitel'],
-				'filter' => $filter,
+				'filter' => [
+					'Id' => [['op' => '=', 'val' => $estateId]],
+				],
 				'estatelanguage' => $isoLanguage,
 				'outputlanguage' => $isoLanguage,
 				'formatoutput' => false,
 			];
 			$pApiClientActionClone = clone $pApiClientAction;
-			$pApiClientActionClone->setParameters($estateParameters);
-			$pApiClientActionClone->addRequestToQueue();
+			$pApiClientActionClone->setParameters($estateParameters)->addRequestToQueue();
 			$listRequestInQueue[$language] = $pApiClientActionClone;
 		}
 		$pApiClientActionClone->sendRequests();
@@ -184,5 +180,15 @@ class EstateIdRequestGuard
 		}
 
 		$this->_estateDataWPML = $this->getEstateTitleByLanguage($default_locales, $estateId);
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function isActiveWPML(): bool
+	{
+		$languages = apply_filters('wpml_active_languages', null);
+
+		return !is_null($languages) && count($languages) > 1;
 	}
 }
