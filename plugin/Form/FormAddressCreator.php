@@ -105,6 +105,16 @@ class FormAddressCreator
 		$result = $pApiClientAction->getResultRecords();
 		$addressId = (int)$result[0]['id'];
 
+		$requestParamss = [
+			"addressId" => $addressId,
+			"mode" => "modus1",
+			"emailidentity" => "linh@myonoffice.de"
+		];
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'sendaddresscompletion');
+		$pApiClientAction->setParameters($requestParamss);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+
 		if ($addressId > 0) {
 			return $addressId;
 		}

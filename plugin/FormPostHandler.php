@@ -42,7 +42,7 @@ class FormPostHandler
 		Form::TYPE_OWNER => FormPostOwner::class,
 		Form::TYPE_INTEREST => FormPostInterest::class,
 		Form::TYPE_APPLICANT_SEARCH => FormPostApplicantSearch::class,
-		Form::TYPE_ADDRESS_COMPLETION => FormPostAddress::class,
+		Form::TYPE_ADDRESS_COMPLETION => FormPostAddressCompletion::class,
 	];
 
 	/** @var array */
