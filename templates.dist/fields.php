@@ -124,6 +124,7 @@ if (!function_exists('renderFormField')) {
 		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
 		$isHiddenField = $pForm->isHiddenField($fieldName);
 		$hiddenAttribute = $isHiddenField ? 'class="oo-hidden-field" readonly ' : '';
+		$disabledAttribute = '';
 
 		$requiredAttribute = "";
 		if ($isRequired) {
@@ -186,6 +187,7 @@ if (!function_exists('renderFormField')) {
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" ';
 				$value = 'value="y" ' . ($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
+				$disabledAttribute = $isHiddenField ? 'disabled ' : '';
 			} elseif (
 				$typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float'
@@ -207,7 +209,7 @@ if (!function_exists('renderFormField')) {
 				$inputType = 'type="datetime-local" step="1" ';
 			}
 
-			$inputType .= $hiddenAttribute;
+			$inputType .= $hiddenAttribute . $disabledAttribute;
 
 			if (
 				$isRangeValue && $pForm->inRangeSearchcriteriaInfos($fieldName) &&
