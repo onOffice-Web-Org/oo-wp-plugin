@@ -71,7 +71,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				echo $additionMessage . ':<br>';
 				echo '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea><br>';
 			} else {
-				echo '<textarea name="message" class="oo-hidden-field" disabled">' . $pForm->getFieldValue('message') . '</textarea>';
+				echo '<textarea name="message" class="oo-hidden-field" readonly>' . $pForm->getFieldValue('message') . '</textarea>';
 			}
 			continue;
 		}
