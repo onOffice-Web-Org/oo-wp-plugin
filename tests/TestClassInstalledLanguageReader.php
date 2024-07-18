@@ -46,6 +46,7 @@ class TestClassInstalledLanguageReader extends WP_UnitTestCase
 			'en_GB' => 'English (UK)',
 			'en_US' => 'English (United States)',
 			'es_ES' => 'Español',
+			'de_CH' => 'Deutsch (Schweiz)'
 		], $availableLanguages);
 	}
 
@@ -58,6 +59,6 @@ class TestClassInstalledLanguageReader extends WP_UnitTestCase
 	{
 		$pInstalledLanguageReader = new InstalledLanguageReader;
 		$availableLanguages = $pInstalledLanguageReader->getAvailableLanguageKeys();
-		$this->assertEquals(['en_US', 'de_DE', 'en_GB', 'es_ES', 'ja_JP'], $availableLanguages);
+		$this->assertEquals(['en_US', 'de_DE', 'en_GB', 'es_ES', 'ja_JP', 'de_CH'], $availableLanguages);
 	}
 }
