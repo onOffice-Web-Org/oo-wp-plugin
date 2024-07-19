@@ -75,8 +75,11 @@ class EstateIdRequestGuard
 		$pEstateDetail = $this->_pEstateDetailFactory->createEstateDetail($estateId);
 		$pEstateDetail->loadEstates();
 		$this->_estateData = $pEstateDetail->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, true);
-		if ($estateId > 0 && !empty($this->_estateData) && $this->isActiveWPML()) {
-			$this->getEstateDataForWPML($estateId);
+		if ($this->isActiveWPML()) {
+			$activeLanguages = apply_filters('wpml_active_languages', null);
+			if ($estateId > 0 && !empty($this->_estateData) && !is_null($activeLanguages) && count($activeLanguages) > 1) {
+				$this->getEstateDataForWPML($estateId);
+			}
 		}
 
 		return $this->_estateData !== false;
@@ -102,24 +105,24 @@ class EstateIdRequestGuard
 	 * @param int $estateId
 	 * @param EstateDetailUrl $pEstateDetailUrl
 	 * @param string $oldUrl
-	 * @param string $switchLanguage
+	 * @param string $switchLocale
 	 *
 	 * @return string
 	 */
-	public function createEstateDetailLinkForSwitchLanguageWPML(string $url, int $estateId, EstateDetailUrl $pEstateDetailUrl, string $oldUrl, string $switchLanguage): string
+	public function createEstateDetailLinkForSwitchLanguageWPML(string $url, int $estateId, EstateDetailUrl $pEstateDetailUrl, string $oldUrl, string $switchLocale): string
 	{
 		$estateDetailTitle = '';
-		$locale = get_locale();
-		if ($estateId > 0 && !empty($this->_estateData) && $switchLanguage !== get_locale()) {
-			switch_to_locale($switchLanguage);
-			$estateDetailTitle = $this->_estateDataWPML[$switchLanguage];
-		} elseif ($estateId > 0 && !empty($this->_estateData) && $switchLanguage === get_locale()) {
+		$currentLocale = get_locale();
+		if ($estateId > 0 && !empty($this->_estateData) && $switchLocale !== get_locale()) {
+			switch_to_locale($switchLocale);
+			$estateDetailTitle = $this->_estateDataWPML[$switchLocale];
+		} elseif ($estateId > 0 && !empty($this->_estateData) && $switchLocale === get_locale()) {
 			$estateDetailTitle = $this->_estateData->getValue('objekttitel');
 		}
-		$url = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true);
-		switch_to_locale($locale);
+		$switchLanguageUrl = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true);
+		switch_to_locale($currentLocale);
 
-		return $url;
+		return $switchLanguageUrl;
 	}
 
 	/**
@@ -151,7 +154,8 @@ class EstateIdRequestGuard
 				'formatoutput' => false,
 			];
 			$pApiClientActionClone = clone $pApiClientAction;
-			$pApiClientActionClone->setParameters($estateParameters)->addRequestToQueue();
+			$pApiClientActionClone->setParameters($estateParameters);
+			$pApiClientActionClone->addRequestToQueue();
 			$listRequestInQueue[$language] = $pApiClientActionClone;
 		}
 		$pApiClientActionClone->sendRequests();
@@ -187,8 +191,6 @@ class EstateIdRequestGuard
 	 */
 	private function isActiveWPML(): bool
 	{
-		$languages = apply_filters('wpml_active_languages', null);
-
-		return !is_null($languages) && count($languages) > 1;
+		return is_plugin_active('sitepress-multilingual-cms/sitepress.php');
 	}
 }
