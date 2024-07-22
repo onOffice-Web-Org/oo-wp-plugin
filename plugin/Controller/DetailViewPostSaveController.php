@@ -125,8 +125,13 @@ class DetailViewPostSaveController
 					$viewContainedCustomField = true;
 				}
 			}
+			$hasOtherShortcodeInWPBakeryBuilderPostContent = false;
 
-			if (($viewContained) || ($viewContainedCustomField && $viewContained) || ($viewContainedCustomField && $hasOtherShortcodeInPostContent == false)) {
+			if (is_plugin_active('js_composer/js_composer.php')) {
+				$hasOtherShortcodeInWPBakeryBuilderPostContent = $this->checkVcRawContentDetailView($postContent, $detailViewName);
+			}
+
+			if (($viewContained) || ($viewContainedCustomField && $viewContained) || ($viewContainedCustomField && $hasOtherShortcodeInPostContent == false) || $hasOtherShortcodeInWPBakeryBuilderPostContent) {
 				if ($postType == 'page') {
 					$pDetailView->setPageId((int) $postId);
 					$pDetailView->addToPageIdsHaveDetailShortCode( (int) $postId );
@@ -528,5 +533,35 @@ class DetailViewPostSaveController
 			}
 
 		}
+	}
+
+	/**
+	 *
+	 * @param string $postContent
+	 * @param string $detailViewName
+	 * @return bool
+	 *
+	 */
+
+	private function checkVcRawContentDetailView(string $postContent, string $detailViewName): bool 
+	{
+		$regex = vc_get_shortcode_regex(implode('|', apply_filters('wpb_custom_html_elements', array(
+			'vc_raw_html', 
+			'vc_raw_js'
+		))));
+
+		$matches = array();
+		preg_match_all('/' . $regex . '/ism', $postContent, $matches);
+
+		if (!empty($matches[5])) {
+			foreach ($matches[5] as $encodedContent) {
+				$decodedContent = rawurldecode(base64_decode($encodedContent));
+				if ($this->postContainsViewName($decodedContent, $detailViewName)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }
