@@ -100,7 +100,7 @@ class EstateDetailUrl
 
 	public function getSanitizeTitle(string $title): string
 	{
-		$sanitizeTitle = sanitize_title($title);
+		$sanitizeTitle = sanitize_title_with_dashes(remove_accents($title));
 		$arrSanitizeTitle = explode('-', $sanitizeTitle);
 		if (count($arrSanitizeTitle) > self::MAXIMUM_WORD_TITLE) {
 			$sanitizeTitle = implode('-', array_splice($arrSanitizeTitle, 0, self::MAXIMUM_WORD_TITLE));
