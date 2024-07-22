@@ -454,6 +454,11 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	color:#fff;
 }
 
+.oo-page-api-settings select.onoffice-input {
+	width: 100%;
+	max-width: 368px;
+}
+
 /* new style */
 .oo-poststuff .custom-input-field {
 	display: flex;

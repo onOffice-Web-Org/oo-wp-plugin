@@ -62,7 +62,6 @@ class ScriptLoaderGenericConfigurationDefault
 			(new IncludeFileModel($script, 'select2', plugins_url('/vendor/select2/select2/dist/js/select2.min.js', $pluginPath)))
 				->setLoadInFooter(true)
 				->setLoadAsynchronous($defer),
-
 			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)),
@@ -219,6 +218,12 @@ class ScriptLoaderGenericConfigurationDefault
 		$scripts[] = (new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/dist/onoffice-prevent-double-form-submission.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true);
+		if (!empty(get_option('onoffice-settings-thousand-separator'))) {
+			$scripts[] = (new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
+			$this->localizeApplyThousandSeparatorScript();
+		}
 
 		if ($this->checkFormType($forms, [Form::TYPE_APPLICANT_SEARCH])) {
 			$scripts[] = (new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/dist/onoffice-form-preview.min.js', $pluginPath)))
@@ -383,8 +388,12 @@ class ScriptLoaderGenericConfigurationDefault
 				->setDependencies(['onoffice-multiselect'])
 				->setLoadInFooter(true)
 				->setLoadAsynchronous($async);
+		$scripts[] = (new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
 
 		$this->localizeFormPreviewScript();
+		$this->localizeApplyThousandSeparatorScript();
 
 		return $scripts;
 	}
@@ -472,4 +481,14 @@ class ScriptLoaderGenericConfigurationDefault
         }
         return $onofficeCssStyleVersion;
     }
+
+	/**
+	 * @return void
+	 */
+	private function localizeApplyThousandSeparatorScript()
+	{
+		wp_localize_script('onoffice-apply-thousand-separator', 'onoffice_apply_thousand_separator', [
+			'thousand_separator_format' => get_option('onoffice-settings-thousand-separator')
+		]);
+	}
 }
