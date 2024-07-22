@@ -128,7 +128,7 @@ class DetailViewPostSaveController
 			$hasOtherShortcodeInWPBakeryBuilderPostContent = false;
 
 			if (is_plugin_active('js_composer/js_composer.php')) {
-				$hasOtherShortcodeInWPBakeryBuilderPostContent = $this->checkVcRawContentDetailView($postContent, $detailViewName);
+				$hasOtherShortcodeInWPBakeryBuilderPostContent = $this->containsDetailViewInWPBakeryBuilder($postContent, $detailViewName);
 			}
 
 			if (($viewContained) || ($viewContainedCustomField && $viewContained) || ($viewContainedCustomField && $hasOtherShortcodeInPostContent == false) || $hasOtherShortcodeInWPBakeryBuilderPostContent) {
@@ -543,7 +543,7 @@ class DetailViewPostSaveController
 	 *
 	 */
 
-	private function checkVcRawContentDetailView(string $postContent, string $detailViewName): bool 
+	private function containsDetailViewInWPBakeryBuilder(string $postContent, string $detailViewName): bool 
 	{
 		$regex = vc_get_shortcode_regex(implode('|', apply_filters('wpb_custom_html_elements', array(
 			'vc_raw_html', 
