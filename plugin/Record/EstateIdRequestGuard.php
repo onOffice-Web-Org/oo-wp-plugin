@@ -66,12 +66,12 @@ class EstateIdRequestGuard
 	 *
 	 */
 
-	public function __construct(EstateListFactory $pEstateDetailFactory)
+	public function __construct(EstateListFactory $pEstateDetailFactory, Container $pContainer = null)
 	{
 		$this->_pEstateDetailFactory = $pEstateDetailFactory;
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pContainer = $pContainer ?? $pContainerBuilder->build();
 	}
 
 
