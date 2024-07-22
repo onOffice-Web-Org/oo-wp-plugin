@@ -23,14 +23,15 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
-use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Utility\Redirector;
 
@@ -51,6 +52,10 @@ class EstateIdRequestGuard
 	/** @var array */
 	private $_estateDataWPML = [];
 
+	/** @var Container */
+	private $_pContainer = null;
+
+
 	/**
 	 *
 	 * @param EstateListFactory $pEstateDetailFactory
@@ -60,6 +65,9 @@ class EstateIdRequestGuard
 	public function __construct(EstateListFactory $pEstateDetailFactory)
 	{
 		$this->_pEstateDetailFactory = $pEstateDetailFactory;
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
 	}
 
 
@@ -119,7 +127,7 @@ class EstateIdRequestGuard
 		} elseif ($estateId > 0 && !empty($this->_estateData) && $switchLocale === get_locale()) {
 			$estateDetailTitle = $this->_estateData->getValue('objekttitel');
 		}
-		$switchLanguageUrl = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true);
+		$switchLanguageUrl = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true, true);
 		switch_to_locale($currentLocale);
 
 		return $switchLanguageUrl;
@@ -133,33 +141,27 @@ class EstateIdRequestGuard
 	 */
 	private function getEstateTitleByLanguage(array $languages, int $estateId): array
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-		$pSDKWrapper = $pContainer->get(EstateListEnvironmentDefault::class)->getSDKWrapper();
+		$pSDKWrapper = $this->_pContainer->get(SDKWrapper::class);
 		$pApiClientAction = new APIClientActionGeneric
 		($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$pApiClientActionClone = null;
 		$results = [];
 		$listRequestInQueue = [];
-		foreach ($languages as $key => $language) {
-			$isoLanguage = Language::LOCALE_MAPPING[$language] ?? 'DEU';
+		foreach ($languages as $language) {
+			$isoLanguageCode = Language::LOCALE_MAPPING[$language] ?? 'DEU';
 			$estateParameters = [
 				'data' => ['objekttitel'],
-				'filter' => [
-					'Id' => [['op' => '=', 'val' => $estateId]],
-				],
-				'estatelanguage' => $isoLanguage,
-				'outputlanguage' => $isoLanguage,
-				'formatoutput' => false,
+				'estatelanguage' => $isoLanguageCode,
+				'outputlanguage' => $isoLanguageCode,
 			];
 			$pApiClientActionClone = clone $pApiClientAction;
+			$pApiClientActionClone->setResourceId((string)$estateId);
 			$pApiClientActionClone->setParameters($estateParameters);
 			$pApiClientActionClone->addRequestToQueue();
 			$listRequestInQueue[$language] = $pApiClientActionClone;
 		}
 		$pApiClientActionClone->sendRequests();
-		if (!$pApiClientActionClone->getResultStatus() || empty($pApiClientActionClone->getResultRecords())) {
+		if (empty($pApiClientActionClone->getResultRecords())) {
 			return [];
 		}
 		foreach($listRequestInQueue as $key => $pApiClientAction) {
