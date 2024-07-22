@@ -130,7 +130,7 @@ class EstateIdRequestGuard
 		} elseif ($estateId > 0 && !empty($this->_estateData) && $switchLocale === get_locale()) {
 			$estateDetailTitle = $this->_estateData->getValue('objekttitel');
 		}
-		$switchLanguageUrl = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true, true);
+		$switchLanguageUrl = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true);
 		switch_to_locale($currentLocale);
 
 		return $switchLanguageUrl;

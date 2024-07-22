@@ -34,7 +34,7 @@ class EstateDetailUrl
 	 * @param int $estateId
 	 * @param string|null $title
 	 * @param string|null $oldUrl
-	 * @param bool $isWPML
+	 * @param bool $flag
 	 *
 	 * @return string
 	 */
@@ -44,7 +44,7 @@ class EstateDetailUrl
 		int $estateId,
 		string $title = null,
 		string $oldUrl = null,
-		bool $isWPML = false): string
+		bool $flag = false): string
 	{
 		$urlLsSwitcher = $url;
 		$slashChar     = '';
@@ -60,7 +60,7 @@ class EstateDetailUrl
 			if ( ! is_null( $oldUrl ) ) {
 				$oldUrlElements = parse_url( $oldUrl );
 				$oldUrlPathArr  = explode( '/', $oldUrlElements['path'] );
-				if ( empty( end( $oldUrlPathArr ) ) || $isWPML ) {
+				if ( empty( end( $oldUrlPathArr ) ) || $flag ) {
 					$slashChar = '/';
 				}
 			}
@@ -68,7 +68,7 @@ class EstateDetailUrl
 			$urlTemp = $estateId;
 
 			if ( ! empty( $title ) && $this->isOptionShowTitleUrl() ) {
-				$urlTemp .= $this->getSanitizeTitle( $title, $isWPML );
+				$urlTemp .= $this->getSanitizeTitle( $title, $flag );
 			}
 
 			$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $urlElements['path'] . $urlTemp . $slashChar;
@@ -96,13 +96,13 @@ class EstateDetailUrl
 
 	/**
 	 * @param string $title
-	 * @param bool $isWPML
+	 * @param bool $flag
 	 * @return string
 	 */
 
-	public function getSanitizeTitle(string $title, bool $isWPML = false): string
+	public function getSanitizeTitle(string $title, bool $flag = false): string
 	{
-		$sanitizeTitle = $isWPML ? sanitize_title(remove_accents($title)) : sanitize_title($title);
+		$sanitizeTitle = $flag ? sanitize_title(remove_accents($title)) : sanitize_title($title);
 		$arrSanitizeTitle = explode('-', $sanitizeTitle);
 		if (count($arrSanitizeTitle) > self::MAXIMUM_WORD_TITLE) {
 			$sanitizeTitle = implode('-', array_splice($arrSanitizeTitle, 0, self::MAXIMUM_WORD_TITLE));
