@@ -35,6 +35,8 @@ use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Utility\Redirector;
 
+
+
 /**
  *
  * Checks if an estate ID exists
@@ -126,14 +128,14 @@ class EstateIdRequestGuard
 		$currentLocale = get_locale();
 		if ($estateId > 0 && !empty($this->_estateData)) {
 			if ($switchLocale !== get_locale()) {
-				switch_to_locale($switchLocale);
+				$this->addLocaleFilter($switchLocale);
 				$estateDetailTitle = $this->_estateDataWPML[$switchLocale];
 			} else {
 				$estateDetailTitle = $this->_estateData->getValue('objekttitel');
 			}
 		}
 		$detailLinkForWPML = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true);
-		switch_to_locale($currentLocale);
+		$this->addLocaleFilter($currentLocale);
 
 		return $detailLinkForWPML;
 	}
@@ -202,5 +204,17 @@ class EstateIdRequestGuard
 	private function isActiveWPML(): bool
 	{
 		return is_plugin_active('sitepress-multilingual-cms/sitepress.php');
+	}
+
+	/**
+	 * @param string $locale
+	 *
+	 * @return void
+	 */
+	private function addLocaleFilter(string $locale): void
+	{
+		add_filter('locale', function () use ($locale) {
+			return $locale;
+		});
 	}
 }
