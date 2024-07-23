@@ -58,7 +58,7 @@ class EstateIdRequestGuard
 	private $_pContainer = null;
 
 	/** @var array  */
-	private $activeLanguages = [];
+	private $_activeLanguages = [];
 
 	/**
 	 *
@@ -89,8 +89,8 @@ class EstateIdRequestGuard
 		$this->_estateData = $pEstateDetail->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, true);
 
 		if ($this->isActiveWPML()) {
-			$this->activeLanguages = apply_filters('wpml_active_languages', null);
-			if ($estateId > 0 && !empty($this->_estateData) && !is_null($this->activeLanguages) && count($this->activeLanguages) > 1) {
+			$this->_activeLanguages = apply_filters('wpml_active_languages', null);
+			if ($estateId > 0 && !empty($this->_estateData) && count($this->_activeLanguages) > 1) {
 				$this->estateDataForWPML($estateId);
 			}
 		}
@@ -127,15 +127,15 @@ class EstateIdRequestGuard
 		$estateDetailTitle = '';
 		$currentLocale = get_locale();
 		if ($estateId > 0 && !empty($this->_estateData)) {
-			if ($switchLocale !== get_locale()) {
-				$this->switchLocaleFilter($switchLocale);
+			if ($switchLocale !== $currentLocale) {
+				$this->addSwitchFilterToLocaleHook($switchLocale);
 				$estateDetailTitle = $this->_estateDataWPML[$switchLocale];
 			} else {
 				$estateDetailTitle = $this->_estateData->getValue('objekttitel');
 			}
 		}
 		$detailLinkForWPML = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true);
-		$this->switchLocaleFilter($currentLocale);
+		$this->addSwitchFilterToLocaleHook($currentLocale);
 
 		return $detailLinkForWPML;
 	}
@@ -189,7 +189,7 @@ class EstateIdRequestGuard
 	private function estateDataForWPML(int $estateId)
 	{
 		$defaultLocales = [];
-		foreach ($this->activeLanguages as $language) {
+		foreach ($this->_activeLanguages as $language) {
 			if (isset($language['default_locale']) && $language['default_locale'] !== get_locale()) {
 				$defaultLocales[] = $language['default_locale'];
 			}
@@ -203,7 +203,7 @@ class EstateIdRequestGuard
 	 */
 	private function isActiveWPML(): bool
 	{
-		return is_plugin_active('sitepress-multilingual-cms/sitepress.php');
+		return in_array('sitepress-multilingual-cms/sitepress.php', get_option("active_plugins"));
 	}
 
 	/**
@@ -211,7 +211,7 @@ class EstateIdRequestGuard
 	 *
 	 * @return void
 	 */
-	private function switchLocaleFilter(string $locale): void
+	private function addSwitchFilterToLocaleHook(string $locale): void
 	{
 		add_filter('locale', function () use ($locale) {
 			return $locale;
