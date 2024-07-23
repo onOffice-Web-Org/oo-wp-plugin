@@ -128,14 +128,14 @@ class EstateIdRequestGuard
 		$currentLocale = get_locale();
 		if ($estateId > 0 && !empty($this->_estateData)) {
 			if ($switchLocale !== get_locale()) {
-				$this->addLocaleFilter($switchLocale);
+				$this->switchLocaleFilter($switchLocale);
 				$estateDetailTitle = $this->_estateDataWPML[$switchLocale];
 			} else {
 				$estateDetailTitle = $this->_estateData->getValue('objekttitel');
 			}
 		}
 		$detailLinkForWPML = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true);
-		$this->addLocaleFilter($currentLocale);
+		$this->switchLocaleFilter($currentLocale);
 
 		return $detailLinkForWPML;
 	}
@@ -211,7 +211,7 @@ class EstateIdRequestGuard
 	 *
 	 * @return void
 	 */
-	private function addLocaleFilter(string $locale): void
+	private function switchLocaleFilter(string $locale): void
 	{
 		add_filter('locale', function () use ($locale) {
 			return $locale;

@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use Generator;
 use onOffice\SDK\onOfficeSDK;
@@ -42,6 +43,37 @@ use WP_UnitTestCase;
 class TestClassEstateIdRequestGuard
 	extends WP_UnitTestCase
 {
+
+	/** @var Container */
+	private $_pContainer = null;
+
+	/**
+	 * @before
+	 */
+	public function prepare()
+	{
+		$switchLocale = 'DEU';
+		$pSDKWrapperMocker = new SDKWrapperMocker();
+		$pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'estate', '3', [
+				'data' => ['objekttitel'],
+				'estatelanguage' => $switchLocale,
+				'outputlanguage' => $switchLocale
+		], null, $this->prepareMockerForEstateDetailOne());
+
+		$pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'estate', '9', [
+				'data' => ['objekttitel'],
+				'estatelanguage' => $switchLocale,
+				'outputlanguage' => $switchLocale
+		], null, $this->prepareMockerForEstateDetailTwo());
+
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pContainer ->set(SDKWrapper::class, $pSDKWrapperMocker);
+	}
+
 	/**
 	 *
 	 * @dataProvider dataProvider
@@ -94,26 +126,6 @@ class TestClassEstateIdRequestGuard
 		$title =  $iterator ? '-' . $iterator['objekttitel'] : '';
 		$oldUrl = 'https://www.onoffice.de/detail/' . $estateId . $title . '/';
 		$expectedUrl = 'https://www.onoffice.de/detail/'. $estateId . $title . '/';
-		$switchLocale = 'DEU';
-		$pSDKWrapperMocker = new SDKWrapperMocker();
-		$pSDKWrapperMocker->addResponseByParameters
-		(onOfficeSDK::ACTION_ID_READ, 'estate', '3', [
-			'data' => ['objekttitel'],
-			'estatelanguage' => $switchLocale,
-			'outputlanguage' => $switchLocale
-		], null, $this->prepareMockerForEstateDetailOne());
-
-		$pSDKWrapperMocker->addResponseByParameters
-		(onOfficeSDK::ACTION_ID_READ, 'estate', '9', [
-			'data' => ['objekttitel'],
-			'estatelanguage' => $switchLocale,
-			'outputlanguage' => $switchLocale
-		], null, $this->prepareMockerForEstateDetailTwo());
-
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-		$pContainer->set(SDKWrapper::class, $pSDKWrapperMocker);
 
 		$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
 			->disableOriginalConstructor()
@@ -126,8 +138,7 @@ class TestClassEstateIdRequestGuard
 			->will($this->returnValue($iterator));
 
 		$pEstateDetailFactory->method('createEstateDetail')->will($this->returnValue($pEstateDetail));
-
-		$pSubject = new EstateIdRequestGuard($pEstateDetailFactory, $pContainer);
+		$pSubject = new EstateIdRequestGuard($pEstateDetailFactory, $this->_pContainer);
 		$pSubject->isValid($estateId);
 		$pEstateDetailUrl = new EstateDetailUrl();
 
