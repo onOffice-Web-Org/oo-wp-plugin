@@ -123,9 +123,9 @@ class TestClassEstateIdRequestGuard
 		});
 
 		$url = 'https://www.onoffice.de/detail/';
-		$title =  $iterator ? '-' . $iterator['objekttitel'] : '';
+		$title = $iterator ? '-' . $iterator['objekttitel'] : '';
 		$oldUrl = 'https://www.onoffice.de/detail/' . $estateId . $title . '/';
-		$expectedUrl = 'https://www.onoffice.de/detail/'. $estateId . $title . '/';
+		$expectedUrl = 'https://www.onoffice.de/detail/' . $estateId . $title . '/';
 
 		$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
 			->disableOriginalConstructor()
@@ -168,16 +168,16 @@ class TestClassEstateIdRequestGuard
 	 * @return null
 	 */
 	private function run_activate_plugin_for_test( $plugin ) {
-		$current = get_option( 'active_plugins' );
-		$plugin = plugin_basename( trim( $plugin ) );
+		$current = get_option('active_plugins');
+		$plugin = plugin_basename(trim($plugin));
 
-		if ( !in_array( $plugin, $current ) ) {
+		if (!in_array($plugin, $current)) {
 			$current[] = $plugin;
-			sort( $current );
-			do_action( 'activate_plugin', trim( $plugin ) );
-			update_option( 'active_plugins', $current );
-			do_action( 'activate_' . trim( $plugin ) );
-			do_action( 'activated_plugin', trim( $plugin) );
+			sort($current);
+			do_action('activate_plugin', trim($plugin));
+			update_option('active_plugins', $current);
+			do_action('activate_' . trim($plugin));
+			do_action('activated_plugin', trim($plugin));
 		}
 
 		return null;
@@ -202,7 +202,7 @@ class TestClassEstateIdRequestGuard
 						'id' => 3,
 						'type' => 'estate',
 						'elements' => [
-                			"objekttitel" => "title-3"
+							"objekttitel" => "title-3"
 						],
 					],
 				],
@@ -235,7 +235,7 @@ class TestClassEstateIdRequestGuard
 						'id' => 9,
 						'type' => 'estate',
 						'elements' => [
-                			"objekttitel" => "title-9"
+							"objekttitel" => "title-9"
 						],
 					],
 				],
