@@ -61,6 +61,7 @@ class EstateIdRequestGuard
 	/**
 	 *
 	 * @param EstateListFactory $pEstateDetailFactory
+	 * @param Container|null $pContainer
 	 *
 	 */
 
