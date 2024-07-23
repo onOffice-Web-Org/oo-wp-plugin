@@ -23,13 +23,16 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\ContainerBuilder;
 use Generator;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Record\EstateIdRequestGuard;
+use onOffice\WPlugin\SDKWrapper;
 use WP_UnitTestCase;
 
 /**
@@ -79,10 +82,38 @@ class TestClassEstateIdRequestGuard
 	public function testCreateEstateDetailLinkForSwitchLanguageWPML(int $estateId, $iterator, bool $result)
 	{
 		add_option('onoffice-detail-view-showTitleUrl', true);
+		$this->run_activate_plugin_for_test( 'sitepress-multilingual-cms/sitepress.php' );
+		add_filter('wpml_active_languages', function () {
+			return [
+				'en' => ['default_locale' => 'en_US'],
+				'de' => ['default_locale' => 'de_DE'],
+			];
+		});
+
 		$url = 'https://www.onoffice.de/detail/';
 		$title =  $iterator ? '-' . $iterator['objekttitel'] : '';
 		$oldUrl = 'https://www.onoffice.de/detail/' . $estateId . $title . '/';
 		$expectedUrl = 'https://www.onoffice.de/detail/'. $estateId . $title . '/';
+		$switchLocale = 'DEU';
+		$pSDKWrapperMocker = new SDKWrapperMocker();
+		$pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'estate', '3', [
+			'data' => ['objekttitel'],
+			'estatelanguage' => $switchLocale,
+			'outputlanguage' => $switchLocale
+		], null, $this->prepareMockerForEstate1());
+
+		$pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'estate', '9', [
+			'data' => ['objekttitel'],
+			'estatelanguage' => $switchLocale,
+			'outputlanguage' => $switchLocale
+		], null, $this->prepareMockerForEstate2());
+
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pContainer->set(SDKWrapper::class, $pSDKWrapperMocker);
 
 		$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
 			->disableOriginalConstructor()
@@ -95,10 +126,12 @@ class TestClassEstateIdRequestGuard
 			->will($this->returnValue($iterator));
 
 		$pEstateDetailFactory->method('createEstateDetail')->will($this->returnValue($pEstateDetail));
-		$pSubject = new EstateIdRequestGuard($pEstateDetailFactory);
+
+		$pSubject = new EstateIdRequestGuard($pEstateDetailFactory, $pContainer);
+		$pSubject->isValid($estateId);
 		$pEstateDetailUrl = new EstateDetailUrl();
 
-		$result = $pSubject->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl);
+		$result = $pSubject->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl, 'en_US');
 		$this->assertEquals($expectedUrl, $result);
 	}
 
@@ -116,5 +149,92 @@ class TestClassEstateIdRequestGuard
 			[7, false, false],
 			[9, new ArrayContainerEscape(['Id' => 9, 'objekttitel' => 'title-9']), true],
 		];
+	}
+
+	/**
+	 * @param $plugin
+	 *
+	 * @return null
+	 */
+	private function run_activate_plugin_for_test( $plugin ) {
+		$current = get_option( 'active_plugins' );
+		$plugin = plugin_basename( trim( $plugin ) );
+
+		if ( !in_array( $plugin, $current ) ) {
+			$current[] = $plugin;
+			sort( $current );
+			do_action( 'activate_plugin', trim( $plugin ) );
+			update_option( 'active_plugins', $current );
+			do_action( 'activate_' . trim( $plugin ) );
+			do_action( 'activated_plugin', trim( $plugin) );
+		}
+
+		return null;
+	}
+
+	/**
+	 *
+	 */
+	private function prepareMockerForEstate1()
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '3',
+			'resourcetype' => 'estate',
+			'identifier' => '',
+			'data' => [
+				'meta' => [
+					'cntabsolute' => 1,
+				],
+				'records' => [
+					0 => [
+						'id' => 3,
+						'type' => 'estate',
+						'elements' => [
+                			"objekttitel" => "title-3"
+						],
+					],
+				],
+			],
+			'status' => [
+				'errorcode' => 0,
+				'message' => 'OK',
+			],
+		];
+
+		return $response;
+	}
+
+	/**
+	 *
+	 */
+	private function prepareMockerForEstate2()
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '9',
+			'resourcetype' => 'estate',
+			'identifier' => '',
+			'data' => [
+				'meta' => [
+					'cntabsolute' => 1,
+				],
+				'records' => [
+					0 => [
+						'id' => 9,
+						'type' => 'estate',
+						'elements' => [
+                			"objekttitel" => "title-9"
+						],
+					],
+				],
+			],
+			'status' => [
+				'errorcode' => 0,
+				'message' => 'OK',
+			],
+		];
+
+		return $response;
 	}
 }
