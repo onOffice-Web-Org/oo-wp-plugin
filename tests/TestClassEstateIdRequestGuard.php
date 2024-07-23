@@ -56,22 +56,22 @@ class TestClassEstateIdRequestGuard
 		$pSDKWrapperMocker = new SDKWrapperMocker();
 		$pSDKWrapperMocker->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'estate', '3', [
-				'data' => ['objekttitel'],
-				'estatelanguage' => $switchLocale,
-				'outputlanguage' => $switchLocale
+			'data' => ['objekttitel'],
+			'estatelanguage' => $switchLocale,
+			'outputlanguage' => $switchLocale
 		], null, $this->prepareMockerForEstateDetailOne());
 
 		$pSDKWrapperMocker->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'estate', '9', [
-				'data' => ['objekttitel'],
-				'estatelanguage' => $switchLocale,
-				'outputlanguage' => $switchLocale
+			'data' => ['objekttitel'],
+			'estatelanguage' => $switchLocale,
+			'outputlanguage' => $switchLocale
 		], null, $this->prepareMockerForEstateDetailTwo());
 
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
-		$this->_pContainer ->set(SDKWrapper::class, $pSDKWrapperMocker);
+		$this->_pContainer->set(SDKWrapper::class, $pSDKWrapperMocker);
 	}
 
 	/**
