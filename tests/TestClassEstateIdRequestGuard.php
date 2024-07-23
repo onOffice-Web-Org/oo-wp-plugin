@@ -101,14 +101,14 @@ class TestClassEstateIdRequestGuard
 			'data' => ['objekttitel'],
 			'estatelanguage' => $switchLocale,
 			'outputlanguage' => $switchLocale
-		], null, $this->prepareMockerForEstate1());
+		], null, $this->prepareMockerForEstateDetailOne());
 
 		$pSDKWrapperMocker->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'estate', '9', [
 			'data' => ['objekttitel'],
 			'estatelanguage' => $switchLocale,
 			'outputlanguage' => $switchLocale
-		], null, $this->prepareMockerForEstate2());
+		], null, $this->prepareMockerForEstateDetailTwo());
 
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -175,7 +175,7 @@ class TestClassEstateIdRequestGuard
 	/**
 	 *
 	 */
-	private function prepareMockerForEstate1()
+	private function prepareMockerForEstateDetailOne()
 	{
 		$response = [
 			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
@@ -208,7 +208,7 @@ class TestClassEstateIdRequestGuard
 	/**
 	 *
 	 */
-	private function prepareMockerForEstate2()
+	private function prepareMockerForEstateDetailTwo()
 	{
 		$response = [
 			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
