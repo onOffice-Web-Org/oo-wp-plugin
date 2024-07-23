@@ -35,8 +35,6 @@ use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Utility\Redirector;
 
-
-
 /**
  *
  * Checks if an estate ID exists
@@ -208,9 +206,8 @@ class EstateIdRequestGuard
 
 	/**
 	 * @param string $locale
-	 * @return void
 	 */
-	private function addSwitchFilterToLocaleHook(string $locale): void
+	private function addSwitchFilterToLocaleHook(string $locale)
 	{
 		add_filter('locale', function () use ($locale) {
 			return $locale;
