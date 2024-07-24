@@ -305,8 +305,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 43) {
-			dbDelta($this->getCreateQueryListviews());
+			$this->_pWpOption->updateOption('onoffice-settings-duration-cache', 'hourly');
 			$dbversion = 44;
+		}
+
+		if ($dbversion == 44) {
+			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 45;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
