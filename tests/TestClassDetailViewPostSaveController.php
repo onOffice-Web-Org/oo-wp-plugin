@@ -169,4 +169,47 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		$detailViewOptions = get_option( DataDetailViewHandler::DEFAULT_VIEW_OPTION_KEY );
 		$this->assertEquals( $pWPPost->ID, $detailViewOptions->getPageId() );
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testShortCodeDetailViewInWPBakeryBuilder()
+	{
+		$this->run_activate_plugin_for_test('js_composer/js_composer.php');
+		$this->_pDataDetailView->setPageId( 13 );
+		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
+
+		$pWPPost = self::factory()->post->create_and_get( [
+			'post_author'  => 1,
+			'post_content' => '[vc_raw_html css=""]JTVCb29fZXN0YXRlJTIwdmlldyUzRCUyMmRldGFpbCUyMiU1RA==[/vc_raw_html]',
+			'post_title'   => 'Test Post',
+			'post_type'    => 'page',
+		] );
+
+		$this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID );
+		$detailViewOptions = get_option( DataDetailViewHandler::DEFAULT_VIEW_OPTION_KEY );
+		$this->assertEquals( $pWPPost->ID, $detailViewOptions->getPageId() );
+	}
+
+	/**
+	 * @param $plugin
+	 * @return null
+	 */
+	private function run_activate_plugin_for_test($plugin) {
+		$current = get_option('active_plugins');
+		$plugin = plugin_basename(trim($plugin));
+
+		if (!in_array($plugin, $current)) {
+			$current[] = $plugin;
+			sort($current);
+			do_action('activate_plugin', trim($plugin));
+			update_option('active_plugins', $current);
+			do_action('activate_' . trim($plugin));
+			do_action('activated_plugin', trim($plugin));
+		}
+
+		return null;
+	}
 }
