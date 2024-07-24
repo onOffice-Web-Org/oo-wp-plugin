@@ -127,7 +127,7 @@ class InputModelRenderer
 		{
 			case InputModelOption::HTML_TYPE_SELECT:
 				$pInstance = new InputFieldSelectRenderer($elementName,
-					$pInputModel->getValuesAvailable());
+					$pInputModel->getValuesAvailable(), $pInputModel->getDescriptionTextHTML());
 				$pInstance->setSelectedValue($pInputModel->getValue());
 				$pInstance->setLabelOnlyValues($pInputModel->getLabelOnlyValues());
 				if ( $pInputModel->getHintHtml() != null ) {
