@@ -119,6 +119,7 @@ class TestClassDatabaseChanges
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
 		$this->assertEquals(45, $dbversion);
+
 		return $this->_createQueries;
 	}
 

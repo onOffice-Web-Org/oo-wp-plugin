@@ -9,6 +9,12 @@ In order to know what has changed, you can view the [commits](https://github.com
 
 For general guidance on writing a changelog, see [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Update CSS Version
+Changes to the styling will sometimes not be visible due to caching. To prevent this, the CSS must be versioned.
+
+If any changes have been made to admin.css for this release:
+Change version in `wp_enqueue_style('onoffice-admin-css', plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), 'v4.20');` in `AdminViewController.php"`
+
 ## Development release
 
 1. Go to https://github.com/onOfficeGmbH/oo-wp-plugin/actions/workflows/development-release.yml.
@@ -44,6 +50,13 @@ For general guidance on writing a changelog, see [Keep a Changelog](https://keep
     1. In your console, delete the tag with `git tag -d v3.2`.
     2. Remove the tag from GitHub with `git push origin :v3.2`. (Only users with admin access to the repository can do this.)
     3. Re-add a tag by redoing step 3.
+
+## Update release Branch
+
+To be able to fix any critical problems anytime in current stable version, we update release branch on every release.
+
+1. Merge master into release.
+2. Push changes to release.
 
 ## Environment
 
