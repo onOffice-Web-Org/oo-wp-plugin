@@ -279,7 +279,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
 
 		$pInputModelDB = $pInstance->createInputModelSameEstateRadius();
-		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'number');
 	}
 
 	/**
@@ -302,7 +302,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
 
 		$pInputModelDB = $pInstance->createInputModelSameEstateAmount();
-		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'number');
 	}
 
 	/**
