@@ -72,9 +72,9 @@ class OutputFields
 			unset($fieldsArray[$posGeo]);
 			$pGeoPositionFieldHandler->readValues($pDataView);
 			$geoFields = $pGeoPositionFieldHandler->getActiveFieldsWithValue();
+			array_splice($fieldsArray, $posGeo, 0, array_keys($geoFields));
 		}
 
-		array_splice($fieldsArray, $posGeo, 0, array_keys($geoFields));
 		$valuesDefault = array_map(function($field) use ($geoFields, $pInputVariableReader) {
 			$fieldValue = $pInputVariableReader->getFieldValueFormatted($field);
 			if ($fieldValue === false) {
