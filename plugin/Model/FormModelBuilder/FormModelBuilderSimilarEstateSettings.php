@@ -335,7 +335,7 @@ class FormModelBuilderSimilarEstateSettings
 
 		$pInputModelRadius = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_RADIUS, $labelRadius);
-		$pInputModelRadius->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelRadius->setHtmlType(InputModelBase::HTML_TYPE_NUMBER);
 
 		$pInputModelRadius->setValuesAvailable(1);
 		$pInputModelRadius->setValue($pDataViewSimilarEstates->getRadius());
@@ -357,7 +357,7 @@ class FormModelBuilderSimilarEstateSettings
 
 		$pInputModelAmount = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_AMOUNT, $labelAmount);
-		$pInputModelAmount->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelAmount->setHtmlType(InputModelBase::HTML_TYPE_NUMBER);
 
 		$pInputModelAmount->setValuesAvailable(1);
 		$pInputModelAmount->setValue($pDataViewSimilarEstates->getRecordsPerPage());
