@@ -454,6 +454,11 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	color:#fff;
 }
 
+.oo-page-api-settings select.onoffice-input {
+	width: 100%;
+	max-width: 368px;
+}
+
 /* new style */
 .oo-poststuff .custom-input-field {
 	display: flex;
@@ -864,6 +869,15 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 		padding: 10px 10px 10px 10px;
 		margin: 0 !important;
 	}
+}
+
+.reCAPTCHA_badge .badge {
+	display: inline-block;
+	background-color: #9acd32;
+	border-radius: 10px;
+	padding: 2px 6px;
+	font-size: 10px;
+	color: #fff;
 }
 
 @media only screen and (max-width: 782px) {
