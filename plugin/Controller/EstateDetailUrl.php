@@ -146,11 +146,7 @@ class EstateDetailUrl
 		$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $newPath . '/' . $urlTemp;
 
 		if (!empty($getParameters)) {
-			if ($pEstateRedirection) {
-				$urlLsSwitcher .= '';
-			} elseif(!$tickerUrlHasTitleFlag) {
-				$urlLsSwitcher .= '?' . http_build_query($getParameters);
-			}
+			$urlLsSwitcher = add_query_arg($getParameters,$urlLsSwitcher);
 		}
 
 		return $urlLsSwitcher;
