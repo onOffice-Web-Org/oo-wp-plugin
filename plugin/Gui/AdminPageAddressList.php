@@ -21,20 +21,10 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use DI\ContainerBuilder;
-use onOffice\WPlugin\Controller\UserCapabilities;
-use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Gui\Table\AddressListTable;
-use onOffice\WPlugin\Record\RecordManagerDeleteListViewAddress;
-use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
-use onOffice\WPlugin\Record\RecordManagerDuplicateListViewAddress;
-use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
-use function add_action;
 use function add_filter;
-use function add_query_arg;
 use function admin_url;
-use function check_admin_referer;
 use function esc_html__;
 use function add_screen_option;
 
@@ -58,7 +48,6 @@ class AdminPageAddressList
 
 	public function renderContent()
 	{
-		$this->generatePageMainTitle(__('Addresses', 'onoffice-for-wp-websites'));
 		$this->_pAddressListTable->prepare_items();
 		$page = 'onoffice-addresses';
 		$buttonSearch = __('Search Addresses', 'onoffice-for-wp-websites');
@@ -87,29 +76,14 @@ class AdminPageAddressList
 			echo ' › ' .  esc_html( $subTitle );
 		}
 
-		echo '</h1>';
+		echo ' › '.esc_html__('List Views', 'onoffice-for-wp-websites');
 
 		$newLink = admin_url('admin.php?page=onoffice-editlistviewaddress');
+
+		echo '</h1>';
 		echo '<a href="'.$newLink.'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
-
-	/**
-	 *
-	 */
-
-	public function handleAdminNotices()
-	{
-		$itemsDeleted = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_NUMBER_INT);
-
-		if ($itemsDeleted !== null && $itemsDeleted !== false) {
-			add_action('admin_notices', function() use ($itemsDeleted) {
-				$pHandler = new AdminNoticeHandlerListViewDeletion();
-				echo $pHandler->handleListView($itemsDeleted);
-			});
-		}
-	}
-
 
 	/**
 	 *
@@ -124,45 +98,7 @@ class AdminPageAddressList
 
 		add_screen_option( 'per_page', array('option' => 'onoffice_address_listview_per_page') );
 		$this->_pAddressListTable = new AddressListTable();
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pDI = $pContainerBuilder->build();
-		$pClosureDeleteAddress = function(string $redirectTo, Table\WP\ListTable $pTable, array $recordIds)
-			use ($pDI): string
-		{
-			/* @var $pBulkDeleteRecord BulkDeleteRecord */
-			$pBulkDeleteRecord = $pDI->get(BulkDeleteRecord::class);
-			/* @var $pRecordManagerDelete RecordManagerDeleteListViewEstate */
-			$pRecordManagerDelete = $pDI->get(RecordManagerDeleteListViewAddress::class);
-			if (in_array($pTable->current_action(), ['delete', 'bulk_delete'])) {
-				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
-				$itemsDeleted = $pBulkDeleteRecord->delete
-					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ADDRESS, $recordIds);
-				$redirectTo = add_query_arg(['delete' => $itemsDeleted],
-					admin_url('admin.php?page=onoffice-addresses'));
-			}
-			return $redirectTo;
-		};
 
-		add_filter('handle_bulk_actions-onoffice_page_onoffice-addresses', $pClosureDeleteAddress, 10, 3);
-
-		$pClosureDuplicateAddress = function (string $redirectTo, Table\WP\ListTable $pTable)
-		use ($pDI): string {
-			if (in_array($pTable->current_action(), ['duplicate', 'bulk_duplicate'])) {
-				check_admin_referer('bulk-' . $pTable->getArgs()['plural']);
-				if (!(isset($_GET['listViewId']))) {
-					wp_die('No List Views for duplicating!');
-				}
-
-				/* @var $pRecordManagerDuplicateListViewAddress RecordManagerDuplicateListViewAddress */
-				$pRecordManagerDuplicateListViewAddress = $pDI->get(RecordManagerDuplicateListViewAddress::class);
-				$listViewRootId = $_GET['listViewId'];
-				$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
-			}
-			return $redirectTo;
-		};
-
-		add_filter('handle_bulk_actions-onoffice_page_onoffice-addresses', $pClosureDuplicateAddress, 10, 3);
 		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-addresses', function(): Table\WP\ListTable {
 			return $this->_pAddressListTable;
 		});
@@ -172,6 +108,16 @@ class AdminPageAddressList
 
 	public function doExtraEnqueues()
 	{
+		$translation = array(
+			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice-for-wp-websites'),
+		);
+
+		wp_register_script('onoffice-bulk-actions', plugins_url('/dist/onoffice-bulk-actions.min.js',
+			ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
+
+		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
+		wp_enqueue_script('onoffice-bulk-actions');
+
 		wp_register_script( 'oo-copy-shortcode',
 			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-copycode.min.js',
 			[ 'jquery' ], '', true );
