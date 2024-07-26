@@ -31,6 +31,8 @@ use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use onOffice\WPlugin\WP\WPPageWrapper;
 use WP_UnitTestCase;
+use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
+use onOffice\WPlugin\DataView\DataAddressDetailView;
 
 /**
  *
@@ -62,6 +64,15 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 	 */
 	private $_pWPPageWrapper;
 
+	/**
+	 * @var DataAddressDetailViewHandler
+	 */
+	private $_pDataAddressDetailViewHandler;
+
+	/**
+	 * @var DataAddressDetailView
+	 */
+	private $_pDataAddressDetailView;
 
 	/**
 	 * @before
@@ -75,13 +86,16 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		$this->_pDataDetailViewHandler = new DataDetailViewHandler($pWpOption);
 		$this->_pDataDetailView = $this->_pDataDetailViewHandler->getDetailView();
 		$this->_pDataDetailViewHandler->saveDetailView($this->_pDataDetailView);
+		$this->_pDataAddressDetailViewHandler = new DataAddressDetailViewHandler($pWpOption);
+		$this->_pDataAddressDetailView = $this->_pDataAddressDetailViewHandler->getAddressDetailView();
+		$this->_pDataAddressDetailViewHandler->saveAddressDetailView($this->_pDataAddressDetailView);
 
 		$this->_pWPPageWrapper = $this->getMockBuilder( WPPageWrapper::class )
 		                              ->setMethods( [ 'getPageUriByPageId' ] )
 		                              ->getMock();
 
 		$pSubject = new RewriteRuleBuilder( $this->_pDataDetailViewHandler,
-			$this->_pWPPageWrapper );
+			$this->_pWPPageWrapper, $this->_pDataAddressDetailViewHandler );
 
 		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
 
@@ -99,6 +113,9 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		$this->_pDataDetailView->setPageId( 13 );
 		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
 
+		$this->_pDataAddressDetailView->setPageId( 14 );
+		$this->_pDataAddressDetailViewHandler->saveAddressDetailView( $this->_pDataAddressDetailView );
+
 		$pWPPost = self::factory()->post->create_and_get( [
 			'post_author'  => 1,
 			'post_content' => '[oo_estate view="detail"]',
@@ -107,7 +124,16 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 			'post_status'  => 'trash',
 		] );
 
+		$pWPPostForAddressDetail = self::factory()->post->create_and_get( [
+			'post_author'  => 1,
+			'post_content' => '[oo_address view="detail"]',
+			'post_title'   => 'Details',
+			'post_type'    => 'page',
+			'post_status'  => 'trash',
+		] );
+
 		$this->assertNull( $this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID ) );
+		$this->assertNull( $this->_pDetailViewPostSaveController->onSavePost( $pWPPostForAddressDetail->ID ) );
 	}
 
 
@@ -168,5 +194,34 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 
 		$detailViewOptions = get_option( DataDetailViewHandler::DEFAULT_VIEW_OPTION_KEY );
 		$this->assertEquals( $pWPPost->ID, $detailViewOptions->getPageId() );
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testAddreeDetailShortCodeInMetaKey()
+	{
+		$this->_pDataAddressDetailView->setPageId( 14 );
+		$this->_pDataAddressDetailViewHandler->saveAddressDetailView( $this->_pDataAddressDetailView );
+
+		$pWPPostForAddressDetail = self::factory()->post->create_and_get( [
+			'post_author'  => 1,
+			'post_content' => '[oo_address view="detail"]',
+			'post_title'   => 'Test Post',
+			'post_type'    => 'page',
+		] );
+
+		add_post_meta( $pWPPostForAddressDetail->ID, 'view', '[oo_address view="detail"]' );
+
+		$this->_pWPPageWrapper->method( 'getPageUriByPageId' )
+							->with( $pWPPostForAddressDetail->ID )
+							->willReturn( 'test-post' );
+
+		$this->_pDetailViewPostSaveController->onSavePost( $pWPPostForAddressDetail->ID );
+
+		$addressDetailViewOptions = get_option( DataAddressDetailViewHandler::DEFAULT_ADDRESS_VIEW_OPTION_KEY );
+		$this->assertEquals( $pWPPostForAddressDetail->ID, $addressDetailViewOptions->getPageId() );
 	}
 }

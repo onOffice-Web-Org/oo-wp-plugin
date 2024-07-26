@@ -51,6 +51,8 @@ class Installer
 		$pRewriteRuleBuilder->addCustomRewriteTags();
 		$pRewriteRuleBuilder->addStaticRewriteRules();
 		$pRewriteRuleBuilder->addDynamicRewriteRules();
+		$pRewriteRuleBuilder->addCustomRewriteTagsForAddressDetail();
+		$pRewriteRuleBuilder->addDynamicRewriteRulesForAddressDetail();
 		self::flushRules();
 	}
 

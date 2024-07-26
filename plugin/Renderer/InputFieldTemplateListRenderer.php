@@ -34,6 +34,7 @@ class InputFieldTemplateListRenderer
 {
 	const TEMPLATE_DEFAULT_LIST = [
 		'onoffice-editlistviewaddress' => 'default.php',
+		'onoffice-addresses'           => 'default_detail.php',
 		'onoffice-editlistview'        => 'default.php',
 		'onoffice-editunitlist'        => 'default_units.php',
 		'onoffice-estates'             => [
