@@ -168,4 +168,48 @@ class TestClassRecordManagerInsertGeneric
 	{
 		$this->assertEquals('wptests_', $this->_pSubject->getTablePrefix());
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testInsertSingleRow()
+	{
+		$recordInput = [
+			RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM => [
+				'form_id' => 1,
+				'write_activity' => true,
+				'action_kind' => 'action_kind',
+				'action_type' => null,
+				'characteristic' => 'characteristic1,characteristic2',
+				'remark' => 'comment',
+			],
+		];
+
+		$recordOutput = [
+			'form_id' => 1,
+			'write_activity' => '1',
+			'action_kind' => 'action_kind',
+			'action_type' => '',
+			'characteristic' => 'characteristic1,characteristic2',
+			'remark' => 'comment'
+		];
+
+		$this->_pWPDB->expects($this->once())->method('insert')
+			->with('testPrefix_'.RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM, $recordOutput)
+			->will($this->returnValue(1));
+		$this->_pSubject->insertSingleRow($recordInput, RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM);
+	}
+
+	/**
+	 *
+	 */
+
+	public function testInsertSingleRowFail()
+	{
+		$this->expectException(\onOffice\WPlugin\Record\RecordManagerInsertException::class);
+		$this->_pWPDB->expects($this->once())->method('insert')->will($this->returnValue(false));
+		$this->_pSubject->insertSingleRow([RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM => [['a' => 'b']]], RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM);
+	}
 }

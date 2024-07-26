@@ -1,0 +1,23 @@
+{
+	"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:create",
+	"resourceid": "",
+	"resourcetype": "agentslog",
+	"cacheable": false,
+	"identifier": "",
+	"data": {
+		"meta": {
+			"cntabsolute": null
+		},
+		"records": [
+			{
+				"id": 6065,
+				"type": "agentsLog",
+				"elements": []
+			}
+		]
+	},
+	"status": {
+		"errorcode": 0,
+		"message": "OK"
+	}
+}
