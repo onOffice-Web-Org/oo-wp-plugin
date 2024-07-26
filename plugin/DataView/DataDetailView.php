@@ -236,6 +236,7 @@ class DataDetailView
         'wochmietbto',
         'kaufpreis_pro_qm',
         'mietpreis_pro_qm',
+        'calculatedPrice'
     ];
 
 	/**
@@ -433,4 +434,10 @@ class DataDetailView
     {
         return $this->_priceFields;
     }
+
+	/** @param array $priceFields */
+	public function setListFieldsShowPriceOnRequest(array $priceFields)
+	{
+		$this->_priceFields = $priceFields;
+	}
 }
