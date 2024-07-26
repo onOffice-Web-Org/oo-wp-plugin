@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.19
+Version: 4.20
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -291,9 +291,46 @@ register_activation_hook(__FILE__, [Installer::class, 'install']);
 register_deactivation_hook(__FILE__, [Installer::class, 'deactivate']);
 register_uninstall_hook(__FILE__, [Installer::class, 'deinstall']);
 
-if (!wp_next_scheduled('oo_cache_cleanup')) {
-	wp_schedule_event(time(), 'hourly', 'oo_cache_cleanup');
+function custom_cron_schedules($schedules) {
+	if(!isset($schedules['ten_minutes'])) {
+		$schedules['ten_minutes'] = array(
+			'interval' => 60 * 10,
+			'display' => __('10 minutes')
+		);
+	}
+	if(!isset($schedules['thirty_minutes'])) {
+		$schedules['thirty_minutes'] = array(
+			'interval' => 60 * 30,
+			'display' => __('30 minutes')
+		);
+	}
+	if(!isset($schedules['six_hours'])) {
+		$schedules['six_hours'] = array(
+			'interval' => 60 * 60 * 6,
+			'display'  => __('6 hours')
+		);
+	}
+
+	return $schedules;
 }
+
+add_filter('cron_schedules', 'custom_cron_schedules');
+
+if (!wp_next_scheduled('oo_cache_cleanup')) {
+	$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
+	wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_cleanup');
+}
+
+add_action('update_option_onoffice-settings-duration-cache', function($old_value, $value) {
+	if ($old_value !== $value) {
+		$timestamp = wp_next_scheduled('oo_cache_cleanup');
+		if ($timestamp) {
+			wp_unschedule_event($timestamp, 'oo_cache_cleanup');
+		}
+
+		wp_schedule_event(time(), $value, 'oo_cache_cleanup');
+	}
+}, 10, 2);
 
 // Gets triggered before we know if it has to be updated at all, so that no value has to be changed
 add_action('pre_update_option', function($value, $option) use ($pDI) {
@@ -329,10 +366,6 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 		}
 		die();
 	}
-});
-
-add_filter('oo_is_detailpage_redirection', function($value) {
-	return $value;
 });
 
 $pEstateRedirection = apply_filters('oo_is_detailpage_redirection', true);

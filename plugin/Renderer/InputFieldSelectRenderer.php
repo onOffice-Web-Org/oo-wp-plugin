@@ -37,16 +37,19 @@ class InputFieldSelectRenderer
 	/** @var array  */
 	private $_labelOnlyValues = [];
 
+    /** @var string */
+    private $_descriptionTextHTML;
 
-	/**
-	 *
-	 * @param string $name
-	 * @param array $value
-	 *
-	 */
+    /**
+     *
+     * @param string $name
+     * @param array $value
+     * @param string $description
+     */
 
-	public function __construct($name, $value = array())
+	public function __construct($name, $value = array(), $description = "")
 	{
+	    $this->_descriptionTextHTML = $description;
 		parent::__construct('select', $name, $value);
 	}
 
@@ -57,7 +60,10 @@ class InputFieldSelectRenderer
 
 	public function render()
 	{
-		$textHtml = '';
+        //some renderer use hint (e.g. estate list) some descriptionTextHTML (e.g. settings) to display info text
+        //todo refactoring: merge hint and descriptionTextHTML attribute
+
+        $textHtml = '';
 		if ( ! empty( $this->getHint() ) ) {
 			if($this->getName() === "oopluginlistviews-showreferenceestate"){
 				$textHtml = '<div class="memssageReference">' . $this->getHint() . '</div>';
@@ -70,6 +76,9 @@ class InputFieldSelectRenderer
 				$textHtml = '<div>' . $this->getHint() . '</div>';
 			}
 		}
+        if (!empty($this->_descriptionTextHTML)) {
+            $textHtml = '<p>' . $this->_descriptionTextHTML . '</p>';
+        }
 		echo '<select name="'.esc_html($this->getName()).'" '
 			 .($this->_multiple ? ' multiple = "multiple" ' : null)
 			 .$this->renderAdditionalAttributes()
