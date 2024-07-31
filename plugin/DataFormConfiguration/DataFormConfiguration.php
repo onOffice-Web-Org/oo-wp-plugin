@@ -67,8 +67,8 @@ class DataFormConfiguration
 	/** @var bool */
 	private $_showEstateContext = false;
 
-	/** @var bool */
-	private $_contactType = '';
+	/** @var array */
+	private $_contactType = [];
 
 	/** @var string */
 	private $_recipient = '';
@@ -139,8 +139,8 @@ class DataFormConfiguration
 	public function setShowEstateContext(bool $showEstateContext)
 		{ $this->_showEstateContext = $showEstateContext; }
 
-	/** @param string $contactTypeField */
-	public function setContactTypeField(string $contactTypeField)
+	/** @param array $contactTypeField */
+	public function setContactTypeField(array $contactTypeField)
 		{ $this->_contactType = $contactTypeField; }
 
 	/** @return array */
@@ -208,8 +208,8 @@ class DataFormConfiguration
 	public function getShowEstateContext(): bool
 		{ return $this->_showEstateContext; }
 
-	/** @return string */
-	public function getContactType(): string
+	/** @return array */
+	public function getContactType(): array
 		{ return $this->_contactType; }
 
 	/** @return bool */
