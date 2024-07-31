@@ -74,7 +74,7 @@ class TestClassDataListViewAddressToAPIParameters
 			'filter' => $this->_filter,
 			'filterid' => 12,
 			'outputlanguage' => 'ENG',
-			'formatoutput' => true,
+			'formatoutput' => false,
 		];
 
 		$this->assertEquals($expectedResult, $result);
@@ -100,7 +100,7 @@ class TestClassDataListViewAddressToAPIParameters
 			'filter' => $this->_filter,
 			'filterid' => 12,
 			'outputlanguage' => 'ENG',
-			'formatoutput' => true,
+			'formatoutput' => false,
 		];
 
 		$this->assertEquals($expectedResult, $result);
@@ -168,7 +168,7 @@ class TestClassDataListViewAddressToAPIParameters
 			'filter' => $this->_filter,
 			'filterid' => 12,
 			'outputlanguage' => 'ENG',
-			'formatoutput' => true,
+			'formatoutput' => false,
 		];
 
 		$this->assertEquals($expectedResult, $result);

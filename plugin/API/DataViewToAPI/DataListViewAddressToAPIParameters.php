@@ -59,10 +59,11 @@ class DataListViewAddressToAPIParameters
 	 * @param array $fields
 	 * @param DataListViewAddress $pDataListView
 	 * @param int $page
+	 * @param bool $raw
 	 * @return array
 	 */
 
-	public function buildParameters(array $fields, DataListViewAddress $pDataListView, int $page): array
+	public function buildParameters(array $fields, DataListViewAddress $pDataListView, int $page, bool $raw = false): array
 	{
 		$pBuilderListViewAddress = $this->_pFilterBuilderFactory->create($pDataListView);
 
@@ -83,7 +84,7 @@ class DataListViewAddressToAPIParameters
 			'filter' => $pBuilderListViewAddress->buildFilter(),
 			'filterid' => $pDataListView->getFilterId(),
 			'outputlanguage' => Language::getDefault(),
-			'formatoutput' => true,
+			'formatoutput' => $raw,
 		);
 
 		if ($pDataListView->getShowPhoto()) {
