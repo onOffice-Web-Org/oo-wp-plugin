@@ -72,18 +72,18 @@ class OutputFields
 			unset($fieldsArray[$posGeo]);
 			$pGeoPositionFieldHandler->readValues($pDataView);
 			$geoFields = $pGeoPositionFieldHandler->getActiveFieldsWithValue();
+			array_splice($fieldsArray, $posGeo, 0, array_keys($geoFields));
 		}
 
-		$allFields = array_merge($fieldsArray, array_keys($geoFields));
 		$valuesDefault = array_map(function($field) use ($geoFields, $pInputVariableReader) {
 			$fieldValue = $pInputVariableReader->getFieldValueFormatted($field);
 			if ($fieldValue === false) {
 				return false;
 			}
 			return $fieldValue ?: $geoFields[$field] ?? null;
-		}, $allFields);
+		}, $fieldsArray);
 
-		$resultDefault = array_combine($allFields, $valuesDefault);
+		$resultDefault = array_combine($fieldsArray, $valuesDefault);
 
 		if ($posGeo !== false &&
 			empty($resultDefault[GeoPosition::ESTATE_LIST_SEARCH_CITY]) &&
