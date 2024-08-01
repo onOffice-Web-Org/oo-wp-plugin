@@ -250,7 +250,7 @@ abstract class FormPost
 		foreach ($fields as $field) {
 			if ($field->getType() === FieldTypes::FIELD_TYPE_MULTISELECT && isset($_POST[$field->getName()]) && !empty($_POST[$field->getName()])
 				&& is_string($_POST[$field->getName()])) {
-				$_POST[$field->getName()] = explode(",", $_POST[$field->getName()]);
+				$_POST[$field->getName()] = explode(', ', $_POST[$field->getName()]);
 			}
 		}
 	}
