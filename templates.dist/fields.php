@@ -120,13 +120,6 @@ if (!function_exists('renderFormField')) {
 	{
 		$output = '';
 		$typeCurrentInput = $pForm->getFieldType($fieldName);
-		$isRequired = $pForm->isRequiredField($fieldName);
-		$requiredAttribute = $isRequired ? 'required ' : '';
-		$permittedValues = $pForm->getPermittedValues($fieldName, true);
-		$selectedValue = $pForm->getFieldValue($fieldName, true);
-		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
-		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
-		$isApplyThousandSeparatorField = $pForm->isApplyThousandSeparatorField($fieldName);
 		$isHiddenField = $pForm->isHiddenField($fieldName);
 
 		if ($isHiddenField) {
@@ -141,117 +134,125 @@ if (!function_exists('renderFormField')) {
 				$value = is_array($value) ? implode(', ', $value) : $value;
 			}
 
-			return '<input type="hidden" name="' . $name . '" value="'. $value .'">';
-		}
-
-		$requiredAttribute = "";
-		if ($isRequired) {
-			$requiredAttribute = "required";
-		}
-
-		if ($fieldName == 'range') {
-			$typeCurrentInput = onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER;
-		}
-
-		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
-			$output .= '<select class="custom-single-select" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
-			/* translators: %s will be replaced with the translated field name. */
-			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
-			foreach ($permittedValues as $key => $value) {
-				if (is_array($selectedValue)) {
-					$isSelected = in_array($key, $selectedValue, true);
-				} else {
-					$isSelected = $selectedValue == $key;
-				}
-				$output .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>'
-					. esc_html($value) . '</option>';
-			}
-			$output .= '</select>';
-		} elseif ($fieldName === 'regionaler_zusatz') {
-			if (!is_array($selectedValue)) {
-				$selectedValue = [];
-			}
-			$output .= renderRegionalAddition($fieldName, $selectedValue, true, $fieldLabel, $isRequired, $permittedValues ?? null);
-		} elseif (
-			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
-			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
-				$isRangeValue)
-		) {
-
-			$postfix = '';
-
-			if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput) {
-				$postfix = '[]';
-			}
-
-			$htmlOptions = '';
-			foreach ($permittedValues as $key => $value) {
-				if (is_array($selectedValue)) {
-					$isSelected = in_array($key, $selectedValue, true);
-				} else {
-					$isSelected = $selectedValue == $key;
-				}
-				$htmlOptions .= '<option value="' . esc_attr($key) . '".' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
-			}
-			$output = '<select class="custom-multiple-select form-control" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
-			$output .= $htmlOptions;
-			$output .= '</select>';
+			$output .= '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
 		} else {
-			$inputType = 'type="text" ';
-			$value = 'value="' . esc_attr($pForm->getFieldValue($fieldName, true)) . '"';
+			$isRequired = $pForm->isRequiredField($fieldName);
+			$requiredAttribute = $isRequired ? 'required ' : '';
+			$permittedValues = $pForm->getPermittedValues($fieldName, true);
+			$selectedValue = $pForm->getFieldValue($fieldName, true);
+			$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
+			$fieldLabel = $pForm->getFieldLabel($fieldName, true);
+			$isApplyThousandSeparatorField = $pForm->isApplyThousandSeparatorField($fieldName);
 
-			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
-				$inputType = 'type="checkbox" ';
-				$value = 'value="y" ' . ($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
-			} elseif (
-				$typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
-				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float'
-			) {
-				$inputType = 'type="number" step="1" ';
-			} elseif (
-				$typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER ||
-				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
-			) {
-				$inputType = 'type="number" step="1" ';
-			} elseif (
-				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATE ||
-				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_DATE
-			) {
-				$inputType = 'type="date" ';
-			} elseif (
-				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATETIME
-			) {
-				$inputType = 'type="datetime-local" step="1" ';
+			$requiredAttribute = "";
+			if ($isRequired) {
+				$requiredAttribute = "required";
 			}
-
-			if ($isApplyThousandSeparatorField) {
-				$inputType = 'type="text" class="apply-thousand-separator-format" ';
+	
+			if ($fieldName == 'range') {
+				$typeCurrentInput = onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER;
 			}
-
-			if (
-				$isRangeValue && $pForm->inRangeSearchcriteriaInfos($fieldName) &&
-				count($pForm->getSearchcriteriaRangeInfosForField($fieldName)) > 0
-			) {
-
-				foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
-					$value = 'value="' . esc_attr($pForm->getFieldValue($key, true)) . '"';
-					$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($key) . '" '
-						. $value . ' placeholder="' . esc_attr($rangeDescription) . '">';
+	
+			if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
+				$output .= '<select class="custom-single-select" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
+				/* translators: %s will be replaced with the translated field name. */
+				$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
+				foreach ($permittedValues as $key => $value) {
+					if (is_array($selectedValue)) {
+						$isSelected = in_array($key, $selectedValue, true);
+					} else {
+						$isSelected = $selectedValue == $key;
+					}
+					$output .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>'
+						. esc_html($value) . '</option>';
 				}
-			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
-				$output = '<fieldset>
-					<input type="radio" id="' . esc_attr($fieldName) . '_u" name="' . esc_attr($fieldName) . '" value=""
-						' . ($selectedValue === '' ? ' checked' : '') . '>
-					<label for="' . esc_attr($fieldName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
-					<input type="radio" id="' . esc_attr($fieldName) . '_y" name="' . esc_attr($fieldName) . '" value="1"
-						' . ($selectedValue === '1' ? 'checked' : '') . '>
-					<label for="' . esc_attr($fieldName) . '_y">' . esc_html__('Yes', 'onoffice-for-wp-websites') . '</label>
-					<input type="radio" id="' . esc_attr($fieldName) . '_n" name="' . esc_attr($fieldName) . '" value="0"
-						' . ($selectedValue === '0' ? 'checked' : '') . '>
-					<label for="' . esc_attr($fieldName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
-					</fieldset>';
+				$output .= '</select>';
+			} elseif ($fieldName === 'regionaler_zusatz') {
+				if (!is_array($selectedValue)) {
+					$selectedValue = [];
+				}
+				$output .= renderRegionalAddition($fieldName, $selectedValue, true, $fieldLabel, $isRequired, $permittedValues ?? null);
+			} elseif (
+				\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
+				(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
+					$isRangeValue)
+			) {
+	
+				$postfix = '';
+	
+				if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput) {
+					$postfix = '[]';
+				}
+	
+				$htmlOptions = '';
+				foreach ($permittedValues as $key => $value) {
+					if (is_array($selectedValue)) {
+						$isSelected = in_array($key, $selectedValue, true);
+					} else {
+						$isSelected = $selectedValue == $key;
+					}
+					$htmlOptions .= '<option value="' . esc_attr($key) . '".' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
+				}
+				$output = '<select class="custom-multiple-select form-control" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
+				$output .= $htmlOptions;
+				$output .= '</select>';
 			} else {
-				$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($fieldName) . '" ' . $value . '>';
+				$inputType = 'type="text" ';
+				$value = 'value="' . esc_attr($pForm->getFieldValue($fieldName, true)) . '"';
+	
+				if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+					$inputType = 'type="checkbox" ';
+					$value = 'value="y" ' . ($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
+				} elseif (
+					$typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
+					$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float'
+				) {
+					$inputType = 'type="number" step="1" ';
+				} elseif (
+					$typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER ||
+					$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
+				) {
+					$inputType = 'type="number" step="1" ';
+				} elseif (
+					$typeCurrentInput === FieldTypes::FIELD_TYPE_DATE ||
+					$typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_DATE
+				) {
+					$inputType = 'type="date" ';
+				} elseif (
+					$typeCurrentInput === FieldTypes::FIELD_TYPE_DATETIME
+				) {
+					$inputType = 'type="datetime-local" step="1" ';
+				}
+	
+				if ($isApplyThousandSeparatorField) {
+					$inputType = 'type="text" class="apply-thousand-separator-format" ';
+				}
+	
+				if (
+					$isRangeValue && $pForm->inRangeSearchcriteriaInfos($fieldName) &&
+					count($pForm->getSearchcriteriaRangeInfosForField($fieldName)) > 0
+				) {
+	
+					foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
+						$value = 'value="' . esc_attr($pForm->getFieldValue($key, true)) . '"';
+						$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($key) . '" '
+							. $value . ' placeholder="' . esc_attr($rangeDescription) . '">';
+					}
+				} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
+					$output = '<fieldset>
+						<input type="radio" id="' . esc_attr($fieldName) . '_u" name="' . esc_attr($fieldName) . '" value=""
+							' . ($selectedValue === '' ? ' checked' : '') . '>
+						<label for="' . esc_attr($fieldName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
+						<input type="radio" id="' . esc_attr($fieldName) . '_y" name="' . esc_attr($fieldName) . '" value="1"
+							' . ($selectedValue === '1' ? 'checked' : '') . '>
+						<label for="' . esc_attr($fieldName) . '_y">' . esc_html__('Yes', 'onoffice-for-wp-websites') . '</label>
+						<input type="radio" id="' . esc_attr($fieldName) . '_n" name="' . esc_attr($fieldName) . '" value="0"
+							' . ($selectedValue === '0' ? 'checked' : '') . '>
+						<label for="' . esc_attr($fieldName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
+						</fieldset>';
+				} else {
+					$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($fieldName) . '" ' . $value . '>';
+				}
 			}
 		}
 		return $output;

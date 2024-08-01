@@ -69,7 +69,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				$line .= $additionMessage . ':<br>';
 				$line .= '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea><br>';
 			} else {
-				$line = '<input type="hidden" name="message" value=' . $pForm->getFieldValue('message') . '>';
+				$line = '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
 			}
 		}
 		if ($table == 'address') {
