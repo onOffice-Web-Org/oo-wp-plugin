@@ -46,7 +46,7 @@ class TestClassInstalledLanguageReader extends WP_UnitTestCase
 			'en_GB' => 'English (UK)',
 			'en_US' => 'English (United States)',
 			'es_ES' => 'Español',
-			'de_CH' => 'Deutsch (Schweiz)',
+			'de_CH' => 'Deutsch (Schweiz)'
 		], $availableLanguages);
 	}
 
