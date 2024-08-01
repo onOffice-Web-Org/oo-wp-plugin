@@ -105,15 +105,19 @@ class AdminViewController
 
 		$this->_pAdminListViewSettingsAddress = new AdminPageAddressListSettings($this->_pageSlug);
 		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editlistviewaddress'] = $this->_pAdminListViewSettingsAddress;
+		add_action('wp_ajax_my_custom_address', [$this->_pAdminListViewSettingsAddress, 'handleMyCustomAction']);
 
 		$this->_pAdminListViewSettings = new AdminPageEstateListSettings($this->_pageSlug);
 		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editlistview'] = $this->_pAdminListViewSettings;
+		add_action('wp_ajax_my_custom_estate', [$this->_pAdminListViewSettings, 'handleMyCustomAction']);
 
 		$this->_pAdminUnitListSettings = new AdminPageEstateUnitSettings($this->_pageSlug);
 		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editunitlist'] = $this->_pAdminUnitListSettings;
+		add_action('wp_ajax_my_custom_unit', [$this->_pAdminUnitListSettings, 'handleMyCustomAction']);
 
 		$this->_pAdminPageFormSettings = new AdminPageFormSettingsMain($this->_pageSlug);
 		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editform'] = $this->_pAdminPageFormSettings;
+		add_action('wp_ajax_my_custom_form', [$this->_pAdminPageFormSettings, 'handleMyCustomAction']);
 
 		$this->_pAdminPageEstates = new AdminPageEstate($this->_pageSlug);
 		$pSelectedSubPage = $this->_pAdminPageEstates->getSelectedAdminPage();
@@ -331,6 +335,7 @@ class AdminViewController
 			array('jquery'));
 		wp_localize_script('handle-notification-actions', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_localize_script('handle-notification-actions', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_localize_script('handle-notification-actions', 'my_custom_action', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_enqueue_script('handle-notification-actions');
 
 		if (__String::getNew($hook)->contains($this->_pageSlug.'-settings')) {

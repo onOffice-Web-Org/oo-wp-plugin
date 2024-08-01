@@ -56,6 +56,12 @@ abstract class AdminPageBase
 		$this->_pContainer = $pDIContainerBuilder->build();
 	}
 
+    public function handleMyCustomAction()
+    {
+        // Your AJAX handling code here
+        wp_send_json_success(['message' => 'form action handled successfully']);
+    }
+
 
 	/**
 	 *

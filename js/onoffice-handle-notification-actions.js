@@ -31,4 +31,19 @@ jQuery(document).ready(function ($) {
 			event.preventDefault();
 		}
 	});
+
+	$(document).on('click', '#send_form', function (event) {
+		event.preventDefault();
+		var data = {
+			'action': 'my_custom_' + my_custom_actions.form,
+		};
+		jQuery.post(my_custom_action.ajaxurl, data, (response) => {
+			const parsedResponse = typeof response === 'string' ? JSON.parse(response) : response;
+
+			if (parsedResponse.success === true) {
+				$('#onoffice-ajax').submit();
+				return;
+			}
+		});
+	});
 });

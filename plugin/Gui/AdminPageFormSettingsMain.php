@@ -78,6 +78,12 @@ class AdminPageFormSettingsMain
 		$this->configureAdminPage($this->_pInstance, $type);
 	}
 
+	public function handleMyCustomAction()
+	{
+		echo json_encode(['success' => false]);
+		wp_die();
+	}
+
 
 	/**
 	 *

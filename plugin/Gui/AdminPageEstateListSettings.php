@@ -71,6 +71,11 @@ class AdminPageEstateListSettings
 		$this->setPageTitle(__('Edit List View', 'onoffice-for-wp-websites'));
 	}
 
+	public function handleMyCustomAction()
+	{
+		echo json_encode(['success' => true]);
+		wp_die();
+	}
 
 	/**
 	 *
@@ -321,5 +326,6 @@ class AdminPageEstateListSettings
 		wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css');
 		wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
 		wp_localize_script('onoffice-custom-select', 'custom_select2_translation', $translation);
+		wp_localize_script('handle-notification-actions', 'my_custom_actions', ['form' => 'estate']);
 	}
 }
