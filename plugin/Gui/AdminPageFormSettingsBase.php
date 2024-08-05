@@ -182,6 +182,7 @@ abstract class AdminPageFormSettingsBase
 	{
 		$pBoolToFieldList = new BooleanValueToFieldList(new InputModelDBFactoryConfigForm, $pValues);
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRED);
+		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_HIDDEN_FIELD);
 	}
 
 	/**

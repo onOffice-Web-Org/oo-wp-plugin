@@ -401,6 +401,29 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelIsHiddenField
+	 */
+	public function testGetInputModelIsHiddenField()
+	{
+		$pInputModelIsHiddenField = $this->_pInstance->getInputModelIsHiddenField();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelIsHiddenField);
+		$this->assertEquals($pInputModelIsHiddenField->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createSearchFieldForFieldLists
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getFieldsCollection
+	 */
+	public function testCreateSearchFieldForFieldLists()
+	{
+		$this->_pInstance->setFormType('address');
+		$pInputModelDB = $this->_pInstance->createSearchFieldForFieldLists('address', 'searchFieldForFieldLists');
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'searchFieldForFieldLists');
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::checkLogicDeleteOrRenameTemplate
 	 */
 	public function testCheckLogicNotDeleteOrRenameTemplate()
@@ -487,18 +510,5 @@ class TestClassFormModelBuilderDBForm
 		$activeTemplatePath = plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php') . 'templates.dist/estate/default.php';
 		$statusCheckLogicChooseWrongTemplate = $this->_pInstance->checkLogicChooseWrongTemplate('onoffice-editlistview', null, $activeTemplatePath);
 		$this->assertEquals($statusCheckLogicChooseWrongTemplate, false);
-	}
-
-	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createSearchFieldForFieldLists
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getFieldsCollection
-	 */
-	public function testCreateSearchFieldForFieldLists()
-	{
-		$this->_pInstance->setFormType('address');
-		$pInputModelDB = $this->_pInstance->createSearchFieldForFieldLists('address', 'searchFieldForFieldLists');
-
-		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
-		$this->assertEquals($pInputModelDB->getHtmlType(), 'searchFieldForFieldLists');
 	}
 }
