@@ -76,6 +76,33 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.0 (2024-08-05) =
+
+**Added**
+
+* Hidden fields in forms
+* Indication in form overview whether reCAPTCHA has been activated or not
+* Thousand separator in form inputs
+* Automatic integration of the energy certificate fields for a newly created detail page
+* Setting for caching duration
+
+**Changed**
+
+* Order of Geo-Position field in property lists, applicant search form and interest form
+* Update leaflet.js version to 1.9.4
+
+**Fixed**
+
+* Unnecessary redirects for multilingual pages with user-friendly URLs
+* Redirection if url contains parameters
+* Loading third party JS liberaries on property detail page of an unit
+* Security issue
+* HTML structure of property list shortcode
+
+**Removed**
+
+* PDF document download for property lists
+
 = 4.20 (2024-06-26) =
 
 **Added**
