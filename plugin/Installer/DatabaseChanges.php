@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 45;
+	const MAX_VERSION = 47;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -300,7 +300,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 42) {
-			dbDelta($this->getCreateQueryFieldConfig());
+			$this->deleteExposeColumnFromListviews();
 			$dbversion = 43;
 		}
 
@@ -310,8 +310,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 44) {
-			dbDelta($this->getCreateQueryListviews());
+			dbDelta($this->getCreateQueryFieldConfig());
 			$dbversion = 45;
+		}
+
+		if ($dbversion == 45) {
+			dbDelta($this->getCreateQueryFormFieldConfig());
+			$dbversion = 46;
+		}
+
+		if ($dbversion == 46) {
+			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 47;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -507,6 +517,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`individual_fieldname` tinyint(1) NOT NULL DEFAULT '0',
 			`required` tinyint(1) NOT NULL DEFAULT '0',
 			`markdown` tinyint(1) NOT NULL DEFAULT '0',
+			`hidden_field` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_fieldconfig_id`)
 		) $charsetCollate;";
@@ -812,6 +823,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
+	/**
+	 *
+	 */
+	private function deleteExposeColumnFromListviews()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_listviews";
+		$sql = "ALTER TABLE $tableName DROP COLUMN expose";
+		$this->_pWPDB->query($sql);
+	}
 
 	/**
 	 *
