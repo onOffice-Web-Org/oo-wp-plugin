@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress;
@@ -33,6 +34,7 @@ use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerInsertException;
 use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerUpdateListViewAddress;
 use stdClass;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
@@ -359,7 +361,23 @@ class AdminPageAddressListSettings
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
+			self::VIEW_NOTICE_SAME_NAME_MESSAGE => __('Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_NOTICE_EMPTY_NAME_MESSAGE => __('The Name field must not be empty. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 		);
+	}
+
+	public function handleNotificationError()
+	{
+		$pRecordManagerRead = new RecordManagerReadListViewAddress();
+		$listAddressName = $pRecordManagerRead->getAllNameByPageType($_POST['action'], $_POST['name'], $_POST['id']);
+		$condition = [
+			'success' => true
+		];
+		if (in_array($_POST['name'], $listAddressName)) {
+			$condition['success'] = false;
+		}
+		echo json_encode($condition);
+		wp_die();
 	}
 
 
@@ -374,6 +392,7 @@ class AdminPageAddressListSettings
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviewsaddress-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script( 'oo-copy-shortcode');
+		wp_localize_script('handle-notification-actions', 'page_type', ['form' => AdminViewController::ADDRESS_AJAX]);
 	}
 
 	/**

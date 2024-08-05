@@ -25,6 +25,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderFromNamesForm;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -331,6 +332,8 @@ abstract class AdminPageFormSettingsBase
 			'language_native' => $pLanguage->getLocale(),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
+			self::VIEW_NOTICE_SAME_NAME_MESSAGE => __('Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_NOTICE_EMPTY_NAME_MESSAGE => __('The Name field must not be empty. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 		];
 	}
 
@@ -700,6 +703,7 @@ abstract class AdminPageFormSettingsBase
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginforms-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
+		wp_localize_script('handle-notification-actions', 'page_type', ['form' => AdminViewController::FORM_AJAX]);
 	}
 
 

@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use UnexpectedValueException;
 
 /**
@@ -189,6 +190,20 @@ class AdminPageFormSettingsMain
 		}
 
 		return $result;
+	}
+
+	public function handleNotificationError()
+	{
+		$pRecordManagerRead = new RecordManagerReadForm();
+		$countData = $pRecordManagerRead->getAllNameByPageType($_POST['action'], $_POST['name'], $_POST['id']);
+		$condition = [
+			'success' => true
+		];
+		if ($countData) {
+			$condition['success'] = false;
+		}
+		echo json_encode($condition);
+		wp_die();
 	}
 
 

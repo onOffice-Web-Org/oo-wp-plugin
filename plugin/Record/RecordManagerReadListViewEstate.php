@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\DataView;
 use onOffice\WPlugin\DataView\DataListView;
 use const ARRAY_A;
@@ -416,5 +417,33 @@ class RecordManagerReadListViewEstate
 		$pWpDb->query("UPDATE {$prefix}".$tableName."
 				SET `page_shortcode` ='" .$page."' 
 				WHERE `".$column."` = ".esc_sql($listviewId));
+	}
+
+	/**
+	 * @param string $pageType
+	 * @param string $name
+	 * @param string|null $id
+	 *
+	 * @return int|null
+	 */
+	public function getAllNameByPageType(string $pageType, string $name, string $id = null)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$tableName = '';
+		if ($pageType === AdminViewController::ESTATE_AJAX) {
+			$tableName = 'oo_plugin_listviews';
+		}
+
+		$sql = "SELECT COUNT(*) AS count
+            FROM {$prefix}{$tableName} 
+            WHERE name = '$name'";
+		if (!is_null($id)) {
+			$sql .= " AND listview_id != " . esc_sql((int)$id);
+		}
+
+		$result = $pWpDb->get_row($sql, ARRAY_A);
+
+		return $result['count'];
 	}
 }

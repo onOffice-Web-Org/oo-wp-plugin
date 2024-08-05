@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use const ARRAY_A;
 use const OBJECT;
@@ -262,5 +263,27 @@ class RecordManagerReadForm
 		$returnValues['all'] = array_sum($returnValues);
 
 		return $returnValues;
+	}
+
+	public function getAllNameByPageType(string $pageType, string $name, string $id = null)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$tableName = '';
+		if ($pageType === AdminViewController::FORM_AJAX) {
+			$tableName = 'oo_plugin_forms';
+		}
+
+		$sql = "SELECT COUNT(*) AS count
+            FROM {$prefix}{$tableName} 
+            WHERE name = '$name'";
+
+		if (!is_null($id)) {
+			$sql .= " AND form_id != " . esc_sql((int)$id);
+		}
+
+		$result = $pWpDb->get_row($sql, ARRAY_A);
+
+		return $result['count'];
 	}
 }
