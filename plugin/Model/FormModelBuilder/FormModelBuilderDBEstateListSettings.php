@@ -128,6 +128,7 @@ class FormModelBuilderDBEstateListSettings
 				DataListView::FIELDS => self::$_defaultFields,
 				'recordsPerPage' => self::DEFAULT_RECORDS_PER_PAGE,
 				'show_status' => self::DEFAULT_RECORDS_SHOW_STATUS,
+				'pictures' => [ImageTypes::TITLE],
 			));
 		}
 
@@ -553,14 +554,6 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModelPictureTypes->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
 		$pictureTypes = $this->getValue(DataListView::PICTURES);
-
-		if (null == $pictureTypes)
-		{
-			$pictureTypes = array(
-				'Titelbild',
-			);
-		}
-
 		$pInputModelPictureTypes->setValue($pictureTypes);
 
 		return $pInputModelPictureTypes;
