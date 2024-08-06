@@ -154,7 +154,7 @@ class AdminViewController
 		add_menu_page( __( 'onOffice', 'onoffice-for-wp-websites' ), __( 'onOffice', 'onoffice-for-wp-websites' ),
 			$roleMainPage, $this->_pageSlug, function () use ( $pDI ) {
 				echo $pDI->get( MainPage::class )->render();
-			}, plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'images/onOffice-Logo-screen_wp-grey.svg' );
+			}, plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'images/oo-logo-plugin.svg' );
 
 		// Getting started
 		add_submenu_page( $this->_pageSlug, __( 'Getting started', 'onoffice-for-wp-websites' ),
