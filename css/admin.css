@@ -245,19 +245,15 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 }
 
 #toplevel_page_onoffice .wp-menu-image {
-	background-image: url(../images/oo-logo-plugin.svg);
-	background-size: 50% 50%;
-	background-position: center center;
-	background-repeat:no-repeat;
-}
-#toplevel_page_onoffice.wp-has-current-submenu .wp-menu-image {
-	background-image: none;
-	background-color: white;
+	background-color: #3f9de4;
 	-webkit-mask-image: url(../images/oo-logo-plugin.svg);
 	mask-image: url(../images/oo-logo-plugin.svg);
 	mask-repeat: no-repeat;
 	mask-size: 50%;
 	mask-position: center;
+}
+#toplevel_page_onoffice.wp-has-current-submenu .wp-menu-image {
+	background-color: white;
 }
 
 #onoffice-form-search-estate {
