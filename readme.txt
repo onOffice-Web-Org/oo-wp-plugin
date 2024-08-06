@@ -76,7 +76,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-= 5.0 (2024-08-05) =
+= 5.0 (2024-08-07) =
 
 **Added**
 
@@ -90,6 +90,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 * Order of Geo-Position field in property lists, applicant search form and interest form
 * Update leaflet.js version to 1.9.4
+* Update onOffice logo
 
 **Fixed**
 
