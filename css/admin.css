@@ -244,18 +244,20 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	overflow: hidden;
 }
 
-#adminmenu #toplevel_page_onoffice .wp-menu-image img {
-	width: 50%;
-	padding: 0;
-}
-
 #toplevel_page_onoffice .wp-menu-image {
-	display: flex;
-    justify-content: center;
-    align-items: center;
+	background-image: url(../images/oo-logo-plugin.svg);
+	background-size: 50% 50%;
+	background-position: center center;
+	background-repeat:no-repeat;
 }
 #toplevel_page_onoffice.wp-has-current-submenu .wp-menu-image {
-	filter: brightness(0) invert(1);
+	background-image: none;
+	background-color: white;
+	-webkit-mask-image: url(../images/oo-logo-plugin.svg);
+	mask-image: url(../images/oo-logo-plugin.svg);
+	mask-repeat: no-repeat;
+	mask-size: 50%;
+	mask-position: center;
 }
 
 #onoffice-form-search-estate {
