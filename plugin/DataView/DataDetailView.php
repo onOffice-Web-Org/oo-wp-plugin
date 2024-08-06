@@ -56,6 +56,15 @@ class DataDetailView
 	/** */
 	const FIELD_PRICE_ON_REQUEST = 'show_price_on_request';
 
+	/** */
+	const FIELD_TOTAL_COSTS_CALCULATOR = 'show_total_costs_calculator';
+
+	/** */
+	const NOTARY_FEES = 1.5;
+
+	/** */
+	const LAND_REGISTER_ENTRY = 0.5;
+
 	/** @var string[] */
 	private $_fields = [
 		'objekttitel',
@@ -223,6 +232,9 @@ class DataDetailView
 	/** @var bool */
 	private $_showPriceOnRequest = false;
 
+	/** @var bool */
+	private $_showTotalCostsCalculator = false;
+
     /** @var string[] */
     private $_priceFields = [
         'kaufpreis',
@@ -237,6 +249,26 @@ class DataDetailView
         'kaufpreis_pro_qm',
         'mietpreis_pro_qm',
     ];
+
+	/** @var string[] */
+	private $_propertyTransferTax = [
+		'Baden-Württemberg' => 5,
+		'Bayern' => 3.5,
+		'Berlin' => 6,
+		'Brandenburg' => 6.5,
+		'Bremen' => 5,
+		'Hamburg' => 5.5,
+		'Hessen' => 6,
+		'Mecklenburg-Vorpommern' => 6,
+		'Niedersachsen' => 5,
+		'Nordrhein-Westfalen' => 6.5,
+		'Rheinland-Pfalz' => 5,
+		'Saarland' => 6.5,
+		'Sachsen' => 5.5,
+		'Sachsen-Anhalt' => 5,
+		'Schleswig-Holstein' => 6.5,
+		'Thüringen' => 5
+	];
 
 	/**
 	 *
@@ -425,7 +457,6 @@ class DataDetailView
 	public function setShowPriceOnRequest(bool $priceOnRequest)
 	{ $this->_showPriceOnRequest = $priceOnRequest; }
 
-
     /**
      * @return array
      */
@@ -433,4 +464,16 @@ class DataDetailView
     {
         return $this->_priceFields;
     }
+
+	/** @return array */
+	public function getPropertyTransferTax(): array
+		{ return $this->_propertyTransferTax; }
+
+	/** @return bool */
+	public function getShowTotalCostsCalculator(): bool
+		{ return $this->_showTotalCostsCalculator; }
+
+	/** @param bool $costsCalculator */
+	public function setShowTotalCostsCalculator(bool $costsCalculator)
+		{ $this->_showTotalCostsCalculator = $costsCalculator; }
 }
