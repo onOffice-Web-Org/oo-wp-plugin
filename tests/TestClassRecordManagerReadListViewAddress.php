@@ -23,6 +23,7 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use WP_UnitTestCase;
+use wpdb;
 
 /**
  *

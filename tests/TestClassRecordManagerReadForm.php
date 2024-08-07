@@ -25,6 +25,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 use WP_UnitTestCase;
 use onOffice\WPlugin\Form;
 use onOffice\SDK\onOfficeSDK;
+use wpdb;
 /**
  *
  * @url http://www.onoffice.de
