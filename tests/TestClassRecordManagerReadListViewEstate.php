@@ -137,19 +137,19 @@ class TestClassRecordManagerReadListViewEstate
 	 */
 	public function testCheckSameName()
 	{
-		$listViewConfigOutput = ['count' => 0];
+		$configOutput = ['count' => 0];
 
 		$pWPDB = $this->getMockBuilder(wpdb::class)
-			  ->disableOriginalConstructor(['testUser', 'testPassword', 'testDB', 'testHost'])
-			  ->setMethods(['get_row'])
-			  ->getMock();
+			->disableOriginalConstructor(['testUser', 'testPassword', 'testDB', 'testHost'])
+			->setMethods(['get_row'])
+			->getMock();
 		$pWPDB->prefix = 'testPrefix';
 		$pWPDB->expects($this->once())
-			  ->method('get_row')
-			  ->willReturnOnConsecutiveCalls($listViewConfigOutput);
+			->method('get_row')
+			->willReturnOnConsecutiveCalls($configOutput);
 		$pRecordManagerReadListViewEstate = $this->getMockBuilder(RecordManagerReadListViewEstate::class)
-												 ->setMethods(['getWpdb'])
-												 ->getMock();
+			->setMethods(['getWpdb'])
+			->getMock();
 
 		$pRecordManagerReadListViewEstate->method('getWpdb')->will($this->returnValue($pWPDB));
 		$pData = $pRecordManagerReadListViewEstate->checkSameName('listView-A');

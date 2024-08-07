@@ -68,7 +68,7 @@ jQuery(document).ready(function($){
 				onOfficeLocalized.view_unsaved_change_same_name_message
 				: onOfficeLocalized.view_unsaved_changes_message;
 			showUnsavedChangesMessage(href, message);
-		});
+		}, 'json');
 	}
 
 	$('#adminmenu a[href], #wpadminbar a[href], .oo-admin-tab').on('click', function(e) {

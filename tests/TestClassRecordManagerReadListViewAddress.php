@@ -147,21 +147,24 @@ class TestClassRecordManagerReadListViewAddress
 		$this->assertEquals(4, count($pFieldsAddress));
 	}
 
+	/**
+	 * 
+	 */
 	public function testCheckSameName()
 	{
 		$configOutput = ['count' => 0];
 
 		$pWPDB = $this->getMockBuilder(wpdb::class)
-			  ->disableOriginalConstructor(['testUser', 'testPassword', 'testDB', 'testHost'])
-			  ->setMethods(['get_row'])
-			  ->getMock();
+			->disableOriginalConstructor(['testUser', 'testPassword', 'testDB', 'testHost'])
+			->setMethods(['get_row'])
+			->getMock();
 		$pWPDB->prefix = 'testPrefix';
 		$pWPDB->expects($this->once())
-			  ->method('get_row')
-			  ->willReturnOnConsecutiveCalls($configOutput);
+			->method('get_row')
+			->willReturnOnConsecutiveCalls($configOutput);
 		$pRecordManagerReadListViewAddress = $this->getMockBuilder(RecordManagerReadListViewAddress::class)
-								   ->setMethods(['getWpdb'])
-								   ->getMock();
+			->setMethods(['getWpdb'])
+			->getMock();
 
 		$pRecordManagerReadListViewAddress->method('getWpdb')->will($this->returnValue($pWPDB));
 		$pData = $pRecordManagerReadListViewAddress->checkSameName('testForm1');

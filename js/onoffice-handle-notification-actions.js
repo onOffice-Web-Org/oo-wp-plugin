@@ -49,16 +49,14 @@ jQuery(document).ready(function ($) {
 			'id': pageId
 		};
 
-		$.get(screenDataHandleNotification.ajaxurl, data, handleResponse);
+		$.get(screenDataHandleNotification.ajaxurl, data, function(response) {
+			if (response.success) {
+				$('#onoffice-ajax').submit();
+			} else {
+				showNotification(onOfficeSaveNameMessage.view_save_same_name_message, true).insertAfter('.wp-header-end');
+			}
+		}, 'json');
 	});
-
-	function handleResponse(response) {
-		if (response.success) {
-			$('#onoffice-ajax').submit();
-		} else {
-			showNotification(onOfficeSaveNameMessage.view_save_same_name_message, true).insertAfter('.wp-header-end');
-		}
-	}
 
 	function showNotification(message, checkSubmit) {
 		$('html, body').animate({ scrollTop: 0 }, 1000);
