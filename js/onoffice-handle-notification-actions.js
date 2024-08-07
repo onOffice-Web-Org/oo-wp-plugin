@@ -1,4 +1,5 @@
-const onOfficeNoticeMessage = typeof onOffice_loc_settings !== 'undefined' ? onOffice_loc_settings : [];
+const onOfficeSaveNameMessage = typeof onOffice_loc_settings !== 'undefined' ? onOffice_loc_settings : [];
+const screenDataHandleNotification = typeof screen_data_handle_notification !== 'undefined' ? screen_data_handle_notification : [];
 jQuery(document).ready(function ($) {
 	$(document).on('click', '.duplicate-check-notify .notice-dismiss', function (event) {
 		event.preventDefault();
@@ -33,44 +34,47 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
-	$(document).on('click', '#send_form', function(event) {
+	$(document).on('click', '.oo-poststuff #send_form', function(event) {
 		event.preventDefault();
-		const title = $(`[name="${shortcode.name}"]`).val().trim();
-		if (title.length === 0) {
-			showErrorNotice(onOfficeNoticeMessage.view_notice_empty_name_message, true);
+		const title = $(`[name="${screenDataHandleNotification.name}"]`).val().trim();
+		if (title.length == 0) {
+			showNotification(onOfficeSaveNameMessage.view_save_empty_name_message, true).insertAfter('.wp-header-end');
 			return;
 		}
 		const urlParams = new URLSearchParams(window.location.search);
 		let pageId = urlParams.get('id');
 		const data = {
-			'action': page_type.form,
+			'action': screenDataHandleNotification.action,
 			'name': title,
 			'id': pageId
 		};
 
-		$.post(name_error_message.ajaxurl, data, handleResponse);
+		$.get(screenDataHandleNotification.ajaxurl, data, handleResponse);
 	});
 
 	function handleResponse(response) {
-		const parsedResponse = typeof response === 'string' ? JSON.parse(response) : response;
-		if (parsedResponse.success === true) {
+		if (response.success) {
 			$('#onoffice-ajax').submit();
 		} else {
-			showErrorNotice(onOfficeNoticeMessage.view_notice_same_name_message, true);
+			showNotification(onOfficeSaveNameMessage.view_save_same_name_message, true).insertAfter('.wp-header-end');
 		}
 	}
 
-	function showErrorNotice(message, checkSubmit) {
-		if (checkSubmit === true) {
-			$('.notice.notice-error.is-dismissible').remove();
+	function showNotification(message, checkSubmit) {
+		$('html, body').animate({ scrollTop: 0 }, 1000);
+		if (checkSubmit) {
+			$('.notice-error-name-message').remove();
 		}
-		if ($('.notice.notice-error').length === 0) {
-			$('.wp-header-end').after(`
-            <div class="notice notice-error is-dismissible">
-                <p>${message}</p>
-                <button type="button" class="notice-dismiss notice-save-view"></button>
-            </div>
-        `);
-		}
+
+		return generateNotificationNameMessage(message);
+	}
+
+	function generateNotificationNameMessage(message) {
+		return $(`
+			<div class="notice notice-error is-dismissible notice-error-name-message">
+				<p>${message}</p>
+				<button type="button" class="notice-dismiss notice-save-view"></button>
+			</div>
+		`);
 	}
 });

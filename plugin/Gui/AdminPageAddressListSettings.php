@@ -34,7 +34,6 @@ use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerInsertException;
 use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
-use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerUpdateListViewAddress;
 use stdClass;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
@@ -361,22 +360,25 @@ class AdminPageAddressListSettings
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
-			self::VIEW_NOTICE_SAME_NAME_MESSAGE => __('Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
-			self::VIEW_NOTICE_EMPTY_NAME_MESSAGE => __('The Name field must not be empty. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_SAME_NAME_MESSAGE => __('There was a problem saving the list. The Name field has been exist.', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_EMPTY_NAME_MESSAGE => __('There was a problem saving the list. The Name field must not be empty.', 'onoffice-for-wp-websites'),
+			self::VIEW_UNSAVED_CHANGE_SAME_NAME_MESSAGE => __('Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_UNSAVED_CHANGE_EMPTY_NAME_MESSAGE => __('The Name field must not be empty. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 		);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function handleNotificationError()
 	{
 		$pRecordManagerRead = new RecordManagerReadListViewAddress();
-		$listAddressName = $pRecordManagerRead->getAllNameByPageType($_POST['action'], $_POST['name'], $_POST['id']);
-		$condition = [
-			'success' => true
+		$sameNameStatus = $pRecordManagerRead->checkSameName($_GET['name'], $_GET['id']);
+		$response = [
+			'success' => $sameNameStatus
 		];
-		if (in_array($_POST['name'], $listAddressName)) {
-			$condition['success'] = false;
-		}
-		echo json_encode($condition);
+
+		echo json_encode($response);
 		wp_die();
 	}
 
@@ -387,12 +389,18 @@ class AdminPageAddressListSettings
 
 	public function doExtraEnqueues()
 	{
+		$screenData = array(
+			'action' => AdminViewController::ACTION_NOTIFICATION_ADDRESS,
+			'name' => 'oopluginlistviewsaddress-name',
+			'ajaxurl' => admin_url('admin-ajax.php')
+		);
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviewsaddress-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script( 'oo-copy-shortcode');
-		wp_localize_script('handle-notification-actions', 'page_type', ['form' => AdminViewController::ADDRESS_AJAX]);
+		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);
+		wp_localize_script('oo-unsaved-changes-message', 'screen_data_unsaved_changes', $screenData);
 	}
 
 	/**

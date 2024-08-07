@@ -192,20 +192,21 @@ class AdminPageFormSettingsMain
 		return $result;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function handleNotificationError()
 	{
 		$pRecordManagerRead = new RecordManagerReadForm();
-		$countData = $pRecordManagerRead->getAllNameByPageType($_POST['action'], $_POST['name'], $_POST['id']);
-		$condition = [
-			'success' => true
+		$sameNameStatus = $pRecordManagerRead->checkSameName($_GET['name'], $_GET['id']);
+
+		$response = [
+			'success' => $sameNameStatus
 		];
-		if ($countData) {
-			$condition['success'] = false;
-		}
-		echo json_encode($condition);
+
+		echo json_encode($response);
 		wp_die();
 	}
-
 
 	/**
 	 *

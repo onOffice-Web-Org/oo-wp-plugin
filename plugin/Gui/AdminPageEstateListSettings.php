@@ -72,19 +72,19 @@ class AdminPageEstateListSettings
 		$this->setPageTitle(__('Edit List View', 'onoffice-for-wp-websites'));
 	}
 
+	/**
+	 * @return void
+	 */
 	public function handleNotificationError()
 	{
 		$pRecordManagerRead = new RecordManagerReadListViewEstate();
-		$numberRecord = $pRecordManagerRead->getAllNameByPageType($_POST['action'], $_POST['name'], $_POST['id']);
+		$sameNameStatus = $pRecordManagerRead->checkSameName($_GET['name'], $_GET['id']);
 
-		$condition = [
-			'success' => true
+		$response = [
+			'success' => $sameNameStatus
 		];
-		if ($numberRecord) {
-			$condition['success'] = false;
-		}
 
-		echo json_encode($condition);
+		echo json_encode($response);
 		wp_die();
 	}
 
@@ -310,6 +310,12 @@ class AdminPageEstateListSettings
 			'singleSelectOption' => __('Select an Option', 'onoffice-for-wp-websites'),
 		);
 
+		$screenData = array(
+			'action' => AdminViewController::ACTION_NOTIFICATION_ESTATE,
+			'name' => 'oopluginlistviews-name',
+			'ajaxurl' => admin_url('admin-ajax.php')
+		);
+
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
 		wp_enqueue_script('onoffice-custom-form-label-js');
@@ -326,6 +332,7 @@ class AdminPageEstateListSettings
 		wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css');
 		wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
 		wp_localize_script('onoffice-custom-select', 'custom_select2_translation', $translation);
-		wp_localize_script('handle-notification-actions', 'page_type', ['form' => AdminViewController::ESTATE_AJAX]);
+		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);
+		wp_localize_script('oo-unsaved-changes-message', 'screen_data_unsaved_changes', $screenData);
 	}
 }

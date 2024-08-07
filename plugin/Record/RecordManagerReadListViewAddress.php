@@ -21,8 +21,6 @@
 
 namespace onOffice\WPlugin\Record;
 
-use onOffice\WPlugin\Controller\AdminViewController;
-
 /**
  *
  * @url http://www.onoffice.de
@@ -155,25 +153,26 @@ class RecordManagerReadListViewAddress
 		return $result;
 	}
 
-	public function getAllNameByPageType(string $pageType, string $name, string $id = null)
+	/**
+	 * @param string $name
+	 * @param string|null $id
+	 *
+	 * @return bool
+	 */
+	public function checkSameName(string $name, string $id = null): bool
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
-		$tableName = '';
-		if ($pageType === AdminViewController::ADDRESS_AJAX) {
-			$tableName = 'oo_plugin_listviews_address';
-		}
 
 		$sql = "SELECT COUNT(*) AS count
-            FROM {$prefix}{$tableName} 
-            WHERE name = '$name'";
+			FROM {$prefix}oo_plugin_listviews_address
+			WHERE name = '" . esc_sql($name) . "'";
 
 		if (!is_null($id)) {
-			$sql .= " AND listview_address_id != " . esc_sql((int)$id);
+			$sql .= " AND listview_address_id != '" . esc_sql($id) . "'";
 		}
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
-
-		return $result['count'];
+		return $result['count'] == 0;
 	}
 }

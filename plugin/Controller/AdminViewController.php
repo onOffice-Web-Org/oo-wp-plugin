@@ -93,9 +93,14 @@ class AdminViewController
 	/** @var AdminPageFormSettingsMain */
 	private $_pAdminPageFormSettings = null;
 
-	const ESTATE_AJAX = 'estate_ajax';
-	const ADDRESS_AJAX = 'address_ajax';
-	const FORM_AJAX = 'form_ajax';
+	/** @var string */
+	const ACTION_NOTIFICATION_ESTATE = 'action_notification_estate';
+
+	/** @var string */
+	const ACTION_NOTIFICATION_ADDRESS = 'action_notification_address';
+
+	/** @var string */
+	const ACTION_NOTIFICATION_FORM = 'action_notification_form';
 
 	/**
 	 *
@@ -126,9 +131,9 @@ class AdminViewController
 			$this->_ajaxHooks['onoffice_page_'.$this->_pageSlug.'-estates'] = $pSelectedSubPage;
 		}
 
-		add_action('wp_ajax_' . self::ESTATE_AJAX, [$this->_pAdminListViewSettings, 'handleNotificationError']);
-		add_action('wp_ajax_' . self::ADDRESS_AJAX, [$this->_pAdminListViewSettingsAddress, 'handleNotificationError']);
-		add_action('wp_ajax_' . self::FORM_AJAX, [$this->_pAdminPageFormSettings, 'handleNotificationError']);
+		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_ESTATE, [$this->_pAdminListViewSettings, 'handleNotificationError']);
+		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_ADDRESS, [$this->_pAdminListViewSettingsAddress, 'handleNotificationError']);
+		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_FORM, [$this->_pAdminPageFormSettings, 'handleNotificationError']);
 	}
 
 
@@ -339,7 +344,6 @@ class AdminViewController
 			array('jquery'));
 		wp_localize_script('handle-notification-actions', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_localize_script('handle-notification-actions', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
-		wp_localize_script('handle-notification-actions', 'name_error_message', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_enqueue_script('handle-notification-actions');
 
 		if (__String::getNew($hook)->contains($this->_pageSlug.'-settings')) {
