@@ -93,6 +93,15 @@ class AdminViewController
 	/** @var AdminPageFormSettingsMain */
 	private $_pAdminPageFormSettings = null;
 
+	/** @var string */
+	const ACTION_NOTIFICATION_ESTATE = 'action_notification_estate';
+
+	/** @var string */
+	const ACTION_NOTIFICATION_ADDRESS = 'action_notification_address';
+
+	/** @var string */
+	const ACTION_NOTIFICATION_FORM = 'action_notification_form';
+
 	/**
 	 *
 	 */
@@ -121,6 +130,10 @@ class AdminViewController
 		if ($pSelectedSubPage instanceof AdminPageAjax) {
 			$this->_ajaxHooks['onoffice_page_'.$this->_pageSlug.'-estates'] = $pSelectedSubPage;
 		}
+
+		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_ESTATE, [$this->_pAdminListViewSettings, 'handleNotificationError']);
+		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_ADDRESS, [$this->_pAdminListViewSettingsAddress, 'handleNotificationError']);
+		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_FORM, [$this->_pAdminPageFormSettings, 'handleNotificationError']);
 	}
 
 
