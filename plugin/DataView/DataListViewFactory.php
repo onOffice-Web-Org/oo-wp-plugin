@@ -84,6 +84,9 @@ class DataListViewFactory
 		$pListView->setShowMap($row['show_map']);
 		$pListView->setShowPriceOnRequest((bool)$row['show_price_on_request']);
 		$pListView->setConvertTextToSelectForCityField($row['convertTextToSelectForCityField']);
+		$pListView->setMarkedPropertiesSort($row['markedPropertiesSort']);
+		$pListView->setSortByTags($row['sortByTags']);
+		$pListView->setSortByTagsDirection($row['sortByTagsDirection']);
 
 		$geoFieldsAll = [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,

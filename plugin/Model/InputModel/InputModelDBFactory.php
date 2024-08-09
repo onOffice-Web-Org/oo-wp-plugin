@@ -90,6 +90,15 @@ class InputModelDBFactory
 	/** */
 	const INPUT_SHOW_MAP = 'showMap';
 
+	/** */
+	const INPUT_MARKED_PROPERTIES_SORT = 'markedPropertiesSort';
+
+	/** */
+	const INPUT_SORT_BY_TAGS = 'sortByTags';
+
+	/** */
+	const INPUT_SORT_ORDER_BY_TAGS = 'sortByTagsDirection';
+
 	/** @var InputModelDBFactoryConfigBase */
 	private $_pInputModelDBFactoryConfig = null;
 
