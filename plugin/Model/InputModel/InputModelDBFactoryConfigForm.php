@@ -98,6 +98,8 @@ class InputModelDBFactoryConfigForm
     /** */
     const INPUT_FORM_CONTACT_TYPE = 'contactType';
 
+	/** */
+	const INPUT_FORM_SHOW_FORM_AS_MODAL = 'showFormAsModal';
 
 	/** @var array */
 	private $_inputConfig = [
@@ -197,6 +199,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_MARK_DOWN => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'markdown',
+		],
+		self::INPUT_FORM_SHOW_FORM_AS_MODAL => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'show_form_as_modal',
 		],
 	];
 

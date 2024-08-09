@@ -73,6 +73,8 @@ class DataFormConfigurationOwner
 	/** @var string */
 	private $_subject = null;
 
+	/** @var bool */
+	private $_showFormAsModal = false;
 
 	/** @return bool */
 	public function getCheckDuplicateOnCreateAddress()
@@ -105,4 +107,12 @@ class DataFormConfigurationOwner
 	/** @param string $subject */
 	public function setSubject($subject)
 		{ $this->_subject = $subject; }
+
+	/** @return bool */
+	public function getShowFormAsModal(): bool
+		{ return $this->_showFormAsModal; }
+
+	/** @param bool $showFormAsModal */
+	public function setShowFormAsModal(bool $showFormAsModal)
+		{ $this->_showFormAsModal = $showFormAsModal; }
 }
