@@ -245,9 +245,6 @@ class DataFormConfigurationFactory
 
 		$geoPositionFields = [];
 		foreach ($geoPositionSettings as $field) {
-			if ($this->_type === Form::TYPE_APPLICANT_SEARCH && $field === GeoPosition::ESTATE_LIST_SEARCH_RADIUS) {
-				continue;
-			}
 			$geoPositionField = [
 				'form_id' => $formId,
 				'required' => $required,

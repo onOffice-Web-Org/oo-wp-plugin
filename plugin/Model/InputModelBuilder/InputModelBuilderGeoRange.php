@@ -116,9 +116,8 @@ class InputModelBuilderGeoRange
 			yield $pInputModelGeoCountry;
 		}
 
-		if ($pView->getViewType() !== Form::TYPE_APPLICANT_SEARCH) {
-			yield $this->generateInputRadius();
-		}
+		yield $this->generateInputRadius();
+
 		yield from $this->generateInputOrder($pView);
 	}
 
@@ -213,18 +212,7 @@ class InputModelBuilderGeoRange
 
 	private function filterGeoOrderOptionsTemplateByView(ViewProperty $pView): array
 	{
-		$geoOrderOptions = self::GEO_ORDER_OOPTIONS_TEMPLATE;
-
-		if ($pView->getViewType() === Form::TYPE_APPLICANT_SEARCH) {
-			foreach ($geoOrderOptions as &$values) {
-				$result = array_search(GeoPosition::ESTATE_LIST_SEARCH_RADIUS, $values);
-				if ($result !== false) {
-					unset($values[$result]);
-				}
-			}
-		}
-
-		return $geoOrderOptions;
+		return self::GEO_ORDER_OOPTIONS_TEMPLATE;
 	}
 
 
@@ -242,11 +230,8 @@ class InputModelBuilderGeoRange
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE => __('Postal Code', 'onoffice-for-wp-websites'),
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_CITY_ACTIVE => __('City', 'onoffice-for-wp-websites'),
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => __('Street', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE => __('Radius', 'onoffice-for-wp-websites'),
 		];
-
-		if ($pView->getViewType() !== Form::TYPE_APPLICANT_SEARCH) {
-			$fieldnames[InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE] = __('Radius', 'onoffice-for-wp-websites');
-		}
 
 		return $fieldnames;
 	}

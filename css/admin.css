@@ -528,12 +528,16 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 }
 
 .oo-poststuff .custom-input-field input[name=oopluginlistviews-countryactive]:checked::before,
-.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive]:checked::before {
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive]:checked::before,
+.oo-poststuff .custom-input-field input[name=oopluginforms-countryactive]:checked::before,
+.oo-poststuff .custom-input-field input[name=oopluginforms-zipactive]:checked::before {
 	filter: brightness(0) saturate(100%) invert(35%) sepia(4%) saturate(967%) hue-rotate(170deg) brightness(91%) contrast(94%);
 }
 
 .oo-poststuff .custom-input-field input[name=oopluginlistviews-countryactive],
-.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive] {
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive],
+.oo-poststuff .custom-input-field input[name=oopluginforms-countryactive],
+.oo-poststuff .custom-input-field input[name=oopluginforms-zipactive] {
 	pointer-events: none;
 }
 

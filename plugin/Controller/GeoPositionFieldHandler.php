@@ -61,10 +61,6 @@ class GeoPositionFieldHandler
 			($pViewProperty->getModule(), RecordManagerFactory::ACTION_READ, $pViewProperty->getId());
 		$this->_booleanFields = $pInputModelFactory->getBooleanFields();
 
-		if ($pViewProperty->getViewType() === Form::TYPE_APPLICANT_SEARCH) {
-			unset($this->_booleanFields[GeoPosition::ESTATE_LIST_SEARCH_RADIUS]);
-		}
-
 		array_map(function($column) use ($pRecordManager) {
 			$pRecordManager->addColumn($column);
 		}, $this->_booleanFields);
