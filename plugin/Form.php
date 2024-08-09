@@ -675,12 +675,7 @@ class Form
 	private function setCountAbsoluteResults(int $countAbsolute)
 		{ $this->_countAbsoluteResults = $countAbsolute; }
 
-	/**
-	 * @return string
-	 */
-
-	public function getShowFormAsModal()
-	{
-		return $this->_pFormData->getDataFormConfiguration()->getShowFormAsModal();
-	}
+	/** @return bool */
+	public function getShowFormAsModal(): bool
+		{ return $this->_pFormData->getDataFormConfiguration()->getShowFormAsModal(); }
 }
