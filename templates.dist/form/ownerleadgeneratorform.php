@@ -30,6 +30,8 @@ $addressValues = array();
 $estateValues = array();
 $miscValues = array();
 
+$showFormAsModal = $pForm->getShowFormAsModal() || $pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS;
+
 if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 	esc_html_e('The form was sent successfully.', 'onoffice-for-wp-websites');
 	echo '<br>';
@@ -67,14 +69,14 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 ?>
 
 <script>
-	$(document).ready(function() {
+	jQuery(document).ready(function() {
 		var oOPaging = new onOffice.paging('leadform');
 		oOPaging.setFormId('leadgeneratorform');
 		oOPaging.setup();
 	});
 </script>
 
-<div id="onoffice-lead" style="display:none;">
+<div id="onoffice-lead" <?php echo $showFormAsModal ? 'style="display:none;"' : ''; ?>>
 	<p>
 		<form name="leadgenerator" action="" method="post" id="leadgeneratorform">
 			<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
@@ -128,7 +130,7 @@ if (in_array($pForm->getFormStatus(), [
 		null,
 		FormPost::MESSAGE_ERROR,
 		FormPost::MESSAGE_REQUIRED_FIELDS_MISSING,
-	])) {
+	]) && $pForm->getShowFormAsModal()) {
 	echo '<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead" class="thickbox">';
 	echo esc_html__('Open the Form', 'onoffice-for-wp-websites');
 	echo '</a>';
