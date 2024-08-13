@@ -327,6 +327,7 @@ class TestClassDataFormConfigurationFactory
 					$this->assertEquals('A Subject', $pDataFormConfiguration->getSubject());
 					$this->assertEquals('test@my-onoffice.com', $pDataFormConfiguration->getRecipient());
 					$this->assertEquals(['ownerSpecialField1'], $pDataFormConfiguration->getAvailableOptionsFields());
+					$this->assertTrue($pDataFormConfiguration->getShowFormAsModal());
 					break;
 				case Form::TYPE_INTEREST:
 					/* @var $pDataFormConfiguration DataFormConfigurationInterest */
@@ -444,7 +445,8 @@ class TestClassDataFormConfigurationFactory
 			'availableOptions' => '1',
 			'show_estate_context' => '0',
 			'contact_type' => '',
-            'default_recipient' => 'default@my-onoffice.com'
+            'default_recipient' => 'default@my-onoffice.com',
+			'show_form_as_modal' => '1',
 		];
 	}
 }
