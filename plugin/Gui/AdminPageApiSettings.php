@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use DI\ContainerBuilder;
+use onOffice\WPlugin\Controller\InputVariableReaderFormatter;
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
@@ -77,6 +78,7 @@ class AdminPageApiSettings
 		$this->addFormModelFavorites($pageSlug);
         $this->addFormModelDetailView($pageSlug);
 		$this->addFormModelPagination($pageSlug);
+		$this->addFormModelSeparatorFormatSettings($pageSlug);
 		$this->addFormModelGoogleBotSettings();
 	}
 
@@ -606,6 +608,36 @@ class AdminPageApiSettings
 		$pFormModel->setGroupSlug('onoffice-cache');
 		$pFormModel->setPageSlug($this->getPageSlug());
 		$pFormModel->setLabel(__('Cache', 'onoffice-for-wp-websites'));
+
+		$this->addFormModel($pFormModel);
+	}
+
+	/**
+	 * @param string $pageSlug
+	 */
+	private function addFormModelSeparatorFormatSettings(string $pageSlug)
+	{
+		$groupSlugPaging = 'onoffice-settings';
+		$labelSeparatorFormatSettings = __('Separator Format Settings', 'onoffice-for-wp-websites');
+		$labelSeparatorCharacterFormat = __('Thousand Separator Format', 'onoffice-for-wp-websites');
+
+		$pInputModelSeparatorCharacterFormat = new InputModelOption($groupSlugPaging, 'thousand-separator',
+			$labelSeparatorCharacterFormat, InputModelOption::SETTING_TYPE_STRING);
+		$pInputModelSeparatorCharacterFormat->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$selectedThousandValue = get_option($pInputModelSeparatorCharacterFormat->getIdentifier(), '.');
+		$pInputModelSeparatorCharacterFormat->setValue($selectedThousandValue);
+		$pInputModelSeparatorCharacterFormat->setValuesAvailable([
+			'' => __('Please choose', 'onoffice-for-wp-websites'),
+			InputVariableReaderFormatter::DOT_THOUSAND_SEPARATOR => __('Dot (ex: 123.456.789)', 'onoffice-for-wp-websites'),
+			InputVariableReaderFormatter::COMMA_THOUSAND_SEPARATOR => __('Comma (ex: 123,456,789)', 'onoffice-for-wp-websites'),
+		]);
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelSeparatorCharacterFormat);
+		$pFormModel->setGroupSlug($groupSlugPaging);
+		$pFormModel->setPageSlug($pageSlug);
+		$pFormModel->setLabel($labelSeparatorFormatSettings);
+	
 		$this->addFormModel($pFormModel);
 	}
 }
