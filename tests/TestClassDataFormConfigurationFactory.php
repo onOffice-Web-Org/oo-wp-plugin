@@ -449,7 +449,7 @@ class TestClassDataFormConfigurationFactory
 			'availableOptions' => '1',
 			'show_estate_context' => '0',
 			'contact_type' => '',
-            'default_recipient' => 'default@my-onoffice.com',
+			'default_recipient' => 'default@my-onoffice.com',
 			'show_form_as_modal' => '1',
 		];
 	}
