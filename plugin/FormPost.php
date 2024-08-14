@@ -35,6 +35,7 @@ use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
@@ -214,6 +215,9 @@ abstract class FormPost
 		$requiredFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $pFormConfig->getRequiredFields());
 		$inputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $pFormConfig->getInputs());
 		$pFormConfig->setInputs($inputs);
+		if (!empty($pFormConfig->getHiddenFields())) {
+			$this->updateValueForHiddenFields($pFormConfig->getHiddenFields());
+		}
 
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$formData = $pFormFieldValidator->getValidatedValues($formFields, $this->_pFieldsCollection);
@@ -227,6 +231,29 @@ abstract class FormPost
 		return $pFormData;
 	}
 
+	/**
+	 * @param array $hiddenFields
+	 *
+	 * @return void
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+
+	private function updateValueForHiddenFields(array $hiddenFields)
+	{
+		$fields = [];
+		foreach ($hiddenFields as $field) {
+			$fields[] = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
+		}
+
+		foreach ($fields as $field) {
+			if ($field->getType() === FieldTypes::FIELD_TYPE_MULTISELECT && isset($_POST[$field->getName()]) && !empty($_POST[$field->getName()])
+				&& is_string($_POST[$field->getName()])) {
+				$_POST[$field->getName()] = explode(', ', $_POST[$field->getName()]);
+			}
+		}
+	}
 
 	/**
 	 * @return FieldsCollection

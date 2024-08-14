@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.20
+Version: 5.0
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -280,10 +280,15 @@ function customFieldCallback( $pDI, $format, $limitEllipsis, $meta_key ) {
 }
 
 
-add_filter('wpml_ls_language_url', function($url) use ($pDI){
+add_filter('wpml_ls_language_url', function($url, $data) use ($pDI) {
+	/** @var EstateIdRequestGuard $pEstateIdGuard */
+	$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
+	$pEstateDetailUrl = $pDI->get(EstateDetailUrl::class);
+	$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
 	$pWPQueryWrapper = $pDI->get(WPQueryWrapper::class);
 	$estateId = (int) $pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
-	return $pDI->get(EstateDetailUrl::class)->createEstateDetailLink($url, $estateId);
+
+	return $pEstateIdGuard->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
 }, 10, 2);
 
 register_activation_hook(__FILE__, [Installer::class, 'install']);
