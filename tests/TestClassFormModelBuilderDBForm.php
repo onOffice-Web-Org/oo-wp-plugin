@@ -401,6 +401,16 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelIsHiddenField
+	 */
+	public function testGetInputModelIsHiddenField()
+	{
+		$pInputModelIsHiddenField = $this->_pInstance->getInputModelIsHiddenField();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelIsHiddenField);
+		$this->assertEquals($pInputModelIsHiddenField->getHtmlType(), 'checkbox');
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createSearchFieldForFieldLists
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getFieldsCollection
 	 */
