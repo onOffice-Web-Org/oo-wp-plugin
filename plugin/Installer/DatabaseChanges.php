@@ -28,6 +28,7 @@ use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use Exception;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\DataView\DataSimilarView;
@@ -41,7 +42,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 46;
+	const MAX_VERSION = 47;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -317,6 +318,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 45) {
 			dbDelta($this->getCreateQueryFormFieldConfig());
 			$dbversion = 46;
+		}
+
+		if ($dbversion == 46) {
+			$this->updateValueGeoFieldsForForms();
+			$dbversion = 47;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1157,6 +1163,22 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$prefix = $this->getPrefix();
 		$sql = "UPDATE {$prefix}oo_plugin_listviews
 			SET country_active = 1, radius_active = 1";
+
+		$this->_pWPDB->query($sql);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function updateValueGeoFieldsForForms()
+	{
+		$prefix = $this->getPrefix();
+
+		$sql = "UPDATE {$prefix}oo_plugin_forms
+			SET country_active = 1, radius_active = CASE 
+			WHEN form_type = '" . Form::TYPE_INTEREST . "' THEN 1
+			ELSE radius_active END
+		WHERE form_type IN ('" . Form::TYPE_INTEREST . "', '" . Form::TYPE_APPLICANT_SEARCH . "')";
 
 		$this->_pWPDB->query($sql);
 	}
