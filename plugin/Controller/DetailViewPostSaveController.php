@@ -125,8 +125,13 @@ class DetailViewPostSaveController
 					$viewContainedCustomField = true;
 				}
 			}
+			$containsDetailViewInWPBakeryBuilder = false;
 
-			if (($viewContained) || ($viewContainedCustomField && $viewContained) || ($viewContainedCustomField && $hasOtherShortcodeInPostContent == false)) {
+			if (in_array( 'js_composer/js_composer.php', get_option("active_plugins") )) {
+				$containsDetailViewInWPBakeryBuilder = $this->containsDetailViewInWPBakeryBuilder($postContent, $detailViewName);
+			}
+
+			if (($viewContained) || ($viewContainedCustomField && $viewContained) || ($viewContainedCustomField && $hasOtherShortcodeInPostContent == false) || $containsDetailViewInWPBakeryBuilder) {
 				if ($postType == 'page') {
 					$pDetailView->setPageId((int) $postId);
 					$pDetailView->addToPageIdsHaveDetailShortCode( (int) $postId );
@@ -528,5 +533,31 @@ class DetailViewPostSaveController
 			}
 
 		}
+	}
+
+	/**
+	 * @param string $postContent
+	 * @param string $detailViewName
+	 * @return bool
+	 */
+
+	private function containsDetailViewInWPBakeryBuilder(string $postContent, string $detailViewName): bool
+	{
+		$matches = array();
+		$regex = get_shortcode_regex(array('vc_raw_html'));
+		preg_match_all('/' . $regex . '/ism', $postContent, $matches);
+
+		if (!array_key_exists(5, $matches)) {
+			return false;
+		}
+
+		foreach ($matches[5] as $encodedContent) {
+			$decodedContent = rawurldecode(base64_decode($encodedContent));
+			if ($this->postContainsViewName($decodedContent, $detailViewName)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
