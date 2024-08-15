@@ -45,10 +45,6 @@ jQuery(document).ready(function($){
 		getCheckedFieldButton(this);
 	});
 
-	if ($('.custom-multi-select2').length > 0) {
-		$('.custom-multi-select2').select2();
-	}
-
 	$('.item-edit').click(function() {
 		$(this).parent().parent().parent().parent().find('.menu-item-settings').toggle();
 	});
