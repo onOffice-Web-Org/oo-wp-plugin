@@ -81,7 +81,7 @@ class FormPostInterest
 		/* @var $pFormConfiguration DataFormConfigurationInterest */
 		$pFormConfiguration = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfiguration->getRecipientByUserSelection();
-		$subject = $pFormConfiguration->getSubject();
+		$subject = $this->processSubject($pFormConfiguration->getSubject(), $pFormData->getValues(), $pFormData->getFormtype(), $this->_pFormPostInterestConfiguration->getNewsletterAccepted());
 
 		try {
 			if ( $pFormConfiguration->getCreateInterest() ) {

@@ -88,7 +88,7 @@ class FormPostContact
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfig->getRecipientByUserSelection();
-		$subject = $pFormConfig->getSubject();
+		$subject = $this->processSubject($pFormConfig->getSubject(), $pFormData->getValues(), $pFormData->getFormtype(), $this->_pFormPostContactConfiguration->getNewsletterAccepted());
 
 		try {
 			if ($pFormConfig->getCreateAddress()) {
@@ -189,7 +189,7 @@ class FormPostContact
 			'addressdata' => $addressData,
 			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
 			'message' => $message . $this->_messageDuplicateAddressData,
-			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
+			'subject' => sanitize_text_field(self::PORTALFILTER_IDENTIFIER.' '.$subject),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),
 			'estatedata' => ["objekttitel", "ort", "plz", "land"],

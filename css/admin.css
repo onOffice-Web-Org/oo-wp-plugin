@@ -865,3 +865,51 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 		margin-top: 10px;
 	}
 }
+
+.oo-poststuff .oo-subject-container {
+	margin: 20px;
+}
+
+.oo-poststuff .oo-subject-container .oo-subject-title {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	min-height: 40px;
+	position: relative;
+}
+
+.oo-poststuff .oo-subject-container .oo-tag {
+	background-color: rgb(164, 40, 106);
+	border: 1px solid rgb(164, 40, 106);
+	color: #fff;
+	border-radius: 17px;
+	padding: 5px;
+	margin: 2px;
+	display: inline-flex;
+	align-items: center;
+}
+
+.oo-poststuff .oo-subject-container .oo-tag .oo-remove-tag {
+	cursor: pointer;
+}
+
+.oo-poststuff .oo-subject-container .oo-subject-suggestions {
+	border: 1px solid #ccc;
+	background-color: #fff;
+	position: absolute;
+	z-index: 1000;
+	max-height: 150px;
+	overflow-y: auto;
+	display: none;
+	min-width: 300px;
+}
+
+.oo-poststuff .oo-subject-container .oo-suggestion-item {
+	padding: 5px;
+	cursor: pointer;
+}
+
+.oo-poststuff .oo-subject-container .oo-suggestion-item:hover {
+	background-color: #f0f0f0;
+}

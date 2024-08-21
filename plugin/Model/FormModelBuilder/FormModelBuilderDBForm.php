@@ -345,6 +345,20 @@ class FormModelBuilderDBForm
 		return $pInputModelFormRecipient;
 	}
 
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelSubject(): InputModelDB
+	{
+		$labelSubject = __('Subject (optional)', 'onoffice-for-wp-websites');
+
+		$pInputModelFormSubject = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT, $labelSubject);
+		$pInputModelFormSubject->setHtmlType(InputModelBase::HTML_TYPE_VARIABLE_INSERT);
+		$pInputModelFormSubject->setValue($this->getValue('subject'));
+
+		return $pInputModelFormSubject;
+	}
 
 	/**
 	 * @return InputModelDB

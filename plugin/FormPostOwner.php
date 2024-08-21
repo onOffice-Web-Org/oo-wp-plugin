@@ -97,7 +97,7 @@ class FormPostOwner
 		$this->_pFormData = $pFormData;
 
 		$recipient = $pDataFormConfiguration->getRecipientByUserSelection();
-		$subject = $pDataFormConfiguration->getSubject();
+		$subject = $this->processSubject($pDataFormConfiguration->getSubject(), $pFormData->getValues(), $pFormData->getFormtype(), $this->_pFormPostOwnerConfiguration->getNewsletterAccepted());
 		$estateData = $this->getEstateData();
 
 		try {

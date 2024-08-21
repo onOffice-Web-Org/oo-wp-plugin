@@ -293,6 +293,10 @@ class InputModelRenderer
                 }
 				$pInstance->setCheckedValues($pInputModel->getValue());
 			break;
+
+			case InputModelBase::HTML_TYPE_VARIABLE_INSERT:
+                $pInstance = new InputFieldVariableInsertRenderer($elementName, $pInputModel->getValue());
+			break;
 		}
 
 		if ($pInstance !== null) {
