@@ -287,12 +287,14 @@ $dimensions = [
 						if (empty($contactData[$field])) {
 							continue;
 						} elseif (is_array($contactData[$field])) {
+							echo '<div class="oo-field-label">'. esc_html($pEstates->getFieldLabel($field)) .'</div>';
 							echo '<div class="oo-aspinfo oo-contact-info">';
 							foreach ($contactData[$field] as $item) {
 								echo '<p>' . esc_html($item) . '</p>';
 							}
 							echo '</div>';
 						} else {
+							echo '<div class="oo-field-label">'. esc_html($pEstates->getFieldLabel($field)) .'</div>';
 							echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($contactData[$field]) . '</p></div>';
 						}
 					} ?>
