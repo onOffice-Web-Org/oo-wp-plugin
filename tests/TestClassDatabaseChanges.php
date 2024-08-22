@@ -203,7 +203,7 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(7))
+		$this->_pWPDBMock->expects($this->exactly(8))
 			->method('get_results')
 			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput);
 
@@ -255,7 +255,7 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(5))
+		$this->_pWPDBMock->expects($this->exactly(6))
 			->method('get_results')
 			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput);
 
