@@ -119,7 +119,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(47, $dbversion);
+		$this->assertEquals(48, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -272,7 +272,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(47, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(48, DatabaseChanges::MAX_VERSION);
 	}
 
 
