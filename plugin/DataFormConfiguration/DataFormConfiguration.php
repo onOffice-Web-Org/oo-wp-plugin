@@ -67,8 +67,8 @@ class DataFormConfiguration
 	/** @var bool */
 	private $_showEstateContext = false;
 
-	/** @var bool */
-	private $_contactType = '';
+	/** @var array */
+	private $_contactType = [];
 
 	/** @var string */
 	private $_recipient = '';
@@ -78,6 +78,9 @@ class DataFormConfiguration
 
 	/** @var array */
 	private $_markdownFields = [];
+
+	/** @var array */
+	private $_hiddenFields = [];
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -139,8 +142,8 @@ class DataFormConfiguration
 	public function setShowEstateContext(bool $showEstateContext)
 		{ $this->_showEstateContext = $showEstateContext; }
 
-	/** @param string $contactTypeField */
-	public function setContactTypeField(string $contactTypeField)
+	/** @param array $contactTypeField */
+	public function setContactTypeField(array $contactTypeField)
 		{ $this->_contactType = $contactTypeField; }
 
 	/** @return array */
@@ -150,6 +153,14 @@ class DataFormConfiguration
 	/** @param array $markdownFields */
 	public function setMarkdownFields(array $markdownFields)
 		{ $this->_markdownFields = $markdownFields; }
+
+	/** @return array */
+	public function getHiddenFields(): array
+	{ return $this->_hiddenFields; }
+
+	/** @param string $hiddenField */
+	public function addHiddenFields(string $hiddenField)
+	{ $this->_hiddenFields []= $hiddenField; }
 
 	/** @param string $requiredField */
 	public function addMarkdownFields(string $markdownFields)
@@ -208,8 +219,8 @@ class DataFormConfiguration
 	public function getShowEstateContext(): bool
 		{ return $this->_showEstateContext; }
 
-	/** @return string */
-	public function getContactType(): string
+	/** @return array */
+	public function getContactType(): array
 		{ return $this->_contactType; }
 
 	/** @return bool */
