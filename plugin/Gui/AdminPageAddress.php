@@ -24,9 +24,7 @@ namespace onOffice\WPlugin\Gui;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
-use onOffice\WPlugin\Gui\Table\AddressListTable;
 use onOffice\WPlugin\Record\RecordManagerDeleteListViewAddress;
-use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewAddress;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
@@ -36,7 +34,6 @@ use function add_query_arg;
 use function admin_url;
 use function check_admin_referer;
 use function esc_html__;
-use function add_screen_option;
 
 /**
  *

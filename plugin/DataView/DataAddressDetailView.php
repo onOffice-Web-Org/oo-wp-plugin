@@ -37,10 +37,34 @@ class DataAddressDetailView
 	const FIELDS = 'fields';
 
 	/** */
+	const ESTATE_FIELDS = 'estateFields';
+
+	/** */
 	const TEMPLATE = 'template';
 
 	/** */
 	const PICTURES = 'pictures';
+
+	/** */
+	const SHOW_STATUS = 'showStatus';
+
+	/** */
+	const ENABLE_LINKED_ESTATES = 'enableLinkedEstates';
+
+	/** */
+	const ENABLE_REFERENCE_ESTATE = 'showReferenceEstate';
+
+	/** */
+	const FILTERID = 'filterId';
+
+	/** */
+	const RECORDS_PER_PAGE = 'recordsPerPage';
+
+	/** */
+	const SHOW_PRICE_ON_REQUEST = 'showPriceOnRequest';
+
+	/** */
+	const SHOW_MAP = 'showMap';
 
 	/** */
 	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_address_translated_labels';
@@ -54,6 +78,36 @@ class DataAddressDetailView
 		'Email',
 		'Telefon1',
 		'Telefax1',
+	];
+
+	/** @var string[] */
+	private $_estateFields = [
+		'objekttitel',
+		'objektart',
+		'objekttyp',
+		'vermarktungsart',
+		'plz',
+		'ort',
+		'objektnr_extern',
+		'wohnflaeche',
+		'grundstuecksflaeche',
+		'nutzflaeche',
+		'anzahl_zimmer',
+		'anzahl_badezimmer',
+		'kaufpreis',
+		'kaltmiete',
+		'objektbeschreibung',
+		'lage',
+		'ausstatt_beschr',
+		'sonstige_angaben',
+		'baujahr',
+		'endenergiebedarf',
+		'energieverbrauchskennwert',
+		'energieausweistyp',
+		'energieausweis_gueltig_bis',
+		'energyClass',
+		'aussen_courtage',
+		'kaution',
 	];
 
 	/** @var string[] */
@@ -74,6 +128,27 @@ class DataAddressDetailView
 	/** @var string */
 	private $_shortCodeForm = '';
 
+	/** @var bool */
+	private $_enableLinkedEstates = false;
+
+	/** @var string */
+	private $_showReferenceEstate = '0';
+
+	/** @var int */
+	private $_filterId = 0;
+
+	/** @var int */
+	private $_recordsPerPage = 12;
+
+	/** @var bool */
+	private $_showStatus = false;
+
+	/** @var bool */
+	private $_showPriceOnRequest = false;
+
+	/** @var bool */
+	private $_showMap = false;
+
 	/** @return int */
 	public function getPageId(): int
 		{ return $this->_pageId; }
@@ -89,6 +164,14 @@ class DataAddressDetailView
 	/** @return string[] */
 	public function getFields(): array
 		{ return $this->_fields; }
+
+	/** @return string[] */
+	public function getEstateFields(): array
+		{ return $this->_estateFields; }
+
+	/** @param array $estateFields */
+	public function setEstateFields(array $estateFields)
+		{ $this->_estateFields = $estateFields; }
 
 	/** @return array */
 	public function getPictureTypes(): array
@@ -137,4 +220,60 @@ class DataAddressDetailView
 	/** @param array $customLabel */
 	public function setCustomLabels(array $customLabel)
 		{ $this->_customLabel = $customLabel; }
+
+	/** @return bool */
+	public function getEnableLinkedEstates(): bool
+		{ return $this->_enableLinkedEstates; }
+
+	/** @param bool $enableLinkedEstates */
+	public function setEnableLinkedEstates(bool $enableLinkedEstates)
+		{ $this->_enableLinkedEstates = $enableLinkedEstates; }
+
+	/** @return string */
+	public function getShowReferenceEstate(): string
+	{ return $this->_showReferenceEstate; }
+
+	/** @param string $showReferenceEstate */
+	public function setShowReferenceEstate(string $showReferenceEstate)
+		{ $this->_showReferenceEstate = $showReferenceEstate; }
+
+	/** @return int */
+	public function getFilterId(): int
+		{ return $this->_filterId; }
+
+	/** @param int $filterId */
+	public function setFilterId(int $filterId)
+		{ $this->_filterId = $filterId; }
+
+	/** @return int */
+	public function getRecordsPerPage(): int
+		{ return $this->_recordsPerPage; }
+
+	/** @param int $recordsPerPage */
+	public function setRecordsPerPage(int $recordsPerPage)
+		{ $this->_recordsPerPage = $recordsPerPage; }
+
+	/** @return bool */
+	public function getShowStatus(): bool
+		{ return $this->_showStatus;}
+
+	/** @param bool $showStatus */
+	public function setShowStatus(bool $showStatus)
+		{ $this->_showStatus = $showStatus; }
+
+	/** @return bool */
+	public function getShowPriceOnRequest(): bool
+		{ return $this->_showPriceOnRequest; }
+
+	/** @param bool $showPriceOnRequest */
+	public function setShowPriceOnRequest(bool $showPriceOnRequest)
+		{ $this->_showPriceOnRequest = $showPriceOnRequest; }
+
+	/** @return bool */
+	public function getShowMap(): bool
+		{ return $this->_showMap; }
+
+	/** @param bool $showMap */
+	public function setShowMap(bool $showMap)
+		{ $this->_showMap = $showMap; }
 }

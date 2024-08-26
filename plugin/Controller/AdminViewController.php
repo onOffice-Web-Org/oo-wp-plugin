@@ -180,7 +180,7 @@ class AdminViewController
 
 		// Addresses
 		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice-for-wp-websites'),
-			__('Addresses', 'onoffice-for-wp-websites'), $roleAddress, 
+			__('Addresses', 'onoffice-for-wp-websites'), $roleAddress,
 			$this->_pageSlug.'-addresses', array($this->_pAdminPageAddresses, 'render'));
 		add_action('load-'.$hookAddresses, [$this->_pAdminPageAddresses, 'handleAdminNotices']);
 		$pSelectedSubPageForAddress = $this->_pAdminPageAddresses->getSelectedAdminPage();

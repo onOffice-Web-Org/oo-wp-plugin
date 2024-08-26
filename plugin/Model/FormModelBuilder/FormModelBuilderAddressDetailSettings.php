@@ -42,6 +42,9 @@ use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
+use onOffice\WPlugin\DataView\DataListView;
 use DI\ContainerBuilder;
 use DI\Container;
 use onOffice\WPlugin\Types\Field;
@@ -144,10 +147,20 @@ class FormModelBuilderAddressDetailSettings
 	 */
 	public function createSortableFieldList($module, string $htmlType): InputModelOption
 	{
-		$pInputModelFieldsConfig = $this->_pInputModelAddressDetailFactory->create
-		(InputModelOptionFactoryAddressDetailView::INPUT_FIELD_CONFIG, null, true);
+		$fields = [];
 
-		$fields = $this->_pDataAddressDetail->getFields();
+		if ($module == onOfficeSDK::MODULE_ADDRESS) {
+			$pInputModelFieldsConfig = $this->_pInputModelAddressDetailFactory->create
+				(InputModelOptionFactoryAddressDetailView::INPUT_FIELD_CONFIG, null, true);
+			$fields = $this->_pDataAddressDetail->getFields();
+		} elseif ($module == onOfficeSDK::MODULE_ESTATE) {
+			$pInputModelFieldsConfig = $this->_pInputModelAddressDetailFactory->create
+				(InputModelOptionFactoryAddressDetailView::INPUT_ESTATE_FIELD_CONFIG, null, true);
+			$fields = $this->_pDataAddressDetail->getEstateFields();
+		} else {
+			throw new UnknownModuleException();
+		}
+	
 		$fieldNames = $this->getFieldnames()->getFieldList($module);
 
 		$fieldNamesArray = [];
@@ -271,8 +284,21 @@ class FormModelBuilderAddressDetailSettings
 		(InputModelOptionFactoryAddressDetailView::INPUT_FIELD_CONFIG, null, true);
 		$fields = $this->_pDataAddressDetail->getFields();
 
-		$fieldNames = $this->getFieldnames()->getFieldList($module);
+		$fieldNames = [];
 
+		if (is_array($module)) {
+			foreach ($module as $submodule) {
+				$newFields = $this->getFieldnames()->getFieldList($submodule);
+				$fieldNames = array_merge($fieldNames, $newFields);
+			}
+		}
+
+		foreach ($fieldNames as $key => $pField) {
+			$action = $pField['module'] === onOfficeSDK::MODULE_ADDRESS ? onOfficeSDK::MODULE_ADDRESS : onOfficeSDK::MODULE_ESTATE;
+			$fieldNames[$key]['action'] = $action;
+		}
+
+		$fields = array_merge($this->_pDataAddressDetail->getFields(), $this->_pDataAddressDetail->getEstateFields()) ?? [];
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
 		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNames));
 		$pInputModelFieldsConfig->setValue($fields);
@@ -315,7 +341,6 @@ class FormModelBuilderAddressDetailSettings
 		return $pInputModel;
 	}
 
-
 	/**
 	 *
 	 * @return InputModelOption
@@ -357,5 +382,139 @@ class FormModelBuilderAddressDetailSettings
 		}
 
 		return $shortCodeForm;
+	}
+
+	/**
+	 * @return array
+	 */
+	static public function getListViewReferenceEstates(): array
+	{
+		return array(
+			DataListView::HIDE_REFERENCE_ESTATE => __('Hide reference estates', 'onoffice-for-wp-websites'),
+			DataListView::SHOW_REFERENCE_ESTATE => __('Show reference estates (alongside others)', 'onoffice-for-wp-websites'),
+			DataListView::SHOW_ONLY_REFERENCE_ESTATE => __('Show only reference estates (filter out all others)', 'onoffice-for-wp-websites'),
+		);
+	}
+
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
+	public function createInputModelEnableLinkedEstates(): InputModelOption
+	{
+		$labelEnableLinkedEstates = __('Show Linked Estates', 'onoffice-for-wp-websites');
+
+		$pInputModelEnableLinkedEstates = $this->_pInputModelAddressDetailFactory->create
+		(InputModelOptionFactoryAddressDetailView::INPUT_ENABLE_LINKED_ESTATES, $labelEnableLinkedEstates);
+		$pInputModelEnableLinkedEstates->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+
+		$pInputModelEnableLinkedEstates->setValue($this->_pDataAddressDetail->getEnableLinkedEstates());
+		$pInputModelEnableLinkedEstates->setValuesAvailable(1);
+
+		return $pInputModelEnableLinkedEstates;
+	}
+
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
+	public function createInputModelShowEstateStatus(): InputModelOption
+	{
+		$labelShowStatus = __('Show Estate Status', 'onoffice-for-wp-websites');
+
+		$pInputModelShowStatus = $this->_pInputModelAddressDetailFactory->create
+		(InputModelOptionFactoryAddressDetailView::INPUT_SHOW_STATUS, $labelShowStatus);
+		$pInputModelShowStatus->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelShowStatus->setValue($this->_pDataAddressDetail->getShowStatus());
+		$pInputModelShowStatus->setValuesAvailable(1);
+
+		return $pInputModelShowStatus;
+	}
+
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
+	public function createInputModelShowReferenceEstates(): InputModelOption
+	{
+		$labelShowReferenceEstate = __('Reference estates', 'onoffice-for-wp-websites');
+
+		$pInputModelShowReferenceEstate = $this->_pInputModelAddressDetailFactory->create
+		(InputModelOptionFactoryAddressDetailView::INPUT_SHOW_REFERENCE_ESTATE, $labelShowReferenceEstate);
+		$pInputModelShowReferenceEstate->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelShowReferenceEstate->setValue($this->_pDataAddressDetail->getShowReferenceEstate());
+		$pInputModelShowReferenceEstate->setValuesAvailable(self::getListViewReferenceEstates());
+
+		return $pInputModelShowReferenceEstate;
+	}
+
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
+	public function createInputModelFilter(): InputModelOption
+	{
+		$labelFilterName = __('Filter', 'onoffice-for-wp-websites');
+
+		$pInputModelFilterName = $this->_pInputModelAddressDetailFactory->create
+		(InputModelOptionFactoryAddressDetailView::INPUT_FILTERID, $labelFilterName);
+		$pInputModelFilterName->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$availableFilters = array(0 => '') + $this->readFilters(onOfficeSDK::MODULE_ESTATE);
+		$pInputModelFilterName->setValuesAvailable($availableFilters);
+		$pInputModelFilterName->setValue($this->_pDataAddressDetail->getFilterId());
+
+		return $pInputModelFilterName;
+	}
+
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
+	public function createInputModelRecordsPerPage(): InputModelOption
+	{
+		$labelRecordsPerPage = __('Estates per page', 'onoffice-for-wp-websites');
+
+		$pInputModelRecordsPerPage = $this->_pInputModelAddressDetailFactory->create
+		(InputModelOptionFactoryAddressDetailView::INPUT_RECORDS_PER_PAGE, $labelRecordsPerPage);
+		$pInputModelRecordsPerPage->setHtmlType(InputModelBase::HTML_TYPE_NUMBER);
+		$pInputModelRecordsPerPage->setValue($this->_pDataAddressDetail->getRecordsPerPage());
+		$pInputModelRecordsPerPage->setMaxValueHtml(500);
+		$pInputModelRecordsPerPage->setHintHtml(__('You can show up to 500 per page.', 'onoffice-for-wp-websites'));
+
+		return $pInputModelRecordsPerPage;
+	}
+
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
+	public function createInputModelShowPriceOnRequest(): InputModelOption
+	{
+		$labelShowPriceOnRequest = __('Show price on request', 'onoffice-for-wp-websites');
+
+		$pInputModelShowPriceOnRequest = $this->_pInputModelAddressDetailFactory->create
+		(InputModelOptionFactoryAddressDetailView::INPUT_SHOW_PRICE_ON_REQUEST, $labelShowPriceOnRequest);
+		$pInputModelShowPriceOnRequest->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelShowPriceOnRequest->setValue($this->_pDataAddressDetail->getShowPriceOnRequest());
+		$pInputModelShowPriceOnRequest->setValuesAvailable(1);
+
+		return $pInputModelShowPriceOnRequest;
+	}
+
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
+	public function createInputModelShowMap(): InputModelOption
+	{
+		$labelShowMap = __('Show estate map', 'onoffice-for-wp-websites');
+
+		$pInputModelShowMap = $this->_pInputModelAddressDetailFactory->create
+		(InputModelOptionFactoryAddressDetailView::INPUT_SHOW_MAP, $labelShowMap);
+		$pInputModelShowMap->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelShowMap->setValue($this->_pDataAddressDetail->getShowMap());
+		$pInputModelShowMap->setValuesAvailable(1);
+
+		return $pInputModelShowMap;
 	}
 }

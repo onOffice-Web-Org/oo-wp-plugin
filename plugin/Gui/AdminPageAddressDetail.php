@@ -73,6 +73,9 @@ class AdminPageAddressDetail
 	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
 
 	/** */
+	const FORM_VIEW_CONTACT_DATA_FIELDS = 'viewcontactdatafields';
+
+	/** */
 	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
 
 	/** */
@@ -83,6 +86,9 @@ class AdminPageAddressDetail
 
 	/** */
 	const CUSTOM_LABELS = 'customlabels';
+
+	/** */
+	const FORM_VIEW_ESTATE_CONFIG = 'viewEstatesConfig';
 
 	/**
 	 *
@@ -110,6 +116,7 @@ class AdminPageAddressDetail
 		$pRenderer = $this->getContainer()->get(InputModelRenderer::class);
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
 		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
+		$pFormViewSortableContactFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_DATA_FIELDS);
 
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
@@ -165,8 +172,23 @@ class AdminPageAddressDetail
 		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
 		echo '</div>';
 
-		echo '<div class="fieldsSortable postbox">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Fields', 'onoffice-for-wp-websites') . '</span></h2>';
+		echo '<div class="fieldsSortable postbox" id="'
+			 .esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
+		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Contact Person Fields', 'onoffice-for-wp-websites').'</span></h2>';
+		$pRenderer->buildForAjax($pFormViewSortableContactFields);
+		echo '</div>';
+		echo '<div class="clear"></div>';
+		echo '<div class="clear"></div>';
+		do_action('add_meta_boxes', get_current_screen()->id, null);
+		echo '<div style="float:left;">';
+		$this->generateAccordionBoxesForEstateFields();
+		echo '</div>';
+		echo '<div id="listSettings" style="float:left;" class="postbox">';
+		do_accordion_sections(get_current_screen()->id, 'estatedata', null);
+		echo '</div>';
+		echo '<div class="fieldsSortable postbox" id="'
+			 .esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
+		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Real Estate Fields', 'onoffice-for-wp-websites').'</span></h2>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
@@ -207,6 +229,9 @@ class AdminPageAddressDetail
 
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
+
+		$pFormEstateConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_ESTATE_CONFIG);
+		$this->createMetaBoxByForm($pFormEstateConfig, 'side');
 	}
 
 	/**
@@ -222,6 +247,20 @@ class AdminPageAddressDetail
 			if (!is_null($pFormFieldsConfig))
 			{
 				$this->createMetaBoxByForm($pFormFieldsConfig, 'contactperson');
+			}
+		}
+	}
+
+	protected function generateAccordionBoxesForEstateFields()
+	{
+		$fieldNames = array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE));
+
+		foreach ($fieldNames as $category) {
+			$slug = $this->generateGroupSlugByModuleCategory(onOfficeSDK::MODULE_ESTATE, $category);
+			$pFormFieldsConfig = $this->getFormModelByGroupSlug($slug);
+			if (!is_null($pFormFieldsConfig))
+			{
+				$this->createMetaBoxByForm($pFormFieldsConfig, 'estatedata');
 			}
 		}
 	}
@@ -253,14 +292,37 @@ class AdminPageAddressDetail
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
 
+		$pInputModelEnableLinkedEstates= $pFormModelBuilder->createInputModelEnableLinkedEstates();
+		$pInputModelShowEstateStatus = $pFormModelBuilder->createInputModelShowEstateStatus();
+		$pInputModelShowReferenceEstates = $pFormModelBuilder->createInputModelShowReferenceEstates();
+		$pInputModelFilters = $pFormModelBuilder->createInputModelFilter();
+		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
+		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
+		$pInputModelShowEstateMap = $pFormModelBuilder->createInputModelShowMap();
+		$pFormModelEstates = new FormModel();
+		$pFormModelEstates->setPageSlug($this->getPageSlug());
+		$pFormModelEstates->setGroupSlug(self::FORM_VIEW_ESTATE_CONFIG);
+		$pFormModelEstates->setLabel(__('Estates', 'onoffice-for-wp-websites'));
+		$pFormModelEstates->addInputModel($pInputModelEnableLinkedEstates);
+		$pFormModelEstates->addInputModel($pInputModelShowReferenceEstates);
+		$pFormModelEstates->addInputModel($pInputModelFilters);
+		$pFormModelEstates->addInputModel($pInputModelRecordsPerPage);
+		$pFormModelEstates->addInputModel($pInputModelShowEstateStatus);
+		$pFormModelEstates->addInputModel($pInputModelShowPriceOnRequest);
+		$pFormModelEstates->addInputModel($pInputModelShowEstateMap);
+		$this->addFormModel($pFormModelEstates);
+
 		$pEnvironment = new AddressListEnvironmentDefault();
 		$pBuilderShort = $pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollection = new FieldsCollection();
 		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-			$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS, $pFieldsCollection);
+		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS, $pFieldsCollection);
+		$fieldNamesForEstate = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, $pFieldsCollection);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS,
-			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldNames);
-		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder);
+			self::FORM_VIEW_CONTACT_DATA_FIELDS, $pFormModelBuilder, $fieldNames);
+		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE,
+			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldNamesForEstate);
+		$this->addSearchFieldForFieldLists([onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE], $pFormModelBuilder);
 	}
 
 	/**
@@ -293,6 +355,7 @@ class AdminPageAddressDetail
 
 		$pDataAddressDetailViewHandler = new DataAddressDetailViewHandler();
 		$valuesPrefixless       = $pInputModelDBAdapterArray->generateValuesArray();
+		$valuesPrefixless       = $this->setRecordsPerPage($valuesPrefixless);
 		$valuesPrefixless       = $this->saveField($valuesPrefixless, $values);
 		$pDataDetailView        = $pDataAddressDetailViewHandler->createAddressDetailViewByValues( $valuesPrefixless );
 		$success                = true;
@@ -320,6 +383,10 @@ class AdminPageAddressDetail
 			array('jquery'), '', true);
 
 		wp_enqueue_script('admin-js');
+		wp_register_script('checkbox', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/checkbox.min.js',
+				array('jquery'), '', true);
+
+		wp_enqueue_script('checkbox');
 		wp_enqueue_script('postbox');
 		wp_register_script( 'oo-copy-shortcode',
 			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-copycode.min.js',
@@ -392,6 +459,7 @@ class AdminPageAddressDetail
 			$pFormModelFieldsConfig->setGroupSlug($slug);
 			$pFormModelFieldsConfig->setLabel($category);
 			$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
+			$pInputModelFieldsConfig->setSpecialDivId(self::getSpecialDivId($module));
 			$this->addFormModel($pFormModelFieldsConfig);
 		}
 
@@ -422,14 +490,14 @@ class AdminPageAddressDetail
 	}
 
 	/**
-	 * @param string $module
+	 * @param array $module
 	 * @param FormModelBuilderAddressDetailSettings $pFormModelBuilder
 	 * @param string $htmlType
 	 * @return void
 	 * @throws ExceptionInputModelMissingField
 	 */
 
-	private function addSearchFieldForFieldLists(string $module, FormModelBuilderAddressDetailSettings $pFormModelBuilder, string $htmlType = InputModelBase::HTML_SEARCH_FIELD_FOR_FIELD_LISTS)
+	private function addSearchFieldForFieldLists(array $module, FormModelBuilderAddressDetailSettings $pFormModelBuilder, string $htmlType = InputModelBase::HTML_SEARCH_FIELD_FOR_FIELD_LISTS)
 	{
 		$pInputModelSearchFieldForFieldLists = $pFormModelBuilder->createSearchFieldForFieldLists($module, $htmlType);
 
@@ -469,7 +537,7 @@ class AdminPageAddressDetail
 		$pFieldsCollectionBuilder->addFieldsAddressEstate($pDefaultFieldsCollection);
 
 		foreach ($pDefaultFieldsCollection->getAllFields() as $pField) {
-			if (!in_array($pField->getModule(), [onOfficeSDK::MODULE_ADDRESS], true)) {
+			if (!in_array($pField->getModule(), [onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE], true)) {
 				$pDefaultFieldsCollection->removeFieldByModuleAndName
 				($pField->getModule(), $pField->getName());
 			}
@@ -545,5 +613,26 @@ class AdminPageAddressDetail
 		}
 
 		return $value;
+	}
+
+	/**
+	 * @param array $row
+	 *
+	 * @return array
+	 */
+	private function setRecordsPerPage(array $row): array
+	{
+		$recordsPerPage = (int)$row['recordsPerPage'];
+		$row['recordsPerPage'] = $recordsPerPage > 0 ? $recordsPerPage : 20;
+		return $row;
+	}
+
+	/**
+	 * @param string $module
+	 * @return string
+	 */
+	private static function getSpecialDivId(string $module): string
+	{
+		return 'actionFor'.$module;
 	}
 }
