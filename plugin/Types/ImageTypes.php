@@ -33,6 +33,7 @@ class ImageTypes
 	const LOCATION_MAP = 'Lageplan';
 	const ENERGY_PASS_RANGE = 'Epass_Skala';
 	const PASSPORTPHOTO = 'PassportPhoto';
+	const USERPHOTO = 'UserPhoto';
 
 	const IMAGE_TYPES = [
 		self::TITLE,
@@ -75,6 +76,7 @@ class ImageTypes
 	public static function getImageTypesForAddress(): array
 	{
 		return [
+			self::USERPHOTO => __('User Photo', 'onoffice-for-wp-websites'),
 			self::PASSPORTPHOTO => __('Passport Photo', 'onoffice-for-wp-websites')
 		];
 	}

@@ -24,7 +24,9 @@ namespace onOffice\WPlugin\Gui;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
+use onOffice\WPlugin\Gui\Table\AddressListTable;
 use onOffice\WPlugin\Record\RecordManagerDeleteListViewAddress;
+use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewAddress;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
@@ -33,7 +35,8 @@ use function add_filter;
 use function add_query_arg;
 use function admin_url;
 use function check_admin_referer;
-use Exception;
+use function esc_html__;
+use function add_screen_option;
 
 /**
  *
@@ -67,8 +70,9 @@ class AdminPageAddress
 	private $_pSelectedTab = null;
 
 	/**
+	 *
 	 * @param string $pageSlug
-	 * @throws Exception
+	 *
 	 */
 
 	public function __construct($pageSlug)
@@ -90,7 +94,7 @@ class AdminPageAddress
 	 *
 	 */
 
-	private function getSelectedTab()
+	private function getSelectedTab(): string
 	{
 		$selectedTab = $this->getDefaultTab();
 		$getParamTab = filter_input(INPUT_GET, self::PARAM_TAB);
@@ -154,11 +158,31 @@ class AdminPageAddress
 	 *
 	 */
 
-	private function getDefaultTab()
+	private function getDefaultTab(): string
 	{
 		return self::PAGE_ADDRESS_LIST;
 	}
 
+	/**
+	 *
+	 * @param string $subTitle
+	 *
+	 */
+
+	public function generatePageMainTitle($subTitle)
+	{
+		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice-for-wp-websites');
+
+		if ($subTitle != '') {
+			echo ' › ' .  esc_html( $subTitle );
+		}
+
+		echo '</h1>';
+
+		$newLink = admin_url('admin.php?page=onoffice-editlistviewaddress');
+		echo '<a href="'.$newLink.'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
+		echo '<hr class="wp-header-end">';
+	}
 
 	/**
 	 *
@@ -218,6 +242,7 @@ class AdminPageAddress
 				$listViewRootId = $_GET['listViewId'];
 				$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
 			}
+
 			return $redirectTo;
 		};
 

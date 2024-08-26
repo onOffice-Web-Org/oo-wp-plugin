@@ -41,6 +41,7 @@ class RewriteRuleBuilder
 	/**
 	 * @param DataDetailViewHandler $pDataDetailViewHandler
 	 * @param WPPageWrapper $pWPPageWrapper
+	 * @param DataAddressDetailViewHandler $pDataAddressDetailViewHandler
 	 */
 	public function __construct(
 		DataDetailViewHandler $pDataDetailViewHandler,
