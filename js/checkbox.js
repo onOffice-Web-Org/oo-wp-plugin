@@ -45,7 +45,7 @@ onOffice.checkboxAdmin = function() {
 				invert: true
 			}
 		],
-    "input[name^=oopluginformfieldconfig-hiddenfield]": [
+		"input[name^=oopluginformfieldconfig-hiddenfield]": [
 			{
 				element: "input[name^=oopluginformfieldconfig-required]",
 				invert: true
