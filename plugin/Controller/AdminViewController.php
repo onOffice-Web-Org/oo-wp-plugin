@@ -165,7 +165,7 @@ class AdminViewController
 		add_menu_page( __( 'onOffice', 'onoffice-for-wp-websites' ), __( 'onOffice', 'onoffice-for-wp-websites' ),
 			$roleMainPage, $this->_pageSlug, function () use ( $pDI ) {
 				echo $pDI->get( MainPage::class )->render();
-			}, plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'images/onOffice-Logo-screen_wp-grey.svg' );
+			}, 'none' );
 
 		// Getting started
 		add_submenu_page( $this->_pageSlug, __( 'Getting started', 'onoffice-for-wp-websites' ),
@@ -328,7 +328,7 @@ class AdminViewController
 	public function enqueue_css()
 	{
 		wp_enqueue_style('onoffice-admin-css',
-			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
+			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), 'v5.0');
 	}
 
 
