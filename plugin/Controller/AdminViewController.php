@@ -97,12 +97,6 @@ class AdminViewController
 	/** @var AdminPageAddress */
 	private $_pAdminPageAddresses = null;
 
-	/** */
-	const VIEW_UNSAVED_CHANGES_MESSAGE = 'view_unsaved_changes_message';
-
-	/** */
-	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
-
 	/**
 	 *
 	 */

@@ -269,13 +269,13 @@ class DetailViewPostSaveController
 				$this->deletePageUseShortCode( $pPost );
 			}
 			if ( $hasDetailPost ) {
-				if (empty($pDetailView->getPageIdsHaveDetailShortCode())) {
-					$pDetailView->setPageId(0);
-				} elseif (in_array($pDetailView->getPageId(), $posts)) {
-					$firstDetailPageId = min(array_keys($detailPageIds));
-					$pDetailView->setPageId((int) $detailPageIds[$firstDetailPageId]);
+				if ( empty( $pDetailView->getPageIdsHaveDetailShortCode() ) ) {
+					$pDetailView->setPageId( 0 );
+				} elseif ( in_array( $pDetailView->getPageId(), $posts ) ) {
+					$firstDetailPageId = min( array_keys( $detailPageIds ) );
+					$pDetailView->setPageId( (int) $detailPageIds[ $firstDetailPageId ] );
 				}
-				$pDataDetailViewHandler->saveDetailView($pDetailView);
+				$pDataDetailViewHandler->saveDetailView( $pDetailView );
 				flush_rewrite_rules();
 			}
 			if ( $hasAddressDetailPost ) {
