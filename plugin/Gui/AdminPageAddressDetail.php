@@ -236,11 +236,13 @@ class AdminPageAddressDetail
 		$this->addFormModel($pFormModel);
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
+		$pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShortCodeForm);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
@@ -446,7 +448,7 @@ class AdminPageAddressDetail
 	 *
 	 */
 
-	protected function generateGroupSlugByModuleCategory($module, $category)
+	protected function generateGroupSlugByModuleCategory($module, $category): string
 	{
 		return $module.'/'.$category;
 	}
@@ -510,7 +512,7 @@ class AdminPageAddressDetail
 	 * @param $values
 	 * @return array
 	 */
-	private function saveField(array $valuesPrefixless, $values)
+	private function saveField(array $valuesPrefixless, $values): array
 	{
 		$data = [];
 		$customLabel = (array) ($values->{'customlabel-lang'});

@@ -39,6 +39,9 @@ use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryAddressDetailView;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
+use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use DI\ContainerBuilder;
 use DI\Container;
 use onOffice\WPlugin\Types\Field;
@@ -196,7 +199,7 @@ class FormModelBuilderAddressDetailSettings
 				return '';
 		}
 	}
-		
+
 	/**
 	 *
 	 * @param string $category
@@ -310,5 +313,49 @@ class FormModelBuilderAddressDetailSettings
 		});
 
 		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelOption
+	 *
+	 * @throws UnknownFormException
+	 * @throws ExceptionInputModelMissingField
+	 */
+
+	public function createInputModelShortCodeForm()
+	{
+		$labelShortCodeForm = __('Select Contact Form', 'onoffice-for-wp-websites');
+		$pInputModelShortCodeForm = $this->_pInputModelAddressDetailFactory->create
+		(InputModelOptionFactoryAddressDetailView::INPUT_SHORT_CODE_FORM, $labelShortCodeForm);
+		$pInputModelShortCodeForm->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$nameShortCodeForms = array('' => __('No Contact Form', 'onoffice-for-wp-websites')) + $this->readNameShortCodeForm();
+		$pInputModelShortCodeForm->setValuesAvailable($nameShortCodeForms);
+
+		$pInputModelShortCodeForm->setValue($this->_pDataAddressDetail->getShortCodeForm());
+
+		return $pInputModelShortCodeForm;
+	}
+
+	/**
+	 *
+	 * @return array
+	 *
+	 * @throws UnknownFormException
+	 */
+
+	private function readNameShortCodeForm(): array
+	{
+		$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadForm::class);
+		$allRecordsForm = $recordManagerReadForm->getAllRecords();
+		$shortCodeForm = array();
+
+		foreach ($allRecordsForm as $value) {
+			$form_name = __String::getNew($value->name);
+			$shortCodeForm[$value->name] = '[oo_form form=&quot;' . esc_html($form_name) . '&quot;]';
+		}
+
+		return $shortCodeForm;
 	}
 }
