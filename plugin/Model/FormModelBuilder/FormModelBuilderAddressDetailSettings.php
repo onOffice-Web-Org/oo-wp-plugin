@@ -420,7 +420,7 @@ class FormModelBuilderAddressDetailSettings
 	 * @throws ExceptionInputModelMissingField
 	 */
 
-	public function createInputModelShortCodeReferenceEstates(): InputModelOption
+	public function createInputModelShortCodeReferenceEstate(): InputModelOption
 	{
 		$labelShortCodeReferenceEstate = __('Reference Estate', 'onoffice-for-wp-websites');
 		$pInputModelShortCodeReferenceEstate = $this->_pInputModelAddressDetailFactory->create

@@ -259,15 +259,15 @@ class AdminPageAddressDetail
 		$this->addFormModel($pFormModelPictureTypes);
 
 		$pInputModelEnableLinkedEstates = $pFormModelBuilder->createInputModelEnableLinkedEstates();
-		$pInputModelShortCodeActiveEstates = $pFormModelBuilder->createInputModelShortCodeActiveEstates();
-		$pInputModelShortCodeReferenceEstates = $pFormModelBuilder->createInputModelShortCodeReferenceEstates();
+		$pInputModelShortCodeActiveEstate = $pFormModelBuilder->createInputModelShortCodeActiveEstate();
+		$pInputModelShortCodeReferenceEstate = $pFormModelBuilder->createInputModelShortCodeReferenceEstate();
 		$pFormModelEstates = new FormModel();
 		$pFormModelEstates->setPageSlug($this->getPageSlug());
 		$pFormModelEstates->setGroupSlug(self::FORM_VIEW_ESTATE_CONFIG);
 		$pFormModelEstates->setLabel(__('Estates', 'onoffice-for-wp-websites'));
 		$pFormModelEstates->addInputModel($pInputModelEnableLinkedEstates);
-		$pFormModelEstates->addInputModel($pInputModelShortCodeActiveEstates);
-		$pFormModelEstates->addInputModel($pInputModelShortCodeReferenceEstates);
+		$pFormModelEstates->addInputModel($pInputModelShortCodeActiveEstate);
+		$pFormModelEstates->addInputModel($pInputModelShortCodeReferenceEstate);
 		$this->addFormModel($pFormModelEstates);
 
 		$pEnvironment = new AddressListEnvironmentDefault();
