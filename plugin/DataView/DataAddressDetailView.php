@@ -60,36 +60,6 @@ class DataAddressDetailView
 	];
 
 	/** @var string[] */
-	private $_estateFields = [
-		'objekttitel',
-		'objektart',
-		'objekttyp',
-		'vermarktungsart',
-		'plz',
-		'ort',
-		'objektnr_extern',
-		'wohnflaeche',
-		'grundstuecksflaeche',
-		'nutzflaeche',
-		'anzahl_zimmer',
-		'anzahl_badezimmer',
-		'kaufpreis',
-		'kaltmiete',
-		'objektbeschreibung',
-		'lage',
-		'ausstatt_beschr',
-		'sonstige_angaben',
-		'baujahr',
-		'endenergiebedarf',
-		'energieverbrauchskennwert',
-		'energieausweistyp',
-		'energieausweis_gueltig_bis',
-		'energyClass',
-		'aussen_courtage',
-		'kaution',
-	];
-
-	/** @var string[] */
 	private $_pictureTypes = [];
 
 	/** @var string */
@@ -131,14 +101,6 @@ class DataAddressDetailView
 	/** @return string[] */
 	public function getFields(): array
 		{ return $this->_fields; }
-
-	/** @return string[] */
-	public function getEstateFields(): array
-		{ return $this->_estateFields; }
-
-	/** @param array $estateFields */
-	public function setEstateFields(array $estateFields)
-		{ $this->_estateFields = $estateFields; }
 
 	/** @return array */
 	public function getPictureTypes(): array
