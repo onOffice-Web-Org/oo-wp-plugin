@@ -64,7 +64,10 @@ class ContentFilterShortCodeAddress
 	/** @var AddressListFactory */
 	private $_pAddressListFactory;
 
-	/**
+    /**  @var ContentFilterShortCodeAddressDetail */
+    private ContentFilterShortCodeAddressDetail $_pContentFilterShortCodeAddressDetail;
+
+    /**
 	 * ContentFilterShortCodeAddress constructor.
 	 *
 	 * @param SearchParametersModelBuilder $pSearchParametersModelBuilder

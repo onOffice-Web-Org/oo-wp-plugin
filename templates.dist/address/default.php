@@ -38,7 +38,8 @@ require 'SearchFormAddress.php';
 		$imageUrl = $escapedValues['imageUrl'];
 		unset($escapedValues['imageUrl']);
 	?>
-		<div class="oo-listobject">
+    <a href="<?php echo esc_url($pAddressList->getAddressLink($addressId)) ?>">
+        <div class="oo-listobject">
 			<div class="oo-listobjectwrap">
 				<?php
 				if (!empty($imageUrl)) {
@@ -66,6 +67,7 @@ require 'SearchFormAddress.php';
 				</div>
 			</div>
 		</div>
+    </a>
 	<?php } ?>
 </div>
 <div>
