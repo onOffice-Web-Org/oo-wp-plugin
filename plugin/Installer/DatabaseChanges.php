@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 46;
+	const MAX_VERSION = 47;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -317,6 +317,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 45) {
 			dbDelta($this->getCreateQueryFormFieldConfig());
 			$dbversion = 46;
+		}
+
+		if ($dbversion == 46) {
+			dbDelta($this->getCreateQueryContactTypes());
+			$this->migrateContactTypes();
+			$dbversion = 47;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -607,6 +613,45 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryContactTypes()
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_contacttypes";
+		$sql =  "CREATE TABLE $tableName (
+			`contacttype_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` int(11) NOT NULL,
+			`contact_type` varchar(100) NOT NULL,
+			PRIMARY KEY (`contacttype_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return void
+	 */
+	private function migrateContactTypes()
+	{
+		$prefix = $this->getPrefix();
+		$tableForm = $prefix."oo_plugin_forms";
+		$tableContactTypes = $prefix."oo_plugin_contacttypes";
+		$contactTypes = $this->_pWPDB->get_results("SELECT form_id, contact_type 
+			FROM $tableForm
+			WHERE contact_type IS NOT NULL 
+			AND contact_type != '' ", ARRAY_A);
+
+		if (!empty($contactTypes) && is_array($contactTypes)) {
+			foreach ($contactTypes as $contactType) {
+				$formId = esc_sql((int) $contactType['form_id']);
+				$value = esc_sql($contactType['contact_type']);
+				$this->_pWPDB->insert($tableContactTypes, ['form_id' => $formId, 'contact_type' => $value]);
+			}
+		}
+	}
 
 	/**
 	 *
@@ -907,6 +952,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_form_translated_labels",
 			$prefix."oo_plugin_fieldconfig_estate_customs_labels",
 			$prefix."oo_plugin_fieldconfig_estate_translated_labels",
+			$prefix."oo_plugin_contacttypes",
 		);
 
 		foreach ($tables as $table)	{
