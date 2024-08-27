@@ -134,6 +134,19 @@ class TestClassRecordManagerReadForm
 		];
 	}
 
+	/**
+	 * @param int $formId
+	 *
+	 * @return array
+	 */
+	private function getContactTypesArray(int $formId): array
+	{
+		return [
+			'form_id' => $formId,
+			'contact_type' => 'Owner'
+		];
+	}
+
 	public function testGetRecords()
 	{
 		$pFieldsForm = $this->_pRecordManagerReadForm->getRecords();
@@ -190,5 +203,17 @@ class TestClassRecordManagerReadForm
 		]));
 		$pFieldsForm = $this->_pRecordManagerReadForm->readFieldsByFormId(1);
 		$this->assertEquals(4, count($pFieldsForm));
+	}
+
+	/**
+	 *
+	 */
+	public function testReadContactTypesByFormId()
+	{
+		$this->_pRecordManagerReadForm->method('readContactTypesByFormId')->will($this->returnValueMap([
+			[1, $this->getContactTypesArray(1)]
+		]));
+		$pFieldsForm = $this->_pRecordManagerReadForm->readContactTypesByFormId(1);
+		$this->assertEquals(2, count($pFieldsForm));
 	}
 }
