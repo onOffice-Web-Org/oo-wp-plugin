@@ -305,46 +305,55 @@ class EstateList
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
 			onOfficeSDK::MODULE_ESTATE);
 
+		$aggregatedData = [];
+		$totalFetched = 0;
 		$this->_currentEstatePage = $currentPage;
 
-		$requestParams = [
-			'data' => $pFieldModifierHandler->getAllAPIFields(),
-			'filter' => $filter,
-			'listlimit' => $numRecordsPerPage,
-			'estatelanguage' => $language,
-			'outputlanguage' => $language,
-			'formatoutput' => $formatOutput,
-			'addMainLangId' => true,
-		];
-		if ($formatOutput !== true) {
-			$requestParams['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
-			$requestParams['data'][] = 'vermarktungsart';
-			$requestParams['data'][] = 'preisAufAnfrage';
-		}
-		if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
-			$requestParams['data'][] = 'preisAufAnfrage';
-		}
-		if ($pListView->getName() === 'detail') {
-			if ($this->getViewRestrict()) {
-				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		do {
+			$offset = $totalFetched;
+			$requestParams = [
+				'data' => $pFieldModifierHandler->getAllAPIFields(),
+				'filter' => $filter,
+				'listlimit' => $numRecordsPerPage,
+				'estatelanguage' => $language,
+				'outputlanguage' => $language,
+				'listoffset' => $offset,
+				'formatoutput' => $formatOutput,
+				'addMainLangId' => true,
+			];
+			if ($formatOutput !== true) {
+				$requestParams['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
+				$requestParams['data'][] = 'vermarktungsart';
+				$requestParams['data'][] = 'preisAufAnfrage';
 			}
-		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
-		}
+			if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
+				$requestParams['data'][] = 'preisAufAnfrage';
+			}
+			if ($pListView->getName() === 'detail') {
+				if ($this->getViewRestrict()) {
+					$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+				}
+			} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+			}
 
-		$requestParams += $this->addExtraParams();
+			$requestParams += $this->addExtraParams();
 
-		$this->_pApiClientAction->setParameters($requestParams);
-		$this->_pApiClientAction->addRequestToQueue()->sendRequests();
-		$result = $this->_pApiClientAction->getResultRecords();
+			$this->_pApiClientAction->setParameters($requestParams);
+			$this->_pApiClientAction->addRequestToQueue()->sendRequests();
+			$result = $this->_pApiClientAction->getResultRecords();
+
+			$aggregatedData = array_merge($aggregatedData, $result);
+			$totalFetched += count($result);
+		} while (count($result) == $numRecordsPerPage);
 
 		if ($formatOutput !== true) {
-			usort($result, [$this, 'sortMarkedProperties']);
+			usort($aggregatedData, [$this, 'sortMarkedProperties']);
 		}
-
-		return $result;
+		
+		return $aggregatedData;
 	}
 
 	/**
