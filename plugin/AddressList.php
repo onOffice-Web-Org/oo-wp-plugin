@@ -312,4 +312,17 @@ class AddressList
 		$pAddressList->_pDataViewAddress = $pDataListViewAddress;
 		return $pAddressList;
 	}
+
+    public function getAddressLink(string $addressId): string
+    {
+        $pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
+            ->getAddressDetailView()->getPageId();
+
+        $url = get_page_link( $pageId ) . $addressId;
+        $fullLinkElements = parse_url( $url );
+        if ( empty( $fullLinkElements['query'] ) ) {
+            $url .= '/';
+        }
+        return $url;
+    }
 }

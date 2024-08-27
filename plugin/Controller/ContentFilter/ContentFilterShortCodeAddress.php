@@ -72,7 +72,8 @@ class ContentFilterShortCodeAddress
 	 * @param Logger $pLogger
 	 * @param DataListViewFactoryAddress $pDataListFactory
 	 * @param Template $pTemplate
-	 * @param WPQueryWrapper $pWPQueryWrapper
+	 * @param WPQueryWrapper $pWPQueryWrapper,
+     * @param ContentFilterShortCodeAddressDetail $pContentFilterShortCodeAddressDetail
 	 */
 	public function __construct(
 		SearchParametersModelBuilder $pSearchParametersModelBuilder,
@@ -80,7 +81,8 @@ class ContentFilterShortCodeAddress
 		Logger $pLogger,
 		DataListViewFactoryAddress $pDataListFactory,
 		Template $pTemplate,
-		WPQueryWrapper $pWPQueryWrapper)
+		WPQueryWrapper $pWPQueryWrapper,
+        ContentFilterShortCodeAddressDetail $pContentFilterShortCodeAddressDetail)
 	{
 		$this->_pSearchParametersModelBuilder = $pSearchParametersModelBuilder;
 
@@ -89,7 +91,8 @@ class ContentFilterShortCodeAddress
 		$this->_pAddressListFactory = $pAddressListFactory;
 		$this->_pTemplate = $pTemplate;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
-	}
+        $this->_pContentFilterShortCodeAddressDetail = $pContentFilterShortCodeAddressDetail;
+    }
 
 	/**
 	 * @param array $attributesInput
@@ -103,8 +106,12 @@ class ContentFilterShortCodeAddress
 		$addressListName = $attributes['view'];
 
 		try {
-			$pTemplate = $this->createTemplate($addressListName);
-			return $pTemplate->render();
+            if ($attributes['view'] === $this->_pContentFilterShortCodeAddressDetail->getViewName()) {
+                return $this->_pContentFilterShortCodeAddressDetail->render();
+            } else {
+                $pTemplate = $this->createTemplate($addressListName);
+                return $pTemplate->render();
+            }
 		} catch (Exception $pException) {
 			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
