@@ -37,34 +37,13 @@ class DataAddressDetailView
 	const FIELDS = 'fields';
 
 	/** */
-	const ESTATE_FIELDS = 'estateFields';
-
-	/** */
 	const TEMPLATE = 'template';
 
 	/** */
 	const PICTURES = 'pictures';
 
 	/** */
-	const SHOW_STATUS = 'showStatus';
-
-	/** */
 	const ENABLE_LINKED_ESTATES = 'enableLinkedEstates';
-
-	/** */
-	const ENABLE_REFERENCE_ESTATE = 'showReferenceEstate';
-
-	/** */
-	const FILTERID = 'filterId';
-
-	/** */
-	const RECORDS_PER_PAGE = 'recordsPerPage';
-
-	/** */
-	const SHOW_PRICE_ON_REQUEST = 'showPriceOnRequest';
-
-	/** */
-	const SHOW_MAP = 'showMap';
 
 	/** */
 	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_address_translated_labels';
@@ -132,22 +111,10 @@ class DataAddressDetailView
 	private $_enableLinkedEstates = false;
 
 	/** @var string */
-	private $_showReferenceEstate = '0';
+	private $_shortCodeActiveEstate = '';
 
-	/** @var int */
-	private $_filterId = 0;
-
-	/** @var int */
-	private $_recordsPerPage = 12;
-
-	/** @var bool */
-	private $_showStatus = false;
-
-	/** @var bool */
-	private $_showPriceOnRequest = false;
-
-	/** @var bool */
-	private $_showMap = false;
+	/** @var string */
+	private $_shortCodeReferenceEstate = '';
 
 	/** @return int */
 	public function getPageId(): int
@@ -230,50 +197,18 @@ class DataAddressDetailView
 		{ $this->_enableLinkedEstates = $enableLinkedEstates; }
 
 	/** @return string */
-	public function getShowReferenceEstate(): string
-	{ return $this->_showReferenceEstate; }
+	public function getShortCodeActiveEstate(): string
+		{ return $this->_shortCodeActiveEstate; }
 
-	/** @param string $showReferenceEstate */
-	public function setShowReferenceEstate(string $showReferenceEstate)
-		{ $this->_showReferenceEstate = $showReferenceEstate; }
+	/** @param string $shortCodeActiveEstate */
+	public function setShortCodeActiveEstate(string $shortCodeActiveEstate)
+		{ $this->_shortCodeActiveEstate = $shortCodeActiveEstate; }
 
-	/** @return int */
-	public function getFilterId(): int
-		{ return $this->_filterId; }
+	/** @return string */
+	public function getShortCodeReferenceEstate(): string
+		{ return $this->_shortCodeReferenceEstate; }
 
-	/** @param int $filterId */
-	public function setFilterId(int $filterId)
-		{ $this->_filterId = $filterId; }
-
-	/** @return int */
-	public function getRecordsPerPage(): int
-		{ return $this->_recordsPerPage; }
-
-	/** @param int $recordsPerPage */
-	public function setRecordsPerPage(int $recordsPerPage)
-		{ $this->_recordsPerPage = $recordsPerPage; }
-
-	/** @return bool */
-	public function getShowStatus(): bool
-		{ return $this->_showStatus;}
-
-	/** @param bool $showStatus */
-	public function setShowStatus(bool $showStatus)
-		{ $this->_showStatus = $showStatus; }
-
-	/** @return bool */
-	public function getShowPriceOnRequest(): bool
-		{ return $this->_showPriceOnRequest; }
-
-	/** @param bool $showPriceOnRequest */
-	public function setShowPriceOnRequest(bool $showPriceOnRequest)
-		{ $this->_showPriceOnRequest = $showPriceOnRequest; }
-
-	/** @return bool */
-	public function getShowMap(): bool
-		{ return $this->_showMap; }
-
-	/** @param bool $showMap */
-	public function setShowMap(bool $showMap)
-		{ $this->_showMap = $showMap; }
+	/** @param string $shortCodeReferenceEstate */
+	public function setShortCodeReferenceEstate(string $shortCodeReferenceEstate)
+		{ $this->_shortCodeReferenceEstate = $shortCodeReferenceEstate; }
 }

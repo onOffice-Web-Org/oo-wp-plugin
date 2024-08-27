@@ -105,16 +105,11 @@ class DataAddressDetailViewHandler
 		$pDataAddressDetailView->setPictureTypes($row[DataAddressDetailView::PICTURES] ?? []);
 		$pDataAddressDetailView->setCustomLabels($row[DataAddressDetailView::FIELD_CUSTOM_LABEL] ?? $pDataAddressDetailView->getCustomLabels());
 		$pDataAddressDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
-		$pDataAddressDetailView->setEstateFields($row[DataAddressDetailView::ESTATE_FIELDS] ?? []);
 		$pDataAddressDetailView->setPictureTypes($row[DataAddressDetailView::PICTURES] ?? []);
 		$pDataAddressDetailView->setCustomLabels($row[DataAddressDetailView::FIELD_CUSTOM_LABEL] ?? $pDataAddressDetailView->getCustomLabels());
 		$pDataAddressDetailView->setEnableLinkedEstates($row[DataAddressDetailView::ENABLE_LINKED_ESTATES] ?? false);
-		$pDataAddressDetailView->setShowStatus($row[DataAddressDetailView::SHOW_STATUS] ?? false);
-		$pDataAddressDetailView->setShowReferenceEstate($row[DataAddressDetailView::ENABLE_REFERENCE_ESTATE] ?? '0');
-		$pDataAddressDetailView->setFilterId($row[DataAddressDetailView::FILTERID] ?? 0);
-		$pDataAddressDetailView->setRecordsPerPage($row[DataAddressDetailView::RECORDS_PER_PAGE] ?? 0);
-		$pDataAddressDetailView->setShowPriceOnRequest($row[DataAddressDetailView::SHOW_PRICE_ON_REQUEST] ?? false);
-		$pDataAddressDetailView->setShowMap($row[DataAddressDetailView::SHOW_MAP] ?? false);
+		$pDataAddressDetailView->setShortCodeActiveEstate($row['shortcodeActiveEstates'] ?? '');
+		$pDataAddressDetailView->setShortCodeReferenceEstate($row['shortcodeReferenceEstate'] ?? '');
 
 		return $pDataAddressDetailView;
 	}
