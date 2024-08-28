@@ -32,6 +32,7 @@ use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
+use onOffice\WPlugin\Controller\InputVariableReaderFormatter;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
@@ -304,46 +305,55 @@ class EstateList
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
 			onOfficeSDK::MODULE_ESTATE);
 
+		$aggregatedData = [];
+		$totalFetched = 0;
 		$this->_currentEstatePage = $currentPage;
 
-		$requestParams = [
-			'data' => $pFieldModifierHandler->getAllAPIFields(),
-			'filter' => $filter,
-			'listlimit' => $numRecordsPerPage,
-			'estatelanguage' => $language,
-			'outputlanguage' => $language,
-			'formatoutput' => $formatOutput,
-			'addMainLangId' => true,
-		];
-		if ($formatOutput !== true) {
-			$requestParams['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
-			$requestParams['data'][] = 'vermarktungsart';
-			$requestParams['data'][] = 'preisAufAnfrage';
-		}
-		if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
-			$requestParams['data'][] = 'preisAufAnfrage';
-		}
-		if ($pListView->getName() === 'detail') {
-			if ($this->getViewRestrict()) {
-				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		do {
+			$offset = $totalFetched;
+			$requestParams = [
+				'data' => $pFieldModifierHandler->getAllAPIFields(),
+				'filter' => $filter,
+				'listlimit' => $numRecordsPerPage,
+				'estatelanguage' => $language,
+				'outputlanguage' => $language,
+				'listoffset' => $offset,
+				'formatoutput' => $formatOutput,
+				'addMainLangId' => true,
+			];
+			if ($formatOutput !== true) {
+				$requestParams['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
+				$requestParams['data'][] = 'vermarktungsart';
+				$requestParams['data'][] = 'preisAufAnfrage';
 			}
-		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
-		}
+			if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
+				$requestParams['data'][] = 'preisAufAnfrage';
+			}
+			if ($pListView->getName() === 'detail') {
+				if ($this->getViewRestrict()) {
+					$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+				}
+			} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+			}
 
-		$requestParams += $this->addExtraParams();
+			$requestParams += $this->addExtraParams();
 
-		$this->_pApiClientAction->setParameters($requestParams);
-		$this->_pApiClientAction->addRequestToQueue()->sendRequests();
-		$result = $this->_pApiClientAction->getResultRecords();
+			$this->_pApiClientAction->setParameters($requestParams);
+			$this->_pApiClientAction->addRequestToQueue()->sendRequests();
+			$result = $this->_pApiClientAction->getResultRecords();
+
+			$aggregatedData = array_merge($aggregatedData, $result);
+			$totalFetched += count($result);
+		} while (count($result) == $numRecordsPerPage);
 
 		if ($formatOutput !== true) {
-			usort($result, [$this, 'sortMarkedProperties']);
+			usort($aggregatedData, [$this, 'sortMarkedProperties']);
 		}
-
-		return $result;
+		
+		return $aggregatedData;
 	}
 
 	/**
@@ -1036,6 +1046,10 @@ class EstateList
 			$result[$field]['name'] = $field;
 			$result[$field]['value'] = $value;
 			$result[$field]['label'] = $this->getFieldLabel($field);
+			if (in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS) && 
+				!empty(get_option('onoffice-settings-thousand-separator'))) {
+				$result[$field]['is-apply-thousand-separator'] = true;
+			}
 		}
 		return $result;
 	}

@@ -52,12 +52,6 @@ abstract class AdminPageEstateListSettingsBase
 	extends AdminPageSettingsBase
 {
 	/** */
-	const FORM_VIEW_DOCUMENT_TYPES = 'viewdocumenttypes';
-
-	/** */
-	const FORM_VIEW_FIELDS_CONFIG = 'viewfieldsconfig';
-
-	/** */
 	const CUSTOM_LABELS = 'customlabels';
 
 	/**
