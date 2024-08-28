@@ -463,7 +463,7 @@ class TestClassFormPostInterest
 				'DSGVOStatus' => "speicherungzugestimmt"
 			],
 			'message' => "\nSuchkriterien des Interessenten:\nVermarktungsart: Kauf\nComment: comment3\nKaufpreis (min): 200000\nKaufpreis (max): 800000\nStp_anzahl (min): 20\nStp_anzahl (max): 40",
-			'subject' => 'Interest',
+			'subject' => 'Interest'.' '.FormPostInterest::PORTALFILTER_IDENTIFIER,
 			'formtype' => Form::TYPE_INTEREST,
 			"referrer" => "",
 			'recipient' => 'test@my-onoffice.com',

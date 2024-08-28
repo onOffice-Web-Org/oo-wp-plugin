@@ -361,11 +361,11 @@ abstract class FormPost
 			return __('New newsletter registration', 'onoffice-for-wp-websites' );
 		}
 		switch ($formType) {
-			case 'owner':
+			case Form::TYPE_OWNER:
 				return __('Message from the owner form of your website', 'onoffice-for-wp-websites' );
-			case 'prospect':
+			case Form::TYPE_INTEREST:
 				return __('Message from the interest form on your website', 'onoffice-for-wp-websites' );
-			case 'contact':
+			case Form::TYPE_CONTACT:
 				return __('Message from the contact form of your website', 'onoffice-for-wp-websites' );
 			default:
 				return '';

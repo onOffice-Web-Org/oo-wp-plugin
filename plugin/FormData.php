@@ -194,6 +194,9 @@ class FormData
 		foreach ($this->_values as $field => $value) {
 			$inputConfigName = $pSearchcriteriaFields->getFieldNameOfInput($field);
 			$inputModule = $inputs[$inputConfigName] ?? null;
+			if ($inputModule === null) {
+				continue;
+			}
 			$pField = $pFieldsCollection->getFieldByModuleAndName($inputModule, $inputConfigName);
 			$name = $pField->getName();
 
