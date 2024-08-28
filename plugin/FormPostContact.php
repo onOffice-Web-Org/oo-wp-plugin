@@ -88,8 +88,12 @@ class FormPostContact
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfig->getRecipientByUserSelection();
-		$subject = $this->processSubject($pFormConfig->getSubject(), $pFormData->getValues(), $pFormData->getFormtype(), $this->_pFormPostContactConfiguration->getNewsletterAccepted());
-
+		$subject = $this->generateDefaultEmailSubject($pFormData->getFormtype(), $this->_pFormPostContactConfiguration->getNewsletterAccepted());
+		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
+		$estateId = $pWPQuery->get('estate_id', null);
+		if (!empty($pFormConfig->getSubject())) {
+			$subject = $this->generateCustomEmailSubject($pFormConfig->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pFormConfig->getInputs());
+		}
 		try {
 			if ($pFormConfig->getCreateAddress()) {
 				$this->createAddress($pFormData);
@@ -189,7 +193,7 @@ class FormPostContact
 			'addressdata' => $addressData,
 			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
 			'message' => $message . $this->_messageDuplicateAddressData,
-			'subject' => sanitize_text_field(self::PORTALFILTER_IDENTIFIER.' '.$subject),
+			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),
 			'estatedata' => ["objekttitel", "ort", "plz", "land"],

@@ -39,6 +39,7 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\__String;
 use const ONOFFICE_DI_CONFIG_PATH;
 
 
@@ -172,6 +173,66 @@ class FormData
 		return $searchcriteriaData;
 	}
 
+	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return array
+	 * @throws DependencyException
+	 * @throws Field\UnknownFieldException
+	 * @throws NotFoundException
+	 */
+	public function getFieldLabelsForEmailSubject(FieldsCollection $pFieldsCollection): array
+	{
+		$inputs = $this->_pDataFormConfiguration->getInputs();
+		$output = [];
+
+		$pContainerBuilder = new ContainerBuilder();
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pSearchcriteriaFields = $pContainer->get(SearchcriteriaFields::class);
+		$pInputVariableReaderAddress = $pContainer->get(InputVariableReaderParser::class);
+
+		foreach ($this->_values as $field => $value) {
+			$inputConfigName = $pSearchcriteriaFields->getFieldNameOfInput($field);
+			$inputModule = $inputs[$inputConfigName] ?? null;
+			$pField = $pFieldsCollection->getFieldByModuleAndName($inputModule, $inputConfigName);
+			$name = $pField->getName();
+
+			$value = $this->_values[$name] ?? null;
+			switch (true) {
+				case FieldTypes::isRangeType($pField->getType()):
+					if (__String::getNew($field)->endsWith(SearchcriteriaFields::RANGE_FROM)) {
+						$output[$name . SearchcriteriaFields::RANGE_FROM] = $this->_values[$name . SearchcriteriaFields::RANGE_FROM];
+					} elseif (__String::getNew($field)->endsWith(SearchcriteriaFields::RANGE_UPTO)) {
+						$output[$name . SearchcriteriaFields::RANGE_UPTO] = $this->_values[$name . SearchcriteriaFields::RANGE_UPTO];
+					} else {
+						$output[$name] = $this->_values[$name];
+					}
+					break;
+
+				case FieldTypes::isMultipleSelectType($pField->getType()):
+					if (is_array($value)) {
+						$tmpOutput = [];
+						foreach ($value as $val) {
+							$tmpOutput[] = (array_key_exists($val, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$val] : $val);
+						}
+						$output[$name] = implode(', ', $tmpOutput);
+					} else {
+						$output[$name] = (array_key_exists($value, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$value] : $value);
+					}
+					break;
+
+				case FieldTypes::FIELD_TYPE_BOOLEAN === $pField->getType():
+					$output[$name] = $pInputVariableReaderAddress->parseBool($value);
+					break;
+
+				default:
+					$output[$name] = $value;
+					break;
+			}
+		}
+
+		return $output;
+	}
 
 	/** @param string[] $requiredFields */
 	public function setRequiredFields(array $requiredFields)

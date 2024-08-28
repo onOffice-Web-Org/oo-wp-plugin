@@ -26,11 +26,11 @@ use Exception;
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
+ * @copyright 2003-2024, onOffice(R) GmbH
  *
  */
 
-class InputFieldVariableInsertRenderer
+class InputFieldSubjectForFormRenderer
 	extends InputFieldRenderer
 {
 	/**
@@ -43,7 +43,7 @@ class InputFieldVariableInsertRenderer
 
 	public function __construct($name, $value = null)
 	{
-		parent::__construct('variable insert', $name, $value);
+		parent::__construct('subject', $name, $value);
 	}
 
 
@@ -53,10 +53,14 @@ class InputFieldVariableInsertRenderer
 
 	public function render()
 	{
-		echo '<div class="oo-subject-container">'
-			. '<div class="oo-subject-title" contenteditable="true"></div>'
-			. '<div class="oo-subject-suggestions"></div>'
-			. '<input type="hidden" class="oo-subject-output" name="' . esc_html($this->getName()) . '" value="' . esc_html($this->getValue()) . '">'
-			. '</div>';
+		$textHtml = '';
+		if (!empty($this->getHint())) {
+			$textHtml = '<p class="hint-fallback-email hint-text">' . esc_html($this->getHint()) . '</p>';
+		}
+		echo '<div class="oo-email-subject-container">'
+			. '<div class="oo-email-subject-title" contenteditable="true"></div>'
+			. '<div class="oo-email-subject-suggestions"></div>'
+			. '<input type="hidden" class="oo-email-subject-output" name="' . esc_html($this->getName()) . '" value="' . esc_html($this->getValue()) . '">'
+			. '</div>'.$textHtml;
 	}
 }

@@ -322,32 +322,29 @@ abstract class FormPost
 	/**
 	 * @param string $subject
 	 * @param array $values
-	 * @param string $formType
-	 * @param bool $newsletterAccepted
+	 * @param int|null $estateId
+	 * @param array $inputs
 	 * @return string
 	*/
-	public function processSubject(string $subject, array $values, string $formType, bool $newsletterAccepted): string
+	public function generateCustomEmailSubject(string $subject, array $values, int $estateId = null, array $inputs): string
 	{
-        if (empty($subject)) {
-            return $this->getDefaultSubject($formType, $newsletterAccepted);
-        }
-
 		preg_match_all('/%%([^%]+)%%/', $subject, $matches);
 		$fields = $matches[1];
 
 		foreach ($fields as $field) {
-			$value = $values[$field] ?? '';
-			$isRangeField = $this->_pFieldsCollection->getFieldByKeyUnsafe($field)->getIsRangeField();
-
-			if ($isRangeField) {
-				$rangeValue = ($values[$field . '__von'] ?? '') . ' - ' . ($values[$field . '__bis'] ?? '');
-				$subject = str_replace("%%$field%%", trim($rangeValue, ' - '), $subject);
-			} else {
-				if (is_array($value)) {
-					$value = implode(', ', $value);
+			$replacement = $values[$field] ?? '';
+			if ($field === 'estateid' && $estateId !== null) {
+				$replacement = $estateId;
+			} else if (array_key_exists($field, $inputs)) {
+				$fieldObject = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
+				if (!array_key_exists($field, $inputs) && $fieldObject->getIsRangeField()) {
+					$replacement = trim(($values[$field . '__von'] ?? '') . ' - ' . ($values[$field . '__bis'] ?? ''), ' - ');
+				} elseif (is_array($replacement)) {
+					$replacement = implode(', ', $replacement);
 				}
-				$subject = str_replace("%%$field%%", $value, $subject);
 			}
+
+			$subject = str_replace("%%$field%%", $replacement, $subject);
 		}
 
 		return $subject;
@@ -358,11 +355,11 @@ abstract class FormPost
 	 * @param bool $newsletterAccepted
 	 * @return string
 	 */
-	private function getDefaultSubject(string $formType, bool $newsletterAccepted): string
+	public function generateDefaultEmailSubject(string $formType, bool $newsletterAccepted): string
 	{
-        if ($newsletterAccepted) {
-            return __('New newsletter registration', 'onoffice-for-wp-websites' );
-        }
+		if ($newsletterAccepted) {
+			return __('New newsletter registration', 'onoffice-for-wp-websites' );
+		}
 		switch ($formType) {
 			case 'owner':
 				return __('Message from the owner form of your website', 'onoffice-for-wp-websites' );

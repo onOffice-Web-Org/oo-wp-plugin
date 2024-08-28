@@ -866,11 +866,8 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	}
 }
 
-.oo-poststuff .oo-subject-container {
-	margin: 20px;
-}
-
-.oo-poststuff .oo-subject-container .oo-subject-title {
+.oo-poststuff .oo-email-subject-container .oo-email-subject-title {
+	box-sizing: border-box;
 	width: 100%;
 	padding: 10px;
 	margin-bottom: 10px;
@@ -879,7 +876,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	position: relative;
 }
 
-.oo-poststuff .oo-subject-container .oo-tag {
+.oo-poststuff .oo-email-subject-container .oo-tag {
 	background-color: rgb(164, 40, 106);
 	border: 1px solid rgb(164, 40, 106);
 	color: #fff;
@@ -890,11 +887,11 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	align-items: center;
 }
 
-.oo-poststuff .oo-subject-container .oo-tag .oo-remove-tag {
+.oo-poststuff .oo-email-subject-container .oo-tag .oo-remove-tag {
 	cursor: pointer;
 }
 
-.oo-poststuff .oo-subject-container .oo-subject-suggestions {
+.oo-poststuff .oo-email-subject-container .oo-email-subject-suggestions {
 	border: 1px solid #ccc;
 	background-color: #fff;
 	position: absolute;
@@ -905,11 +902,11 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	min-width: 300px;
 }
 
-.oo-poststuff .oo-subject-container .oo-suggestion-item {
+.oo-poststuff .oo-email-subject-container .oo-suggestion-item {
 	padding: 5px;
 	cursor: pointer;
 }
 
-.oo-poststuff .oo-subject-container .oo-suggestion-item:hover {
+.oo-poststuff .oo-email-subject-container .oo-suggestion-item:hover {
 	background-color: #f0f0f0;
 }

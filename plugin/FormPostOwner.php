@@ -48,6 +48,9 @@ use onOffice\WPlugin\Utility\__String;
 class FormPostOwner
 	extends FormPost
 {
+	/** */
+	const PORTALFILTER_IDENTIFIER = '[onOffice-WP]';
+
 	/** @var FormData */
 	private $_pFormData = null;
 
@@ -97,15 +100,19 @@ class FormPostOwner
 		$this->_pFormData = $pFormData;
 
 		$recipient = $pDataFormConfiguration->getRecipientByUserSelection();
-		$subject = $this->processSubject($pDataFormConfiguration->getSubject(), $pFormData->getValues(), $pFormData->getFormtype(), $this->_pFormPostOwnerConfiguration->getNewsletterAccepted());
+
+		$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
+		$estateId = $pWPQuery->get('estate_id', null);
+		$subject = $this->generateDefaultEmailSubject($pFormData->getFormtype(), $this->_pFormPostOwnerConfiguration->getNewsletterAccepted());
+		if (!empty($pDataFormConfiguration->getSubject())) {
+			$subject = $this->generateCustomEmailSubject($pDataFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pDataFormConfiguration->getInputs());
+		}
 		$estateData = $this->getEstateData();
 
 		try {
 			if ( $pDataFormConfiguration->getCreateOwner() ) {
 				$checkDuplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
 				$contactType = $pDataFormConfiguration->getContactType();
-				$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
-				$estateId = $pWPQuery->get('estate_id', null);
 				$latestAddressIdOnEnterPrise = null;
 				if ($checkDuplicate) {
 					$latestAddressIdOnEnterPrise = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
@@ -299,7 +306,7 @@ class FormPostOwner
 			'addressdata' => $addressData,
 			'estateid' => $estateId,
 			'message' => $message . $this->_messageDuplicateAddressData,
-			'subject' => $subject,
+			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
 			'referrer' => $this->_pFormPostOwnerConfiguration->getReferrer(),
 			'formtype' => $formType,
 		];

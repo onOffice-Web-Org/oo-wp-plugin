@@ -295,7 +295,10 @@ class InputModelRenderer
 			break;
 
 			case InputModelBase::HTML_TYPE_VARIABLE_INSERT:
-                $pInstance = new InputFieldVariableInsertRenderer($elementName, $pInputModel->getValue());
+				$pInstance = new InputFieldSubjectForFormRenderer($elementName, $pInputModel->getValue());
+				if ($pInputModel->getHintHtml() != null) {
+					$pInstance->setHint($pInputModel->getHintHtml());
+				}
 			break;
 		}
 
