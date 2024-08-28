@@ -553,7 +553,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 
 .sortable-tags .sortable-tag {
 	margin: 5px  0;
-	padding: 10px 10px 10px  15px;
+	padding: 10px 10px 10px 15px;
 	background-color: #fafafa;
 	cursor: move;
 	border: 1px solid #c3c4c7;
