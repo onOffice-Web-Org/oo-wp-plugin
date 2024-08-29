@@ -123,4 +123,27 @@ class TestClassDataViewSimilarEstates
 		$pDataViewSimilarEstates = new DataViewSimilarEstates();
 		$this->assertEquals(false,$pDataViewSimilarEstates->getRandom());
 	}
+
+	/**
+	 *
+	 */
+
+	public function testGetListFieldsShowPriceOnRequest()
+	{
+		$pDataViewSimilarEstates = new DataViewSimilarEstates();
+		$expectedPriceFields = [
+			'kaufpreis',
+			'erbpacht',
+			'nettokaltmiete',
+			'warmmiete',
+			'pacht',
+			'kaltmiete',
+			'miete_pauschal',
+			'saisonmiete',
+			'wochmietbto',
+			'kaufpreis_pro_qm',
+			'mietpreis_pro_qm',
+		];
+		$this->assertEquals($expectedPriceFields, $pDataViewSimilarEstates->getListFieldsShowPriceOnRequest());
+	}
 }
