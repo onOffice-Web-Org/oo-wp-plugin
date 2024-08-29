@@ -337,7 +337,7 @@ abstract class FormPost
 				$replacement = $estateId;
 			} else if (array_key_exists($field, $inputs)) {
 				$fieldObject = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
-				if (!array_key_exists($field, $inputs) && $fieldObject->getIsRangeField()) {
+				if ($fieldObject->getIsRangeField()) {
 					$replacement = trim(($values[$field . '__von'] ?? '') . ' - ' . ($values[$field . '__bis'] ?? ''), ' - ');
 				} elseif (is_array($replacement)) {
 					$replacement = implode(', ', $replacement);
