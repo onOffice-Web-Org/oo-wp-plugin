@@ -869,10 +869,10 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .oo-poststuff .oo-email-subject-container .oo-email-subject-title {
 	box-sizing: border-box;
 	width: 100%;
-	padding: 10px;
-	margin-bottom: 10px;
-	border: 1px solid #ccc;
-	min-height: 40px;
+	padding: 5px 5px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	min-height: 30px;
 	position: relative;
 }
 
@@ -881,10 +881,11 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	border: 1px solid rgb(164, 40, 106);
 	color: #fff;
 	border-radius: 17px;
-	padding: 5px;
+	padding: 0px 4px;
 	margin: 2px;
 	display: inline-flex;
 	align-items: center;
+	cursor: default;
 }
 
 .oo-poststuff .oo-email-subject-container .oo-tag .oo-remove-tag {

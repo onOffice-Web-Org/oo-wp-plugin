@@ -194,7 +194,7 @@ jQuery(document).ready(function($) {
                 .filter(([fieldName]) => !excludedFields.includes(fieldName))
                 .map(([fieldName, field]) => ({
                     value: fieldName,
-                    label: `${field.label} (${module})`
+                    label: `${field.label} (${fieldName})`
                 }))
         );
 

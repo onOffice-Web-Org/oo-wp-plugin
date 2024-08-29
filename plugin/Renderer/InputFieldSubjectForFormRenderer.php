@@ -55,7 +55,7 @@ class InputFieldSubjectForFormRenderer
 	{
 		$textHtml = '';
 		if (!empty($this->getHint())) {
-			$textHtml = '<p class="hint-fallback-email hint-text">' . esc_html($this->getHint()) . '</p>';
+			$textHtml = '<p class="hint-text">' . esc_html($this->getHint()) . '</p>';
 		}
 		echo '<div class="oo-email-subject-container">'
 			. '<div class="oo-email-subject-title" contenteditable="true"></div>'
