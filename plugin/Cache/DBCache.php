@@ -67,7 +67,13 @@ class DBCache
 
 	private function getCacheMaxAge()
 	{
-		return time() - $this->_options['ttl'];
+		$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
+		$interval = $this->_options['ttl'];
+		if (!empty($onofficeSettingsCache) && !isset($this->_options['cleanCache'])) {
+			$interval = wp_get_schedules()[$onofficeSettingsCache]["interval"];
+		}
+
+		return time() - $interval;
 	}
 
 
@@ -167,6 +173,7 @@ class DBCache
 	{
 		$oldTtl = $this->_options['ttl'];
 		$this->_options['ttl'] = 0;
+		$this->_options['cleanCache'] = true;
 		$this->cleanup();
 		$this->_options['ttl'] = $oldTtl;
 	}

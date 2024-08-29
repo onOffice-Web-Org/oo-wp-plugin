@@ -65,16 +65,22 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		if ( in_array( $input, array( 'message' ) ) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage   = $isRequiredMessage ? '*' : '';
-			echo $pForm->getFieldLabel( 'message' );
-			echo $additionMessage . ':<br>';
-			echo '<textarea name="message">' . $pForm->getFieldValue( 'message' ) . '</textarea><br>';
+			$isHiddenField = $pForm->isHiddenField('message');
+			if (!$isHiddenField) {
+				echo $pForm->getFieldLabel( 'message' );
+				echo $additionMessage . ':<br>';
+				echo '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea><br>';
+			} else {
+				echo '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
+			}
 			continue;
 		}
 
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
-		echo $pForm->getFieldLabel($input).$addition.': ';
-		echo renderFormField($input, $pForm).'<br>';
+		$isHiddenField = $pForm->isHiddenField($input);
+		$label = $pForm->getFieldLabel($input).$addition.': ';
+		echo !$isHiddenField ? $label . renderFormField($input, $pForm).'<br>' : renderFormField($input, $pForm);
 	}
 ?>
 
