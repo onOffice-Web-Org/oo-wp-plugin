@@ -877,10 +877,9 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 }
 
 .oo-poststuff .oo-email-subject-container .oo-tag {
-	background-color: rgb(164, 40, 106);
-	border: 1px solid rgb(164, 40, 106);
-	color: #fff;
-	border-radius: 17px;
+	background-color: #e4e4e4;
+	border: 1px solid #aaa;
+	border-radius: 4px;
 	padding: 0px 4px;
 	margin: 2px;
 	display: inline-flex;
