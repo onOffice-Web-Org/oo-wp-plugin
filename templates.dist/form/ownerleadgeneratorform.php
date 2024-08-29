@@ -29,6 +29,7 @@ add_thickbox();
 $addressValues = array();
 $estateValues = array();
 $miscValues = array();
+$hiddenValues = array();
 
 if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 	esc_html_e('The form was sent successfully.', 'onoffice-for-wp-websites');
@@ -44,6 +45,10 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
 	/* @var $pForm Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
+		if ($pForm->isHiddenField($input)) {
+			$hiddenValues []= renderFormField($input, $pForm);
+			continue;
+		}
 		if ( $pForm->isMissingField( $input )  &&
 			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 			/* translators: %s will be replaced with a translated field name. */
@@ -110,7 +115,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 						</div>
 					</p>
 				</div>
-
+				<?php echo implode($hiddenValues); ?>
 				<span class="leadform-back" style="float:left; cursor:pointer;">
 					<?php echo esc_html__('Back', 'onoffice-for-wp-websites'); ?>
 				</span>

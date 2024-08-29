@@ -213,6 +213,10 @@ class DataFormConfigurationFactory
 		if (array_key_exists('markdown', $row) && $row['markdown'] == 1) {
 			$pFormConfiguration->addMarkdownFields($fieldName);
 		}
+
+		if (array_key_exists('hidden_field', $row) && $row['hidden_field'] == 1) {
+			$pFormConfiguration->addHiddenFields($fieldName);
+		}
 	}
 
 
@@ -279,7 +283,7 @@ class DataFormConfigurationFactory
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
 		$pConfig->setNewsletterCheckbox((bool)$row['newsletter']);
 		$pConfig->setShowEstateContext((bool)$row['show_estate_context']);
-		$pConfig->setContactTypeField($row['contact_type'] ?? '');
+		$pConfig->setContactTypeField($row['contact_type'] ?? []);
 	}
 
 
@@ -332,7 +336,7 @@ class DataFormConfigurationFactory
 		$pConfig->setPages($row['pages']);
 		$pConfig->setCreateOwner((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
-		$pConfig->setContactTypeField($row['contact_type'] ?? '');
+		$pConfig->setContactTypeField($row['contact_type'] ?? []);
 	}
 
 
@@ -350,7 +354,7 @@ class DataFormConfigurationFactory
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCreateInterest((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
-		$pConfig->setContactTypeField($row['contact_type'] ?? '');
+		$pConfig->setContactTypeField($row['contact_type'] ?? []);
 	}
 
 
