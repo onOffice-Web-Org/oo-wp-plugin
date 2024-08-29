@@ -84,7 +84,7 @@ class SortListBuilder
 		$isUserSetting = (bool) $sortBySetting;
 		$isAdjustable = false;
 
-		if ($isUserSetting && count($sortByUserValues) > 0)	{
+		if ($isUserSetting && count($sortByUserValues) > 0 && $sortBySetting !== DataListView::SHOW_MARKED_PROPERTIES_SORT)	{
 			$isAdjustable = true;
 		}
 

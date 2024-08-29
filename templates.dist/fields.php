@@ -51,6 +51,10 @@ if (!function_exists('renderFieldEstateSearch')) {
 			$inputType = 'type="number" step="1" ';
 		}
 
+		if (isset($properties['is-apply-thousand-separator'])) {
+			$inputType = 'type="text" class="apply-thousand-separator-format" data-step="1" ';
+		}
+
 		if ($properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN) {
 			echo '<br>';
 			echo '<fieldset>
@@ -116,12 +120,30 @@ if (!function_exists('renderFormField')) {
 	{
 		$output = '';
 		$typeCurrentInput = $pForm->getFieldType($fieldName);
+		$isHiddenField = $pForm->isHiddenField($fieldName);
+
+		if ($isHiddenField) {
+			$name = esc_html($fieldName);
+			$value = $pForm->getFieldValue($fieldName, true);
+
+			if ($typeCurrentInput === FieldTypes::FIELD_TYPE_BOOLEAN) {
+				$value = empty($value) ? 'u' : ($value == true ? 'y' : 'n');
+			}
+
+			if ($typeCurrentInput === FieldTypes::FIELD_TYPE_MULTISELECT) { 
+				$value = is_array($value) ? implode(', ', $value) : $value;
+			}
+
+			return '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
+		}
+
 		$isRequired = $pForm->isRequiredField($fieldName);
 		$requiredAttribute = $isRequired ? 'required ' : '';
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
 		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
+		$isApplyThousandSeparatorField = $pForm->isApplyThousandSeparatorField($fieldName);
 
 		$requiredAttribute = "";
 		if ($isRequired) {
@@ -203,6 +225,10 @@ if (!function_exists('renderFormField')) {
 				$inputType = 'type="datetime-local" step="1" ';
 			}
 
+			if ($isApplyThousandSeparatorField) {
+				$inputType = 'type="text" class="apply-thousand-separator-format" ';
+			}
+
 			if (
 				$isRangeValue && $pForm->inRangeSearchcriteriaInfos($fieldName) &&
 				count($pForm->getSearchcriteriaRangeInfosForField($fieldName)) > 0
@@ -216,13 +242,13 @@ if (!function_exists('renderFormField')) {
 			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
 				$output = '<fieldset>
 					<input type="radio" id="' . esc_attr($fieldName) . '_u" name="' . esc_attr($fieldName) . '" value=""
-						' . ($selectedValue == '' ? ' checked' : '') . '>
+						' . ($selectedValue === '' ? ' checked' : '') . '>
 					<label for="' . esc_attr($fieldName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
 					<input type="radio" id="' . esc_attr($fieldName) . '_y" name="' . esc_attr($fieldName) . '" value="1"
-						' . ($selectedValue == 1 ? 'checked' : '') . '>
+						' . ($selectedValue === '1' ? 'checked' : '') . '>
 					<label for="' . esc_attr($fieldName) . '_y">' . esc_html__('Yes', 'onoffice-for-wp-websites') . '</label>
 					<input type="radio" id="' . esc_attr($fieldName) . '_n" name="' . esc_attr($fieldName) . '" value="0"
-						' . ($selectedValue == 0 ? 'checked' : '') . '>
+						' . ($selectedValue === '0' ? 'checked' : '') . '>
 					<label for="' . esc_attr($fieldName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
 					</fieldset>';
 			} else {
