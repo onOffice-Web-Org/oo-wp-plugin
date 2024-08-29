@@ -358,15 +358,15 @@ abstract class FormPost
 	public function generateDefaultEmailSubject(string $formType, bool $newsletterAccepted): string
 	{
 		if ($newsletterAccepted) {
-			return __('New newsletter registration', 'onoffice-for-wp-websites' );
+			return __('New newsletter registration', 'onoffice-for-wp-websites');
 		}
 		switch ($formType) {
 			case Form::TYPE_OWNER:
-				return __('Message from the owner form of your website', 'onoffice-for-wp-websites' );
+				return __('Message from the owner form of your website', 'onoffice-for-wp-websites');
 			case Form::TYPE_INTEREST:
-				return __('Message from the interest form on your website', 'onoffice-for-wp-websites' );
+				return __('Message from the interest form on your website', 'onoffice-for-wp-websites');
 			case Form::TYPE_CONTACT:
-				return __('Message from the contact form of your website', 'onoffice-for-wp-websites' );
+				return __('Message from the contact form of your website', 'onoffice-for-wp-websites');
 			default:
 				return '';
 		}

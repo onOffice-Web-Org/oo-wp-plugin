@@ -21,8 +21,7 @@ jQuery(document).ready(function($) {
         });
 
         editableElement.on('click', '.oo-remove-tag', function() {
-            $(this).parent().remove();
-            updateOutputField(editableElement, outputElement);
+            handleTagRemoval($(this), editableElement, outputElement);
         });
 
         $(document).on('click', (e) => {
@@ -113,6 +112,16 @@ jQuery(document).ready(function($) {
         }
 
         suggestionsElement.hide();
+        updateOutputField(editableElement, outputElement);
+    }
+
+    function handleTagRemoval(tagElement, editableElement, outputElement) {
+        const parent = tagElement.parent();
+        const nextSibling = parent[0].nextSibling;
+        if (nextSibling && nextSibling.nodeType === Node.TEXT_NODE && nextSibling.nodeValue.startsWith('\u00A0')) {
+            nextSibling.nodeValue = nextSibling.nodeValue.slice(1);
+        }
+        parent.remove();
         updateOutputField(editableElement, outputElement);
     }
 
