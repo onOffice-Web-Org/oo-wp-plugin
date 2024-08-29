@@ -30,6 +30,7 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 
 $addressValues = array();
 $searchcriteriaValues = array();
+$hiddenValues  = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo '<p>'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
@@ -43,9 +44,13 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 /* @var $pForm \onOffice\WPlugin\Form */
 foreach ( $pForm->getInputFields() as $input => $table ) {
+	if ($pForm->isHiddenField($input)) {
+		$hiddenValues []= renderFormField($input, $pForm);
+		continue;
+	}
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
-	$line = $pForm->getFieldLabel( $input ).$addition.': ';
+	$line = $pForm->getFieldLabel($input).$addition.': ';
 	$line .= renderFormField($input, $pForm);
 
 	if ( $pForm->isMissingField( $input ) ) {
@@ -84,6 +89,7 @@ if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			<?php echo implode('<br>', $searchcriteriaValues) ?>
 		</div>
 	</p>
+	<?php echo implode($hiddenValues); ?>
 	<div>
 		<?php
 			include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');

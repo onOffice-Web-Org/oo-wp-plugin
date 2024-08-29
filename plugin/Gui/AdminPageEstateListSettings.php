@@ -136,6 +136,9 @@ class AdminPageEstateListSettings
 		$pInputModelSortByspec           = $pFormModelBuilder->createInputModelSortBySpec();
 		$pInputModelSortOrder            = $pFormModelBuilder->createInputModelSortOrder();
 		$pInputModelRandomSort           = $pFormModelBuilder->createInputModelRandomSort();
+		$pInputModelMarkedPropertiesSort = $pFormModelBuilder->createInputModelMarkedPropertiesSort();
+		$pInputModelSortByTags           = $pFormModelBuilder->createInputModelSortByTags();
+		$pInputModelSortByTagsDirection  = $pFormModelBuilder->createInputModelSortByTagsDirection();
 
 		$pFormModelRecordsFilter = new FormModel();
 		$pFormModelRecordsFilter->setPageSlug( $this->getPageSlug() );
@@ -148,6 +151,9 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->addInputModel( $pInputModelSortBySelectTwoStandard );
 		$pFormModelRecordsFilter->addInputModel( $pInputModelSortOrder );
 		$pFormModelRecordsFilter->addInputModel( $pInputModelRandomSort );
+		$pFormModelRecordsFilter->addInputModel( $pInputModelMarkedPropertiesSort );
+		$pFormModelRecordsFilter->addInputModel( $pInputModelSortByTags );
+		$pFormModelRecordsFilter->addInputModel( $pInputModelSortByTagsDirection );
 		$this->addFormModel( $pFormModelRecordsFilter );
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate('estate');
@@ -168,14 +174,6 @@ class AdminPageEstateListSettings
 		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
-
-		$pInputModelDocumentTypes = $pFormModelBuilder->createInputModelExpose();
-		$pFormModelDocumentTypes = new FormModel();
-		$pFormModelDocumentTypes->setPageSlug($this->getPageSlug());
-		$pFormModelDocumentTypes->setGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
-		$pFormModelDocumentTypes->setLabel(__('Downloadable Documents', 'onoffice-for-wp-websites'));
-		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
-		$this->addFormModel($pFormModelDocumentTypes);
 
 		$pListView = new DataListView($this->getListViewId() ?? 0, '');
 
@@ -221,9 +219,6 @@ class AdminPageEstateListSettings
 
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'side');
-
-		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
-		$this->createMetaBoxByForm($pFormDocumentTypes, 'normal');
 
 		$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
 		$this->createMetaBoxByForm($pFormGeoPosition, 'normal');
