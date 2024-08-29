@@ -88,7 +88,7 @@ abstract class InputModelBase
 	const HTML_GOOGLE_RECAPTCHA_ACCOUNT = 'googleRecaptchaAccount';
 
 	/** */
-	const HTML_TYPE_VARIABLE_INSERT = 'variableInsert';
+	const HTML_TYPE_EMAIL_SUBJECT = 'emailSubject';
 
 	/** @var string */
 	private $_name = null;

@@ -294,7 +294,7 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 			break;
 
-			case InputModelBase::HTML_TYPE_VARIABLE_INSERT:
+			case InputModelBase::HTML_TYPE_EMAIL_SUBJECT:
 				$pInstance = new InputFieldSubjectForFormRenderer($elementName, $pInputModel->getValue());
 				if ($pInputModel->getHintHtml() != null) {
 					$pInstance->setHint($pInputModel->getHintHtml());

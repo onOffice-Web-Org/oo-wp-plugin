@@ -795,7 +795,7 @@ class FormModelBuilderDBForm
 
 		$pInputModelFormSubject = $this->getInputModelDBFactory()->create
 			(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT, $labelSubject);
-		$pInputModelFormSubject->setHtmlType(InputModelBase::HTML_TYPE_VARIABLE_INSERT);
+		$pInputModelFormSubject->setHtmlType(InputModelBase::HTML_TYPE_EMAIL_SUBJECT);
 		$pInputModelFormSubject->setValue($this->getValue('subject'));
 		$pInputModelFormSubject->setHintHtml(__('We recommend a maximum number of characters between 40 and 60 or up to 10 words.', 'onoffice-for-wp-websites'));
 

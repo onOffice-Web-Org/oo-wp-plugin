@@ -10,7 +10,8 @@ jQuery(document).ready(function($) {
         const outputElement = $(outputSelector);
 
         if (outputElement.val()) {
-            editableElement.html(replaceTagsWithSpans(outputElement.val()));
+            const { newValue } = replaceTagsWithSpans(outputElement.val());
+            editableElement.html(newValue);
         }
 
         editableElement.on('paste', handlePaste)
@@ -45,14 +46,18 @@ jQuery(document).ready(function($) {
     }
 
     function replaceTagsWithSpans(value) {
-        return value.replace(/%%([^%]+)%%/g, (match, p1) => {
+        let cursorPosition = 0;
+        const newValue = value.replace(/%%([^%]+)%%/g, (match, p1, offset) => {
             const variableName = p1.trim();
             if (!variableName) return match;
             const variable = fields.find(variable => variable.value === variableName);
             const label = variable ? variable.label : variableName;
 
+            cursorPosition = offset + match.length; // Update cursor position to after the last %
             return `<span class="oo-tag" contenteditable="false" data-value="${variableName}">${label} <span class="oo-remove-tag select2-selection__choice__remove"></span></span>&nbsp;`;
         });
+
+        return { newValue, cursorPosition };
     }
 
     function displaySuggestions(beforeCursor, suggestionsElement) {
@@ -75,8 +80,11 @@ jQuery(document).ready(function($) {
     }
 
     function handleInputAndClick(editableElement, suggestionsElement, outputElement) {
-        const newValue = replaceTagsWithSpans(editableElement.html());
-        if (newValue !== editableElement.html()) editableElement.html(newValue);
+        const { newValue, cursorPosition } = replaceTagsWithSpans(editableElement.html());
+        if (newValue !== editableElement.html()) {
+            editableElement.html(newValue);
+            setCursorPosition(editableElement[0], cursorPosition);
+        }
 
         const beforeCursor = getTextBeforeCursor();
         const lastPercentIndex = beforeCursor.lastIndexOf('%');
@@ -95,6 +103,33 @@ jQuery(document).ready(function($) {
         }
         saveCursorPosition();
         updateOutputField(editableElement, outputElement);
+    }
+
+    function setCursorPosition(element, position) {
+        const range = document.createRange();
+        const selection = window.getSelection();
+        let currentNode = element.firstChild;
+        let currentPosition = 0;
+
+        while (currentNode) {
+            const nodeLength = currentNode.nodeType === Node.TEXT_NODE ? currentNode.length : currentNode.textContent.length;
+
+            if (currentPosition + nodeLength >= position) {
+                range.setStart(currentNode, position - currentPosition);
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                return;
+            }
+
+            currentPosition += nodeLength;
+            currentNode = currentNode.nextSibling;
+        }
+
+        range.selectNodeContents(element);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
     }
 
     function checkOnlyPercentCharacter(text, index) {
