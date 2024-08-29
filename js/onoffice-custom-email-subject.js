@@ -21,7 +21,7 @@ jQuery(document).ready(function($) {
         });
 
         editableElement.on('click', '.oo-remove-tag', function() {
-            handleTagRemoval($(this), editableElement, outputElement);
+            handleTagRemove($(this), editableElement, outputElement);
         });
 
         $(document).on('click', (e) => {
@@ -115,7 +115,7 @@ jQuery(document).ready(function($) {
         updateOutputField(editableElement, outputElement);
     }
 
-    function handleTagRemoval(tagElement, editableElement, outputElement) {
+    function handleTagRemove(tagElement, editableElement, outputElement) {
         const parent = tagElement.parent();
         const nextSibling = parent[0].nextSibling;
         if (nextSibling && nextSibling.nodeType === Node.TEXT_NODE && nextSibling.nodeValue.startsWith('\u00A0')) {
