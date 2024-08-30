@@ -178,7 +178,6 @@ class FormPostInterest
 		$message .= "\nSuchkriterien des Interessenten:\n".
 					"$searchCriterias";
 		$addressData = $pFormData->getAddressData( $this->getFieldsCollection() );
-
 		$requestParams = [
 			'addressdata' => $addressData,
 			'message' => $message . $this->_messageDuplicateAddressData,
