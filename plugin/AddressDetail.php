@@ -21,6 +21,148 @@
 
 namespace onOffice\WPlugin;
 
-class AddressDetail {
+use onOffice\WPlugin\DataView\DataAddressDetailView;
+use onOffice\WPlugin\DataView\DataViewAddress;
+
+class AddressDetail
+	extends AddressList {
+
+
+	/** @var int */
+	private $_addressId = null;
+
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+
+	protected function getNumAddressPages()
+	{
+		return 1;
+	}
+
+
+	/**
+	 *
+	 * @param int $id
+	 *
+	 */
+
+	public function loadSingleAddress($id)
+	{
+		$this->_addressId = $id;
+		$this->loadAdressesById([$id], $this->getDataViewAddress()->getFields());
+	}
+
+
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+
+	protected function getRecordsPerPage()
+	{
+		return 1;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	protected function addExtraParams(): array
+	{
+		return [];
+	}
+
+
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+
+	public function getAddressId(): int
+	{
+		return $this->_addressId;
+	}
+
+
+	/**
+	 *
+	 * @param int $addressId
+	 *
+	 */
+
+	public function setAddressId(int $addressId)
+	{
+		$this->_addressId = $addressId;
+	}
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	 public function getShortCodeForm(): string
+	 {
+		$view = $this->getDataViewAddress();
+		$result = '';
+
+		if (! $view instanceof DataAddressDetailView || $view->getShortCodeForm() == '') {
+			return '';
+		}
+
+		$result = $view->getShortCodeForm();
+
+		return  '[oo_form form="' . $result . '"]';
+	 }
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	 public function getShortCodeReferenceEstates(): string
+	 {
+		 $view = $this->getDataViewAddress();
+		 $result = '';
+
+		 if (! $view instanceof DataAddressDetailView || $view->getShortCodeReferenceEstate() == '') {
+			 return '';
+		 }
+
+		 $result = $view->getShortCodeReferenceEstate();
+
+		 return '[oo_estate view="' . $result . '" address="'.$this->_addressId.'"]';
+
+	 }
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	 public function getShortCodeActiveEstates(): string
+	 {
+		 $view = $this->getDataViewAddress();
+		 $result = '';
+
+		 if (! $view instanceof DataAddressDetailView || $view->getShortCodeActiveEstate() == '') {
+			 return '';
+		 }
+
+		 $result = $view->getShortCodeActiveEstate();
+
+		 return '[oo_estate view="' . $result . '" address="'.$this->_addressId.'"]';
+
+	 }
 
 }

@@ -138,5 +138,12 @@ class AddressListEnvironmentDefault
     {
         return $this->_pContainer->get(DataAddressDetailViewHandler::class);
     }
+		/**
+		 * @return Container
+		 */
+		public function getContainer(): Container
+		{
+			return $this->_pContainer;
+		}
 
 }

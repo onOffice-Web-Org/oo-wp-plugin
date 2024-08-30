@@ -131,7 +131,7 @@ class ContentFilterShortCodeAddress
 	{
 		$page = $this->_pWPQueryWrapper->getWPQuery()->get('paged', 1);
 		$pAddressListView = $this->_pDataListFactory->getListViewByName($addressListName);
-		$pAddressList = $this->_pAddressListFactory->create()->withDataListViewAddress($pAddressListView);
+		$pAddressList = $this->_pAddressListFactory->create($pAddressListView)->withDataListViewAddress($pAddressListView);
 		$pAddressList->loadAddresses($page);
 		$this->populateWpLinkPagesArgs($pAddressListView->getFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name

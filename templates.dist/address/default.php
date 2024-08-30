@@ -38,8 +38,7 @@ require 'SearchFormAddress.php';
 		$imageUrl = $escapedValues['imageUrl'];
 		unset($escapedValues['imageUrl']);
 	?>
-    <a href="<?php echo esc_url($pAddressList->getAddressLink($addressId)) ?>">
-        <div class="oo-listobject">
+		<div class="oo-listobject">
 			<div class="oo-listobjectwrap">
 				<?php
 				if (!empty($imageUrl)) {
@@ -64,10 +63,14 @@ require 'SearchFormAddress.php';
 						}
 						?>
 					</div>
+					<div class="oo-detailslink">
+						<a class="oo-details-btn" href="<?php echo esc_url($pAddressList->getAddressLink($addressId)) ?>">
+								<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
+						</a>
+					</div>
 				</div>
 			</div>
-		</div>
-    </a>
+    </div>
 	<?php } ?>
 </div>
 <div>

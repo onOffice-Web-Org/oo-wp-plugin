@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\API\DataViewToAPI;
 
-use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\DataView\DataViewAddress;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddressFactory;
 use onOffice\WPlugin\Language;
 
@@ -63,7 +63,7 @@ class DataListViewAddressToAPIParameters
 	 * @return array
 	 */
 
-	public function buildParameters(array $fields, DataListViewAddress $pDataListView, int $page, bool $raw = false): array
+	public function buildParameters(array $fields, DataViewAddress $pDataListView, int $page, bool $raw = false): array
 	{
 		$pBuilderListViewAddress = $this->_pFilterBuilderFactory->create($pDataListView);
 

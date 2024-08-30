@@ -32,11 +32,12 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Controller\AddressListBase;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandlerEmpty;
-use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\DataView\DataViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
@@ -48,6 +49,7 @@ use function esc_html;
  */
 
 class AddressList
+implements AddressListBase
 {
 	/** @var string */
 	const CONTACT_CATEGORY_PRIVATE_CUSTOMER = 'privateCustomer';
@@ -128,19 +130,21 @@ class AddressList
 	private $_pDataViewAddress = null;
 
 	/** @var array */
+	private $_records = [];
+	/** @var array */
 	private $_recordsRaw = [];
-
 
 	/**
 	 *
+	 * @param DataViewAddress $pDataViewAddress
 	 * @param AddressListEnvironment $pEnvironment
 	 *
 	 */
 
-	public function __construct(AddressListEnvironment $pEnvironment = null)
+	public function __construct(DataViewAddress $pDataViewAddress = null, AddressListEnvironment $pEnvironment = null)
 	{
 		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
-		$this->_pDataViewAddress = new DataListViewAddress(0, 'default');
+		$this->_pDataViewAddress = $pDataViewAddress ?? new DataListViewAddress(0, 'default');
 	}
 
 	/**
@@ -205,8 +209,8 @@ class AddressList
 		$recordsRaw = $pAddressRawApiCall->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 
-		$records = $pApiCall->getResultRecords();
-		$this->fillAddressesById($records);
+		$this->_records = $pApiCall->getResultRecords();
+		$this->fillAddressesById($this->_records);
 
 		$resultMeta = $pApiCall->getResultMeta();
 		$numpages = ceil($resultMeta['cntabsolute']/$this->_pDataViewAddress->getRecordsPerPage());
@@ -310,7 +314,9 @@ class AddressList
 		}
 		return new ArrayContainerEscape($row);
 	}
-
+	/** @return DataViewAddress */
+	public function getDataViewAddress(): DataViewAddress
+		{ return $this->_pDataViewAddress; }
 	/**
 	 * @param string $field
 	 * @param bool $raw
@@ -320,7 +326,6 @@ class AddressList
 	{
 		$label = $this->_pEnvironment->getFieldnames()
 			->getFieldLabel($field, onOfficeSDK::MODULE_ADDRESS);
-
 		return $raw ? $label : esc_html($label);
 	}
 
@@ -428,16 +433,31 @@ class AddressList
 		return $imageAlt;
 	}
 
-    public function getAddressLink(string $addressId): string
-    {
-        $pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
-            ->getAddressDetailView()->getPageId();
+	public function getAddressLink(string $addressId): string
+	{
+			$pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
+					->getAddressDetailView()->getPageId();
 
-        $url = get_page_link( $pageId ) . $addressId;
-        $fullLinkElements = parse_url( $url );
-        if ( empty( $fullLinkElements['query'] ) ) {
-            $url .= '/';
-        }
-        return $url;
-    }
+			$url = get_page_link( $pageId ) . $addressId;
+			$fullLinkElements = parse_url( $url );
+			if ( empty( $fullLinkElements['query'] ) ) {
+					$url .= '/';
+			}
+			return $url;
+	}
+
+		/**
+	 * @return array
+	 */
+	public function getAddressIds(): array
+	{
+		return array_column($this->_recordsRaw, 'id');
+	}
+		/**
+	 * @return array
+	 */
+	public function getCurrentAddress(): array
+	{
+		return $this->_adressesById;
+	}
 }

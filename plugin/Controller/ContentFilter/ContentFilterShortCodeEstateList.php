@@ -130,6 +130,11 @@ class ContentFilterShortCodeEstateList
 			$pEstateList->setUnitsViewName($attributes['units']);
 			$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 
+			if(isset($attributes['address']))
+			{
+				$pEstateList->setFilterAdressId($attributes['address']);
+			}
+
 			$pEstateList->loadEstates($this->_pWPQueryWrapper->getWPQuery($pListView->getId())->get('paged', 1) ?: 1);
 			$pTemplate = $this->_pTemplate
 				->withTemplateName($pListViewWithSortParams->getTemplate())

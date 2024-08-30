@@ -117,6 +117,8 @@ $dimensions = [
 	$pEstatesClone = clone $pEstates;
 	$pEstatesClone->resetEstateIterator();
 	while ( $currentEstate = $pEstatesClone->estateIterator() ) :
+		if( !$pEstatesClone->isCurrentEstateContactsInAddressFilter() )
+			continue;
 		$marketingStatus = $currentEstate['vermarktungsstatus'];
 		unset($currentEstate['vermarktungsstatus']);
 		$estateId = $pEstatesClone->getCurrentEstateId();

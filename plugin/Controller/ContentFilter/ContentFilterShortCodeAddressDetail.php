@@ -23,6 +23,8 @@ namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 use onOffice\WPlugin\Template;
+use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\Factory\AddressListFactory;
 
 class ContentFilterShortCodeAddressDetail {
 
@@ -32,15 +34,31 @@ class ContentFilterShortCodeAddressDetail {
     /** @var Template */
     private $_pTemplate;
 
-    public function __construct(DataAddressDetailViewHandler $dataAddressDetailViewHandler, Template $template) {
+		/** @var AddressListFactory */
+		private $_pAddressDetailFactory;
+
+		/** @var WPQueryWrapper */
+		private $_pWPQueryWrapper;
+
+    public function __construct(DataAddressDetailViewHandler $dataAddressDetailViewHandler,
+			Template $template,
+			AddressListFactory $pAddressDetailFactory,
+			WPQueryWrapper $pWPQueryWrapper) {
         $this->_pDataAddressDetailViewHandler = $dataAddressDetailViewHandler;
         $this->_pTemplate = $template;
+				$this->_pAddressDetailFactory = $pAddressDetailFactory;
+				$this->_pWPQueryWrapper = $pWPQueryWrapper;
     }
 
     public function render(): string {
         $addressDetailView =  $this->_pDataAddressDetailViewHandler->getAddressDetailView();
         $template = $this->_pTemplate->withTemplateName($addressDetailView->getTemplate());
-        return $template->render();
+				$addressId = $this->_pWPQueryWrapper->getWPQuery()->query_vars['address_id'] ?? 0;
+				$pAddressList = $this->_pAddressDetailFactory->createAddressDetail((int)$addressId);
+				$pAddressList->loadSingleAddress($addressId);
+        return $template
+					->withAddressList($pAddressList)
+					->render();
     }
 
     /**

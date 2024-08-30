@@ -173,4 +173,8 @@ class DataAddressDetailView
 	/** @param string $shortCodeReferenceEstate */
 	public function setShortCodeReferenceEstate(string $shortCodeReferenceEstate)
 		{ $this->_shortCodeReferenceEstate = $shortCodeReferenceEstate; }
+
+	/** @return int */
+	public function getRecordsPerPage(): int
+	{ return 1; }
 }

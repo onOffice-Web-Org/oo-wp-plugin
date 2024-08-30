@@ -19,8 +19,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace onOffice\WPlugin\DataView;
 
 use onOffice\SDK\onOfficeSDK;
@@ -34,7 +32,7 @@ use onOffice\WPlugin\Controller\ViewProperty;
  */
 
 class DataListViewAddress
-	implements DataViewFilterableFields, ViewProperty, DataViewAddress
+	implements DataViewAddress, DataViewFilterableFields, ViewProperty
 {
 	/** */
 	const FIELDS = 'fields';
