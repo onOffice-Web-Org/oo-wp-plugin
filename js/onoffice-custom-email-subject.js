@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
     const excludedFields = ['dummy_key', 'message', 'gdprcheckbox', 'DSGVOStatus'];
-    const fields = getFieldsForShowTagEmailSubject();
+    let fields = getFieldsForShowTagEmailSubject();
     let cursorPosition;
 
     function handleLogicTagEmailSubject(editableSelector, suggestionsSelector, outputSelector) {
