@@ -45,6 +45,9 @@ use function sanitize_text_field;
 class FormPostInterest
 	extends FormPost
 {
+	/** */
+	const PORTALFILTER_IDENTIFIER = '[onOffice-WP]';
+
 	/** @var FormPostInterestConfiguration */
 	private $_pFormPostInterestConfiguration = null;
 
@@ -81,14 +84,17 @@ class FormPostInterest
 		/* @var $pFormConfiguration DataFormConfigurationInterest */
 		$pFormConfiguration = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfiguration->getRecipientByUserSelection();
-		$subject = $pFormConfiguration->getSubject();
+		$pWPQuery = $this->_pFormPostInterestConfiguration->getWPQueryWrapper()->getWPQuery();
+		$estateId = $pWPQuery->get('estate_id', null);
+		$subject = $this->generateDefaultEmailSubject($pFormData->getFormtype(), $this->_pFormPostInterestConfiguration->getNewsletterAccepted());
+		if (!empty($pFormConfiguration->getSubject())) {
+			$subject = $this->generateCustomEmailSubject($pFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pFormConfiguration->getInputs());
+		}
 
 		try {
 			if ( $pFormConfiguration->getCreateInterest() ) {
 				$checkDuplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
 						$contactType = $pFormConfiguration->getContactType();
-				$pWPQuery = $this->_pFormPostInterestConfiguration->getWPQueryWrapper()->getWPQuery();
-				$estateId = $pWPQuery->get('estate_id', null);
 				$latestAddressIdOnEnterPrise = null;
 				if ($checkDuplicate) {
 					$latestAddressIdOnEnterPrise = $this->_pFormPostInterestConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
@@ -172,10 +178,11 @@ class FormPostInterest
 		$message .= "\nSuchkriterien des Interessenten:\n".
 					"$searchCriterias";
 		$addressData = $pFormData->getAddressData( $this->getFieldsCollection() );
+
 		$requestParams = [
 			'addressdata' => $addressData,
 			'message' => $message . $this->_messageDuplicateAddressData,
-			'subject' => sanitize_text_field($subject),
+			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
 			'formtype' => $pFormData->getFormtype(),
 			'referrer' => filter_input(INPUT_SERVER, 'REQUEST_URI') ?? '',
 			'recipient' => $recipient

@@ -902,3 +902,48 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 		margin-top: 10px;
 	}
 }
+
+.oo-poststuff .oo-email-subject-container .oo-email-subject-title {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 5px 5px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	min-height: 30px;
+	position: relative;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-tag {
+	background-color: #e4e4e4;
+	border: 1px solid #aaa;
+	border-radius: 4px;
+	padding: 0px 4px;
+	margin: 2px;
+	display: inline-flex;
+	align-items: center;
+	cursor: default;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-tag .oo-remove-tag {
+	cursor: pointer;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-email-subject-suggestions {
+	border: 1px solid #ccc;
+	background-color: #fff;
+	position: absolute;
+	z-index: 1000;
+	max-height: 150px;
+	overflow-y: auto;
+	display: none;
+	min-width: 300px;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-suggestion-item {
+	padding: 5px;
+	cursor: pointer;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-suggestion-item:hover {
+	background-color: #f0f0f0;
+}
