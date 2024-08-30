@@ -1,6 +1,5 @@
 jQuery(document).ready(function($) {
-    const excludedFields = ['message', 'gdprcheckbox', 'DSGVOStatus'];
-    const fieldList = onOffice_loc_settings.fieldList || {};
+    const excludedFields = ['dummy_key', 'message', 'gdprcheckbox', 'DSGVOStatus'];
     const fields = getFieldsForShowTagEmailSubject();
     let cursorPosition;
 
@@ -53,7 +52,7 @@ jQuery(document).ready(function($) {
             const variable = fields.find(variable => variable.value === variableName);
             const label = variable ? variable.label : variableName;
 
-            cursorPosition = offset + match.length; // Update cursor position to after the last %
+            cursorPosition = offset + match.length;
             return `<span class="oo-tag" contenteditable="false" data-value="${variableName}">${label} <span class="oo-remove-tag select2-selection__choice__remove"></span></span>&nbsp;`;
         });
 
@@ -70,7 +69,7 @@ jQuery(document).ready(function($) {
         }
 
         const filteredVariables = inputText === '' || inputText.match(/^\s*$/)
-            ? fields.slice(0, 5)
+            ? fields
             : fields.filter(variable => variable.label.toLowerCase().startsWith(inputText.toLowerCase()));
 
         suggestionsElement.empty().toggle(filteredVariables.length > 0);
@@ -224,22 +223,24 @@ jQuery(document).ready(function($) {
     }
 
     function getFieldsForShowTagEmailSubject() {
-        const fields = Object.entries(fieldList).flatMap(([module, fields]) =>
-            Object.entries(fields)
-                .filter(([fieldName]) => !excludedFields.includes(fieldName))
-                .map(([fieldName, field]) => ({
-                    value: fieldName,
-                    label: `${field.label} (${fieldName})`
-                }))
-        );
-
-        fields.push({
-            value: 'estateid',
-            label: 'estateID'
+        const fields = [];
+        $('#sortableFieldsList .sortable-item').each(function() {
+            const value = $(this).find('input[name^="filter_fields_order"][name$="[slug]"]').val();
+            if (excludedFields.includes(value)) return;
+            const label = $(this).find('.item-title').text().trim();
+            fields.push({ value, label: `${label} (${value})` });
         });
-
         return fields;
     }
 
-    handleLogicTagEmailSubject('.oo-email-subject-title', '.oo-email-subject-suggestions', '.oo-email-subject-output');
+    function updateFields() {
+        fields = getFieldsForShowTagEmailSubject();
+    }
+
+    function init() {
+        document.addEventListener('fieldListUpdated', updateFields);
+        handleLogicTagEmailSubject('.oo-email-subject-title', '.oo-email-subject-suggestions', '.oo-email-subject-output');
+    }
+
+    init();
 });
