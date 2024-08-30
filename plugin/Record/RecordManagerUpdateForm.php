@@ -72,6 +72,29 @@ class RecordManagerUpdateForm
 	}
 
 	/**
+	 * @param array $contactTypes
+	 *
+	 * @return bool
+	 */
+	public function updateContactTypeByRow(array $contactTypes): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$pWpDb->delete($prefix.self::TABLENAME_CONTACT_TYPES, ['form_id' => $this->getRecordId()]);
+
+		$result = true;
+		foreach ($contactTypes as $row) {
+			if (empty($row)) {
+				continue;
+			}
+
+			$result = $result && $pWpDb->insert($pWpDb->prefix.self::TABLENAME_CONTACT_TYPES, $row);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * @param array $row
 	 *
 	 * @return bool
@@ -86,5 +109,5 @@ class RecordManagerUpdateForm
 		$row['form_id'] = $this->getRecordId();
 
 		return $result && $pWpDb->insert($pWpDb->prefix.'oo_plugin_form_taskconfig', $row);
-	}
+  }
 }

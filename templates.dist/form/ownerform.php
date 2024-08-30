@@ -31,6 +31,7 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 
 $addressValues = array();
 $estateValues = array();
+$hiddenValues  = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo esc_html__('SUCCESS!', 'onoffice-for-wp-websites');
@@ -43,6 +44,10 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
+		if ($pForm->isHiddenField($input) && $input !== 'message') {
+			$hiddenValues []= renderFormField($input, $pForm);
+			continue;
+		}
 		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
 		$line = $pForm->getFieldLabel($input).$addition.': ';
@@ -58,9 +63,14 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		if ( in_array( $input, array( 'message' )) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage = $isRequiredMessage ? '*' : '';
-	
-			$line = $pForm->getFieldLabel( 'message' ).$additionMessage.':<br>';
-			$line .= '<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
+			$isHiddenField = $pForm->isHiddenField('message');
+			if (!$isHiddenField) {
+				$line = $pForm->getFieldLabel( 'message' );
+				$line .= $additionMessage . ':<br>';
+				$line .= '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea><br>';
+			} else {
+				$line = '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
+			}
 		}
 		if ($table == 'address') {
 			$addressValues []= $line;
@@ -83,6 +93,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		<p>';
 	echo implode('<br>', $estateValues);
 	echo '</p>';
+	echo implode($hiddenValues);
 
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }

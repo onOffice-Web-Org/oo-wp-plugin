@@ -218,6 +218,10 @@ class DataFormConfigurationFactory
 		if (array_key_exists('markdown', $row) && $row['markdown'] == 1) {
 			$pFormConfiguration->addMarkdownFields($fieldName);
 		}
+
+		if (array_key_exists('hidden_field', $row) && $row['hidden_field'] == 1) {
+			$pFormConfiguration->addHiddenFields($fieldName);
+		}
 	}
 
 
@@ -244,6 +248,7 @@ class DataFormConfigurationFactory
 		$geoPositionSettings = $this->_pGeoPositionFieldHandler->getActiveFields();
 		$fieldMapping = (new GeoPosition)->getSearchCriteriaFields();
 
+		$geoPositionFields = [];
 		foreach ($geoPositionSettings as $field) {
 			if ($this->_type === Form::TYPE_APPLICANT_SEARCH && $field === GeoPosition::ESTATE_LIST_SEARCH_RADIUS) {
 				continue;
@@ -258,8 +263,10 @@ class DataFormConfigurationFactory
 				'individual_fieldname' => 0,
 			];
 
-			$result []= $geoPositionField;
+			$geoPositionFields []= $geoPositionField;
 		}
+
+		array_splice($result, $arrayPosition, 0, $geoPositionFields);
 
 		return $result;
 	}
@@ -302,7 +309,7 @@ class DataFormConfigurationFactory
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
 		$pConfig->setNewsletterCheckbox((bool)$row['newsletter']);
 		$pConfig->setShowEstateContext((bool)$row['show_estate_context']);
-		$pConfig->setContactTypeField($row['contact_type'] ?? '');
+		$pConfig->setContactTypeField($row['contact_type'] ?? []);
 	}
 
 
@@ -355,7 +362,7 @@ class DataFormConfigurationFactory
 		$pConfig->setPages($row['pages']);
 		$pConfig->setCreateOwner((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
-		$pConfig->setContactTypeField($row['contact_type'] ?? '');
+		$pConfig->setContactTypeField($row['contact_type'] ?? []);
 	}
 
 
@@ -373,7 +380,7 @@ class DataFormConfigurationFactory
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCreateInterest((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
-		$pConfig->setContactTypeField($row['contact_type'] ?? '');
+		$pConfig->setContactTypeField($row['contact_type'] ?? []);
 	}
 
 

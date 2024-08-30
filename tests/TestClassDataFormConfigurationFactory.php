@@ -315,6 +315,7 @@ class TestClassDataFormConfigurationFactory
 			$this->assertEquals(['Vorname', 'Name'], $pDataFormConfiguration->getRequiredFields());
 			$this->assertEquals('testtemplate.php', $pDataFormConfiguration->getTemplate());
 			$this->assertEquals(['Vorname', 'Name'], $pDataFormConfiguration->getMarkdownFields());
+			$this->assertEquals(['Vorname', 'Name'], $pDataFormConfiguration->getHiddenFields());
 
 			$this->assertTrue($pDataFormConfiguration->getCaptcha());
 
@@ -394,6 +395,7 @@ class TestClassDataFormConfigurationFactory
 				'required' => '1',
 				'markdown' => '1',
 				'contact_type' => '',
+				'hidden_field' => '1'
 			],
 			[
 				'form_fieldconfig_id' => '2',
@@ -407,6 +409,7 @@ class TestClassDataFormConfigurationFactory
 				'required' => '1',
 				'markdown' => '1',
 				'contact_type' => '',
+				'hidden_field' => '1'
 			],
 			[
 				'form_fieldconfig_id' => '3',
@@ -420,6 +423,7 @@ class TestClassDataFormConfigurationFactory
 				'required' => '0',
 				'markdown' => '0',
 				'contact_type' => '',
+				'hidden_field' => ''
 			],
 		];
 
@@ -472,7 +476,7 @@ class TestClassDataFormConfigurationFactory
 			'newsletter' => '1',
 			'availableOptions' => '1',
 			'show_estate_context' => '0',
-			'contact_type' => '',
+			'contact_type' => ['Owner', 'Investor'],
             'default_recipient' => 'default@my-onoffice.com'
 		];
 	}

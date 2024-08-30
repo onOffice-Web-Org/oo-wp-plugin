@@ -66,6 +66,7 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->setMarkdownFields(['test1', 'test2']);
 		$pDataFormConfiguration->addMarkdownFields('test3');
 		$pDataFormConfiguration->setShowEstateContext(true);
+		$pDataFormConfiguration->addHiddenFields('test-hidden');
 		$pDataFormConfiguration->setEnableCreateTask(true);
 		$pDataFormConfiguration->setTaskResponsibility('Tobias');
 		$pDataFormConfiguration->setTaskProcessor('Tobias');
@@ -109,6 +110,7 @@ class TestClassDataFormConfiguration
 			$pDataFormConfiguration->getMarkdownFields());
 		$this->assertEquals('form', $pDataFormConfiguration->getModule());
 		$this->assertTrue($pDataFormConfiguration->getShowEstateContext());
+		$this->assertEquals(['test-hidden'], $pDataFormConfiguration->getHiddenFields());
 		$this->assertTrue($pDataFormConfiguration->getEnableCreateTask());
 		$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskResponsibility());
 		$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskProcessor());

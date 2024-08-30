@@ -164,6 +164,15 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 					}
 				}
 
+				$contactTypes = $listViewRoot['contact_type'];
+				foreach ($contactTypes as $contactType) {
+					$this->_pWPDB->insert($prefix.'oo_plugin_contacttypes', [
+							'form_id' => esc_sql((int) $duplicateListViewId),
+							'contact_type' => esc_sql($contactType)
+						]
+					);
+				}
+
 				//duplicate data related oo_plugin_form_taskconfig table
 				$tableTaskConfig = $prefix . self::TABLENAME_TASKCONFIG_FORMS;
 				$taskConfigByFormId = "SELECT * FROM {$this->_pWPDB->_escape($tableTaskConfig)} WHERE form_id='{$this->_pWPDB->_escape($listViewRoot['form_id'])}'";
@@ -171,7 +180,7 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 				if (!empty($taskConfigRows) && (count($taskConfigRows) !== 0)) {
 					$this->duplicateDataRelated($duplicateListViewId, $taskConfigRows,
 						$tableTaskConfig, 'form_id', 'form_taskconfig_id');
-				}
+ 				}
 			}
 		}
 	}

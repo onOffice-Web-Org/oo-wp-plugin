@@ -60,6 +60,7 @@ use stdClass;
 use function __;
 use function esc_sql;
 use function wp_enqueue_script;
+use function esc_attr;
 
 /**
  *
@@ -182,6 +183,7 @@ abstract class AdminPageFormSettingsBase
 	{
 		$pBoolToFieldList = new BooleanValueToFieldList(new InputModelDBFactoryConfigForm, $pValues);
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRED);
+		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_HIDDEN_FIELD);
 	}
 
 	/**
@@ -214,6 +216,9 @@ abstract class AdminPageFormSettingsBase
 					($row[RecordManager::TABLENAME_FIELDCONFIG_FORMS]);
 			}
 
+			if (array_key_exists(RecordManager::TABLENAME_CONTACT_TYPES, $row)) {
+				$result = $result && $pRecordManagerUpdateForm->updateContactTypeByRow($row[RecordManager::TABLENAME_CONTACT_TYPES]);
+			}
 			if (array_key_exists(RecordManager::TABLENAME_TASKCONFIG_FORMS, $row)) {
 				$result = $result && $pRecordManagerUpdateForm->updateTasksConfigByRow($row[RecordManager::TABLENAME_TASKCONFIG_FORMS]);
 			}
@@ -229,6 +234,8 @@ abstract class AdminPageFormSettingsBase
 				$rowFieldConfig = $this->prepareRelationValues
 					(RecordManager::TABLENAME_FIELDCONFIG_FORMS, 'form_id', $row, $recordId);
 				$row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] = $rowFieldConfig;
+				$row[RecordManager::TABLENAME_CONTACT_TYPES] =
+					$this->prepareRelationValues(RecordManager::TABLENAME_CONTACT_TYPES, 'form_id', $row, $recordId);
 				$row[RecordManager::TABLENAME_TASKCONFIG_FORMS]['form_id'] = $recordId;
 				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_TASKCONFIG_FORMS);
 				$pRecordManagerInsertForm->insertAdditionalValues($row);
@@ -706,6 +713,12 @@ abstract class AdminPageFormSettingsBase
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginforms-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
+
+		if ($this->getType() !== Form::TYPE_APPLICANT_SEARCH) {
+			wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js');
+			wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css');
+			wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
+		}
 	}
 
 
@@ -769,7 +782,7 @@ abstract class AdminPageFormSettingsBase
 		$this->generatePageMainTitle( $this->getPageTitle() );
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
-		echo '<input type="hidden" name="record_id" value="' . ( $_GET['id'] ?? 0 ) . '" />';
+		echo '<input type="hidden" name="record_id" value="' . esc_attr( $_GET['id'] ?? 0 ) . '" />';
 		echo '<input type="hidden" name="type" value="' . $this->getType() . '" />';
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );

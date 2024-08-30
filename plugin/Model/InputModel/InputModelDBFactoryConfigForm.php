@@ -93,6 +93,9 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_MARK_DOWN = 'formMarkdown';
 
 	/** */
+	const INPUT_FORM_HIDDEN_FIELD = 'formHiddenField';
+
+	/** */
 	const INPUT_FORM_ESTATE_CONTEXT_AS_HEADING = 'show_estate_context';
 
     /** */
@@ -228,7 +231,7 @@ class InputModelDBFactoryConfigForm
 			self::KEY_FIELD => 'show_estate_context',
 		],
 		self::INPUT_FORM_CONTACT_TYPE => [
-			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_TABLE => 'oo_plugin_contacttypes',
 			self::KEY_FIELD => 'contact_type',
 		],
 
@@ -259,6 +262,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_MARK_DOWN => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'markdown',
+		],
+		self::INPUT_FORM_HIDDEN_FIELD => [
+			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
+			self::KEY_FIELD => 'hidden_field',
 		],
 		self::INPUT_FORM_ENABLE_CREATE_TASK => [
 			self::KEY_TABLE => 'oo_plugin_form_taskconfig',
