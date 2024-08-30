@@ -230,6 +230,11 @@ jQuery(document).ready(function($) {
             const label = $(this).find('.item-title').text().trim();
             fields.push({ value, label: `${label} (${value})` });
         });
+        fields.push({
+            value: 'estateid',
+            label: 'estateID'
+        });
+
         return fields;
     }
 
