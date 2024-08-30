@@ -445,6 +445,7 @@ class FormModelBuilderAddressDetailSettings
 	{
 		$recordManagerReadEstate = $this->_pContainer->get(RecordManagerReadListViewEstate::class);
 		$recordManagerReadEstate->addColumn('name');
+		$recordManagerReadEstate->setLimit(100);
 		$allRecordsEstate = $recordManagerReadEstate->getRecords();
 		$shortCodeEstate = array();
 
