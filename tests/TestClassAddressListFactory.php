@@ -24,6 +24,7 @@ namespace onOffice\tests;
 
 use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
+use onOffice\WPlugin\DataAddressDetailViewHandler;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
 use onOffice\WPlugin\Factory\AddressListFactory;
 
@@ -44,8 +45,8 @@ class TestClassAddressListFactory
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
 		$pAddressListEnvironment = $pContainer->get(AddressListEnvironment::class);
-
-		$this->_pFactory = new AddressListFactory($pAddressListEnvironment);
+		$detailViewHandler = new DataAddressDetailViewHandler(null);
+		$this->_pFactory = new AddressListFactory($pAddressListEnvironment, $detailViewHandler);
 	}
 
 	/**

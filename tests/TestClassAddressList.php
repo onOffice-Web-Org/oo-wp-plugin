@@ -213,7 +213,7 @@ class TestClassAddressList
 
 		$pMockConfig->method('getFieldsCollectionBuilderShort')->willReturn($pFieldsCollectionBuilderMock);
 
-		$this->_pAddressList = new AddressList($pMockConfig);
+		$this->_pAddressList = new AddressList(null, $pMockConfig);
 	}
 
 
