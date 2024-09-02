@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
@@ -49,7 +51,11 @@ class ContentFilterShortCodeAddressDetail {
 				$this->_pAddressDetailFactory = $pAddressDetailFactory;
 				$this->_pWPQueryWrapper = $pWPQueryWrapper;
     }
-
+		/**
+     * @return string
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
     public function render(): string {
         $addressDetailView =  $this->_pDataAddressDetailViewHandler->getAddressDetailView();
         $template = $this->_pTemplate->withTemplateName($addressDetailView->getTemplate());

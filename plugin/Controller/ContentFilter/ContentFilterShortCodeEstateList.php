@@ -130,7 +130,7 @@ class ContentFilterShortCodeEstateList
 			$pEstateList->setUnitsViewName($attributes['units']);
 			$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 
-			if(isset($attributes['address']))
+			if(isset($attributes['address']) && intval($attributes['address']) != 0)
 			{
 				$pEstateList->setFilterAdressId($attributes['address']);
 			}
