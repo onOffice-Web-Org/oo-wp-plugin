@@ -222,7 +222,8 @@ class FormPostContact
 		$pAddressDataView = $pDataAddressDetailViewHandler->getAddressDetailView();
 
 		$referrerURL = get_site_url().$requestParams['referrer'];
-		if($pAddressDataView->getPageId() != "" && (
+
+		if(intval($pAddressDataView->getPageId()) != 0 && (
 			str_starts_with($referrerURL, get_permalink($pAddressDataView->getPageId()))
 			|| str_starts_with($referrerURL, get_permalink($pAddressDataView->getPageId()))))
 		{
