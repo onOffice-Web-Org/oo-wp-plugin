@@ -25,6 +25,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\WPlugin\Controller\InputVariableReaderFormatter;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use Parsedown;
@@ -207,6 +208,17 @@ class Form
 		$inputsAll = $this->filterActiveInputFields($inputsAll);
 
 		return $inputsAll;
+	}
+
+	/**
+	 * @param string $field
+	 * @return bool
+	 */
+	public function isHiddenField(string $field): bool
+	{
+		$hiddenFields = $this->getDataFormConfiguration()->getHiddenFields();
+
+		return in_array($field, $hiddenFields);
 	}
 
 
@@ -577,6 +589,16 @@ class Form
 	{
 		return $this->_pFormData->getFormSent() &&
 			in_array($field, $this->_pFormData->getMissingFields(), true);
+	}
+
+	/**
+	 * @param string $field
+	 * @return bool
+	 */
+	public function isApplyThousandSeparatorField(string $field): bool
+	{
+		return in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS) && 
+			!empty(get_option('onoffice-settings-thousand-separator'));
 	}
 
 
