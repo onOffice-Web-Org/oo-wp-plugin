@@ -29,8 +29,6 @@ use onOffice\WPlugin\Controller\AddressListEnvironment;
 
 class AddressListFactory
 {
-	// /** @var AddressListEnvironment */
-	// private $_pEnvironment;
 
 	/** @var DataAddressDetailViewHandler */
 	private $_pDataAddressDetailViewHandler;
@@ -40,7 +38,6 @@ class AddressListFactory
 	 */
 	public function __construct(DataAddressDetailViewHandler $pDataAddressDetailViewHandler)
 	{
-		// $this->_pEnvironment = $pEnvironment;
 		$this->_pDataAddressDetailViewHandler = $pDataAddressDetailViewHandler;
 	}
 

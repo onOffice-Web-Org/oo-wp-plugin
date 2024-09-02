@@ -218,13 +218,13 @@ class FormPostContact
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
 		}
-
 		$pDataAddressDetailViewHandler = new DataAddressDetailViewHandler();
 		$pAddressDataView = $pDataAddressDetailViewHandler->getAddressDetailView();
 
 		$referrerURL = get_site_url().$requestParams['referrer'];
-		if(str_starts_with($referrerURL, get_permalink($pAddressDataView->getPageId()))
-			|| str_starts_with($referrerURL, get_permalink($pAddressDataView->getPageId())))
+		if($pAddressDataView->getPageId() != "" && (
+			str_starts_with($referrerURL, get_permalink($pAddressDataView->getPageId()))
+			|| str_starts_with($referrerURL, get_permalink($pAddressDataView->getPageId()))))
 		{
 			//if form posted on address detail page, change recipient
 			$addressId = str_replace(get_permalink($pAddressDataView->getPageId()),"",$referrerURL);
@@ -241,7 +241,6 @@ class FormPostContact
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
 		$pAPIClientAction->setParameters($requestParams);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
-
 		if (!$pAPIClientAction->getResultStatus()) {
 			throw new ApiClientException($pAPIClientAction);
 		}

@@ -448,6 +448,35 @@ class TestClassFormPostContact
 		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
 	}
 
+
+	/**
+	 *
+	 */
+
+	public function testFormHoneypotEmpty()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'Email' => 'john.doe@my-onoffice.com',
+			'Plz' => '52068',
+			'Ort' => 'Aachen',
+			'Telefon1' => '0815/2345677',
+			'AGB_akzeptiert' => 'y',
+			'newsletter' => 'y',
+			'Id' => '1337',
+			'Anrede' => '',
+			'tmpField' => 'content',
+		];
+
+		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$pDataFormConfiguration->setCreateAddress(true);
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+
+		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+	}
+
 	/**
 	 *
 	 */
