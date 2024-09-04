@@ -58,6 +58,7 @@ class InputFieldSubjectForFormRenderer
 			$textHtml = '<p class="hint-text">' . esc_html($this->getHint()) . '</p>';
 		}
 		echo '<div class="oo-email-subject-container">'
+        	. '<button class="oo-insert-variable-button">'.__('Enter variable', 'onoffice-for-wp-websites').'</button>'
 			. '<div class="oo-email-subject-title" contenteditable="true"></div>'
 			. '<div class="oo-email-subject-suggestions"></div>'
 			. '<input type="hidden" class="oo-email-subject-output" name="' . esc_html($this->getName()) . '" value="' . esc_html($this->getValue()) . '">'

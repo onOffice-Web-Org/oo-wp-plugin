@@ -3,10 +3,11 @@ jQuery(document).ready(function($) {
     let fields = getFieldsForShowTagEmailSubject();
     let cursorPosition;
 
-    function handleLogicTagEmailSubject(editableSelector, suggestionsSelector, outputSelector) {
+    function handleLogicTagEmailSubject(editableSelector, suggestionsSelector, outputSelector, buttonSelector) {
         const editableElement = $(editableSelector);
         const suggestionsElement = $(suggestionsSelector);
         const outputElement = $(outputSelector);
+        const buttonElement = $(buttonSelector);
 
         if (outputElement.val()) {
             const { newValue } = replaceTagsWithSpans(outputElement.val());
@@ -20,15 +21,37 @@ jQuery(document).ready(function($) {
             handleSuggestionSelection($(this), editableElement, suggestionsElement, outputElement);
         });
 
+        buttonElement.on('click', function(e) {
+            e.preventDefault();
+            focusAtEnd(editableElement[0]);
+            insertTextAtCursor(' %');
+            editableElement.trigger('input');
+        });
+
         editableElement.on('click', '.oo-remove-tag', function() {
             handleTagRemove($(this), editableElement, outputElement);
         });
 
         $(document).on('click', (e) => {
-            if (!editableElement.is(e.target) && !suggestionsElement.is(e.target) && suggestionsElement.has(e.target).length === 0) {
+            if (!editableElement.is(e.target) && !suggestionsElement.is(e.target) && suggestionsElement.has(e.target).length === 0 && !buttonElement.is(e.target)) {
                 suggestionsElement.hide();
             }
         });
+    }
+
+    function getSelection() {
+        return window.getSelection();
+    }
+
+    function insertTextAtCursor(text) {
+        const selection = getSelection();
+        if (!selection || !selection.rangeCount) return;
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(document.createTextNode(text));
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
     }
 
     function handlePaste(e) {
@@ -37,7 +60,7 @@ jQuery(document).ready(function($) {
     }
 
     function pasteTextAtCursor(text) {
-        const selection = window.getSelection();
+        const selection = getSelection();
         if (!selection || !selection.rangeCount) return;
         selection.deleteFromDocument();
         selection.getRangeAt(0).insertNode(document.createTextNode(text));
@@ -92,7 +115,7 @@ jQuery(document).ready(function($) {
             const hasAdjacentPercents = str.includes('%%');
             const isSinglePercent = checkOnlyPercentCharacter(beforeCursor, lastPercentIndex);
 
-            if (!hasAdjacentPercents && (str.endsWith('%') || (str.includes('%') && str.split('%').pop().trim() !== '')) || isSinglePercent) {
+            if (!hasAdjacentPercents && (str.endsWith('%') || (str.includes('%') && str.split('%').pop().trim() !== '')) || isSinglePercent && str.endsWith('%')) {
                 displaySuggestions(beforeCursor, suggestionsElement);
             } else {
                 suggestionsElement.hide();
@@ -106,7 +129,7 @@ jQuery(document).ready(function($) {
 
     function setCursorPosition(element, position) {
         const range = document.createRange();
-        const selection = window.getSelection();
+        const selection = getSelection();
         let currentNode = element.firstChild;
         let currentPosition = 0;
 
@@ -141,6 +164,28 @@ jQuery(document).ready(function($) {
         const newValue = `<span class="oo-tag" contenteditable="false" data-value="${selectedValue}">${selectedLabel} <span class="oo-remove-tag select2-selection__choice__remove"></span></span>&nbsp;`;
 
         if (cursorPosition) {
+            const startContainer = cursorPosition.startContainer;
+            const startOffset = cursorPosition.startOffset;
+
+            if (startContainer.nodeType === Node.TEXT_NODE) {
+                const textContent = startContainer.textContent;
+                if (textContent[startOffset - 1] === '%') {
+                    startContainer.textContent = textContent.slice(0, startOffset - 1) + textContent.slice(startOffset);
+                    cursorPosition.setStart(startContainer, startOffset - 1);
+                    cursorPosition.collapse(true);
+                }
+            } else if (startContainer.nodeType === Node.ELEMENT_NODE && startContainer.childNodes[startOffset - 1].nodeType === Node.TEXT_NODE) {
+                const textNode = startContainer.childNodes[startOffset - 1];
+                const textContent = textNode.textContent;
+                if (textContent[textContent.length - 1] === '%') {
+                    textNode.textContent = textContent.slice(0, textContent.length - 1);
+                    cursorPosition.setStart(textNode, textNode.length);
+                    cursorPosition.collapse(true);
+                }
+            }
+        }
+
+        if (cursorPosition) {
             cursorPosition.deleteContents();
             insertHtmlAtRange(newValue);
         }
@@ -160,7 +205,7 @@ jQuery(document).ready(function($) {
     }
 
     function saveCursorPosition() {
-        const selection = window.getSelection();
+        const selection = getSelection();
         if (selection && selection.rangeCount > 0) {
             cursorPosition = selection.getRangeAt(0);
         }
@@ -178,7 +223,7 @@ jQuery(document).ready(function($) {
     }
 
     function getTextBeforeCursor() {
-        const selection = window.getSelection();
+        const selection = getSelection();
         if (!selection || selection.rangeCount === 0) return '';
         const tempRange = document.createRange();
         tempRange.setStart(selection.getRangeAt(0).startContainer, 0);
@@ -216,7 +261,7 @@ jQuery(document).ready(function($) {
         if (lastNode) {
             cursorPosition.setStartAfter(lastNode);
             cursorPosition.collapse(true);
-            const selection = window.getSelection();
+            const selection = getSelection();
             selection.removeAllRanges();
             selection.addRange(cursorPosition);
         }
@@ -242,9 +287,18 @@ jQuery(document).ready(function($) {
         fields = getFieldsForShowTagEmailSubject();
     }
 
+    function focusAtEnd(element) {
+        const range = document.createRange();
+        const selection = getSelection();
+        range.selectNodeContents(element);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
     function init() {
         document.addEventListener('fieldListUpdated', updateFields);
-        handleLogicTagEmailSubject('.oo-email-subject-title', '.oo-email-subject-suggestions', '.oo-email-subject-output');
+        handleLogicTagEmailSubject('.oo-email-subject-title', '.oo-email-subject-suggestions', '.oo-email-subject-output', '.oo-insert-variable-button');
     }
 
     init();

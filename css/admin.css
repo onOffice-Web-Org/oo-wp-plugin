@@ -913,6 +913,20 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	position: relative;
 }
 
+.oo-poststuff .oo-email-subject-container .oo-insert-variable-button {
+	color: #646970;
+	border-color: #646970;
+	background: #f6f7f7;
+	padding: 5px 10px;
+	border-radius: 4px;
+	cursor: pointer;
+	margin-bottom: 10px;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-insert-variable-button:hover {
+	background: #e0e0e0;
+}
+
 .oo-poststuff .oo-email-subject-container .oo-tag {
 	background-color: #e4e4e4;
 	border: 1px solid #aaa;
