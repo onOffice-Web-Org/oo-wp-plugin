@@ -121,7 +121,7 @@ implements AddressListBase
 
 
 	/** @var array */
-	private $_adressesById = [];
+	private $_addressesById = [];
 
 	/** @var AddressListEnvironment */
 	private $_pEnvironment = null;
@@ -154,7 +154,7 @@ implements AddressListBase
 	 * @throws NotFoundException
 	 * @throws API\ApiClientException
 	 */
-	public function loadAdressesById(array $addressIds, array $fields)
+	public function loadAddressesById(array $addressIds, array $fields)
 	{
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		$pApiCall = new APIClientActionGeneric
@@ -249,7 +249,7 @@ implements AddressListBase
 
 			$additionalContactData = $this->collectAdditionalContactData($elements);
 			unset($elements['id']);
-			$this->_adressesById[$address['id']] = array_merge($elements, $additionalContactData);
+			$this->_addressesById[$address['id']] = array_merge($elements, $additionalContactData);
 		}
 	}
 
@@ -286,7 +286,7 @@ implements AddressListBase
 	 */
 	public function getAddressById($id): array
 	{
-		return $this->_adressesById[$id] ?? [];
+		return $this->_addressesById[$id] ?? [];
 	}
 
 	/**
@@ -299,7 +299,7 @@ implements AddressListBase
 		return array_map(function($values) use ($pAddressFieldModifier, $raw): ArrayContainer {
 			$valuesNew = $pAddressFieldModifier->processRecord($values);
 			return $this->getArrayContainerByRow($raw, $valuesNew);
-		}, $this->_adressesById);
+		}, $this->_addressesById);
 	}
 
 	/**
@@ -403,7 +403,7 @@ implements AddressListBase
 			case AddressList::CONTACT_CATEGORY_PRIVATE_CUSTOMER:
 				$firstName = $addressRawElements['Vorname'] ?? '';
 				$name = $addressRawElements['Name'] ?? '';
-				$imageAlt = trim($firstName . ', ' . $name , ', ');
+				$imageAlt = $firstName . ' ' . $name;
 				break;
 			case AddressList::CONTACT_CATEGORY_COMPANY:
 				$imageAlt = $addressRawElements['Zusatz1'] ?? '';
@@ -458,6 +458,6 @@ implements AddressListBase
 	 */
 	public function getCurrentAddress(): array
 	{
-		return $this->_adressesById;
+		return $this->_addressesById;
 	}
 }

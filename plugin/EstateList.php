@@ -109,7 +109,7 @@ class EstateList
 
 	private $_pWPOptionWrapper;
 
-	private $_filterAdressId;
+	private $_filterAddressId;
 
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
@@ -445,7 +445,7 @@ class EstateList
 		ksort($fields);
 
 		if ($fields !== [] && $allAddressIds !== []) {
-			$this->_pEnvironment->getAddressList()->loadAdressesById($allAddressIds, $fields);
+			$this->_pEnvironment->getAddressList()->loadAddressesById($allAddressIds, $fields);
 		}
 	}
 
@@ -797,7 +797,7 @@ class EstateList
 	{
 		$addressIds = $this->getEstateContactIds();
 
-		return !isset($this->_filterAdressId) || in_array($this->_filterAdressId,$addressIds);
+		return !isset($this->_filterAddressId) || in_array($this->_filterAddressId,$addressIds);
 	}
 	/**
 	 * @return array
@@ -1109,9 +1109,9 @@ class EstateList
 	public function setUnitsViewName($unitsViewName)
 		{ $this->_unitsViewName = $unitsViewName; }
 
-	/** @param string $filterAdressId */
-	public function setFilterAdressId($filterAdressId)
-		{ $this->_filterAdressId = $filterAdressId; }
+	/** @param string $filterAddressId */
+	public function setFilterAddressId($filterAddressId)
+		{ $this->_filterAddressId = $filterAddressId; }
 
 	/** @return GeoSearchBuilder */
 	public function getGeoSearchBuilder(): GeoSearchBuilder

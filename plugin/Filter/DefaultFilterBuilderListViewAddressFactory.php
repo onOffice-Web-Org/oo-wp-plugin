@@ -66,15 +66,15 @@ class DefaultFilterBuilderListViewAddressFactory
 
 	/**
 	 *
-	 * @param DataViewAddress $pDataListView
+	 * @param DataViewAddress $pDataViewAddress
 	 * @return DefaultFilterBuilderListViewAddress
 	 *
 	 */
 
-	public function create(DataViewAddress $pDataListView): DefaultFilterBuilderListViewAddress
+	public function create(DataViewAddress $pDataViewAddress): DefaultFilterBuilderListViewAddress
 	{
 		$pFilterBuilder = $this->_pFilterBuilderFactory->createForAddress();
-		return new DefaultFilterBuilderListViewAddress($pDataListView,
+		return new DefaultFilterBuilderListViewAddress($pDataViewAddress,
 			$this->_pBuilderShort, $this->_pCompoundFields, $pFilterBuilder);
 	}
 }

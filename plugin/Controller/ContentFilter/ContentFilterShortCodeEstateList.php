@@ -132,7 +132,7 @@ class ContentFilterShortCodeEstateList
 
 			if(isset($attributes['address']) && intval($attributes['address']) != 0)
 			{
-				$pEstateList->setFilterAdressId($attributes['address']);
+				$pEstateList->setFilterAddressId($attributes['address']);
 			}
 
 			$pEstateList->loadEstates($this->_pWPQueryWrapper->getWPQuery($pListView->getId())->get('paged', 1) ?: 1);

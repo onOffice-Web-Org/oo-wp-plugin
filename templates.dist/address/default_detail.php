@@ -19,7 +19,7 @@
  *
  */
 
-use onOffice\WPlugin\AdressDetail;
+use onOffice\WPlugin\AddressDetail;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 
 

@@ -41,7 +41,7 @@ class DefaultFilterBuilderListViewAddress
 	implements DefaultFilterBuilder
 {
 	/** @var DataViewAddress */
-	private $_pDataListView = null;
+	private $_pDataViewAddress = null;
 
 	/** @var FilterBuilderInputVariables */
 	private $_pFilterBuilderInputVars = null;
@@ -55,18 +55,18 @@ class DefaultFilterBuilderListViewAddress
 
 	/**
 	 *
-	 * @param DataViewAddress $pDataListView
+	 * @param DataViewAddress $pDataViewAddress
 	 * @param FilterBuilderInputVariables $pFilterBuilder
 	 *
 	 */
 
 	public function __construct(
-		DataViewAddress $pDataListView,
+		DataViewAddress $pDataViewAddress,
 		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort,
 		CompoundFieldsFilter $pCompoundFields,
 		FilterBuilderInputVariables $pFilterBuilder = null)
 	{
-		$this->_pDataListView = $pDataListView;
+		$this->_pDataViewAddress = $pDataViewAddress;
 		$this->_pFilterBuilderInputVars = $pFilterBuilder ?? new FilterBuilderInputVariables
 			(onOfficeSDK::MODULE_ADDRESS, true);
 
@@ -87,7 +87,7 @@ class DefaultFilterBuilderListViewAddress
 
 	public function buildFilter(): array
 	{
-		$filterableFields = $this->_pDataListView->getFilterableFields();
+		$filterableFields = $this->_pDataViewAddress->getFilterableFields();
 		$pFieldsCollection = new FieldsCollection();
 		$this->_pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$filterableInputs = $this->_pCompoundFieldsFilter->mergeFields($pFieldsCollection, $filterableFields);
