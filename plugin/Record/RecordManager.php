@@ -78,6 +78,9 @@ abstract class RecordManager
 	const TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS = 'oo_plugin_fieldconfig_estate_translated_labels';
 
 	/** */
+	const TABLENAME_CONTACT_TYPES = 'oo_plugin_contacttypes';
+
+	/** */
 	const TABLENAME_ACTIVITY_CONFIG_FORM = 'oo_plugin_form_activityconfig';
 
 	/**

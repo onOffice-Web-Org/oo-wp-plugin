@@ -45,7 +45,19 @@ onOffice.checkboxAdmin = function() {
 				invert: true
 			}
 		],
-		
+		"input[name^=oopluginformfieldconfig-hiddenfield]": [
+			{
+				element: "input[name^=oopluginformfieldconfig-required]",
+				invert: true
+			},
+		],
+		"input[name^=oopluginformfieldconfig-required]": [
+			{
+				element: "input[name^=oopluginformfieldconfig-hiddenfield]",
+				invert: true
+			},
+		],
+
 		// view: create activity form
 		"input[name=oopluginformactivityconfig-writeactivity]": [
 			{

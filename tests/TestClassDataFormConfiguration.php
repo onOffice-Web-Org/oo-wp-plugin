@@ -66,6 +66,7 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->setMarkdownFields(['test1', 'test2']);
 		$pDataFormConfiguration->addMarkdownFields('test3');
 		$pDataFormConfiguration->setShowEstateContext(true);
+		$pDataFormConfiguration->addHiddenFields('test-hidden');
 		$pDataFormConfiguration->setWriteActivity(true);
 		$pDataFormConfiguration->setActionKind('test1');
 		$pDataFormConfiguration->setActionType('test2');
@@ -106,6 +107,7 @@ class TestClassDataFormConfiguration
 			$pDataFormConfiguration->getMarkdownFields());
 		$this->assertEquals('form', $pDataFormConfiguration->getModule());
 		$this->assertTrue($pDataFormConfiguration->getShowEstateContext());
+		$this->assertEquals(['test-hidden'], $pDataFormConfiguration->getHiddenFields());
 		$this->assertTrue($pDataFormConfiguration->getWriteActivity());
 		$this->assertEquals('test1', $pDataFormConfiguration->getActionKind());
 		$this->assertEquals('test2', $pDataFormConfiguration->getActionType());

@@ -199,6 +199,12 @@ class RecordStructure
 				self::EMPTY_VALUE => '',
 			),
 		],
+		RecordManager::TABLENAME_CONTACT_TYPES => array(
+			'contact_type' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+		),
 		RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM => array(
 			'write_activity' => array(
 				self::NULL_ALLOWED => false,

@@ -314,6 +314,7 @@ class TestClassFormPostContact
 			'phone' => '0815/2345677',
 			'AGB_akzeptiert' => true,
 			'checkDuplicate' => false,
+			'ArtDaten' => ['Owner', 'Customer'],
 		];
 
 		$responseJson = file_get_contents
@@ -574,7 +575,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->setFormName('contactForm');
 		$pDataFormConfiguration->setSubject('¡A new Contact!');
 		$pDataFormConfiguration->setRequiredFields(['Vorname', 'Name', 'Email']);
-		$pDataFormConfiguration->setContactTypeField('');
+		$pDataFormConfiguration->setContactTypeField(['Owner', 'Customer']);
 		$this->mockNewsletterCall();
 
 		return $pDataFormConfiguration;

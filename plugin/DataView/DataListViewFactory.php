@@ -57,7 +57,7 @@ class DataListViewFactory
 	public function createListViewByRow(array $row): DataViewFilterableFields
 	{
 		$pListView = new DataListView($row['listview_id'], $row['name']);
-		$pListView->setExpose($row['expose']);
+		$pListView->setExpose($row['expose'] ?? '');
 		$pListView->setFields($row[DataListView::FIELDS]);
 		$pListView->setFilterId($row['filterId'] ?? 0);
 		$pListView->setShowReferenceEstate( $row['show_reference_estate'] );
@@ -84,6 +84,9 @@ class DataListViewFactory
 		$pListView->setShowMap($row['show_map']);
 		$pListView->setShowPriceOnRequest((bool)$row['show_price_on_request']);
 		$pListView->setConvertTextToSelectForCityField($row['convertTextToSelectForCityField']);
+		$pListView->setMarkedPropertiesSort($row['markedPropertiesSort']);
+		$pListView->setSortByTags($row['sortByTags']);
+		$pListView->setSortByTagsDirection($row['sortByTagsDirection']);
 
 		$geoFieldsAll = [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,
