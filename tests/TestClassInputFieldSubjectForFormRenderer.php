@@ -42,7 +42,7 @@ class TestClassInputFieldSubjectForFormRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="oo-email-subject-container"><div class="oo-email-subject-title" contenteditable="true"></div><div class="oo-email-subject-suggestions"></div><input type="hidden" class="oo-email-subject-output" name="testRenderer" value=""></div>', $output);
+		$this->assertEquals('<div class="oo-email-subject-container"><button class="oo-insert-variable-button">Enter variable</button><div class="oo-email-subject-title" contenteditable="true"></div><div class="oo-email-subject-suggestions"></div><input type="hidden" class="oo-email-subject-output" name="testRenderer" value=""></div>', $output);
 	}
 
 	/**
@@ -55,7 +55,7 @@ class TestClassInputFieldSubjectForFormRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="oo-email-subject-container"><div class="oo-email-subject-title" contenteditable="true"></div><div class="oo-email-subject-suggestions"></div><input type="hidden" class="oo-email-subject-output" name="testRenderer" value="%%Strasse%%"></div>', $output);
+		$this->assertEquals('<div class="oo-email-subject-container"><button class="oo-insert-variable-button">Enter variable</button><div class="oo-email-subject-title" contenteditable="true"></div><div class="oo-email-subject-suggestions"></div><input type="hidden" class="oo-email-subject-output" name="testRenderer" value="%%Strasse%%"></div>', $output);
 	}
 
 	/**
@@ -69,6 +69,6 @@ class TestClassInputFieldSubjectForFormRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="oo-email-subject-container"><div class="oo-email-subject-title" contenteditable="true"></div><div class="oo-email-subject-suggestions"></div><input type="hidden" class="oo-email-subject-output" name="testRenderer" value="%%Strasse%%"></div><p class="hint-text">test</p>', $output);
+		$this->assertEquals('<div class="oo-email-subject-container"><button class="oo-insert-variable-button">Enter variable</button><div class="oo-email-subject-title" contenteditable="true"></div><div class="oo-email-subject-suggestions"></div><input type="hidden" class="oo-email-subject-output" name="testRenderer" value="%%Strasse%%"></div><p class="hint-text">test</p>', $output);
 	}
 }

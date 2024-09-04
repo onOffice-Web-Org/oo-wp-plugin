@@ -23,8 +23,14 @@ jQuery(document).ready(function($) {
 
         buttonElement.on('click', function(e) {
             e.preventDefault();
-            focusAtEnd(editableElement[0]);
-            insertTextAtCursor(' %');
+            const content = editableElement.text();
+            const lastChar = content.slice(-1);
+            const textToInsert = lastChar.trim() === '' ? '%' : ' %';
+            if (!cursorPosition) {
+                focusAtEnd(editableElement[0], textToInsert);
+            } else {
+                insertTextAtCursor(textToInsert, editableElement);
+            }
             editableElement.trigger('input');
         });
 
@@ -43,10 +49,14 @@ jQuery(document).ready(function($) {
         return window.getSelection();
     }
 
-    function insertTextAtCursor(text) {
+    function insertTextAtCursor(text, editableElement) {
         const selection = getSelection();
         if (!selection || !selection.rangeCount) return;
         const range = selection.getRangeAt(0);
+        if ($(range.commonAncestorContainer).closest(editableElement).length === 0) {
+            focusAtEnd(editableElement[0], text);
+            return;
+        }
         range.deleteContents();
         range.insertNode(document.createTextNode(text));
         range.collapse(false);
@@ -123,7 +133,7 @@ jQuery(document).ready(function($) {
         } else {
             suggestionsElement.hide();
         }
-        saveCursorPosition();
+        saveCursorPosition(editableElement);
         updateOutputField(editableElement, outputElement);
     }
 
@@ -164,28 +174,22 @@ jQuery(document).ready(function($) {
         const newValue = `<span class="oo-tag" contenteditable="false" data-value="${selectedValue}">${selectedLabel} <span class="oo-remove-tag select2-selection__choice__remove"></span></span>&nbsp;`;
 
         if (cursorPosition) {
-            const startContainer = cursorPosition.startContainer;
-            const startOffset = cursorPosition.startOffset;
-
+            const { startContainer, startOffset } = cursorPosition;
+    
             if (startContainer.nodeType === Node.TEXT_NODE) {
                 const textContent = startContainer.textContent;
                 if (textContent[startOffset - 1] === '%') {
                     startContainer.textContent = textContent.slice(0, startOffset - 1) + textContent.slice(startOffset);
                     cursorPosition.setStart(startContainer, startOffset - 1);
-                    cursorPosition.collapse(true);
                 }
-            } else if (startContainer.nodeType === Node.ELEMENT_NODE && startContainer.childNodes[startOffset - 1].nodeType === Node.TEXT_NODE) {
+            } else if (startContainer.nodeType === Node.ELEMENT_NODE) {
                 const textNode = startContainer.childNodes[startOffset - 1];
-                const textContent = textNode.textContent;
-                if (textContent[textContent.length - 1] === '%') {
-                    textNode.textContent = textContent.slice(0, textContent.length - 1);
+                if (textNode && textNode.nodeType === Node.TEXT_NODE && textNode.textContent.endsWith('%')) {
+                    textNode.textContent = textNode.textContent.slice(0, -1);
                     cursorPosition.setStart(textNode, textNode.length);
-                    cursorPosition.collapse(true);
                 }
             }
-        }
-
-        if (cursorPosition) {
+            cursorPosition.collapse(true);
             cursorPosition.deleteContents();
             insertHtmlAtRange(newValue);
         }
@@ -204,10 +208,16 @@ jQuery(document).ready(function($) {
         updateOutputField(editableElement, outputElement);
     }
 
-    function saveCursorPosition() {
+    function saveCursorPosition(editableElement) {
         const selection = getSelection();
         if (selection && selection.rangeCount > 0) {
-            cursorPosition = selection.getRangeAt(0);
+            const range = selection.getRangeAt(0);
+            const commonAncestor = range.commonAncestorContainer;
+            if ($(commonAncestor).closest(editableElement).length > 0) {
+                cursorPosition = range;
+            } else {
+                cursorPosition = undefined;
+            }
         }
     }
 
@@ -287,13 +297,14 @@ jQuery(document).ready(function($) {
         fields = getFieldsForShowTagEmailSubject();
     }
 
-    function focusAtEnd(element) {
+    function focusAtEnd(element, textToInsert) {
         const range = document.createRange();
         const selection = getSelection();
         range.selectNodeContents(element);
         range.collapse(false);
         selection.removeAllRanges();
         selection.addRange(range);
+        insertTextAtCursor(textToInsert, $(element));
     }
 
     function init() {
