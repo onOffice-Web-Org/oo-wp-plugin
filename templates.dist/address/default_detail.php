@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2020  onOffice GmbH
+ *    Copyright (C) 2024  onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  *
  */
 
-use onOffice\WPlugin\AdressDetail;
+use onOffice\WPlugin\AddressDetail;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 
 
@@ -27,9 +27,13 @@ use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 
 <div class="oo-detailview">
 	<?php
+    /* @var $pAddressList AddressDetail */
 	$currentAddressArr = $pAddressList->getCurrentAddress();
 	foreach ($currentAddressArr as $addressId => $escapedValues) {
 	?>
+    <h2 class="oo-addressdetail-headline">
+        <?php echo $escapedValues['Name']; ?>
+    </h2>
 	<div class="oo-detailsheadline">
 		<h1><?php echo $escapedValues['Name']; ?></h1>
 		<div class="oo-detailstable">

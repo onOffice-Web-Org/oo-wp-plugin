@@ -79,6 +79,7 @@ class ScriptLoaderGenericConfigurationDefault
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/dist/favorites.min.js', $pluginPath)))
 				->setDependencies(['jquery']);
 		}
+        $values = $this->addAddressStyle($values, $style, $pluginPath);
 
 		return array_merge($values, $this->addScripts($pluginPath, $script, $style, $defer, $async));
 	}
@@ -345,6 +346,23 @@ class ScriptLoaderGenericConfigurationDefault
 		preg_match_all('/\[oo_form form="([^"]+)"\]/', $pageContent, $matches);
 		return $matches[1];
 	}
+
+    /**
+     * @param array $values
+     * @param string $style
+     * @param string $pluginPath
+     * @return array
+     */
+    private function addAddressStyle(array $values, string $style, string $pluginPath) {
+        $pageContent = get_the_content();
+        if ($this->isAddressListPage($pageContent)) {
+            $values []= (new IncludeFileModel($style, 'onoffice-address', plugins_url('/css/onoffice-address.css', $pluginPath)));
+        }
+        if ($this->isDetailAddressPage($pageContent)) {
+            $values []= (new IncludeFileModel($style, 'onoffice-address-detail', plugins_url('/css/onoffice-address-detail.css', $pluginPath)));
+        }
+        return $values;
+    }
 
 	/**
 	 * @param array $scripts
