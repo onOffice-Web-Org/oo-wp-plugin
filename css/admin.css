@@ -915,7 +915,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 
 .oo-poststuff .oo-email-subject-container .oo-insert-variable-button {
 	color: #646970;
-	border-color: #646970;
+	border: 1px solid #646970;
 	background: #f6f7f7;
 	padding: 5px 10px;
 	border-radius: 4px;
@@ -927,18 +927,18 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	background: #e0e0e0;
 }
 
-.oo-poststuff .oo-email-subject-container .oo-tag {
+.oo-poststuff .oo-email-subject-container .oo-email-subject-tag {
 	background-color: #e4e4e4;
 	border: 1px solid #aaa;
 	border-radius: 4px;
 	padding: 0px 4px;
-	margin: 2px;
+	margin: 3px;
 	display: inline-flex;
 	align-items: center;
 	cursor: default;
 }
 
-.oo-poststuff .oo-email-subject-container .oo-tag .oo-remove-tag {
+.oo-poststuff .oo-email-subject-container .oo-email-subject-tag .oo-remove-tag {
 	cursor: pointer;
 }
 
@@ -950,7 +950,11 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	max-height: 150px;
 	overflow-y: auto;
 	display: none;
-	min-width: 300px;
+	min-width: 220px;
+	box-shadow: rgba(32, 33, 36, 0.28) 0px 1px 6px;
+	border-bottom: 1px hidden rgb(255, 255, 255);
+	margin-top: -5px;
+	margin-left: 7px;
 }
 
 .oo-poststuff .oo-email-subject-container .oo-suggestion-item {

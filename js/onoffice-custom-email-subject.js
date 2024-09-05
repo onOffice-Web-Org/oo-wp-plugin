@@ -86,10 +86,11 @@ jQuery(document).ready(function($) {
             const label = variable ? variable.label : variableName;
 
             cursorPosition = offset + match.length;
-            return `<span class="oo-tag" contenteditable="false" data-value="${variableName}">${label} <span class="oo-remove-tag select2-selection__choice__remove"></span></span>&nbsp;`;
+            return `<span class="oo-email-subject-tag" contenteditable="false" data-value="${variableName}">${label} <span class="oo-remove-tag select2-selection__choice__remove"></span></span>&nbsp;`;
         });
+        const cleanedValue = newValue.replace(/&nbsp;\s+/g, '&nbsp;');
 
-        return { newValue, cursorPosition };
+        return { newValue: cleanedValue, cursorPosition };
     }
 
     function displaySuggestions(beforeCursor, suggestionsElement) {
@@ -171,7 +172,7 @@ jQuery(document).ready(function($) {
     function handleSuggestionSelection(suggestion, editableElement, suggestionsElement, outputElement) {
         const selectedValue = suggestion.data('value');
         const selectedLabel = suggestion.text();
-        const newValue = `<span class="oo-tag" contenteditable="false" data-value="${selectedValue}">${selectedLabel} <span class="oo-remove-tag select2-selection__choice__remove"></span></span>&nbsp;`;
+        const newValue = `<span class="oo-email-subject-tag" contenteditable="false" data-value="${selectedValue}">${selectedLabel} <span class="oo-remove-tag select2-selection__choice__remove"></span></span>&nbsp;`;
 
         if (cursorPosition) {
             const { startContainer, startOffset } = cursorPosition;
@@ -223,7 +224,7 @@ jQuery(document).ready(function($) {
 
     function updateOutputField(editableElement, outputElement) {
         const text = editableElement.clone().find('.oo-remove-tag').remove().end().html();
-        const replacedText = text.replace(/<span class="oo-tag" contenteditable="false" data-value="([^"]+)">[^<]+<\/span>/g, '%%$1%%').replace(/&nbsp;/g, ' ').trim();
+        const replacedText = text.replace(/<span class="oo-email-subject-tag" contenteditable="false" data-value="([^"]+)">[^<]+<\/span>/g, '%%$1%%').replace(/&nbsp;/g, ' ').trim();
 
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = replacedText;
