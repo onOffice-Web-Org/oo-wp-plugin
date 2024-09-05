@@ -123,6 +123,9 @@ class FormPostOwner
 					->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 				$estateData = $this->getEstateData();
 				$estateId   = $this->createEstate( $estateData );
+				if (!empty($pDataFormConfiguration->getSubject())) {
+					$subject = $this->generateCustomEmailSubject($pDataFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pDataFormConfiguration->getInputs());
+				}
 				$this->createOwnerRelation( $estateId, $addressId );
 				$this->setNewsletter( $addressId );
 			}
