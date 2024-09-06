@@ -112,7 +112,6 @@ class AddressDetail
 	 public function getShortCodeForm(): string
 	 {
 		$view = $this->getDataViewAddress();
-		$result = '';
 
 		if (! $view instanceof DataAddressDetailView || $view->getShortCodeForm() == '') {
 			return '';
@@ -132,7 +131,6 @@ class AddressDetail
 	 public function getShortCodeReferenceEstates(): string
 	 {
 		 $view = $this->getDataViewAddress();
-		 $result = '';
 
 		 if (! $view instanceof DataAddressDetailView || $view->getShortCodeReferenceEstate() == '') {
 			 return '';
@@ -153,7 +151,6 @@ class AddressDetail
 	 public function getShortCodeActiveEstates(): string
 	 {
 		 $view = $this->getDataViewAddress();
-		 $result = '';
 
 		 if (! $view instanceof DataAddressDetailView || $view->getShortCodeActiveEstate() == '') {
 			 return '';
