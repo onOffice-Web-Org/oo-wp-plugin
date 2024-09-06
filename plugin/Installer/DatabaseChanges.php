@@ -37,11 +37,13 @@ use wpdb;
 use function dbDelta;
 use function esc_sql;
 use const ABSPATH;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\Form;
 
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 48;
+	const MAX_VERSION = 49;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -328,6 +330,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 47) {
 			dbDelta($this->getCreateQueryListviews());
 			$dbversion = 48;
+		}
+
+		if ($dbversion == 48) {
+			$this->updateShortCodeFormForDetailView();
+			$dbversion = 49;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1213,5 +1220,22 @@ class DatabaseChanges implements DatabaseChangesInterface
 			SET country_active = 1, radius_active = 1";
 
 		$this->_pWPDB->query($sql);
+	}
+
+	/**
+	 *
+	 */
+	private function updateShortCodeFormForDetailView()
+	{
+		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		if(!empty($pDataDetailViewOptions)){
+			$recordManagerReadForm = new RecordManagerReadForm();
+			$allRecordsForm = $recordManagerReadForm->getRowByName($pDataDetailViewOptions->getShortCodeForm());
+			if ($allRecordsForm['form_type'] !== Form::TYPE_CONTACT) {
+				$form = $recordManagerReadForm->getAllRecordsByFormType(Form::TYPE_CONTACT);
+				$pDataDetailViewOptions->setShortCodeForm($form[0]->name ?? '');
+				$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
+			}
+		}
 	}
 }

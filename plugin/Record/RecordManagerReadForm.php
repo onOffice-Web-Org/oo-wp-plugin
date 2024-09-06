@@ -104,17 +104,19 @@ class RecordManagerReadForm
 
 
 	/**
+	 * @param string $formType
+	 * 
 	 * @return object
 	 * @throws UnknownFormException
 	 */
 
-	public function getAllRecords()
+	public function getAllRecordsByFormType(string $formType)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
 		$sql = "SELECT *
-				FROM {$prefix}oo_plugin_forms";
+				FROM {$prefix}oo_plugin_forms WHERE form_type = '{$formType}'";
 
 		$result = $pWpDb->get_results($sql, OBJECT);
 
