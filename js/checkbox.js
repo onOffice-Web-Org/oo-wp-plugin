@@ -57,18 +57,6 @@ onOffice.checkboxAdmin = function() {
 				invert: true
 			},
 		],
-
-		// view: address detail view
-		"input[name=onoffice-enableLinkedEstates]": [
-			{
-				element: "select[name=onoffice-shortcodeActiveEstates]",
-				invert: false
-			},
-			{
-				element: "select[name=onoffice-shortcodeReferenceEstate]",
-				invert: false
-			}
-		]
 	};
 };
 

@@ -52,7 +52,7 @@ class AddressDetail
 	public function loadSingleAddress($id)
 	{
 		$this->_addressId = $id;
-		$this->loadAdressesById([$id], $this->getDataViewAddress()->getFields());
+		$this->loadAddressesById([$id], $this->getDataViewAddress()->getFields());
 	}
 
 

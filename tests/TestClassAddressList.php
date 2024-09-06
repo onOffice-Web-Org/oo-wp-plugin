@@ -226,7 +226,7 @@ class TestClassAddressList
 
 	private function runTestGetRows(bool $raw, string $containerClass)
 	{
-		$this->_pAddressList->loadAdressesById([13, 37], ['Name', 'KdNr', 'Vorname', 'phone']);
+		$this->_pAddressList->loadAddressesById([13, 37], ['Name', 'KdNr', 'Vorname', 'phone']);
 		$records = $this->_pAddressList->getRows($raw);
 		$expectationRecords = $this->_expectedRecords;
 
@@ -268,7 +268,7 @@ class TestClassAddressList
 
 	public function testGetRecordsById()
 	{
-		$this->_pAddressList->loadAdressesById([13, 37], ['Name', 'KdNr', 'Vorname', 'phone']);
+		$this->_pAddressList->loadAddressesById([13, 37], ['Name', 'KdNr', 'Vorname', 'phone']);
 		$this->assertEquals($this->_expectedRecords[13], $this->_pAddressList->getAddressById(13));
 		$this->assertEquals($this->_expectedRecords[37], $this->_pAddressList->getAddressById(37));
 	}
