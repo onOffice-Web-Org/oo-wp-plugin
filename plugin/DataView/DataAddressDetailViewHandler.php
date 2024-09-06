@@ -107,7 +107,6 @@ class DataAddressDetailViewHandler
 		$pDataAddressDetailView->setPictureTypes($row[DataAddressDetailView::PICTURES] ?? []);
 		$pDataAddressDetailView->setCustomLabels($row[DataAddressDetailView::FIELD_CUSTOM_LABEL] ?? $pDataAddressDetailView->getCustomLabels());
 		$pDataAddressDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
-		$pDataAddressDetailView->setEnableLinkedEstates($row[DataAddressDetailView::ENABLE_LINKED_ESTATES] ?? false);
 		$pDataAddressDetailView->setShortCodeActiveEstate($row['shortcodeActiveEstates'] ?? '');
 		$pDataAddressDetailView->setShortCodeReferenceEstate($row['shortcodeReferenceEstate'] ?? '');
 

@@ -247,20 +247,6 @@ class TestClassFormModelBuilderAddressDetailSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelEnableLinkedEstates
-	 */
-	public function testCreateInputModelEnableLinkedEstates()
-	{
-		$pFormModelBuilderAddressDetailSettings = $this->_pFormModelBuilderAddressDetailSettings;
-		$pFormModelBuilderAddressDetailSettings->generate('test');
-		$pInputModelOption = $pFormModelBuilderAddressDetailSettings->createInputModelEnableLinkedEstates();
-
-		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
-		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
-		$this->assertEquals($pInputModelOption->getHtmlType(), 'checkbox');
-	}
-
-	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings::createInputModelShortCodeActiveEstate
 	 */
 	public function testCreateInputModelShortCodeActiveEstate()

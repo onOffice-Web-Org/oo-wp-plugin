@@ -43,9 +43,6 @@ class DataAddressDetailView
 	const PICTURES = 'pictures';
 
 	/** */
-	const ENABLE_LINKED_ESTATES = 'enableLinkedEstates';
-
-	/** */
 	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_address_translated_labels';
 
 	/** @var string[] */
@@ -76,9 +73,6 @@ class DataAddressDetailView
 
 	/** @var string */
 	private $_shortCodeForm = '';
-
-	/** @var bool */
-	private $_enableLinkedEstates = false;
 
 	/** @var string */
 	private $_shortCodeActiveEstate = '';
@@ -149,14 +143,6 @@ class DataAddressDetailView
 	/** @param array $customLabel */
 	public function setCustomLabels(array $customLabel)
 		{ $this->_customLabel = $customLabel; }
-
-	/** @return bool */
-	public function getEnableLinkedEstates(): bool
-		{ return $this->_enableLinkedEstates; }
-
-	/** @param bool $enableLinkedEstates */
-	public function setEnableLinkedEstates(bool $enableLinkedEstates)
-		{ $this->_enableLinkedEstates = $enableLinkedEstates; }
 
 	/** @return string */
 	public function getShortCodeActiveEstate(): string
