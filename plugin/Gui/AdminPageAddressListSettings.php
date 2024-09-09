@@ -40,6 +40,7 @@ use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
 use function wp_enqueue_script;
+use onOffice\WPlugin\DataView\DataAddressDetailView;
 
 /**
  *
@@ -76,6 +77,13 @@ class AdminPageAddressListSettings
 			echo '<div class="notice notice-error is-dismissible"><p>'
 				. esc_html__( 'There was a problem saving the address. The Name field cannot be empty.', 'onoffice-for-wp-websites' )
 				. '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
+		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'false' ) {
+			echo '<div class="notice notice-error is-dismissible"><p>'
+			     . esc_html__( 'There was a problem saving the view. Please make '
+			                   . 'sure the name of the view is unique, even across all address list types.',
+					'onoffice-for-wp-websites' )
+			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
 		parent::renderContent();
 	}
@@ -253,6 +261,14 @@ class AdminPageAddressListSettings
 	{
 		$type = RecordManagerFactory::TYPE_ADDRESS;
 		$result = false;
+		$pDummyAddressDetailView = new DataAddressDetailView();
+
+		if ($row[RecordManager::TABLENAME_LIST_VIEW_ADDRESS]['name'] === $pDummyAddressDetailView->getName()) {
+			// false / null
+			$pResult->result = false;
+			$pResult->record_id = null;
+			return;
+		}
 
 		if (array_key_exists('name', $row[RecordManager::TABLENAME_LIST_VIEW_ADDRESS])) {
 			$row[RecordManager::TABLENAME_LIST_VIEW_ADDRESS]['name'] = $this->sanitizeShortcodeName(
