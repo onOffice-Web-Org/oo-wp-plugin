@@ -52,7 +52,11 @@ class AddressDetail
 	public function loadSingleAddress($id)
 	{
 		$this->_addressId = $id;
-		$this->loadAddressesById([$id], $this->getDataViewAddress()->getFields());
+        $fields = $this->getDataViewAddress()->getFields();
+        if($this->getDataViewAddress() instanceof DataAddressDetailView &&
+            $this->getDataViewAddress()->getPictureTypes() != [] && $this->getDataViewAddress()->getPictureTypes() != null)
+            array_push($fields, "imageUrl");
+        $this->loadAddressesById([$id], $fields);
 	}
 
 
