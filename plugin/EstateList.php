@@ -114,6 +114,12 @@ class EstateList
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
 
+	/** @var array */
+	private $_contactPersonIds = [];
+
+	/** @var array */
+	private $_similarEstateIds = [];
+
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
@@ -187,6 +193,8 @@ class EstateList
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		if ($this->_pDataView instanceof DataListView && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
 			$this->loadRecordsOrderEstatesByTags($currentPage);
+		} else if ($this->_pDataView instanceof DataViewSimilarEstates && $this->_pDataView->getSameEstateAgent()) {
+			$this->loadSimilar($currentPage);
 		} else {
 			$this->loadRecords($currentPage);
 		}
@@ -236,14 +244,40 @@ class EstateList
 
 	/**
 	 * @param int $currentPage
+	 * @return void
+	 */
+	private function loadSimilar(int $currentPage)
+	{
+		$sameEstateKind = $this->_pDataView->getSameEstateKind();
+		$sameMarketingMethod = $this->_pDataView->getSameMarketingMethod();
+		$samePostalCode = $this->_pDataView->getSamePostalCode();
+		$this->_pDataView->setSameEstateKind(false);
+		$this->_pDataView->setSameMarketingMethod(false);
+		$this->_pDataView->setSamePostalCode(false);
+		$maxRecordForPage = $this->fetchMaxRecordsForPage($currentPage, $this->_formatOutput);
+		$recordIds = array_column($this->_records, 'id');
+		$estateIds = array_diff(array_column($maxRecordForPage, 'id'), $recordIds);
+		$this->setContactsPersonIds($this->_pEnvironment->getDefaultFilterBuilder()->getContactPersonIds());
+		$this->getEstateContactPerson(array_flip($estateIds));
+
+		$this->_pDataView->setSameEstateKind($sameEstateKind);
+		$this->_pDataView->setSameMarketingMethod($sameMarketingMethod);
+		$this->_pDataView->setSamePostalCode($samePostalCode);
+
+		$this->loadRecords($currentPage);
+	}
+
+	/**
+	 * @param int $currentPage
 	 * @throws UnknownViewException
 	 * @throws API\ApiClientException
 	 */
 	private function loadRecordsOrderEstatesByTags(int $currentPage)
 	{
-		$this->_records = $this->fetchDataForOrderEstatesByTags($currentPage, $this->_formatOutput);
-		$formattedRecordsRaw = $this->fetchDataForOrderEstatesByTags($currentPage, false);
-
+		$this->_records = $this->fetchMaxRecordsForPage($currentPage, $this->_formatOutput);
+		$formattedRecordsRaw = $this->fetchMaxRecordsForPage($currentPage, false);
+		usort($formattedRecordsRaw, [$this, 'sortMarkedProperties']);
+		
 		$numRecordsPerPage = $this->getRecordsPerPage();
 		$startPosition = ($currentPage - 1) * $numRecordsPerPage;
 
@@ -296,7 +330,7 @@ class EstateList
 	 * @param bool $formatOutput
 	 * @return array
 	 */
-	private function fetchDataForOrderEstatesByTags(int $currentPage, bool $formatOutput): array
+	private function fetchMaxRecordsForPage(int $currentPage, bool $formatOutput): array
 	{
 		$language = Language::getDefault();
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
@@ -350,10 +384,6 @@ class EstateList
 			$aggregatedData = array_merge($aggregatedData, $result);
 			$totalFetched += count($result);
 		} while (count($result) == $numRecordsPerPage);
-
-		if ($formatOutput !== true) {
-			usort($aggregatedData, [$this, 'sortMarkedProperties']);
-		}
 		
 		return $aggregatedData;
 	}
@@ -437,6 +467,20 @@ class EstateList
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
 		$pAPIClientAction->setParameters($parameters);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
+
+		if ($this->_pDataView instanceof DataViewSimilarEstates && $this->_pDataView->getSameEstateAgent()) {
+			$resultRecords = $pAPIClientAction->getResultRecords()[0]['elements'];
+			foreach ($this->getContactsPersonIds() as $id) {
+				foreach ($resultRecords as $estateId => $contactIds) {
+					if (in_array($id, $contactIds)) {
+						$this->_similarEstateIds[] = $estateId;
+					}
+				}
+			}
+
+			return;
+		}
+		$this->_contactPersonIds = $pAPIClientAction->getResultRecords()[0]['elements'][array_keys($estateIds)[0]] ?? [];
 		$this->collectEstateContactPerson($pAPIClientAction->getResultRecords(), $estateIds);
 	}
 
@@ -456,6 +500,10 @@ class EstateList
 
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
 			onOfficeSDK::MODULE_ESTATE);
+
+		if (!empty($this->_similarEstateIds)) {
+			$filter['Id'] []= ['op' => 'in', 'val' => array_unique($this->_similarEstateIds)];
+		}
 
 		$requestParams = [
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
@@ -1274,4 +1322,12 @@ class EstateList
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
 		{ return $this->_pEnvironment; }
+
+	/** @return array */
+	public function getContactsPersonIds(): array
+		{ return $this->_contactPersonIds; }
+
+	/** @param array $contactPersonIds */
+	public function setContactsPersonIds(array $contactPersonIds)
+		{ $this->_contactPersonIds = $contactPersonIds; }
 }

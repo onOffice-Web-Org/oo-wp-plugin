@@ -68,6 +68,9 @@ class InputModelOptionFactorySimilarView
 	const INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE = DataViewSimilarEstates::FIELD_SIMILAR_ESTATES_TEMPLATE;
 
 	/** */
+	const INPUT_FIELD_SIMILAR_ESTATES_SAME_ESTATE_AGENT = DataViewSimilarEstates::FIELD_SAME_ESTATE_AGENT;
+
+	/** */
 	const KEY_TYPE = 'type';
 
 	/** */
@@ -107,6 +110,9 @@ class InputModelOptionFactorySimilarView
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
 		self::INPUT_SHOW_PRICE_ON_REQUEST => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_SAME_ESTATE_AGENT => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
 		]
 	];

@@ -39,6 +39,8 @@ class DefaultFilterBuilderSimilarEstates
 	/** @var int[] */
 	private $_excludeIds = [];
 
+	/** @var int[] */
+	private $_contactPersonIds = [];
 
 	/**
 	 *
@@ -106,4 +108,12 @@ class DefaultFilterBuilderSimilarEstates
 	/** @param array $excludeIds */
 	public function setExcludeIds(array $excludeIds)
 		{ $this->_excludeIds = $excludeIds; }
+
+	/** @return array */
+	public function getContactPersonIds(): array
+		{ return $this->_contactPersonIds; }
+
+	/** @param array $contactPersonIds */
+	public function setContactPersonIds(array $contactPersonIds)
+		{ $this->_contactPersonIds = $contactPersonIds; }
 }
