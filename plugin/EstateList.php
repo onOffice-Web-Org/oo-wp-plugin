@@ -254,10 +254,9 @@ class EstateList
 		$this->_pDataView->setSameEstateKind(false);
 		$this->_pDataView->setSameMarketingMethod(false);
 		$this->_pDataView->setSamePostalCode(false);
-		$maxRecordForPage = $this->fetchMaxRecordsForPage($currentPage, $this->_formatOutput);
+		$maxRecordForPage = $this->fetchMaxRecordsForPage($currentPage, false);
 		$recordIds = array_column($this->_records, 'id');
 		$estateIds = array_diff(array_column($maxRecordForPage, 'id'), $recordIds);
-		$this->setContactsPersonIds($this->_pEnvironment->getDefaultFilterBuilder()->getContactPersonIds());
 		$this->getEstateContactPerson(array_flip($estateIds));
 
 		$this->_pDataView->setSameEstateKind($sameEstateKind);
@@ -451,6 +450,7 @@ class EstateList
 
 	/**
 	 * @param array $estateIds
+	 * 
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 * @throws API\ApiClientException
@@ -470,9 +470,9 @@ class EstateList
 
 		if ($this->_pDataView instanceof DataViewSimilarEstates && $this->_pDataView->getSameEstateAgent()) {
 			$resultRecords = $pAPIClientAction->getResultRecords()[0]['elements'];
-			foreach ($this->getContactsPersonIds() as $id) {
+			foreach ($this->getContactPersonIds() as $contactId) {
 				foreach ($resultRecords as $estateId => $contactIds) {
-					if (in_array($id, $contactIds)) {
+					if (in_array($contactId, $contactIds)) {
 						$this->_similarEstateIds[] = $estateId;
 					}
 				}
@@ -1324,10 +1324,10 @@ class EstateList
 		{ return $this->_pEnvironment; }
 
 	/** @return array */
-	public function getContactsPersonIds(): array
+	public function getContactPersonIds(): array
 		{ return $this->_contactPersonIds; }
 
 	/** @param array $contactPersonIds */
-	public function setContactsPersonIds(array $contactPersonIds)
+	public function setContactPersonIds(array $contactPersonIds)
 		{ $this->_contactPersonIds = $contactPersonIds; }
 }

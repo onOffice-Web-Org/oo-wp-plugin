@@ -111,7 +111,6 @@ class EstateViewSimilarEstates
 
 			$pDefaultFilterBuilder = new DefaultFilterBuilderSimilarEstates($this->_pFilterConfiguration);
 			$pDefaultFilterBuilder->setExcludeIds([$estateId]);
-			$pDefaultFilterBuilder->setContactPersonIds($this->_contactPersonIds);
 			$pGeoRangeSearch = new GeoSearchBuilderSimilarEstates($this->_pFilterConfiguration);
 
 			$pEstateListSub = clone $this->_pEnvironment->getEstateList();
@@ -192,6 +191,7 @@ class EstateViewSimilarEstates
 
 		foreach ($pGenerator as $id => $pEstateListSub) {
 			$pEstateListSub->setFormatOutput(true);
+			$pEstateListSub->setContactPersonIds($this->_contactPersonIds);
 			$pEstateListSub->loadEstates();
 			$this->_estateListsByMainId[$id] = $pEstateListSub;
 		}

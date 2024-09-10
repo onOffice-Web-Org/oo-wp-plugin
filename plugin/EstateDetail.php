@@ -257,7 +257,7 @@ class EstateDetail
 		}
 		$pDataViewSimilarEstates = $pDataSimilarSettings->getDataViewSimilarEstates();
 
-		$pSimilarEstates = new EstateViewSimilarEstates($pDataViewSimilarEstates, null, $this->getContactsPersonIds());
+		$pSimilarEstates = new EstateViewSimilarEstates($pDataViewSimilarEstates, null, $this->getContactPersonIds());
 		$pCopyThis = clone $this;
 		$pCopyThis->setFormatOutput(false);
 		$pCopyThis->loadEstates();

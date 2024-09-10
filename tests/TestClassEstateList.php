@@ -64,6 +64,8 @@ use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use onOffice\WPlugin\DataView\DataViewSimilarEstates;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -877,6 +879,32 @@ class TestClassEstateList
 	/**
 	 *
 	 */
+	public function testDataViewSimilarEstateAgent()
+	{
+		$pDataDetailView = $this->getMockBuilder(DataViewSimilarEstates::class)
+			->setMethods(['getRecordsPerPage',
+				'getSortby',
+				'getSortorder',
+				'getFields',
+				'getSameMarketingMethod',
+				'getSameEstateAgent'
+			])
+			->getMock();
+		$pDataDetailView->method('getRecordsPerPage')->willReturn(10);
+		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp', 'objekttitel']);
+		$pDataDetailView->method('getSameMarketingMethod')->willReturn(true);
+		$pDataDetailView->method('getSameEstateAgent')->willReturn(true);
+		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
+		$this->_pEstateList->setContactPersonIds([50,52]);
+
+		$this->_pEstateList->loadEstates();
+		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->estateIterator());
+	}
+
+
+	/**
+	 *
+	 */
 	public function testDisplayTextPriceOnRequest()
 	{
 		$this->_pEstateList->loadEstates();
@@ -921,11 +949,29 @@ class TestClassEstateList
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetIdsFromRelation.json'), true);
 		$responseGetEstatePictures = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetEstatePictures.json'), true);
+		$dataReadAllEstateRecordsFormatted = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadAllEstateRecordsPublishedENG.json'), true);
+		$responseReadAllEstateRecordsFormatted = $dataReadAllEstateRecordsFormatted['response'];
+		$parametersReadAllEstateRecordsFormatted = $dataReadAllEstateRecordsFormatted['parameters'];
+		$dataReadSimplarEstatesAgentFormatted = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadSimplarEstatesAgentPublishedENG.json'), true);
+		$responseReadSimplarEstatesAgentFormatted = $dataReadSimplarEstatesAgentFormatted['response'];
+		$parametersReadSimplarEstatesAgentFormatted = $dataReadSimplarEstatesAgentFormatted['parameters'];
+		$dataReadSimplarEstatesAgentPublishedENGRaw = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadSimplarEstatesAgentPublishedENGRaw.json'), true);
+		$responseReadSimplarEstatesAgentPublishedENGRaw = $dataReadSimplarEstatesAgentPublishedENGRaw['response'];
+		$parametersReadSimplarEstatesAgentPublishedENGRaw = $dataReadSimplarEstatesAgentPublishedENGRaw['parameters'];
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadAllEstateRecordsFormatted, null, $responseReadAllEstateRecordsFormatted);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadSimplarEstatesAgentFormatted, null, $responseReadSimplarEstatesAgentFormatted);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadSimplarEstatesAgentPublishedENGRaw, null, $responseReadSimplarEstatesAgentPublishedENGRaw);
 
 		unset($parametersReadEstate['georangesearch']);
 		$this->_pSDKWrapperMocker->addResponseByParameters
@@ -963,6 +1009,7 @@ class TestClassEstateList
 				'getAddressList',
 				'getEstateUnitsByName',
 				'getDataDetailViewHandler',
+				'getContactPersonIds'
 			])
 			->getMock();
 		$pEstatePicturesMock = new EstateFiles;
@@ -980,7 +1027,7 @@ class TestClassEstateList
 			{
 				$pFieldsCollectionOut->merge($pFieldsCollection);
 				return $pFieldsCollectionBuilderShort;
-			});
+			});-
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
 	
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
