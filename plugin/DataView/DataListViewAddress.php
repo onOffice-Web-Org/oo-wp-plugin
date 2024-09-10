@@ -34,7 +34,7 @@ use onOffice\WPlugin\Controller\ViewProperty;
  */
 
 class DataListViewAddress
-	implements DataViewFilterableFields, ViewProperty
+	implements DataViewAddress, DataViewFilterableFields, ViewProperty
 {
 	/** */
 	const FIELDS = 'fields';

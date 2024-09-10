@@ -470,6 +470,7 @@ class TestClassFormPostContact
 		];
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$pDataFormConfiguration->setCreateAddress(true);
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);

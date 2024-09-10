@@ -31,6 +31,8 @@ use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\WP\WPPageWrapper;
+use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
+use onOffice\WPlugin\DataView\DataAddressDetailView;
 
 /**
  *
@@ -119,6 +121,59 @@ class TestClassRewriteRuleBuilder
 		$this->assertSame([
 			'^(test_parent/test\-post)/([0-9]+)(-([^$]+)?)?/?$' =>
 				'index.php?pagename=test_parent%2Ftest-post&view=$matches[1]&estate_id=$matches[2]'
+		], $wp_rewrite->extra_rules_top);
+	}
+
+	public function testAddCustomRewriteTagsForAddressDetail()
+	{
+		global $wp_rewrite;
+		$wp_rewrite->rewritecode = [];
+		$wp_rewrite->rewritereplace = [];
+		$pSubject = $this->_pContainer->get(RewriteRuleBuilder::class);
+		$pSubject->addCustomRewriteTagsForAddressDetail();
+		$this->assertSame('%address_id%', $wp_rewrite->rewritecode[0]);
+		$this->assertSame('([^&]+)', $wp_rewrite->rewritereplace[0]);
+
+		$this->assertSame('%view%', $wp_rewrite->rewritecode[1]);
+		$this->assertSame('([^&]+)', $wp_rewrite->rewritereplace[1]);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testAddDynamicRewriteRulesForAddressDetail()
+	{
+		global $wp_rewrite;
+		$wp_rewrite->extra_rules_top = [];
+
+		$pDataAddressDetailViewHandler = $this->getMockBuilder(DataAddressDetailViewHandler::class)
+			->disableOriginalConstructor()
+			->setMethods(['getAddressDetailView'])
+			->getMock();
+
+		$pDataAddressDetailView = new DataAddressDetailView;
+		$pDataAddressDetailView->addToPageIdsHaveDetailShortCode(13);
+		$pDataAddressDetailView->setPageId(13);
+		$pDataAddressDetailViewHandler->expects($this->once())
+			->method('getAddressDetailView')
+			->willReturn($pDataAddressDetailView);
+
+		$pWPPageWrapper = $this->getMockBuilder(WPPageWrapper::class)
+			->setMethods(['getPageUriByPageId'])
+			->getMock();
+		$pWPPageWrapper->method('getPageUriByPageId')
+			->with(13)
+			->willReturn('test_parent/test-post');
+
+		$this->_pContainer->set(DataAddressDetailViewHandler::class, $pDataAddressDetailViewHandler);
+		$this->_pContainer->set(WPPageWrapper::class, $pWPPageWrapper);
+
+		$pSubject = $this->_pContainer->get(RewriteRuleBuilder::class);
+		$pSubject->addDynamicRewriteRulesForAddressDetail();
+		$this->assertSame([
+			'^(test_parent/test\-post)/([0-9]+)(-([^$]+)?)?/?$' =>
+				'index.php?pagename=test_parent%2Ftest-post&view=$matches[1]&address_id=$matches[2]'
 		], $wp_rewrite->extra_rules_top);
 	}
 }
