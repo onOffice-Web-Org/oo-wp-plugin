@@ -193,7 +193,7 @@ class EstateList
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		if ($this->_pDataView instanceof DataListView && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
 			$this->loadRecordsOrderEstatesByTags($currentPage);
-		} else if ($this->_pDataView instanceof DataViewSimilarEstates && $this->_pDataView->getSameEstateAgent()) {
+		} else if ($this->_pDataView instanceof DataViewSimilarEstates && $this->_pDataView->getSameEstateAgent() && !empty($this->getContactPersonIds())) {
 			$this->loadSimilar($currentPage);
 		} else {
 			$this->loadRecords($currentPage);
