@@ -35,16 +35,9 @@ use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
-use function shortcode_atts;
 
-/**
- *
- * render address short codes
- *
- */
 
-class ContentFilterShortCodeAddress
-	implements ContentFilterShortCode
+class ContentFilterShortCodeAddress implements ContentFilterShortCode
 {
 	/** @var SearchParametersModelBuilder */
 	private $_pSearchParametersModelBuilder;
@@ -64,7 +57,10 @@ class ContentFilterShortCodeAddress
 	/** @var AddressListFactory */
 	private $_pAddressListFactory;
 
-	/**
+	/**  @var ContentFilterShortCodeAddressDetail */
+	private ContentFilterShortCodeAddressDetail $_pContentFilterShortCodeAddressDetail;
+
+    /**
 	 * ContentFilterShortCodeAddress constructor.
 	 *
 	 * @param SearchParametersModelBuilder $pSearchParametersModelBuilder
@@ -72,7 +68,8 @@ class ContentFilterShortCodeAddress
 	 * @param Logger $pLogger
 	 * @param DataListViewFactoryAddress $pDataListFactory
 	 * @param Template $pTemplate
-	 * @param WPQueryWrapper $pWPQueryWrapper
+	 * @param WPQueryWrapper $pWPQueryWrapper,
+	 * @param ContentFilterShortCodeAddressDetail $pContentFilterShortCodeAddressDetail
 	 */
 	public function __construct(
 		SearchParametersModelBuilder $pSearchParametersModelBuilder,
@@ -80,7 +77,8 @@ class ContentFilterShortCodeAddress
 		Logger $pLogger,
 		DataListViewFactoryAddress $pDataListFactory,
 		Template $pTemplate,
-		WPQueryWrapper $pWPQueryWrapper)
+		WPQueryWrapper $pWPQueryWrapper,
+    ContentFilterShortCodeAddressDetail $pContentFilterShortCodeAddressDetail)
 	{
 		$this->_pSearchParametersModelBuilder = $pSearchParametersModelBuilder;
 
@@ -89,6 +87,7 @@ class ContentFilterShortCodeAddress
 		$this->_pAddressListFactory = $pAddressListFactory;
 		$this->_pTemplate = $pTemplate;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
+		$this->_pContentFilterShortCodeAddressDetail = $pContentFilterShortCodeAddressDetail;
 	}
 
 	/**
@@ -103,8 +102,12 @@ class ContentFilterShortCodeAddress
 		$addressListName = $attributes['view'];
 
 		try {
-			$pTemplate = $this->createTemplate($addressListName);
-			return $pTemplate->render();
+			if ($attributes['view'] === $this->_pContentFilterShortCodeAddressDetail->getViewName()) {
+					return $this->_pContentFilterShortCodeAddressDetail->render();
+			} else {
+					$pTemplate = $this->createTemplate($addressListName);
+					return $pTemplate->render();
+			}
 		} catch (Exception $pException) {
 			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
@@ -121,7 +124,7 @@ class ContentFilterShortCodeAddress
 	{
 		$page = $this->_pWPQueryWrapper->getWPQuery()->get('paged', 1);
 		$pAddressListView = $this->_pDataListFactory->getListViewByName($addressListName);
-		$pAddressList = $this->_pAddressListFactory->create()->withDataListViewAddress($pAddressListView);
+		$pAddressList = $this->_pAddressListFactory->create($pAddressListView)->withDataListViewAddress($pAddressListView);
 		$pAddressList->loadAddresses($page);
 		$this->populateWpLinkPagesArgs($pAddressListView->getFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name
