@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 5.0
+Version: 5.1
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -171,6 +171,8 @@ add_action('init', function() use ($pDI) {
 	$pRewriteRuleBuilder->addCustomRewriteTags();
 	$pRewriteRuleBuilder->addStaticRewriteRules();
 	$pRewriteRuleBuilder->addDynamicRewriteRules();
+	$pRewriteRuleBuilder->addCustomRewriteTagsForAddressDetail();
+	$pRewriteRuleBuilder->addDynamicRewriteRulesForAddressDetail();
 });
 
 // This hook [wp] is one effective place to perform any high-level filtering or validation,
