@@ -29,6 +29,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
+use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\OutputFields;
@@ -127,4 +128,22 @@ class AddressListEnvironmentDefault
 		return new ViewFieldModifierHandler($fields, onOfficeSDK::MODULE_ADDRESS,
 			AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
 	}
+
+    /**
+     * @return DataAddressDetailViewHandler
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getDataAddressDetailViewHandler(): DataAddressDetailViewHandler
+    {
+        return $this->_pContainer->get(DataAddressDetailViewHandler::class);
+    }
+		/**
+		 * @return Container
+		 */
+		public function getContainer(): Container
+		{
+			return $this->_pContainer;
+		}
+
 }

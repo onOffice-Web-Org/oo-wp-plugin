@@ -71,7 +71,7 @@ class ContentFilterShortCodeForm
 	public function replaceShortCodes(array $attributesInput): string
 	{
 		$attributes = shortcode_atts([
-			'form' => '',
+			'form' => ''
 		], $attributesInput);
 
 		try {
