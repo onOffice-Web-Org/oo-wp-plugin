@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Filter;
 
-use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\DataView\DataViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
 
@@ -66,15 +66,15 @@ class DefaultFilterBuilderListViewAddressFactory
 
 	/**
 	 *
-	 * @param DataListViewAddress $pDataListView
+	 * @param DataViewAddress $pDataViewAddress
 	 * @return DefaultFilterBuilderListViewAddress
 	 *
 	 */
 
-	public function create(DataListViewAddress $pDataListView): DefaultFilterBuilderListViewAddress
+	public function create(DataViewAddress $pDataViewAddress): DefaultFilterBuilderListViewAddress
 	{
 		$pFilterBuilder = $this->_pFilterBuilderFactory->createForAddress();
-		return new DefaultFilterBuilderListViewAddress($pDataListView,
+		return new DefaultFilterBuilderListViewAddress($pDataViewAddress,
 			$this->_pBuilderShort, $this->_pCompoundFields, $pFilterBuilder);
 	}
 }

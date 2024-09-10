@@ -682,7 +682,6 @@ class Form
 		$this->_genericSettings[$settingName] = $value;
 	}
 
-
 	/** @return array */
 	public function getResponseFieldsValues()
 		{ return $this->_pFormData->getResponseFieldsValues(); }
