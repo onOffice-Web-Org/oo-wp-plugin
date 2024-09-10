@@ -59,9 +59,9 @@ class ContentFilterShortCodeAddressDetail {
     public function render(): string {
         $addressDetailView =  $this->_pDataAddressDetailViewHandler->getAddressDetailView();
         $template = $this->_pTemplate->withTemplateName($addressDetailView->getTemplate());
-				$addressId = $this->_pWPQueryWrapper->getWPQuery()->query_vars['address_id'] ?? 0;
-				$pAddressList = $this->_pAddressDetailFactory->createAddressDetail((int)$addressId);
-				$pAddressList->loadSingleAddress($addressId);
+        $addressId = $this->_pWPQueryWrapper->getWPQuery()->query_vars['address_id'] ?? 0;
+        $pAddressList = $this->_pAddressDetailFactory->createAddressDetail((int)$addressId);
+        $pAddressList->loadSingleAddress($addressId);
         return $template
 					->withAddressList($pAddressList)
 					->render();

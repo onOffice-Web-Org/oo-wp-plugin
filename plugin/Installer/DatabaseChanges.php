@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 47;
+	const MAX_VERSION = 48;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -325,6 +325,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 47;
 		}
 
+		if ($dbversion == 47) {
+			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 48;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -410,13 +415,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
-			`sortBySetting` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined',
+			`sortBySetting` ENUM('0','1','2') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined',
 			`sortByUserDefinedDefault` VARCHAR(200) NOT NULL COMMENT 'Standardsortierung',
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
 			`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
 			`show_map` tinyint(1) NOT NULL DEFAULT '1',
 			`show_price_on_request` tinyint(1) NOT NULL DEFAULT '0',
+			`markedPropertiesSort` VARCHAR( 255 ) NOT NULL DEFAULT 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz',
+			`sortByTags` tinytext NOT NULL,
+			`sortByTagsDirection` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";

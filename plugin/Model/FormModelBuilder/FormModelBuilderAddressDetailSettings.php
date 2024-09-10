@@ -267,8 +267,6 @@ class FormModelBuilderAddressDetailSettings
 
 	public function createSearchFieldForFieldLists($module, string $htmlType): InputModelOption
 	{
-		$fields = [];
-
 		$pInputModelFieldsConfig = $this->_pInputModelAddressDetailFactory->create
 		(InputModelOptionFactoryAddressDetailView::INPUT_FIELD_CONFIG, null, true);
 		$fields = $this->_pDataAddressDetail->getFields();
@@ -370,24 +368,6 @@ class FormModelBuilderAddressDetailSettings
 			DataListView::SHOW_REFERENCE_ESTATE => __('Show reference estates (alongside others)', 'onoffice-for-wp-websites'),
 			DataListView::SHOW_ONLY_REFERENCE_ESTATE => __('Show only reference estates (filter out all others)', 'onoffice-for-wp-websites'),
 		);
-	}
-
-	/**
-	 * @return InputModelOption
-	 * @throws ExceptionInputModelMissingField
-	 */
-	public function createInputModelEnableLinkedEstates(): InputModelOption
-	{
-		$labelEnableLinkedEstates = __('Show Linked Estates', 'onoffice-for-wp-websites');
-
-		$pInputModelEnableLinkedEstates = $this->_pInputModelAddressDetailFactory->create
-		(InputModelOptionFactoryAddressDetailView::INPUT_ENABLE_LINKED_ESTATES, $labelEnableLinkedEstates);
-		$pInputModelEnableLinkedEstates->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
-
-		$pInputModelEnableLinkedEstates->setValue($this->_pDataAddressDetail->getEnableLinkedEstates());
-		$pInputModelEnableLinkedEstates->setValuesAvailable(1);
-
-		return $pInputModelEnableLinkedEstates;
 	}
 
 	/**

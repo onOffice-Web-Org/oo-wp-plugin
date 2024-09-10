@@ -52,7 +52,11 @@ class AddressDetail
 	public function loadSingleAddress($id)
 	{
 		$this->_addressId = $id;
-		$this->loadAdressesById([$id], $this->getDataViewAddress()->getFields());
+        $fields = $this->getDataViewAddress()->getFields();
+        if($this->getDataViewAddress() instanceof DataAddressDetailView &&
+            $this->getDataViewAddress()->getPictureTypes() != [] && $this->getDataViewAddress()->getPictureTypes() != null)
+            array_push($fields, "imageUrl");
+        $this->loadAddressesById([$id], $fields);
 	}
 
 
@@ -112,7 +116,6 @@ class AddressDetail
 	 public function getShortCodeForm(): string
 	 {
 		$view = $this->getDataViewAddress();
-		$result = '';
 
 		if (! $view instanceof DataAddressDetailView || $view->getShortCodeForm() == '') {
 			return '';
@@ -132,7 +135,6 @@ class AddressDetail
 	 public function getShortCodeReferenceEstates(): string
 	 {
 		 $view = $this->getDataViewAddress();
-		 $result = '';
 
 		 if (! $view instanceof DataAddressDetailView || $view->getShortCodeReferenceEstate() == '') {
 			 return '';
@@ -153,7 +155,6 @@ class AddressDetail
 	 public function getShortCodeActiveEstates(): string
 	 {
 		 $view = $this->getDataViewAddress();
-		 $result = '';
 
 		 if (! $view instanceof DataAddressDetailView || $view->getShortCodeActiveEstate() == '') {
 			 return '';

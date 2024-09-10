@@ -19,18 +19,18 @@
  *
  */
 
-use onOffice\WPlugin\AddressDetail;
-use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
-
+use onOffice\WPlugin\AddressList;
 
 ?>
 
 <div class="oo-detailview">
 	<?php
-    /* @var $pAddressList AddressDetail */
+    /* @var $pAddressList AddressList */
 	$currentAddressArr = $pAddressList->getCurrentAddress();
 	foreach ($currentAddressArr as $addressId => $escapedValues) {
-	?>
+        $imageUrl = $escapedValues['imageUrl'];
+        unset($escapedValues['imageUrl']);
+    ?>
     <h2 class="oo-addressdetail-headline">
         <?php echo $escapedValues['Name']; ?>
     </h2>
@@ -38,15 +38,14 @@ use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 		<h1><?php echo $escapedValues['Name']; ?></h1>
 		<div class="oo-detailstable">
 			<?php
+            if (!empty($imageUrl)) {
+                echo '<img width="350" src="'.$imageUrl.'"/>';
+            }
 			foreach ($escapedValues as $field => $value) {
-				if($field === 'ind_2124_Feld_adressen4') {
-					echo '<img width="350" src="'.$value.'"/>';
-				} else {
-					echo '<div class="oo-detailslisttd">' . esc_html($pAddressList->getFieldLabel($field)) . '</div>' . "\n"
-						. '<div class="oo-detailslisttd">'
-						. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
-						. '</div>' . "\n";
-				}
+                echo '<div class="oo-detailslisttd">' . esc_html($pAddressList->getFieldLabel($field)) . '</div>' . "\n"
+                    . '<div class="oo-detailslisttd">'
+                    . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
+                    . '</div>' . "\n";
 			}?>
 		</div>
 	</div>
@@ -58,14 +57,6 @@ use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 			continue;
 	-->
 	<?php
-		$shortCodeReferenceEstates = $pAddressList->getShortCodeReferenceEstates();
-		if (!empty($shortCodeReferenceEstates)) {
-		?>
-			<div class="detail-contact-form">
-				<?php echo do_shortcode($shortCodeReferenceEstates); ?>
-			</div>
-	<?php } ?>
-	<?php
 		$shortCodeActiveEstates = $pAddressList->getShortCodeActiveEstates();
 		if (!empty($shortCodeActiveEstates)) {
 		?>
@@ -73,6 +64,14 @@ use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 				<?php echo do_shortcode($shortCodeActiveEstates); ?>
 			</div>
 	<?php } ?>
+    <?php
+    $shortCodeReferenceEstates = $pAddressList->getShortCodeReferenceEstates();
+    if (!empty($shortCodeReferenceEstates)) {
+        ?>
+        <div class="detail-contact-form">
+            <?php echo do_shortcode($shortCodeReferenceEstates); ?>
+        </div>
+    <?php } ?>
 	<?php
 		$shortCodeForm = $pAddressList->getShortCodeForm();
 		if (!empty($shortCodeForm)) {

@@ -394,6 +394,27 @@ class ScriptLoaderGenericConfigurationDefault
 	 * @return array
 	 */
 
+	private function renderScriptForAddressDetailPage(array $scripts, string $pluginPath, string $script, string $defer): array
+	{
+		$scripts[] = (new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadAsynchronous($defer);
+		$scripts[] = (new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/dist/onoffice_defaultview.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
+
+		return $scripts;
+	}
+	/**
+	 * @param array $scripts
+	 * @param string $pluginPath
+	 * @param string $script
+	 * @param string $style
+	 * @param string $defer
+	 * @return array
+	 */
+
 	private function renderScriptForEstateDetailPage(array $scripts, string $pluginPath, string $script, string $defer): array
 	{
 		$scripts[] = (new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))

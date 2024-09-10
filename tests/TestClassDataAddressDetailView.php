@@ -54,7 +54,6 @@ class TestClassDataAddressDetailView
 		$this->assertEquals('', $pDataAddressDetailView->getTemplate());
 		$this->assertEquals([], $pDataAddressDetailView->getPageIdsHaveDetailShortCode());
 		$this->assertEquals([], $pDataAddressDetailView->getCustomLabels());
-		$this->assertEquals(false, $pDataAddressDetailView->getEnableLinkedEstates());
 		$this->assertEquals('', $pDataAddressDetailView->getShortCodeActiveEstate());
 		$this->assertEquals('', $pDataAddressDetailView->getShortCodeReferenceEstate());
 	}
@@ -85,8 +84,6 @@ class TestClassDataAddressDetailView
 		$this->assertEquals([], $pDataAddressDetailView->getPageIdsHaveDetailShortCode());
 		$pDataAddressDetailView->setCustomLabels(['field1']);
 		$this->assertEquals(['field1'], $pDataAddressDetailView->getCustomLabels());
-		$pDataAddressDetailView->setEnableLinkedEstates(true);
-		$this->assertTrue($pDataAddressDetailView->getEnableLinkedEstates());
 		$pDataAddressDetailView->setShortCodeActiveEstate('[oo_estate view="active estate"]');
 		$this->assertEquals('[oo_estate view="active estate"]', $pDataAddressDetailView->getShortCodeActiveEstate());
 		$pDataAddressDetailView->setShortCodeReferenceEstate('[oo_estate view="reference estate"]');

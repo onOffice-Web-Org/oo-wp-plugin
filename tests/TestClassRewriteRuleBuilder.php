@@ -152,12 +152,12 @@ class TestClassRewriteRuleBuilder
 			->setMethods(['getAddressDetailView'])
 			->getMock();
 
-		$pDataAdressDetailView = new DataAddressDetailView;
-		$pDataAdressDetailView->addToPageIdsHaveDetailShortCode(13);
-		$pDataAdressDetailView->setPageId(13);
+		$pDataAddressDetailView = new DataAddressDetailView;
+		$pDataAddressDetailView->addToPageIdsHaveDetailShortCode(13);
+		$pDataAddressDetailView->setPageId(13);
 		$pDataAddressDetailViewHandler->expects($this->once())
 			->method('getAddressDetailView')
-			->willReturn($pDataAdressDetailView);
+			->willReturn($pDataAddressDetailView);
 
 		$pWPPageWrapper = $this->getMockBuilder(WPPageWrapper::class)
 			->setMethods(['getPageUriByPageId'])
