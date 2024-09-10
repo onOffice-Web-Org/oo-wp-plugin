@@ -42,6 +42,9 @@ class ScriptLoaderGenericConfigurationDefault
 	const ESTATE_TAG = 'oo_estate';
 
 	/** */
+	const ADDRESS_TAG = 'oo_address';
+
+	/** */
 	const FORM_TAG = 'oo_form';
 
 	/**
@@ -110,11 +113,13 @@ class ScriptLoaderGenericConfigurationDefault
 		}
 
 		$shortcodeFormForDetailPage = !empty(get_option('onoffice-default-view')) ? get_option('onoffice-default-view')->getShortCodeForm() : '';
-		if ($this->isFormPage($pageContent) || (is_array($shortcode) && !empty($shortcode['form'])) || ($this->isDetailEstatePage($pageContent) && ! empty($shortcodeFormForDetailPage))) {
-			$pageContent = ($this->isFormPage($pageContent) || $this->isDetailEstatePage($pageContent)) ? $pageContent : $shortcode['form'];
+		if ($this->isFormPage($pageContent) || (is_array($shortcode) && !empty($shortcode['form']))
+			|| ($this->isDetailEstatePage($pageContent) && ! empty($shortcodeFormForDetailPage))
+			|| ($this->isDetailAddressPage($pageContent) && ! empty($shortcodeFormForDetailPage))) {
+			$pageContent = ($this->isFormPage($pageContent) || $this->isDetailEstatePage($pageContent) || $this->isDetailAddressPage($pageContent)) ? $pageContent : $shortcode['form'];
 			$scripts = $this->renderScriptForFormPage($scripts, $pluginPath, $script, $pageContent, $async, $shortcodeFormForDetailPage);
 		}
-	
+
 		return $scripts;
 	}
 
@@ -124,6 +129,7 @@ class ScriptLoaderGenericConfigurationDefault
 	private function getShortcodeByPostMeta(): array
 	{
 		$metaKeys = get_post_meta(get_the_ID(), '', true);
+
 		if (!is_array($metaKeys) || empty($metaKeys)) {
 			return [];
 		}
@@ -136,7 +142,9 @@ class ScriptLoaderGenericConfigurationDefault
 			}
 			if ($this->isEstateListPage($metaValue)) {
 				$filteredMetaKeys['estate'] = $metaValue;
-			} elseif ($this->isDetailEstatePage($metaValue)) {
+			} elseif ($this->isAddressListPage($metaValue)) {
+				$filteredMetaKeys['address'] = $metaValue;
+			} elseif ($this->isDetailEstatePage($metaValue) || $this->isDetailAddressPage($metaValue)) {
 				$filteredMetaKeys['detail'] = $metaValue;
 			} elseif ($this->isFormPage($metaValue)) {
 				$filteredMetaKeys['form'][] = $metaValue;
@@ -165,6 +173,26 @@ class ScriptLoaderGenericConfigurationDefault
 	private function isDetailEstatePage(string $content): bool
 	{
 		return $this->matchesShortcode($content, self::ESTATE_TAG, 'view', 'detail');
+	}
+	/**
+	 * @param string $content
+	 * @return bool
+	 */
+	private function isAddressListPage(string $content): bool
+	{
+		return ($this->matchesShortcode($content, self::ADDRESS_TAG, 'view', '[^"]*') &&
+				!$this->matchesShortcode($content, self::ADDRESS_TAG, 'view', 'detail')) ||
+				($this->matchesShortcode($content, self::ADDRESS_TAG, 'units', '[^"]*') &&
+				!$this->matchesShortcode($content, self::ADDRESS_TAG, 'view', 'detail'));
+	}
+
+	/**
+	 * @param string $content
+	 * @return bool
+	 */
+	private function isDetailAddressPage(string $content): bool
+	{
+		return $this->matchesShortcode($content, self::ADDRESS_TAG, 'view', 'detail');
 	}
 
 	/**
@@ -295,7 +323,7 @@ class ScriptLoaderGenericConfigurationDefault
 		}, $this->extractFormNames($pageContent));
 		$names = implode(',', $names);
 
-		if ($this->isDetailEstatePage($pageContent)) {
+		if ($this->isDetailEstatePage($pageContent) || $this->isDetailAddressPage($pageContent)) {
 			$names = "'" . esc_sql($shortcodeFormForDetailPage) . "'";
 		}
 
@@ -318,6 +346,27 @@ class ScriptLoaderGenericConfigurationDefault
 		return $matches[1];
 	}
 
+	/**
+	 * @param array $scripts
+	 * @param string $pluginPath
+	 * @param string $script
+	 * @param string $style
+	 * @param string $defer
+	 * @return array
+	 */
+
+	private function renderScriptForAddressDetailPage(array $scripts, string $pluginPath, string $script, string $defer): array
+	{
+		$scripts[] = (new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadAsynchronous($defer);
+		$scripts[] = (new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/dist/onoffice_defaultview.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
+
+		return $scripts;
+	}
 	/**
 	 * @param array $scripts
 	 * @param string $pluginPath
