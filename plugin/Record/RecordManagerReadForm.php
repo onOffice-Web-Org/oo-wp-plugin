@@ -151,6 +151,33 @@ class RecordManagerReadForm
 		return $result;
 	}
 
+	/**
+	 * @param string $formType
+	 * 
+	 * @return object
+	 * @throws UnknownFormException
+	 */
+
+	public function getLatestRecordByFormType(string $formType)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT `name`
+				FROM {$prefix}oo_plugin_forms 
+				WHERE `form_type` = '".esc_sql($formType)."'
+				ORDER BY `form_id` DESC
+				LIMIT 1";
+
+		$result = $pWpDb->get_results($sql, OBJECT);
+
+		if ($result === null) {
+			throw new UnknownFormException();
+		}
+
+		return $result;
+	}
+
 	public function getCountDefaultRecipientRecord()
 	{
 		$prefix = $this->getTablePrefix();

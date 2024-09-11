@@ -1232,7 +1232,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadForm::class);
 			$allRecordsForm = $recordManagerReadForm->getRowByName($pDataDetailViewOptions->getShortCodeForm());
 			if ($allRecordsForm['form_type'] !== Form::TYPE_CONTACT) {
-				$form = $recordManagerReadForm->getAllRecordsByFormType(Form::TYPE_CONTACT);
+				$form = $recordManagerReadForm->getLatestRecordByFormType(Form::TYPE_CONTACT);
 				$pDataDetailViewOptions->setShortCodeForm($form[0]->name ?? '');
 				$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
 			}
