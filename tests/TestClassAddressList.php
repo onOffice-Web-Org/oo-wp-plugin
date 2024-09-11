@@ -102,6 +102,11 @@ class TestClassAddressList
 			'outputlanguage' => Language::getDefault(),
 			'formatoutput' => true,
 		];
+		$responseRelation = $this->getResponseRelation();
+		$parametersRelation = [
+			'childids' => [13, 37],
+			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER
+		];
 
 		$addressParametersWithoutFormat = [
 			'data' => ['Name', 'KdNr', 'Vorname'],
@@ -140,6 +145,8 @@ class TestClassAddressList
 		$addressParametersWithFormat['data'][] = 'imageUrl';
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormat, null, $responseRaw);
+		$pSDKWrapper->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', $parametersRelation, null, $responseRelation);
 
 		$pMockViewFieldModifierHandler = $this->getMockBuilder(ViewFieldModifierHandler::class)
 			->setMethods(['processRecord', 'getAllAPIFields'])
@@ -287,6 +294,16 @@ class TestClassAddressList
 		$pAddressList->loadAddresses();
 	}
 
+	/**
+	 *
+	 */
+
+	public function testGetCountEstatesForAddress()
+	{
+		$this->_pAddressList->loadAddresses();
+		$this->assertEquals(2, $this->_pAddressList->getCountEstates(13));
+	}
+
 
 	/**
 	 *
@@ -399,6 +416,44 @@ class TestClassAddressList
 	}
 
 
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	private function getResponseRelation()
+	{
+		$responseStr = '
+		{
+        "actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+        "resourceid": "",
+        "resourcetype": "idsfromrelation",
+        "cacheable": true,
+        "identifier": "",
+        "data": {
+          "meta": {
+            "cntabsolute": null
+          },
+          "records": [
+            {
+              "id": "relatedIds",
+              "type": "",
+              "elements": {
+                "13": [122,133],
+                "37": []
+              }
+            }
+          ]
+        },
+        "status": {
+          "errorcode": 0,
+          "message": "OK"
+        }
+      }';
+
+		return json_decode($responseStr, true);
+	}
 	/**
 	 *
 	 * @return string
