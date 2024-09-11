@@ -333,7 +333,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 48) {
-			$this->updateShortCodeFormForDetailView();
+			$this->migrationsDataShortCodeFormForDetailView();
 			$dbversion = 49;
 		}
 
@@ -1223,13 +1223,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 	}
 
 	/**
-	 *
+	 * @return void
 	 */
-	private function updateShortCodeFormForDetailView()
+	private function migrationsDataShortCodeFormForDetailView()
 	{
 		$pDataDetailViewOptions = get_option('onoffice-default-view');
-		if(!empty($pDataDetailViewOptions)){
-			$recordManagerReadForm = new RecordManagerReadForm();
+		if(!empty($pDataDetailViewOptions) && !empty($pDataDetailViewOptions->getShortCodeForm())){
+			$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadForm::class);
 			$allRecordsForm = $recordManagerReadForm->getRowByName($pDataDetailViewOptions->getShortCodeForm());
 			if ($allRecordsForm['form_type'] !== Form::TYPE_CONTACT) {
 				$form = $recordManagerReadForm->getAllRecordsByFormType(Form::TYPE_CONTACT);

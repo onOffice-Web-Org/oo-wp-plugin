@@ -159,12 +159,12 @@ class TestClassRecordManagerReadForm
 		$this->assertEquals([],$pFieldsFormSortAlphabe);
 	}
 
-	public function testGetAllRecords()
+	public function testGetAllRecordsByFormType()
 	{
-		$this->_pRecordManagerReadForm->method('getAllRecords')->will($this->returnValueMap([
+		$this->_pRecordManagerReadForm->method('getAllRecordsByFormType')->will($this->returnValueMap([
 			['testForm1', $this->getBaseRow(1, Form::TYPE_CONTACT)]
 		]));
-		$pFieldsForm = $this->_pRecordManagerReadForm->getAllRecords();
+		$pFieldsForm = $this->_pRecordManagerReadForm->getAllRecordsByFormType();
 
 		$this->assertEquals(null, $pFieldsForm);
 	}
