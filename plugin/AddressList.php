@@ -134,6 +134,8 @@ implements AddressListBase
 	/** @var array */
 	private $_recordsRaw = [];
 
+	/** @var array */
+	private $_countEstates = [];
 	/**
 	 *
 	 * @param DataViewAddress $pDataViewAddress
@@ -209,6 +211,8 @@ implements AddressListBase
 		$recordsRaw = $pAddressRawApiCall->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 
+		$this->getCountEstateForAddress($this->getAddressIds());
+
 		$this->_records = $pApiCall->getResultRecords();
 		$this->fillAddressesById($this->_records);
 
@@ -251,6 +255,52 @@ implements AddressListBase
 			unset($elements['id']);
 			$this->_addressesById[$address['id']] = array_merge($elements, $additionalContactData);
 		}
+	}
+
+		/**
+	 * @param array $addressIds
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws API\ApiClientException
+	 */
+	private function getCountEstateForAddress(array $addressIds)
+	{
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+		error_log("AddressIds".var_export($addressIds,true ));
+
+		$parameters = [
+			'childids' => array_values($addressIds),
+			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
+		];
+		$pAPIClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
+		$pAPIClientAction->setParameters($parameters);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+		$this->collectCountEstates($pAPIClientAction->getResultRecords(), $addressIds);
+	}
+
+	/**
+	 * @param array $responseArrayContacts
+	 * @param array $addressIds
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws API\ApiClientException
+	 */
+	private function collectCountEstates($responseArrayContacts, array $addressIds)
+	{
+		$records = $responseArrayContacts[0]['elements'] ?? [];
+
+		foreach ($addressIds as $index => $addressId) {
+			$this->_countEstates[$addressId] = array_key_exists($addressId,$records) ? count($records[$addressId]) : 0;
+		}
+	}
+
+	/**
+ * @return int
+ */
+	public function getCountEstates($addressId)
+	{
+		return intval($this->_countEstates[$addressId]);
 	}
 
 	/**
