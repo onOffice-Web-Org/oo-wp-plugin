@@ -84,6 +84,9 @@ class FormModelBuilderDBForm
 	/** @var array */
 	private $_characteristic = [];
 
+	/** @var array */
+	private $_originContact = [];
+
 	/**
 	 * @param Container $pContainer
 	 */
@@ -238,6 +241,8 @@ class FormModelBuilderDBForm
 		$values['actiontype'] = $pDataFormConfiguration->getActionType();
 		$values['characteristic'] = $pDataFormConfiguration->getCharacteristic();
 		$values['remark'] = $pDataFormConfiguration->getRemark();
+		$values['origincontact'] = $pDataFormConfiguration->getOriginContact();
+		$values['advisorylevel'] = $pDataFormConfiguration->getAdvisorylevel();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -879,8 +884,8 @@ class FormModelBuilderDBForm
 		$parameters = [
 			'labels' => true,
 			'language' => $language,
-			'fieldList' => ['merkmal'],
-			'modules' => ['agentsLog']
+			'fieldList' => ['merkmal', 'HerkunftKontakt'],
+			'modules' => ['agentsLog', 'address']
 		];
 
 		$pApiClientActionGetCharacteristic = new APIClientActionGeneric
@@ -898,7 +903,12 @@ class FormModelBuilderDBForm
 			}
 		}
 		if (!empty($resultCharacteristic)) {
-			$this->_characteristic = $resultCharacteristic[0]['elements'];
+			foreach (array_column($resultCharacteristic, 'elements') as $value) {
+				if (isset($value['merkmal']))
+				$this->_characteristic = $value['merkmal'];
+				if (isset($value['HerkunftKontakt']))
+				$this->_originContact = $value['HerkunftKontakt'];
+			}
 		}
 	}
 
@@ -916,9 +926,64 @@ class FormModelBuilderDBForm
 		$characteristicArray = explode(',', $this->getValue('characteristic')) ?? [];
 		$pInputModelCharacteristic->setIsMulti(true);
 		$pInputModelCharacteristic->setValue($characteristicArray);
-		$pInputModelCharacteristic->setValuesAvailable($this->_characteristic['merkmal']['permittedvalues'] ?? []);
+		$pInputModelCharacteristic->setValuesAvailable($this->_characteristic['permittedvalues'] ?? []);
 
 		return $pInputModelCharacteristic;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+
+	public function createInputModelOriginContact(): InputModelDB
+	{
+		$labelOriginContact = __('Origin Contact', 'onoffice-for-wp-websites');
+
+		$pInputModelOriginContact = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_ORIGIN_CONTACT, $labelOriginContact);
+		$pInputModelOriginContact->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelOriginContact->setValue($this->getValue('origincontact') ?? '');
+		$defaultOriginContact = ['' => __('Please choose', 'onoffice-for-wp-websites')]
+			+ $this->_originContact['permittedvalues'];
+		$pInputModelOriginContact->setValuesAvailable($defaultOriginContact ?? []);
+
+		return $pInputModelOriginContact;
+	}
+
+
+	/**
+	 * @return array
+	 */
+
+	private function getDefaultAdvisoryLevel() {
+		return [
+			'A' => __('A Rental/purchase contract signed', 'onoffice-for-wp-websites'),
+			'B' => __('B Written rental / purchase commitment', 'onoffice-for-wp-websites'),
+			'C' => __('C Intense communication', 'onoffice-for-wp-websites'),
+			'D' => __('D Interested, but still reviewing', 'onoffice-for-wp-websites'),
+			'E' => __('E Documentation received', 'onoffice-for-wp-websites'),
+			'F' => __('F Documentation ordered', 'onoffice-for-wp-websites'),
+			'G' => __('G Cancellation', 'onoffice-for-wp-websites'),
+		];
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+
+	public function createInputModelAdvisoryLevel(): InputModelDB
+	{
+		$labelAdvisoryLevel= __('Advisory Level', 'onoffice-for-wp-websites');
+
+		$pInputModelAdvisoryLevel = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_ADVISORY_LEVEL, $labelAdvisoryLevel);
+		$pInputModelAdvisoryLevel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelAdvisoryLevel->setValue($this->getValue('advisorylevel') ?? '');
+		$defaultAdvisoryLevel = ['' => __('Please choose', 'onoffice-for-wp-websites')]
+			+ $this->getDefaultAdvisoryLevel();
+		$pInputModelAdvisoryLevel->setValuesAvailable($defaultAdvisoryLevel);
+
+		return $pInputModelAdvisoryLevel;
 	}
 
 	/**

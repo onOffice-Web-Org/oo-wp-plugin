@@ -1236,6 +1236,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`write_activity` tinyint(1) NOT NULL DEFAULT '0',
 			`action_kind` tinytext NOT NULL,
 			`action_type` tinytext NOT NULL,
+			`origin_contact` tinytext NOT NULL,
+			`advisory_level` tinytext NOT NULL,
 			`characteristic` VARCHAR(255) NOT NULL,
 			`remark` text NOT NULL,
 			PRIMARY KEY (`form_activityconfig_id`)

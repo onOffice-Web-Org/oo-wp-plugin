@@ -97,6 +97,12 @@ class DataFormConfiguration
 	/** @var string */
 	private $_remark = '';
 
+	/** @var string */
+	private $_originContact = '';
+
+	/** @var string */
+	private $_advisorylevel = '';
+
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -305,4 +311,20 @@ class DataFormConfiguration
 	/** @param string $remark */
 	public function setRemark(string $remark)
 		{ $this->_remark = $remark; }
+	
+	/** @return string */
+	public function getOriginContact(): string
+		{ return $this->_originContact; }
+
+	/** @param string $originContact */
+	public function setOriginContact(string $originContact)
+		{ $this->_originContact = $originContact; }
+	
+	/** @return string */
+	public function getAdvisorylevel(): string
+		{ return $this->_advisorylevel; }
+
+	/** @param string $advisorylevel */
+	public function setAdvisorylevel(string $advisorylevel)
+		{ $this->_advisorylevel = $advisorylevel; }
 }
