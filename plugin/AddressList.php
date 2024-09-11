@@ -266,7 +266,6 @@ implements AddressListBase
 	private function getCountEstateForAddress(array $addressIds)
 	{
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
-		error_log("AddressIds".var_export($addressIds,true ));
 
 		$parameters = [
 			'childids' => array_values($addressIds),
