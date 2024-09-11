@@ -139,7 +139,8 @@ class RecordManagerReadForm
 		$pWpDb = $this->getWpdb();
 
 		$sql = "SELECT *
-				FROM {$prefix}oo_plugin_forms WHERE form_type = '{$formType}'";
+				FROM {$prefix}oo_plugin_forms 
+				WHERE `form_type` = '".esc_sql($formType)."'";
 
 		$result = $pWpDb->get_results($sql, OBJECT);
 
