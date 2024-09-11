@@ -57,4 +57,5 @@ if ($pForm->needsReCaptcha() && $key !== '') {
 <input type="submit" value="<?php echo esc_html($pForm->getGenericSetting('submitButtonLabel')); ?>">
 
 <?php
+
 }
