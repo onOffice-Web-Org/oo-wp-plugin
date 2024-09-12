@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\Container;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -74,4 +75,9 @@ interface AddressListEnvironment
 	 * @return FieldsCollectionBuilderShort
 	 */
 	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort;
+
+	/**
+	 * @return Container
+	 */
+	public function getContainer(): Container;
 }
