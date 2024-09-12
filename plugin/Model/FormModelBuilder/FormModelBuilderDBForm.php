@@ -1006,6 +1006,9 @@ class FormModelBuilderDBForm
 						if (isset($record['elements']['types'][$value])) {
 							$this->_taskType[$key] = $record['elements']['types'][$value];
 						}
+						if ($value === 'Rückruf') {
+							$this->_taskType[$key] = __('Callback', 'onoffice-for-wp-websites');
+						}
 					}
 				}
 			}
