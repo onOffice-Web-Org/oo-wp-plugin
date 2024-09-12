@@ -21,63 +21,73 @@
 
 use onOffice\WPlugin\AddressList;
 
-?>
-
-<div class="oo-detailview">
-	<?php
-    /* @var $pAddressList AddressList */
-	$currentAddressArr = $pAddressList->getCurrentAddress();
-	foreach ($currentAddressArr as $addressId => $escapedValues) {
-        $imageUrl = $escapedValues['imageUrl'];
-        unset($escapedValues['imageUrl']);
-    ?>
+$addressName = array('Anrede', 'Titel', 'Vorname', 'Name');
+/* @var $pAddressList AddressList */
+$currentAddressArr = $pAddressList->getRows();
+foreach ($currentAddressArr as $addressId => $escapedValues) {
+		$imageUrl = $escapedValues['imageUrl'];
+		unset($escapedValues['imageUrl']);
+	?>
+<div class="oo-addresscontact">
     <h2 class="oo-addressdetail-headline">
-        <?php echo $escapedValues['Name']; ?>
-    </h2>
-	<div class="oo-detailsheadline">
-		<h1><?php echo $escapedValues['Name']; ?></h1>
-		<div class="oo-detailstable">
-			<?php
-            if (!empty($imageUrl)) {
-                echo '<img width="350" src="'.$imageUrl.'"/>';
-            }
-			foreach ($escapedValues as $field => $value) {
-                echo '<div class="oo-detailslisttd">' . esc_html($pAddressList->getFieldLabel($field)) . '</div>' . "\n"
-                    . '<div class="oo-detailslisttd">'
-                    . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
-                    . '</div>' . "\n";
-			}?>
-		</div>
-	</div>
-	<?php } ?>
-	<!--
-		to filter estates on address-detail-page you have to change the estate-list-template
-		add this in while:
-		if( !$pEstatesClone->isCurrentEstateContactsInAddressFilter() )
-			continue;
-	-->
-	<?php
-		$shortCodeActiveEstates = $pAddressList->getShortCodeActiveEstates();
-		if (!empty($shortCodeActiveEstates)) {
-		?>
-			<div class="detail-contact-form">
-				<?php echo do_shortcode($shortCodeActiveEstates); ?>
-			</div>
-	<?php } ?>
-    <?php
-    $shortCodeReferenceEstates = $pAddressList->getShortCodeReferenceEstates();
-    if (!empty($shortCodeReferenceEstates)) {
+        <?php
+        $fullName = '';
+        foreach ($addressName as $namePart) {
+            $fullName .= !empty($escapedValues[$namePart]) ? $escapedValues[$namePart]. ' ' : '';
+        }
+        echo substr_replace($fullName, '', -1);;
         ?>
-        <div class="detail-contact-form">
-            <?php echo do_shortcode($shortCodeReferenceEstates); ?>
-        </div>
-    <?php } ?>
-	<?php
-		$shortCodeForm = $pAddressList->getShortCodeForm();
-		if (!empty($shortCodeForm)) {
-		?>
-			<div class="detail-contact-form">
-				<?php echo do_shortcode($shortCodeForm); ?>
-			</div>
-		<?php } ?>
+    </h2>
+    <?php
+        if (!empty($imageUrl)) {
+            $imageAlt = $pAddressList->generateImageAlt($addressId);
+            echo '<picture class="oo-picture">';
+            echo '<img class="oo-responsive-image estate-status" ' .
+                'src="' . esc_url($imageUrl) . '" ' .
+                'alt="' . esc_html($imageAlt) . '" ' .
+                'loading="lazy"/>';
+            echo '</picture>';
+        }
+        foreach ($escapedValues as $field => $value) {
+            /*if (in_array($field, $addressName) || !in_array($field, $fields)) {
+                continue;
+            }*/
+            if (in_array($field, $addressName)) {
+                continue;
+            }
+            echo '<div class="oo-addresscontact-field">'
+                . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
+                . '</div>' . "\n";
+    }?>
 </div>
+<?php } ?>
+<!--
+    to filter estates on address-detail-page you have to change the estate-list-template
+    add this in while:
+    if( !$pEstatesClone->isCurrentEstateContactsInAddressFilter() )
+        continue;
+-->
+<?php
+    $shortCodeActiveEstates = $pAddressList->getShortCodeActiveEstates();
+    if (!empty($shortCodeActiveEstates)) {
+    ?>
+        <div class="detail-contact-form">
+            <?php echo do_shortcode($shortCodeActiveEstates); ?>
+        </div>
+<?php } ?>
+<?php
+$shortCodeReferenceEstates = $pAddressList->getShortCodeReferenceEstates();
+if (!empty($shortCodeReferenceEstates)) {
+    ?>
+    <div class="detail-contact-form">
+        <?php echo do_shortcode($shortCodeReferenceEstates); ?>
+    </div>
+<?php } ?>
+<?php
+    $shortCodeForm = $pAddressList->getShortCodeForm();
+    if (!empty($shortCodeForm)) {
+    ?>
+        <div class="detail-contact-form">
+            <?php echo do_shortcode($shortCodeForm); ?>
+        </div>
+<?php } ?>

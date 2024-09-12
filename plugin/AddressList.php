@@ -227,7 +227,7 @@ implements AddressListBase
 	{
 		$fields = $this->_pDataViewAddress->getFields();
 
-		if ($this->_pDataViewAddress->getShowPhoto()) {
+		if ($this->getDataViewAddress() instanceof DataListViewAddress && $this->_pDataViewAddress->getShowPhoto()) {
 			$fields []= 'imageUrl';
 		}
 

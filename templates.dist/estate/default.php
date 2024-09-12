@@ -92,9 +92,6 @@ $dimensions = [
 	ul.oo-listparking {
 		padding: 0 10px;
 	}
-	.clear {
-		width: 50%;
-	}
 </style>
 
 <div class="oo-estate-map">

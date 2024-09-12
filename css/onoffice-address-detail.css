@@ -1,4 +1,10 @@
-.oo-addressdetail-headline {
-    color: grey;
-    font-size: 3rem;
+
+.oo-addresscontact {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 4rem;
+}
+.oo-addresscontact-field {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
 }
