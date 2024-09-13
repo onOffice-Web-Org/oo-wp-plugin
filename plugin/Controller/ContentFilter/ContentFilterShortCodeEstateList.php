@@ -130,13 +130,16 @@ class ContentFilterShortCodeEstateList
 			$pEstateList->setUnitsViewName($attributes['units']);
 			$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 
+			if(isset($attributes['address']) && intval($attributes['address']) != 0)
+			{
+				$pEstateList->setFilterAddressId($attributes['address']);
+			}
+
 			$pEstateList->loadEstates($this->_pWPQueryWrapper->getWPQuery($pListView->getId())->get('paged', 1) ?: 1);
 			$pTemplate = $this->_pTemplate
 				->withTemplateName($pListViewWithSortParams->getTemplate())
 				->withEstateList($pEstateList);
-			$result = '<div id="'.str_replace(' ', '-', $attributes['view']).'">';
-			$result .= $pTemplate->render();
-			$result .= '</div>';
+			$result = $pTemplate->render();
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel, true);
 		}
 		return $result;

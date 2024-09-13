@@ -21,6 +21,7 @@
 
 declare (strict_types=1);
 
+
 namespace onOffice\tests;
 
 use DI\Container;
@@ -70,6 +71,7 @@ class TestClassContentFilterShortCodeEstate
 		$input = [
 			'view' => 'default_view',
 			'units' => 'test_units',
+			'address' => null
 		];
 		$pContentFilterDetail = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
 		$pContentFilterDetail->expects($this->once())
@@ -80,7 +82,7 @@ class TestClassContentFilterShortCodeEstate
 		$pContentFilterList = $this->_pContainer->get(ContentFilterShortCodeEstateList::class);
 		$pContentFilterList->expects($this->once())
 			->method('render')
-			->with(['view' => 'other', 'units' => null])
+			->with(['view' => 'other', 'units' => null, 'address' => null])
 			->will($this->returnValue('rendered list'));
 
 		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstate::class);

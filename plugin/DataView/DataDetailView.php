@@ -117,6 +117,62 @@ class DataDetailView
 	];
 
 	/** @var string[] */
+	const GENERAL_ENERGY_FIELDS = ['energieausweistyp', 'endenergiebedarf', 'energieverbrauchskennwert','energyClass'];
+
+	/** @var string[] */
+	const PRIVATE_ENERGY_FIELDS = ['energietraeger', 'baujahr', 'co2ausstoss', 'co2_Emissionsklasse'];
+
+	/** @var string[] */
+	const AUSTRIA_ENERGY_FIELDS = ['ea_hwb_at', 'ea_hwb_klasse_at', 'ea_fgee_klasse_at', 'ea_fgee_at'];
+
+	/** @var string */
+	const AUSTRIA_LANGUAGE_CODE = 'de_AT';
+
+	/** @var string[] */
+	const LANGUAGE_CODE_EU_COUNTRIES = [
+		'nl_BE',
+		'fr_BE',
+		'de_BE',
+		'bg_BG',
+		'hr_HR',
+		'el_CY',
+		'tr_CY',
+		'cs_CZ',
+		'da_DK',
+		'et_EE',
+		'fi_FI',
+		'sv_FI',
+		'fr_FR',
+		'de_DE',
+		'el_GR',
+		'hu_HU',
+		'en_IE',
+		'ga_IE',
+		'it_IT',
+		'lv_LV',
+		'lt_LT',
+		'lb_LU',
+		'de_LU',
+		'fr_LU',
+		'mt_MT',
+		'en_MT',
+		'nl_NL',
+		'pl_PL',
+		'pt_PT',
+		'ro_RO',
+		'sk_SK',
+		'sl_SI',
+		'es_ES',
+		'ca_ES',
+		'gl_ES',
+		'eu_ES',
+		'sv_SE',
+		'en_GB',
+		'gd_GB',
+		'cy_GB'
+	];
+
+	/** @var string[] */
 	private $_pictureTypes = [];
 
 	/** @var string */

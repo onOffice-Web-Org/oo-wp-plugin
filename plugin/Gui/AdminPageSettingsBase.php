@@ -46,6 +46,7 @@ use function wp_enqueue_script;
 use function wp_nonce_field;
 use function wp_register_script;
 use function wp_verify_nonce;
+use function esc_attr;
 
 /**
  *
@@ -154,13 +155,6 @@ abstract class AdminPageSettingsBase
 			     . esc_html__( 'The view has been saved.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
-		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'false' ) {
-			echo '<div class="notice notice-error is-dismissible"><p>'
-			     . esc_html__( 'There was a problem saving the view. Please make '
-			                   . 'sure the name of the view is unique, even across all estate list types.',
-					'onoffice-for-wp-websites' )
-			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
-		}
 		do_action( 'add_meta_boxes', get_current_screen()->id, null );
 		$this->generateMetaBoxes();
 
@@ -173,7 +167,7 @@ abstract class AdminPageSettingsBase
 		$this->generatePageMainTitle( $this->getPageTitle() );
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
-		echo '<input type="hidden" name="record_id" value="' . ( $_GET['id'] ?? 0 ) . '" />';
+		echo '<input type="hidden" name="record_id" value="' . esc_attr( $_GET['id'] ?? 0 ) . '" />';
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );

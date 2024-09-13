@@ -2,9 +2,9 @@
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
-Tested up to: 6.4.3
-Requires PHP: 7.3
-Stable tag: 4.20
+Tested up to: 6.6.1
+Requires PHP: 7.4
+Stable tag: 5.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,49 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 5.1 (2024-09-09) =
+
+**Added**
+
+* Order properties by tags
+
+**Changed**
+
+* Multiple option to set contact types in forms
+
+**Fixed**
+
+* Showing similar properties with price on request
+
+
+= 5.0 (2024-08-07) =
+
+**Added**
+
+* Hidden fields in forms -! To use this feature properly: personalized form templates and fields.php have to be updated !-
+* Indication in form overview whether reCAPTCHA has been activated or not
+* Thousand separator in form inputs -! To use this properly: personalized templates have to be updated !-
+* Automatic integration of the energy certificate fields for a newly created detail page
+* Setting for caching duration
+
+**Changed**
+
+* Order of Geo-Position field in property lists, applicant search form and interest form
+* Update leaflet.js version to 1.9.4
+* Update onOffice logo
+
+**Fixed**
+
+* Unnecessary redirects for multilingual pages with user-friendly URLs
+* Redirection if url contains parameters
+* Loading third party JS liberaries on property detail page of an unit
+* Security issue
+* HTML structure of property list shortcode
+
+**Removed**
+
+* PDF document download for property lists
 
 = 4.20 (2024-06-26) =
 
