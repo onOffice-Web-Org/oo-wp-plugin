@@ -23,6 +23,7 @@ use onOffice\WPlugin\AddressList;
 
 $addressName = array('Anrede', 'Titel', 'Vorname', 'Name');
 /* @var $pAddressList AddressList */
+/*todo getRows()*/
 $currentAddressArr = $pAddressList->getRows();
 foreach ($currentAddressArr as $addressId => $escapedValues) {
 		$imageUrl = $escapedValues['imageUrl'];
@@ -42,6 +43,7 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
         if (!empty($imageUrl)) {
             $imageAlt = $pAddressList->generateImageAlt($addressId);
             echo '<picture class="oo-picture">';
+            /*todo alttag*/
             echo '<img class="oo-responsive-image estate-status" ' .
                 'src="' . esc_url($imageUrl) . '" ' .
                 'alt="' . esc_html($imageAlt) . '" ' .
@@ -49,9 +51,6 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
             echo '</picture>';
         }
         foreach ($escapedValues as $field => $value) {
-            /*if (in_array($field, $addressName) || !in_array($field, $fields)) {
-                continue;
-            }*/
             if (in_array($field, $addressName)) {
                 continue;
             }
