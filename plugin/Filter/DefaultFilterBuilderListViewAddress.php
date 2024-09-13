@@ -25,7 +25,7 @@ namespace onOffice\WPlugin\Filter;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\DataView\DataViewAddress;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -40,8 +40,8 @@ use onOffice\WPlugin\Types\FieldsCollection;
 class DefaultFilterBuilderListViewAddress
 	implements DefaultFilterBuilder
 {
-	/** @var DataListViewAddress */
-	private $_pDataListView = null;
+	/** @var DataViewAddress */
+	private $_pDataViewAddress = null;
 
 	/** @var FilterBuilderInputVariables */
 	private $_pFilterBuilderInputVars = null;
@@ -55,18 +55,18 @@ class DefaultFilterBuilderListViewAddress
 
 	/**
 	 *
-	 * @param DataListViewAddress $pDataListView
+	 * @param DataViewAddress $pDataViewAddress
 	 * @param FilterBuilderInputVariables $pFilterBuilder
 	 *
 	 */
 
 	public function __construct(
-		DataListViewAddress $pDataListView,
+		DataViewAddress $pDataViewAddress,
 		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort,
 		CompoundFieldsFilter $pCompoundFields,
 		FilterBuilderInputVariables $pFilterBuilder = null)
 	{
-		$this->_pDataListView = $pDataListView;
+		$this->_pDataViewAddress = $pDataViewAddress;
 		$this->_pFilterBuilderInputVars = $pFilterBuilder ?? new FilterBuilderInputVariables
 			(onOfficeSDK::MODULE_ADDRESS, true);
 
@@ -87,7 +87,7 @@ class DefaultFilterBuilderListViewAddress
 
 	public function buildFilter(): array
 	{
-		$filterableFields = $this->_pDataListView->getFilterableFields();
+		$filterableFields = $this->_pDataViewAddress->getFilterableFields();
 		$pFieldsCollection = new FieldsCollection();
 		$this->_pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$filterableInputs = $this->_pCompoundFieldsFilter->mergeFields($pFieldsCollection, $filterableFields);
