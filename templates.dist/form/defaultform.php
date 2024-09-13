@@ -37,7 +37,7 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 	<input type="hidden" name="Id" value="<?php echo esc_attr($estateId); ?>">
 	<?php endif; ?>
 
-<?php
+	<?php
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo esc_html__('SUCCESS!', 'onoffice-for-wp-websites');

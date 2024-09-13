@@ -213,6 +213,10 @@ abstract class AdminPageFormSettingsBase
 				$result = $result && $pRecordManagerUpdateForm->updateFieldConfigByRow
 					($row[RecordManager::TABLENAME_FIELDCONFIG_FORMS]);
 			}
+
+			if (array_key_exists(RecordManager::TABLENAME_CONTACT_TYPES, $row)) {
+				$result = $result && $pRecordManagerUpdateForm->updateContactTypeByRow($row[RecordManager::TABLENAME_CONTACT_TYPES]);
+			}
 		} else {
 			$action = RecordManagerFactory::ACTION_INSERT;
 			// insert
@@ -225,6 +229,8 @@ abstract class AdminPageFormSettingsBase
 				$rowFieldConfig = $this->prepareRelationValues
 					(RecordManager::TABLENAME_FIELDCONFIG_FORMS, 'form_id', $row, $recordId);
 				$row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] = $rowFieldConfig;
+				$row[RecordManager::TABLENAME_CONTACT_TYPES] =
+					$this->prepareRelationValues(RecordManager::TABLENAME_CONTACT_TYPES, 'form_id', $row, $recordId);
 				$pRecordManagerInsertForm->insertAdditionalValues($row);
 				$result = true;
 			} catch (RecordManagerInsertException $pException) {
@@ -704,6 +710,12 @@ abstract class AdminPageFormSettingsBase
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginforms-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
+
+		if ($this->getType() !== Form::TYPE_APPLICANT_SEARCH) {
+			wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js');
+			wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css');
+			wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
+		}
 	}
 
 

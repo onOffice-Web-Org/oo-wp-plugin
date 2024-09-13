@@ -171,7 +171,7 @@ class InputModelDBFactoryConfigForm
 			self::KEY_FIELD => 'show_estate_context',
 		],
 		self::INPUT_FORM_CONTACT_TYPE => [
-			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_TABLE => 'oo_plugin_contacttypes',
 			self::KEY_FIELD => 'contact_type',
 		],
 
