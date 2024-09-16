@@ -75,6 +75,14 @@ onOffice.checkboxAdmin = function() {
 			{
 				element: "textarea[name=oopluginformactivityconfig-remark]",
 				invert: false
+			},
+			{
+				element: "select[name^=oopluginformactivityconfig-origincontact]",
+				invert: false
+			},
+			{
+				element: "select[name^=oopluginformactivityconfig-advisorylevel]",
+				invert: false
 			}
 		]
 	};

@@ -693,6 +693,10 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	border-color: #dcdcde;
 }
 
+.oo-poststuff .select2-container--default .select2-selection--multiple[aria-disabled="true"] .select2-selection__choice {
+    opacity: 0.5;
+}
+
 .oo-search-field {
 	width: 100%;
 	float: left;

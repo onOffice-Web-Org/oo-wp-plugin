@@ -181,6 +181,8 @@ class AdminPageFormSettingsContact
 		$pInputModelWriteActivity = $pFormModelBuilder->createInputModelWriteActivity();
 		$pInputModelActionKind = $pFormModelBuilder->createInputModelActionKind();
 		$pInputModelActionType= $pFormModelBuilder->createInputModelActionType();
+		$pInputModelOriginContact= $pFormModelBuilder->createInputModelOriginContact();
+		$pInputModelAdvisoryLevel= $pFormModelBuilder->createInputModelAdvisoryLevel();
 		$pInputModelCharacteristic= $pFormModelBuilder->createInputModelCharacteristic();
 		$pInputModelRemark= $pFormModelBuilder->createInputModelRemark();
 		$pFormModelFormActivitiy  = new FormModel();
@@ -190,6 +192,10 @@ class AdminPageFormSettingsContact
 		$pFormModelFormActivitiy->addInputModel($pInputModelWriteActivity);
 		$pFormModelFormActivitiy->addInputModel($pInputModelActionKind);
 		$pFormModelFormActivitiy->addInputModel($pInputModelActionType);
+		$pFormModelFormActivitiy->addInputModel($pInputModelOriginContact);
+		if ($this->getType() !== Form::TYPE_INTEREST) {
+			$pFormModelFormActivitiy->addInputModel($pInputModelAdvisoryLevel);
+		}
 		$pFormModelFormActivitiy->addInputModel($pInputModelCharacteristic);
 		$pFormModelFormActivitiy->addInputModel($pInputModelRemark);
 

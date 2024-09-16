@@ -208,6 +208,8 @@ class DataFormConfigurationFactory
 		$pFormConfiguration->setActionType($row['action_type'] ?? '');
 		$pFormConfiguration->setCharacteristic($row['characteristic'] ?? '');
 		$pFormConfiguration->setRemark($row['remark'] ?? '');
+		$pFormConfiguration->setOriginContact($row['origin_contact'] ?? '');
+		$pFormConfiguration->setAdvisorylevel($row['advisory_level'] ?? '');
 	}
 
 

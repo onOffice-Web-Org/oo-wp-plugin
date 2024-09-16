@@ -419,12 +419,14 @@ class FormAddressCreator
 			'addressids' => [$addressId],
 			'actionkind' => $pFormConfig->getActionKind() ?: null,
 			'actiontype' => $pFormConfig->getActionType() ?: null,
+			'origincontact' => $pFormConfig->getOriginContact() ?: null,
 			'features' => !empty($pFormConfig->getCharacteristic()) ? explode(',', $pFormConfig->getCharacteristic()) : null,
 			'note' => $pFormConfig->getRemark(),
 		];
 
 		if (!empty($estateId)) {
 			$requestParams['estateid'] = $estateId;
+			$requestParams['advisorylevel'] = $pFormConfig->getAdvisorylevel() ?: null;
 		}
 
 		$pApiClientAction = new APIClientActionGeneric

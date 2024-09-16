@@ -116,6 +116,12 @@ class InputModelDBFactoryConfigForm
 	/** */
 	const INPUT_FORM_REMARK = 'remark';
 
+	/** */
+	const INPUT_FORM_ORIGIN_CONTACT = 'originContact';
+
+	/** */
+	const INPUT_FORM_ADVISORY_LEVEL = 'advisoryLevel';
+
 	/** @var array */
 	private $_inputConfig = [
 		self::INPUT_FORM_NAME => [
@@ -238,6 +244,14 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_REMARK => [
 			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
 			self::KEY_FIELD => 'remark',
+		],
+		self::INPUT_FORM_ORIGIN_CONTACT => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'origin_contact',
+		],
+		self::INPUT_FORM_ADVISORY_LEVEL => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'advisory_level',
 		],
 	];
 
