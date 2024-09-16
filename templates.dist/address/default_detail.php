@@ -22,6 +22,7 @@
 use onOffice\WPlugin\AddressList;
 
 $addressName = array('Anrede', 'Titel', 'Vorname', 'Name');
+$addressPlace = array('Strasse', 'Plz', 'Ort', 'Plz-Ort');
 /* @var $pAddressList AddressList */
 /*todo getRows()*/
 $currentAddressArr = $pAddressList->getRows();
@@ -29,8 +30,8 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
 		$imageUrl = $escapedValues['imageUrl'];
 		unset($escapedValues['imageUrl']);
 	?>
-<div class="oo-addresscontact">
-    <h2 class="oo-addressdetail-headline">
+<div class="oo-address">
+    <h2 class="oo-address-name">
         <?php
         $fullName = '';
         foreach ($addressName as $namePart) {
@@ -42,22 +43,37 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
     <?php
         if (!empty($imageUrl)) {
             $imageAlt = $pAddressList->generateImageAlt($addressId);
-            echo '<picture class="oo-picture">';
+            echo '<picture class="oo-picture oo-address-picture">';
             /*todo alttag*/
-            echo '<img class="oo-responsive-image estate-status" ' .
+            echo '<img class="oo-responsive-image" ' .
                 'src="' . esc_url($imageUrl) . '" ' .
                 'alt="' . esc_html($imageAlt) . '" ' .
                 'loading="lazy"/>';
             echo '</picture>';
         }
-        foreach ($escapedValues as $field => $value) {
-            if (in_array($field, $addressName)) {
-                continue;
+    ?>
+    <div class="oo-address-fieldlist">
+        <?php
+            $addressPlaceDiv = '';
+            foreach ($escapedValues as $field => $value) {
+                if (in_array($field, $addressName) || empty($value)) {
+                    continue;
+                }
+                if (in_array($field, $addressPlace)) {
+                    $addressPlaceDiv .= '<div class="oo-address-placefield">'
+                        . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
+                        . '</div>';
+                    continue;
+                }
+                echo '<div class="oo-address-field">'
+                    . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
+                    . '</div>';
             }
-            echo '<div class="oo-addresscontact-field">'
-                . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
-                . '</div>' . "\n";
-    }?>
+            if(!empty($addressPlaceDiv)) {
+                echo '<div class="oo-address-placefieldlist">'.$addressPlaceDiv.'</div>';
+            }
+            ?>
+    </div>
 </div>
 <?php } ?>
 <!--
@@ -70,7 +86,7 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
     $shortCodeActiveEstates = $pAddressList->getShortCodeActiveEstates();
     if (!empty($shortCodeActiveEstates)) {
     ?>
-        <div class="detail-contact-form">
+        <div class="oo-address-estatelist">
             <?php echo do_shortcode($shortCodeActiveEstates); ?>
         </div>
 <?php } ?>
@@ -78,7 +94,7 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
 $shortCodeReferenceEstates = $pAddressList->getShortCodeReferenceEstates();
 if (!empty($shortCodeReferenceEstates)) {
     ?>
-    <div class="detail-contact-form">
+    <div class="oo-address-estatelist">
         <?php echo do_shortcode($shortCodeReferenceEstates); ?>
     </div>
 <?php } ?>
@@ -86,7 +102,7 @@ if (!empty($shortCodeReferenceEstates)) {
     $shortCodeForm = $pAddressList->getShortCodeForm();
     if (!empty($shortCodeForm)) {
     ?>
-        <div class="detail-contact-form">
+        <div class="oo-address-form">
             <?php echo do_shortcode($shortCodeForm); ?>
         </div>
 <?php } ?>
