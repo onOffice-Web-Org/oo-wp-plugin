@@ -355,9 +355,6 @@ class ScriptLoaderGenericConfigurationDefault
      */
     private function addAddressStyle(array $values, string $style, string $pluginPath) {
         $pageContent = get_the_content();
-        if ($this->isAddressListPage($pageContent)) {
-            $values []= (new IncludeFileModel($style, 'onoffice-address', plugins_url('/css/onoffice-address.css', $pluginPath)));
-        }
         if ($this->isDetailAddressPage($pageContent)) {
             $values []= (new IncludeFileModel($style, 'onoffice-address-detail', plugins_url('/css/onoffice-address-detail.css', $pluginPath)));
         }

@@ -24,7 +24,6 @@ use onOffice\WPlugin\AddressList;
 $addressName = array('Anrede', 'Titel', 'Vorname', 'Name');
 $addressPlace = array('Strasse', 'Plz', 'Ort', 'Plz-Ort');
 /* @var $pAddressList AddressList */
-/*todo getRows()*/
 $currentAddressArr = $pAddressList->getRows();
 foreach ($currentAddressArr as $addressId => $escapedValues) {
 		$imageUrl = $escapedValues['imageUrl'];
@@ -44,7 +43,6 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
         if (!empty($imageUrl)) {
             $imageAlt = $pAddressList->generateImageAlt($addressId);
             echo '<picture class="oo-picture oo-address-picture">';
-            /*todo alttag*/
             echo '<img class="oo-responsive-image" ' .
                 'src="' . esc_url($imageUrl) . '" ' .
                 'alt="' . esc_html($imageAlt) . '" ' .
