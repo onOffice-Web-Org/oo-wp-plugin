@@ -336,6 +336,7 @@ class TestClassFormPostContact
 			'addressids' => [320],
 			'actionkind' => 'ActionKind',
 			'actiontype' => 'ActionType',
+			'origincontact' => 'originContact',
 			'features' => ['Characteristic1', 'Characteristic2'],
 			'note' => 'comment'
 		];
@@ -543,6 +544,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->setActionKind('ActionKind');
 		$pDataFormConfiguration->setActionType('ActionType');
 		$pDataFormConfiguration->setCharacteristic('Characteristic1,Characteristic2');
+		$pDataFormConfiguration->setOriginContact('originContact');
 		$pDataFormConfiguration->setRemark('comment');
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 

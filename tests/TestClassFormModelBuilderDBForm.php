@@ -110,8 +110,8 @@ class TestClassFormModelBuilderDBForm
 		$parameters = [
 			'labels' => true,
 			'language' => "ENG",
-			'fieldList' => ['merkmal'],
-			'modules' => ['agentsLog']
+			'fieldList' => ['merkmal', 'HerkunftKontakt'],
+			'modules' => ['agentsLog', 'address']
 		];
 		$pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'fields', '', $parameters, null, $this->getResponseFieldCharacteristic());
@@ -530,6 +530,21 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelOriginContact
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 */
+	public function testCreateInputModelOriginContact()
+	{
+		$this->_pInstance->setFormType('contact');
+
+		$this->_pInstance->generate('test');
+		$pInputModelDB = $this->_pInstance->createInputModelOriginContact();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
 	 *
 	 */
 	private function getResponseFieldCharacteristic()
@@ -551,6 +566,18 @@ class TestClassFormModelBuilderDBForm
 					"type": "",
 					"elements": {
 					  "merkmal": {
+						"type": "multiselect",
+						"length": null,
+						"permittedvalues": [
+						  "invoiceOpen",
+						  "invoiceOpen2"
+						],
+						"default": null,
+						"filters": [],
+						"dependencies": [],
+						"compoundFields": []
+					  },
+					  "HerkunftKontakt": {
 						"type": "multiselect",
 						"length": null,
 						"permittedvalues": [
