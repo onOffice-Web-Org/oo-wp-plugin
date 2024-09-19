@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.1.1 (2024-09-19) =
+
+**Fixed**
+
+* Displaying reference property detail pages
+
 = 5.1 (2024-09-09) =
 
 **Added**
@@ -89,7 +95,6 @@ Start editing inside the `onoffice-personalized` folder.
 **Fixed**
 
 * Showing similar properties with price on request
-
 
 = 5.0 (2024-08-07) =
 
