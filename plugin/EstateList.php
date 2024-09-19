@@ -800,7 +800,6 @@ class EstateList
 		$estateId = $this->_currentEstate['id'];
 		$estateFiles = [];
 		$estateImages = $this->_pEstateFiles->getEstatePictures($estateId);
-
 		foreach ($estateImages as $image) {
 			if (null !== $types && !in_array($image['type'], $types, true)) {
 				continue;
@@ -810,6 +809,22 @@ class EstateList
 
 		return $estateFiles;
 	}
+
+    public function	getEstateFilesByEstateId()
+    {
+        $estateId = $this->_currentEstate['id'];
+        $estateFiles = [];
+        $estateFilesByEstateId = $this->_pEstateFiles->getFilesByEstateId($estateId, $this->_pEnvironment->getSDKWrapper());
+
+        if (empty($estateFilesByEstateId)){
+            return;
+        }
+        foreach ($estateFilesByEstateId as $image) {
+            $estateFiles []= $image['url'];
+        }
+
+        return $estateFiles;
+    }
 
 	/**
 	 * Not supported in list view

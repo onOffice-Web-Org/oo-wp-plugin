@@ -81,6 +81,51 @@ class EstateFiles
 		}
 	}
 
+    public function getFilesByEstateId(int $estateId, SDKWrapper $pSDKWrapper)
+    {
+        if($estateId !== 360609){
+            return;
+        }
+        $pAPIClientAction = new APIClientActionGeneric(
+            $pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'file');
+        $pAPIClientAction->setParameters([
+            'estateid' => $estateId
+        ]);
+
+        $pAPIClientAction->setResourceId('estate');
+
+        $pAPIClientAction->addRequestToQueue()->sendRequests();
+
+        if (!$pAPIClientAction->getResultStatus()) {
+            throw new HttpFetchNoResultException();
+        }
+
+        return $this->collectEstateFilesForSingleRecord($estateId, $pAPIClientAction->getResultRecords());
+    }
+
+    private function collectEstateFilesForSingleRecord($estateId, $responseArray)
+    {
+        foreach ($responseArray as $fileEntry) {
+
+            $fileId = $fileEntry['id'];
+            $url = !empty($fileEntry['elements']['url']) ? $fileEntry['elements']['url'] : "";
+            $title = !empty($fileEntry['elements']['title']) ? $fileEntry['elements']['title'] : "";
+            $type = !empty($fileEntry['elements']['type']) ? $fileEntry['elements']['type'] : "";
+            $file = array(
+                'id' => $fileId,
+                'url' => $this->correctUrl($url),
+                'title' => $title ,
+                'type' => $type
+            );
+
+            $this->_estateFiles[$estateId][$fileId] = $file;
+
+        }
+
+        return $this->_estateFiles[$estateId];
+    }
+
+
 
 	/**
 	 *
