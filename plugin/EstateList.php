@@ -505,7 +505,11 @@ class EstateList
 		if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
 			$requestParams['data'][] = 'preisAufAnfrage';
 		}
-		if ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
+		if ($pListView->getName() === 'detail') {
+			if ($this->getViewRestrict()) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			}
+		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
 		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
