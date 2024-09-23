@@ -281,11 +281,8 @@ implements AddressListBase
 	/**
 	 * @param array $responseArrayContacts
 	 * @param array $addressIds
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws API\ApiClientException
-	 */
-	private function collectCountEstates($responseArrayContacts, array $addressIds)
+     */
+	private function collectCountEstates(array $responseArrayContacts, array $addressIds)
 	{
 		$records = $responseArrayContacts[0]['elements'] ?? [];
 
@@ -294,10 +291,11 @@ implements AddressListBase
 		}
 	}
 
-	/**
- * @return int
- */
-	public function getCountEstates($addressId)
+    /**
+     * @param int $addressId
+     * @return int
+     */
+	public function getCountEstates(int $addressId)
 	{
 		return intval($this->_countEstates[$addressId]);
 	}
