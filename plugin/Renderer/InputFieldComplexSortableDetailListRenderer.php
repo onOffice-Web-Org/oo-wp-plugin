@@ -51,6 +51,11 @@ class InputFieldComplexSortableDetailListRenderer
 	/** @var array */
 	private $_extraInputModels = [];
 
+	/** @var bool */
+	private $_isMultiPage = false;
+
+	/** @var string */
+	private $_template = '';
 
 	/**
 	 *
@@ -72,33 +77,74 @@ class InputFieldComplexSortableDetailListRenderer
 	public function render()
 	{
 		$this->readInactiveFields();
-		echo '<ul class="filter-fields-list attachSortableFieldsList" id="sortableFieldsList">';
-
-		$i = 1;
-
-		$fields = [];
 		$values = $this->getValue();
 		$allFields = $values[0] ?? [];
 
+		if ($this->_isMultiPage) {
+			$isOwnerLeadGeneratorForm = strpos($this->_template, 'ownerleadgeneratorform.php') !== false;
+			echo '<div id="single-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'none' : 'block') . ';">';
+			$this->renderSinglePage($allFields);
+			echo '</div>';
+			echo '<div id="multi-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'block' : 'none') . ';">';
+			$this->renderMultiPage($allFields);
+			echo '</div>';
+			echo '<p class="add-page-button"><button type="button" style="display: ' . ($isOwnerLeadGeneratorForm ? 'block' : 'none') . ';">' . __( 'Add Page', 'onoffice-for-wp-websites' ) . '</button><p>';
+		} else {
+			$this->renderSinglePage($allFields);
+		}
+	}
+
+	private function renderSinglePage(array $allFields): void
+	{
+		echo '<ul class="filter-fields-list attachSortableFieldsList sortableFieldsListForForm" id="sortableFieldsList">';
+		$i = 1;
+		$fields = [];
 		foreach ($allFields as $value) {
 			$fields[$value] = $this->_allFields[$value] ?? [];
 		}
-
 		foreach ($fields as $key => $properties) {
 			$label = $properties['label'] ?? null;
 			$category = $properties['content'] ?? null;
 			$type = $properties['type'] ?? null;
-			$this->generateSelectableElement($key, $label, $category, $i, $type,
-				false, $this->_extraInputModels);
+			$this->generateSelectableElement($key, $label, $category, $i, $type, false, $this->_extraInputModels);
 			$i++;
 		}
-
-		// create hidden element for cloning
-		$this->generateSelectableElement('dummy_key', 'dummy_label',
-			'dummy_category', $i, null, true, $this->_extraInputModels);
+		$this->generateSelectableElement('dummy_key', 'dummy_label', 'dummy_category', $i, null, true, $this->_extraInputModels);
 		echo '</ul>';
 	}
 
+	private function renderMultiPage(array $allFields): void
+	{
+		$fieldsByPage = [];
+		foreach ($allFields as $properties) {
+			$page = $this->_allFields[$properties]['page'] ?? 1;
+			$fieldsByPage[$page][$properties] = $this->_allFields[$properties];
+		}
+		$extraInputModels = $this->_extraInputModels;
+		$page = 1;
+		foreach ($fieldsByPage as $fields) {
+			echo '<div class="list-fields-for-each-page">';
+			echo '<div class="oo-page-title">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</div>';
+			echo '<ul class="filter-fields-list attachSortableFieldsList fieldsListPage-' . esc_attr($page) . ' sortableFieldsListForForm">';
+			$i = 1;
+
+			foreach ($fields as $key => $properties) {
+				$label = $properties['label'] ?? null;
+				$category = $properties['content'] ?? null;
+				$type = $properties['type'] ?? null;
+				$this->generateSelectableElement($key, $label, $category, $i, $type, false, $extraInputModels, $page);
+				$i++;
+			}
+
+			$this->generateSelectableElement('dummy_key', 'dummy_label', 'dummy_category', $i, null, true, $extraInputModels, $page);
+			echo '</ul>';
+			echo '<div class="item-remove-page"><a class="item-remove-page-link submitdelete">'.esc_html__('Remove Page', 'onoffice-for-wp-websites').'</a></div>';
+			echo '</div>';
+			$page++;
+		}
+
+		$this->generateSelectableElement('dummy_key', 'dummy_label', 'dummy_category', 100, null, true, $extraInputModels, 7);
+	}
 
 	/**
 	 *
@@ -109,12 +155,13 @@ class InputFieldComplexSortableDetailListRenderer
 	 * @param string $type
 	 * @param bool $isDummy for javascript-side copying
 	 * @param array $extraInputModels
+	 * @param int $page
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
 
 	private function generateSelectableElement($key, $label, $category,
-		$iteration, $type, $isDummy = false, array $extraInputModels = [])
+		$iteration, $type, $isDummy = false, array $extraInputModels = [], int $page = 1)
 	{
 		$inactiveFields = $this->_inactiveFields;
 
@@ -130,7 +177,7 @@ class InputFieldComplexSortableDetailListRenderer
 			$type = InputModelBase::HTML_TYPE_TEXT;
 		}
 
-		echo '<li class="sortable-item" id="menu-item-'.esc_html($key).'" action-field-name="labelButtonHandleField-'.esc_html($key).'">'
+		echo '<li class="sortable-item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
 			.'<div class="menu-item-bar">'
 				.'<div class="menu-item-handle ui-sortable-handle">'
 					.'<span class="item-title" '.$deactivatedStyle.'>'
@@ -151,7 +198,7 @@ class InputFieldComplexSortableDetailListRenderer
 			.'<div class="menu-item-settings submitbox" style="display:none;">';
 
 			if ($this->_pContentRenderer !== null) {
-				$this->_pContentRenderer->render($key, $isDummy, $type, $extraInputModels);
+				$this->_pContentRenderer->render($key, $isDummy, $type, $extraInputModels, $this->_isMultiPage);
 			}
 
 		echo '</div>';
@@ -186,4 +233,12 @@ class InputFieldComplexSortableDetailListRenderer
 	 */
 	public function setExtraInputModels(array $extraInputModels)
 		{ $this->_extraInputModels = $extraInputModels; }
+
+	/** @param bool $isMultiPage */
+	public function setIsMultiPage(bool $isMultiPage)
+		{ $this->_isMultiPage = $isMultiPage; }
+
+	/** @param string $template */
+	public function setTemplate(string $template)
+		{ $this->_template = $template; }
 }

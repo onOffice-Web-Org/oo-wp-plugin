@@ -42,13 +42,14 @@ class InputFieldComplexSortableDetailListContentDefault
 	 * @param string $key
 	 * @param bool $isDummy
 	 * @param string $type
-	 * @param array $extraInputModels
+	 * @param array $extraInputModels 
+	 * @param bool $isMutiplePages
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
 
 	public function render(string $key, bool $isDummy,
-		string $type = null, array $extraInputModels = [])
+		string $type = null, array $extraInputModels = [], bool $isMutiplePages = false)
 	{
 		$pFormModel = new FormModel();
 
@@ -76,6 +77,10 @@ class InputFieldComplexSortableDetailListContentDefault
 
 			if ($isDummy) {
 				$pInputModel->setTable(AdminPageAjax::EXCLUDE_FIELD . $pInputModel->getTable());
+			} elseif ($isMutiplePages) {
+				if (strpos($pInputModel->getTable(), AdminPageAjax::EXCLUDE_FIELD) === 0) {
+					$pInputModel->setTable(substr($pInputModel->getTable(), strlen(AdminPageAjax::EXCLUDE_FIELD)));
+				}
 			}
 
 			$pFormModel->addInputModel($pInputModel);

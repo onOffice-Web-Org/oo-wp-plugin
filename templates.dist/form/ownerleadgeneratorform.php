@@ -59,14 +59,11 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		$addition = $isRequired ? '*' : '';
 		$line = $pForm->getFieldLabel($input).$addition.': ';
 		$line .= renderFormField($input, $pForm);
-
-		if ($table == 'address') {
-			$addressValues []= $line;
-		} elseif ($table == 'estate') {
-			$estateValues []= $line;
-		} else {
-			$miscValues []= $line;
+		$pageNumber = $pForm->getPagePerForm($input);
+		if (!isset($addressValues[$pageNumber])) {
+			$addressValues[$pageNumber] = array();
 		}
+		$addressValues[$pageNumber][] = $line;
 	}
 }
 ?>
@@ -91,30 +88,26 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 					}
 				?>
 
-				<div class="lead-lightbox lead-page-1">
-					<h2><?php echo esc_html__('Your contact details', 'onoffice-for-wp-websites'); ?></h2>
-					<p>
-						<?php echo implode('<br>', $addressValues); ?>
-					</p>
-				</div>
-
-				<div class="lead-lightbox lead-page-2">
-					<h2><?php echo esc_html__('Information about your property', 'onoffice-for-wp-websites'); ?></h2>
-					<p>
-						<?php echo implode('<br>', $estateValues); ?>
-					</p>
-					<p>
-						<?php echo implode('<br>', $miscValues); ?>
-					</p>
-					<p>
-						<div style="float:right">
-							<?php
-							$pForm->setGenericSetting('formId', 'leadgeneratorform');
-							include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
-							?>
-						</div>
-					</p>
-				</div>
+<?php 
+				$totalPages = count($addressValues);
+				foreach ($addressValues as $pageNumber => $fields): ?>
+					<div class="lead-lightbox lead-page-<?php echo $pageNumber; ?>">
+						<h2><?php echo esc_html__('Page', 'onoffice-for-wp-websites') . ' ' . $pageNumber; ?></h2>
+						<p>
+							<?php echo implode('<br>', $fields); ?>
+						</p>
+						<?php if ($pageNumber == $totalPages): ?>
+							<p>
+								<div style="float:right">
+									<?php
+									$pForm->setGenericSetting('formId', 'leadgeneratorform');
+									include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
+									?>
+								</div>
+							</p>
+						<?php endif; ?>
+					</div>
+				<?php endforeach; ?>
 				<?php echo implode($hiddenValues); ?>
 				<span class="leadform-back" style="float:left; cursor:pointer;">
 					<?php echo esc_html__('Back', 'onoffice-for-wp-websites'); ?>

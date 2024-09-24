@@ -67,6 +67,7 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->addMarkdownFields('test3');
 		$pDataFormConfiguration->setShowEstateContext(true);
 		$pDataFormConfiguration->addHiddenFields('test-hidden');
+		$pDataFormConfiguration->addPagePerForm('test-field','1');
 
 		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 	}
@@ -103,6 +104,7 @@ class TestClassDataFormConfiguration
 		$this->assertEquals('form', $pDataFormConfiguration->getModule());
 		$this->assertTrue($pDataFormConfiguration->getShowEstateContext());
 		$this->assertEquals(['test-hidden'], $pDataFormConfiguration->getHiddenFields());
+		$this->assertEquals(['test-field' => 1], $pDataFormConfiguration->getPagePerForm());
 	}
 
 

@@ -153,6 +153,15 @@ abstract class InputModelBase
 	/** @var int */
 	private $_minValue = 0;
 
+	/** @var array */
+	private $_perPageForm = array();
+
+	/** @var bool */
+	private $_isMultiPage = false;
+
+	/** @var string */
+	private $_template = '';
+
 	/**
 	 *
 	 * @return string
@@ -329,4 +338,28 @@ abstract class InputModelBase
 	/** @param int $minValue */
 	public function setMinValueHtml(int $minValue)
 		{ $this->_minValue = $minValue; }
+
+	/** @return array */
+	public function getPerPageForm()
+		{ return $this->_perPageForm; }
+
+	/** @param array $perPageForm */
+	public function setPerPageForm(array $perPageForm)
+		{ $this->_perPageForm = $perPageForm; }
+
+	/** @param bool $isMultiPage */
+	public function setIsMultiPage(bool $isMultiPage)
+		{ $this->_isMultiPage = $isMultiPage; }
+
+	/** @return bool */
+	public function getIsMultiPage()
+		{ return $this->_isMultiPage; }
+
+	/** @param string $template */
+	public function setTemplate(string $template)
+		{ $this->_template = $template; }
+
+	/** @return string */
+	public function getTemplate()
+		{ return $this->_template; }
 }

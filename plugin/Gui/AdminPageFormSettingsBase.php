@@ -335,6 +335,8 @@ abstract class AdminPageFormSettingsBase
 			'fieldList' => $this->getFieldList(),
 			'installed_wp_languages' => $this->getInstalledLanguages(),
 			'language_native' => $pLanguage->getLocale(),
+			'page_number' => __('Page', 'onoffice-for-wp-websites'),
+			'remove_page' => __('Remove Page', 'onoffice-for-wp-websites'),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
 		];
@@ -712,6 +714,7 @@ abstract class AdminPageFormSettingsBase
 			wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css');
 			wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
 		}
+		wp_enqueue_script('custom-admin-js', get_template_directory_uri() . '/js/admin.js', array('jquery', 'jquery-ui-draggable', 'jquery-ui-droppable'));
 	}
 
 
@@ -835,11 +838,10 @@ abstract class AdminPageFormSettingsBase
 
 		$mainRecordId = $recordId != 0 ? $recordId : null;
 		$values = (object) $this->transformPostValues();
-
+		$values = $this->updatePageNumbers( $values, 'oopluginformfieldconfig-pageperform' );
 		$this->prepareValues( $values );
 		$this->customFontMarkdown( $values );
 		$pInputModelDBAdapterRow = new InputModelDBAdapterRow();
-
 		foreach ( $this->getFormModels() as $pFormModel ) {
 			foreach ( $pFormModel->getInputModel() as $pInputModel ) {
 				if ( $pInputModel instanceof InputModelDB ) {
@@ -882,6 +884,30 @@ abstract class AdminPageFormSettingsBase
 
 		wp_redirect( admin_url( 'admin.php?' . $pageQuery . $typeQuery . $idQuery . $statusQuery ) );
 		die();
+	}
+
+	/**
+	 * @param mixed $inputValues
+	 * @param string $fieldName
+	 * @return mixed
+	 */
+	private function updatePageNumbers($inputValues, string $fieldName) {
+		if (!isset($inputValues->$fieldName) || !is_array($inputValues->$fieldName)) {
+			return $inputValues;
+		}
+	
+		$valueMap = [];
+		$currentValue = 1;
+	
+		foreach ($inputValues->$fieldName as $key => $value) {
+			if (!isset($valueMap[$value])) {
+				$valueMap[$value] = (string)$currentValue;
+				$currentValue++;
+			}
+			$inputValues->$fieldName[$key] = $valueMap[$value];
+		}
+	
+		return $inputValues;
 	}
 
 	/** @return string */

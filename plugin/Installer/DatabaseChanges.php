@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 48;
+	const MAX_VERSION = 49;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -330,6 +330,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 48;
 		}
 
+		if ($dbversion == 48) {
+			dbDelta($this->getCreateQueryFormFieldConfig());
+			$dbversion = 49;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -525,6 +530,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`markdown` tinyint(1) NOT NULL DEFAULT '0',
 			`hidden_field` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
+			`page_per_form` int(6) NOT NULL DEFAULT '1',
 			PRIMARY KEY (`form_fieldconfig_id`)
 		) $charsetCollate;";
 

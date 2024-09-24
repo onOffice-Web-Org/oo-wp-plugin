@@ -77,19 +77,23 @@ body #onoffice-ajax span.viewusage .italic {
 	width: 49%;
 }
 
+.sortableFieldsListForForm .menu-item-bar,
 #sortableFieldsList .menu-item-bar {
 	display: block;
 	margin: 0 12px;
 }
 
+.sortableFieldsListForForm .menu-item-bar > .menu-item-handle,
 #sortableFieldsList .menu-item-bar > .menu-item-handle {
 	max-width: 430px;
 }
 
+.sortableFieldsListForForm .menu-item-settings,
 #sortableFieldsList .menu-item-settings {
 	max-width: 440px;
 }
 
+.sortableFieldsListForForm .menu-item-settings .submitdelete,
 #sortableFieldsList .menu-item-settings .submitdelete {
 	text-align: right;
 	display:block;
@@ -100,6 +104,7 @@ body #onoffice-ajax span.viewusage .italic {
 	cursor: inherit;
 }
 
+.sortableFieldsListForForm .menu-item-settings,
 #sortableFieldsList .menu-item-settings {
 	display: block;
 	position: relative;
@@ -108,10 +113,12 @@ body #onoffice-ajax span.viewusage .italic {
 	clear: both;
 }
 
+.sortableFieldsListForForm .item-delete-link,
 #sortableFieldsList .item-delete-link {
 	padding-right: 10px;
 }
 
+.sortableFieldsListForForm .item-delete-link:hover,
 #sortableFieldsList .item-delete-link:hover {
 	cursor: pointer;
 }
@@ -126,6 +133,7 @@ body #onoffice-ajax span.viewusage .italic {
 	padding: 0;
 }
 
+.sortableFieldsListForForm .menu-item-settings-name,
 #sortableFieldsList .menu-item-settings-name {
 	font-style: italic;
 }
@@ -164,22 +172,27 @@ body #onoffice-ajax span.viewusage .italic {
 	display: none;
 }
 
+div.fieldsSortable .sortableFieldsListForForm div.menu-item-settings p,
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p {
 	line-height: 1em;
 }
 
+div.fieldsSortable .sortableFieldsListForForm div.menu-item-settings p span.deleteButtonLang:before,
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:before {
 	vertical-align: middle;
 }
 
+div.fieldsSortable .sortableFieldsListForForm div.menu-item-settings p span.deleteButtonLang,
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang {
 	color: #737373;
 }
 
+div.fieldsSortable .sortableFieldsListForForm div.menu-item-settings p span.deleteButtonLang:before:hover,
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:before:hover {
 	color: #ce8483;
 }
 
+div.fieldsSortable .sortableFieldsListForForm div.menu-item-settings p span.deleteButtonLang:hover,
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:hover {
 	cursor: pointer;
 	color: #d43f3a;
@@ -904,4 +917,76 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	.oo-google-recaptcha-key > button > span {
 		margin-top: 10px;
 	}
+}
+
+.fieldsSortable .add-page-button button {
+	padding: 5px 22px;
+	border-radius: 3px;
+	margin-left: 10px;
+	background: #4CAF50;
+	border: none;
+	border-color: #4CAF50;
+	color: #fff;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+	cursor: pointer;
+}
+
+.fieldsSortable .add-page-button button:hover {
+	background: #246e27;
+	border-color: #246e27;
+	color: #fff;
+}
+
+.fieldsSortable .add-page-button {
+	display: flex;
+	justify-content: center;
+}
+
+.fieldsSortable .list-fields-for-each-page {
+	background-color: #f9f9f9;
+	border: 1px solid #ccc;
+	margin: 10px;
+	padding: 10px;
+}
+
+.list-fields-for-each-page .filter-fields-list {
+	min-height: 20px;
+	width: 100%;
+}
+
+.list-fields-for-each-page .oo-page-title {
+	margin-bottom: 10px;
+	font-weight: 600;
+	margin-left: 12px;
+}
+
+.list-fields-for-each-page .sortable-item:hover,
+.list-fields-for-each-page .ui-droppable-hover {
+	background-color: #f0f0f0;
+	cursor: move;
+}
+
+.list-fields-for-each-page .ui-sortable-helper {
+	background-color: #e0e0e0;
+	border: 1px solid #ccc;
+	opacity: 0.8;
+}
+
+.list-fields-for-each-page .ui-sortable-placeholder {
+	border: 1px dashed #ccc;
+	background: #f9f9f9;
+	visibility: visible !important;
+	height: 40px;
+}
+
+.list-fields-for-each-page .item-remove-page .item-remove-page-link {
+	cursor: pointer;
+	color: #b32d2e;
+	border: none;
+    margin-right: 12px;
+}
+
+.list-fields-for-each-page .item-remove-page {
+	display: flex;
+	justify-content: flex-end;
 }
