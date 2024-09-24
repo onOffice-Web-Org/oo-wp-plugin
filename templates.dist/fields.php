@@ -20,13 +20,14 @@ if (!function_exists('printRegion')) {
 if (!function_exists('printCountry')) {
 	function printCountry($values, $selectedValue)
 	{
-		echo '<option value="">' . esc_html__('Choose country', 'onoffice-for-wp-websites') . '</option>';
 		foreach ($values as $key => $name) {
-			$selected = null;
-			if ($key == $selectedValue) {
-				$selected = 'selected';
+			$isSelected = false;
+			if (is_array($selectedValue)) {
+				$isSelected = in_array($key, $selectedValue, true);
+			} else {
+				$isSelected = $selectedValue == $key;
 			}
-			echo '<option value="' . esc_attr($key) . '" ' . $selected . '>' . esc_html($name) . '</option>';
+			echo '<option value="' . esc_attr($key) . '" ' . ($isSelected ? ' selected' : '') . '>' . esc_html($name) . '</option>';
 		}
 	}
 }
@@ -92,7 +93,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 		} elseif ($inputName === 'regionaler_zusatz') {
 			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], false, $properties['permittedvalues'] ?? null);
 		} elseif ($inputName === 'country') {
-			echo '<select class="custom-single-select" size="1" name="' . esc_attr($inputName) . '">';
+			echo '<select class="custom-multiple-select form-control" name="' . esc_attr($inputName) . '[]" multiple="multiple">';
 			printCountry($properties['permittedvalues'], $selectedValue);
 			echo '</select>';
 		} elseif (
