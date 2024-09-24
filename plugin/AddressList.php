@@ -134,6 +134,8 @@ implements AddressListBase
 	/** @var array */
 	private $_recordsRaw = [];
 
+	/** @var array */
+	private $_countEstates = [];
 	/**
 	 *
 	 * @param DataViewAddress $pDataViewAddress
@@ -212,6 +214,8 @@ implements AddressListBase
 			$this->_pDataViewAddress, $newPage);
 		$this->addRawRecordsByAPICall(clone $pApiCall, $addressParameterRaws);
 
+		$this->getCountEstateForAddress($this->getAddressIds());
+
 		$this->_records = $pApiCall->getResultRecords();
 		$this->fillAddressesById($this->_records);
 
@@ -254,6 +258,49 @@ implements AddressListBase
 			unset($elements['id']);
 			$this->_addressesById[$address['id']] = array_merge($elements, $additionalContactData);
 		}
+	}
+
+		/**
+	 * @param array $addressIds
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws API\ApiClientException
+	 */
+	private function getCountEstateForAddress(array $addressIds)
+	{
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+
+		$parameters = [
+			'childids' => array_values($addressIds),
+			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
+		];
+		$pAPIClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
+		$pAPIClientAction->setParameters($parameters);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+		$this->collectCountEstates($pAPIClientAction->getResultRecords(), $addressIds);
+	}
+
+	/**
+	 * @param array $responseArrayContacts
+	 * @param array $addressIds
+     */
+	private function collectCountEstates(array $responseArrayContacts, array $addressIds)
+	{
+		$records = $responseArrayContacts[0]['elements'] ?? [];
+
+		foreach ($addressIds as $index => $addressId) {
+			$this->_countEstates[$addressId] = array_key_exists($addressId,$records) ? count($records[$addressId]) : 0;
+		}
+	}
+
+    /**
+     * @param int $addressId
+     * @return int
+     */
+	public function getCountEstates(int $addressId)
+	{
+		return intval($this->_countEstates[$addressId]);
 	}
 
 	/**
