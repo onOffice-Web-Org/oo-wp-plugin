@@ -88,7 +88,7 @@ class InputFieldComplexSortableDetailListRenderer
 			echo '<div id="multi-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'block' : 'none') . ';">';
 			$this->renderMultiPage($allFields);
 			echo '</div>';
-			echo '<p class="add-page-button"><button type="button" style="display: ' . ($isOwnerLeadGeneratorForm ? 'block' : 'none') . ';">' . __( 'Add Page', 'onoffice-for-wp-websites' ) . '</button><p>';
+			echo '<p class="add-page-button" style="display: ' . ($isOwnerLeadGeneratorForm ? 'block' : 'none') . ';"><button type="button">' . __( 'Add Page', 'onoffice-for-wp-websites' ) . '</button><p>';
 		} else {
 			$this->renderSinglePage($allFields);
 		}
