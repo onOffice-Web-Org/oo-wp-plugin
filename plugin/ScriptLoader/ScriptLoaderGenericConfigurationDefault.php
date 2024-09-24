@@ -79,6 +79,7 @@ class ScriptLoaderGenericConfigurationDefault
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/dist/favorites.min.js', $pluginPath)))
 				->setDependencies(['jquery']);
 		}
+        $values = $this->addAddressStyle($values, $style, $pluginPath);
 
 		return array_merge($values, $this->addScripts($pluginPath, $script, $style, $defer, $async));
 	}
@@ -346,11 +347,24 @@ class ScriptLoaderGenericConfigurationDefault
 		return $matches[1];
 	}
 
+    /**
+     * @param array $values
+     * @param string $style
+     * @param string $pluginPath
+     * @return array
+     */
+    private function addAddressStyle(array $values, string $style, string $pluginPath) {
+        $pageContent = get_the_content();
+        if ($this->isDetailAddressPage($pageContent)) {
+            $values []= (new IncludeFileModel($style, 'onoffice-address-detail', plugins_url('/css/onoffice-address-detail.css', $pluginPath)));
+        }
+        return $values;
+    }
+
 	/**
 	 * @param array $scripts
 	 * @param string $pluginPath
 	 * @param string $script
-	 * @param string $style
 	 * @param string $defer
 	 * @return array
 	 */
@@ -371,7 +385,6 @@ class ScriptLoaderGenericConfigurationDefault
 	 * @param array $scripts
 	 * @param string $pluginPath
 	 * @param string $script
-	 * @param string $style
 	 * @param string $defer
 	 * @return array
 	 */
