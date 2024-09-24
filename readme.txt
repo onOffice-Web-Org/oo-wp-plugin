@@ -76,6 +76,16 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.1.2 (2024-09-24) =
+
+**Added**
+
+* Counter for properties in address lists
+
+**Changed**
+
+* Default template of address detail
+
 = 5.1.1 (2024-09-19) =
 
 **Fixed**
