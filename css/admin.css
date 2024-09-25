@@ -919,30 +919,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	}
 }
 
-.fieldsSortable .add-page-container .add-page-button {
-	padding: 5px 22px;
-	border-radius: 3px;
-	margin-left: 10px;
-	background: #4CAF50;
-	border: none;
-	border-color: #4CAF50;
-	color: #fff;
-	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-	cursor: pointer;
-}
-
-.fieldsSortable .add-page-container .add-page-button:hover {
-	background: #246e27;
-	border-color: #246e27;
-	color: #fff;
-}
-
-.fieldsSortable .add-page-container {
-	display: flex;
-	justify-content: center;
-}
-
-.fieldsSortable .list-fields-for-each-page {
+.list-fields-for-each-page {
 	background-color: #f9f9f9;
 	border: 1px solid #ccc;
 	margin: 10px;
@@ -954,7 +931,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	width: 100%;
 }
 
-.list-fields-for-each-page .oo-page-title {
+.list-fields-for-each-page .page-title {
 	margin-bottom: 10px;
 	font-weight: 600;
 	margin-left: 12px;
@@ -989,4 +966,27 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .list-fields-for-each-page .item-remove-page {
 	display: flex;
 	justify-content: flex-end;
+}
+
+.add-page-container {
+	display: flex;
+	justify-content: center;
+}
+
+.add-page-container .add-page-button {
+	padding: 5px 22px;
+	border-radius: 3px;
+	margin-left: 10px;
+	background: #4CAF50;
+	border: none;
+	border-color: #4CAF50;
+	color: #fff;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+	cursor: pointer;
+}
+
+.add-page-container .add-page-button:hover {
+	background: #246e27;
+	border-color: #246e27;
+	color: #fff;
 }

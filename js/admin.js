@@ -153,10 +153,10 @@ jQuery(document).ready(function($){
 					accept: '.inputFieldButton',
 					hoverClass: 'ui-droppable-hover',
 					drop: function(event, ui) {
-						var field = ui.helper.clone();
-						var classList = $(this).attr('class').split(/\s+/);
-						var id = classList.find(cls => cls.startsWith('fieldsListPage'));
-						var output = id ? id.split('-')[1] : '1';
+						const field = ui.helper.clone();
+						const classList = $(this).attr('class').split(/\s+/);
+						const id = classList.find(cls => cls.startsWith('fieldsListPage'));
+						const output = id ? id.split('-')[1] : '1';
 						getCheckedFieldButton(field, output);
 					}
 				});
@@ -229,7 +229,7 @@ jQuery(document).ready(function($){
 
 		createNewPage: function(pageNumber) {
 			const newPage = $('<div>', { class: `list-fields-for-each-page fieldsListPage-${pageNumber}` })
-				.append(`<div class="oo-page-title">${onOffice_loc_settings.page_number} ${pageNumber}</div>`)
+				.append(`<div class="page-title">${onOffice_loc_settings.page_title} ${pageNumber}</div>`)
 				.append(`<ul class="filter-fields-list attachSortableFieldsList fieldsListPage-${pageNumber} sortableFieldsListForForm"></ul>`)
 				.append(`<div class="item-remove-page"><a class="item-remove-page-link submitdelete">${onOffice_loc_settings.remove_page}</a></div>`);
 
@@ -266,7 +266,7 @@ jQuery(document).ready(function($){
 		reorderPages: function() {
 			$('.list-fields-for-each-page').each(function(index) {
 				const newPageNumber = index + 1;
-				$(this).find('.oo-page-title').text(`${onOffice_loc_settings.page_number} ${newPageNumber}`);
+				$(this).find('.page-title').text(`${onOffice_loc_settings.page_title} ${newPageNumber}`);
 				FormMultiPageManager.updatePageClassAndId($(this), newPageNumber);
 			});
 			this.checkSortableFieldsList();
@@ -444,18 +444,18 @@ jQuery(document).ready(function($){
 	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory, module, label, optionsAvailable, actionFieldName, pageId) {
 		var myLabel = label ? $('#' + label) : {};
 		var dummyKey;
-		var container = isMultiplePages ? '#multi-page-container' : '#single-page-container';
+		const pageContainer = isMultiplePages ? '#multi-page-container' : '#single-page-container';
 
-		if ($(container).length) {
+		if ($(pageContainer).length) {
 			let pageIdSelector = pageId || $('#multi-page-container').is(':visible') ? '.page-' + (pageId ?? '1') : '';
 			
 			if (myLabel.length) {
-				dummyKey = myLabel.find(container + ' #menu-item-dummy_key' + pageIdSelector);
+				dummyKey = myLabel.find(pageContainer + ' #menu-item-dummy_key' + pageIdSelector);
 			} else {
-				dummyKey = $(container + ' #menu-item-dummy_key' + pageIdSelector);
+				dummyKey = $(pageContainer + ' #menu-item-dummy_key' + pageIdSelector);
 			}
 
-			if (container === '#multi-page-container' && !$(container + ' .list-fields-for-each-page').length) { return '' };
+			if (pageContainer === '#multi-page-container' && !$(pageContainer + ' .list-fields-for-each-page').length) { return '' };
 		} else {
 			if (myLabel.length) {
 				dummyKey = myLabel.find('#menu-item-dummy_key');
@@ -486,7 +486,7 @@ jQuery(document).ready(function($){
 			hiddenField.parent().remove();
 		}
 		
-		if ($(container).length) {
+		if ($(pageContainer).length) {
 			clonedElement.find('input[name^="oopluginformfieldconfig-pageperform"]').val(pageId);
 		}
 		if (!optionsAvailable) {
