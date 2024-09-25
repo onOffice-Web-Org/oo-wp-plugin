@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 5.1
+Stable tag: 5.1.2
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -76,6 +76,22 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.1.2 (2024-09-24) =
+
+**Added**
+
+* Counter for properties in address lists
+
+**Changed**
+
+* Default template of address detail
+
+= 5.1.1 (2024-09-19) =
+
+**Fixed**
+
+* Displaying reference property detail pages
+
 = 5.1 (2024-09-09) =
 
 **Added**
@@ -89,7 +105,6 @@ Start editing inside the `onoffice-personalized` folder.
 **Fixed**
 
 * Showing similar properties with price on request
-
 
 = 5.0 (2024-08-07) =
 
