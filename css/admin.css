@@ -919,7 +919,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	}
 }
 
-.fieldsSortable .add-page-button button {
+.fieldsSortable .add-page-container .add-page-button {
 	padding: 5px 22px;
 	border-radius: 3px;
 	margin-left: 10px;
@@ -931,13 +931,13 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	cursor: pointer;
 }
 
-.fieldsSortable .add-page-button button:hover {
+.fieldsSortable .add-page-container .add-page-button:hover {
 	background: #246e27;
 	border-color: #246e27;
 	color: #fff;
 }
 
-.fieldsSortable .add-page-button {
+.fieldsSortable .add-page-container {
 	display: flex;
 	justify-content: center;
 }
