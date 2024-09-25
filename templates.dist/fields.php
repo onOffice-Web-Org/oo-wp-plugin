@@ -68,7 +68,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 			' . ($selectedValue === false ? 'checked' : '') . '>
 		<label for="' . esc_attr($inputName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
 	  </fieldset>';
-		} elseif ($inputName === 'ort' || $inputName === 'Ort' && !empty($properties['permittedvalues'])) {
+		} elseif (($inputName === 'ort' || $inputName === 'Ort') && !empty($properties['permittedvalues'])) {
 			echo renderCityField($inputName, $properties);
 		}  elseif (
 			in_array($properties['type'], $multiSelectableTypes) &&
