@@ -179,11 +179,11 @@ class FormPostApplicantSearch
 	 */
 	private function setKdNr(array $applicants): array
 	{
-		$adressIds = array_keys($applicants);
+		$addressIds = array_keys($applicants);
 		$pApiClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
 		$pApiClientAction->setParameters([
-			'recordids' => $adressIds,
+			'recordids' => $addressIds,
 			'data' => ['KdNr'],
 		]);
 

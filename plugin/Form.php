@@ -210,6 +210,17 @@ class Form
 		return $inputsAll;
 	}
 
+	/**
+	 * @param string $field
+	 * @return bool
+	 */
+	public function isHiddenField(string $field): bool
+	{
+		$hiddenFields = $this->getDataFormConfiguration()->getHiddenFields();
+
+		return in_array($field, $hiddenFields);
+	}
+
 
 	/**
 	 * @param $inputs
@@ -670,7 +681,6 @@ class Form
 	{
 		$this->_genericSettings[$settingName] = $value;
 	}
-
 
 	/** @return array */
 	public function getResponseFieldsValues()
