@@ -43,6 +43,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
+use onOffice\WPlugin\Gui\AdminPageAddress;
 use Parsedown;
 use HTMLPurifier_Config;
 use HTMLPurifier;
@@ -93,6 +94,9 @@ class AdminViewController
 	/** @var AdminPageFormSettingsMain */
 	private $_pAdminPageFormSettings = null;
 
+	/** @var AdminPageAddress */
+	private $_pAdminPageAddresses = null;
+
 	/** @var string */
 	const ACTION_NOTIFICATION_ESTATE = 'action_notification_estate';
 
@@ -131,6 +135,13 @@ class AdminViewController
 			$this->_ajaxHooks['onoffice_page_'.$this->_pageSlug.'-estates'] = $pSelectedSubPage;
 		}
 
+		$this->_pAdminPageAddresses = new AdminPageAddress($this->_pageSlug);
+		$pSelectedSubPageForAddress = $this->_pAdminPageAddresses->getSelectedAdminPage();
+
+		if ($pSelectedSubPageForAddress instanceof AdminPageAjax) {
+			$this->_ajaxHooks['onoffice_page_'.$this->_pageSlug.'-addresses'] = $pSelectedSubPageForAddress;
+		}
+
 		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_ESTATE, [$this->_pAdminListViewSettings, 'handleNotificationError']);
 		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_ADDRESS, [$this->_pAdminListViewSettingsAddress, 'handleNotificationError']);
 		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_FORM, [$this->_pAdminPageFormSettings, 'handleNotificationError']);
@@ -167,18 +178,23 @@ class AdminViewController
 		add_menu_page( __( 'onOffice', 'onoffice-for-wp-websites' ), __( 'onOffice', 'onoffice-for-wp-websites' ),
 			$roleMainPage, $this->_pageSlug, function () use ( $pDI ) {
 				echo $pDI->get( MainPage::class )->render();
-			}, plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'images/onOffice-Logo-screen_wp-grey.svg' );
+			}, 'none' );
 
 		// Getting started
 		add_submenu_page( $this->_pageSlug, __( 'Getting started', 'onoffice-for-wp-websites' ),
 			__( 'Getting started', 'onoffice-for-wp-websites' ),
 			$roleMainPage, $this->_pageSlug );
 
-		$pAdminPageAddresses = new AdminPageAddressList($this->_pageSlug);
-		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice-for-wp-websites'), __('Addresses', 'onoffice-for-wp-websites'),
-			$roleAddress, $this->_pageSlug.'-addresses', array($pAdminPageAddresses, 'render'));
-		add_action('load-'.$hookAddresses, [$pAdminPageAddresses, 'handleAdminNotices']);
-		add_action('current_screen', [$pAdminPageAddresses, 'preOutput']);
+		// Addresses
+		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice-for-wp-websites'),
+			__('Addresses', 'onoffice-for-wp-websites'), $roleAddress,
+			$this->_pageSlug.'-addresses', array($this->_pAdminPageAddresses, 'render'));
+		add_action('load-'.$hookAddresses, [$this->_pAdminPageAddresses, 'handleAdminNotices']);
+		$pSelectedSubPageForAddress = $this->_pAdminPageAddresses->getSelectedAdminPage();
+		if ($pSelectedSubPageForAddress instanceof AdminPageAjax) {
+			add_action( 'load-'.$hookAddresses, array($pSelectedSubPageForAddress, 'checkForms'));
+		}
+		add_action('current_screen', [$this->_pAdminPageAddresses, 'preOutput']);
 
 		// Estates
 		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice-for-wp-websites'),
@@ -325,7 +341,7 @@ class AdminViewController
 	public function enqueue_css()
 	{
 		wp_enqueue_style('onoffice-admin-css',
-			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
+			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), 'v5.1');
 	}
 
 

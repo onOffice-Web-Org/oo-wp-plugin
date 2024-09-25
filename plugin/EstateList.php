@@ -109,6 +109,8 @@ class EstateList
 
 	private $_pWPOptionWrapper;
 
+	private $_filterAddressId;
+
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
 
@@ -183,7 +185,11 @@ class EstateList
 			$pDataListView = $this->_pDataView;
 		}
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
-		$this->loadRecords($currentPage);
+		if ($this->_pDataView instanceof DataListView && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
+			$this->loadRecordsOrderEstatesByTags($currentPage);
+		} else {
+			$this->loadRecords($currentPage);
+		}
 
 		$fileCategories = $this->getPreloadEstateFileCategories();
 
@@ -229,9 +235,144 @@ class EstateList
 	}
 
 	/**
+	 * @param int $currentPage
+	 * @throws UnknownViewException
+	 * @throws API\ApiClientException
+	 */
+	private function loadRecordsOrderEstatesByTags(int $currentPage)
+	{
+		$this->_records = $this->fetchDataForOrderEstatesByTags($currentPage, $this->_formatOutput);
+		$formattedRecordsRaw = $this->fetchDataForOrderEstatesByTags($currentPage, false);
+
+		$numRecordsPerPage = $this->getRecordsPerPage();
+		$startPosition = ($currentPage - 1) * $numRecordsPerPage;
+
+		$combinedRawRecords = array_combine(array_column($formattedRecordsRaw, 'id'), $formattedRecordsRaw);
+		$result = [];
+		$this->processRecordsRawForOrderEsates($combinedRawRecords, $result);
+		$pagedRecords = array_slice($result, $startPosition, $numRecordsPerPage, true);
+		$this->_records = $pagedRecords;
+	}
+
+	/**
+	 * @param array $recordsRaw
+	 * @param array $result
+	 */
+	private function processRecordsRawForOrderEsates(&$recordsRaw, &$result) 
+	{
+		foreach ($recordsRaw as $recordRaw) {
+			$labelTag = $this->getInfoTagOfProperty($recordRaw["elements"]);
+			$this->_recordsRaw[$recordRaw['id']] = $recordRaw;
+			$this->_recordsRaw[$recordRaw['id']]["elements"]["tagNameOfEstate"] = $labelTag[1] ?? '';
+
+			$records = array_filter($this->_records, function($record) use ($recordRaw) {
+				return $recordRaw['id'] === $record['id'];
+			});
+
+			$result = array_merge($result, $records);
+		}
+	}
+
+	/**
+	 * @param array $infoTagOfProperty
+	 * @return array
+	 */
+	private function getInfoTagOfProperty(array $infoTagOfProperty): array
+	{
+		$sortByTags = preg_split("/,/", $this->_pDataView->getMarkedPropertiesSort());
+
+		foreach ($sortByTags as $index => $key) {
+			if (($infoTagOfProperty["vermarktungsart"] === $key && $infoTagOfProperty["verkauft"] === "1") ||
+				(isset($infoTagOfProperty[$key]) && $infoTagOfProperty[$key] === "1")) {
+				return [$index, $key];
+			}
+		}
+
+		return [array_search("no_marker", $sortByTags), ''];
+	}
+
+	/**
+	 * @param int $currentPage
+	 * @param bool $formatOutput
+	 * @return array
+	 */
+	private function fetchDataForOrderEstatesByTags(int $currentPage, bool $formatOutput): array
+	{
+		$language = Language::getDefault();
+		$pListView = $this->filterActiveInputFields($this->_pDataView);
+		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
+
+		$numRecordsPerPage = 500;
+
+		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
+			onOfficeSDK::MODULE_ESTATE);
+
+		$aggregatedData = [];
+		$totalFetched = 0;
+		$this->_currentEstatePage = $currentPage;
+
+		do {
+			$offset = $totalFetched;
+			$requestParams = [
+				'data' => $pFieldModifierHandler->getAllAPIFields(),
+				'filter' => $filter,
+				'listlimit' => $numRecordsPerPage,
+				'estatelanguage' => $language,
+				'outputlanguage' => $language,
+				'listoffset' => $offset,
+				'formatoutput' => $formatOutput,
+				'addMainLangId' => true,
+			];
+			if ($formatOutput !== true) {
+				$requestParams['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
+				$requestParams['data'][] = 'vermarktungsart';
+				$requestParams['data'][] = 'preisAufAnfrage';
+			}
+			if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
+				$requestParams['data'][] = 'preisAufAnfrage';
+			}
+			if ($pListView->getName() === 'detail') {
+				if ($this->getViewRestrict()) {
+					$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+				}
+			} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+			}
+
+			$requestParams += $this->addExtraParams();
+
+			$this->_pApiClientAction->setParameters($requestParams);
+			$this->_pApiClientAction->addRequestToQueue()->sendRequests();
+			$result = $this->_pApiClientAction->getResultRecords();
+
+			$aggregatedData = array_merge($aggregatedData, $result);
+			$totalFetched += count($result);
+		} while (count($result) == $numRecordsPerPage);
+
+		if ($formatOutput !== true) {
+			usort($aggregatedData, [$this, 'sortMarkedProperties']);
+		}
+		
+		return $aggregatedData;
+	}
+
+	/**
+	 * @param array $recordA
+	 * @param array $recordB
+	 */
+	private function sortMarkedProperties($recordA, $recordB)
+	{
+		$aPriority = $this->getInfoTagOfProperty($recordA['elements'])[0];
+		$bPriority = $this->getInfoTagOfProperty($recordB['elements'])[0];
+
+		return $aPriority - $bPriority;
+	}
+
+	/**
 	 * @param $inputs
 	 * @return DataView
-	 *
 	 */
 
 	private function filterActiveInputFields($inputs): DataView
@@ -348,7 +489,6 @@ class EstateList
 		}
 
 		$requestParams += $this->addExtraParams();
-
 		return $requestParams;
 	}
 
@@ -366,6 +506,14 @@ class EstateList
 
 		if ($pListView->getSortorder() !== '') {
 			$requestParams['sortorder'] =$pListView->getSortorder();
+		}
+
+		if ($pListView instanceof DataListView && $pListView->getSortByTags() !== '' && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
+			$requestParams['sortby'] = $pListView->getSortByTags();
+		}
+
+		if ($pListView instanceof DataListView && $pListView->getSortByTagsDirection() !== '' && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
+			$requestParams['sortorder'] = $pListView->getSortByTagsDirection();
 		}
 
 		if ($pListView->getFilterId() !== 0) {
@@ -443,7 +591,7 @@ class EstateList
 		ksort($fields);
 
 		if ($fields !== [] && $allAddressIds !== []) {
-			$this->_pEnvironment->getAddressList()->loadAdressesById($allAddressIds, $fields);
+			$this->_pEnvironment->getAddressList()->loadAddressesById($allAddressIds, $fields);
 		}
 	}
 
@@ -788,7 +936,15 @@ class EstateList
 		$recordId = $this->_currentEstate['id'];
 		return $this->_estateContacts[$recordId] ?? [];
 	}
+	/**
+	 * @return bool
+	 */
+	public function isCurrentEstateContactsInAddressFilter()
+	{
+		$addressIds = $this->getEstateContactIds();
 
+		return !isset($this->_filterAddressId) || in_array($this->_filterAddressId,$addressIds);
+	}
 	/**
 	 * @return array
 	 */
@@ -1098,6 +1254,10 @@ class EstateList
 	/** @param string $unitsViewName */
 	public function setUnitsViewName($unitsViewName)
 		{ $this->_unitsViewName = $unitsViewName; }
+
+	/** @param string $filterAddressId */
+	public function setFilterAddressId($filterAddressId)
+		{ $this->_filterAddressId = $filterAddressId; }
 
 	/** @return GeoSearchBuilder */
 	public function getGeoSearchBuilder(): GeoSearchBuilder

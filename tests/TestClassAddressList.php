@@ -41,6 +41,11 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Filter\FilterBuilderInputVariablesFactory;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddressFactory;
+use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -97,11 +102,60 @@ class TestClassAddressList
 			'outputlanguage' => Language::getDefault(),
 			'formatoutput' => true,
 		];
+		$responseRelation = $this->getResponseRelation();
+		$parametersRelation = [
+			'childids' => [13, 37],
+			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER
+		];
+
+		$addressParametersWithoutFormat = [
+			'data' => ['Name', 'KdNr', 'Vorname'],
+			'listoffset' => 0,
+			'listlimit' => 5,
+			'sortby' => "",
+			'sortorder' => "",
+			'filter' => [],
+			'filterid' => 0,
+			'outputlanguage' => "ENG",
+			'formatoutput' => true,
+		];
+
+		$responseRaw = $this->getResponseGetRowsRaw();
+		$addressParametersWithFormat = [
+			'data' => ['contactCategory', 'Vorname', 'Name', 'Zusatz1', 'branch', 'communityOfHeirs', 'communityOfOwners', 'umbrellaOrganization', 'association', 'institution', 'department'],
+			'listoffset' => 0,
+			'listlimit' => 5,
+			'sortby' => "",
+			'sortorder' => "",
+			'filter' => [],
+			'filterid' => 0,
+			'outputlanguage' => "ENG",
+			'formatoutput' => false,
+		];
+
+        $addressParametersWithFormatDetail = [
+            'recordids' => [13,37],
+            'data' => ['contactCategory', 'Vorname', 'Name', 'Zusatz1', 'branch', 'communityOfHeirs', 'communityOfOwners', 'umbrellaOrganization', 'association', 'institution', 'department'],
+            'outputlanguage' => "ENG",
+            'formatoutput' => false,
+        ];
 
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $response);
 		$pSDKWrapper->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_READ, 'address', '', [], null, $response);
+		(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
+			$addressParametersWithoutFormat['data'][] = 'imageUrl';
+		$pSDKWrapper->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
+		$pSDKWrapper->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormat, null, $responseRaw);
+		$addressParametersWithFormat['data'][] = 'imageUrl';
+		$pSDKWrapper->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormat, null, $responseRaw);
+		$pSDKWrapper->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormatDetail, null, $responseRaw);
+		$pSDKWrapper->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', $parametersRelation, null, $responseRelation);
 
 		$pMockViewFieldModifierHandler = $this->getMockBuilder(ViewFieldModifierHandler::class)
 			->setMethods(['processRecord', 'getAllAPIFields'])
@@ -138,12 +192,24 @@ class TestClassAddressList
 		$pMockOutputFields->method('getVisibleFilterableFields')
 			->will($this->returnValue(['KdNr' => 4, 'Vorname' => null, 'Name' => 'Stefansson']));
 
+		$pContainerBuilder = new ContainerBuilder();
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pFieldsCollectionBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFilterBuilderFactory = $pContainer->get(FilterBuilderInputVariablesFactory::class);
+		$pCompoundFieldsFilter = $pContainer->get(CompoundFieldsFilter::class);
+		$pFactory = $this->getMockBuilder(DefaultFilterBuilderListViewAddressFactory::class)
+			 ->setConstructorArgs([$pFieldsCollectionBuilderShort, $pCompoundFieldsFilter, $pFilterBuilderFactory])
+			 ->getMock();
+		$pDataListViewAddressToAPIParameters = new DataListViewAddressToAPIParameters($pFactory);
+
 		$pMockConfig = $this->getMockBuilder(AddressListEnvironment::class)->getMock();
 		$pMockConfig->method('getSDKWrapper')->will($this->returnValue($pSDKWrapper));
 		$pMockConfig->method('getViewFieldModifierHandler')
 			->will($this->returnValue($pMockViewFieldModifierHandler));
 		$pMockConfig->method('getFieldnames')->will($this->returnValue($pMockFieldnames));
 		$pMockConfig->method('getOutputFields')->will($this->returnValue($pMockOutputFields));
+		$pMockConfig->method('getDataListViewAddressToAPIParameters')->will($this->returnValue($pDataListViewAddressToAPIParameters));
 
 		$pFieldsCollectionBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 				->setConstructorArgs([new Container()])
@@ -163,7 +229,7 @@ class TestClassAddressList
 
 		$pMockConfig->method('getFieldsCollectionBuilderShort')->willReturn($pFieldsCollectionBuilderMock);
 
-		$this->_pAddressList = new AddressList($pMockConfig);
+		$this->_pAddressList = new AddressList(null, $pMockConfig);
 	}
 
 
@@ -176,7 +242,7 @@ class TestClassAddressList
 
 	private function runTestGetRows(bool $raw, string $containerClass)
 	{
-		$this->_pAddressList->loadAdressesById([13, 37], ['Name', 'KdNr', 'Vorname', 'phone']);
+		$this->_pAddressList->loadAddressesById([13, 37], ['Name', 'KdNr', 'Vorname', 'phone']);
 		$records = $this->_pAddressList->getRows($raw);
 		$expectationRecords = $this->_expectedRecords;
 
@@ -218,7 +284,7 @@ class TestClassAddressList
 
 	public function testGetRecordsById()
 	{
-		$this->_pAddressList->loadAdressesById([13, 37], ['Name', 'KdNr', 'Vorname', 'phone']);
+		$this->_pAddressList->loadAddressesById([13, 37], ['Name', 'KdNr', 'Vorname', 'phone']);
 		$this->assertEquals($this->_expectedRecords[13], $this->_pAddressList->getAddressById(13));
 		$this->assertEquals($this->_expectedRecords[37], $this->_pAddressList->getAddressById(37));
 	}
@@ -235,6 +301,16 @@ class TestClassAddressList
 
 		$pAddressList = $this->_pAddressList->withDataListViewAddress($pAddressView);
 		$pAddressList->loadAddresses();
+	}
+
+	/**
+	 *
+	 */
+
+	public function testGetCountEstatesForAddress()
+	{
+		$this->_pAddressList->loadAddresses();
+		$this->assertEquals(2, $this->_pAddressList->getCountEstates(13));
 	}
 
 
@@ -355,6 +431,44 @@ class TestClassAddressList
 	 *
 	 */
 
+	private function getResponseRelation()
+	{
+		$responseStr = '
+		{
+        "actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+        "resourceid": "",
+        "resourcetype": "idsfromrelation",
+        "cacheable": true,
+        "identifier": "",
+        "data": {
+          "meta": {
+            "cntabsolute": null
+          },
+          "records": [
+            {
+              "id": "relatedIds",
+              "type": "",
+              "elements": {
+                "13": [122,133],
+                "37": []
+              }
+            }
+          ]
+        },
+        "status": {
+          "errorcode": 0,
+          "message": "OK"
+        }
+      }';
+
+		return json_decode($responseStr, true);
+	}
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
 	private function getResponseGetRows()
 	{
 		$responseStr = '
@@ -389,6 +503,67 @@ class TestClassAddressList
 							"Name": "Fleißig",
 							"KdNr": 12,
 							"Vorname": "Heinrich"
+						}
+					}
+				]
+			},
+			"status": {
+				"errorcode": 0,
+				"message": "OK"
+			}
+		}';
+
+		return json_decode($responseStr, true);
+	}
+
+	private function getResponseGetRowsRaw()
+	{
+		$responseStr = '
+		{
+			"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:read",
+			"resourceid": "",
+			"resourcetype": "address",
+			"cacheable": true,
+			"identifier": "",
+			"data": {
+				"meta": {
+					"cntabsolute": null
+				},
+				"records": [
+					{
+						"id": 13,
+						"type": "address",
+						"elements": {
+							"id": 13,
+							"contactCategory": "branch",
+							"Vorname": "David",
+							"Name": "Joe",
+							"Zusatz1": "AST Company",
+							"branch": "AST1 Office",
+							"communityOfHeirs": "AST Community",
+							"communityOfOwners": "AST community",
+							"umbrellaOrganization": "AST Organization",
+							"association": "AST",
+							"institution": "AST",
+							"department": "Department"
+						}
+					},
+					{
+						"id": 37,
+						"type": "address",
+						"elements": {
+							"id": 37,
+							"contactCategory": "institution",
+							"Vorname": "David",
+							"Name": "Joe",
+							"Zusatz1": "AST Company",
+							"branch": "AST1 Office",
+							"communityOfHeirs": "AST Community",
+							"communityOfOwners": "AST community",
+							"umbrellaOrganization": "AST Organization",
+							"association": "AST",
+							"institution": "AST",
+							"department": "Department"
 						}
 					}
 				]
