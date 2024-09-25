@@ -32,11 +32,12 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Controller\AddressListBase;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandlerEmpty;
-use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\DataView\DataViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
@@ -48,7 +49,56 @@ use function esc_html;
  */
 
 class AddressList
+implements AddressListBase
 {
+	/** @var string */
+	const CONTACT_CATEGORY_PRIVATE_CUSTOMER = 'privateCustomer';
+
+	/** @var string */
+	const CONTACT_CATEGORY_BUSINESS_CUSTOMER = 'businessCustomer';
+
+	/** @var string */
+	const CONTACT_CATEGORY_COMPANY = 'company';
+
+	/** @var string */
+	const CONTACT_CATEGORY_OFFICE = 'branch';
+
+	/** @var string */
+	const CONTACT_CATEGORY_DEPARTMMENT = 'department';
+
+	/** @var string */
+	const CONTACT_CATEGORY_MARRIED_COUPLE = 'marriedCouple';
+
+	/** @var string */
+	const CONTACT_CATEGORY_INSTITUTION = 'institution';
+
+	/** @var string */
+	const CONTACT_CATEGORY_ASSOCIATION = 'association';
+
+	/** @var string */
+	const CONTACT_CATEGORY_OWNER_ASSOCIATION  = 'communityOfOwners';
+
+	/** @var string */
+	const CONTACT_CATEGORY_JOINT_HEIRS = 'communityOfHeirs';
+
+	/** @var string */
+	const CONTACT_CATEGORY_UMBRELLA_ORGANIZATION = 'umbrellaOrganization';
+
+	/** @var string[] */
+	private $_addressParametersForImageAlt = [
+		'contactCategory',
+		'Vorname',
+		'Name',
+		'Zusatz1',
+		'branch',
+		'communityOfHeirs',
+		'communityOfOwners',
+		'umbrellaOrganization',
+		'association',
+		'institution',
+		'department'
+	];
+
 	/** @var string[] */
 	private $_specialContactData = [
 		'mobile',
@@ -71,7 +121,7 @@ class AddressList
 
 
 	/** @var array */
-	private $_adressesById = [];
+	private $_addressesById = [];
 
 	/** @var AddressListEnvironment */
 	private $_pEnvironment = null;
@@ -79,17 +129,24 @@ class AddressList
 	/** @var DataListViewAddress */
 	private $_pDataViewAddress = null;
 
+	/** @var array */
+	private $_records = [];
+	/** @var array */
+	private $_recordsRaw = [];
 
+	/** @var array */
+	private $_countEstates = [];
 	/**
 	 *
+	 * @param DataViewAddress $pDataViewAddress
 	 * @param AddressListEnvironment $pEnvironment
 	 *
 	 */
 
-	public function __construct(AddressListEnvironment $pEnvironment = null)
+	public function __construct(DataViewAddress $pDataViewAddress = null, AddressListEnvironment $pEnvironment = null)
 	{
 		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
-		$this->_pDataViewAddress = new DataListViewAddress(0, 'default');
+		$this->_pDataViewAddress = $pDataViewAddress ?? new DataListViewAddress(0, 'default');
 	}
 
 	/**
@@ -99,7 +156,7 @@ class AddressList
 	 * @throws NotFoundException
 	 * @throws API\ApiClientException
 	 */
-	public function loadAdressesById(array $addressIds, array $fields)
+	public function loadAddressesById(array $addressIds, array $fields)
 	{
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		$pApiCall = new APIClientActionGeneric
@@ -110,12 +167,20 @@ class AddressList
 			'outputlanguage' => Language::getDefault(),
 			'formatoutput' => true,
 		];
+        $parametersRaw = [
+            'recordids' => $addressIds,
+            'data' => $this->_addressParametersForImageAlt,
+            'outputlanguage' => Language::getDefault(),
+            'formatoutput' => false,
+        ];
 		$pApiCall->setParameters($parameters);
 		$pApiCall->addRequestToQueue()->sendRequests();
 
 		$records = $pApiCall->getResultRecords();
 		$this->fillAddressesById($records);
 		$this->_pDataViewAddress->setFields($fields);
+
+        $this->addRawRecordsByAPICall(clone $pApiCall, $parametersRaw);
 	}
 
 	/**
@@ -138,15 +203,21 @@ class AddressList
 
 		$newPage = $inputPage === 0 ? 1 : $inputPage;
 		$apiOnlyFields = $pModifier->getAllAPIFields();
-		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields, $this->_pDataViewAddress, $newPage);
+		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields, $this->_pDataViewAddress, $newPage, true);
 
 		$pApiCall = new APIClientActionGeneric
 			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
 		$pApiCall->setParameters($parameters);
-		$pApiCall->addRequestToQueue()->sendRequests();
+		$pApiCall->addRequestToQueue();
 
-		$records = $pApiCall->getResultRecords();
-		$this->fillAddressesById($records);
+		$addressParameterRaws = $pDataListViewToApi->buildParameters($this->_addressParametersForImageAlt,
+			$this->_pDataViewAddress, $newPage);
+		$this->addRawRecordsByAPICall(clone $pApiCall, $addressParameterRaws);
+
+		$this->getCountEstateForAddress($this->getAddressIds());
+
+		$this->_records = $pApiCall->getResultRecords();
+		$this->fillAddressesById($this->_records);
 
 		$resultMeta = $pApiCall->getResultMeta();
 		$numpages = ceil($resultMeta['cntabsolute']/$this->_pDataViewAddress->getRecordsPerPage());
@@ -163,7 +234,7 @@ class AddressList
 	{
 		$fields = $this->_pDataViewAddress->getFields();
 
-		if ($this->_pDataViewAddress->getShowPhoto()) {
+		if ($this->getDataViewAddress() instanceof DataListViewAddress && $this->_pDataViewAddress->getShowPhoto()) {
 			$fields []= 'imageUrl';
 		}
 
@@ -185,8 +256,51 @@ class AddressList
 
 			$additionalContactData = $this->collectAdditionalContactData($elements);
 			unset($elements['id']);
-			$this->_adressesById[$address['id']] = array_merge($elements, $additionalContactData);
+			$this->_addressesById[$address['id']] = array_merge($elements, $additionalContactData);
 		}
+	}
+
+		/**
+	 * @param array $addressIds
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws API\ApiClientException
+	 */
+	private function getCountEstateForAddress(array $addressIds)
+	{
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+
+		$parameters = [
+			'childids' => array_values($addressIds),
+			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
+		];
+		$pAPIClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
+		$pAPIClientAction->setParameters($parameters);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+		$this->collectCountEstates($pAPIClientAction->getResultRecords(), $addressIds);
+	}
+
+	/**
+	 * @param array $responseArrayContacts
+	 * @param array $addressIds
+     */
+	private function collectCountEstates(array $responseArrayContacts, array $addressIds)
+	{
+		$records = $responseArrayContacts[0]['elements'] ?? [];
+
+		foreach ($addressIds as $index => $addressId) {
+			$this->_countEstates[$addressId] = array_key_exists($addressId,$records) ? count($records[$addressId]) : 0;
+		}
+	}
+
+    /**
+     * @param int $addressId
+     * @return int
+     */
+	public function getCountEstates(int $addressId)
+	{
+		return intval($this->_countEstates[$addressId]);
 	}
 
 	/**
@@ -222,7 +336,7 @@ class AddressList
 	 */
 	public function getAddressById($id): array
 	{
-		return $this->_adressesById[$id] ?? [];
+		return $this->_addressesById[$id] ?? [];
 	}
 
 	/**
@@ -235,7 +349,7 @@ class AddressList
 		return array_map(function($values) use ($pAddressFieldModifier, $raw): ArrayContainer {
 			$valuesNew = $pAddressFieldModifier->processRecord($values);
 			return $this->getArrayContainerByRow($raw, $valuesNew);
-		}, $this->_adressesById);
+		}, $this->_addressesById);
 	}
 
 	/**
@@ -250,7 +364,9 @@ class AddressList
 		}
 		return new ArrayContainerEscape($row);
 	}
-
+	/** @return DataViewAddress */
+	public function getDataViewAddress(): DataViewAddress
+		{ return $this->_pDataViewAddress; }
 	/**
 	 * @param string $field
 	 * @param bool $raw
@@ -260,7 +376,6 @@ class AddressList
 	{
 		$label = $this->_pEnvironment->getFieldnames()
 			->getFieldLabel($field, onOfficeSDK::MODULE_ADDRESS);
-
 		return $raw ? $label : esc_html($label);
 	}
 
@@ -312,4 +427,101 @@ class AddressList
 		$pAddressList->_pDataViewAddress = $pDataListViewAddress;
 		return $pAddressList;
 	}
+
+	/**
+	 * @param int $addressId
+	 *
+	 * @return string
+	 */
+	public function generateImageAlt(int $addressId): string
+	{
+		$addressRawElements = $this->_recordsRaw[$addressId]['elements'] ?? [];
+		if (empty($addressRawElements)) {
+			return '';
+		}
+
+		$contactCategory = $addressRawElements['contactCategory'];
+
+		switch ($contactCategory) {
+			case AddressList::CONTACT_CATEGORY_ASSOCIATION:
+				$imageAlt = $addressRawElements['association'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_INSTITUTION:
+				$imageAlt = $addressRawElements['institution'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_BUSINESS_CUSTOMER:
+			case AddressList::CONTACT_CATEGORY_PRIVATE_CUSTOMER:
+				$firstName = $addressRawElements['Vorname'] ?? '';
+				$name = $addressRawElements['Name'] ?? '';
+				$imageAlt = $firstName . ' ' . $name;
+				break;
+			case AddressList::CONTACT_CATEGORY_COMPANY:
+				$imageAlt = $addressRawElements['Zusatz1'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_OFFICE:
+				$imageAlt = $addressRawElements['branch'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_DEPARTMMENT:
+				$imageAlt = $addressRawElements['department'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_JOINT_HEIRS:
+				$imageAlt = $addressRawElements['communityOfHeirs'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_MARRIED_COUPLE:
+				$imageAlt = $addressRawElements['Name'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_OWNER_ASSOCIATION:
+				$imageAlt = $addressRawElements['communityOfOwners'] ?? '';
+				break;
+			case AddressList::CONTACT_CATEGORY_UMBRELLA_ORGANIZATION:
+				$imageAlt = $addressRawElements['umbrellaOrganization'] ?? '';
+				break;
+			default:
+				$imageAlt = '';
+		}
+
+		return $imageAlt;
+	}
+
+	public function getAddressLink(string $addressId): string
+	{
+			$pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
+					->getAddressDetailView()->getPageId();
+
+			$url = get_page_link( $pageId ) . $addressId;
+			$fullLinkElements = parse_url( $url );
+			if ( empty( $fullLinkElements['query'] ) ) {
+					$url .= '/';
+			}
+			return $url;
+	}
+
+		/**
+	 * @return array
+	 */
+	public function getAddressIds(): array
+	{
+		return array_column($this->_recordsRaw, 'id');
+	}
+		/**
+	 * @return array
+	 */
+	public function getCurrentAddress(): array
+	{
+		return $this->_addressesById;
+	}
+
+    /**
+     * @param APIClientActionGeneric $addressApiCall
+     * @param array $parameters
+     * @throws API\ApiClientException
+     */
+    private function addRawRecordsByAPICall(APIClientActionGeneric $addressApiCall, array $parameters) {
+        $addressApiCall->setParameters($parameters);
+        $addressApiCall->addRequestToQueue()->sendRequests();
+        $recordsRaw = $addressApiCall->getResultRecords();
+
+        $this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+
+    }
 }

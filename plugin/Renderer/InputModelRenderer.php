@@ -73,8 +73,7 @@ class InputModelRenderer
 		foreach ($pFormModel->getInputModel() as $pInputModel) {
 			$pInputField = $this->createInputField($pInputModel, $pFormModel);
 			$italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
-			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON
-				&& $pInputModel->getHtmlType() !== InputModelBase::HTML_VERTICAL_RADIO) {
+			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_SORTABLE_TAGS && $pInputModel->getHtmlType() !== InputModelBase::HTML_VERTICAL_RADIO ) {
 				echo '<p id="" class="wp-clearfix custom-input-field">';
 				echo '<label class="howto custom-label" for="'. esc_html($pInputField->getGuiId()).'">';
 				echo $pInputModel->getLabel(). $italicText;
@@ -128,7 +127,7 @@ class InputModelRenderer
 		{
 			case InputModelOption::HTML_TYPE_SELECT:
 				$pInstance = new InputFieldSelectRenderer($elementName,
-					$pInputModel->getValuesAvailable());
+					$pInputModel->getValuesAvailable(), $pInputModel->getDescriptionTextHTML());
 				$pInstance->setSelectedValue($pInputModel->getValue());
 				$pInstance->setLabelOnlyValues($pInputModel->getLabelOnlyValues());
 				if ( $pInputModel->getHintHtml() != null ) {
@@ -295,6 +294,12 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 			break;
 
+			case InputModelOption::HTML_TYPE_SORTABLE_TAGS:
+				$pInstance = new SortableTagsRenderer($elementName, $pInputModel->getValuesAvailable());
+				$pInstance->setValue($pInputModel->getValue());
+				$pInstance->setLabel($pInputModel->getLabel());
+				break;
+
 			case InputModelOption::HTML_VERTICAL_RADIO:
 				$pInstance = new InputFieldVerticalRadioRenderer($elementName, $pInputModel->getValuesAvailable());
 				if ($pInputModel->getHintHtml() != null) {
@@ -303,7 +308,6 @@ class InputModelRenderer
 				$pInstance->setCheckedValue($pInputModel->getValue());
 				break;
 		}
-
 		if ($pInstance !== null) {
 			if ($onOfficeInputFields) {
 				$pInstance->addAdditionalAttribute('class', 'onoffice-input');
@@ -345,6 +349,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
 			case InputModelOption::HTML_SEARCH_FIELD_FOR_FIELD_LISTS:
 			case InputModelOption::HTML_TYPE_TOGGLE_SWITCH:
+			case InputModelOption::HTML_TYPE_SELECT_TWO:
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}

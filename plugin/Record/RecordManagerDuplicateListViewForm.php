@@ -163,6 +163,15 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 							$tableFieldFormTranslatedLabel, 'input_id', 'translated_label_id' );
 					}
 				}
+
+				$contactTypes = $listViewRoot['contact_type'];
+				foreach ($contactTypes as $contactType) {
+					$this->_pWPDB->insert($prefix.'oo_plugin_contacttypes', [
+							'form_id' => esc_sql((int) $duplicateListViewId),
+							'contact_type' => esc_sql($contactType)
+						]
+					);
+				}
 			}
 		}
 	}
