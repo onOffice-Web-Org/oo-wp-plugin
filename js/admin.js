@@ -229,7 +229,7 @@ jQuery(document).ready(function($){
 
 		createNewPage: function(pageNumber) {
 			const newPage = $('<div>', { class: `list-fields-for-each-page fieldsListPage-${pageNumber}` })
-				.append(`<div class="page-title">${onOffice_loc_settings.page_title} ${pageNumber}</div>`)
+				.append(`<span class="page-title">${onOffice_loc_settings.page_title} ${pageNumber}</span>`)
 				.append(`<ul class="filter-fields-list attachSortableFieldsList fieldsListPage-${pageNumber} sortableFieldsListForForm"></ul>`)
 				.append(`<div class="item-remove-page"><a class="item-remove-page-link submitdelete">${onOffice_loc_settings.remove_page}</a></div>`);
 

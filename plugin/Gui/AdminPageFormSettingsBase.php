@@ -887,27 +887,28 @@ abstract class AdminPageFormSettingsBase
 	}
 
 	/**
-	 * @param mixed $inputValues
+	 * @param mixed $values
 	 * @param string $fieldName
 	 * @return mixed
 	 */
-	private function updatePageNumbers($inputValues, string $fieldName) {
-		if (!isset($inputValues->$fieldName) || !is_array($inputValues->$fieldName)) {
-			return $inputValues;
+	private function updatePageNumbers($values, string $fieldName) 
+	{
+		if (!isset($values->$fieldName) || !is_array($values->$fieldName)) {
+			return $values;
 		}
 	
-		$valueMap = [];
+		$data = [];
 		$currentValue = 1;
 	
-		foreach ($inputValues->$fieldName as $key => $value) {
-			if (!isset($valueMap[$value])) {
-				$valueMap[$value] = (string)$currentValue;
+		foreach ($values->$fieldName as $key => $value) {
+			if (!isset($data[$value])) {
+				$data[$value] = (string)$currentValue;
 				$currentValue++;
 			}
-			$inputValues->$fieldName[$key] = $valueMap[$value];
+			$values->$fieldName[$key] = $data[$value];
 		}
 	
-		return $inputValues;
+		return $values;
 	}
 
 	/** @return string */

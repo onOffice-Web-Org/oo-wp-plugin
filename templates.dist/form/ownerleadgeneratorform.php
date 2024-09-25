@@ -92,7 +92,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				$totalPages = count($addressValues);
 				foreach ($addressValues as $pageNumber => $fields): ?>
 					<div class="lead-lightbox lead-page-<?php echo $pageNumber; ?>">
-						<h2><?php echo esc_html__('Page', 'onoffice-for-wp-websites') . ' ' . $pageNumber; ?></h2>
+						<span><?php echo sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $pageNumber); ?></span>
 						<p>
 							<?php echo implode('<br>', $fields); ?>
 						</p>
