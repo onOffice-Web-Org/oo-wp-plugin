@@ -81,45 +81,54 @@ class EstateFiles
 		}
 	}
 
-    public function getFilesByEstateId(int $estateId, SDKWrapper $pSDKWrapper)
+    public function getFilesByEstateIds(array $estateIds, SDKWrapper $pSDKWrapper)
     {
-        if($estateId !== 360609){
-            return;
-        }
-        $pAPIClientAction = new APIClientActionGeneric(
-            $pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'file');
-        $pAPIClientAction->setParameters([
-            'estateid' => $estateId
-        ]);
+		$listRequestInQueue = [];
 
-        $pAPIClientAction->setResourceId('estate');
+		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'file');
 
-        $pAPIClientAction->addRequestToQueue()->sendRequests();
+		foreach ($estateIds as $key => $estateId) {
+			$pAPIClientActionTest = clone $pAPIClientAction;
+			$pAPIClientActionTest->setParameters([
+				'estateid' => $estateId,
+				'showispublishedonhomepage' => true
+			]);
+			$pAPIClientActionTest->setResourceId('estate');
+			$pAPIClientActionTest->addRequestToQueue();
+			$listRequestInQueue[$estateId] = $pAPIClientActionTest;
+		}
+		$pAPIClientAction->sendRequests();
 
-        if (!$pAPIClientAction->getResultStatus()) {
-            throw new HttpFetchNoResultException();
-        }
+		$data = [];
+		foreach ($listRequestInQueue as $key => $value) {
+			if ($value->getResultStatus()) {
+				$data[$key] = $value->getResultRecords();
+			}
+		}
 
-        return $this->collectEstateFilesForSingleRecord($estateId, $pAPIClientAction->getResultRecords());
+        return $this->collectEstateFilesForSingleRecord($data);
     }
 
-    private function collectEstateFilesForSingleRecord($estateId, $responseArray)
+    private function collectEstateFilesForSingleRecord($responseArray)
     {
-        foreach ($responseArray as $fileEntry) {
-
-            $fileId = $fileEntry['id'];
-            $url = !empty($fileEntry['elements']['url']) ? $fileEntry['elements']['url'] : "";
-            $title = !empty($fileEntry['elements']['title']) ? $fileEntry['elements']['title'] : "";
-            $type = !empty($fileEntry['elements']['type']) ? $fileEntry['elements']['type'] : "";
-            $file = array(
-                'id' => $fileId,
-                'url' => $this->correctUrl($url),
-                'title' => $title ,
-                'type' => $type
-            );
-
-            $this->_estateFiles[$estateId][$fileId] = $file;
-
+        foreach ($responseArray as $estateId => $value) {
+			foreach ($value as $fileEntry) {
+				$fileId = $fileEntry['id'];
+				$url = !empty($fileEntry['elements']['url']) ? $fileEntry['elements']['url'] : "";
+				$title = !empty($fileEntry['elements']['title']) ? $fileEntry['elements']['title'] : "";
+				$type = !empty($fileEntry['elements']['type']) ? $fileEntry['elements']['type'] : "";
+				$file = array(
+					'id' => $fileId,
+					'url' => $this->correctUrl($url),
+					'title' => $title ,
+					'type' => $type
+				);
+				if (!in_array($type, ImageTypes::IMAGE_FILE_TYPES)) {
+					continue;
+				}
+	
+				$this->_estateFiles[$estateId][$fileId] = $file;
+			}
         }
 
         return $this->_estateFiles[$estateId];

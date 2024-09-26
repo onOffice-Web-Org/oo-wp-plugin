@@ -200,6 +200,7 @@ class EstateList
 
 			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles();
 			$this->_pEstateFiles->getAllFiles($fileCategories, $estateIds, $this->_pEnvironment->getSDKWrapper());
+			$this->_pEstateFiles->getFilesByEstateIds($estateIds, $this->_pEnvironment->getSDKWrapper());
 		}
 
 		if ($pDataListView->getRandom()) {
@@ -809,22 +810,6 @@ class EstateList
 
 		return $estateFiles;
 	}
-
-    public function	getEstateFilesByEstateId()
-    {
-        $estateId = $this->_currentEstate['id'];
-        $estateFiles = [];
-        $estateFilesByEstateId = $this->_pEstateFiles->getFilesByEstateId($estateId, $this->_pEnvironment->getSDKWrapper());
-
-        if (empty($estateFilesByEstateId)){
-            return;
-        }
-        foreach ($estateFilesByEstateId as $image) {
-            $estateFiles []= $image['url'];
-        }
-
-        return $estateFiles;
-    }
 
 	/**
 	 * Not supported in list view

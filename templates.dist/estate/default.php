@@ -126,8 +126,6 @@ $dimensions = [
 		<div class="oo-listobject">
 			<div class="oo-listobjectwrap">
 				<?php
-                $estateFileByEstateId = $pEstatesClone->getEstateFilesByEstateId();
-                var_dump($estateFileByEstateId);
 				$estatePictures = $pEstatesClone->getEstatePictures();
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstatesClone->getEstatePictureValues( $id );
