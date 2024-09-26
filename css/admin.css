@@ -976,16 +976,12 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	padding: 5px 22px;
 	border-radius: 3px;
 	margin-left: 10px;
-	background: #4CAF50;
-	border: none;
-	border-color: #4CAF50;
+	color: black !important;
+	border: 1px solid #2271B1;
 	color: #fff;
-	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 	cursor: pointer;
 }
 
 .add-page-container .add-page-button:hover {
-	background: #246e27;
-	border-color: #246e27;
-	color: #fff;
+	border: 1px solid #0f4775;
 }

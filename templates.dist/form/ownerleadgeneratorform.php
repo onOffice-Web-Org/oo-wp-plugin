@@ -89,10 +89,18 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				?>
 
 <?php 
+				$pageTitle = [
+					1 => esc_html__('Page 1', 'onoffice-for-wp-websites'),
+					2 => esc_html__('Page 2', 'onoffice-for-wp-websites'),
+					3 => esc_html__('Page 3', 'onoffice-for-wp-websites'),
+					4 => esc_html__('Page 4', 'onoffice-for-wp-websites'),
+					5 => esc_html__('Page 5', 'onoffice-for-wp-websites'),
+					6 => esc_html__('Page 6', 'onoffice-for-wp-websites'),
+				];
 				$totalPages = count($addressValues);
 				foreach ($addressValues as $pageNumber => $fields): ?>
 					<div class="lead-lightbox lead-page-<?php echo $pageNumber; ?>">
-						<span><?php echo sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $pageNumber); ?></span>
+						<span><?php echo sprintf('%s', $pageTitle[$pageNumber]); ?></span>
 						<p>
 							<?php echo implode('<br>', $fields); ?>
 						</p>
