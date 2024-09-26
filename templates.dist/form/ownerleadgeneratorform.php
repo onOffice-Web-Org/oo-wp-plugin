@@ -120,9 +120,11 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				<span class="leadform-back" style="float:left; cursor:pointer;">
 					<?php echo esc_html__('Back', 'onoffice-for-wp-websites'); ?>
 				</span>
+				<?php if ($totalPages !== 1): ?>
 				<span class="leadform-forward" style="float:right; cursor:pointer;">
 					<?php echo esc_html__('Next', 'onoffice-for-wp-websites'); ?>
 				</span>
+				<?php endif; ?>
 			</div>
 		</form>
 	</p>
