@@ -951,7 +951,6 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .list-fields-for-each-page .ui-sortable-placeholder {
 	border: 1px dashed #ccc;
 	background: #f9f9f9;
-	visibility: visible !important;
 	height: 40px;
 }
 
