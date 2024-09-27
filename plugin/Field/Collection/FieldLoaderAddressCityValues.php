@@ -44,7 +44,6 @@ class FieldLoaderAddressCityValues
 
 	/**
 	 * @param SDKWrapper $pSDKWrapper
-	 * @param string $pShowReferenceEstate
 	 */
 
 	public function __construct(SDKWrapper $pSDKWrapper) {
