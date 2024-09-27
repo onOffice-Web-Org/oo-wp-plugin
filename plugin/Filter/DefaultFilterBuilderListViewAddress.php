@@ -29,6 +29,7 @@ use onOffice\WPlugin\DataView\DataViewAddress;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Controller\InputVariableReader;
 
 /**
  *
@@ -92,13 +93,41 @@ class DefaultFilterBuilderListViewAddress
 		$this->_pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$filterableInputs = $this->_pCompoundFieldsFilter->mergeFields($pFieldsCollection, $filterableFields);
 		$fieldFilter = $this->_pFilterBuilderInputVars->getPostFieldsFilter($filterableInputs);
-
+		$filter = $this->addAddressCityFilterWhenConvertTextToSelect($fieldFilter);
 		$defaultFilter = [
 			'homepage_veroeffentlichen' => [
 				['op' => '=', 'val' => 1],
 			],
 		];
 
-		return array_merge($defaultFilter, $fieldFilter);
+		return array_merge($defaultFilter, $filter);
+	}
+
+	/**
+	 * @param array $fieldFilter
+	 * @return array
+	 */
+	private function addAddressCityFilterWhenConvertTextToSelect(array $fieldFilter): array
+	{
+		if (in_array('Ort', $this->_pDataViewAddress->getFilterableFields(), true) && !empty($this->_pDataViewAddress->getConvertInputTextToSelectForField())) {
+			$additionalAddressCities = [];
+			$pAddressInputVars = new InputVariableReader(onOfficeSDK::MODULE_ADDRESS);
+			$addressCityValue = $pAddressInputVars->getFieldValue('Ort');
+
+			if (!is_array($addressCityValue) || empty($addressCityValue)) {
+				return $fieldFilter;
+			}
+			foreach ($addressCityValue as $value) {
+				$additionalAddressCities []= $value;
+			}
+
+			if ($additionalAddressCities !== []) {
+				$fieldFilter['Ort'] = [
+					['op' => 'in', 'val' => $additionalAddressCities],
+				];
+			}
+		}
+
+		return $fieldFilter;
 	}
 }
