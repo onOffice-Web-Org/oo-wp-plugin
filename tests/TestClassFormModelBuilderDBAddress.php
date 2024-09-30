@@ -34,6 +34,7 @@ use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Model\InputModelBase;
 
 class TestClassFormModelBuilderDBAddress
 	extends WP_UnitTestCase
@@ -124,5 +125,21 @@ class TestClassFormModelBuilderDBAddress
 		$pInputModelDB = $pFormModelBuilderDBAddress->createInputModelRecordsPerPage();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'number');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress::getInputModelConvertInputTextToSelectField
+	 */
+	public function testGetInputModelConvertInputTextToSelectField()
+	{
+		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
+			->setConstructorArgs([new FieldsCollection()])
+			->getMock();
+		$pInstance = new FormModelBuilderDBAddress($pFieldnames);
+
+		$pInputModelDB = $pInstance->getInputModelConvertInputTextToSelectField();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
+		$this->assertEquals([$pInstance, 'callbackValueInputModelConvertInputTextToSelectForField'], $pInputModelDB->getValueCallback());
 	}
 }

@@ -76,6 +76,17 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.1.3 (2024-09-30) =
+
+**Added**
+
+* Showing cities as filterable selection field in address search
+
+**Fixed**
+
+* Parking lot price
+* Meta key
+
 = 5.1.2 (2024-09-24) =
 
 **Added**
