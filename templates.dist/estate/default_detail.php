@@ -84,9 +84,6 @@ $dimensions = [
 	ul.oo-listparking {
 		padding: 0 10px;
 	}
-	.clear {
-		width: 25%;
-	}
 </style>
 <div class="oo-detailview">
 	<?php
