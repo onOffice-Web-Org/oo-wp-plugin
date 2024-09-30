@@ -55,7 +55,7 @@ class FieldParkingLot{
 			if ( ! empty( $parking['MarketingType'] ) ) {
 				$marketingType = $this->getMarketingType( $parking['MarketingType'] );
 			}
-			$price = $this->formatPriceParking( $parking['Price'], $locale, $codeCurrency );
+			$price = $this->formatPriceParking( $parking['Price'] ?? '0', $locale, $codeCurrency );
 			/* translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type */
 			$element = sprintf( _n( '%1$s at %2$s%3$s', '%1$s at %2$s each%3$s', $isCount, 'onoffice-for-wp-websites' ), $parkingName, $price, $marketingType );
 
