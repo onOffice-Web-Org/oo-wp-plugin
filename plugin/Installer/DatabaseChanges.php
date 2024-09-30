@@ -331,12 +331,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 48) {
-			dbDelta($this->getCreateQueryFormTaskConfig());
+			dbDelta($this->getCreateQueryAddressFieldConfig());
 			$dbversion = 49;
 		}
 
 		if ($dbversion == 49) {
-			dbDelta($this->getCreateQueryAddressFieldConfig());
+			dbDelta($this->getCreateQueryFormTaskConfig());
 			$dbversion = 50;
 		}
 	
