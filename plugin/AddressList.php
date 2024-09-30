@@ -43,6 +43,8 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function esc_html;
+use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\DataView\DataAddressDetailView;
 
 /**
  *
@@ -136,6 +138,10 @@ implements AddressListBase
 
 	/** @var array */
 	private $_countEstates = [];
+
+	/** @var FieldsCollection */
+	private $_pFieldsCollection = [];
+
 	/**
 	 *
 	 * @param DataViewAddress $pDataViewAddress
@@ -147,6 +153,7 @@ implements AddressListBase
 	{
 		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
 		$this->_pDataViewAddress = $pDataViewAddress ?? new DataListViewAddress(0, 'default');
+		$this->buildFieldsCollectionForAddressCustomLabel();
 	}
 
 	/**
@@ -374,8 +381,22 @@ implements AddressListBase
 	 */
 	public function getFieldLabel($field, bool $raw = false): string
 	{
-		$label = $this->_pEnvironment->getFieldnames()
-			->getFieldLabel($field, onOfficeSDK::MODULE_ADDRESS);
+		$recordType = onOfficeSDK::MODULE_ADDRESS;
+		$label = '';
+
+		try {
+			$label = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+		} catch (UnknownFieldException $pE) {
+			$label = $this->_pEnvironment->getFieldnames()->getFieldLabel($field, $recordType);
+		}
+		if ($this->_pDataViewAddress instanceof DataAddressDetailView) {
+			$pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
+			$dataView = $this->_pDataViewAddress->getCustomLabels();
+			if (!empty( $dataView[ $field ][ $pLanguage ])) {
+				$label = $dataView[ $field ][ $pLanguage ];
+			}
+		}
+
 		return $raw ? $label : esc_html($label);
 	}
 
@@ -390,6 +411,20 @@ implements AddressListBase
 			->getFieldnames()
 			->getFieldInformation($field, onOfficeSDK::MODULE_ADDRESS);
 		return $fieldInformation['type'];
+	}
+
+	/**
+	 *
+	 */
+	private function buildFieldsCollectionForAddressCustomLabel()
+	{
+		$this->_pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$pFieldBuilderShort->addFieldsAddressEstate($this->_pFieldsCollection);
+
+		if ($this->_pDataViewAddress instanceof DataListViewAddress) {
+			$pFieldBuilderShort->addCustomLabelFieldsAddressFrontend($this->_pFieldsCollection, $this->_pDataViewAddress->getName());
+		}
 	}
 
 	/**

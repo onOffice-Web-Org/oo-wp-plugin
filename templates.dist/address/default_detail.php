@@ -63,6 +63,7 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
                         . '</div>';
                     continue;
                 }
+                echo '<div class="oo-address-field">' . esc_html($pAddressList->getFieldLabel($field)) . '</div>';
                 echo '<div class="oo-address-field">'
                     . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
                     . '</div>';
