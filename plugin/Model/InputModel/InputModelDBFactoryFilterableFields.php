@@ -41,4 +41,7 @@ interface InputModelDBFactoryFilterableFields
 
 	/** */
 	const INPUT_FIELD_CONVERT_TEXT_TO_SELECT_FOR_CITY_FIELD = 'inputconvertTextToSelectForCityField';
+
+	/** */
+	const INPUT_FIELD_CONVERT_INPUT_TEXT_TO_SELECT_FOR_FIELD = 'convertInputTextToSelectForField';
 }
