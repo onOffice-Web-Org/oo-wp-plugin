@@ -49,6 +49,9 @@ class EstateFiles
 	/** @var array */
 	private $_pictureCategories = array();
 
+	/** @var array */
+	private $_estateAllFiles = array();
+
 	/**
 	 * EstateFiles constructor.
 	 *
@@ -90,12 +93,12 @@ class EstateFiles
 		foreach ($estateIds as $key => $estateId) {
 			$pAPIClientActionTest = clone $pAPIClientAction;
 			$pAPIClientActionTest->setParameters([
-				'estateid' => $estateId,
+				'estateid' => $key,
 				'showispublishedonhomepage' => true
 			]);
 			$pAPIClientActionTest->setResourceId('estate');
 			$pAPIClientActionTest->addRequestToQueue();
-			$listRequestInQueue[$estateId] = $pAPIClientActionTest;
+			$listRequestInQueue[$key] = $pAPIClientActionTest;
 		}
 		$pAPIClientAction->sendRequests();
 
@@ -127,11 +130,11 @@ class EstateFiles
 					continue;
 				}
 	
-				$this->_estateFiles[$estateId][$fileId] = $file;
+				$this->_estateAllFiles[$estateId][$fileId] = $file;
 			}
         }
 
-        return $this->_estateFiles[$estateId];
+        return $this->_estateAllFiles[$estateId];
     }
 
 
@@ -353,4 +356,17 @@ class EstateFiles
 	{
 		return $this->_estateFiles[$estateId][$imageId] ?? [];
 	}
+
+
+	/**
+	 *
+	 * @param int $estateId
+	 * @return array
+	 *
+	 */
+
+	 public function getEstateFiles(int $estateId)
+	 {
+		return $this->_estateAllFiles[$estateId] ?? [];
+	 }
 }

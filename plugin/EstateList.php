@@ -842,6 +842,15 @@ class EstateList
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getEstateFileUrl()
+	{
+		$currentEstate = $this->_currentEstate['id'];
+		return $this->_pEstateFiles->getEstateFiles($currentEstate);
+	}
+
+	/**
 	 * @param int $imageId
 	 * @return string
 	 */
