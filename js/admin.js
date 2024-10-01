@@ -501,6 +501,12 @@ jQuery(document).ready(function($){
 			convertTextToSelectForCityField.parent().remove();
 		}
 
+		if (fieldName !== 'Ort') {
+			const selectors = ['oopluginaddressfieldconfig-convertInputTextToSelectField'];
+			let convertTextToSelectForField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
+			convertTextToSelectForField.parent().remove();
+		}
+
 		if(onOffice_loc_settings.modulelabels && module){
 			var inputModule = clonedElement.find('input[name^=oopluginformfieldconfig-module]');
 			inputModule.val(module);
