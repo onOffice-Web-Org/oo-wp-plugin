@@ -422,7 +422,7 @@ implements AddressListBase
 		$pFieldBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldBuilderShort->addFieldsAddressEstate($this->_pFieldsCollection);
 
-		if ($this->_pDataViewAddress instanceof DataListViewAddress) {
+		if ($this->_pDataViewAddress instanceof DataListViewAddress && !empty($this->_pDataViewAddress->getName())) {
 			$pFieldBuilderShort->addCustomLabelFieldsAddressFrontend($this->_pFieldsCollection, $this->_pDataViewAddress->getName());
 		}
 	}

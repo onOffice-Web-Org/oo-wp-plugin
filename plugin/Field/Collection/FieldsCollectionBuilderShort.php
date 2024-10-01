@@ -342,6 +342,7 @@ class FieldsCollectionBuilderShort
 		$pFieldsCollection->merge($pFieldCollectionSupervisor);
 		return $this;
 	}
+
 	/**
 	 *
 	 * @param FieldsCollection $pFieldsCollection
@@ -352,7 +353,7 @@ class FieldsCollectionBuilderShort
 	 * @throws UnknownFormException
 	 */
 
-	public function addCustomLabelFieldsAddressFrontend(FieldsCollection $pFieldsCollection, $formName): self
+	public function addCustomLabelFieldsAddressFrontend(FieldsCollection $pFieldsCollection, string $formName): self
 	{
 		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorCustomLabelAddress($pFieldsCollection, $formName);
 		$pFieldsCollection->merge($pFieldsCollectionTmp);

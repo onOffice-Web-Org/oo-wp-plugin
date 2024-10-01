@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2021 onOffice GmbH
+ *    Copyright (C) 2024 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -25,13 +25,10 @@ namespace onOffice\tests;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorCustomLabelAddress;
-use onOffice\WPlugin\Form;
-use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;

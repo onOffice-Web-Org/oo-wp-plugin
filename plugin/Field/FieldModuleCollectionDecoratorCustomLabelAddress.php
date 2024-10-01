@@ -36,7 +36,7 @@ use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2021, onOffice(R) GmbH
+ * @copyright 2003-2024, onOffice(R) GmbH
  *
  */
 class FieldModuleCollectionDecoratorCustomLabelAddress
@@ -48,7 +48,13 @@ class FieldModuleCollectionDecoratorCustomLabelAddress
 	/** @var array */
 	private $_fieldCustomLabels = [];
 
-	public function __construct(FieldModuleCollection $pFieldModuleCollection, $formName, Container $pContainer = null)
+	/**
+	 * @param FieldModuleCollection $pFieldModuleCollection
+	 * @param mixed $formName
+	 * @param Container|null $pContainer
+	 * @return void
+	 */
+	public function __construct(FieldModuleCollection $pFieldModuleCollection, string $formName, Container $pContainer = null)
 	{
 		parent::__construct($pFieldModuleCollection);
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
