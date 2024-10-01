@@ -310,7 +310,7 @@ class AdminPageAddressListSettings
 					RecordManager::TABLENAME_FIELDCONFIG_ADDRESS => $this->prepareRelationValues
 					(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS, 'listview_address_id', $row, $recordId),
 					RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS => $this->prepareRelationValues
-						(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS, 'listview_address_id', $row, $recordId),
+					(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS, 'listview_address_id', $row, $recordId),
 				];
 				$pRecordManagerInsert->insertAdditionalValues($row);
 				$result = true;

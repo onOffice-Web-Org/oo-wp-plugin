@@ -419,7 +419,7 @@ implements AddressListBase
 	private function buildFieldsCollectionForAddressCustomLabel()
 	{
 		$this->_pFieldsCollection = new FieldsCollection();
-		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$pFieldBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldBuilderShort->addFieldsAddressEstate($this->_pFieldsCollection);
 
 		if ($this->_pDataViewAddress instanceof DataListViewAddress) {
