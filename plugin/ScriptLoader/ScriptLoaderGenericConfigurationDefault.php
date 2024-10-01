@@ -79,6 +79,7 @@ class ScriptLoaderGenericConfigurationDefault
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/dist/favorites.min.js', $pluginPath)))
 				->setDependencies(['jquery']);
 		}
+        $values = $this->addAddressStyle($values, $style, $pluginPath);
 
 		return array_merge($values, $this->addScripts($pluginPath, $script, $style, $defer, $async));
 	}
@@ -104,6 +105,10 @@ class ScriptLoaderGenericConfigurationDefault
 		}
 
 		$pageContent = str_replace('\u0022', '"', $pageContent);
+		if ($this->isAddressListPage($pageContent) || !empty($shortcode['address'])) {
+			$scripts = $this->renderScriptForAddressListPage($scripts, $pluginPath, $script);
+		}
+
 		if ($this->isEstateListPage($pageContent) || !empty($shortcode['estate'])) {
 			$scripts = $this->renderScriptForEstateListPage($scripts, $pluginPath, $script, $async);
 		}
@@ -346,11 +351,24 @@ class ScriptLoaderGenericConfigurationDefault
 		return $matches[1];
 	}
 
+    /**
+     * @param array $values
+     * @param string $style
+     * @param string $pluginPath
+     * @return array
+     */
+    private function addAddressStyle(array $values, string $style, string $pluginPath) {
+        $pageContent = get_the_content();
+        if ($this->isDetailAddressPage($pageContent)) {
+            $values []= (new IncludeFileModel($style, 'onoffice-address-detail', plugins_url('/css/onoffice-address-detail.css', $pluginPath)));
+        }
+        return $values;
+    }
+
 	/**
 	 * @param array $scripts
 	 * @param string $pluginPath
 	 * @param string $script
-	 * @param string $style
 	 * @param string $defer
 	 * @return array
 	 */
@@ -371,7 +389,6 @@ class ScriptLoaderGenericConfigurationDefault
 	 * @param array $scripts
 	 * @param string $pluginPath
 	 * @param string $script
-	 * @param string $style
 	 * @param string $defer
 	 * @return array
 	 */
@@ -410,6 +427,22 @@ class ScriptLoaderGenericConfigurationDefault
         }
         return $styles;
     }
+
+	/**
+	 * @param array $scripts
+	 * @param string $pluginPath
+	 * @param string $script
+	 * @return array
+	 */
+
+	private function renderScriptForAddressListPage(array $scripts, string $pluginPath, string $script): array
+	{
+		$scripts[] = (new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
+
+		return $scripts;
+	}
 
 	/**
 	 * @param array $scripts
