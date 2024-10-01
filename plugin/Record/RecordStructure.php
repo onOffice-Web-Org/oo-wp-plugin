@@ -148,6 +148,10 @@ class RecordStructure
 				self::NULL_ALLOWED => false,
 				self::EMPTY_VALUE => [],
 			),
+			'convertInputTextToSelectForField' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 0,
+			),
 		),
 		RecordManager::TABLENAME_FORMS => array(
 			'name' => array(
