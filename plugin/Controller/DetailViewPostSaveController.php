@@ -114,8 +114,8 @@ class DetailViewPostSaveController
 			$postType = $pPost->post_type;
 			$metaKeys = get_post_meta($postId, '', true);
 
-			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
-			$viewContainedAddressDetail = $this->postContainsViewName($postContent, $addressDetailViewName, 'oo_address');
+			$viewContained = !is_null($postContent) ? $this->postContainsViewName($postContent, $detailViewName) : false;
+			$viewContainedAddressDetail = !is_null($postContent) ? $this->postContainsViewName($postContent, $addressDetailViewName, 'oo_address') : false;
 
 			$viewContainedCustomField = false;
 			$hasOtherShortcodeInPostContent = false;
@@ -131,11 +131,11 @@ class DetailViewPostSaveController
 			}
 
 			foreach ($metaKeys as $metaKey) {
-				$viewContainedMetaKey = $this->postContainsViewName($metaKey[0], $detailViewName);
+				$viewContainedMetaKey = !is_null($metaKey[0]) ? $this->postContainsViewName($metaKey[0], $detailViewName) : false;
 				if ($viewContainedMetaKey) {
 					$viewContainedCustomField = true;
 				}
-				$viewAddressDetailContainedMetaKey = $this->postContainsViewName($metaKey[0], $addressDetailViewName, 'oo_address');
+				$viewAddressDetailContainedMetaKey = !is_null($metaKey[0]) ? $this->postContainsViewName($metaKey[0], $addressDetailViewName, 'oo_address') : false;
 				if ($viewAddressDetailContainedMetaKey) {
 					$viewContainedAddressDetailCustomField = true;
 				}
