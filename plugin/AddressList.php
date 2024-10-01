@@ -167,12 +167,20 @@ implements AddressListBase
 			'outputlanguage' => Language::getDefault(),
 			'formatoutput' => true,
 		];
+        $parametersRaw = [
+            'recordids' => $addressIds,
+            'data' => $this->_addressParametersForImageAlt,
+            'outputlanguage' => Language::getDefault(),
+            'formatoutput' => false,
+        ];
 		$pApiCall->setParameters($parameters);
 		$pApiCall->addRequestToQueue()->sendRequests();
 
 		$records = $pApiCall->getResultRecords();
 		$this->fillAddressesById($records);
 		$this->_pDataViewAddress->setFields($fields);
+
+        $this->addRawRecordsByAPICall(clone $pApiCall, $parametersRaw);
 	}
 
 	/**
@@ -204,12 +212,9 @@ implements AddressListBase
 
 		$addressParameterRaws = $pDataListViewToApi->buildParameters($this->_addressParametersForImageAlt,
 			$this->_pDataViewAddress, $newPage);
+		$this->addRawRecordsByAPICall(clone $pApiCall, $addressParameterRaws);
 
-		$pAddressRawApiCall = clone $pApiCall;
-		$pAddressRawApiCall->setParameters($addressParameterRaws);
-		$pAddressRawApiCall->addRequestToQueue()->sendRequests();
-		$recordsRaw = $pAddressRawApiCall->getResultRecords();
-		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+		$this->getCountEstateForAddress($this->getAddressIds());
 
 		$this->getCountEstateForAddress($this->getAddressIds());
 
@@ -231,7 +236,7 @@ implements AddressListBase
 	{
 		$fields = $this->_pDataViewAddress->getFields();
 
-		if ($this->_pDataViewAddress->getShowPhoto()) {
+		if ($this->getDataViewAddress() instanceof DataListViewAddress && $this->_pDataViewAddress->getShowPhoto()) {
 			$fields []= 'imageUrl';
 		}
 
@@ -281,11 +286,16 @@ implements AddressListBase
 	/**
 	 * @param array $responseArrayContacts
 	 * @param array $addressIds
+<<<<<<< HEAD
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 * @throws API\ApiClientException
 	 */
 	private function collectCountEstates($responseArrayContacts, array $addressIds)
+=======
+     */
+	private function collectCountEstates(array $responseArrayContacts, array $addressIds)
+>>>>>>> master
 	{
 		$records = $responseArrayContacts[0]['elements'] ?? [];
 
@@ -294,10 +304,18 @@ implements AddressListBase
 		}
 	}
 
+<<<<<<< HEAD
 	/**
  * @return int
  */
 	public function getCountEstates($addressId)
+=======
+    /**
+     * @param int $addressId
+     * @return int
+     */
+	public function getCountEstates(int $addressId)
+>>>>>>> master
 	{
 		return intval($this->_countEstates[$addressId]);
 	}
@@ -404,6 +422,9 @@ implements AddressListBase
 		$pBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollection = new FieldsCollection();
 		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		if (!empty($this->getDataViewAddress()->getConvertInputTextToSelectForField())) {
+			$pBuilderShort->addFieldAddressCityValues($pFieldsCollection);
+		}
 		$fieldsValues = $pFilterableFields->getVisibleFilterableFields
 			($this->_pDataViewAddress, $pFieldsCollection, new GeoPositionFieldHandlerEmpty);
 		$result = [];
@@ -509,4 +530,18 @@ implements AddressListBase
 	{
 		return $this->_addressesById;
 	}
+
+    /**
+     * @param APIClientActionGeneric $addressApiCall
+     * @param array $parameters
+     * @throws API\ApiClientException
+     */
+    private function addRawRecordsByAPICall(APIClientActionGeneric $addressApiCall, array $parameters) {
+        $addressApiCall->setParameters($parameters);
+        $addressApiCall->addRequestToQueue()->sendRequests();
+        $recordsRaw = $addressApiCall->getResultRecords();
+
+        $this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+
+    }
 }

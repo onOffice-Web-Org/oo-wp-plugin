@@ -62,6 +62,7 @@ class DataListViewFactoryAddress
 		$pDataListViewAddress->setTemplate($row['template']);
 		$pDataListViewAddress->setFilterableFields($row['filterable']);
 		$pDataListViewAddress->setHiddenFields($row['hidden']);
+		$pDataListViewAddress->setConvertInputTextToSelectForField($row['convertInputTextToSelectForField']);
 
 		return $pDataListViewAddress;
 	}
