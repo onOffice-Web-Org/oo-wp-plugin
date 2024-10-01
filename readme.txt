@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 5.1.2
+Stable tag: 5.1.3
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,17 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 5.1.3 (2024-09-30) =
+
+**Added**
+
+* Showing cities as filterable selection field in address search
+
+**Fixed**
+
+* Parking lot price
+* Meta key
 
 = 5.1.2 (2024-09-24) =
 
