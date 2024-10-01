@@ -34,7 +34,7 @@ use onOffice\WPlugin\Controller\ViewProperty;
  */
 
 class DataListViewAddress
-	implements DataViewFilterableFields, ViewProperty
+	implements DataViewAddress, DataViewFilterableFields, ViewProperty
 {
 	/** */
 	const FIELDS = 'fields';
@@ -72,6 +72,8 @@ class DataListViewAddress
 	/** @var array */
 	private $_filterableHiddenFields = [];
 
+	/** @var string[] */
+	private $_convertInputTextToSelectForField = [];
 
 	/**
 	 *
@@ -174,4 +176,12 @@ class DataListViewAddress
 	/** @return string */
 	public function getViewType(): string
 		{ return ''; }
+
+	/** @return array */
+	public function getConvertInputTextToSelectForField(): array
+		{ return $this->_convertInputTextToSelectForField; }
+
+	/** @param array $convertInputTextToSelectForField */
+	public function setConvertInputTextToSelectForField(array $convertInputTextToSelectForField)
+		{ $this->_convertInputTextToSelectForField = $convertInputTextToSelectForField; }
 }

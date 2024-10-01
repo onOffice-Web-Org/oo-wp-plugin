@@ -127,6 +127,7 @@ class RecordManagerReadListViewAddress
 		$result['fields'] = array_column($resultFieldConfig, 'fieldname');
 		$result['filterable'] = array_keys(array_filter(array_column($resultFieldConfig, 'filterable', 'fieldname')));
 		$result['hidden'] = array_keys(array_filter(array_column($resultFieldConfig, 'hidden', 'fieldname')));
+		$result['convertInputTextToSelectForField'] = array_keys(array_filter(array_column($resultFieldConfig, 'convertInputTextToSelectForField', 'fieldname')));
 		return $result;
 	}
 

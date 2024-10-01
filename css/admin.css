@@ -264,6 +264,7 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 #onoffice-form-search-address{
 	display: flex;
 	float: right;
+	margin-top: -33px;
 }
 #onoffice-form-search-form {
 	display: flex;
@@ -545,6 +546,43 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	pointer-events: none;
 }
 
+.sortable-tags { 
+	background-color: #fff;
+	list-style-type: none; 
+	margin: 0; 
+	width: 100%;
+	margin-top: 6px;
+	display: flex;
+	flex-direction: column;
+}
+
+.sortable-tags .rotate-icon {
+	transform: rotate(90deg);
+}
+
+.sortable-tags .sortable-tag {
+	margin: 5px  0;
+	padding: 10px 10px 10px 15px;
+	background-color: #fafafa;
+	cursor: move;
+	border: 1px solid #c3c4c7;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.sortable-tags .sortable-tag:hover {
+	border-color: #8c8f94;
+}
+
+.sortable-tag:hover label {
+	cursor: move;
+}
+
+.sortable-tags .sortable-tag span {
+	color: #c3c4c7;
+}
+
 #listSettings .custom-input-field,
 #viewpicturetypes .custom-input-field {
 	display: block;
@@ -814,10 +852,12 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 		width: 100%;
 	}
 
+	.oo-poststuff-address-detail .viewusage,
 	.oo-poststuff-estate-detail .viewusage {
 		width: 100%;
 	}
 
+	.oo-poststuff-address-detail .block-publish,
 	.oo-poststuff-estate-detail .block-publish,
 	.oo-poststuff-similar-estate .block-publish {
 		margin-top: 0;

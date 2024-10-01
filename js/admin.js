@@ -49,6 +49,16 @@ jQuery(document).ready(function($){
 		$(this).parent().parent().parent().parent().find('.menu-item-settings').toggle();
 	});
 
+	$(".sortable-tags").sortable({
+		update: function() {
+			var sortedKeys = [];
+			$(".sortable-tags .sortable-tag").each(function() {
+				sortedKeys.push($(this).data("key"));
+			});
+			$(".hidden-sortable-tags").val(sortedKeys);
+		}
+	});
+
 	$('.item-delete-link').click(function() {
 		var labelButtonHandleField= $(this).parent().parent().attr('action-field-name');
 		const data = $('.' + labelButtonHandleField);
@@ -257,6 +267,12 @@ jQuery(document).ready(function($){
 			const selectors = ['oopluginfieldconfig-convertTextToSelectForCityField'];
 			let convertTextToSelectForCityField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
 			convertTextToSelectForCityField.parent().remove();
+		}
+
+		if (fieldName !== 'Ort') {
+			const selectors = ['oopluginaddressfieldconfig-convertInputTextToSelectField'];
+			let convertTextToSelectForField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
+			convertTextToSelectForField.parent().remove();
 		}
 
 		if(onOffice_loc_settings.modulelabels && module){
