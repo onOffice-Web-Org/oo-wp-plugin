@@ -49,6 +49,9 @@ class EstateFiles
 	/** @var array */
 	private $_pictureCategories = array();
 
+	/** @var array */
+	private $_estateAllFiles = array();
+
 	/**
 	 * EstateFiles constructor.
 	 *
@@ -80,6 +83,60 @@ class EstateFiles
 			$this->collectEstateFiles($pAPIClientAction->getResultRecords());
 		}
 	}
+
+    public function getFilesByEstateIds(array $estateIds, SDKWrapper $pSDKWrapper)
+    {
+		$listRequestInQueue = [];
+
+		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'file');
+
+		foreach ($estateIds as $key => $estateId) {
+			$pAPIClientActionTest = clone $pAPIClientAction;
+			$pAPIClientActionTest->setParameters([
+				'estateid' => $key,
+				'showispublishedonhomepage' => true
+			]);
+			$pAPIClientActionTest->setResourceId('estate');
+			$pAPIClientActionTest->addRequestToQueue();
+			$listRequestInQueue[$key] = $pAPIClientActionTest;
+		}
+		$pAPIClientAction->sendRequests();
+
+		$data = [];
+		foreach ($listRequestInQueue as $key => $value) {
+			if ($value->getResultStatus()) {
+				$data[$key] = $value->getResultRecords();
+			}
+		}
+
+        return $this->collectEstateFilesForSingleRecord($data);
+    }
+
+    private function collectEstateFilesForSingleRecord($responseArray)
+    {
+        foreach ($responseArray as $estateId => $value) {
+			foreach ($value as $fileEntry) {
+				$fileId = $fileEntry['id'];
+				$url = !empty($fileEntry['elements']['url']) ? $fileEntry['elements']['url'] : "";
+				$title = !empty($fileEntry['elements']['title']) ? $fileEntry['elements']['title'] : "";
+				$type = !empty($fileEntry['elements']['type']) ? $fileEntry['elements']['type'] : "";
+				$file = array(
+					'id' => $fileId,
+					'url' => $this->correctUrl($url),
+					'title' => $title ,
+					'type' => $type
+				);
+				if (!in_array($type, ImageTypes::FILE_TYPES)) {
+					continue;
+				}
+	
+				$this->_estateAllFiles[$estateId][$fileId] = $file;
+			}
+        }
+
+        return $this->_estateAllFiles[$estateId];
+    }
+
 
 
 	/**
@@ -299,4 +356,17 @@ class EstateFiles
 	{
 		return $this->_estateFiles[$estateId][$imageId] ?? [];
 	}
+
+
+	/**
+	 *
+	 * @param int $estateId
+	 * @return array
+	 *
+	 */
+
+	 public function getEstateFiles(int $estateId)
+	 {
+		return $this->_estateAllFiles[$estateId] ?? [];
+	 }
 }

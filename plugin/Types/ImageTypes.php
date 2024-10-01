@@ -34,6 +34,9 @@ class ImageTypes
 	const ENERGY_PASS_RANGE = 'Epass_Skala';
 	const PASSPORTPHOTO = 'PassportPhoto';
 	const USERPHOTO = 'UserPhoto';
+	const LINK = 'Link';
+	const FILM_LINK = 'Film-Link';
+	const EXPOSE = 'Expose';
 
 	const IMAGE_TYPES = [
 		self::TITLE,
@@ -43,6 +46,19 @@ class ImageTypes
 		self::GROUNDPLAN,
 		self::LOCATION_MAP,
 		self::ENERGY_PASS_RANGE,
+	];
+
+	const FILE_TYPES = [
+		self::TITLE,
+		self::PHOTO,
+		self::PHOTO_BIG,
+		self::GROUNDPLAN,
+		self::LOCATION_MAP,
+		self::PANORAMA,
+		LinksTypes::FILE_TYPE_LINK,
+		self::FILM_LINK,
+		LinksTypes::FILE_TYPE_OGULO_LINK,
+		self::EXPOSE,
 	];
 
 	/**
