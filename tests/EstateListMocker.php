@@ -62,6 +62,8 @@ class EstateListMocker
 	/** @var bool */
 	private $_formatOutput = true;
 
+	/** @var array */
+	private $_contactPersonIds = [];
 
 	/**
 	 *
@@ -306,6 +308,13 @@ class EstateListMocker
 		$this->_estateData = $estateData;
 	}
 
+	/** @return array */
+	public function getContactPersonIds(): array
+		{ return $this->_contactPersonIds; }
+
+	/** @param array $contactPersonIds */
+	public function setContactPersonIds(array $contactPersonIds)
+		{ $this->_contactPersonIds = $contactPersonIds; }
 
 	/** @return bool */
 	public function getFormatOutput(): bool
