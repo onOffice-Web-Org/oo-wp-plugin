@@ -153,7 +153,6 @@ implements AddressListBase
 	{
 		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
 		$this->_pDataViewAddress = $pDataViewAddress ?? new DataListViewAddress(0, 'default');
-		$this->buildFieldsCollectionForAddressCustomLabel();
 	}
 
 	/**
@@ -188,6 +187,7 @@ implements AddressListBase
 		$this->_pDataViewAddress->setFields($fields);
 
         $this->addRawRecordsByAPICall(clone $pApiCall, $parametersRaw);
+		$this->buildFieldsCollectionForAddressCustomLabel();
 	}
 
 	/**
@@ -232,6 +232,7 @@ implements AddressListBase
 		$multipage = $numpages > 1;
 		$more = true;
 		$page = $newPage;
+		$this->buildFieldsCollectionForAddressCustomLabel();
 	}
 
 	/**
