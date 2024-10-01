@@ -973,6 +973,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_estate_customs_labels",
 			$prefix."oo_plugin_fieldconfig_estate_translated_labels",
 			$prefix."oo_plugin_contacttypes",
+			$prefix."oo_plugin_fieldconfig_address_customs_labels",
+			$prefix."oo_plugin_fieldconfig_address_translated_labels",
 		);
 
 		foreach ($tables as $table)	{

@@ -122,7 +122,7 @@ class AdminPageAddressListSettings
 		$this->addSortableFieldsList(array(onOfficeSDK::MODULE_ADDRESS), $this->_pFormModelBuilderAddress,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
 		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ADDRESS, $this->_pFormModelBuilderAddress);
-		$this->_pFieldsCollection = $this->buildFieldsCollectionForCurrentAddress();
+		$this->_pFieldsCollection = $pFieldsCollection;
 
 		$this->addFormModelName();
 		$this->addFormModelPictureTypes();
@@ -425,32 +425,6 @@ class AdminPageAddressListSettings
 	}
 
 	/**
-	 *
-	 * @return FieldsCollection
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws UnknownFieldException
-	 */
-
-	private function buildFieldsCollectionForCurrentAddress(): FieldsCollection
-	{
-		$pEnvironment = new AddressListEnvironmentDefault();
-
-		$pBuilderShort = $pEnvironment->getFieldsCollectionBuilderShort();
-		$pFieldsCollection = new FieldsCollection();
-		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-
-		foreach ($pFieldsCollection->getAllFields() as $pField) {
-			if (!in_array($pField->getModule(), [onOfficeSDK::MODULE_ADDRESS], true)) {
-				$pFieldsCollection->removeFieldByModuleAndName
-					($pField->getModule(), $pField->getName());
-			}
-		}
-		
-		return $pFieldsCollection;
-	}
-
-	/**
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
@@ -463,6 +437,9 @@ class AdminPageAddressListSettings
 		$pCustomLabelRead = $this->getContainer()->get(CustomLabelRead::class);
 		$pLanguage = $this->getContainer()->get(Language::class);
 		$currentLocale = $pLanguage->getLocale();
+		if (is_null($this->_pFieldsCollection)) {
+			return [];
+		}
 
 		foreach (array_chunk($this->_pFieldsCollection->getAllFields(), 100) as $pField) {
 			$pCustomLabelModel = $pCustomLabelRead->getCustomLabelsFieldsForAdmin
