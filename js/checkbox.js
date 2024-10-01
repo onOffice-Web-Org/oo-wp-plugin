@@ -7,6 +7,10 @@ onOffice.checkboxAdmin = function() {
 			{
 				element: "input[name^=oopluginaddressfieldconfig-hidden]",
 				invert: false
+			},
+			{
+				element: "input[name^=oopluginaddressfieldconfig-convertInputTextToSelectForField]",
+				invert: false
 			}
 		],
 
