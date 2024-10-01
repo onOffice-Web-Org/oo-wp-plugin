@@ -36,7 +36,15 @@ use onOffice\WPlugin\Cache\DBCache;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use onOffice\WPlugin\DataView\DataListViewFactory;
+use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
+use onOffice\WPlugin\EstateList;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 
+use onOffice\SDK\internal\ApiAction;
+use onOffice\SDK\internal\Request;
 
 /**
  *
@@ -61,6 +69,9 @@ class SDKWrapper
 	 */
 	private $_encrypter;
 
+	/** @var Container */
+	private $_pContainer = null;
+
 
 	/**
 	 *
@@ -82,8 +93,8 @@ class SDKWrapper
 
 		$pDIContainerBuilder = new ContainerBuilder();
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pDIContainerBuilder->build();
-		$this->_encrypter = $pContainer->make(SymmetricEncryption::class);
+		$this->_pContainer = $pDIContainerBuilder->build();
+		$this->_encrypter = $this->_pContainer->make(SymmetricEncryption::class);
 		$this->_pSDK->setCaches($this->_caches);
 		$this->_pSDK->setApiServer('https://api.onoffice.de/api/');
 		$this->_pSDK->setApiVersion('latest');
@@ -112,6 +123,21 @@ class SDKWrapper
 		$parameters = $pApiAction->getParameters();
 		$callback = $pApiAction->getResultCallback();
 
+
+		//1 check is call for a list
+		if(isset($parameters['listname']) && array_key_exists('params_list_cache',$parameters))
+		{
+			//2 check is list-data in Cache
+			$cacheResponse = $this->_pSDK->callFromCache($actionId, $resourceId, $identifier, $resourceType, $parameters['params_list_cache']);
+			// $cacheResponse = $this->callFromCache($actionId, $resourceId, $identifier, $resourceType, $parameters['params_list_cache']);
+			// error_log("Try to get data from Cache: ".$parameters['listname']);
+			if($cacheResponse == null)
+			{
+				error_log("ERROR: Tried to get data from Cache (and renew): ".$parameters['listname']." -->".$parameters['formatoutput']);
+				$this->renewCache($parameters['listname']);
+			}
+		}
+
 		$id = $this->_pSDK->call($actionId, $resourceId, $identifier, $resourceType, $parameters);
 
 		if ($callback !== null) {
@@ -125,8 +151,7 @@ class SDKWrapper
 	/**
 	 *
 	 */
-
-	public function sendRequests()
+	public function sendRequests(bool $saveToCache = true)
 	{
 		$pOptionsWrapper = $this->_pWPOptionWrapper;
 		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
@@ -143,7 +168,7 @@ class SDKWrapper
 			$secret = $secretDecrypt;
 			$token = $tokenDecrypt;
 		}
-		$this->_pSDK->sendRequests($token, $secret);
+		$this->_pSDK->sendRequests($token, $secret, $saveToCache);
 		$errors = $this->_pSDK->getErrors();
 
 		foreach ($this->_callbacksAfterSend as $handle => $callback) {
@@ -153,6 +178,116 @@ class SDKWrapper
 
 		$this->_callbacksAfterSend = [];
 	}
+
+	private function createCacheForList($parameters, int $page = 1)
+	{
+		//1 get first page
+		$pApiClientAction = new APIClientActionGeneric($this, onOfficeSDK::ACTION_ID_READ, 'estate');
+		$pApiClientAction->setParameters($parameters);
+		$pApiClientAction->addRequestToQueue()->sendRequests(false);
+		$records = $pApiClientAction->getResult();
+		$resultMeta = $pApiClientAction->getResultMeta();
+
+		$numpages = ceil($resultMeta['cntabsolute']/500);
+		//2 loop over other pages
+		if($page == 1 && $numpages > 1)
+		{
+			for ($curPage = 2; $curPage < $numpages+1; $curPage++)
+			{
+				$parameters['offset'] = $curPage-1;
+				$tmpRecords = $this->createCacheForList($parameters, $curPage);
+				$records = array_merge_recursive($records, $tmpRecords);
+			}
+		}
+		return $records;
+	}
+	/**
+	 * cleans Cache and create new Cache from all lists
+	 * (does not create cache for detail pages and similar objects)
+	 * @throws ApiClientException
+	 */
+	 public function renewCache(string $listName = null)
+	 {
+			//1 get all lists
+			//2 clean Cache
+			//3 create cache for every list
+			//3.1 for every language RecordManagerReadListViewEstate
+			$pDataListViewFactory = $this->_pContainer->get(DataListViewFactory::class);
+			$pDataListViewFactoryAddress = $this->_pContainer->get(DataListViewFactoryAddress::class);
+			$pDefaultFilterBuilderFactory = $this->_pContainer->get(DefaultFilterBuilderFactory::class);
+
+			$languages = [Language::getDefault()]; //TODO
+			$lists = $this->get_estate_lists($listName);
+			error_log("COUNT:".count($lists));
+			foreach ($this->getCache() as $pCache) {
+				foreach ($lists as $list) {
+					$pListView = $pDataListViewFactory->getListViewByName($list->name);
+					$pEstateList = new EstateList($pListView);
+
+					$pListViewFilterBuilder = $pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
+					$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
+					foreach ($languages as $lang) {
+						foreach ([true,false] as $value) { //call one for raw and one for formattedOutput
+							$params = $pEstateList->getEstateParametersForCache($lang, $value);
+							$response = $this->createCacheForList($params);
+							$pApiAction = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'estate', $params, '', null);
+							$pRequest = new Request($pApiAction);
+							$usedParameters = $pRequest->getApiAction()->getActionParameters();
+							$pCache->write($usedParameters,serialize($response));
+
+							error_log("CREATE CACHE FOR E:".var_export($list->name,true)." LAN:".$lang." SIZE ".count($response));
+						}
+					}
+				}
+				foreach ($this->get_address_lists() as $list) {
+					// error_log("CREATE CACHE FOR A:".var_export($list->name,true));
+					// $pListView = $pDataListViewFactoryAddress->getListViewByName($list->name);
+					// $pAddressList = new AddressList($pListView);
+					// foreach ($languages as $lang) {
+					// 	// $pCache->createCacheForList($requestParams,$lang);
+					// }
+				}
+			}
+	 }
+
+	 private function get_request_params()
+	 {
+
+	 }
+
+	 private function get_estate_lists(string $listName = null) : array
+	 {
+		 $pRecordRead = new RecordManagerReadListViewEstate();
+		 $pRecordRead->setLimit(100);
+		 $pRecordRead->setOffset(0);
+		 $pRecordRead->addColumn('listview_id', 'ID');
+		 $pRecordRead->addColumn('name');
+		 $pRecordRead->addColumn('filterId');
+		 $pRecordRead->addColumn('template');
+		 $pRecordRead->addColumn('list_type');
+		 $pRecordRead->addColumn('name', 'shortcode');
+		 $pRecordRead->addColumn('page_shortcode');
+		 $pRecordRead->addWhere("`list_type` IN('default', 'reference', 'favorites')");
+		 if($listName != null)
+		 	$pRecordRead->addWhere("`name` = '".$listName."'");
+
+		 return $pRecordRead->getRecordsSortedAlphabetically();
+	 }
+
+	 private function get_address_lists() : array
+	 {
+		 $pRecordRead = new RecordManagerReadListViewAddress();
+		 $pRecordRead->setLimit(100);
+		 $pRecordRead->setOffset(0);
+		 $pRecordRead->addColumn('listview_address_id', 'ID');
+		 $pRecordRead->addColumn('name');
+		 $pRecordRead->addColumn('filterId');
+		 $pRecordRead->addColumn('template');
+		 $pRecordRead->addColumn('name', 'shortcode');
+		 $pRecordRead->addColumn('page_shortcode');
+
+		 return $pRecordRead->getRecordsSortedAlphabetically();
+	 }
 
 
 	/**

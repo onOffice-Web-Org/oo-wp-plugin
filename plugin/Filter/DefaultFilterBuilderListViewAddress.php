@@ -53,6 +53,12 @@ class DefaultFilterBuilderListViewAddress
 	/** @var FieldsCollectionBuilderShort */
 	private $_pBuilderShort = null;
 
+	private $_defaultFilter = [
+		'homepage_veroeffentlichen' => [
+			['op' => '=', 'val' => 1],
+		],
+	];
+
 
 	/**
 	 *
@@ -129,5 +135,12 @@ class DefaultFilterBuilderListViewAddress
 		}
 
 		return $fieldFilter;
+	}
+		/**
+	 * @return array
+	 */
+	public function getDefaultFilter(): array
+	{
+		return $this->_defaultFilter;
 	}
 }

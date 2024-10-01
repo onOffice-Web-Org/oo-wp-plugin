@@ -30,12 +30,13 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Factory\AddressListFactory;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddressFactory;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
-
 
 class ContentFilterShortCodeAddress implements ContentFilterShortCode
 {
@@ -57,6 +58,9 @@ class ContentFilterShortCodeAddress implements ContentFilterShortCode
 	/** @var AddressListFactory */
 	private $_pAddressListFactory;
 
+	/** @var DefaultFilterBuilderListViewAddressFactory */
+	private $_pDefaultFilterBuilderFactory;
+
 	/**  @var ContentFilterShortCodeAddressDetail */
 	private ContentFilterShortCodeAddressDetail $_pContentFilterShortCodeAddressDetail;
 
@@ -70,6 +74,7 @@ class ContentFilterShortCodeAddress implements ContentFilterShortCode
 	 * @param Template $pTemplate
 	 * @param WPQueryWrapper $pWPQueryWrapper,
 	 * @param ContentFilterShortCodeAddressDetail $pContentFilterShortCodeAddressDetail
+	 * @param DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory
 	 */
 	public function __construct(
 		SearchParametersModelBuilder $pSearchParametersModelBuilder,
@@ -78,7 +83,8 @@ class ContentFilterShortCodeAddress implements ContentFilterShortCode
 		DataListViewFactoryAddress $pDataListFactory,
 		Template $pTemplate,
 		WPQueryWrapper $pWPQueryWrapper,
-    ContentFilterShortCodeAddressDetail $pContentFilterShortCodeAddressDetail)
+    ContentFilterShortCodeAddressDetail $pContentFilterShortCodeAddressDetail,
+		DefaultFilterBuilderListViewAddressFactory $pDefaultFilterBuilderFactory)
 	{
 		$this->_pSearchParametersModelBuilder = $pSearchParametersModelBuilder;
 
@@ -88,6 +94,7 @@ class ContentFilterShortCodeAddress implements ContentFilterShortCode
 		$this->_pTemplate = $pTemplate;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 		$this->_pContentFilterShortCodeAddressDetail = $pContentFilterShortCodeAddressDetail;
+		$this->_pDefaultFilterBuilderFactory = $pDefaultFilterBuilderFactory;
 	}
 
 	/**
@@ -125,6 +132,10 @@ class ContentFilterShortCodeAddress implements ContentFilterShortCode
 		$page = $this->_pWPQueryWrapper->getWPQuery()->get('paged', 1);
 		$pAddressListView = $this->_pDataListFactory->getListViewByName($addressListName);
 		$pAddressList = $this->_pAddressListFactory->create($pAddressListView)->withDataListViewAddress($pAddressListView);
+
+		$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory->create($pAddressListView);
+
+		$pAddressList->setDefaultFilterBuilder($pListViewFilterBuilder);
 		$pAddressList->loadAddresses($page);
 		$this->populateWpLinkPagesArgs($pAddressListView->getFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name

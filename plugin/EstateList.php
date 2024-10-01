@@ -59,6 +59,7 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldParkingLot;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 
 class EstateList
 	implements EstateListBase
@@ -129,7 +130,7 @@ class EstateList
 		$this->_pDataView = $pDataView;
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 		$this->_pApiClientAction = new APIClientActionGeneric
-			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+		($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
 		$this->_pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
@@ -441,6 +442,46 @@ class EstateList
 	}
 
 	/**
+	 * 
+	 * @param string $lang
+	 * @return array
+	 * @throws UnknownViewException
+	 */
+	public function getEstateParametersForCache($lang, bool $formatOutput)
+	{
+		$pListView = $this->filterActiveInputFields($this->_pDataView);
+
+		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
+			onOfficeSDK::MODULE_ESTATE);
+
+		$requestParams = [
+			'listname' => $this->_pDataView->getName(),
+			'data' => $pFieldModifierHandler->getAllAPIFields(),
+			'filter' => $this->getDefaultFilterBuilder()->getDefaultFilter(),
+			'estatelanguage' => $lang,
+			'outputlanguage' => $lang,
+			'listlimit' => 500,
+			'formatoutput' => $formatOutput,
+			'addMainLangId' => true
+		];
+
+		if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
+			$requestParams['data'][] = 'preisAufAnfrage';
+		}
+
+		if ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+		}
+
+		if ($pListView instanceof DataListView && $pListView->getFilterId() !== 0) {
+			$requestParams['filterid'] = $pListView->getFilterId();
+		}
+
+		return $requestParams;
+	}
+	/**
 	 * @param int $currentPage
 	 * @param bool $formatOutput
 	 * @return array
@@ -450,7 +491,7 @@ class EstateList
 	{
 		$language = Language::getDefault();
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
-		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
+		$filter = $this->getDefaultFilterBuilder()->buildFilter();
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
 
@@ -458,6 +499,7 @@ class EstateList
 			onOfficeSDK::MODULE_ESTATE);
 
 		$requestParams = [
+			'listname' => $this->_pDataView->getName(),
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
 			'filter' => $filter,
 			'estatelanguage' => $language,
@@ -465,6 +507,7 @@ class EstateList
 			'listlimit' => $numRecordsPerPage,
 			'formatoutput' => $formatOutput,
 			'addMainLangId' => true,
+			'params_list_cache'=> $this->getEstateParametersForCache($language, $formatOutput)
 		];
 
 		if (!$pListView->getRandom()) {
@@ -489,6 +532,10 @@ class EstateList
 		}
 
 		$requestParams += $this->addExtraParams();
+		if(isset($requestParams['georangesearch'] )) {
+			unset($requestParams['listname']);
+			unset($requestParams['params_list_cache']);
+		}
 		return $requestParams;
 	}
 
@@ -505,7 +552,7 @@ class EstateList
 		}
 
 		if ($pListView->getSortorder() !== '') {
-			$requestParams['sortorder'] =$pListView->getSortorder();
+			$requestParams['sortorder'] = $pListView->getSortorder();
 		}
 
 		if ($pListView instanceof DataListView && $pListView->getSortByTags() !== '' && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {

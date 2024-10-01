@@ -28,8 +28,9 @@ use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
+use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
+use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\OutputFields;
@@ -58,6 +59,9 @@ class AddressListEnvironmentDefault
 	/** @var Container */
 	private $_pContainer;
 
+	/** @var DefaultFilterBuilder */
+	private $_pDefaultFilterBuilder;
+
 	/**
 	 *
 	 */
@@ -71,14 +75,31 @@ class AddressListEnvironmentDefault
 		$this->_pContainer = $pContainerBuilder->build();
 	}
 
+
 	/**
-	 * @return DataListViewAddressToAPIParameters
-	 * @throws DependencyException
-	 * @throws NotFoundException
+	 *
+	 * @return DefaultFilterBuilder
+	 * @throws UnknownViewException
+	 *
 	 */
-	public function getDataListViewAddressToAPIParameters(): DataListViewAddressToAPIParameters
+
+	public function getDefaultFilterBuilder(): DefaultFilterBuilder
 	{
-		return $this->_pContainer->get(DataListViewAddressToAPIParameters::class);;
+		if ($this->_pDefaultFilterBuilder === null) {
+			throw new UnknownViewException;
+		}
+		return $this->_pDefaultFilterBuilder;
+	}
+
+	/**
+	*
+	* @param DefaultFilterBuilder $pDefaultFilterBuilder
+	*
+	*/
+
+	public function setDefaultFilterBuilder(DefaultFilterBuilder $pDefaultFilterBuilder)
+	{
+		$this->_pDefaultFilterBuilder = $pDefaultFilterBuilder;
 	}
 
 	/**

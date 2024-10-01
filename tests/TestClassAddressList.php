@@ -45,7 +45,6 @@ use DI\ContainerBuilder;
 use onOffice\WPlugin\Filter\FilterBuilderInputVariablesFactory;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddressFactory;
-use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -204,7 +203,6 @@ class TestClassAddressList
 		$pFactory = $this->getMockBuilder(DefaultFilterBuilderListViewAddressFactory::class)
 			 ->setConstructorArgs([$pFieldsCollectionBuilderShort, $pCompoundFieldsFilter, $pFilterBuilderFactory])
 			 ->getMock();
-		$pDataListViewAddressToAPIParameters = new DataListViewAddressToAPIParameters($pFactory);
 
 		$pMockConfig = $this->getMockBuilder(AddressListEnvironment::class)->getMock();
 		$pMockConfig->method('getSDKWrapper')->will($this->returnValue($pSDKWrapper));
@@ -212,7 +210,6 @@ class TestClassAddressList
 			->will($this->returnValue($pMockViewFieldModifierHandler));
 		$pMockConfig->method('getFieldnames')->will($this->returnValue($pMockFieldnames));
 		$pMockConfig->method('getOutputFields')->will($this->returnValue($pMockOutputFields));
-		$pMockConfig->method('getDataListViewAddressToAPIParameters')->will($this->returnValue($pDataListViewAddressToAPIParameters));
 
 		$pFieldsCollectionBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 				->setConstructorArgs([new Container()])

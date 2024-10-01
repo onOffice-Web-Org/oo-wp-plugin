@@ -17,7 +17,7 @@
     "prefer-stable" : true,
 	"autoload": {
 		 "psr-4": {
-			"onOffice\\SDK\\": "SDK/SDK/",
+			"onOffice\\SDK\\": "SDK/src/",
 			"onOffice\\WPlugin\\": "plugin/"
 		}
 	},

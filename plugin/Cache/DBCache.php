@@ -87,6 +87,10 @@ class DBCache
 	private function getParametersHashed( array $parameters )
 	{
 		$parametersSerialized = $this->getParametersSerialized( $parameters );
+		if(isset($parameters['parameters']['listname']))
+		{
+			$parametersSerialized = $parameters['parameters']['listname'].intval($parameters['parameters']['formatoutput']);
+		}
 		$parametersHashed = md5( $parametersSerialized );
 		return $parametersHashed;
 	}
@@ -125,6 +129,14 @@ class DBCache
 				WHERE cache_parameters_hashed = %s AND UNIX_TIMESTAMP(cache_created) > %d
 				", $parametersHashed, $cacheMaxAge )
 		);
+		$counted = 0;
+		// if ($record != null && is_countable(unserialize($record))){
+		// 	$counted = count(unserialize($record));
+		// }
+		if(isset($parameters['parameters']['listname']))
+		{
+			// error_log("DBCACHE FROM CACHE:".$parameters['parameters']['listname']." HASH:".$parametersHashed." format:".$parameters['parameters']["formatoutput"]. "RECORDS: ".$counted);
+		}
 
 		return $record;
 	}
@@ -139,6 +151,11 @@ class DBCache
 	{
 		$parametersHashed = $this->getParametersHashed( $parameters );
 		$parametersSerialized = $this->getParametersSerialized( $parameters );
+
+		if(isset($parameters['parameters']['listname']))
+		{
+			error_log("DBCACHE TO CACHE:".$parameters['parameters']['listname']." HASH:".$parametersHashed." format:".$parameters['parameters']["formatoutput"]);
+		}
 
 		return $this->_pWpdb->replace(
 			"{$this->_pWpdb->prefix}oo_plugin_cache", [
