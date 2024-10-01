@@ -105,6 +105,7 @@ class FormModelBuilderDBAddress
 			$values['fields'] = array_column($resultByField, 'fieldname');
 			$values['filterable'] = $this->arrayColumnTrue($resultByField, 'filterable');
 			$values['hidden'] = $this->arrayColumnTrue($resultByField, 'hidden');
+			$values['convertInputTextToSelectForField'] = $this->arrayColumnTrue($resultByField, 'convertInputTextToSelectForField');
 
 			if ((int)$values['recordsPerPage'] === 0) {
 				$values['recordsPerPage'] = self::DEFAULT_RECORDS_PER_PAGE;
@@ -241,8 +242,10 @@ class FormModelBuilderDBAddress
 			$pFieldsCollectionUsedFields->addField($field);
 		}
 
+		$pInputModelConvertInputTextToSelectField = $this->getInputModelConvertInputTextToSelectField();
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
+		$pSortableFieldsList->addReferencedInputModel($pInputModelConvertInputTextToSelectField);
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 
@@ -358,6 +361,43 @@ class FormModelBuilderDBAddress
 		$pInputModelRecordsPerPage->setHintHtml(__('You can show up to 500 data records per page.', 'onoffice-for-wp-websites'));
 
 		return $pInputModelRecordsPerPage;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function getInputModelConvertInputTextToSelectField()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigAddress();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Display as selection list instead of text input', 'onoffice-for-wp-websites');
+		$type = InputModelDBFactoryConfigAddress::INPUT_FIELD_CONVERT_INPUT_TEXT_TO_SELECT_FOR_FIELD;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelConvertInputTextToSelectForField'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 *
+	 */
+
+	public function callbackValueInputModelConvertInputTextToSelectForField(InputModelBase $pInputModel, string $key)
+	{
+		$valueFromConfig = $this->getValue('convertInputTextToSelectForField');
+
+		$convertInputTextToSelectForFields = is_array($valueFromConfig) ? $valueFromConfig : array();
+		$value = in_array($key, $convertInputTextToSelectForFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
 	}
 
 	/**

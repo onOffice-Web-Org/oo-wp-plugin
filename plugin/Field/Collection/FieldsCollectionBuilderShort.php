@@ -305,6 +305,27 @@ class FieldsCollectionBuilderShort
 	}
 
 	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function addFieldAddressCityValues(FieldsCollection $pFieldsCollection): self
+	{
+		if (!$pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ADDRESS, 'Ort')) {
+			return $this;
+		};
+		$pFieldLoader = $this->_pContainer->get(FieldLoaderAddressCityValues::class);
+		$pFieldCollectionAddressEstate = $this->_pContainer->get(FieldsCollectionBuilder::class)
+			->buildFieldsCollection($pFieldLoader);
+		$pFieldsCollection->merge($pFieldCollectionAddressEstate);
+
+		return $this;
+	}
+
+	/**
 	 * @param FieldsCollection $pFieldsCollection
 	 * @return $this
 	 * @throws DependencyException

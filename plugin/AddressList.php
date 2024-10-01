@@ -440,6 +440,9 @@ implements AddressListBase
 		$pBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollection = new FieldsCollection();
 		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		if (!empty($this->getDataViewAddress()->getConvertInputTextToSelectForField())) {
+			$pBuilderShort->addFieldAddressCityValues($pFieldsCollection);
+		}
 		$fieldsValues = $pFilterableFields->getVisibleFilterableFields
 			($this->_pDataViewAddress, $pFieldsCollection, new GeoPositionFieldHandlerEmpty);
 		$result = [];
