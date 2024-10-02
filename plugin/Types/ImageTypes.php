@@ -34,8 +34,6 @@ class ImageTypes
 	const ENERGY_PASS_RANGE = 'Epass_Skala';
 	const PASSPORTPHOTO = 'PassportPhoto';
 	const USERPHOTO = 'UserPhoto';
-	const LINK = 'Link';
-	const FILM_LINK = 'Film-Link';
 	const EXPOSE = 'Expose';
 
 	const IMAGE_TYPES = [
@@ -56,7 +54,7 @@ class ImageTypes
 		self::LOCATION_MAP,
 		self::PANORAMA,
 		LinksTypes::FILE_TYPE_LINK,
-		self::FILM_LINK,
+		MovieLinkTypes::FILE_TYPE_MOVIE_LINK,
 		LinksTypes::FILE_TYPE_OGULO_LINK,
 		self::EXPOSE,
 	];

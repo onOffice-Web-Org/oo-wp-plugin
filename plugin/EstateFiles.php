@@ -90,15 +90,15 @@ class EstateFiles
 
 		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'file');
 
-		foreach ($estateIds as $key => $estateId) {
-			$pAPIClientActionTest = clone $pAPIClientAction;
-			$pAPIClientActionTest->setParameters([
-				'estateid' => $key,
+		foreach ($estateIds as $mainId => $estateId) {
+			$pAPIClientActionClone = clone $pAPIClientAction;
+			$pAPIClientActionClone->setParameters([
+				'estateid' => $mainId,
 				'showispublishedonhomepage' => true
 			]);
-			$pAPIClientActionTest->setResourceId('estate');
-			$pAPIClientActionTest->addRequestToQueue();
-			$listRequestInQueue[$key] = $pAPIClientActionTest;
+			$pAPIClientActionClone->setResourceId('estate');
+			$pAPIClientActionClone->addRequestToQueue();
+			$listRequestInQueue[$mainId] = $pAPIClientActionClone;
 		}
 		$pAPIClientAction->sendRequests();
 
@@ -365,8 +365,8 @@ class EstateFiles
 	 *
 	 */
 
-	 public function getEstateFiles(int $estateId)
-	 {
-		return $this->_estateAllFiles[$estateId] ?? [];
-	 }
+	public function getEstateFiles(int $estateId): array
+	{
+	return $this->_estateAllFiles[$estateId] ?? [];
+	}
 }

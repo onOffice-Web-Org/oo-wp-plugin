@@ -849,7 +849,7 @@ class EstateList
 	/**
 	 * @return string
 	 */
-	public function getEstateFileUrl()
+	public function getEstateAllFiles(): array
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstateFiles($currentEstate);
