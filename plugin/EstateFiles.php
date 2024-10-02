@@ -43,6 +43,20 @@ use function esc_url;
 
 class EstateFiles
 {
+	/** */
+	const FILE_TYPES = [
+		ImageTypes::TITLE,
+		ImageTypes::PHOTO,
+		ImageTypes::PHOTO_BIG,
+		ImageTypes::GROUNDPLAN,
+		ImageTypes::LOCATION_MAP,
+		ImageTypes::PANORAMA,
+		LinksTypes::FILE_TYPE_LINK,
+		MovieLinkTypes::FILE_TYPE_MOVIE_LINK,
+		LinksTypes::FILE_TYPE_OGULO_LINK,
+		LinksTypes::EXPOSE,
+	];
+
 	/** @var array */
 	private $_estateFiles = array();
 
@@ -92,8 +106,8 @@ class EstateFiles
 	public function getFilesByEstateIds(array $estateIds, SDKWrapper $pSDKWrapper)
 	{
 		$listRequestInQueue = [];
-
 		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'file');
+		$pAPIClientActionClone = null;
 
 		foreach ($estateIds as $mainId => $estateId) {
 			$pAPIClientActionClone = clone $pAPIClientAction;
@@ -105,7 +119,7 @@ class EstateFiles
 			$pAPIClientActionClone->addRequestToQueue();
 			$listRequestInQueue[$mainId] = $pAPIClientActionClone;
 		}
-		$pAPIClientAction->sendRequests();
+		$pAPIClientActionClone->sendRequests();
 
 		$data = [];
 		foreach ($listRequestInQueue as $key => $value) {
@@ -135,7 +149,7 @@ class EstateFiles
 					'title' => $title ,
 					'type' => $type
 				);
-				if (!in_array($type, ImageTypes::FILE_TYPES)) {
+				if (!in_array($type, self::FILE_TYPES)) {
 					continue;
 				}
 
