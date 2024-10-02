@@ -58,6 +58,7 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
                     continue;
                 }
                 if (in_array($field, $addressPlace)) {
+                    $addressPlaceDiv .= '<div class="oo-address-placefield">' . esc_html($pAddressList->getFieldLabel($field)) . '</div>';
                     $addressPlaceDiv .= '<div class="oo-address-placefield">'
                         . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
                         . '</div>';
@@ -69,7 +70,6 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
                     . '</div>';
             }
             if(!empty($addressPlaceDiv)) {
-                echo '<div class="oo-address-field">' . esc_html($pAddressList->getFieldLabel($field)) . '</div>';
                 echo '<div class="oo-address-placefieldlist">'.$addressPlaceDiv.'</div>';
             }
             ?>
