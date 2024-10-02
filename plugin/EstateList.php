@@ -847,12 +847,12 @@ class EstateList
 	}
 
 	/**
-	 * @return string
+	 * @return array
 	 */
 	public function getEstateAllFiles(): array
 	{
 		$currentEstate = $this->_currentEstate['id'];
-		return $this->_pEstateFiles->getEstateFiles($currentEstate);
+		return $this->_pEstateFiles->getEstateAllFilesById($currentEstate);
 	}
 
 	/**

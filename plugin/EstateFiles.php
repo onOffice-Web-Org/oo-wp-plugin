@@ -84,8 +84,13 @@ class EstateFiles
 		}
 	}
 
-    public function getFilesByEstateIds(array $estateIds, SDKWrapper $pSDKWrapper)
-    {
+	/**
+	 * @param array $estateIds
+	 * @param SDKWrapper $pSDKWrapper
+	 * @return void
+	 */
+	public function getFilesByEstateIds(array $estateIds, SDKWrapper $pSDKWrapper)
+	{
 		$listRequestInQueue = [];
 
 		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'file');
@@ -109,12 +114,16 @@ class EstateFiles
 			}
 		}
 
-        return $this->collectEstateFilesForSingleRecord($data);
-    }
+		$this->collectEstateFilesForSingleRecord($data);
+	}
 
-    private function collectEstateFilesForSingleRecord($responseArray)
-    {
-        foreach ($responseArray as $estateId => $value) {
+	/**
+	 * @param array $responseArray
+	 * @return void
+	 */
+	private function collectEstateFilesForSingleRecord(array $responseArray)
+	{
+		foreach ($responseArray as $estateId => $value) {
 			foreach ($value as $fileEntry) {
 				$fileId = $fileEntry['id'];
 				$url = !empty($fileEntry['elements']['url']) ? $fileEntry['elements']['url'] : "";
@@ -129,15 +138,11 @@ class EstateFiles
 				if (!in_array($type, ImageTypes::FILE_TYPES)) {
 					continue;
 				}
-	
+
 				$this->_estateAllFiles[$estateId][$fileId] = $file;
 			}
-        }
-
-        return $this->_estateAllFiles[$estateId];
-    }
-
-
+		}
+	}
 
 	/**
 	 *
@@ -365,8 +370,8 @@ class EstateFiles
 	 *
 	 */
 
-	public function getEstateFiles(int $estateId): array
+	public function getEstateAllFilesById(int $estateId): array
 	{
-	return $this->_estateAllFiles[$estateId] ?? [];
+		return $this->_estateAllFiles[$estateId] ?? [];
 	}
 }
