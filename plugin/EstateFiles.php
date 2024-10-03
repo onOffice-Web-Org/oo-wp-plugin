@@ -156,7 +156,7 @@ class EstateFiles
 
 				$this->_estateAllFiles[$estateId]['file_info'][$fileId] = $file;
 			}
-			$this->_estateAllFiles[$estateId]['file_count'] = count($this->_estateAllFiles[$estateId] ?? []);
+			$this->_estateAllFiles[$estateId]['file_count'] = count($this->_estateAllFiles[$estateId]['file_info'] ?? []);
 		}
 	}
 
