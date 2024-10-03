@@ -113,7 +113,8 @@ class EstateFiles
 			$pAPIClientActionClone = clone $pAPIClientAction;
 			$pAPIClientActionClone->setParameters([
 				'estateid' => $mainId,
-				'showispublishedonhomepage' => true
+				'showispublishedonhomepage' => true,
+				'listlimit' => 100
 			]);
 			$pAPIClientActionClone->setResourceId('estate');
 			$pAPIClientActionClone->addRequestToQueue();
