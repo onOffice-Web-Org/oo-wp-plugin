@@ -849,19 +849,19 @@ class EstateList
 	/**
 	 * @return array
 	 */
-	public function getEstateAllFiles(): array
+	public function getEstateFilesInfo(): array
 	{
 		$currentEstate = $this->_currentEstate['mainId'];
-		return $this->_pEstateFiles->getEstateAllFilesById($currentEstate);
+		return $this->_pEstateFiles->getEstateAllFilesById($currentEstate)['file_info'];
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getEstateImageCount(): int
+	public function getEstateFilesCount(): int
 	{
 		$currentEstate = $this->_currentEstate['mainId'];
-		return $this->_pEstateFiles->getEstateAllFilesById($currentEstate)['image_count'];
+		return $this->_pEstateFiles->getEstateAllFilesById($currentEstate)['file_count'];
 	}
 
 	/**
