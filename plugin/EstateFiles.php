@@ -146,7 +146,7 @@ class EstateFiles
 				$file = array(
 					'id' => $fileId,
 					'url' => $this->correctUrl($url),
-					'title' => $title ,
+					'title' => $title,
 					'type' => $type
 				);
 				if (!in_array($type, self::FILE_TYPES)) {
@@ -155,6 +155,7 @@ class EstateFiles
 
 				$this->_estateAllFiles[$estateId][$fileId] = $file;
 			}
+			$this->_estateAllFiles[$estateId]['image_count'] = count($this->_estateAllFiles[$estateId] ?? []);
 		}
 	}
 

@@ -856,6 +856,15 @@ class EstateList
 	}
 
 	/**
+	 * @return int
+	 */
+	public function getEstateImageCount(): int
+	{
+		$currentEstate = $this->_currentEstate['mainId'];
+		return $this->_pEstateFiles->getEstateAllFilesById($currentEstate)['image_count'];
+	}
+
+	/**
 	 * @param int $imageId
 	 * @return string
 	 */
