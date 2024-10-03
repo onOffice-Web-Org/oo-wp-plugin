@@ -955,6 +955,7 @@ class TestClassEstateList
 		foreach ($estateIds as $estateId) {
 			$parameters['estateid'] = $estateId;
 			$parameters['showispublishedonhomepage'] = true;
+			$parameters['listlimit'] = 100;
 			$responseGetEstateFiles = $dataGetEstateFiles['response'];
 			$this->_pSDKWrapperMocker->addResponseByParameters
 				(onOfficeSDK::ACTION_ID_GET, 'file', 'estate', $parameters, null, $responseGetEstateFiles);
