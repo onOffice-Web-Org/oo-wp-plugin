@@ -852,7 +852,7 @@ class EstateList
 	public function getEstateFilesInfo(): array
 	{
 		$currentEstate = $this->_currentEstate['mainId'];
-		return $this->_pEstateFiles->getEstateAllFilesById($currentEstate)['file_info'];
+		return $this->_pEstateFiles->getEstateAllFilesById($currentEstate);
 	}
 
 	/**
@@ -861,7 +861,7 @@ class EstateList
 	public function getEstateFilesCount(): int
 	{
 		$currentEstate = $this->_currentEstate['mainId'];
-		return $this->_pEstateFiles->getEstateAllFilesById($currentEstate)['file_count'];
+		return count($this->_pEstateFiles->getEstateAllFilesById($currentEstate));
 	}
 
 	/**
