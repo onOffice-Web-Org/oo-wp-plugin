@@ -43,7 +43,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 49;
+	const MAX_VERSION = 50;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -326,12 +326,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->migrateContactTypes();
 			$dbversion = 47;
 		}
-    
-    if ($dbversion == 47) {
-			$this->updatePriceFieldsOptionForSimilarEstate();
-			$this->updatePriceFieldsOptionDetailView();
-			$dbversion = 48;
-		}
 
 		if ($dbversion == 47) {
 			dbDelta($this->getCreateQueryListviews());
@@ -342,7 +336,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryAddressFieldConfig());
 			$dbversion = 49;
 		}
-	
+
+		if ($dbversion == 49) {
+			$this->updatePriceFieldsOptionForSimilarEstate();
+			$this->updatePriceFieldsOptionDetailView();
+			$dbversion = 50;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
