@@ -238,6 +238,10 @@ implements AddressListBase
 			$fields []= 'imageUrl';
 		}
 
+		if ($this->getDataViewAddress() instanceof DataListViewAddress && $this->_pDataViewAddress->getBildWebseite()) {
+			$fields []= 'bildWebseite';
+		}
+
 		// only active fields
 		$fields = array_intersect($fields,
 			array_keys($this->_pEnvironment->getFieldnames()->getFieldList(onOfficeSDK::MODULE_ADDRESS)));

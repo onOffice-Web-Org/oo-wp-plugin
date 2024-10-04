@@ -35,7 +35,8 @@ require 'SearchFormAddress.php';
 	<?php
 	/* @var $pAddressList AddressList */
 	foreach ($pAddressList->getRows() as $addressId => $escapedValues) {
-		$imageUrl = $escapedValues['imageUrl'];
+		$imageUrl = $escapedValues['bildWebseite'] ?? $escapedValues['imageUrl'];
+		unset($escapedValues['bildWebseite']);
 		unset($escapedValues['imageUrl']);
 	?>
 		<div class="oo-listobject">

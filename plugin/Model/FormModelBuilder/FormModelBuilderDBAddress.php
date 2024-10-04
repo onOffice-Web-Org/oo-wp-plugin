@@ -384,4 +384,24 @@ class FormModelBuilderDBAddress
 		$pInputModel->setValue($value);
 		$pInputModel->setValuesAvailable($key);
 	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelBildWebseite()
+	{
+		$labelPhoto = __('Contact Image', 'onoffice-for-wp-websites');
+		$pInputModelBildWebseite = $this->getInputModelDBFactory()->create
+			(InputModelDBFactory::INPUT_BILD_WEBSEITE, $labelPhoto);
+		$pInputModelBildWebseite->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelBildWebseite->setValuesAvailable(1);
+		$pictureTypeSelected = $this->getValue($pInputModelBildWebseite->getField());
+		$pInputModelBildWebseite->setValue((int)$pictureTypeSelected);
+
+		return $pInputModelBildWebseite;
+	}
 }
