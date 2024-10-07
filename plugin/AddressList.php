@@ -289,8 +289,29 @@ implements AddressListBase
 	{
 		$records = $responseArrayContacts[0]['elements'] ?? [];
 
-		foreach ($addressIds as $index => $addressId) {
-			$this->_countEstates[$addressId] = array_key_exists($addressId,$records) ? count($records[$addressId]) : 0;
+		foreach ($addressIds as $index => $addressId)
+		{
+			if(!array_key_exists($addressId,$records) || count($records[$addressId]) == 0) {
+				$this->_countEstates[$addressId] = 0;
+				continue;
+			}
+
+			$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+			$parameters = [
+				"filter" => [
+					"Id" => [["op" => "IN", "val" => $records[$addressId]]],
+					"verkauft" => [["op" => "=", "val" => "0"]],
+					"veroeffentlichen" => [["op" => "=", "val" => "1"]],
+					"status" => [["op" => "=", "val" => "1"]]
+				],
+				"listlimit" => 500
+			];
+			$pAPIClientAction = new APIClientActionGeneric
+				($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+			$pAPIClientAction->setParameters($parameters);
+			$pAPIClientAction->addRequestToQueue()->sendRequests();
+			$responseMeta = $pAPIClientAction->getResultMeta();
+			$this->_countEstates[$addressId] = (array_key_exists("cntabsolute",$responseMeta)) ? intval($responseMeta["cntabsolute"]) : 0;
 		}
 	}
 
