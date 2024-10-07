@@ -165,8 +165,6 @@ implements AddressListBase
 	public function loadAddressesById(array $addressIds, array $fields)
 	{
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
-		$this->_pApiClientAction = new APIClientActionGeneric
-			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
 		$parameters = [
 			'recordids' => $addressIds,
 			'data' => $fields,
@@ -211,8 +209,6 @@ implements AddressListBase
 		$apiOnlyFields = $pModifier->getAllAPIFields();
 		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields, $this->_pDataViewAddress, $newPage, true);
 
-		$this->_pApiClientAction = new APIClientActionGeneric
-			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
 		$this->_pApiClientAction->setParameters($parameters);
 		$this->_pApiClientAction->addRequestToQueue();
 
