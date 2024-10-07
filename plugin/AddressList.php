@@ -352,6 +352,12 @@ implements AddressListBase
 		$pAddressFieldModifier = $this->generateRecordModifier();
 		return array_map(function($values) use ($pAddressFieldModifier, $raw): ArrayContainer {
 			$valuesNew = $pAddressFieldModifier->processRecord($values);
+
+			if (!empty($valuesNew['bildWebseite'])) {
+				$valuesNew['imageUrl'] = $valuesNew['bildWebseite'];
+				unset($valuesNew['bildWebseite']);
+			}
+
 			return $this->getArrayContainerByRow($raw, $valuesNew);
 		}, $this->_addressesById);
 	}
