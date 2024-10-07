@@ -90,6 +90,7 @@ class FormModelBuilderDBAddress
 		$this->setValues([
 			DataListViewAddress::FIELDS => self::$_defaultFields,
 			'recordsPerPage' => self::DEFAULT_RECORDS_PER_PAGE,
+			'showPhoto' => true
 		]);
 		if ($listViewId !== null)
 		{
