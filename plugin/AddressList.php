@@ -126,6 +126,9 @@ implements AddressListBase
 	/** @var AddressListEnvironment */
 	private $_pEnvironment = null;
 
+	/** @var APIClientActionGeneric */
+	private $_pApiClientAction = null;
+
 	/** @var DataListViewAddress */
 	private $_pDataViewAddress = null;
 
@@ -147,6 +150,9 @@ implements AddressListBase
 	{
 		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
 		$this->_pDataViewAddress = $pDataViewAddress ?? new DataListViewAddress(0, 'default');
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+		$this->_pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
 	}
 
 	/**
@@ -159,28 +165,26 @@ implements AddressListBase
 	public function loadAddressesById(array $addressIds, array $fields)
 	{
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
-		$pApiCall = new APIClientActionGeneric
-			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
 		$parameters = [
 			'recordids' => $addressIds,
 			'data' => $fields,
 			'outputlanguage' => Language::getDefault(),
 			'formatoutput' => true,
 		];
-        $parametersRaw = [
-            'recordids' => $addressIds,
-            'data' => $this->_addressParametersForImageAlt,
-            'outputlanguage' => Language::getDefault(),
-            'formatoutput' => false,
-        ];
-		$pApiCall->setParameters($parameters);
-		$pApiCall->addRequestToQueue()->sendRequests();
+		$parametersRaw = [
+				'recordids' => $addressIds,
+				'data' => $this->_addressParametersForImageAlt,
+				'outputlanguage' => Language::getDefault(),
+				'formatoutput' => false,
+		];
+		$this->_pApiClientAction->setParameters($parameters);
+		$this->_pApiClientAction->addRequestToQueue()->sendRequests();
 
-		$records = $pApiCall->getResultRecords();
+		$records = $this->_pApiClientAction->getResultRecords();
 		$this->fillAddressesById($records);
 		$this->_pDataViewAddress->setFields($fields);
 
-        $this->addRawRecordsByAPICall(clone $pApiCall, $parametersRaw);
+		$this->addRawRecordsByAPICall(clone $this->_pApiClientAction, $parametersRaw);
 	}
 
 	/**
@@ -205,21 +209,19 @@ implements AddressListBase
 		$apiOnlyFields = $pModifier->getAllAPIFields();
 		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields, $this->_pDataViewAddress, $newPage, true);
 
-		$pApiCall = new APIClientActionGeneric
-			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
-		$pApiCall->setParameters($parameters);
-		$pApiCall->addRequestToQueue();
+		$this->_pApiClientAction->setParameters($parameters);
+		$this->_pApiClientAction->addRequestToQueue();
 
 		$addressParameterRaws = $pDataListViewToApi->buildParameters($this->_addressParametersForImageAlt,
 			$this->_pDataViewAddress, $newPage);
-		$this->addRawRecordsByAPICall(clone $pApiCall, $addressParameterRaws);
+		$this->addRawRecordsByAPICall(clone $this->_pApiClientAction, $addressParameterRaws);
 
 		$this->getCountEstateForAddress($this->getAddressIds());
 
-		$this->_records = $pApiCall->getResultRecords();
+		$this->_records = $this->_pApiClientAction->getResultRecords();
 		$this->fillAddressesById($this->_records);
 
-		$resultMeta = $pApiCall->getResultMeta();
+		$resultMeta = $this->_pApiClientAction->getResultMeta();
 		$numpages = ceil($resultMeta['cntabsolute']/$this->_pDataViewAddress->getRecordsPerPage());
 
 		$multipage = $numpages > 1;
@@ -293,8 +295,29 @@ implements AddressListBase
 	{
 		$records = $responseArrayContacts[0]['elements'] ?? [];
 
-		foreach ($addressIds as $index => $addressId) {
-			$this->_countEstates[$addressId] = array_key_exists($addressId,$records) ? count($records[$addressId]) : 0;
+		foreach ($addressIds as $index => $addressId)
+		{
+			if(!array_key_exists($addressId,$records) || count($records[$addressId]) == 0) {
+				$this->_countEstates[$addressId] = 0;
+				continue;
+			}
+
+			$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+			$parameters = [
+				"filter" => [
+					"Id" => [["op" => "IN", "val" => $records[$addressId]]],
+					"verkauft" => [["op" => "=", "val" => "0"]],
+					"veroeffentlichen" => [["op" => "=", "val" => "1"]],
+					"status" => [["op" => "=", "val" => "1"]]
+				],
+				"listlimit" => 500
+			];
+			$pAPIClientAction = new APIClientActionGeneric
+				($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+			$pAPIClientAction->setParameters($parameters);
+			$pAPIClientAction->addRequestToQueue()->sendRequests();
+			$responseMeta = $pAPIClientAction->getResultMeta();
+			$this->_countEstates[$addressId] = (array_key_exists("cntabsolute",$responseMeta)) ? intval($responseMeta["cntabsolute"]) : 0;
 		}
 	}
 
@@ -341,6 +364,15 @@ implements AddressListBase
 	public function getAddressById($id): array
 	{
 		return $this->_addressesById[$id] ?? [];
+	}
+
+	/**
+	 * @return int
+	 * @throws API\ApiClientException
+	 */
+	public function getAddressOverallCount()
+	{
+		return $this->_pApiClientAction->getResultMeta()['cntabsolute'];
 	}
 
 	/**
