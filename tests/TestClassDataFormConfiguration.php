@@ -67,6 +67,14 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->addMarkdownFields('test3');
 		$pDataFormConfiguration->setShowEstateContext(true);
 		$pDataFormConfiguration->addHiddenFields('test-hidden');
+		$pDataFormConfiguration->setEnableCreateTask(true);
+		$pDataFormConfiguration->setTaskResponsibility('Tobias');
+		$pDataFormConfiguration->setTaskProcessor('Tobias');
+		$pDataFormConfiguration->setTaskType(1);
+		$pDataFormConfiguration->setTaskPriority(1);
+		$pDataFormConfiguration->setTaskSubject('test task subject');
+		$pDataFormConfiguration->setTaskDescription('test task description');
+		$pDataFormConfiguration->setTaskStatus(3);
 
 		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 	}
@@ -103,6 +111,14 @@ class TestClassDataFormConfiguration
 		$this->assertEquals('form', $pDataFormConfiguration->getModule());
 		$this->assertTrue($pDataFormConfiguration->getShowEstateContext());
 		$this->assertEquals(['test-hidden'], $pDataFormConfiguration->getHiddenFields());
+		$this->assertTrue($pDataFormConfiguration->getEnableCreateTask());
+		$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskResponsibility());
+		$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskProcessor());
+		$this->assertEquals(1, $pDataFormConfiguration->getTaskType());
+		$this->assertEquals(1, $pDataFormConfiguration->getTaskPriority());
+		$this->assertEquals('test task subject', $pDataFormConfiguration->getTaskSubject());
+		$this->assertEquals('test task description', $pDataFormConfiguration->getTaskDescription());
+		$this->assertEquals(3, $pDataFormConfiguration->getTaskStatus());
 	}
 
 
@@ -139,5 +155,11 @@ class TestClassDataFormConfiguration
 		$this->assertEquals([], $pDataFormConfiguration->getAvailableOptionsFields());
 		$this->assertEquals([], $pDataFormConfiguration->getMarkdownFields());
 		$this->assertFalse($pDataFormConfiguration->getShowEstateContext());
+		$this->assertEquals('', $pDataFormConfiguration->getTaskDescription());
+		$this->assertEquals('', $pDataFormConfiguration->getTaskSubject());
+		$this->assertEquals('', $pDataFormConfiguration->getTaskResponsibility());
+		$this->assertEquals('', $pDataFormConfiguration->getTaskProcessor());
+		$this->assertEquals(0, $pDataFormConfiguration->getTaskType());
+		$this->assertEquals(0, $pDataFormConfiguration->getTaskStatus());
 	}
 }

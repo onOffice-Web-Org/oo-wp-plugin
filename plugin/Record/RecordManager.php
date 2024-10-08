@@ -80,6 +80,9 @@ abstract class RecordManager
 	/** */
 	const TABLENAME_CONTACT_TYPES = 'oo_plugin_contacttypes';
 
+	/** */
+	const TABLENAME_TASKCONFIG_FORMS = 'oo_plugin_form_taskconfig';
+
 	/**
 	 *
 	 * @deprecated get wpdb via DI

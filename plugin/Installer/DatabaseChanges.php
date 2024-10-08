@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 49;
+	const MAX_VERSION = 50;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -333,6 +333,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 48) {
 			dbDelta($this->getCreateQueryAddressFieldConfig());
 			$dbversion = 49;
+		}
+
+		if ($dbversion == 49) {
+			dbDelta($this->getCreateQueryFormTaskConfig());
+			$dbversion = 50;
 		}
 	
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -967,6 +972,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_estate_customs_labels",
 			$prefix."oo_plugin_fieldconfig_estate_translated_labels",
 			$prefix."oo_plugin_contacttypes",
+			$prefix."oo_plugin_form_taskconfig",
 		);
 
 		foreach ($tables as $table)	{
@@ -1219,5 +1225,31 @@ class DatabaseChanges implements DatabaseChangesInterface
 			SET country_active = 1, radius_active = 1";
 
 		$this->_pWPDB->query($sql);
+	}
+
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFormTaskConfig(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_form_taskconfig";
+		$sql = "CREATE TABLE $tableName (
+			`form_taskconfig_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` int(11) NOT NULL,
+			`enable_create_task` tinyint(1) NOT NULL DEFAULT '0',
+			`responsibility` VARCHAR(255) NOT NULL,
+			`processor` VARCHAR(255) NOT NULL,
+			`type` int(11) NOT NULL DEFAULT '0',
+			`priority` tinyint(1) NOT NULL DEFAULT '0',
+			`subject` VARCHAR(255) NOT NULL,
+			`description` text NOT NULL,
+			`status` tinyint(1) NOT NULL DEFAULT '0',
+			PRIMARY KEY (`form_taskconfig_id`)
+		) $charsetCollate;";
+
+		return $sql;
 	}
 }

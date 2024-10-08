@@ -70,7 +70,8 @@ class TestClassRecordManagerDeleteForm
 			$this->equalTo('wp_test_oo_plugin_forms'),
 			$this->equalTo('wp_test_oo_plugin_form_fieldconfig'),
 			$this->equalTo('wp_test_oo_plugin_fieldconfig_form_defaults'),
-			$this->equalTo('wp_test_oo_plugin_fieldconfig_form_customs_labels')
+			$this->equalTo('wp_test_oo_plugin_fieldconfig_form_customs_labels'),
+			$this->equalTo('wp_oo_plugin_form_taskconfig')
 		));
 		$this->_pWpdbMock->expects($this->once())->method('prepare')
 			->with('DELETE FROM wp_test_oo_plugin_fieldconfig_form_defaults_values '
@@ -100,7 +101,8 @@ class TestClassRecordManagerDeleteForm
 			$this->equalTo('wp_test_oo_plugin_forms'),
 			$this->equalTo('wp_test_oo_plugin_form_fieldconfig'),
 			$this->equalTo('wp_test_oo_plugin_fieldconfig_form_defaults'),
-			$this->equalTo('wp_test_oo_plugin_fieldconfig_form_customs_labels')
+			$this->equalTo('wp_test_oo_plugin_fieldconfig_form_customs_labels'),
+			$this->equalTo('wp_oo_plugin_form_taskconfig')
 		));
 		$this->_pWpdbMock->expects($this->once())->method('prepare')
 			->with('DELETE FROM wp_test_oo_plugin_fieldconfig_form_translated_labels '

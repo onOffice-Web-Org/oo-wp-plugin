@@ -168,4 +168,53 @@ class TestClassRecordManagerInsertGeneric
 	{
 		$this->assertEquals('wptests_', $this->_pSubject->getTablePrefix());
 	}
+
+	/**
+	 *
+	 */
+	public function testInsertSingleRow()
+	{
+		$recordInput = [
+			RecordManager::TABLENAME_TASKCONFIG_FORMS => [
+				'form_taskconfig_id ' => 1,
+				'form_id' => 1,
+				'enable_create_task' => true,
+				'responsibility' => 'Tobias',
+				'processor' => 'Tobias',
+				'type' => 1,
+				'priority' => 1,
+				'subject' => 'Test subject',
+				'description' => 'Test description',
+				'status' => 1,
+			],
+		];
+
+		$recordOutput = [
+			'form_taskconfig_id ' => 1,
+			'form_id' => 1,
+			'enable_create_task' => true,
+			'responsibility' => 'Tobias',
+			'processor' => 'Tobias',
+			'type' => 1,
+			'priority' => 1,
+			'subject' => 'Test subject',
+			'description' => 'Test description',
+			'status' => 1,
+		];
+
+		$this->_pWPDB->expects($this->once())->method('insert')
+					 ->with('testPrefix_'.RecordManager::TABLENAME_TASKCONFIG_FORMS, $recordOutput)
+					 ->will($this->returnValue(1));
+		$this->_pSubject->insertSingleRow($recordInput, RecordManager::TABLENAME_TASKCONFIG_FORMS);
+	}
+
+	/**
+	 *
+	 */
+	public function testInsertSingleRowFail()
+	{
+		$this->expectException(\onOffice\WPlugin\Record\RecordManagerInsertException::class);
+		$this->_pWPDB->expects($this->once())->method('insert')->will($this->returnValue(false));
+		$this->_pSubject->insertSingleRow([RecordManager::TABLENAME_TASKCONFIG_FORMS => [['a' => 'b']]], RecordManager::TABLENAME_TASKCONFIG_FORMS);
+	}
 }
