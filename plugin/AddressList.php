@@ -380,10 +380,9 @@ implements AddressListBase
 	 * @param bool $raw
 	 * @return string
 	 */
-	public function getFieldLabel($field, bool $raw = false): string
+	public function getFieldLabel(string $field, bool $raw = false): string
 	{
 		$recordType = onOfficeSDK::MODULE_ADDRESS;
-		$label = '';
 
 		try {
 			$label = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
@@ -391,8 +390,12 @@ implements AddressListBase
 			$label = $this->_pEnvironment->getFieldnames()->getFieldLabel($field, $recordType);
 		}
 		if ($this->_pDataViewAddress instanceof DataAddressDetailView) {
-			$pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
-			$dataView = $this->_pDataViewAddress->getCustomLabels();
+            try {
+                $pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
+            } catch (DependencyException | NotFoundException $e) {
+                return $raw ? $label : esc_html($label);
+            }
+            $dataView = $this->_pDataViewAddress->getCustomLabels();
 			if (!empty( $dataView[ $field ][ $pLanguage ])) {
 				$label = $dataView[ $field ][ $pLanguage ];
 			}
