@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 49;
+	const MAX_VERSION = 50;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -334,7 +334,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryAddressFieldConfig());
 			$dbversion = 49;
 		}
-	
+
+		if ($dbversion == 49) {
+			$this->updateContactImageTypesForDetailPage();
+			$dbversion = 50;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -1219,5 +1224,19 @@ class DatabaseChanges implements DatabaseChangesInterface
 			SET country_active = 1, radius_active = 1";
 
 		$this->_pWPDB->query($sql);
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	private function updateContactImageTypesForDetailPage()
+	{
+		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		if(!empty($pDataDetailViewOptions) && in_array('imageUrl', $pDataDetailViewOptions->getAddressFields())){
+			$pDataDetailViewOptions->setContactImageTypes([ImageTypes::PASSPORTPHOTO]);
+			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
+		}
 	}
 }
