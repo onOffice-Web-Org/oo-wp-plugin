@@ -339,6 +339,7 @@ class FormModelBuilderSimilarEstateSettings
 
 		$pInputModelRadius->setValuesAvailable(1);
 		$pInputModelRadius->setValue($pDataViewSimilarEstates->getRadius());
+		$pInputModelRadius->setMinValueHtml(0);
 
 		return $pInputModelRadius;
 	}
@@ -361,6 +362,7 @@ class FormModelBuilderSimilarEstateSettings
 
 		$pInputModelAmount->setValuesAvailable(1);
 		$pInputModelAmount->setValue($pDataViewSimilarEstates->getRecordsPerPage());
+		$pInputModelAmount->setMinValueHtml(0);
 
 		return $pInputModelAmount;
 	}
