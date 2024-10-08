@@ -23,6 +23,7 @@ namespace onOffice\WPlugin;
 
 use onOffice\WPlugin\DataView\DataAddressDetailView;
 use onOffice\WPlugin\DataView\DataViewAddress;
+use onOffice\WPlugin\Types\ImageTypes;
 
 class AddressDetail
 	extends AddressList {
@@ -56,6 +57,11 @@ class AddressDetail
         if($this->getDataViewAddress() instanceof DataAddressDetailView &&
             $this->getDataViewAddress()->getPictureTypes() != [] && $this->getDataViewAddress()->getPictureTypes() != null)
             array_push($fields, "imageUrl");
+
+		if($this->getDataViewAddress() instanceof DataAddressDetailView && $this->getDataViewAddress()->getPictureTypes() != null && 
+			in_array(ImageTypes::BILDWEBSEITE, $this->getDataViewAddress()->getPictureTypes()))
+			array_push($fields, ImageTypes::BILDWEBSEITE);
+	
         $this->loadAddressesById([$id], $fields);
 	}
 
