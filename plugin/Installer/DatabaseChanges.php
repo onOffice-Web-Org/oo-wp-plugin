@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 50;
+	const MAX_VERSION = 51;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -330,14 +330,15 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 48;
 		}
 
-		if ($dbversion == 48) {
-			dbDelta($this->getCreateQueryAddressFieldConfig());
-			$dbversion = 49;
+		if ($dbversion == 49) {
+			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
+			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
+			$dbversion = 50;
 		}
 
-		if ($dbversion == 49) {
+		if ($dbversion == 50) {
 			$this->updateContactImageTypesForDetailPage();
-			$dbversion = 50;
+			$dbversion = 51;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -972,6 +973,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_estate_customs_labels",
 			$prefix."oo_plugin_fieldconfig_estate_translated_labels",
 			$prefix."oo_plugin_contacttypes",
+			$prefix."oo_plugin_fieldconfig_address_customs_labels",
+			$prefix."oo_plugin_fieldconfig_address_translated_labels",
 		);
 
 		foreach ($tables as $table)	{
@@ -1226,6 +1229,42 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$this->_pWPDB->query($sql);
 	}
 
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigAddressCustomsLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_address_customs_labels";
+		$sql = "CREATE TABLE $tableName (
+			`customs_labels_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` bigint(20) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			PRIMARY KEY (`customs_labels_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigAddressTranslatedLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_address_translated_labels";
+		$sql = "CREATE TABLE $tableName (
+			`translated_label_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`input_id` bigint(20) NOT NULL,
+			`locale` tinytext NULL DEFAULT NULL,
+			`value` text,
+			PRIMARY KEY (`translated_label_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
 
 	/**
 	 * @return void
