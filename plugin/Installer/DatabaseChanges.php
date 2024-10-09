@@ -1277,7 +1277,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	private function updateContactImageTypesForDetailPage()
 	{
-		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		$pDataDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
 		if(!empty($pDataDetailViewOptions) && in_array('imageUrl', $pDataDetailViewOptions->getAddressFields())){
 			$pDataDetailViewOptions->setContactImageTypes([ImageTypes::PASSPORTPHOTO]);
 			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
