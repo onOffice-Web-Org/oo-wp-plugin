@@ -69,7 +69,7 @@ abstract class InputFieldRenderer
 	private $_selectedValue = [];
 	
 	/** @var int */
-	private $_minValue = 0;
+	private $_minValue = null;
 
 	/** @var int */
 	private $_maxValue = 0;
@@ -252,12 +252,12 @@ abstract class InputFieldRenderer
 	public function setMaxValue(int $maxValue)
 		{ $this->_maxValue = $maxValue; }
 
-	/**@return int */
-	public function getMinValue(): int
+	/** @return ?int */
+	public function getMinValue(): ?int
 		{ return $this->_minValue; }
 
-	/** @param int $minValue */
-	public function setMinValue(int $minValue)
+	/** @param ?int $minValue */
+	public function setMinValue(?int $minValue)
 		{ $this->_minValue = $minValue; }
 
     /** @return bool */
