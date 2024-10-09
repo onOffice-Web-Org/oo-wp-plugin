@@ -1,0 +1,29 @@
+{
+	"response": {
+		"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+		"resourceid": "estate",
+		"resourcetype": "file",
+		"cacheable": true,
+		"identifier": "",
+		"data": {
+			"meta": {
+				"cntabsolute": 9
+			},
+			"records": [
+				{
+					"id": 15,
+					"type": "estate",
+					"elements": {
+						"url" : "https://test.url/image/2.jpg",
+						"title" : "Titelbild",
+						"type" : "Titelbild"
+					}
+				}
+			]
+		},
+		"status": {
+			"errorcode": 0,
+			"message": "OK"
+		}
+	}
+}
