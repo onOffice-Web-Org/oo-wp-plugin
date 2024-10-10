@@ -230,7 +230,7 @@ class TestClassAddressList
 				->getMock();
 
 		$pFieldsCollectionNewFields = new FieldsCollection;
-		$pFieldsCollectionNewFields->addField(new Field('KdNr', onOfficeSDK::MODULE_ADDRESS));
+		$pFieldsCollectionNewFields->addField(new Field('KdNr', onOfficeSDK::MODULE_ADDRESS, 'Kundennummer'));
 		$pFieldsCollectionNewFields->addField(new Field('Vorname', onOfficeSDK::MODULE_ADDRESS));
 		$pFieldsCollectionNewFields->addField(new Field('Name', onOfficeSDK::MODULE_ADDRESS));
 
@@ -367,7 +367,7 @@ class TestClassAddressList
 			'KdNr' => [
 				'type' => 'varchar',
 				'value' => 4,
-				'label' => '',
+				'label' => 'Kundennummer',
 				'default' => null,
 				'length' => null,
 				'permittedvalues' => Array (),
