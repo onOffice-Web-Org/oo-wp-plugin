@@ -142,4 +142,26 @@ class TestClassFormModelBuilderDBAddress
 		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
 		$this->assertEquals([$pInstance, 'callbackValueInputModelConvertInputTextToSelectForField'], $pInputModelDB->getValueCallback());
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress::getInputModelCustomLabelLanguageSwitch
+	 */
+	public function testGetInputModelCustomLabelLanguageSwitch()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBAddress::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['readAvailableLanguageNamesUsingNativeName'])
+		                  ->getMock();
+						  
+		$inputModel = $pInstance->getInputModelCustomLabelLanguageSwitch();
+		$this->assertInstanceOf(InputModelDB::class, $inputModel);
+		$this->assertEquals('Add custom label language', $inputModel->getLabel());
+		$this->assertEquals('language-custom-label', $inputModel->getTable());
+		$this->assertEquals('language', $inputModel->getField());
+
+		$values = $inputModel->getValuesAvailable();
+
+		$this->assertContains('Choose Language', $values);
+		$this->assertNotContains(get_locale(), $values);
+  }
 }
