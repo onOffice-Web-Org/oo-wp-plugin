@@ -421,4 +421,17 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
 		$this->assertEquals($pInputModelOption->getHtmlType(), 'searchFieldForFieldLists');
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelShowEnergyCertificate
+	 */
+	public function testCreateInputModelShowEnergyCertificate()
+	{
+		$this->_pFormModelBuilderEstateDetailSettings->generate('test');
+		$pInputModelOption = $this->_pFormModelBuilderEstateDetailSettings->createInputModelShowEnergyCertificate();
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'checkbox');
+	}
 }
