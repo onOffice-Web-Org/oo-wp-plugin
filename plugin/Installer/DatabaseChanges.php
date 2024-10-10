@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 49;
+	const MAX_VERSION = 50;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -335,6 +335,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 49;
 		}
 	
+		if ($dbversion == 49) {
+			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
+			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
+			$dbversion = 50;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -967,6 +973,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_estate_customs_labels",
 			$prefix."oo_plugin_fieldconfig_estate_translated_labels",
 			$prefix."oo_plugin_contacttypes",
+			$prefix."oo_plugin_fieldconfig_address_customs_labels",
+			$prefix."oo_plugin_fieldconfig_address_translated_labels",
 		);
 
 		foreach ($tables as $table)	{
@@ -1219,5 +1227,42 @@ class DatabaseChanges implements DatabaseChangesInterface
 			SET country_active = 1, radius_active = 1";
 
 		$this->_pWPDB->query($sql);
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigAddressCustomsLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_address_customs_labels";
+		$sql = "CREATE TABLE $tableName (
+			`customs_labels_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` bigint(20) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			PRIMARY KEY (`customs_labels_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigAddressTranslatedLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_address_translated_labels";
+		$sql = "CREATE TABLE $tableName (
+			`translated_label_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`input_id` bigint(20) NOT NULL,
+			`locale` tinytext NULL DEFAULT NULL,
+			`value` text,
+			PRIMARY KEY (`translated_label_id`)
+		) $charsetCollate;";
+
+		return $sql;
 	}
 }

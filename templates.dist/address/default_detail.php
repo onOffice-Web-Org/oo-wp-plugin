@@ -22,7 +22,6 @@
 use onOffice\WPlugin\AddressList;
 
 $addressName = array('Anrede', 'Titel', 'Vorname', 'Name');
-$addressPlace = array('Strasse', 'Plz', 'Ort', 'Plz-Ort');
 /* @var $pAddressList AddressList */
 $currentAddressArr = $pAddressList->getRows();
 foreach ($currentAddressArr as $addressId => $escapedValues) {
@@ -52,23 +51,16 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
     ?>
     <div class="oo-address-fieldlist">
         <?php
-            $addressPlaceDiv = '';
             foreach ($escapedValues as $field => $value) {
                 if (in_array($field, $addressName) || empty($value)) {
                     continue;
                 }
-                if (in_array($field, $addressPlace)) {
-                    $addressPlaceDiv .= '<div class="oo-address-placefield">'
-                        . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
-                        . '</div>';
-                    continue;
-                }
-                echo '<div class="oo-address-field">'
+                echo '<div class="oo-address-field">';
+                echo '<div class="oo-address-field-label">' . esc_html($pAddressList->getFieldLabel($field)) . '</div>';
+                echo '<div class="oo-address-field-value">'
                     . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
                     . '</div>';
-            }
-            if(!empty($addressPlaceDiv)) {
-                echo '<div class="oo-address-placefieldlist">'.$addressPlaceDiv.'</div>';
+                echo '</div>';
             }
             ?>
     </div>
