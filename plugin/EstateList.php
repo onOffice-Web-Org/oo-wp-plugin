@@ -110,6 +110,7 @@ class EstateList
 
 	private $_pWPOptionWrapper;
 
+	/** @var int */
 	private $_filterAddressId;
 
 	/** @var Redirector */
@@ -450,14 +451,16 @@ class EstateList
 	public function getEstateParametersForCache($lang, bool $formatOutput)
 	{
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
+		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),onOfficeSDK::MODULE_ESTATE);
 
-		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
-			onOfficeSDK::MODULE_ESTATE);
+		$filter = $this->getDefaultFilterBuilder()->buildFilter();
+		$fields = array_merge($pFieldModifierHandler->getAllAPIFields(), array_keys($filter));
+		$fields[] = $pListView->getSortby();
 
 		$requestParams = [
 			'listname' => $this->_pDataView->getName(),
-			'data' => $pFieldModifierHandler->getAllAPIFields(),
-			'filter' => $this->getDefaultFilterBuilder()->getDefaultFilter(),
+			'data' => $fields,
+			'filter' => $filter,
 			'estatelanguage' => $lang,
 			'outputlanguage' => $lang,
 			'listlimit' => 500,
@@ -465,9 +468,8 @@ class EstateList
 			'addMainLangId' => true
 		];
 
-		if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
-			$requestParams['data'][] = 'preisAufAnfrage';
-		}
+		$requestParams['data'][] = 'preisAufAnfrage';
+		$requestParams['data'][] = 'referenz';
 
 		if ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
@@ -493,6 +495,14 @@ class EstateList
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$filter = $this->getDefaultFilterBuilder()->buildFilter();
 
+		if($this->_filterAddressId != 0)
+		{
+			$addressList = $this->_pEnvironment->getAddressList();
+			$addressList->fetchEstatesForAddressIds([$this->_filterAddressId]);
+			$estateIds = $addressList->getEstateIdsForContact($this->_filterAddressId);
+			$filter['Id'] = [["op" => "IN", "val" => $estateIds]];
+		}
+
 		$numRecordsPerPage = $this->getRecordsPerPage();
 
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
@@ -507,8 +517,9 @@ class EstateList
 			'listlimit' => $numRecordsPerPage,
 			'formatoutput' => $formatOutput,
 			'addMainLangId' => true,
-			'params_list_cache'=> $this->getEstateParametersForCache($language, $formatOutput)
 		];
+		if($pListView instanceof DataListView)
+			$requestParams['params_list_cache'] = $this->getEstateParametersForCache($language, $formatOutput);
 
 		if (!$pListView->getRandom()) {
 			$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
@@ -700,8 +711,8 @@ class EstateList
 			} );
 		}
 
-        $WPPluginChecker = new WPPluginChecker;
-        $isSEOPluginActive = $WPPluginChecker->isSEOPluginActive();
+		$WPPluginChecker = new WPPluginChecker;
+		$isSEOPluginActive = $WPPluginChecker->isSEOPluginActive();
 		$openGraphStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-opengraph');
 		$twitterCardsStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-twittercards');
 		if ($checkEstateIdRequestGuard && $openGraphStatus && !$isSEOPluginActive) {
@@ -983,15 +994,7 @@ class EstateList
 		$recordId = $this->_currentEstate['id'];
 		return $this->_estateContacts[$recordId] ?? [];
 	}
-	/**
-	 * @return bool
-	 */
-	public function isCurrentEstateContactsInAddressFilter()
-	{
-		$addressIds = $this->getEstateContactIds();
 
-		return !isset($this->_filterAddressId) || in_array($this->_filterAddressId,$addressIds);
-	}
 	/**
 	 * @return array
 	 */

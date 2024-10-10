@@ -47,6 +47,7 @@ class APIClientExceptionFactory
 		if ($pApiError->isCredentialError($code)) {
 			return new APIClientCredentialsException($pAPIClientAction);
 		} elseif ($code === 500) {
+			error_log("MSG:".$pAPIClientAction->getErrorMessage());
 			return new APIEmptyResultException($pAPIClientAction);
 		}
 

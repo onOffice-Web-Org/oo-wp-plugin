@@ -105,14 +105,16 @@ class ContentFilterShortCodeAddress implements ContentFilterShortCode
 	{
 		$attributes = shortcode_atts([
 			'view' => null,
+			'geo' => null,
 		], $attributesInput);
 		$addressListName = $attributes['view'];
+		$geo = $attributes['geo'];
 
 		try {
 			if ($attributes['view'] === $this->_pContentFilterShortCodeAddressDetail->getViewName()) {
 					return $this->_pContentFilterShortCodeAddressDetail->render();
 			} else {
-					$pTemplate = $this->createTemplate($addressListName);
+					$pTemplate = $this->createTemplate($addressListName, $geo);
 					return $pTemplate->render();
 			}
 		} catch (Exception $pException) {
@@ -127,15 +129,21 @@ class ContentFilterShortCodeAddress implements ContentFilterShortCode
 	 * @throws NotFoundException
 	 * @throws UnknownViewException
 	 */
-	private function createTemplate(string $addressListName): Template
+	private function createTemplate(string $addressListName, string $geo = null): Template
 	{
 		$page = $this->_pWPQueryWrapper->getWPQuery()->get('paged', 1);
 		$pAddressListView = $this->_pDataListFactory->getListViewByName($addressListName);
 		$pAddressList = $this->_pAddressListFactory->create($pAddressListView)->withDataListViewAddress($pAddressListView);
 
 		$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory->create($pAddressListView);
+		if($geo != null)
+		{
+			$pListViewFilterBuilder->setFilterGeoSearch(intval($geo));
+			$pAddressList->setHasGeoFilter(true);
+		}
 
 		$pAddressList->setDefaultFilterBuilder($pListViewFilterBuilder);
+
 		$pAddressList->loadAddresses($page);
 		$this->populateWpLinkPagesArgs($pAddressListView->getFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name
