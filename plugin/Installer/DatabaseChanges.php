@@ -334,7 +334,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryAddressFieldConfig());
 			$dbversion = 49;
 		}
-
+	
 		if ($dbversion == 49) {
 			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
 			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
@@ -344,7 +344,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 50) {
 			dbDelta($this->getCreateQueryListViewsAddress());
 			$dbversion = 51;
-    }
+		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}

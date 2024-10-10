@@ -418,7 +418,7 @@ class FormModelBuilderDBAddress
 		$pInputModelBildWebseite->setValue((int)$pictureTypeSelected);
 
 		return $pInputModelBildWebseite;
-  }
+	}
 
 	/**
 	 * @param FieldsCollection $pFieldsCollection
