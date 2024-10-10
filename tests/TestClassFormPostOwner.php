@@ -581,7 +581,7 @@ class TestClassFormPostOwner
 			],
 			'estateid' => 5590,
 			'message' => 'Hello! I am interested in selling my property!',
-			'subject' => null,
+			'subject' => 'Message from the owner form of your website'.' '.FormPostOwner::PORTALFILTER_IDENTIFIER,
 			'referrer' => '/test/page/1',
 			'formtype' => 'owner',
 			'estatedata' => ['objektart','objekttyp','energieausweistyp','wohnflaeche','kabel_sat_tv'],
@@ -677,6 +677,7 @@ class TestClassFormPostOwner
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$this->prepareMockerForContactSuccessUsingArrayInputEstate();
 		$pDataFormConfiguration->setCreateOwner(false);
+		$pDataFormConfiguration->setSubject('Vorname: %%Vorname%%');
 
 		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
 		$pFormData = $this->_pFormPostOwner->getFormDataInstance('test', 5);
@@ -711,7 +712,7 @@ class TestClassFormPostOwner
 			],
 			'estateid' => 0,
 			'message' => 'Hello! I am interested in selling my property!',
-			'subject' => null,
+			'subject' => 'Vorname: John'.' '.FormPostOwner::PORTALFILTER_IDENTIFIER,
 			'referrer' => '/test/page/1',
 			'formtype' => 'owner' . "\n"
 				. 'Objektart: Haus' . "\n"

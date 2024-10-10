@@ -422,4 +422,15 @@ class TestClassFormModelBuilderDBForm
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'searchFieldForFieldLists');
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelSubject
+	 */
+	public function testCreateInputModelSubject()
+	{
+		$pInputModelDB = $this->_pInstance->createInputModelSubject();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'emailSubject');
+	}
 }

@@ -295,4 +295,95 @@ class TestClassFormData
 		$this->_pFormData->setResponseFieldsValues($values);
 		$this->assertEquals($values, $this->_pFormData->getResponseFieldsValues());
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetFieldLabelsForEmailSubject()
+	{
+		$pFieldInput1 = new Field('testInput1', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldInput1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldInput3 = new Field('testInput3', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldInput3->setType(FieldTypes::FIELD_TYPE_FLOAT);
+		$pFieldInput3->setIsRangeField(true);
+
+		$pFieldTelefon1 = new Field('Telefon1', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldTelefon1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldEmail = new Field('Email', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldEmail->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldTelefax1 = new Field('Telefax1', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldTelefax1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldInput4 = new Field('testInput4', onOfficeSDK::MODULE_ESTATE);
+		$pFieldInput4->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldInput5 = new Field('testInput5', onOfficeSDK::MODULE_ESTATE);
+		$pFieldInput5->setType(FieldTypes::FIELD_TYPE_INTEGER);
+
+		$pFieldInput6 = new Field('testInput6', onOfficeSDK::MODULE_ESTATE);
+		$pFieldInput6->setType(FieldTypes::FIELD_TYPE_INTEGER);
+
+		$pFieldInput7 = new Field('testInput7', onOfficeSDK::MODULE_ESTATE);
+		$pFieldInput7->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldInput8 = new Field('testInput8', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pFieldInput8->setType(FieldTypes::FIELD_TYPE_FLOAT);
+		$pFieldInput8->setIsRangeField(true);
+		
+		$pFieldInput9 = new Field('testInput9', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pFieldInput9->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldRegionalerZusatz = new Field('regionaler_zusatz', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pFieldRegionalerZusatz->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldBoolInput = new Field('testBoolInput', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldBoolInput->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+
+		$pFieldMessage = new Field('message', '');
+		$pFieldMessage->setType(FieldTypes::FIELD_TYPE_TEXT);
+
+		$pFieldsCollection = new FieldsCollection;
+		$pFieldsCollection->addField($pFieldInput1);
+		$pFieldsCollection->addField($pFieldInput3);
+		$pFieldsCollection->addField($pFieldTelefon1);
+		$pFieldsCollection->addField($pFieldEmail);
+		$pFieldsCollection->addField($pFieldTelefax1);
+		$pFieldsCollection->addField($pFieldInput4);
+		$pFieldsCollection->addField($pFieldInput5);
+		$pFieldsCollection->addField($pFieldInput6);
+		$pFieldsCollection->addField($pFieldInput7);
+		$pFieldsCollection->addField($pFieldInput8);
+		$pFieldsCollection->addField($pFieldInput9);
+		$pFieldsCollection->addField($pFieldRegionalerZusatz);
+		$pFieldsCollection->addField($pFieldBoolInput);
+		$pFieldsCollection->addField($pFieldMessage);
+
+		$fieldLabelsForEmailSubject = $this->_pFormData->getFieldLabelsForEmailSubject($pFieldsCollection);
+
+		$expectation = [
+			'testInput1' => "Test",
+			'testInput3__von' => 3.1415,
+			'testInput3__bis' => 15,
+			'Telefon1' => "0815 8374374",
+			'Email' =>"test-wp@my-onoffice.com",
+			'Telefax1' => "0815 83748937",
+			'testInput4' => "Another Test",
+			'testInput5' => 8237383.99,
+			'testInput6' => 47,
+			'testInput7' => ["test1","test2"],
+			'testInput8__von' => 12,
+			'testInput8__bis' => 55,
+			'testInput9' => "wood",
+			'regionaler_zusatz' => "AachenStadt",
+			'testBoolInput' => true,
+			'message' =>"abc"
+		];
+
+		$this->assertEquals($expectation, $fieldLabelsForEmailSubject);
+	}
 }
