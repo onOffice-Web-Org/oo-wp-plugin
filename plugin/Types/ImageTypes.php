@@ -77,7 +77,7 @@ class ImageTypes
 	{
 		return [
 			self::PASSPORTPHOTO => __('Passport Photo', 'onoffice-for-wp-websites'),
-			self::BILDWEBSEITE => __('Contact Person Image', 'onoffice-for-wp-websites')
+			self::BILDWEBSEITE => __('Image website', 'onoffice-for-wp-websites')
 		];
 	}
 }
