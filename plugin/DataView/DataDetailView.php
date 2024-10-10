@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\DataView;
 
 use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
+use onOffice\WPlugin\Types\ImageTypes;
 
 /**
  *
@@ -222,6 +223,11 @@ class DataDetailView
 
 	/** @var bool */
 	private $_showPriceOnRequest = false;
+
+	/** @var string[] */
+	private $_contactImageTypes = [
+		ImageTypes::PASSPORTPHOTO
+	];
 
     /** @var string[] */
     private $_priceFields = [
@@ -433,4 +439,12 @@ class DataDetailView
     {
         return $this->_priceFields;
     }
+
+	/** @return array */
+	public function getContactImageTypes(): array
+		{ return $this->_contactImageTypes; }
+
+	/** @param array $contactImageTypes */
+	public function setContactImageTypes(array $contactImageTypes)
+		{ $this->_contactImageTypes = $contactImageTypes; }
 }
