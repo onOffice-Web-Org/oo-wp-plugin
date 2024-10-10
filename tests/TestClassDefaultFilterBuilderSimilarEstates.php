@@ -83,9 +83,6 @@ class TestClassDefaultFilterBuilderSimilarEstates
 			'reserviert' => [
 				['op' => '!=', 'val' => 1],
 			],
-			'referenz' => [
-				['op' => '!=', 'val' => 1],
-			],
 		];
 		$this->assertEquals($expectation, $result);
 	}
@@ -110,9 +107,6 @@ class TestClassDefaultFilterBuilderSimilarEstates
 				['op' => '!=', 'val' => 1],
 			],
 			'reserviert' => [
-				['op' => '!=', 'val' => 1],
-			],
-			'referenz' => [
 				['op' => '!=', 'val' => 1],
 			],
 		];
@@ -141,9 +135,6 @@ class TestClassDefaultFilterBuilderSimilarEstates
 			'reserviert' => [
 				['op' => '!=', 'val' => 1],
 			],
-			'referenz' => [
-				['op' => '!=', 'val' => 1],
-			],
 		];
 		$this->assertEquals($expectation, $result);
 	}
@@ -165,9 +156,6 @@ class TestClassDefaultFilterBuilderSimilarEstates
 				['op' => '!=', 'val' => 1],
 			],
 			'reserviert' => [
-				['op' => '!=', 'val' => 1],
-			],
-			'referenz' => [
 				['op' => '!=', 'val' => 1],
 			],
 			'plz' => [
@@ -196,9 +184,6 @@ class TestClassDefaultFilterBuilderSimilarEstates
 				['op' => '!=', 'val' => 1],
 			],
 			'reserviert' => [
-				['op' => '!=', 'val' => 1],
-			],
-			'referenz' => [
 				['op' => '!=', 'val' => 1],
 			],
 			'plz' => [
@@ -231,9 +216,6 @@ class TestClassDefaultFilterBuilderSimilarEstates
 				['op' => '!=', 'val' => 1],
 			],
 			'reserviert' => [
-				['op' => '!=', 'val' => 1],
-			],
-			'referenz' => [
 				['op' => '!=', 'val' => 1],
 			],
 			'vermarktungsart' => [
