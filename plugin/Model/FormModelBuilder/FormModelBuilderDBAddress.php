@@ -409,7 +409,7 @@ class FormModelBuilderDBAddress
 
 	public function createInputModelBildWebseite()
 	{
-		$labelPhoto = __('Contact Person Image', 'onoffice-for-wp-websites');
+		$labelPhoto = __('Image website', 'onoffice-for-wp-websites');
 		$pInputModelBildWebseite = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_BILD_WEBSEITE, $labelPhoto);
 		$pInputModelBildWebseite->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
