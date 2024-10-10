@@ -51,12 +51,16 @@ return (function(EstateList $pEstatesClone) {
 
 	if ($estateData === []) {
 		return;
-	} ?>
-    <div id="map" style="width: 100%; height: 100%;"></div>
+	}
+	$listViewId = $pEstatesClone->getListViewId();
+	$mapId = 'oo_map_' . $listViewId;
+	?>
+    <div class="oo-map" id="<?php echo esc_attr($mapId) ?>" style="width: 100%; height: 100%;"></div>
     <script>
     (function() {
         var estateMarkers = <?php echo json_encode($estateData); ?>;
-        var map = L.map('map', {
+        let mapId = <?php echo esc_js($mapId); ?>;
+        var map = L.map(mapId, {
             center: [50.8, 10.0],
             zoom: 5
         });

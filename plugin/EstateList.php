@@ -1278,4 +1278,16 @@ class EstateList
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
 		{ return $this->_pEnvironment; }
+
+	/**
+	 * @return mixed
+	 */
+	public function getListViewId()
+	{
+		if ($this->getDataView() instanceof DataListView) {
+			return $this->getDataView()->getId();
+		}
+
+		return 'estate_detail';
+	}
 }
