@@ -42,6 +42,7 @@ use function __;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorCustomLabelEstate;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorCustomLabelAddress;
 
 
 /**
@@ -339,6 +340,23 @@ class FieldsCollectionBuilderShort
 		$pFieldCollectionSupervisor = $this->_pContainer->get(FieldsCollectionBuilder::class)
 			->buildFieldsCollection($pFieldLoader);
 		$pFieldsCollection->merge($pFieldCollectionSupervisor);
+		return $this;
+	}
+
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $formName
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFormException
+	 */
+
+	public function addCustomLabelFieldsAddressFrontend(FieldsCollection $pFieldsCollection, string $formName): self
+	{
+		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorCustomLabelAddress($pFieldsCollection, $formName);
+		$pFieldsCollection->merge($pFieldsCollectionTmp);
 		return $this;
 	}
 }

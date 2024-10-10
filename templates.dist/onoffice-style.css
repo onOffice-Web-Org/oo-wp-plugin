@@ -209,7 +209,8 @@
     border-bottom: 2px solid #efefef;
 }
 
-.oo-detailslisttd:nth-child(odd) {
+.oo-detailslisttd:nth-child(odd),
+.oo-field-label {
     font-weight: 700;
 }
 
