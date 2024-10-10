@@ -80,6 +80,12 @@ abstract class RecordManager
 	/** */
 	const TABLENAME_CONTACT_TYPES = 'oo_plugin_contacttypes';
 
+	/** */
+	const TABLENAME_FIELDCONFIG_ADDRESS_CUSTOMS_LABELS = 'oo_plugin_fieldconfig_address_customs_labels';
+
+	/** */
+	const TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS = 'oo_plugin_fieldconfig_address_translated_labels';
+
 	/**
 	 *
 	 * @deprecated get wpdb via DI
