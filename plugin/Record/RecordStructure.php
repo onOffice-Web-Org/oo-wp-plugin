@@ -84,7 +84,7 @@ class RecordStructure
 			),
 			'fieldname' => array(
 				self::NULL_ALLOWED => false,
-				self::EMPTY_VALUE => '',
+				self::EMPTY_VALUE => [],
 			),
 		),
 		RecordManager::TABLENAME_LISTVIEW_CONTACTPERSON => array(
@@ -146,7 +146,7 @@ class RecordStructure
 			),
 			'fieldname' => array(
 				self::NULL_ALLOWED => false,
-				self::EMPTY_VALUE => '',
+				self::EMPTY_VALUE => [],
 			),
 			'convertInputTextToSelectForField' => array(
 				self::NULL_ALLOWED => false,
