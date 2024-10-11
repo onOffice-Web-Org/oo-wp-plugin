@@ -64,7 +64,7 @@ onOffice.checkboxAdmin = function() {
 	};
 };
 
-onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
+onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement, parentContainer) {
 	var $ = jQuery;
 	var instance = this;
 	var toggleChild = function(receivers, mainElement, fromOnChange) {
@@ -72,7 +72,9 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 			var receiver = receivers[i];
 			var receiverElement = mainElement.parent().parent().find(receiver.element);
 			var invert = receiver.invert;
-
+			if (parentContainer && $(parentContainer).is(':hidden')) {
+				continue;
+			}
 			if (receiverElement.length) {
 				if (mainElement.prop('checked')) {
 					if (!invert) {
@@ -87,6 +89,9 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 						receiverElement.prop('disabled', 'disabled');
 						receiverElement.removeAttr('checked');
 					} else {
+						if (mainElement.closest('#single-page-container').is(':hidden') || mainElement.closest('#multi-page-container').is(':hidden')) {
+							continue;
+						}
 						receiverElement.removeAttr('disabled');
 					}
 				}
@@ -117,5 +122,5 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 
 jQuery(document).ready(function() {
 	var cbAdmin = new onOffice.checkboxAdmin();
-	cbAdmin.changeCbStatus(this);
+	cbAdmin.changeCbStatus(this, null);
 });

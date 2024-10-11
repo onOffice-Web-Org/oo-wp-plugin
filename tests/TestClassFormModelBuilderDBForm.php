@@ -422,4 +422,14 @@ class TestClassFormModelBuilderDBForm
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'searchFieldForFieldLists');
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelPerPageForm
+	 */
+	public function testGetInputModelPerPageForm()
+	{
+		$pInputModelPerPageForm = $this->_pInstance->getInputModelPerPageForm();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelPerPageForm);
+		$this->assertEquals($pInputModelPerPageForm->getHtmlType(), 'hidden');
+	}
 }

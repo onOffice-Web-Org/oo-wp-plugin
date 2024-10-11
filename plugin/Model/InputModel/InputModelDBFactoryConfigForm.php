@@ -101,6 +101,8 @@ class InputModelDBFactoryConfigForm
     /** */
     const INPUT_FORM_CONTACT_TYPE = 'contactType';
 
+	/** */
+	const INPUT_FORM_PAGE_PER_FORM = 'formPagePerForm';
 
 	/** @var array */
 	private $_inputConfig = [
@@ -204,6 +206,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_HIDDEN_FIELD => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'hidden_field',
+		],
+		self::INPUT_FORM_PAGE_PER_FORM=> [
+			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
+			self::KEY_FIELD => 'page_per_form',
 		],
 	];
 
