@@ -224,6 +224,7 @@ class SDKWrapperMocker
 
 		if ($this->_requestSent) {
 			$requestParameters = $this->_requests[$handle];
+			// echo(var_export(array_keys($this->_responses)[0],true));
 			$response = $this->_responses[$requestParameters];
 		}
 

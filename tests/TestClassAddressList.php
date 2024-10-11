@@ -95,9 +95,93 @@ class TestClassAddressList
 	{
 		$pSDKWrapper = new SDKWrapperMocker();
 		$response = $this->getResponseGetRows();
+		$parametersDefault = [
+			'listname' => 'default',
+			'data' => ['Name','KdNr','Vorname'],
+			'listoffset' => 0,
+			'listlimit' => 5,
+			'sortby' => '',
+			'sortorder' => '',
+			'filter' => [],
+			'filterid' => 0,
+			'outputlanguage' => Language::getDefault(),
+			'formatoutput' => true,
+			'params_list_cache' => [
+				'listname' => 'default',
+				'data' => ['Name','KdNr','Vorname',''],
+				'listlimit' => 500,
+				'filter' => [],
+				'filterid' => 0,
+				'outputlanguage' => Language::getDefault(),
+				'formatoutput' => true
+			]
+		];
+		$parametersDefaultRaw = [
+			'listname' => 'default',
+			'data' => ['Name','KdNr','Vorname'],
+			'listoffset' => 0,
+			'listlimit' => 5,
+			'sortby' => '',
+			'sortorder' => '',
+			'filter' => [],
+			'filterid' => 0,
+			'outputlanguage' => Language::getDefault(),
+			'formatoutput' => false,
+			'params_list_cache' => [
+				'listname' => 'default',
+				'data' => ['Name','KdNr','Vorname',''],
+				'listlimit' => 500,
+				'filter' => [],
+				'filterid' => 0,
+				'outputlanguage' => Language::getDefault(),
+				'formatoutput' => false
+			]
+		];
 		$parameters = [
-			'recordids' => [13, 37],
-			'data' => ['Name', 'KdNr', 'Vorname', 'phone'],
+			'listname' => 'testView',
+			'data' => ['Name','KdNr','Vorname','imageUrl'],
+			'listoffset' => 0,
+			'listlimit' => 5,
+			'sortby' => '',
+			'sortorder' => '',
+			'filter' => [],
+			'filterid' => 0,
+			'outputlanguage' => Language::getDefault(),
+			'formatoutput' => true,
+			'params_list_cache' => [
+				'listname' => 'testView',
+				'data' => ['Name','KdNr','Vorname',''],
+				'listlimit' => 500,
+				'filter' => [],
+				'filterid' => 0,
+				'outputlanguage' => Language::getDefault(),
+				'formatoutput' => true
+			]
+		];
+		$parametersRaw = [
+			'listname' => 'testView',
+			'data' => ['Name','KdNr','Vorname','imageUrl'],
+			'listoffset' => 0,
+			'listlimit' => 5,
+			'sortby' => '',
+			'sortorder' => '',
+			'filter' => [],
+			'filterid' => 0,
+			'outputlanguage' => Language::getDefault(),
+			'formatoutput' => false,
+			'params_list_cache' => [
+				'listname' => 'testView',
+				'data' => ['Name','KdNr','Vorname',''],
+				'listlimit' => 500,
+				'filter' => [],
+				'filterid' => 0,
+				'outputlanguage' => Language::getDefault(),
+				'formatoutput' => false
+			]
+		];
+		$parametersLoadedById = [
+		 	'recordids' => [13, 37],
+			'data' => ['Name','KdNr','Vorname','phone'],
 			'outputlanguage' => Language::getDefault(),
 			'formatoutput' => true,
 		];
@@ -143,14 +227,22 @@ class TestClassAddressList
 		];
 
 		$addressParametersWithFormatDetail = [
-				'recordids' => [13,37],
+				'recordids' => [13, 37],
 				'data' => ['contactCategory', 'Vorname', 'Name', 'Zusatz1', 'branch', 'communityOfHeirs', 'communityOfOwners', 'umbrellaOrganization', 'association', 'institution', 'department'],
 				'outputlanguage' => "ENG",
 				'formatoutput' => false,
 		];
 
 		$pSDKWrapper->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $response);
+		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parametersDefault, null, $response);
+		$pSDKWrapper->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parametersDefaultRaw, null, $response);
+		$pSDKWrapper->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $response);
+		$pSDKWrapper->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parametersRaw, null, $response);
+		$pSDKWrapper->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $parametersLoadedById, null, $response);
 		$pSDKWrapper->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
 			$addressParametersWithoutFormat['data'][] = 'imageUrl';
@@ -423,7 +515,7 @@ class TestClassAddressList
 		}, $this->_pAddressList, AddressList::class);
 		$this->assertEquals(new DataListViewAddress(0, 'default'), $pClosureGetListViewAddress());
 
-		$pNewDataListView = new DataListViewAddress(15, 'testList');
+		$pNewDataListView = new DataListViewAddress(15, 'default');
 		$pNewDataListView->setFields(['test1', 'test2', 'test3']);
 
 		$pNewAddressList = $this->_pAddressList->withDataListViewAddress($pNewDataListView);
