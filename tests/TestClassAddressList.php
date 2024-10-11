@@ -507,7 +507,6 @@ class TestClassAddressList
 	/**
 	 *
 	 */
-
 	public function testWithDataListViewAddress()
 	{
 		$pClosureGetListViewAddress = Closure::bind(function() {
