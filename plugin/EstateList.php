@@ -509,7 +509,6 @@ class EstateList
 			onOfficeSDK::MODULE_ESTATE);
 
 		$requestParams = [
-			'listname' => $this->_pDataView->getName(),
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
 			'filter' => $filter,
 			'estatelanguage' => $language,
@@ -518,8 +517,10 @@ class EstateList
 			'formatoutput' => $formatOutput,
 			'addMainLangId' => true,
 		];
-		if($pListView instanceof DataListView)
+		if($pListView instanceof DataListView) {
 			$requestParams['params_list_cache'] = $this->getEstateParametersForCache($language, $formatOutput);
+			$requestParams = array('listname' => $this->_pDataView->getName() ) + $requestParams;
+		}
 
 		if (!$pListView->getRandom()) {
 			$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
