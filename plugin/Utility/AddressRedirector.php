@@ -3,7 +3,6 @@
 namespace onOffice\WPlugin\Utility;
 
 use onOffice\WPlugin\Controller\AddressDetailUrl;
-use onOffice\WPlugin\WP\WPPageWrapper;
 use onOffice\WPlugin\WP\WPRedirectWrapper;
 
 class AddressRedirector
@@ -16,11 +15,11 @@ class AddressRedirector
 
 
 	/**
-	 * @param  AddressDetailUrl  $addressDetailUrl
-	 * @param  WPRedirectWrapper  $redirectWrapper
+	 * @param AddressDetailUrl $addressDetailUrl
+	 * @param WPRedirectWrapper $redirectWrapper
 	 */
 
-	public function __construct( AddressDetailUrl $addressDetailUrl, WPRedirectWrapper $redirectWrapper )
+	public function __construct(AddressDetailUrl $addressDetailUrl, WPRedirectWrapper $redirectWrapper)
 	{
 		$this->_wpAddressDetailUrl = $addressDetailUrl;
 		$this->_wpRedirectWrapper = $redirectWrapper;
@@ -28,16 +27,16 @@ class AddressRedirector
 
 
 	/**
-	 * @param $addressId
-	 * @param $addressTitle
-	 * @param $pAddressRedirection
+	 * @param int $addressId
+	 * @param string $addressTitle
+	 * @param bool $pAddressRedirection
 	 * @return bool|void
 	 */
 
-	public function redirectDetailView( $addressId, $addressTitle, $pAddressRedirection )
+	public function redirectDetailView(int $addressId, string $addressTitle, bool $pAddressRedirection)
 	{
 		$matches = $this->checkUrlIsMatchRule();
-		if ( empty( $matches[2] ) ) {
+		if (empty($matches[2])) {
 			return true;
 		}
 
@@ -45,14 +44,14 @@ class AddressRedirector
 		$sanitizeTitle = $this->_wpAddressDetailUrl->getSanitizeTitle($addressTitle);
 		$isUrlHaveTitle = strpos($oldUrl, $sanitizeTitle) !== false;
 		$newUrl = $this->_wpAddressDetailUrl->getUrlWithAddressTitle($addressId, $addressTitle, $oldUrl, $isUrlHaveTitle, $pAddressRedirection);
-		if ( $newUrl !== $oldUrl ) {
+		if ($newUrl !== $oldUrl) {
 			$isNewUrlValid = $this->checkNewUrlIsValid(
-				array_filter( explode( '/', $newUrl ) ),
-				array_filter( explode( '/', $oldUrl ) )
+				array_filter(explode('/', $newUrl)),
+				array_filter(explode('/', $oldUrl))
 			);
 
-			if ( $isNewUrlValid ) {
-				$this->_wpRedirectWrapper->redirect( $newUrl );
+			if ($isNewUrlValid) {
+				$this->_wpRedirectWrapper->redirect($newUrl);
 			}
 		}
 	}
@@ -64,33 +63,33 @@ class AddressRedirector
 
 	public function checkUrlIsMatchRule()
 	{
-		$uri        = $this->getUri();
-		$uriToArray = explode( '/', $uri );
-		array_pop( $uriToArray );
-		$pagePath = implode( '/', array_filter( $uriToArray ) );
+		$uri = $this->getUri();
+		$uriToArray = explode('/', $uri);
+		array_pop($uriToArray);
+		$pagePath = implode('/', array_filter($uriToArray));
 
 		//Check pass rule and has Unique ID
-		preg_match( '/^(' . preg_quote( $pagePath,
-				'/' ) . ')\/([0-9]+)(-([^$]+)?)?\/?$/', $uri, $matches );
+		preg_match('/^(' . preg_quote($pagePath,
+				'/') . ')\/([0-9]+)(-([^$]+)?)?\/?$/', $uri, $matches);
 
 		return $matches;
 	}
 
 
 	/**
-	 * @param  array  $newUrlArr
-	 * @param  array  $oldUrlArr
+	 * @param array $newUrlArr
+	 * @param array $oldUrlArr
 	 *
 	 * @return bool
 	 */
 
-	public function checkNewUrlIsValid( array $newUrlArr, array $oldUrlArr )
+	public function checkNewUrlIsValid(array $newUrlArr, array $oldUrlArr)
 	{
-		if ( end( $newUrlArr ) !== end( $oldUrlArr ) ) {
-			array_pop( $newUrlArr );
-			array_pop( $oldUrlArr );
+		if (end($newUrlArr) !== end($oldUrlArr)) {
+			array_pop($newUrlArr);
+			array_pop($oldUrlArr);
 
-			return empty( array_diff( $newUrlArr, $oldUrlArr ) );
+			return empty(array_diff($newUrlArr, $oldUrlArr));
 		}
 
 		return false;

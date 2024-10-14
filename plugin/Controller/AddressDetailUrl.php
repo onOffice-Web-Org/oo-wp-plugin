@@ -38,40 +38,40 @@ class AddressDetailUrl
 
 	public function createAddressDetailLink(
 		string $url,
-		int $addressId,
+		int    $addressId,
 		string $title = null,
 		string $oldUrl = null,
-		bool $flag = false): string
+		bool   $flag = false): string
 	{
 		$urlLsSwitcher = $url;
-		$slashChar     = '';
+		$slashChar = '';
 
-		if ( $addressId !== 0 ) {
-			$urlElements   = parse_url( $url );
+		if ($addressId !== 0) {
+			$urlElements = parse_url($url);
 			$getParameters = [];
 
-			if ( ! empty( $urlElements['query'] ) ) {
-				parse_str( $urlElements['query'], $getParameters );
+			if (!empty($urlElements['query'])) {
+				parse_str($urlElements['query'], $getParameters);
 			}
 
-			if ( ! is_null( $oldUrl ) ) {
-				$oldUrlElements = parse_url( $oldUrl );
-				$oldUrlPathArr  = explode( '/', $oldUrlElements['path'] );
-				if ( empty( end( $oldUrlPathArr ) ) || $flag ) {
+			if (!is_null($oldUrl)) {
+				$oldUrlElements = parse_url($oldUrl);
+				$oldUrlPathArr = explode('/', $oldUrlElements['path']);
+				if (empty(end($oldUrlPathArr)) || $flag) {
 					$slashChar = '/';
 				}
 			}
 
 			$urlTemp = $addressId;
 
-			if ( ! empty( $title ) && $this->isOptionShowTitleUrl() ) {
-				$urlTemp .= $this->getSanitizeTitle( $title, $flag );
+			if (!empty($title) && $this->isOptionShowTitleUrl()) {
+				$urlTemp .= $this->getSanitizeTitle($title, $flag);
 			}
 
 			$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $urlElements['path'] . $urlTemp . $slashChar;
 
-			if ( ! empty( $getParameters ) ) {
-				$urlLsSwitcher .= '?' . http_build_query( $getParameters );
+			if (!empty($getParameters)) {
+				$urlLsSwitcher .= '?' . http_build_query($getParameters);
 			}
 		}
 
@@ -87,7 +87,7 @@ class AddressDetailUrl
 
 	public function isOptionShowTitleUrl()
 	{
-		return get_option('onoffice-address-detail-view-showInfoUserUrl',  false);
+		return get_option('onoffice-address-detail-view-showInfoUserUrl', false);
 	}
 
 
@@ -114,8 +114,8 @@ class AddressDetailUrl
 	public function getUrlWithAddressTitle(int $addressId, string $title = null, string $oldUrl = null, bool $isUrlHaveTitle = false, bool $pAddressRedirection = false): string
 	{
 		$getParameters = [];
-		$urlElements   = parse_url( $oldUrl );
-		$urlTemp       = $addressId;
+		$urlElements = parse_url($oldUrl);
+		$urlTemp = $addressId;
 
 		if (!empty($title) && $this->isOptionShowTitleUrl()) {
 			if ($pAddressRedirection === false && !empty($urlElements['query']) && !$isUrlHaveTitle) {
@@ -125,21 +125,21 @@ class AddressDetailUrl
 			}
 		}
 
-		if ( ! empty( $urlElements['query'] ) ) {
-			parse_str( $urlElements['query'], $getParameters );
+		if (!empty($urlElements['query'])) {
+			parse_str($urlElements['query'], $getParameters);
 		}
 
-		$oldUrlPathArr = explode( '/', $urlElements['path'] );
-		if ( empty( end( $oldUrlPathArr ) ) ) {
-			array_pop( $oldUrlPathArr );
+		$oldUrlPathArr = explode('/', $urlElements['path']);
+		if (empty(end($oldUrlPathArr))) {
+			array_pop($oldUrlPathArr);
 		}
-		array_pop( $oldUrlPathArr );
-		$newPath = implode( '/', $oldUrlPathArr );
+		array_pop($oldUrlPathArr);
+		$newPath = implode('/', $oldUrlPathArr);
 
 		$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $newPath . '/' . $urlTemp;
 
 		if (!empty($getParameters)) {
-			$urlLsSwitcher = add_query_arg($getParameters,$urlLsSwitcher);
+			$urlLsSwitcher = add_query_arg($getParameters, $urlLsSwitcher);
 		}
 
 		return $urlLsSwitcher;

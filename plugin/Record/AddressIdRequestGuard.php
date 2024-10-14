@@ -53,7 +53,7 @@ class AddressIdRequestGuard
 	/** @var Container */
 	private $_pContainer = null;
 
-	/** @var array  */
+	/** @var array */
 	private $_activeLanguages = [];
 
 	/**
@@ -82,7 +82,7 @@ class AddressIdRequestGuard
 		$pAddressDetail = $this->_pAddressDetailFactory->createAddressDetail($addressId);
 		$pAddressDetail->loadSingleAddress($addressId);
 
-		$this->_addressData = $pAddressDetail->getRows();
+		$this->_addressData = $pAddressDetail->getRows()[ $addressId ];
 
 		if ($this->isActiveWPML()) {
 			$this->_activeLanguages = apply_filters('wpml_active_languages', null);
@@ -97,19 +97,19 @@ class AddressIdRequestGuard
 
 	/**
 	 *
-	 * @param  int  $addressId
-	 * @param  AddressRedirector  $pRedirector
+	 * @param int $addressId
+	 * @param AddressRedirector $pRedirector
 	 * @param bool $pAddressRedirection
 	 *
 	 * @return void
 	 */
 
-	public function addressDetailUrlChecker( int $addressId, AddressRedirector $pRedirector, bool $pAddressRedirection ) 
+	public function addressDetailUrlChecker(int $addressId, AddressRedirector $pRedirector, bool $pAddressRedirection)
 	{
-        $firstName = $this->_addressData[$addressId]->getValue('Vorname');
-        $lastName = $this->_addressData[$addressId]->getValue('Name');
-        $company = $this->_addressData[$addressId]->getValue('Zusatz1');
-        $addressTitle = $this->createAddressTitle($firstName, $lastName, $company);
+		$firstName = $this->_addressData->getValue('Vorname');
+		$lastName = $this->_addressData->getValue('Name');
+		$company = $this->_addressData->getValue('Zusatz1');
+		$addressTitle = $this->createAddressTitle($firstName, $lastName, $company);
 		$pRedirector->redirectDetailView($addressId, $addressTitle, $pAddressRedirection);
 	}
 
@@ -129,12 +129,12 @@ class AddressIdRequestGuard
 		if ($addressId > 0 && !empty($this->_addressData)) {
 			if ($switchLocale !== $currentLocale) {
 				$this->addSwitchFilterToLocaleHook($switchLocale);
-				$addressDetailTitle = $this->_addressDataWPML[$switchLocale];
+				$addressDetailTitle = $this->_addressDataWPML[ $switchLocale ];
 			} else {
-                $firstName = $this->_addressData[$addressId]->getValue('Vorname');
-                $lastName = $this->_addressData[$addressId]->getValue('Name');
-                $company = $this->_addressData[$addressId]->getValue('Zusatz1');
-                $addressDetailTitle = $this->createAddressTitle($firstName, $lastName, $company);
+				$firstName = $this->_addressData->getValue('Vorname');
+				$lastName = $this->_addressData->getValue('Name');
+				$company = $this->_addressData->getValue('Zusatz1');
+				$addressDetailTitle = $this->createAddressTitle($firstName, $lastName, $company);
 			}
 		}
 		$detailLinkForWPML = $pAddressDetailUrl->createAddressDetailLink($url, $addressId, $addressDetailTitle, $oldUrl, true);
@@ -160,17 +160,16 @@ class AddressIdRequestGuard
 		$pApiClientAction = new APIClientActionGeneric
 		($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
 		foreach ($locales as $locale) {
-			$isoLanguageCode = Language::LOCALE_MAPPING[$locale] ?? 'DEU';
+			$isoLanguageCode = Language::LOCALE_MAPPING[ $locale ] ?? 'DEU';
 			$addressParameters = [
-				'data' => ['Vorname', 'Name' , 'Zusatz1'],
-				'addresslanguage' => $isoLanguageCode,
-				'outputlanguage' => $isoLanguageCode,
+				'data' => ['Vorname', 'Name', 'Zusatz1'],
+				'outputlanguage' => $isoLanguageCode
 			];
 			$pApiClientActionClone = clone $pApiClientAction;
-			$pApiClientActionClone->setResourceId((string)$addressId);
+			$pApiClientActionClone->setResourceId((string) $addressId);
 			$pApiClientActionClone->setParameters($addressParameters);
 			$pApiClientActionClone->addRequestToQueue();
-			$listRequestInQueue[$locale] = $pApiClientActionClone;
+			$listRequestInQueue[ $locale ] = $pApiClientActionClone;
 		}
 		$pApiClientActionClone->sendRequests();
 
@@ -178,11 +177,11 @@ class AddressIdRequestGuard
 			return [];
 		}
 
-		foreach($listRequestInQueue as $key => $pApiClientAction) {
-            $firstName = $pApiClientAction->getResultRecords()[0]['elements']['Vorname'];
-            $lastName = $pApiClientAction->getResultRecords()[0]['elements']['Name'];
-            $company = $pApiClientAction->getResultRecords()[0]['elements']['Zusatz1'];
-			$addressTitleByLocales[$key] = $this->createAddressTitle($firstName, $lastName, $company);
+		foreach ($listRequestInQueue as $key => $pApiClientAction) {
+			$firstName = $pApiClientAction->getResultRecords()[0]['elements']['Vorname'];
+			$lastName = $pApiClientAction->getResultRecords()[0]['elements']['Name'];
+			$company = $pApiClientAction->getResultRecords()[0]['elements']['Zusatz1'];
+			$addressTitleByLocales[ $key ] = $this->createAddressTitle($firstName, $lastName, $company);
 		}
 
 		return $addressTitleByLocales;
@@ -222,25 +221,25 @@ class AddressIdRequestGuard
 		});
 	}
 
-    /**
-     * @param string|null $firstName
-     * @param string|null $lastName
-     * @param string|null $company
-     * @return string
-     */
-    private function createAddressTitle(string $firstName, string $lastName, string $company): string
-    {
-        $parts = [];
-        if (!empty($firstName)) {
-            $parts[] = strtolower($firstName);
-        }
-        if (!empty($lastName)) {
-            $parts[] = strtolower($lastName);
-        }
-        if (!empty($company)) {
-            $parts[] = strtolower($company);
-        }
+	/**
+	 * @param string|null $firstName
+	 * @param string|null $lastName
+	 * @param string|null $company
+	 * @return string
+	 */
+	private function createAddressTitle(string $firstName, string $lastName, string $company): string
+	{
+		$parts = [];
+		if (!empty($firstName)) {
+			$parts[] = strtolower($firstName);
+		}
+		if (!empty($lastName)) {
+			$parts[] = strtolower($lastName);
+		}
+		if (!empty($company)) {
+			$parts[] = strtolower($company);
+		}
 
-        return implode('-', $parts);
-    }
+		return implode(' ', $parts);
+	}
 }

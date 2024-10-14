@@ -563,35 +563,37 @@ implements AddressListBase
 		return $imageAlt;
 	}
 
+	/**
+	 * @param string $addressId
+	 * @return string
+	 */
 	public function getAddressLink(string $addressId): string
 	{
 		$pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
 				->getAddressDetailView()->getPageId();
 
-		if ( $pageId !== 0 ) {
-			$currentAddress = $this->getAddressById($addressId);
-			$firstName = $currentAddress['Vorname'];
-			$lastName = $currentAddress['Name'];
-			$company = $currentAddress['Zusatz1'];
-			$parts = [];
-			if (!empty($firstName)) {
-				$parts[] = strtolower($firstName);
-			}
-			if (!empty($lastName)) {
-				$parts[] = strtolower($lastName);
-			}
-			if (!empty($company)) {
-				$parts[] = strtolower($company);
-			}
-			$addressTitle = implode('-', $parts);
+		$currentAddress = $this->getAddressById($addressId);
+		$firstName = $currentAddress['Vorname'] ?? '';
+		$lastName = $currentAddress['Name'] ?? '';
+		$company = $currentAddress['Zusatz1'] ?? '';
+		$parts = [];
+		if (!empty($firstName)) {
+			$parts[] = strtolower($firstName);
+		}
+		if (!empty($lastName)) {
+			$parts[] = strtolower($lastName);
+		}
+		if (!empty($company)) {
+			$parts[] = strtolower($company);
+		}
+		$addressTitle = implode(' ', $parts);
 
-			$url      = get_page_link( $pageId );
-			$fullLink = $this->_pLanguageSwitcher->createAddressDetailLink( $url, $addressId, $addressTitle );
+		$url      = get_page_link( $pageId );
+		$fullLink = $this->_pLanguageSwitcher->createAddressDetailLink( $url, $addressId, $addressTitle );
 
-			$fullLinkElements = parse_url( $fullLink );
-			if ( empty( $fullLinkElements['query'] ) ) {
-					$fullLink .= '/';
-			}
+		$fullLinkElements = parse_url( $fullLink );
+		if ( empty( $fullLinkElements['query'] ) ) {
+				$fullLink .= '/';
 		}
 
 		return $fullLink;
