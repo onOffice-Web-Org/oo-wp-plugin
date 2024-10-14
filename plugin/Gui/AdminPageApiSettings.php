@@ -491,8 +491,18 @@ class AdminPageApiSettings
         $pInputModelShowTitleUrl->setValue(get_option($pInputModelShowTitleUrl->getIdentifier()) == 1);
         $pInputModelShowTitleUrl->setDescriptionTextHTML(__('If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used.', 'onoffice-for-wp-websites'));
 
+        $groupSlugView = 'onoffice-address-detail-view';
+        $showTitleInUrl = __('Enable "Speaking" URL in Address Detail', 'onoffice-for-wp-websites');
+        $pInputModelShowInfoContactUrl = new InputModelOption($groupSlugView, 'showInfoUserUrl',
+            $showTitleInUrl, InputModelOption::SETTING_TYPE_BOOLEAN);
+        $pInputModelShowInfoContactUrl->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+        $pInputModelShowInfoContactUrl->setValuesAvailable(1);
+        $pInputModelShowInfoContactUrl->setValue(get_option($pInputModelShowInfoContactUrl->getIdentifier()) == 1);
+        $pInputModelShowInfoContactUrl->setDescriptionTextHTML(__('If this checkbox is selected, the name and company of the address will be included in the URLs of the address detail views. The name and company will be placed after the record number, eg. <code>/1234-firstname-lastname-company</code>.', 'onoffice-for-wp-websites'));
+
         $pFormModel = new FormModel();
         $pFormModel->addInputModel($pInputModelShowTitleUrl);
+        $pFormModel->addInputModel($pInputModelShowInfoContactUrl);
         $pFormModel->setGroupSlug($groupSlugView);
         $pFormModel->setPageSlug($pageSlug);
         $pFormModel->setLabel(__('Detail View URLs', 'onoffice-for-wp-websites'));
