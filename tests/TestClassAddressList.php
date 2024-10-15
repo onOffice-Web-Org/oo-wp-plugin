@@ -150,30 +150,30 @@ class TestClassAddressList
 		];
 
 		$addressParametersWithFormatDetail = [
-			'recordids' => [13,37],
-			'data' => ['contactCategory', 'Vorname', 'Name', 'Zusatz1', 'branch', 'communityOfHeirs', 'communityOfOwners', 'umbrellaOrganization', 'association', 'institution', 'department'],
-			'outputlanguage' => "ENG",
-			'formatoutput' => false,
+				'recordids' => [13,37],
+				'data' => ['contactCategory', 'Vorname', 'Name', 'Zusatz1', 'branch', 'communityOfHeirs', 'communityOfOwners', 'umbrellaOrganization', 'association', 'institution', 'department'],
+				'outputlanguage' => "ENG",
+				'formatoutput' => false,
 		];
 
 		$pSDKWrapper->addResponseByParameters
-		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $response);
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $response);
 		$pSDKWrapper->addResponseByParameters
-		(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
 		$addressParametersWithoutFormat['data'][] = 'imageUrl';
 		$pSDKWrapper->addResponseByParameters
-		(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
 		$pSDKWrapper->addResponseByParameters
-		(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormat, null, $responseRaw);
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormat, null, $responseRaw);
 		$addressParametersWithFormat['data'][] = 'imageUrl';
 		$pSDKWrapper->addResponseByParameters
-		(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormat, null, $responseRaw);
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormat, null, $responseRaw);
 		$pSDKWrapper->addResponseByParameters
-		(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormatDetail, null, $responseRaw);
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormatDetail, null, $responseRaw);
 		$pSDKWrapper->addResponseByParameters
-		(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', $parametersRelation, null, $responseRelation);
+			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', $parametersRelation, null, $responseRelation);
 		$pSDKWrapper->addResponseByParameters
-		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersEstatesOfAddress, null, $responseEstatesOfAddress);
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersEstatesOfAddress, null, $responseEstatesOfAddress);
 
 		$pMockViewFieldModifierHandler = $this->getMockBuilder(ViewFieldModifierHandler::class)
 			->setMethods(['processRecord', 'getAllAPIFields'])
@@ -217,8 +217,8 @@ class TestClassAddressList
 		$pFilterBuilderFactory = $pContainer->get(FilterBuilderInputVariablesFactory::class);
 		$pCompoundFieldsFilter = $pContainer->get(CompoundFieldsFilter::class);
 		$pFactory = $this->getMockBuilder(DefaultFilterBuilderListViewAddressFactory::class)
-			->setConstructorArgs([$pFieldsCollectionBuilderShort, $pCompoundFieldsFilter, $pFilterBuilderFactory])
-			->getMock();
+			 ->setConstructorArgs([$pFieldsCollectionBuilderShort, $pCompoundFieldsFilter, $pFilterBuilderFactory])
+			 ->getMock();
 		$pDataListViewAddressToAPIParameters = new DataListViewAddressToAPIParameters($pFactory);
 
 		$pMockConfig = $this->getMockBuilder(AddressListEnvironmentDefault::class)->getMock();
@@ -230,8 +230,8 @@ class TestClassAddressList
 		$pMockConfig->method('getDataListViewAddressToAPIParameters')->will($this->returnValue($pDataListViewAddressToAPIParameters));
 
 		$pFieldsCollectionBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setConstructorArgs([new Container()])
-			->getMock();
+				->setConstructorArgs([new Container()])
+				->getMock();
 
 		$pFieldsCollectionNewFields = new FieldsCollection;
 		$pFieldsCollectionNewFields->addField(new Field('KdNr', onOfficeSDK::MODULE_ADDRESS, 'Kundennummer'));
@@ -365,6 +365,7 @@ class TestClassAddressList
 
 	public function testGetAddressLink()
 	{
+		add_option('onoffice-address-detail-view-showInfoUserUrl', true);
 		global $wp_filter;
 		$this->_pAddressList->loadAddresses();
 		$this->_pAddressList->getRows();
@@ -389,7 +390,7 @@ class TestClassAddressList
 		$wp_filter['save_post'] = $savePostBackup;
 		$pDataDetailView->setPageId($pWPPost->ID);
 
-		$this->assertEquals('http://example.org/details/15/', $this->_pAddressList->getAddressLink("15"));
+		$this->assertEquals('http://example.org/details/13-fred-firestone/', $this->_pAddressList->getAddressLink("13"));
 	}
 
 	/**

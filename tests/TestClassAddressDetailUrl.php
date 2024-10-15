@@ -80,7 +80,7 @@ class TestClassAddressDetailUrl
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
-	public function testUrlWithTitle()
+	public function testAddressDetailUrl()
 	{
 		add_option('onoffice-address-detail-view-showInfoUserUrl', true);
 		$addressId = 123;
@@ -96,7 +96,7 @@ class TestClassAddressDetailUrl
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
-	public function testUrlWithTitleNotSetOptionShowUrlAndTitle()
+	public function testAddressDetailUrlNotSetOptionShowUrlAndTitle()
 	{
 		add_option('onoffice-address-detail-view-showInfoUserUrl', false);
 
@@ -113,7 +113,7 @@ class TestClassAddressDetailUrl
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
-	public function testUrlWithTitleAndParameter()
+	public function testAddressDetailUrlAndParameter()
 	{
 		add_option('onoffice-address-detail-view-showInfoUserUrl', true);
 		$addressId = 123;
