@@ -119,6 +119,7 @@ class Installer
 		delete_option('onoffice-settings-opengraph');
 		delete_option('onoffice-settings-twittercards');
 		delete_option('onoffice-settings-duration-cache');
+		delete_option('onoffice-address-detail-view-showInfoUserUrl');
 
 		self::flushRules();
 	}
