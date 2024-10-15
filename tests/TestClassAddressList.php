@@ -159,8 +159,8 @@ class TestClassAddressList
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $response);
 		$pSDKWrapper->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
-		$addressParametersWithoutFormat['data'][] = 'imageUrl';
+		(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
+			$addressParametersWithoutFormat['data'][] = 'imageUrl';
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
 		$pSDKWrapper->addResponseByParameters
