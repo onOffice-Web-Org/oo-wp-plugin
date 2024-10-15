@@ -415,7 +415,7 @@ $pAddressRedirection = apply_filters('oo_is_address_detail_page_redirection', tr
 
 add_action('parse_request', function(WP $pWP) use ($pDI, $pAddressRedirection) {
 	$addressId = $pWP->query_vars['address_id'] ?? '';
-	/** @var AddressIdRequestGuard $pEstateIdGuard */
+	/** @var AddressIdRequestGuard $pAddressIdGuard */
 	$pAddressIdGuard = $pDI->get(AddressIdRequestGuard::class);
 
 	if ($addressId !== '') {
@@ -426,7 +426,7 @@ add_action('parse_request', function(WP $pWP) use ($pDI, $pAddressRedirection) {
 			include(get_query_template('404'));
 			die();
 		}
-		$pAddressIdGuard->addressDetailUrlChecker( $addressId, $pDI->get( AddressRedirector::class ), $pAddressRedirection);
+		$pAddressIdGuard->addressDetailUrlChecker($addressId, $pDI->get(AddressRedirector::class), $pAddressRedirection);
 	}
 });
 
