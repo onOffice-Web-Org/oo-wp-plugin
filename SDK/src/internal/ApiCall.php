@@ -244,6 +244,7 @@ class ApiCall
 				}
 				elseif (strtolower($op) === 'like')
 				{
+					$val = str_replace('%','',$val);
 					if(!array_key_exists($key,$item["elements"]) || !str_contains($item["elements"][$key], $val)){
 						unset($filtredArray[$index]);
 						break;
