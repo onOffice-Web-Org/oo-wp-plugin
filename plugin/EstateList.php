@@ -1064,6 +1064,7 @@ class EstateList
 				!empty(get_option('onoffice-settings-thousand-separator'))) {
 				$result[$field]['is-apply-thousand-separator'] = true;
 			}
+			$result[$field]['required'] = in_array($field, $this->_pDataView->getRequiredFields() ?? []);
 		}
 		return $result;
 	}
