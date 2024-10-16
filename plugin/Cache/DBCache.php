@@ -152,11 +152,6 @@ class DBCache
 		$parametersHashed = $this->getParametersHashed( $parameters );
 		$parametersSerialized = $this->getParametersSerialized( $parameters );
 
-		if(isset($parameters['parameters']['listname']))
-		{
-			error_log("DBCACHE TO CACHE:".$parameters['parameters']['listname']." HASH:".$parametersHashed." format:".$parameters['parameters']["formatoutput"]);
-		}
-
 		return $this->_pWpdb->replace(
 			"{$this->_pWpdb->prefix}oo_plugin_cache", [
 				'cache_parameters' => $parametersSerialized,
