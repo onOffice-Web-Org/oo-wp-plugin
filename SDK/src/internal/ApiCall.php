@@ -179,7 +179,7 @@ class ApiCall
 				{
 					if($params["formatoutput"] == true)
 					{
-						$cachedResponse["data"]["records"] = $this->filterRecords($cachedResponse["data"]["records"], $params["filter"]);
+						$cachedResponse["data"]["records"] = $this->filterRecords($cachedResponse["data"]["records"], $params["filter"], $params['outputlanguage']);
 						$sortBy = (array_key_exists('geo', $params["filter"]) && array_key_exists('loc', $params["filter"]['geo'][0])) ? 'geo_distance' : $params["sortby"];
 						$sortOrder =  (array_key_exists('geo', $params["filter"]) && array_key_exists('loc', $params["filter"]['geo'][0])) ? 'ASC' : $params["sortorder"];
 						if(isset($params["sortby"]))
@@ -215,10 +215,11 @@ class ApiCall
 		return array_slice($records, $offset, $limit);
 	}
 
-	private function filterRecords(array $records, array $filter)
+	private function filterRecords(array $records, array $filter, string $lang = 'de_DE')
 	{
 		$filtredArray = [];
 		$calculator = new Vincenty();
+
 		foreach($records as $index => $item) {
 			$filtredArray[$index] = $item;
 			foreach($filter as $key => $value) {
@@ -252,42 +253,20 @@ class ApiCall
 				}
 				elseif ($op === 'in')
 				{
-					if(!in_array($item["elements"][$key], $val)){
+					if(!in_array(strtolower($item["elements"][$key]), $val)){
 						unset($filtredArray[$index]);
 						break;
 					}
 				}
 				elseif ($op === '<=')
 				{
-					$dateVal = date_create_from_format('Y-m-d H:i:s', $val); //1955-12-29
-					if($dateVal === false){ //compare Int
-						if(floatval($item["elements"][$key]) > floatval($val)){
-							unset($filtredArray[$index]);
-							break;
-						}
-					} else { //compare Dates
-						$compare = date_create_from_format('d.m.Y', $item["elements"][$key]);
-						if($compare != false && $compare > $dateVal){
-							unset($filtredArray[$index]);
-							break;
-						}
-					}
+					if($this->isBigger($key, $val, $item["elements"], $lang))
+						unset($filtredArray[$index]);
 				}
 				elseif ($op === '>=')
 				{
-					$dateVal = date_create_from_format('Y-m-d H:i:s', $val); //1955-12-29
-					if($dateVal === false){ //compare Int
-						if(floatval($item["elements"][$key]) < floatval($val)){
-							unset($filtredArray[$index]);
-							break;
-						}
-					} else { //compare Dates
-						$compare = date_create_from_format('d.m.Y', $item["elements"][$key]);
-						if($compare != false && $compare < $dateVal){
-							unset($filtredArray[$index]);
-							break;
-						}
-					}
+					if($this->isSmaller($key, $val, $item["elements"], $lang))
+						unset($filtredArray[$index]);
 				}
 				elseif ($op === 'geo')
 				{
@@ -310,6 +289,46 @@ class ApiCall
 			}
 		}
 		return $filtredArray;
+	}
+	/**
+	 * @param array $responses
+	 */
+	private function isBigger(string $key, mixed $val, array $elements, string $lang = 'de_DE')
+	{
+		return $this->isSmaller($key, $val, $elements, $lang, false);
+	}
+	/**
+	 * @param array $responses
+	 */
+	private function isSmaller(string $key, mixed $val, array $elements, string $lang = 'de_DE', bool $isSmaller = true)
+	{
+		$elVal = $elements[$key];
+		if(is_string($elements[$key]) && (str_contains($elements[$key],'€') || str_contains($elements[$key],'$'))) {
+			$curr = "USD";
+			$formatter = new \NumberFormatter($lang, \NumberFormatter::CURRENCY);
+			// $elVal = str_replace(' €',"\xc2\xa0$",$elVal);
+			// $elVal = str_replace(' $',"\xc2\xa0$",$elVal);
+			$elVal = preg_replace("/[^0-9]/", '', $elVal);
+			$elVal = trim($elVal);
+			$elVal = $formatter->parseCurrency($elVal, $curr);
+		}
+		$dateVal = date_create_from_format('Y-m-d H:i:s', $val); //1955-12-29
+		if($dateVal === false){ //compare Int
+			$elVal = preg_replace("/[^0-9 ]/", '', $elVal);
+			if($isSmaller){
+				return (floatval($elVal) < floatval($val));
+			} else {
+				return (floatval($elVal) > floatval($val));
+			}
+		} else { //compare Dates
+			$compare = date_create_from_format('d.m.Y', $elVal);
+			if($isSmaller) {
+				return ($compare != false && $compare < $dateVal);
+			} else {
+				return ($compare != false && $compare > $dateVal);
+			}
+		}
+		return false;
 	}
 	/**
 	 * @param array $responses
