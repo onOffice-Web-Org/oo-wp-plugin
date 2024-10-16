@@ -29,6 +29,7 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
  */
 
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
+$supportTypeLinkFields = array('Homepage', 'facebook', 'instagram', 'linkedin', 'pinterest', 'tiktok', 'twitter', 'xing', 'youtube', 'bewertungslinkWebseite');
 /** @var EstateDetail $pEstates */
 
 /*  responsive picture properties
@@ -290,6 +291,9 @@ $dimensions = [
 								echo '<p>' . esc_html($item) . '</p>';
 							}
 							echo '</div>';
+						} else if (in_array($field, $supportTypeLinkFields)) { 
+							echo '<div class="oo-field-label">'. esc_html($pEstates->getFieldLabel($field)) .'</div>';
+							echo '<div class="oo-aspinfo oo-contact-info"><a href="' . esc_url($contactData[$field]) . '" target="_blank" rel="nofollow noopener" aria-label="Link to ' . esc_attr($pEstates->getFieldLabel($field)) . '">' . esc_html($contactData[$field]) . '</a></div>';
 						} else {
 							echo '<div class="oo-field-label">'. esc_html($pEstates->getFieldLabel($field)) .'</div>';
 							echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($contactData[$field]) . '</p></div>';
