@@ -210,13 +210,9 @@ class ApiCall
 		$this->_requestQueue = array();
 	}
 
-	private function recordsPerPage(array $records, int $limit, int $page)
+	private function recordsPerPage(array $records, int $limit, int $offset)
 	{
-		$offset = ($page === 0) ? 0 : $page -1;
-		$firstElementOnPage = ($offset * $limit);
-		$lastElementOnPage = (count($records) < $limit * ($offset+1)) ? count($records) : $limit * ($offset+1);
-		$records = array_slice($records, $firstElementOnPage, $lastElementOnPage);
-		return $records;
+		return array_slice($records, $offset, $limit);
 	}
 
 	private function filterRecords(array $records, array $filter)
@@ -230,7 +226,7 @@ class ApiCall
 					continue;
 				$op = $value[0]["op"];
 				$val = $value[0]["val"];
-				if($val === null || trim($val) === '')
+				if($val === null || (is_array($val) && empty($val)) || (is_string($val) && trim($val) === ''))
 					continue;
 				if(strtolower($op) === '=')
 				{
