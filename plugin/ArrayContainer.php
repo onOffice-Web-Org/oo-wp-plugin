@@ -56,6 +56,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 *
 	 */
 
+	#[\ReturnTypeWillChange]
 	public function offsetExists( $offset ) {
 		return isset( $this->_subject[$offset] );
 	}
@@ -70,6 +71,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 *
 	 */
 
+    #[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
 		return $this->getValue( $offset );
 	}
@@ -84,6 +86,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 *
 	 */
 
+	#[\ReturnTypeWillChange]
 	public function offsetSet( $offset, $value ) {
 		if ( is_null( $offset ) ) {
 			$this->_subject[] = $value;
@@ -101,6 +104,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 *
 	 */
 
+	#[\ReturnTypeWillChange]
 	public function offsetUnset( $offset ) {
 		unset( $this->_subject[$offset] );
 	}
@@ -113,6 +117,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 *
 	 */
 
+	#[\ReturnTypeWillChange]
 	public function getValue( $key ) {
 		if ( isset( $this->_subject[$key] ) ) {
 			return $this->_subject[$key];
@@ -142,6 +147,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 * Forced by Iterator interface
 	 */
 
+	#[\ReturnTypeWillChange]
 	public function rewind() {
 		reset($this->_subject);
 	}
@@ -155,6 +161,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 *
 	 */
 
+	#[\ReturnTypeWillChange]
 	public function current() {
 		return current($this->_subject);
 	}
@@ -167,7 +174,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 * @return mixed
 	 *
 	 */
-
+	#[\ReturnTypeWillChange]
 	public function key() {
 		return key($this->_subject);
 	}
@@ -179,6 +186,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 *
 	 */
 
+	#[\ReturnTypeWillChange]
 	public function next() {
 		next($this->_subject);
 	}
@@ -192,7 +200,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 *
 	 */
 
-	public function valid() {
+	public function valid(): bool {
 		return key($this->_subject) !== null;
 	}
 }

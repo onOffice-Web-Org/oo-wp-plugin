@@ -152,7 +152,7 @@ abstract class FieldTypes
 	 */
 	static public function getInputVarSanitizers(): array
 	{
-		return self::INPUT_VAR_SANITIZERS;
+		return @self::INPUT_VAR_SANITIZERS;
 	}
 
 	/**
