@@ -134,7 +134,7 @@ class FormFieldValidator
 			return false;
 		}
 
-		$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_SANITIZE_STRING);
+		$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, @FILTER_SANITIZE_STRING);
 		return trim($value) === '';
 	}
 
@@ -174,7 +174,7 @@ class FormFieldValidator
 		}
 
 		if ($filter === FILTER_VALIDATE_INT) {
-			$filter = FILTER_SANITIZE_STRING;
+			$filter = @FILTER_SANITIZE_STRING;
 		}
 
 		if ($dataType == FieldTypes::FIELD_TYPE_MULTISELECT ||
