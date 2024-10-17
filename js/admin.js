@@ -270,7 +270,7 @@ jQuery(document).ready(function($){
 		}
 
 		if (fieldName !== 'Ort') {
-			const selectors = ['oopluginaddressfieldconfig-convertInputTextToSelectField'];
+			const selectors = ['oopluginaddressfieldconfig-convertInputTextToSelectForField'];
 			let convertTextToSelectForField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
 			convertTextToSelectForField.parent().remove();
 		}
