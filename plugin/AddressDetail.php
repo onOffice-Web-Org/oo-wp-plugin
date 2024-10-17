@@ -53,16 +53,21 @@ class AddressDetail
 	public function loadSingleAddress($id)
 	{
 		$this->_addressId = $id;
-        $fields = $this->getDataViewAddress()->getFields();
-        if($this->getDataViewAddress() instanceof DataAddressDetailView &&
-            $this->getDataViewAddress()->getPictureTypes() != [] && $this->getDataViewAddress()->getPictureTypes() != null)
-            array_push($fields, "imageUrl");
+		$fields = $this->getDataViewAddress()->getFields();
 
-		if($this->getDataViewAddress() instanceof DataAddressDetailView && $this->getDataViewAddress()->getPictureTypes() != null && 
-			in_array(ImageTypes::BILDWEBSEITE, $this->getDataViewAddress()->getPictureTypes()))
-			array_push($fields, ImageTypes::BILDWEBSEITE);
-	
-        $this->loadAddressesById([$id], $fields);
+		if ($this->getDataViewAddress() instanceof DataAddressDetailView) {
+			$pictureTypes = $this->getDataViewAddress()->getPictureTypes();
+
+			if (in_array(ImageTypes::PASSPORTPHOTO, $pictureTypes)) {
+				array_push($fields, "imageUrl");
+			}
+
+			if (in_array(ImageTypes::BILDWEBSEITE, $pictureTypes)) {
+				array_push($fields, ImageTypes::BILDWEBSEITE);
+			}
+		}
+
+		$this->loadAddressesById([$id], $fields);
 	}
 
 
