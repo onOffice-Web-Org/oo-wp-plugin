@@ -180,21 +180,8 @@ class ApiCall
 					if($params["formatoutput"] == true)
 					{
 						$cachedResponse["data"]["records"] = $this->filterRecords($cachedResponse["data"]["records"], $params["filter"], $params['outputlanguage']);
-						$sortBy = (array_key_exists('geo', $params["filter"]) && array_key_exists('loc', $params["filter"]['geo'][0])) ? 'geo_distance' : $params["sortby"];
-						$sortOrder =  (array_key_exists('geo', $params["filter"]) && array_key_exists('loc', $params["filter"]['geo'][0])) ? 'ASC' : $params["sortorder"];
-						if(isset($params["sortby"]))
-						{
-							usort($cachedResponse["data"]["records"], function ($a, $b) use ($sortBy, $sortOrder) {
-								$sortA = $a['elements'][$sortBy];
-								$sortB = $b['elements'][$sortBy];
-								if ($sortOrder === 'ASC') {
-									return ($sortA > $sortB) ? 1 : -1;
-								}
-								else {
-									return ($sortA > $sortB) ? -1 : 1;
-								}
-							});
-						}
+						if($params["sortby"] != null)
+							$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse["data"]["records"], $params["filter"], $params["sortby"], $params["sortorder"] ?? 'ASC');
 						$cachedResponse["data"]["meta"]["cntabsolute"] = count($cachedResponse["data"]["records"]);
 
 						$cachedResponse["data"]["records"] =
@@ -210,6 +197,26 @@ class ApiCall
 		$this->_requestQueue = array();
 	}
 
+	private function sortRecords(array $records, array $filter, string $sortby, string $sortorder)
+	{
+		$newRecords = $records;
+		$sortBy = (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'geo_distance' : $sortby;
+		$sortOrder =  (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'ASC' : $sortorder;
+		if(isset($sortby))
+		{
+			usort($newRecords, function ($a, $b) use ($sortBy, $sortOrder) {
+				$sortA = $a['elements'][$sortBy];
+				$sortB = $b['elements'][$sortBy];
+				if ($sortOrder === 'ASC') {
+					return ($sortA > $sortB) ? 1 : -1;
+				}
+				else {
+					return ($sortA > $sortB) ? -1 : 1;
+				}
+			});
+		}
+		return $newRecords;
+	}
 	private function recordsPerPage(array $records, int $limit, int $offset)
 	{
 		return array_slice($records, $offset, $limit);
@@ -219,6 +226,8 @@ class ApiCall
 	{
 		$filtredArray = [];
 		$calculator = new Vincenty();
+		$isGeoAndMin = 0;
+		$isGeoAndMax = 0;
 
 		foreach($records as $index => $item) {
 			$filtredArray[$index] = $item;
@@ -229,16 +238,10 @@ class ApiCall
 				$val = $value[0]["val"];
 				if($val === null || (is_array($val) && empty($val)) || (is_string($val) && trim($val) === ''))
 					continue;
+
 				if(strtolower($op) === '=')
 				{
-					if(!array_key_exists($key,$item["elements"]) || $item["elements"][$key] != $val){
-						unset($filtredArray[$index]);
-						break;
-					}
-				}
-				elseif (strtolower($op) === '=')
-				{
-					if(!array_key_exists($key,$item["elements"]) || $item["elements"][$key] === $val){
+					if(!array_key_exists($key,$item["elements"]) || strtolower($item["elements"][$key]) != strtolower($val)){
 						unset($filtredArray[$index]);
 						break;
 					}
@@ -251,35 +254,59 @@ class ApiCall
 						break;
 					}
 				}
-				elseif ($op === 'in')
+				elseif (strtolower($op) === 'in')
 				{
-					if(!in_array(strtolower($item["elements"][$key]), $val)){
+					$elVal = strtolower($item["elements"][$key]);
+					if($key === "Id") {
+						$elVal = str_replace(',','',$elVal);
+						$elVal = str_replace('.','',$elVal);
+					}
+
+					if(!in_array($elVal, $val)){
 						unset($filtredArray[$index]);
 						break;
 					}
 				}
 				elseif ($op === '<=')
 				{
-					if($this->isBigger($key, $val, $item["elements"], $lang))
+					if($this->isBigger($key, $val, $item["elements"], $lang)){
 						unset($filtredArray[$index]);
+						break;
+					}
 				}
 				elseif ($op === '>=')
 				{
-					if($this->isSmaller($key, $val, $item["elements"], $lang))
+					if($this->isSmaller($key, $val, $item["elements"], $lang)){
 						unset($filtredArray[$index]);
+						break;
+					}
 				}
-				elseif ($op === 'geo')
+				elseif (strtolower($op) === 'geo')
 				{
+					$km = intval($val);
+					$min = $value[0]["min"];
+					$max = $value[0]["max"];
+
 					$loc = $value[0]["loc"] ?? '';
+					if($loc != '' && $min != null && intval($min) > 0)
+						$isGeoAndMin = $min;
+					if($loc != '' && $max != null && intval($max) > 0)
+						$isGeoAndMax = $max;
+
 					$selectedCoordinates = explode(",", $loc);
 					if(!array_key_exists('laengengrad',$item["elements"]) || !array_key_exists('breitengrad',$item["elements"])
 						|| !is_array($selectedCoordinates) || count($selectedCoordinates) != 2)
 						continue;
+					if($item["elements"]['laengengrad'] == null || $item["elements"]['breitengrad'] == null){
+						unset($filtredArray[$index]);
+						break;
+					}
+
 					$coordinate1 = new Coordinate($item["elements"]['laengengrad'], $item["elements"]['breitengrad']);
 					$coordinate2 = new Coordinate($selectedCoordinates[0], $selectedCoordinates[1]);
 					$distance = $calculator->getDistance($coordinate1, $coordinate2);
 
-					if(intval($distance/1000) > intval($val)){
+					if(intval($distance/1000) > $km){
 						unset($filtredArray[$index]);
 						break;
 					} else {
@@ -287,6 +314,21 @@ class ApiCall
 					}
 				}
 			}
+		}
+		if($isGeoAndMin > 0 && count($filtredArray) < $isGeoAndMin)
+		{
+			$newFilter = $filter;
+			$newFilter['geo'][0]["val"] = 1000; //km
+			$newFilter['geo'][0]["min"] = 0;
+			$filtredArray = $this->filterRecords($records, $newFilter, $lang);
+			$filtredArray = $this->sortRecords($filtredArray, $newFilter, 'geo_distance', 'ASC');
+			if($filtredArray > $isGeoAndMin)
+				$filtredArray = array_slice($filtredArray, 0, $isGeoAndMin);
+		}
+		if($isGeoAndMax > 0 && count($filtredArray) > $isGeoAndMax)
+		{
+			$filtredArray = $this->sortRecords($filtredArray, $filter, 'geo_distance', 'ASC');
+			$filtredArray = array_slice($filtredArray, 0, $isGeoAndMax);
 		}
 		return $filtredArray;
 	}

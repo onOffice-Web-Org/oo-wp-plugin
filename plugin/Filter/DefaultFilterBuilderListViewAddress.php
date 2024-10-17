@@ -151,11 +151,11 @@ class DefaultFilterBuilderListViewAddress
 	{
 		return $this->_geofilter;
 	}
-	public function setFilterGeoSearch(int $km)
+	public function setFilterGeoSearch(object $geo)
 	{
 		$this->_geofilter = [
 			'geo' => [
-				['op' => 'geo', 'val' => $km]
+				['op' => 'geo', 'val' => $geo->km, 'min' => $geo->min ?? null, 'max' => $geo->max ?? null]
 			]
 		];
 	}

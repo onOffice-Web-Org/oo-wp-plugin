@@ -138,7 +138,11 @@ class ContentFilterShortCodeAddress implements ContentFilterShortCode
 		$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory->create($pAddressListView);
 		if($geo != null)
 		{
-			$pListViewFilterBuilder->setFilterGeoSearch(intval($geo));
+			$geoObj = json_decode($geo);
+			if(json_last_error() != JSON_ERROR_NONE || is_string($geoObj) || is_integer($geoObj))
+				$geoObj = json_decode('{ "km": '.$geo.' }');
+
+			$pListViewFilterBuilder->setFilterGeoSearch($geoObj);
 			$pAddressList->setHasGeoFilter(true);
 		}
 

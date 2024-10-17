@@ -517,6 +517,7 @@ class EstateList
 			'formatoutput' => $formatOutput,
 			'addMainLangId' => true,
 		];
+
 		if($pListView instanceof DataListView) {
 			$requestParams['params_list_cache'] = $this->getEstateParametersForCache($language, $formatOutput);
 			$requestParams = array('listname' => $this->_pDataView->getName() ) + $requestParams;
