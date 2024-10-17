@@ -75,6 +75,9 @@ class DataListViewAddress
 	/** @var string[] */
 	private $_convertInputTextToSelectForField = [];
 
+	/** @var bool */
+	private $_bildWebseite = false;
+
 	/**
 	 *
 	 * @param int $id
@@ -184,4 +187,12 @@ class DataListViewAddress
 	/** @param array $convertInputTextToSelectForField */
 	public function setConvertInputTextToSelectForField(array $convertInputTextToSelectForField)
 		{ $this->_convertInputTextToSelectForField = $convertInputTextToSelectForField; }
+
+	/** @return bool */
+	public function getBildWebseite(): bool
+		{ return $this->_bildWebseite; }
+
+	/** @param bool $bildWebseite */
+	public function setBildWebseite(bool $bildWebseite)
+		{ $this->_bildWebseite = $bildWebseite; }
 }

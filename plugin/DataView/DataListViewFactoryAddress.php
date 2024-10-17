@@ -63,6 +63,7 @@ class DataListViewFactoryAddress
 		$pDataListViewAddress->setFilterableFields($row['filterable']);
 		$pDataListViewAddress->setHiddenFields($row['hidden']);
 		$pDataListViewAddress->setConvertInputTextToSelectForField($row['convertInputTextToSelectForField']);
+		$pDataListViewAddress->setBildWebseite((bool)$row['bildWebseite']);
 
 		return $pDataListViewAddress;
 	}

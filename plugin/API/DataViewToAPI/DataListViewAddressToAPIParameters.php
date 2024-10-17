@@ -91,6 +91,10 @@ class DataListViewAddressToAPIParameters
 			$parameters['data'] []= 'imageUrl';
 		}
 
+		if ($pDataListView->getBildWebseite()) {
+			$parameters['data'] []= 'bildWebseite';
+		}
+
 		return $parameters;
 	}
 }

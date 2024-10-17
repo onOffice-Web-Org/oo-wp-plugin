@@ -52,6 +52,9 @@ class InputModelDBFactory
 	const INPUT_PICTURE_TYPE = 'pictureType';
 
 	/** */
+	const INPUT_BILD_WEBSEITE = 'bildWebseite';
+
+	/** */
 	const INPUT_TEMPLATE = 'template';
 
 	/** */

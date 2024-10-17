@@ -215,11 +215,13 @@ class AdminPageAddressListSettings
 	private function addFormModelPictureTypes()
 	{
 		$pInputModelPictureTypes = $this->_pFormModelBuilderAddress->createInputModelPictureTypes();
+		$pInputModelBildWebseite = $this->_pFormModelBuilderAddress->createInputModelBildWebseite();
 		$pFormModelPictureTypes = new FormModel();
 		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
 		$pFormModelPictureTypes->setGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
 		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
+		$pFormModelPictureTypes->addInputModel($pInputModelBildWebseite);
 		$this->addFormModel($pFormModelPictureTypes);
 	}
 
