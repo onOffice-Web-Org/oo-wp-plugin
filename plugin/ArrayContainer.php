@@ -56,8 +56,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 *
 	 */
 
-	#[\ReturnTypeWillChange]
-	public function offsetExists( $offset ) {
+	public function offsetExists( $offset ): bool {
 		return isset( $this->_subject[$offset] );
 	}
 
@@ -71,7 +70,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 *
 	 */
 
-    #[\ReturnTypeWillChange]
+	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
 		return $this->getValue( $offset );
 	}
