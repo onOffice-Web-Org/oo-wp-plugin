@@ -335,7 +335,6 @@ implements AddressListBase
 			$elements = $address['elements'];
 
 			$additionalContactData = $this->collectAdditionalContactData($elements);
-			unset($elements['id']);
 			$this->_addressesById[$address['id']] = array_merge($elements, $additionalContactData);
 		}
 	}

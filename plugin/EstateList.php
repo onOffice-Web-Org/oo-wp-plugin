@@ -551,6 +551,15 @@ class EstateList
 		}
 		return $requestParams;
 	}
+	/**
+	 * @param string $addressId
+	 * @return string
+	 */
+	public function getAddressLink(string $addressId): string
+	{
+		$addressList = $this->_pEnvironment->getAddressList();
+		return $addressList->getAddressLink(($addressId));
+	}
 
 	/**
 	 * @return array
