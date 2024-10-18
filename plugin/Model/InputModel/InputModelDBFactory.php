@@ -99,6 +99,9 @@ class InputModelDBFactory
 	/** */
 	const INPUT_SORT_ORDER_BY_TAGS = 'sortByTagsDirection';
 
+	/** */
+	const INPUT_PAGE_ID = 'pageId';
+
 	/** @var InputModelDBFactoryConfigBase */
 	private $_pInputModelDBFactoryConfig = null;
 

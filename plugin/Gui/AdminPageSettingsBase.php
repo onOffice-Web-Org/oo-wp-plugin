@@ -74,6 +74,9 @@ abstract class AdminPageSettingsBase
 	const FORM_VIEW_LAYOUT_DESIGN = 'viewlayoutdesign';
 
 	/** */
+	const FORM_VIEW_PROPERTY_SEARCH = 'viewpropertysearch';
+
+	/** */
 	const FORM_VIEW_RECORDS_FILTER = 'viewrecordsfilter';
 
 	const FORM_VIEW_RECORDS_SORTING = 'viewrecordssorting';

@@ -190,6 +190,9 @@ class DataListView
 		'mietpreis_pro_qm',
 	];
 
+	/** @var int */
+	private $_pageId = 0;
+
 	/**
 	 *
 	 * @param int $id
@@ -483,4 +486,13 @@ class DataListView
 	/** @param array $convertTextToSelectForCityField */
 	public function setConvertTextToSelectForCityField(array $convertTextToSelectForCityField)
 		{ $this->_convertTextToSelectForCityField = $convertTextToSelectForCityField; }
+
+	/** @param int $pageId */
+	public function setPageId(int $pageId)
+		{ $this->_pageId = $pageId; }
+
+	/** @return int */
+	public function getPageId(): int
+		{ return $this->_pageId;	}
+
 }

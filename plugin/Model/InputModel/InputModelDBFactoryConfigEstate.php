@@ -141,6 +141,10 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'sortByTagsDirection',
 		],
+		InputModelDBFactory::INPUT_PAGE_ID => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'page_id',
+		],
 	];
 
 

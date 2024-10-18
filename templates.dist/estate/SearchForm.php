@@ -24,10 +24,11 @@ if (count($visible) === 0) {
 }
 ?>
 <div class="oo-searchform">
-	<form method="get" data-estate-search-name="<?php echo esc_attr($getListName()); ?>">
+	<form method="get" action="<?php echo esc_url(home_url('/' . get_page($pEstates->getPageId())->post_name)); ?>" data-estate-search-name="<?php echo esc_attr($getListName()); ?>">
 		<div class="oo-searchformfieldwrap">
 			<?php
 			foreach ($visible as $inputName => $properties) :
+				echo '<input type="hidden" name="redirected" value="'.$pEstates->getDataView()->getId().'">';
 				echo '<div class="oo-searchformfield">';
 				echo '<label>'.esc_html($properties['label']).':</label>';
 				renderFieldEstateSearch($inputName, $properties);

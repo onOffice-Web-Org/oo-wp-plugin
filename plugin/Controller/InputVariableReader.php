@@ -80,6 +80,16 @@ class InputVariableReader
 		return $fieldValue;
 	}
 
+
+	/**
+	 * @return int
+	 */
+
+	public function getRedirectedId(): int
+	{
+		return (int) $this->getValueByFullInputNameAndType("redirected", FieldTypes::FIELD_TYPE_INTEGER);
+	}
+
 	/**
 	 *
 	 * @param string $fieldInput

@@ -87,6 +87,7 @@ class DataListViewFactory
 		$pListView->setMarkedPropertiesSort($row['markedPropertiesSort']);
 		$pListView->setSortByTags($row['sortByTags']);
 		$pListView->setSortByTagsDirection($row['sortByTagsDirection']);
+		$pListView->setPageId($row['page_id']);
 
 		$geoFieldsAll = [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,

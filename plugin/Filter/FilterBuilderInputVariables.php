@@ -28,6 +28,7 @@ use onOffice\WPlugin\Controller\InputVariableReaderConfig;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldnames;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 
 /**
  *
@@ -75,6 +76,14 @@ class FilterBuilderInputVariables
 		$filter = [];
 		$pEstateInputVars = new InputVariableReader($this->_module, $this->_pInputVariableReaderConf);
 
+		$redirectedId = $pEstateInputVars->getRedirectedId();
+		if ($redirectedId) {
+			$pRecordReadListView = new RecordManagerReadListViewEstate;
+			foreach ($pRecordReadListView->getFieldconfigByListviewId($redirectedId) as $field) {
+				$filterableFields[] = $field['fieldname'];
+			}
+		}
+
 		foreach ($filterableFields as $fieldInput) {
 			$type = $pEstateInputVars->getFieldType($fieldInput);
 			$value = $pEstateInputVars->getFieldValue($fieldInput);
@@ -86,7 +95,7 @@ class FilterBuilderInputVariables
 			$fieldFilter = $this->getFieldFilter($value, $type);
 			$filter[$fieldInput] = $fieldFilter;
 		}
-
+		
 		return $filter;
 	}
 

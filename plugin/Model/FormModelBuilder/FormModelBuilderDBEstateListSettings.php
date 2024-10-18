@@ -951,4 +951,44 @@ class FormModelBuilderDBEstateListSettings
 
 		return $pInputModelFieldsConfig;
 	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelForwardingPage()
+	{
+
+		$labelForwardingPage = __('Select page', 'onoffice-for-wp-websites');
+		$pInputModelForwardingPage = $this->getInputModelDBFactory()->create
+		(InputModelDBFactory::INPUT_PAGE_ID, $labelForwardingPage);
+		$pInputModelForwardingPage->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelForwardingPage->setValuesAvailable($this->readNameForwardingPage());
+
+		$pInputModelForwardingPage->setValue($this->getValue($pInputModelForwardingPage->getField()));
+
+		return $pInputModelForwardingPage;
+	}
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function readNameForwardingPage(): array
+	{
+		$allRecordsForm = get_pages();
+		$shortCodeForm = array();
+
+		foreach ($allRecordsForm as $value) {
+			if ($value === null) {
+				continue;
+			}
+			$shortCodeForm[$value->ID] = $value->post_title;
+		}
+		return $shortCodeForm;
+	}
 }
