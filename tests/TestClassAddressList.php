@@ -63,6 +63,7 @@ class TestClassAddressList
 	/** @var array */
 	private $_expectedRecords = [
 		13 => array(
+			'id' => 13,
 			'Name' => 'Firestone',
 			'KdNr' => 9,
 			'Vorname' => 'Fred',
@@ -74,6 +75,7 @@ class TestClassAddressList
 			],
 		),
 		37 => array(
+			'id' => 37,
 			'Name' => 'Fleißig',
 			'KdNr' => 12,
 			'Vorname' => 'Heinrich',
