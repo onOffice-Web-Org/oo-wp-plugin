@@ -236,7 +236,7 @@ class ApiCall
 					continue;
 				$op = $value[0]["op"];
 				$val = $value[0]["val"];
-				if($val === null || (is_array($val) && empty($val)) || (is_string($val) && trim($val) === ''))
+				if($val === null || (is_string($val) && trim($val) === ''))
 					continue;
 
 				if(strtolower($op) === '=')
