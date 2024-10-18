@@ -39,4 +39,12 @@ interface DefaultFilterBuilder
 	 */
 
 	public function buildFilter(): array;
+
+	/**
+	 *
+	 * @return array the default filter
+	 *
+	 */
+
+	public function getDefaultFilter(): array;
 }
