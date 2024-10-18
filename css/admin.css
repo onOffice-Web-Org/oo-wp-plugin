@@ -679,6 +679,19 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	margin-left: 5px;
 }
 
+.oo-poststuff .custom-input-field textarea[name=oopluginformactivityconfig-remark] {
+	min-height: 100px;
+}
+
+.oo-poststuff .select2-container--default.select2-container--disabled .select2-selection--multiple {
+	background-color: #f6f7f7;
+	border-color: #dcdcde;
+}
+
+.oo-poststuff .select2-container--default .select2-selection--multiple[aria-disabled="true"] .select2-selection__choice {
+    opacity: 0.5;
+}
+
 .oo-search-field {
 	width: 100%;
 	float: left;

@@ -181,6 +181,7 @@ class TestClassFormPostContact
 		$this->configureSDKWrapperForCreateAddress();
 		$this->configureSDKWrapperForCreateAddressWithDuplicateCheck();
 		$this->configureSDKWrapperForFieldsAddressEstate();
+		$this->configureSDKWrapperForCreateAgentsLog();
 	}
 
 
@@ -324,6 +325,29 @@ class TestClassFormPostContact
 			(onOfficeSDK::ACTION_ID_CREATE, 'address', '', $parameters, null, $response);
 	}
 
+
+	/**
+	 *
+	 */
+
+	private function configureSDKWrapperForCreateAgentsLog()
+	{
+		$parameters = [
+			'addressids' => [320],
+			'actionkind' => 'ActionKind',
+			'actiontype' => 'ActionType',
+			'origincontact' => 'originContact',
+			'features' => ['Characteristic1', 'Characteristic2'],
+			'note' => 'comment'
+		];
+
+		$responseJson = file_get_contents
+			(__DIR__.'/resources/FormPostContact/ApiResponseCreateAgentLog.json');
+		$response = json_decode($responseJson, true);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_CREATE, 'agentslog', '', $parameters, null, $response);
+	}
 
 	/**
 	 *
@@ -488,6 +512,40 @@ class TestClassFormPostContact
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$pDataFormConfiguration->setCreateAddress(true);
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+
+		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testCreateAgentsLog()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'Email' => 'john.doe@my-onoffice.com',
+			'Plz' => '52068',
+			'Ort' => 'Aachen',
+			'Telefon1' => '0815/2345677',
+			'AGB_akzeptiert' => 'y',
+			'newsletter' => 'y',
+			'Id' => '1337',
+			'Anrede' => '',
+			'tmpField' => 'content',
+		];
+
+		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$pDataFormConfiguration->setWriteActivity(true);
+		$pDataFormConfiguration->setActionKind('ActionKind');
+		$pDataFormConfiguration->setActionType('ActionType');
+		$pDataFormConfiguration->setCharacteristic('Characteristic1,Characteristic2');
+		$pDataFormConfiguration->setOriginContact('originContact');
+		$pDataFormConfiguration->setRemark('comment');
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
