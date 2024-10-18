@@ -129,14 +129,6 @@ class DBCache
 				WHERE cache_parameters_hashed = %s AND UNIX_TIMESTAMP(cache_created) > %d
 				", $parametersHashed, $cacheMaxAge )
 		);
-		$counted = 0;
-		// if ($record != null && is_countable(unserialize($record))){
-		// 	$counted = count(unserialize($record));
-		// }
-		if(isset($parameters['parameters']['listname']))
-		{
-			// error_log("DBCACHE FROM CACHE:".$parameters['parameters']['listname']." HASH:".$parametersHashed." format:".$parameters['parameters']["formatoutput"]. "RECORDS: ".$counted);
-		}
 
 		return $record;
 	}
