@@ -150,7 +150,7 @@ implements AddressListBase
 	/** @var FieldsCollection */
 	private $_pFieldsCollection = [];
 
-	private $_hasGeoFilter = false;
+	private $_geoFilter = null;
 
 	/**
 	 *
@@ -640,16 +640,23 @@ implements AddressListBase
 		return $imageAlt;
 	}
 
-	public function setHasGeoFilter($geoFilter)
+	public function setGeoFilter($geoFilter)
 	{
-		$this->_hasGeoFilter = $geoFilter;
+		$this->_geoFilter = $geoFilter;
 	}
 	/**
 	 * @return bool
 	 */
 	public function getHasGeoFilter(): bool
 	{
-		return $this->_hasGeoFilter;
+		return ($this->_geoFilter != null);
+	}
+	/**
+	 * @return object
+	 */
+	public function getGeoFilter(): object
+	{
+		return $this->_geoFilter;
 	}
 	/**
 	 * @return DefaultFilterBuilder

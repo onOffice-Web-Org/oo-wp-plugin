@@ -143,7 +143,7 @@ class ContentFilterShortCodeAddress implements ContentFilterShortCode
 				$geoObj = json_decode('{ "km": '.$geo.' }');
 
 			$pListViewFilterBuilder->setFilterGeoSearch($geoObj);
-			$pAddressList->setHasGeoFilter(true);
+			$pAddressList->setGeoFilter($geoObj);
 		}
 
 		$pAddressList->setDefaultFilterBuilder($pListViewFilterBuilder);

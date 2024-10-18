@@ -155,7 +155,7 @@ class DefaultFilterBuilderListViewAddress
 	{
 		$this->_geofilter = [
 			'geo' => [
-				['op' => 'geo', 'val' => $geo->km, 'min' => $geo->min ?? null, 'max' => $geo->max ?? null]
+				['op' => 'geo', 'val' => $geo->km, 'min' => $geo->min ?? null, 'max' => $geo->max ?? null, 'country' => $geo->country ?? null]
 			]
 		];
 	}
