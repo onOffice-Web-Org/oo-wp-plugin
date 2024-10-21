@@ -211,11 +211,11 @@ class SDKWrapper
 			//3 create cache for every list
 			//3.1 for every language RecordManagerReadListViewEstate
 			$pDataListViewFactory = $this->_pContainer->get(DataListViewFactory::class);
-			$pDataListViewFactoryAddress = $this->_pContainer->get(DataListViewFactoryAddress::class); //DataListViewFactoryAddress
+			$pDataListViewFactoryAddress = $this->_pContainer->get(DataListViewFactoryAddress::class);
 			$pDefaultFilterBuilderFactory = $this->_pContainer->get(DefaultFilterBuilderFactory::class);
 			$pDefaultFilterBuilderListViewAddressFactory = $this->_pContainer->get(DefaultFilterBuilderListViewAddressFactory::class);
 
-			$languages = [Language::getDefault()]; //TODO
+			$languages = Language::getAllWPMLLanguages();
 			$estateLists = $this->get_estate_lists($listName);
 			$addressLists = $this->get_address_lists($listName);
 			foreach ($this->getCache() as $pCache) {
