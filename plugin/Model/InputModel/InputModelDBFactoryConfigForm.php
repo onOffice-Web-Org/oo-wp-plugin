@@ -102,6 +102,27 @@ class InputModelDBFactoryConfigForm
     const INPUT_FORM_CONTACT_TYPE = 'contactType';
 
 	/** */
+	const INPUT_FORM_WRITE_ACTIVITY = 'writeActivity';
+
+	/** */
+	const INPUT_FORM_ACTION_KIND = 'actionKind';
+
+	/** */
+	const INPUT_FORM_ACTION_TYPE = 'actionType';
+
+	/** */
+	const INPUT_FORM_CHARACTERISTIC = 'characteristic';
+
+	/** */
+	const INPUT_FORM_REMARK = 'remark';
+
+	/** */
+	const INPUT_FORM_ORIGIN_CONTACT = 'originContact';
+
+	/** */
+	const INPUT_FORM_ADVISORY_LEVEL = 'advisoryLevel';
+
+	/** */
 	const INPUT_FORM_ENABLE_CREATE_TASK = 'enableCreateTask';
 
 	/** */
@@ -266,6 +287,34 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_HIDDEN_FIELD => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'hidden_field',
+		],
+		self::INPUT_FORM_WRITE_ACTIVITY => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'write_activity',
+		],
+		self::INPUT_FORM_ACTION_KIND => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'action_kind',
+		],
+		self::INPUT_FORM_ACTION_TYPE => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'action_type',
+		],
+		self::INPUT_FORM_CHARACTERISTIC => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'characteristic',
+		],
+		self::INPUT_FORM_REMARK => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'remark',
+		],
+		self::INPUT_FORM_ORIGIN_CONTACT => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'origin_contact',
+		],
+		self::INPUT_FORM_ADVISORY_LEVEL => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'advisory_level',
 		],
 		self::INPUT_FORM_ENABLE_CREATE_TASK => [
 			self::KEY_TABLE => 'oo_plugin_form_taskconfig',

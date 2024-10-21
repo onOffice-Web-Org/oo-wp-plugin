@@ -107,6 +107,16 @@ class TestClassAddressList
 			'childids' => [13, 37],
 			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER
 		];
+		$responseEstatesOfAddress = $this->getResponseEstatesOfAddress();
+		$parametersEstatesOfAddress = [
+			"filter" => [
+				"Id" => [["op" => "IN", "val" => [122,133]]],
+				"verkauft" => [["op" => "=", "val" => "0"]],
+				"veroeffentlichen" => [["op" => "=", "val" => "1"]],
+				"status" => [["op" => "=", "val" => "1"]]
+			],
+			"listlimit" => 500
+		];
 
 		$addressParametersWithoutFormat = [
 			'data' => ['Name', 'KdNr', 'Vorname'],
@@ -133,12 +143,12 @@ class TestClassAddressList
 			'formatoutput' => false,
 		];
 
-        $addressParametersWithFormatDetail = [
-            'recordids' => [13,37],
-            'data' => ['contactCategory', 'Vorname', 'Name', 'Zusatz1', 'branch', 'communityOfHeirs', 'communityOfOwners', 'umbrellaOrganization', 'association', 'institution', 'department'],
-            'outputlanguage' => "ENG",
-            'formatoutput' => false,
-        ];
+		$addressParametersWithFormatDetail = [
+				'recordids' => [13,37],
+				'data' => ['contactCategory', 'Vorname', 'Name', 'Zusatz1', 'branch', 'communityOfHeirs', 'communityOfOwners', 'umbrellaOrganization', 'association', 'institution', 'department'],
+				'outputlanguage' => "ENG",
+				'formatoutput' => false,
+		];
 
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $response);
@@ -156,6 +166,8 @@ class TestClassAddressList
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormatDetail, null, $responseRaw);
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', $parametersRelation, null, $responseRelation);
+		$pSDKWrapper->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersEstatesOfAddress, null, $responseEstatesOfAddress);
 
 		$pMockViewFieldModifierHandler = $this->getMockBuilder(ViewFieldModifierHandler::class)
 			->setMethods(['processRecord', 'getAllAPIFields'])
@@ -216,7 +228,7 @@ class TestClassAddressList
 				->getMock();
 
 		$pFieldsCollectionNewFields = new FieldsCollection;
-		$pFieldsCollectionNewFields->addField(new Field('KdNr', onOfficeSDK::MODULE_ADDRESS));
+		$pFieldsCollectionNewFields->addField(new Field('KdNr', onOfficeSDK::MODULE_ADDRESS, 'Kundennummer'));
 		$pFieldsCollectionNewFields->addField(new Field('Vorname', onOfficeSDK::MODULE_ADDRESS));
 		$pFieldsCollectionNewFields->addField(new Field('Name', onOfficeSDK::MODULE_ADDRESS));
 
@@ -352,7 +364,7 @@ class TestClassAddressList
 			'KdNr' => [
 				'type' => 'varchar',
 				'value' => 4,
-				'label' => '',
+				'label' => 'Kundennummer',
 				'default' => null,
 				'length' => null,
 				'permittedvalues' => Array (),
@@ -424,6 +436,42 @@ class TestClassAddressList
 		$pNewAddressList->loadAddresses();
 	}
 
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	private function getResponseEstatesOfAddress()
+	{
+		$responseStr = '
+		{
+        "actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+        "resourceid": "",
+        "resourcetype": "estate",
+        "cacheable": true,
+        "identifier": "",
+        "data": {
+          "meta": {
+            "cntabsolute": 2
+          },
+          "records": [
+            {
+              "type": "",
+              "elements": {
+              }
+            }
+          ]
+        },
+        "status": {
+          "errorcode": 0,
+          "message": "OK"
+        }
+      }';
+
+		return json_decode($responseStr, true);
+	}
 
 	/**
 	 *

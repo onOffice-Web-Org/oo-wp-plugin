@@ -66,11 +66,12 @@ class TestClassRecordManagerDeleteForm
 
 	public function testDeleteByIds()
 	{
-		$this->_pWpdbMock->expects($this->exactly(12))->method('delete')->with($this->logicalOr(
+		$this->_pWpdbMock->expects($this->exactly(15))->method('delete')->with($this->logicalOr(
 			$this->equalTo('wp_test_oo_plugin_forms'),
 			$this->equalTo('wp_test_oo_plugin_form_fieldconfig'),
 			$this->equalTo('wp_test_oo_plugin_fieldconfig_form_defaults'),
 			$this->equalTo('wp_test_oo_plugin_fieldconfig_form_customs_labels'),
+			$this->equalTo('wp_test_oo_plugin_form_activityconfig'),
 			$this->equalTo('wp_oo_plugin_form_taskconfig')
 		));
 		$this->_pWpdbMock->expects($this->once())->method('prepare')
@@ -97,11 +98,12 @@ class TestClassRecordManagerDeleteForm
 
 	public function testDeleteTranslatedLabelsByIds()
 	{
-		$this->_pWpdbMock->expects($this->exactly(12))->method('delete')->with($this->logicalOr(
+	$this->_pWpdbMock->expects($this->exactly(15))->method('delete')->with($this->logicalOr(
 			$this->equalTo('wp_test_oo_plugin_forms'),
 			$this->equalTo('wp_test_oo_plugin_form_fieldconfig'),
 			$this->equalTo('wp_test_oo_plugin_fieldconfig_form_defaults'),
 			$this->equalTo('wp_test_oo_plugin_fieldconfig_form_customs_labels'),
+			$this->equalTo('wp_test_oo_plugin_form_activityconfig'),
 			$this->equalTo('wp_oo_plugin_form_taskconfig')
 		));
 		$this->_pWpdbMock->expects($this->once())->method('prepare')

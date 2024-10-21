@@ -36,6 +36,12 @@ use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
+use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Language;
+use DI\DependencyException;
+use DI\NotFoundException;
+use onOffice\WPlugin\API\ApiClientException;
 
 /**
  *
@@ -172,6 +178,27 @@ class AdminPageFormSettingsContact
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
+		$pInputModelWriteActivity = $pFormModelBuilder->createInputModelWriteActivity();
+		$pInputModelActionKind = $pFormModelBuilder->createInputModelActionKind();
+		$pInputModelActionType= $pFormModelBuilder->createInputModelActionType();
+		$pInputModelOriginContact= $pFormModelBuilder->createInputModelOriginContact();
+		$pInputModelAdvisoryLevel= $pFormModelBuilder->createInputModelAdvisoryLevel();
+		$pInputModelCharacteristic= $pFormModelBuilder->createInputModelCharacteristic();
+		$pInputModelRemark= $pFormModelBuilder->createInputModelRemark();
+		$pFormModelFormActivitiy  = new FormModel();
+		$pFormModelFormActivitiy->setPageSlug($this->getPageSlug());
+		$pFormModelFormActivitiy->setGroupSlug(self::FORM_VIEW_FORM_ACTIVITYCONFIG);
+		$pFormModelFormActivitiy->setLabel(__('Activities', 'onoffice-for-wp-websites'));
+		$pFormModelFormActivitiy->addInputModel($pInputModelWriteActivity);
+		$pFormModelFormActivitiy->addInputModel($pInputModelActionKind);
+		$pFormModelFormActivitiy->addInputModel($pInputModelActionType);
+		$pFormModelFormActivitiy->addInputModel($pInputModelOriginContact);
+		if ($this->getType() !== Form::TYPE_INTEREST) {
+			$pFormModelFormActivitiy->addInputModel($pInputModelAdvisoryLevel);
+		}
+		$pFormModelFormActivitiy->addInputModel($pInputModelCharacteristic);
+		$pFormModelFormActivitiy->addInputModel($pInputModelRemark);
+
 		$pInputModelEnableCreateTask = $pFormModelBuilder->createInputModelEnableCreateTask();
 		$pInputModelTaskResponsibility = $pFormModelBuilder->createInputModelTaskResponsibility();
 		$pInputModelTaskProcessor = $pFormModelBuilder->createInputModelTaskProcessor();
@@ -194,6 +221,7 @@ class AdminPageFormSettingsContact
 		$pFormModelFormTask->addInputModel($pInputModelTaskStatus);
 
 		$this->addFormModel($pFormModelFormSpecific);
+		$this->addFormModel($pFormModelFormActivitiy);
 		$this->buildGeoPositionSettings();
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
 		$this->addFormModel($pFormModelFormTask);
@@ -203,6 +231,35 @@ class AdminPageFormSettingsContact
 		$this->addSearchFieldForFieldLists($this->getSortableFieldModules(), $pFormModelBuilder);
 	}
 
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws ApiClientException
+	 */
+	private function getTypesOfAction(): array
+	{
+		$pLanguage = $this->getContainer()->get(Language::class);
+		$pSDKWrapper = $this->getContainer()->get(SDKWrapper::class);
+		$pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'actionkindtypes');
+		$pApiClientAction->setParameters(['lang'=> $pLanguage->getDefault()]);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+		$result = $pApiClientAction->getResultRecords();
+
+		if (empty($result)) {
+			return [];
+		}
+
+		$data = [];
+
+		foreach ($result as $record) {
+			$data[$record['elements']['key']] = $record['elements']['types'];
+		}
+
+		return $data;
+	}
 
 	/**
 	 *
@@ -227,6 +284,30 @@ class AdminPageFormSettingsContact
 		}
 	}
 
+	/**
+	 * @return array
+	 */
+
+	public function getEnqueueData(): array
+	{
+		$returnArray = parent::getEnqueueData();
+		$returnArray['action_type'] = $this->getTypesOfAction();
+		$returnArray['default_label_choose'] = __('Please choose', 'onoffice-for-wp-websites');
+
+		return $returnArray;
+	}
+
+	/**
+	 *
+	 */
+
+	public function doExtraEnqueues()
+	{
+		parent::doExtraEnqueues();
+		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+		wp_register_script('onoffice-handle-activity-config', plugins_url('/dist/onoffice-handle-activity-config.min.js', $pluginPath));
+		wp_enqueue_script('onoffice-handle-activity-config');
+	}
 
 	/**
 	 *
@@ -244,6 +325,9 @@ class AdminPageFormSettingsContact
 			$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
 			$this->createMetaBoxByForm($pFormGeoPosition, 'side');
 		}
+
+		$pFormActivities = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_ACTIVITYCONFIG);
+		$this->createMetaBoxByForm($pFormActivities, 'side');
 
 		parent::generateMetaBoxes();
 	}

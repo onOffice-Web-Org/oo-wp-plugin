@@ -412,6 +412,38 @@ class FormAddressCreator
 	 *
 	 * @return void
 	 */
+	public function createAgentsLog(DataFormConfiguration $pFormConfig, int $addressId, int $estateId = null)
+	{
+		if (empty($pFormConfig->getActionKind()) && empty($pFormConfig->getActionType()) && empty($pFormConfig->getCharacteristic()) && empty($pFormConfig->getRemark())) {
+			return;
+		}
+		$requestParams = [
+			'addressids' => [$addressId],
+			'actionkind' => $pFormConfig->getActionKind() ?: null,
+			'actiontype' => $pFormConfig->getActionType() ?: null,
+			'origincontact' => $pFormConfig->getOriginContact() ?: null,
+			'features' => !empty($pFormConfig->getCharacteristic()) ? explode(',', $pFormConfig->getCharacteristic()) : null,
+			'note' => $pFormConfig->getRemark(),
+		];
+
+		if (!empty($estateId)) {
+			$requestParams['estateid'] = $estateId;
+			$requestParams['advisorylevel'] = $pFormConfig->getAdvisorylevel() ?: null;
+		}
+
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'agentslog');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+	}
+
+	/**
+	 * @param DataFormConfiguration $pFormConfig
+	 * @param int $addressId
+	 * @param int|null $estateId
+	 *
+	 * @return void
+	 */
 	public function createTask(DataFormConfiguration $pFormConfig, int $addressId, int $estateId = null)
 	{
 		if (empty($pFormConfig->getTaskType()) || empty($pFormConfig->getTaskStatus())) {

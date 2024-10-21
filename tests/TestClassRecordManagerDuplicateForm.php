@@ -169,6 +169,18 @@ class TestClassRecordManagerDuplicateForm
 			]
 		];
 
+		$sampleDataActivityConfigArr = [
+			[
+				'form_activityconfig_id' => 43,
+				'form_id' => 23,
+				'write_activity' => '1',
+				'action_kind' => 'action_kind',
+				'action_type' => 'action_type',
+				'characteristic' => 'characteristic1,characteristic2',
+				'remark' => 'test1',
+			]
+		];
+
 		$recordRootCopy = (object) [
 			'form_id' => 22,
 			'name'    => 'list view root - Copy 1',
@@ -208,6 +220,7 @@ class TestClassRecordManagerDuplicateForm
 						 $sampleDataArr,
 						 $sampleDataObj,
 						 $sampleDataArr,
+						 $sampleDataActivityConfigArr,
 						 $sampleTaskConfig
 					 );
 

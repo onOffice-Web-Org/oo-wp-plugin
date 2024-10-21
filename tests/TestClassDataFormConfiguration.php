@@ -67,6 +67,11 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->addMarkdownFields('test3');
 		$pDataFormConfiguration->setShowEstateContext(true);
 		$pDataFormConfiguration->addHiddenFields('test-hidden');
+		$pDataFormConfiguration->setWriteActivity(true);
+		$pDataFormConfiguration->setActionKind('test1');
+		$pDataFormConfiguration->setActionType('test2');
+		$pDataFormConfiguration->setCharacteristic('test3');
+		$pDataFormConfiguration->setRemark('comment');
 		$pDataFormConfiguration->setEnableCreateTask(true);
 		$pDataFormConfiguration->setTaskResponsibility('Tobias');
 		$pDataFormConfiguration->setTaskProcessor('Tobias');
@@ -111,6 +116,11 @@ class TestClassDataFormConfiguration
 		$this->assertEquals('form', $pDataFormConfiguration->getModule());
 		$this->assertTrue($pDataFormConfiguration->getShowEstateContext());
 		$this->assertEquals(['test-hidden'], $pDataFormConfiguration->getHiddenFields());
+		$this->assertTrue($pDataFormConfiguration->getWriteActivity());
+		$this->assertEquals('test1', $pDataFormConfiguration->getActionKind());
+		$this->assertEquals('test2', $pDataFormConfiguration->getActionType());
+		$this->assertEquals('test3', $pDataFormConfiguration->getCharacteristic());
+		$this->assertEquals('comment', $pDataFormConfiguration->getRemark());
 		$this->assertTrue($pDataFormConfiguration->getEnableCreateTask());
 		$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskResponsibility());
 		$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskProcessor());
@@ -155,6 +165,11 @@ class TestClassDataFormConfiguration
 		$this->assertEquals([], $pDataFormConfiguration->getAvailableOptionsFields());
 		$this->assertEquals([], $pDataFormConfiguration->getMarkdownFields());
 		$this->assertFalse($pDataFormConfiguration->getShowEstateContext());
+		$this->assertFalse($pDataFormConfiguration->getWriteActivity());
+		$this->assertEquals('', $pDataFormConfiguration->getActionKind());
+		$this->assertEquals('', $pDataFormConfiguration->getActionType());
+		$this->assertEquals('', $pDataFormConfiguration->getCharacteristic());
+		$this->assertEquals('', $pDataFormConfiguration->getRemark());
 		$this->assertEquals('', $pDataFormConfiguration->getTaskDescription());
 		$this->assertEquals('', $pDataFormConfiguration->getTaskSubject());
 		$this->assertEquals('', $pDataFormConfiguration->getTaskResponsibility());

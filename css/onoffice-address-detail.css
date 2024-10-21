@@ -13,20 +13,22 @@
 .oo-address-fieldlist {
     display: flex;
     flex-direction: column;
-}
-.oo-address-placefieldlist {
-    display: flex;
-    flex-direction: column;
-    margin-top: 0.25rem;
-    margin-bottom: 0.25rem;
-}
-.oo-address-placefield {
-    font-size: 1rem;
+    flex-wrap: wrap;
 }
 .oo-address-field {
+    display: flex;
+    flex-wrap: wrap;
     font-size: 1rem;
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
+}
+.oo-address-field-label {
+    margin-right: 0.5rem;
+    font-weight: bold;
+    word-break: break-word;
+}
+.oo-address-field-label {
+    word-break: break-word;
 }
 .oo-address-estatelist {
     margin-bottom: 4rem;

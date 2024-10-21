@@ -89,6 +89,7 @@ class FormPostInterest
 						$contactType = $pFormConfiguration->getContactType();
 				$pWPQuery = $this->_pFormPostInterestConfiguration->getWPQueryWrapper()->getWPQuery();
 				$estateId = $pWPQuery->get('estate_id', null);
+				$writeActivity = $pFormConfiguration->getWriteActivity();
 				$latestAddressIdOnEnterPrise = null;
 				$enableCreateTask = $pFormConfiguration->getEnableCreateTask();
 				if ($checkDuplicate) {
@@ -99,6 +100,9 @@ class FormPostInterest
 				$this->_messageDuplicateAddressData = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
 						->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 				$this->createSearchcriteria( $pFormData, $addressId );
+				if ($writeActivity) {
+					$this->_pFormPostInterestConfiguration->getFormAddressCreator()->createAgentsLog($pFormConfiguration, $addressId, null);
+				}
 				$this->setNewsletter( $addressId );
 				if ($enableCreateTask) {
 					$this->_pFormPostInterestConfiguration->getFormAddressCreator()->createTask($pFormConfiguration, $addressId, $estateId);

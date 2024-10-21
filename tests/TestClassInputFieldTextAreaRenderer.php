@@ -25,8 +25,6 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
-use DI\Container;
-use DI\ContainerBuilder;
 use WP_UnitTestCase;
 use onOffice\WPlugin\Renderer\InputFieldTextAreaRenderer;
 
@@ -43,12 +41,12 @@ class TestClassInputFieldTextAreaRenderer
 	public function prepare()
 	{
 		global $wpdb;
-
+		
 		$pWpOption = new WPOptionWrapperTest();
 		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
 		$pDbChanges->install();
 	}
-
+	
 	/**
 	 * @throws \Exception
 	 */
@@ -58,9 +56,9 @@ class TestClassInputFieldTextAreaRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<textarea rows="4" name="testRenderer" id="textarea_1" ></textarea>', $output);
+		$this->assertEquals('<textarea name="testRenderer" id="textarea_1" ></textarea>', $output);
 	}
-
+	
 	/**
 	 * @throws \Exception
 	 */
@@ -71,6 +69,6 @@ class TestClassInputFieldTextAreaRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<textarea rows="4" name="testRenderer" id="textarea_1" >test1</textarea>', $output);
+		$this->assertEquals('<textarea name="testRenderer" id="textarea_1" >test1</textarea>', $output);
 	}
 }
