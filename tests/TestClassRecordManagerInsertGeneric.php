@@ -200,7 +200,15 @@ class TestClassRecordManagerInsertGeneric
 			->with('testPrefix_'.RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM, $recordOutput)
 			->will($this->returnValue(1));
 		$this->_pSubject->insertSingleRow($recordInput, RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM);
+	}
 
+
+	/**
+	 *
+	 */
+
+	public function testInsertTaskSingleRow()
+	{
 		$recordTaskConfigInput = [
 			RecordManager::TABLENAME_TASKCONFIG_FORMS => [
 				'form_taskconfig_id ' => 1,
@@ -230,8 +238,8 @@ class TestClassRecordManagerInsertGeneric
 		];
 
 		$this->_pWPDB->expects($this->once())->method('insert')
-					 ->with('testPrefix_'.RecordManager::TABLENAME_TASKCONFIG_FORMS, $recordTaskConfigOutput)
-					 ->will($this->returnValue(1));
+			->with('testPrefix_'.RecordManager::TABLENAME_TASKCONFIG_FORMS, $recordTaskConfigOutput)
+			->will($this->returnValue(1));
 		$this->_pSubject->insertSingleRow($recordTaskConfigInput, RecordManager::TABLENAME_TASKCONFIG_FORMS);
 	}
 

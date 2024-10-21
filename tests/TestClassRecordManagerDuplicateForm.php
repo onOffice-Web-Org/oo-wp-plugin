@@ -154,6 +154,18 @@ class TestClassRecordManagerDuplicateForm
 			]
 		];
 
+		$sampleDataActivityConfigArr = [
+			[
+				'form_activityconfig_id' => 43,
+				'form_id' => 23,
+				'write_activity' => '1',
+				'action_kind' => 'action_kind',
+				'action_type' => 'action_type',
+				'characteristic' => 'characteristic1,characteristic2',
+				'remark' => 'test1',
+			]
+		];
+
 		$sampleTaskConfig = [
 			[
 				'form_taskconfig_id ' => 1,
@@ -166,18 +178,6 @@ class TestClassRecordManagerDuplicateForm
 				'subject' => 'Test subject',
 				'description' => 'Test description',
 				'status' => 1,
-			]
-		];
-
-		$sampleDataActivityConfigArr = [
-			[
-				'form_activityconfig_id' => 43,
-				'form_id' => 23,
-				'write_activity' => '1',
-				'action_kind' => 'action_kind',
-				'action_type' => 'action_type',
-				'characteristic' => 'characteristic1,characteristic2',
-				'remark' => 'test1',
 			]
 		];
 
@@ -201,9 +201,10 @@ class TestClassRecordManagerDuplicateForm
 					 ->method( 'get_row' )
 					 ->willReturnOnConsecutiveCalls( $recordRootCopy );
 
-		$this->_pWPDB->expects($this->exactly(5))
+		$this->_pWPDB->expects($this->exactly(6))
 			->method('get_col')
 			->willReturnOnConsecutiveCalls(
+				$colData,
 				$colData,
 				$colData,
 				$colData,
@@ -211,7 +212,7 @@ class TestClassRecordManagerDuplicateForm
 				$colData
 			);
 
-		$this->_pWPDB->expects( $this->exactly( 7 ) )
+		$this->_pWPDB->expects( $this->exactly( 8 ) )
 					 ->method( 'get_results' )
 					 ->willReturnOnConsecutiveCalls(
 						 $fieldConfigRecordOutputArr,

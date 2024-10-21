@@ -58,6 +58,7 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\API\ApiClientException;
+use onOffice\WPlugin\Field\Collection\FieldLoaderSupervisorValues;
 
 /**
  *

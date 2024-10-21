@@ -490,7 +490,8 @@ class TestClassFormModelBuilderDBForm
 			'Termin' => "Termin",
 			'AGB bestätigt' => "AGB bestätigt",
 			'Kaufpreisangebot' => "Kaufpreisangebot",
-			'Widerruf bestätigt' => "Widerruf bestätigt"
+			'Widerruf bestätigt' => "Widerruf bestätigt",
+			'Aufgabe' => 'Aufgabe'
 		];
 		$this->_pInstance->setFormType('contact');
 
@@ -748,7 +749,7 @@ class TestClassFormModelBuilderDBForm
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskProcessor
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getSupervisorData
 	 */
-	public function	testCreateInputModelTaskProcessor()
+	public function testCreateInputModelTaskProcessor()
 	{
 		$data = [
 			'' => 'Please choose',
