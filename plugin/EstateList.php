@@ -578,6 +578,10 @@ class EstateList
 
 		$fields = $this->_pDataView->getAddressFields();
 
+		if ($this->_pDataView instanceof DataListView) {
+			$fields = ['Name', 'Vorname', 'imageUrl'];
+		}
+
 		$defaultFields = ['defaultemail' => 'Email', 'defaultphone' => 'Telefon1', 'defaultfax' => 'Telefax1'];
 		foreach ($defaultFields as $defaultField => $newField) {
 			if (in_array($defaultField, $fields)) {
