@@ -704,7 +704,7 @@ class TestClassFormModelBuilderDBForm
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskType
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfAction
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
 	 */
 	public function testCreateInputModelTaskType()
 	{
