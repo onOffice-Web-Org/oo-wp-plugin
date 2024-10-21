@@ -318,9 +318,6 @@ class AdminPageFormSettingsContact
 		$pFormFormSpecific = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$this->createMetaBoxByForm($pFormFormSpecific, 'side');
 
-		$pFormTaskConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_TASKCONFIG);
-		$this->createMetaBoxByForm($pFormTaskConfig, 'side');
-
 		if ($this->_showGeoPositionSettings) {
 			$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
 			$this->createMetaBoxByForm($pFormGeoPosition, 'side');
@@ -328,6 +325,9 @@ class AdminPageFormSettingsContact
 
 		$pFormActivities = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_ACTIVITYCONFIG);
 		$this->createMetaBoxByForm($pFormActivities, 'side');
+
+		$pFormTaskConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_TASKCONFIG);
+		$this->createMetaBoxByForm($pFormTaskConfig, 'side');
 
 		parent::generateMetaBoxes();
 	}
