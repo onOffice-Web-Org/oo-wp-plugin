@@ -91,6 +91,7 @@ class RecordManagerDeleteForm
 
 			$pWpdb->delete($prefix.'oo_plugin_fieldconfig_form_defaults', ['form_id' => $id]);
 			$pWpdb->delete($prefix.'oo_plugin_fieldconfig_form_customs_labels', ['form_id' => $id]);
+			$pWpdb->delete($prefix.'oo_plugin_form_activityconfig', ['form_id' => $id]);
 		}
 	}
 }
