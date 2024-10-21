@@ -95,6 +95,7 @@ class APIClientActionGeneric
 	}
 
 	/**
+	 * @param bool $saveToCache
 	 * call addRequestToQueue() first
 	 */
 	public function sendRequests(bool $saveToCache = true)

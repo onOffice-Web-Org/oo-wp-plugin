@@ -443,12 +443,12 @@ class EstateList
 	}
 
 	/**
-	 * 
 	 * @param string $lang
+	 * @param bool $formatOutput
 	 * @return array
 	 * @throws UnknownViewException
 	 */
-	public function getEstateParametersForCache($lang, bool $formatOutput)
+	public function getEstateParametersForCache(string $lang, bool $formatOutput)
 	{
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),onOfficeSDK::MODULE_ESTATE);

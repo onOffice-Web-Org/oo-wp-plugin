@@ -208,7 +208,7 @@ implements AddressListBase
 	 * @return array
 	 * @throws UnknownViewException
 	 */
-	public function getAddressParameters(int $currentPage, bool $formatOutput)
+	private function getAddressParameters(int $currentPage, bool $formatOutput)
 	{
 		$language = Language::getDefault();
 		$pFieldModifierHandler = $this->generateRecordModifier();
@@ -245,7 +245,7 @@ implements AddressListBase
 		return $parameters;
 	}
 	/**
-	 * @param int $currentPage
+	 * @param string $lang
 	 * @param bool $formatOutput
 	 * @return array
 	 * @throws UnknownViewException
@@ -639,7 +639,7 @@ implements AddressListBase
 
 		return $imageAlt;
 	}
-
+	/** @param array $geoFilter */
 	public function setGeoFilter($geoFilter)
 	{
 		$this->_geoFilter = $geoFilter;
