@@ -441,7 +441,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`markedPropertiesSort` VARCHAR( 255 ) NOT NULL DEFAULT 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz',
 			`sortByTags` tinytext NOT NULL,
 			`sortByTagsDirection` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
-			`forwarding_page_id` int(11) NOT NULL,
+			`forwardingPageId` int(11) NOT NULL,
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";

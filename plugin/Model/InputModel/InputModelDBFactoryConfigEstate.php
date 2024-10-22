@@ -143,7 +143,7 @@ class InputModelDBFactoryConfigEstate
 		],
 		InputModelDBFactory::INPUT_FORWARDING_PAGE_ID => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
-			self::KEY_FIELD => 'forwarding_page_id',
+			self::KEY_FIELD => 'forwardingPageId',
 		],
 	];
 

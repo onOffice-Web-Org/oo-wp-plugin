@@ -79,6 +79,9 @@ abstract class AdminPageSettingsBase
 	const FORM_VIEW_RECORDS_SORTING = 'viewrecordssorting';
 
 	/** */
+	const FORM_VIEW_FORWARDING_PAGE = 'viewforwardingpage';
+
+	/** */
 	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
 
 	/** */
@@ -92,9 +95,6 @@ abstract class AdminPageSettingsBase
 
 	/** */
 	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
-
-	/** */
-	const FORM_VIEW_FORWARDING_PAGE = 'viewforwardingpage';
 
 	/** @var string */
 	private $_pageTitle = null;

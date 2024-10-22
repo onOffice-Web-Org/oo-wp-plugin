@@ -493,5 +493,5 @@ class DataListView
 
 	/** @return int */
 	public function getForwardingPageId(): int
-		{ return $this->_forwardingPageId;	}
+		{ return $this->_forwardingPageId; }
 }
