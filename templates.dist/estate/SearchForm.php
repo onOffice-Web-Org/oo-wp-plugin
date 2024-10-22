@@ -23,10 +23,10 @@ if (count($visible) === 0) {
 	return;
 }
 $actionUrl = '';
-$hiddenInput = '';
+$redirectedHiddenInput = '';
 if (!empty($pEstates->getForwardingPageId())) {
     $actionUrl = esc_url(home_url('/' . get_page($pEstates->getForwardingPageId())->post_name));
-    $hiddenInput = '<input type="hidden" name="redirected" value="' . esc_attr($pEstates->getDataView()->getId()) . '">';
+    $redirectedHiddenInput = '<input type="hidden" name="redirected" value="' . esc_attr($pEstates->getDataView()->getId()) . '">';
 }
 
 ?>
@@ -34,7 +34,7 @@ if (!empty($pEstates->getForwardingPageId())) {
 	<form method="get" action="<?php echo $actionUrl; ?>" data-estate-search-name="<?php echo esc_attr($getListName()); ?>">
 		<div class="oo-searchformfieldwrap">
 			<?php
-			echo $hiddenInput;
+			echo $redirectedHiddenInput;
 			foreach ($visible as $inputName => $properties) :
 				echo '<div class="oo-searchformfield">';
 				echo '<label>'.esc_html($properties['label']).':</label>';

@@ -86,7 +86,7 @@ class FilterBuilderInputVariables
 			$fieldFilter = $this->getFieldFilter($value, $type);
 			$filter[$fieldInput] = $fieldFilter;
 		}
-		
+
 		return $filter;
 	}
 
