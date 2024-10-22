@@ -60,7 +60,7 @@ class TestClassAddressRedirectIfOldUrl
 	}
 
 	/**
-	 * @covers \onOffice\WPlugin\Utility\AddressRedirector::redirectDetailView
+	 * @covers \onOffice\WPlugin\Controller\Redirector\AddressRedirector::redirectDetailView
 	 */
 	public function testRedirectDetailViewSameUrl()
 	{
@@ -73,7 +73,7 @@ class TestClassAddressRedirectIfOldUrl
 	}
 
 	/**
-	 * @covers \onOffice\WPlugin\Utility\AddressRedirector::redirectDetailView
+	 * @covers \onOffice\WPlugin\Controller\Redirector\AddressRedirector::redirectDetailView
 	 */
 	public function testRedirectDetailViewNotMatchRule()
 	{
