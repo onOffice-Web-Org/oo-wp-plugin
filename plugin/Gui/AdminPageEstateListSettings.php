@@ -186,6 +186,14 @@ class AdminPageEstateListSettings
 			$pFormModelGeoFields->addInputModel($pInputModel);
 		}
 
+		$pInputModelForwardingPage  = $pFormModelBuilder->createInputModelForwardingPage();
+		$pFormModelForwardingPage = new FormModel();
+		$pFormModelForwardingPage->setPageSlug($this->getPageSlug());
+		$pFormModelForwardingPage->setGroupSlug(self::FORM_VIEW_FORWARDING_PAGE);
+		$pFormModelForwardingPage->setLabel(__('Forwarding page of the property search', 'onoffice-for-wp-websites'));
+		$pFormModelForwardingPage->addInputModel($pInputModelForwardingPage);
+		$this->addFormModel($pFormModelForwardingPage);
+
 		$geoNotice = __('At least city or postcode are required.', 'onoffice-for-wp-websites');
 		$pInputModelGeoLabel = new InputModelLabel(null, $geoNotice);
 		$pInputModelGeoLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_ITALIC);
@@ -222,6 +230,9 @@ class AdminPageEstateListSettings
 
 		$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
 		$this->createMetaBoxByForm($pFormGeoPosition, 'normal');
+		
+		$pFormForwardingPage = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORWARDING_PAGE);
+		$this->createMetaBoxByForm($pFormForwardingPage, 'side');
 	}
 
 
