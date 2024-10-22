@@ -155,11 +155,13 @@ class TestClassAddressList
 		$pSDKWrapper->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
 			$addressParametersWithoutFormat['data'][] = 'imageUrl';
+			$addressParametersWithoutFormat['data'][] = 'bildWebseite';
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormat, null, $responseRaw);
 		$addressParametersWithFormat['data'][] = 'imageUrl';
+		$addressParametersWithFormat['data'][] = 'bildWebseite';
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormat, null, $responseRaw);
 		$pSDKWrapper->addResponseByParameters
@@ -228,7 +230,7 @@ class TestClassAddressList
 				->getMock();
 
 		$pFieldsCollectionNewFields = new FieldsCollection;
-		$pFieldsCollectionNewFields->addField(new Field('KdNr', onOfficeSDK::MODULE_ADDRESS));
+		$pFieldsCollectionNewFields->addField(new Field('KdNr', onOfficeSDK::MODULE_ADDRESS, 'Kundennummer'));
 		$pFieldsCollectionNewFields->addField(new Field('Vorname', onOfficeSDK::MODULE_ADDRESS));
 		$pFieldsCollectionNewFields->addField(new Field('Name', onOfficeSDK::MODULE_ADDRESS));
 
@@ -310,6 +312,7 @@ class TestClassAddressList
 	{
 		$pAddressView = new DataListViewAddress(3, 'testView');
 		$pAddressView->setShowPhoto(true);
+		$pAddressView->setBildWebseite(true);
 
 		$pAddressList = $this->_pAddressList->withDataListViewAddress($pAddressView);
 		$pAddressList->loadAddresses();
@@ -364,7 +367,7 @@ class TestClassAddressList
 			'KdNr' => [
 				'type' => 'varchar',
 				'value' => 4,
-				'label' => '',
+				'label' => 'Kundennummer',
 				'default' => null,
 				'length' => null,
 				'permittedvalues' => Array (),
