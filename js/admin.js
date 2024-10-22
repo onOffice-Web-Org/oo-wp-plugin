@@ -102,6 +102,20 @@ jQuery(document).ready(function($){
 		}
 	});
 
+	if ($('input[name="oopluginlistviews-template"]:checked').val().includes('SearchForm.php')) {
+		$('#viewforwardingpage').show();
+	} else {
+		$('#viewforwardingpage').hide().find('select').prop('disabled', true);
+	}
+
+	$('input[name="oopluginlistviews-template"]').change(function() {
+		if ($(this).is(':checked') && $(this).val().includes('SearchForm.php')) {
+			$('#viewforwardingpage').show().find('select').prop('disabled', false);
+		} else {
+			$('#viewforwardingpage').hide().find('select').prop('disabled', true);
+		}
+	});
+
 	$(document).on('click', function(event) {
 		let $fieldLists = $('.oo-search-field .field-lists');
 		let $inputSearch = $('.oo-search-field .input-search');

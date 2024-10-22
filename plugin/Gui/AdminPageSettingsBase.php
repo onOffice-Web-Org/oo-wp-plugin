@@ -93,6 +93,9 @@ abstract class AdminPageSettingsBase
 	/** */
 	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
 
+	/** */
+	const FORM_VIEW_FORWARDING_PAGE = 'viewforwardingpage';
+
 	/** @var string */
 	private $_pageTitle = null;
 

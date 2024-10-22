@@ -1183,6 +1183,14 @@ class EstateList
 	}
 
 	/**
+	 * @return int
+	 */
+	public function getForwardingPageId(): int
+	{
+		return $this->_pDataView->getForwardingPageId();
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function getShowReferenceStatus(): bool
