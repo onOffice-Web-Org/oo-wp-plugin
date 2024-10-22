@@ -76,6 +76,9 @@ abstract class InputModelBase
 	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
 
 	/** */
+	const HTML_TYPE_SORTABLE_TAGS = 'sortabletags';
+
+	/** */
 	const HTML_TYPE_SELECT_TWO = 'select2';
 
 	/** */
@@ -86,6 +89,9 @@ abstract class InputModelBase
 
 	/** */
 	const HTML_GOOGLE_RECAPTCHA_ACCOUNT = 'googleRecaptchaAccount';
+
+	/** */
+	const HTML_TYPE_TEXTAREA = 'textarea';
 
 	/** @var string */
 	private $_name = null;

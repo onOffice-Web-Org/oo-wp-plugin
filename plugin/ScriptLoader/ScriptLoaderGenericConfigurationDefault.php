@@ -42,6 +42,9 @@ class ScriptLoaderGenericConfigurationDefault
 	const ESTATE_TAG = 'oo_estate';
 
 	/** */
+	const ADDRESS_TAG = 'oo_address';
+
+	/** */
 	const FORM_TAG = 'oo_form';
 
 	/**
@@ -62,7 +65,6 @@ class ScriptLoaderGenericConfigurationDefault
 			(new IncludeFileModel($script, 'select2', plugins_url('/vendor/select2/select2/dist/js/select2.min.js', $pluginPath)))
 				->setLoadInFooter(true)
 				->setLoadAsynchronous($defer),
-
 			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)),
@@ -77,6 +79,7 @@ class ScriptLoaderGenericConfigurationDefault
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/dist/favorites.min.js', $pluginPath)))
 				->setDependencies(['jquery']);
 		}
+        $values = $this->addAddressStyle($values, $style, $pluginPath);
 
 		return array_merge($values, $this->addScripts($pluginPath, $script, $style, $defer, $async));
 	}
@@ -102,6 +105,10 @@ class ScriptLoaderGenericConfigurationDefault
 		}
 
 		$pageContent = str_replace('\u0022', '"', $pageContent);
+		if ($this->isAddressListPage($pageContent) || !empty($shortcode['address'])) {
+			$scripts = $this->renderScriptForAddressListPage($scripts, $pluginPath, $script);
+		}
+
 		if ($this->isEstateListPage($pageContent) || !empty($shortcode['estate'])) {
 			$scripts = $this->renderScriptForEstateListPage($scripts, $pluginPath, $script, $async);
 		}
@@ -112,11 +119,13 @@ class ScriptLoaderGenericConfigurationDefault
 		}
 
 		$shortcodeFormForDetailPage = !empty(get_option('onoffice-default-view')) ? get_option('onoffice-default-view')->getShortCodeForm() : '';
-		if ($this->isFormPage($pageContent) || (is_array($shortcode) && !empty($shortcode['form'])) || ($isDetailEstatePage && ! empty($shortcodeFormForDetailPage))) {
-			$pageContent = ($this->isFormPage($pageContent) || $isDetailEstatePage) ? $pageContent : $shortcode['form'];
+		if ($this->isFormPage($pageContent) || (is_array($shortcode) && !empty($shortcode['form']))
+			|| ($isDetailEstatePage && ! empty($shortcodeFormForDetailPage))
+			|| ($this->isDetailAddressPage($pageContent) && ! empty($shortcodeFormForDetailPage))) {
+			$pageContent = ($this->isFormPage($pageContent) || $this->isDetailEstatePage($pageContent) || $this->isDetailAddressPage($pageContent)) ? $pageContent : $shortcode['form'];
 			$scripts = $this->renderScriptForFormPage($scripts, $pluginPath, $script, $pageContent, $async, $isDetailEstatePage, $shortcodeFormForDetailPage);
 		}
-	
+
 		return $scripts;
 	}
 
@@ -126,6 +135,7 @@ class ScriptLoaderGenericConfigurationDefault
 	private function getShortcodeByPostMeta(): array
 	{
 		$metaKeys = get_post_meta(get_the_ID(), '', true);
+
 		if (!is_array($metaKeys) || empty($metaKeys)) {
 			return [];
 		}
@@ -138,7 +148,9 @@ class ScriptLoaderGenericConfigurationDefault
 			}
 			if ($this->isEstateListPage($metaValue)) {
 				$filteredMetaKeys['estate'] = $metaValue;
-			} elseif ($this->isDetailEstatePage($metaValue)) {
+			} elseif ($this->isAddressListPage($metaValue)) {
+				$filteredMetaKeys['address'] = $metaValue;
+			} elseif ($this->isDetailEstatePage($metaValue) || $this->isDetailAddressPage($metaValue)) {
 				$filteredMetaKeys['detail'] = $metaValue;
 			} elseif ($this->isFormPage($metaValue)) {
 				$filteredMetaKeys['form'][] = $metaValue;
@@ -182,6 +194,26 @@ class ScriptLoaderGenericConfigurationDefault
 	private function isDetailEstatePage(string $content): bool
 	{
 		return $this->matchesShortcode($content, self::ESTATE_TAG, 'view', 'detail');
+	}
+	/**
+	 * @param string $content
+	 * @return bool
+	 */
+	private function isAddressListPage(string $content): bool
+	{
+		return ($this->matchesShortcode($content, self::ADDRESS_TAG, 'view', '[^"]*') &&
+				!$this->matchesShortcode($content, self::ADDRESS_TAG, 'view', 'detail')) ||
+				($this->matchesShortcode($content, self::ADDRESS_TAG, 'units', '[^"]*') &&
+				!$this->matchesShortcode($content, self::ADDRESS_TAG, 'view', 'detail'));
+	}
+
+	/**
+	 * @param string $content
+	 * @return bool
+	 */
+	private function isDetailAddressPage(string $content): bool
+	{
+		return $this->matchesShortcode($content, self::ADDRESS_TAG, 'view', 'detail');
 	}
 
 	/**
@@ -237,6 +269,12 @@ class ScriptLoaderGenericConfigurationDefault
 		$scripts[] = (new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/dist/onoffice-prevent-double-form-submission.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true);
+		if (!empty(get_option('onoffice-settings-thousand-separator'))) {
+			$scripts[] = (new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
+			$this->localizeApplyThousandSeparatorScript();
+		}
 
 		if ($this->checkFormType($forms, [Form::TYPE_APPLICANT_SEARCH])) {
 			$scripts[] = (new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/dist/onoffice-form-preview.min.js', $pluginPath)))
@@ -308,7 +346,7 @@ class ScriptLoaderGenericConfigurationDefault
 		}, $this->extractFormNames($pageContent));
 		$names = implode(',', $names);
 
-		if ($isDetailEstatePage) {
+		if ($isDetailEstatePage || $this->isDetailAddressPage($pageContent)) {
 			$names = "'" . esc_sql($shortcodeFormForDetailPage) . "'";
 		}
 
@@ -331,11 +369,44 @@ class ScriptLoaderGenericConfigurationDefault
 		return $matches[1];
 	}
 
+    /**
+     * @param array $values
+     * @param string $style
+     * @param string $pluginPath
+     * @return array
+     */
+    private function addAddressStyle(array $values, string $style, string $pluginPath) {
+        $pageContent = get_the_content();
+        if ($this->isDetailAddressPage($pageContent)) {
+            $values []= (new IncludeFileModel($style, 'onoffice-address-detail', plugins_url('/css/onoffice-address-detail.css', $pluginPath)));
+        }
+        return $values;
+    }
+
 	/**
 	 * @param array $scripts
 	 * @param string $pluginPath
 	 * @param string $script
-	 * @param string $style
+	 * @param string $defer
+	 * @return array
+	 */
+
+	private function renderScriptForAddressDetailPage(array $scripts, string $pluginPath, string $script, string $defer): array
+	{
+		$scripts[] = (new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadAsynchronous($defer);
+		$scripts[] = (new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/dist/onoffice_defaultview.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
+
+		return $scripts;
+	}
+	/**
+	 * @param array $scripts
+	 * @param string $pluginPath
+	 * @param string $script
 	 * @param string $defer
 	 * @return array
 	 */
@@ -380,6 +451,22 @@ class ScriptLoaderGenericConfigurationDefault
 	 * @param array $scripts
 	 * @param string $pluginPath
 	 * @param string $script
+	 * @return array
+	 */
+
+	private function renderScriptForAddressListPage(array $scripts, string $pluginPath, string $script): array
+	{
+		$scripts[] = (new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
+
+		return $scripts;
+	}
+
+	/**
+	 * @param array $scripts
+	 * @param string $pluginPath
+	 * @param string $script
 	 * @param string $style
 	 * @param string $defer
 	 * @return array
@@ -403,8 +490,12 @@ class ScriptLoaderGenericConfigurationDefault
 				->setDependencies(['onoffice-multiselect'])
 				->setLoadInFooter(true)
 				->setLoadAsynchronous($async);
+		$scripts[] = (new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
 
 		$this->localizeFormPreviewScript();
+		$this->localizeApplyThousandSeparatorScript();
 
 		return $scripts;
 	}
@@ -492,4 +583,14 @@ class ScriptLoaderGenericConfigurationDefault
         }
         return $onofficeCssStyleVersion;
     }
+
+	/**
+	 * @return void
+	 */
+	private function localizeApplyThousandSeparatorScript()
+	{
+		wp_localize_script('onoffice-apply-thousand-separator', 'onoffice_apply_thousand_separator', [
+			'thousand_separator_format' => get_option('onoffice-settings-thousand-separator')
+		]);
+	}
 }

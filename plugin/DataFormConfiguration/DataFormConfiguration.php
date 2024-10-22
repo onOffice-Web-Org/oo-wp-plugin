@@ -67,8 +67,8 @@ class DataFormConfiguration
 	/** @var bool */
 	private $_showEstateContext = false;
 
-	/** @var bool */
-	private $_contactType = '';
+	/** @var array */
+	private $_contactType = [];
 
 	/** @var string */
 	private $_recipient = '';
@@ -78,6 +78,31 @@ class DataFormConfiguration
 
 	/** @var array */
 	private $_markdownFields = [];
+
+	/** @var array */
+	private $_hiddenFields = [];
+
+	/** @var bool */
+	private $_writeActivity = false;
+
+	/** @var string */
+	private $_actionKind = '';
+
+	/** @var string */
+	private $_actionType = '';
+
+	/** @var string */
+	private $_characteristic = '';
+
+	/** @var string */
+	private $_remark = '';
+
+	/** @var string */
+	private $_originContact = '';
+
+	/** @var string */
+	private $_advisorylevel = '';
+
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -139,8 +164,8 @@ class DataFormConfiguration
 	public function setShowEstateContext(bool $showEstateContext)
 		{ $this->_showEstateContext = $showEstateContext; }
 
-	/** @param string $contactTypeField */
-	public function setContactTypeField(string $contactTypeField)
+	/** @param array $contactTypeField */
+	public function setContactTypeField(array $contactTypeField)
 		{ $this->_contactType = $contactTypeField; }
 
 	/** @return array */
@@ -150,6 +175,14 @@ class DataFormConfiguration
 	/** @param array $markdownFields */
 	public function setMarkdownFields(array $markdownFields)
 		{ $this->_markdownFields = $markdownFields; }
+
+	/** @return array */
+	public function getHiddenFields(): array
+	{ return $this->_hiddenFields; }
+
+	/** @param string $hiddenField */
+	public function addHiddenFields(string $hiddenField)
+	{ $this->_hiddenFields []= $hiddenField; }
 
 	/** @param string $requiredField */
 	public function addMarkdownFields(string $markdownFields)
@@ -208,8 +241,8 @@ class DataFormConfiguration
 	public function getShowEstateContext(): bool
 		{ return $this->_showEstateContext; }
 
-	/** @return string */
-	public function getContactType(): string
+	/** @return array */
+	public function getContactType(): array
 		{ return $this->_contactType; }
 
 	/** @return bool */
@@ -238,4 +271,60 @@ class DataFormConfiguration
 
 		return $this->_recipient;
 	}
+
+	/** @return bool */
+	public function getWriteActivity(): bool
+		{ return $this->_writeActivity; }
+
+	/** @param bool $writeActivity */
+	public function setWriteActivity(bool $writeActivity)
+		{ $this->_writeActivity = $writeActivity; }
+
+	/** @return string */
+	public function getActionKind(): string
+		{ return $this->_actionKind; }
+
+	/** @param string $actionKind */
+	public function setActionKind(string $actionKind)
+		{ $this->_actionKind = $actionKind; }
+	
+	/** @return string */
+	public function getActionType(): string
+		{ return $this->_actionType; }
+
+	/** @param string $actionType */
+	public function setActionType(string $actionType)
+		{ $this->_actionType = $actionType; }
+
+	/** @return string */
+	public function getCharacteristic(): string
+		{ return $this->_characteristic; }
+
+	/** @param string $characteristic */
+	public function setCharacteristic(string $characteristic)
+		{ $this->_characteristic = $characteristic; }
+	
+	/** @return string */
+	public function getRemark(): string
+		{ return $this->_remark; }
+
+	/** @param string $remark */
+	public function setRemark(string $remark)
+		{ $this->_remark = $remark; }
+	
+	/** @return string */
+	public function getOriginContact(): string
+		{ return $this->_originContact; }
+
+	/** @param string $originContact */
+	public function setOriginContact(string $originContact)
+		{ $this->_originContact = $originContact; }
+	
+	/** @return string */
+	public function getAdvisorylevel(): string
+		{ return $this->_advisorylevel; }
+
+	/** @param string $advisorylevel */
+	public function setAdvisorylevel(string $advisorylevel)
+		{ $this->_advisorylevel = $advisorylevel; }
 }

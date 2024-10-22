@@ -70,4 +70,46 @@ class RecordManagerUpdateForm
 
 		return $result;
 	}
+
+	/**
+	 * @param array $contactTypes
+	 *
+	 * @return bool
+	 */
+	public function updateContactTypeByRow(array $contactTypes): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$pWpDb->delete($prefix.self::TABLENAME_CONTACT_TYPES, ['form_id' => $this->getRecordId()]);
+
+		$result = true;
+		foreach ($contactTypes as $row) {
+			if (empty($row)) {
+				continue;
+			}
+
+			$result = $result && $pWpDb->insert($pWpDb->prefix.self::TABLENAME_CONTACT_TYPES, $row);
+		}
+
+		return $result;
+	}
+
+	/**
+	 *
+	 * @param array $row
+	 * @return bool
+	 *
+	 */
+
+	public function updateActivityConfigByRow(array $row): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$pWpDb->delete($prefix.self::TABLENAME_ACTIVITY_CONFIG_FORM, ['form_id' => $this->getRecordId()]);
+
+		$result = true;
+		$row['form_id'] = $this->getRecordId();
+
+		return $result && $pWpDb->insert($pWpDb->prefix.self::TABLENAME_ACTIVITY_CONFIG_FORM, $row);
+	}
 }

@@ -209,7 +209,8 @@
     border-bottom: 2px solid #efefef;
 }
 
-.oo-detailslisttd:nth-child(odd) {
+.oo-detailslisttd:nth-child(odd),
+.oo-field-label {
     font-weight: 700;
 }
 
@@ -268,6 +269,21 @@
 .oo-area-butler .oo-area-butler-iframe {
     height: 500px;
     width: 100%;
+}
+
+/* address list */
+.oo-address-listframe .oo-address-image {
+    width: 100%;
+    height: auto;
+}
+
+.oo-address-listframe .oo-listtd {
+    word-wrap: break-word;
+}
+
+.oo-address-listframe .oo-listinfotableview {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 /* responsive */

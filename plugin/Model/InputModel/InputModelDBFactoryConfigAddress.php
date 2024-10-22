@@ -75,6 +75,14 @@ class InputModelDBFactoryConfigAddress
 			self::KEY_TABLE => 'oo_plugin_address_fieldconfig',
 			self::KEY_FIELD => 'hidden',
 		],
+		self::INPUT_FIELD_CONVERT_INPUT_TEXT_TO_SELECT_FOR_FIELD => [
+			self::KEY_TABLE => 'oo_plugin_address_fieldconfig',
+			self::KEY_FIELD => 'convertInputTextToSelectForField',
+		],
+		InputModelDBFactory::INPUT_BILD_WEBSEITE => [
+			self::KEY_TABLE => 'oo_plugin_listviews_address',
+			self::KEY_FIELD => 'bildWebseite',
+		],
 	];
 
 

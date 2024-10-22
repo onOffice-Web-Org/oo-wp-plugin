@@ -52,12 +52,6 @@ abstract class AdminPageEstateListSettingsBase
 	extends AdminPageSettingsBase
 {
 	/** */
-	const FORM_VIEW_DOCUMENT_TYPES = 'viewdocumenttypes';
-
-	/** */
-	const FORM_VIEW_FIELDS_CONFIG = 'viewfieldsconfig';
-
-	/** */
 	const CUSTOM_LABELS = 'customlabels';
 
 	/**
@@ -71,6 +65,13 @@ abstract class AdminPageEstateListSettingsBase
 			echo '<div class="notice notice-error is-dismissible"><p>'
 				. esc_html__( 'There was a problem saving the list. The Name field cannot be empty.', 'onoffice-for-wp-websites' )
 				. '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
+		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'false' ) {
+			echo '<div class="notice notice-error is-dismissible"><p>'
+			     . esc_html__( 'There was a problem saving the view. Please make '
+			                   . 'sure the name of the view is unique, even across all estate list types.',
+					'onoffice-for-wp-websites' )
+			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
 		parent::renderContent();
 	}

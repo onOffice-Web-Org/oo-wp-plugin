@@ -37,6 +37,7 @@ use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 
 /**
  *
@@ -64,7 +65,7 @@ class FormAddressCreator
 	/**
 	 * @param FormData $pFormData
 	 * @param bool $mergeExisting
-	 * @param string $contactType
+	 * @param array $contactType
 	 * @param int|null $estateId
 	 * @return int the new (or updated) address ID
 	 * @throws ApiClientException
@@ -73,7 +74,7 @@ class FormAddressCreator
 	 * @throws NotFoundException
 	 */
 	public function createOrCompleteAddress(
-		FormData $pFormData, bool $mergeExisting = false, string $contactType = '', int $estateId = null): int
+		FormData $pFormData, bool $mergeExisting = false, array $contactType = [], int $estateId = null): int
 	{
 		$requestParams = $this->getAddressDataForApiCall($pFormData);
 		$requestParams['checkDuplicate'] = $mergeExisting;
@@ -402,5 +403,35 @@ class FormAddressCreator
 		}
 
 		return $addressData;
+	}
+
+	/**
+	 * @param DataFormConfiguration $pFormConfig
+	 * @param int $addressId
+	 * @param int|null $estateId
+	 */
+	public function createAgentsLog(DataFormConfiguration $pFormConfig, int $addressId, int $estateId = null)
+	{
+		if (empty($pFormConfig->getActionKind()) && empty($pFormConfig->getActionType()) && empty($pFormConfig->getCharacteristic()) && empty($pFormConfig->getRemark())) {
+			return;
+		}
+		$requestParams = [
+			'addressids' => [$addressId],
+			'actionkind' => $pFormConfig->getActionKind() ?: null,
+			'actiontype' => $pFormConfig->getActionType() ?: null,
+			'origincontact' => $pFormConfig->getOriginContact() ?: null,
+			'features' => !empty($pFormConfig->getCharacteristic()) ? explode(',', $pFormConfig->getCharacteristic()) : null,
+			'note' => $pFormConfig->getRemark(),
+		];
+
+		if (!empty($estateId)) {
+			$requestParams['estateid'] = $estateId;
+			$requestParams['advisorylevel'] = $pFormConfig->getAdvisorylevel() ?: null;
+		}
+
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'agentslog');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
 	}
 }
