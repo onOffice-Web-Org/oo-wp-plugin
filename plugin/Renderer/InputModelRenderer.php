@@ -300,6 +300,11 @@ class InputModelRenderer
 				$pInstance->setLabel($pInputModel->getLabel());
 				break;
 
+			case InputModelBase::HTML_TYPE_TEXTAREA:
+				$pInstance = new InputFieldTextAreaRenderer('textarea', $elementName);
+				$pInstance->setValue($pInputModel->getValue());
+				break;
+
 			case InputModelOption::HTML_VERTICAL_RADIO:
 				$pInstance = new InputFieldVerticalRadioRenderer($elementName, $pInputModel->getValuesAvailable());
 				if ($pInputModel->getHintHtml() != null) {

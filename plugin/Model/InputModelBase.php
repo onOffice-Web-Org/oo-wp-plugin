@@ -91,6 +91,9 @@ abstract class InputModelBase
 	const HTML_GOOGLE_RECAPTCHA_ACCOUNT = 'googleRecaptchaAccount';
 
 	/** */
+	const HTML_TYPE_TEXTAREA = 'textarea';
+
+	/** */
 	const HTML_VERTICAL_RADIO = 'verticalRadio';
 
 	/** @var string */
