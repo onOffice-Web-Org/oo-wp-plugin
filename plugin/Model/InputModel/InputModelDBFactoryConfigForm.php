@@ -102,9 +102,6 @@ class InputModelDBFactoryConfigForm
     const INPUT_FORM_CONTACT_TYPE = 'contactType';
 
 	/** */
-	const INPUT_FORM_SHOW_FORM_AS_MODAL = 'showFormAsModal';
-
-	/** */
 	const INPUT_FORM_WRITE_ACTIVITY = 'writeActivity';
 
 	/** */
