@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 51;
+	const MAX_VERSION = 53;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -334,7 +334,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryAddressFieldConfig());
 			$dbversion = 49;
 		}
-
+	
 		if ($dbversion == 49) {
 			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
 			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
@@ -342,8 +342,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 50) {
-			$this->updateContactImageTypesForDetailPage();
+			dbDelta($this->getCreateQueryFormActivityConfig());
 			$dbversion = 51;
+		}
+
+		if ($dbversion == 51) {
+			dbDelta($this->getCreateQueryListViewsAddress());
+			$dbversion = 52;
+		}
+
+		if ($dbversion == 52) {
+			$this->updateContactImageTypesForDetailPage();
+			$dbversion = 53;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -698,6 +708,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`template` tinytext NOT NULL,
 			`recordsPerPage` int(10) NOT NULL DEFAULT '10',
 			`showPhoto` tinyint(1) NOT NULL DEFAULT '0',
+			`bildWebseite` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
@@ -980,6 +991,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_contacttypes",
 			$prefix."oo_plugin_fieldconfig_address_customs_labels",
 			$prefix."oo_plugin_fieldconfig_address_translated_labels",
+			$prefix."oo_plugin_form_activityconfig",
 		);
 
 		foreach ($tables as $table)	{
@@ -1266,6 +1278,30 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`locale` tinytext NULL DEFAULT NULL,
 			`value` text,
 			PRIMARY KEY (`translated_label_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFormActivityConfig(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_form_activityconfig";
+		$sql = "CREATE TABLE $tableName (
+			`form_activityconfig_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` int(11) NOT NULL,
+			`write_activity` tinyint(1) NOT NULL DEFAULT '0',
+			`action_kind` tinytext NOT NULL,
+			`action_type` tinytext NOT NULL,
+			`origin_contact` tinytext NOT NULL,
+			`advisory_level` tinytext NOT NULL,
+			`characteristic` VARCHAR(255) NOT NULL,
+			`remark` text NOT NULL,
+			PRIMARY KEY (`form_activityconfig_id`)
 		) $charsetCollate;";
 
 		return $sql;
