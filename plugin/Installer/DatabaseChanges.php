@@ -336,7 +336,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryAddressFieldConfig());
 			$dbversion = 49;
 		}
-
+	
 		if ($dbversion == 49) {
 			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
 			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
@@ -349,9 +349,14 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 51) {
+			dbDelta($this->getCreateQueryListViewsAddress());
+			$dbversion = 52;
+		}
+
+		if ($dbversion == 52) {
 			$this->updatePriceFieldsOptionForSimilarEstate();
 			$this->updatePriceFieldsOptionDetailView();
-			$dbversion = 52;
+			$dbversion = 53;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -706,6 +711,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`template` tinytext NOT NULL,
 			`recordsPerPage` int(10) NOT NULL DEFAULT '10',
 			`showPhoto` tinyint(1) NOT NULL DEFAULT '0',
+			`bildWebseite` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
