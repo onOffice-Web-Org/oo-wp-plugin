@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\Types\ImageTypes;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -57,7 +59,9 @@ class DataAddressDetailView
 	];
 
 	/** @var string[] */
-	private $_pictureTypes = [];
+	private $_pictureTypes = [
+		ImageTypes::PASSPORTPHOTO
+	];
 
 	/** @var string */
 	private $_template = '';
