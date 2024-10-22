@@ -67,7 +67,8 @@ use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use onOffice\WPlugin\Record\AddressIdRequestGuard;
-use onOffice\WPlugin\Utility\AddressRedirector;
+use onOffice\WPlugin\Controller\Redirector\AddressRedirector;
+use onOffice\WPlugin\Controller\Redirector\EstateRedirector;
 use onOffice\WPlugin\Controller\AddressDetailUrl;
 
 const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
@@ -407,7 +408,7 @@ add_action('parse_request', function(WP $pWP) use ($pDI, $pEstateRedirection) {
 			include(get_query_template('404'));
 			die();
 		}
-		$pEstateIdGuard->estateDetailUrlChecker( $estateId, $pDI->get( Redirector::class ), $pEstateRedirection);
+		$pEstateIdGuard->estateDetailUrlChecker( $estateId, $pDI->get( EstateRedirector::class ), $pEstateRedirection);
 	}
 });
 

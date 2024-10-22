@@ -492,7 +492,7 @@ class AdminPageApiSettings
         $pInputModelShowTitleUrl->setDescriptionTextHTML(__('If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used.', 'onoffice-for-wp-websites'));
 
         $groupSlugView = 'onoffice-address-detail-view';
-        $showTitleInUrl = __('Enable "Speaking" URL in Address Detail', 'onoffice-for-wp-websites');
+        $showTitleInUrl = __('Show Name and Company in the URL', 'onoffice-for-wp-websites');
         $pInputModelShowInfoContactUrl = new InputModelOption($groupSlugView, 'showInfoUserUrl',
             $showTitleInUrl, InputModelOption::SETTING_TYPE_BOOLEAN);
         $pInputModelShowInfoContactUrl->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);

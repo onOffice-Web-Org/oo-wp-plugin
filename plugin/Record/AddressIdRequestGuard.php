@@ -31,7 +31,7 @@ use onOffice\WPlugin\Controller\AddressDetailUrl;
 use onOffice\WPlugin\Factory\AddressListFactory;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\Utility\AddressRedirector;
+use onOffice\WPlugin\Controller\Redirector\AddressRedirector;
 
 /**
  *

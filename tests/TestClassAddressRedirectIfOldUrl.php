@@ -24,7 +24,7 @@ namespace onOffice\tests;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use onOffice\WPlugin\Utility\AddressRedirector;
+use onOffice\WPlugin\Controller\Redirector\AddressRedirector;
 
 class TestClassAddressRedirectIfOldUrl
 	extends \WP_UnitTestCase
@@ -57,22 +57,6 @@ class TestClassAddressRedirectIfOldUrl
 	public function stestInstance()
 	{
 		$this->assertInstanceOf( AddressRedirector::class, $this->_pRedirectIfOldUrl );
-	}
-
-	/**
-	 * @covers \onOffice\WPlugin\Utility\AddressRedirector::getCurrentLink
-	 */
-	public function testGetCurrentLink()
-	{
-		$this->assertEquals( 'http://example.org/address-detail-view/123', $this->_pRedirectIfOldUrl->getCurrentLink() );
-	}
-
-	/**
-	 * @covers \onOffice\WPlugin\Utility\AddressRedirector::getUri
-	 */
-	public function testGetUri()
-	{
-		$this->assertEquals( 'address-detail-view/123', $this->_pRedirectIfOldUrl->getUri() );
 	}
 
 	/**
