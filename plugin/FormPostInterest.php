@@ -95,6 +95,7 @@ class FormPostInterest
 			if ( $pFormConfiguration->getCreateInterest() ) {
 				$checkDuplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
 						$contactType = $pFormConfiguration->getContactType();
+				$writeActivity = $pFormConfiguration->getWriteActivity();
 				$latestAddressIdOnEnterPrise = null;
 				if ($checkDuplicate) {
 					$latestAddressIdOnEnterPrise = $this->_pFormPostInterestConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
@@ -104,6 +105,9 @@ class FormPostInterest
 				$this->_messageDuplicateAddressData = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
 						->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 				$this->createSearchcriteria( $pFormData, $addressId );
+				if ($writeActivity) {
+					$this->_pFormPostInterestConfiguration->getFormAddressCreator()->createAgentsLog($pFormConfiguration, $addressId, null);
+				}
 				$this->setNewsletter( $addressId );
 			}
 		} finally {

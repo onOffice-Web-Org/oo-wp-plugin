@@ -248,6 +248,10 @@ implements AddressListBase
 			$fields []= 'imageUrl';
 		}
 
+		if ($this->getDataViewAddress() instanceof DataListViewAddress && $this->_pDataViewAddress->getBildWebseite()) {
+			$fields []= 'bildWebseite';
+		}
+
 		// only active fields
 		$fields = array_intersect($fields,
 			array_keys($this->_pEnvironment->getFieldnames()->getFieldList(onOfficeSDK::MODULE_ADDRESS)));
@@ -388,6 +392,12 @@ implements AddressListBase
 		$pAddressFieldModifier = $this->generateRecordModifier();
 		return array_map(function($values) use ($pAddressFieldModifier, $raw): ArrayContainer {
 			$valuesNew = $pAddressFieldModifier->processRecord($values);
+
+			if (!empty($valuesNew['bildWebseite'])) {
+				$valuesNew['imageUrl'] = $valuesNew['bildWebseite'];
+				unset($valuesNew['bildWebseite']);
+			}
+
 			return $this->getArrayContainerByRow($raw, $valuesNew);
 		}, $this->_addressesById);
 	}

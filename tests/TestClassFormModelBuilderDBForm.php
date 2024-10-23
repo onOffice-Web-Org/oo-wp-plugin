@@ -38,6 +38,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\SDKWrapper;
 
 class TestClassFormModelBuilderDBForm
 	extends WP_UnitTestCase
@@ -98,6 +99,24 @@ class TestClassFormModelBuilderDBForm
 			return $this->_pFieldsCollectionBuilderShort;
 		}));
 
+		$pSDKWrapperMocker = new SDKWrapperMocker();
+		$response = json_decode
+		(file_get_contents(__DIR__ . '/resources/ApiResponseActionKindTypes.json'), true);
+		/* @var $pSDKWrapperMocker SDKWrapperMocker */
+
+		$pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_GET, 'actionkindtypes', '', ['lang'=> "ENG"], null, $response);
+
+		$parameters = [
+			'labels' => true,
+			'language' => "ENG",
+			'fieldList' => ['merkmal', 'HerkunftKontakt'],
+			'modules' => ['agentsLog', 'address']
+		];
+		$pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_GET, 'fields', '', $parameters, null, $this->getResponseFieldCharacteristic());
+
+		$this->_pContainer->set(SDKWrapper::class, $pSDKWrapperMocker);
 		$this->_pInstance = new FormModelBuilderDBForm($this->_pContainer);
 	}
 
@@ -424,6 +443,108 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelCharacteristic
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::generate
+	 */
+	public function testCreateInputModelCharacteristic()
+	{
+		$this->_pInstance->setFormType('contact');
+
+		$this->_pInstance->generate('test');
+		$pInputModelDB = $this->_pInstance->createInputModelCharacteristic();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals(['invoiceOpen', 'invoiceOpen2'], $pInputModelDB->getValuesAvailable());
+		$this->assertTrue($pInputModelDB->getIsMulti());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select2');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelActionKind
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::generate
+	 */
+	public function testCreateInputModelActionKind()
+	{
+		$data = [
+			'' => "Please choose",
+			'Immofeedback / Terminnachbereitung' => "Immofeedback / Terminnachbereitung",
+			'Termin' => "Termin",
+			'AGB bestätigt' => "AGB bestätigt",
+			'Kaufpreisangebot' => "Kaufpreisangebot",
+			'Widerruf bestätigt' => "Widerruf bestätigt"
+		];
+		$this->_pInstance->setFormType('contact');
+
+		$this->_pInstance->generate('test');
+		$pInputModelDB = $this->_pInstance->createInputModelActionKind();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($data, $pInputModelDB->getValuesAvailable());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelActionType
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::generate
+	 */
+	public function testCreateInputModelActionType()
+	{
+		$this->_pInstance->setFormType('contact');
+
+		$this->_pInstance->generate('test');
+		$pInputModelDB = $this->_pInstance->createInputModelActionType();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelWriteActivity
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 */
+	public function testCreateInputModelWriteActivity()
+	{
+		$this->_pInstance->setFormType('contact');
+
+		$pInputModelDB = $this->_pInstance->createInputModelWriteActivity();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelRemark
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 */
+	public function testCreateInputModelRemark()
+	{
+		$this->_pInstance->setFormType('contact');
+
+		$pInputModelDB = $this->_pInstance->createInputModelRemark();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'textarea');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelOriginContact
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 */
+	public function testCreateInputModelOriginContact()
+	{
+		$this->_pInstance->setFormType('contact');
+
+		$this->_pInstance->generate('test');
+		$pInputModelDB = $this->_pInstance->createInputModelOriginContact();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelSubject
 	 */
 	public function testCreateInputModelSubject()
@@ -432,5 +553,63 @@ class TestClassFormModelBuilderDBForm
 
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'emailSubject');
+	}
+
+	/**
+	 *
+	 */
+	private function getResponseFieldCharacteristic()
+	{
+		$responseStr = '
+		{
+			"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+			"resourceid": "",
+			"resourcetype": "fields",
+			"cacheable": true,
+			"identifier": "",
+			"data": {
+				"meta": {
+				  "cntabsolute": null
+				},
+				"records": [
+				  {
+					"id": "agentsLog",
+					"type": "",
+					"elements": {
+					  "merkmal": {
+						"type": "multiselect",
+						"length": null,
+						"permittedvalues": [
+						  "invoiceOpen",
+						  "invoiceOpen2"
+						],
+						"default": null,
+						"filters": [],
+						"dependencies": [],
+						"compoundFields": []
+					  },
+					  "HerkunftKontakt": {
+						"type": "multiselect",
+						"length": null,
+						"permittedvalues": [
+						  "invoiceOpen",
+						  "invoiceOpen2"
+						],
+						"default": null,
+						"filters": [],
+						"dependencies": [],
+						"compoundFields": []
+					  }
+					}
+				  }
+				]
+			  },
+			"status": {
+				"errorcode": 0,
+				"message": "OK"
+			}
+		}';
+
+		return json_decode($responseStr, true);
 	}
 }

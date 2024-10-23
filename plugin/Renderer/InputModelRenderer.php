@@ -300,6 +300,11 @@ class InputModelRenderer
 				$pInstance->setLabel($pInputModel->getLabel());
 				break;
 
+			case InputModelBase::HTML_TYPE_TEXTAREA:
+				$pInstance = new InputFieldTextAreaRenderer('textarea', $elementName);
+				$pInstance->setValue($pInputModel->getValue());
+				break;
+
 			case InputModelBase::HTML_TYPE_EMAIL_SUBJECT:
 				$pInstance = new InputFieldSubjectForFormRenderer($elementName, $pInputModel->getValue());
 				if ($pInputModel->getHintHtml() != null) {
