@@ -233,7 +233,7 @@ class AdminPageApiSettings
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelTwitterCards);
 		$pFormModel->addInputModel($pInputModelOpenGraph);
-		$pFormModel->setGroupSlug('onoffice-settings');
+		$pFormModel->setGroupSlug('onoffice-settings-social-meta');
 		$pFormModel->setPageSlug($this->getPageSlug());
 		$pFormModel->setLabel(__('Social MetaData', 'onoffice-for-wp-websites'));
 
