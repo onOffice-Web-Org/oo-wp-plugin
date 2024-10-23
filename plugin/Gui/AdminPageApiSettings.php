@@ -73,14 +73,14 @@ class AdminPageApiSettings
 		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleMapsKey();
 		$this->addFormModelGoogleCaptcha();
-		$this->addFormModelSocialMetaData();
 		$this->addFormModelHoneypot();
 		$this->addFormModelFavorites($pageSlug);
         $this->addFormModelDetailView($pageSlug);
 		$this->addFormModelPagination($pageSlug);
 		$this->addFormModelSeparatorFormatSettings($pageSlug);
 		$this->addFormModelGoogleBotSettings();
-	}
+        $this->addFormModelSocialMetaData();
+    }
 
 
 	/**
@@ -233,7 +233,7 @@ class AdminPageApiSettings
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelTwitterCards);
 		$pFormModel->addInputModel($pInputModelOpenGraph);
-		$pFormModel->setGroupSlug('onoffice-settings');
+		$pFormModel->setGroupSlug('onoffice-social-metadata');
 		$pFormModel->setPageSlug($this->getPageSlug());
 		$pFormModel->setLabel(__('Social MetaData', 'onoffice-for-wp-websites'));
 
@@ -617,7 +617,7 @@ class AdminPageApiSettings
 	 */
 	private function addFormModelSeparatorFormatSettings(string $pageSlug)
 	{
-		$groupSlugPaging = 'onoffice-settings';
+		$groupSlugPaging = 'onoffice-thousand-separator';
 		$labelSeparatorFormatSettings = __('Separator Format Settings', 'onoffice-for-wp-websites');
 		$labelSeparatorCharacterFormat = __('Thousand Separator Format', 'onoffice-for-wp-websites');
 
