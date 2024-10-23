@@ -79,7 +79,7 @@ class AdminPageApiSettings
 		$this->addFormModelPagination($pageSlug);
 		$this->addFormModelSeparatorFormatSettings($pageSlug);
 		$this->addFormModelGoogleBotSettings();
-        $this->addFormModelSocialMetaData();
+		$this->addFormModelSocialMetaData();
     }
 
 
@@ -617,11 +617,10 @@ class AdminPageApiSettings
 	 */
 	private function addFormModelSeparatorFormatSettings(string $pageSlug)
 	{
-		$groupSlugPaging = 'onoffice-thousand-separator';
 		$labelSeparatorFormatSettings = __('Separator Format Settings', 'onoffice-for-wp-websites');
 		$labelSeparatorCharacterFormat = __('Thousand Separator Format', 'onoffice-for-wp-websites');
 
-		$pInputModelSeparatorCharacterFormat = new InputModelOption($groupSlugPaging, 'thousand-separator',
+		$pInputModelSeparatorCharacterFormat = new InputModelOption('onoffice-settings', 'thousand-separator',
 			$labelSeparatorCharacterFormat, InputModelOption::SETTING_TYPE_STRING);
 		$pInputModelSeparatorCharacterFormat->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$selectedThousandValue = get_option($pInputModelSeparatorCharacterFormat->getIdentifier(), '.');
@@ -634,7 +633,7 @@ class AdminPageApiSettings
 
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelSeparatorCharacterFormat);
-		$pFormModel->setGroupSlug($groupSlugPaging);
+		$pFormModel->setGroupSlug('onoffice-thousand-separator');
 		$pFormModel->setPageSlug($pageSlug);
 		$pFormModel->setLabel($labelSeparatorFormatSettings);
 	
