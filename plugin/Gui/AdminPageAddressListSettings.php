@@ -41,6 +41,15 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
 use function wp_enqueue_script;
 use onOffice\WPlugin\DataView\DataAddressDetailView;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
+use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelDelete;
+use onOffice\WPlugin\Field\CustomLabel\ModelToOutputConverter\CustomLabelRowSaver;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderFromNamesForm;
+use onOffice\WPlugin\Field\CustomLabel\Exception\CustomLabelDeleteException;
+use DI\DependencyException;
+use DI\NotFoundException;
+use onOffice\WPlugin\Field\UnknownFieldException;
 
 /**
  *
@@ -54,6 +63,12 @@ class AdminPageAddressListSettings
 {
 	/** @var FormModelBuilderDBAddress */
 	private $_pFormModelBuilderAddress = null;
+
+	/** @var FieldsCollection */
+	private $_pFieldsCollection = null;
+
+	/** */
+	const CUSTOM_LABELS = 'customlabels';
 
 	/**
 	 *
@@ -107,6 +122,7 @@ class AdminPageAddressListSettings
 		$this->addSortableFieldsList(array(onOfficeSDK::MODULE_ADDRESS), $this->_pFormModelBuilderAddress,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
 		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ADDRESS, $this->_pFormModelBuilderAddress);
+		$this->_pFieldsCollection = $pFieldsCollection;
 
 		$this->addFormModelName();
 		$this->addFormModelPictureTypes();
@@ -199,11 +215,13 @@ class AdminPageAddressListSettings
 	private function addFormModelPictureTypes()
 	{
 		$pInputModelPictureTypes = $this->_pFormModelBuilderAddress->createInputModelPictureTypes();
+		$pInputModelBildWebseite = $this->_pFormModelBuilderAddress->createInputModelBildWebseite();
 		$pFormModelPictureTypes = new FormModel();
 		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
 		$pFormModelPictureTypes->setGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
 		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
+		$pFormModelPictureTypes->addInputModel($pInputModelBildWebseite);
 		$this->addFormModel($pFormModelPictureTypes);
 	}
 
@@ -293,6 +311,8 @@ class AdminPageAddressListSettings
 				$row = [
 					RecordManager::TABLENAME_FIELDCONFIG_ADDRESS => $this->prepareRelationValues
 					(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS, 'listview_address_id', $row, $recordId),
+					RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS => $this->prepareRelationValues
+					(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS, 'listview_address_id', $row, $recordId),
 				];
 				$pRecordManagerInsert->insertAdditionalValues($row);
 				$result = true;
@@ -302,6 +322,9 @@ class AdminPageAddressListSettings
 			}
 		}
 
+		if ($result) {
+			$this->saveCustomLabels($recordId, $row, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS);
+		}
 		$pResult->result = $result;
 		$pResult->record_id = $recordId;
 	}
@@ -376,6 +399,8 @@ class AdminPageAddressListSettings
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
+			self::CUSTOM_LABELS => $this->readCustomLabels(),
+			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 		);
 	}
 
@@ -391,6 +416,77 @@ class AdminPageAddressListSettings
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviewsaddress-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script( 'oo-copy-shortcode');
+		wp_register_script('onoffice-custom-form-label-js',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', ['onoffice-multiselect'], '', true);
+		wp_enqueue_script('onoffice-custom-form-label-js');
+        $pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+        wp_register_script('onoffice-multiselect', plugins_url('dist/onoffice-multiselect.min.js', $pluginPath));
+        wp_register_style('onoffice-multiselect', plugins_url('css/onoffice-multiselect.css', $pluginPath));
+        wp_enqueue_script('onoffice-multiselect');
+        wp_enqueue_style('onoffice-multiselect');
+	}
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+	private function readCustomLabels(): array
+	{
+		$result = [];
+		/** @var CustomLabelRead $pCustomLabelRead*/
+		$pCustomLabelRead = $this->getContainer()->get(CustomLabelRead::class);
+		$pLanguage = $this->getContainer()->get(Language::class);
+		$currentLocale = $pLanguage->getLocale();
+		if (is_null($this->_pFieldsCollection)) {
+			return [];
+		}
+
+		foreach (array_chunk($this->_pFieldsCollection->getAllFields(), 100) as $pField) {
+			$pCustomLabelModel = $pCustomLabelRead->getCustomLabelsFieldsForAdmin
+			((int)$this->getListViewId(), $pField, $currentLocale, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS);
+			if (count($pCustomLabelModel)) $result = array_merge($result, $pCustomLabelModel);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param int $recordId
+	 * @param array $row
+	 * @param string $pCustomsLabelConfigurationField
+	 * @param string $pTranslateLabelConfigurationField
+	 * @throws CustomLabelDeleteException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws RecordManagerInsertException
+	 * @throws UnknownFieldException
+	 */
+
+	private function saveCustomLabels(int $recordId, array $row ,string $pCustomsLabelConfigurationField, string $pTranslateLabelConfigurationField)
+	{
+		$fields = $row[RecordManager::TABLENAME_FIELDCONFIG_ADDRESS] ?? [];
+		$fieldNamesSelected = array_column($fields, 'fieldname');
+
+		foreach ($fieldNamesSelected as $key => $name) {
+			if (!$this->_pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ADDRESS, $name)) {
+				unset($fieldNamesSelected[$key]);
+				unset($row['oo_plugin_fieldconfig_address_translated_labels'][$name]);
+			}
+		}
+		/** @var FieldsCollectionBuilderFromNamesForm $pFieldsCollectionBuilder */
+		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderFromNamesForm::class);
+		$pFieldsCollectionCurrent = $pFieldsCollectionBuilder->buildFieldsCollectionFromBaseCollection
+		($fieldNamesSelected, $this->_pFieldsCollection);
+
+		/** @var CustomLabelDelete $pCustomLabelDelete */
+		$pCustomLabelDelete = $this->getContainer()->get(CustomLabelDelete::class);
+		$pCustomLabelDelete->deleteByFormIdAndFieldNames($recordId, $fieldNamesSelected, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
+
+		$pCustomLabelSave = $this->getContainer()->get(CustomLabelRowSaver::class);
+		$pCustomLabelSave->saveCustomLabels($recordId,
+			$row['oo_plugin_fieldconfig_address_translated_labels'] ?? [], $pFieldsCollectionCurrent, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
 	}
 
 	/**
