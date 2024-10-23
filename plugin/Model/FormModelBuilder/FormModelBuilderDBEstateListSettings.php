@@ -966,9 +966,10 @@ class FormModelBuilderDBEstateListSettings
 		(InputModelDBFactory::INPUT_FORWARDING_PAGE_ID, $labelForwardingPage);
 		$pInputModelForwardingPage->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 		$pInputModelForwardingPage->setValuesAvailable(array('' => '') + $this->getPages());
-		$documentLink = '<a href="" target="_blank">' . __( 'Documentation', 'onoffice-for-wp-websites' ) . '</a>';
+		$pluginDocumentationLink = __("https://wp-plugin.onoffice.com/", 'onoffice-for-wp-websites');
+		$documentLinkHTML = '<a href="' . esc_attr($pluginDocumentationLink) . '" target="_blank">' . __( 'Documentation', 'onoffice-for-wp-websites') . '</a>';
 		$pInputModelForwardingPage->setValue($this->getValue($pInputModelForwardingPage->getField()));
-		$pInputModelForwardingPage->setDescriptionTextHTML(sprintf(__('You can find out more about the property search in our %s.', 'onoffice-for-wp-websites'), $documentLink));
+		$pInputModelForwardingPage->setDescriptionTextHTML(sprintf(__('You can find out more about the property search in our %s.', 'onoffice-for-wp-websites'), $documentLinkHTML));
 
 		return $pInputModelForwardingPage;
 	}
