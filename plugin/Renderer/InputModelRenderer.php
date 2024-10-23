@@ -301,6 +301,11 @@ class InputModelRenderer
 				$pInstance->setValue($pInputModel->getValue());
 				$pInstance->setLabel($pInputModel->getLabel());
 				break;
+
+			case InputModelBase::HTML_TYPE_TEXTAREA:
+				$pInstance = new InputFieldTextAreaRenderer('textarea', $elementName);
+				$pInstance->setValue($pInputModel->getValue());
+				break;
 		}
 
 		if ($pInstance !== null) {

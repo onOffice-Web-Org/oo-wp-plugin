@@ -82,6 +82,27 @@ class DataFormConfiguration
 	/** @var array */
 	private $_hiddenFields = [];
 
+	/** @var bool */
+	private $_writeActivity = false;
+
+	/** @var string */
+	private $_actionKind = '';
+
+	/** @var string */
+	private $_actionType = '';
+
+	/** @var string */
+	private $_characteristic = '';
+
+	/** @var string */
+	private $_remark = '';
+
+	/** @var string */
+	private $_originContact = '';
+
+	/** @var string */
+	private $_advisorylevel = '';
+
 	/** @var array */
 	private $_pagePerForm = [];
 
@@ -265,4 +286,60 @@ class DataFormConfiguration
 
 		return $this->_recipient;
 	}
+
+	/** @return bool */
+	public function getWriteActivity(): bool
+		{ return $this->_writeActivity; }
+
+	/** @param bool $writeActivity */
+	public function setWriteActivity(bool $writeActivity)
+		{ $this->_writeActivity = $writeActivity; }
+
+	/** @return string */
+	public function getActionKind(): string
+		{ return $this->_actionKind; }
+
+	/** @param string $actionKind */
+	public function setActionKind(string $actionKind)
+		{ $this->_actionKind = $actionKind; }
+	
+	/** @return string */
+	public function getActionType(): string
+		{ return $this->_actionType; }
+
+	/** @param string $actionType */
+	public function setActionType(string $actionType)
+		{ $this->_actionType = $actionType; }
+
+	/** @return string */
+	public function getCharacteristic(): string
+		{ return $this->_characteristic; }
+
+	/** @param string $characteristic */
+	public function setCharacteristic(string $characteristic)
+		{ $this->_characteristic = $characteristic; }
+	
+	/** @return string */
+	public function getRemark(): string
+		{ return $this->_remark; }
+
+	/** @param string $remark */
+	public function setRemark(string $remark)
+		{ $this->_remark = $remark; }
+	
+	/** @return string */
+	public function getOriginContact(): string
+		{ return $this->_originContact; }
+
+	/** @param string $originContact */
+	public function setOriginContact(string $originContact)
+		{ $this->_originContact = $originContact; }
+	
+	/** @return string */
+	public function getAdvisorylevel(): string
+		{ return $this->_advisorylevel; }
+
+	/** @param string $advisorylevel */
+	public function setAdvisorylevel(string $advisorylevel)
+		{ $this->_advisorylevel = $advisorylevel; }
 }
