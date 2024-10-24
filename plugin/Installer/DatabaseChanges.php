@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 53;
+	const MAX_VERSION = 54;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -356,9 +356,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 53;
 		}
 
-		if ($dbversion == 51) {
+		if ($dbversion == 53) {
 			dbDelta($this->getCreateQueryFormFieldConfig());
-			$dbversion = 52;
+			$dbversion = 54;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
