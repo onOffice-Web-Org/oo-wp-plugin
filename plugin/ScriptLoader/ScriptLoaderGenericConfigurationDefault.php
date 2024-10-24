@@ -96,11 +96,11 @@ class ScriptLoaderGenericConfigurationDefault
 	private function addScripts(string $pluginPath, string $script, string $style, string $defer, string $async): array
 	{
 		$scripts = [];
-		$pageContent = get_the_content();
+		$pageContent = $this->getCurrentPostContent();
 
 		$shortcode = $this->getShortcodeByPostMeta();
 
-		if (empty($pageContent)) {
+		if (empty($pageContent) && empty($shortcode)) {
 			return $scripts;
 		}
 
@@ -113,16 +113,17 @@ class ScriptLoaderGenericConfigurationDefault
 			$scripts = $this->renderScriptForEstateListPage($scripts, $pluginPath, $script, $async);
 		}
 
-		if ($this->isDetailEstatePage($pageContent) || !empty($shortcode['detail'])) {
+		$isDetailEstatePage = $this->isDetailEstatePage($pageContent) || !empty($shortcode['detail']);
+		if ($isDetailEstatePage) {
 			$scripts = $this->renderScriptForEstateDetailPage($scripts, $pluginPath, $script, $defer);
 		}
 
 		$shortcodeFormForDetailPage = !empty(get_option('onoffice-default-view')) ? get_option('onoffice-default-view')->getShortCodeForm() : '';
 		if ($this->isFormPage($pageContent) || (is_array($shortcode) && !empty($shortcode['form']))
-			|| ($this->isDetailEstatePage($pageContent) && ! empty($shortcodeFormForDetailPage))
+			|| ($isDetailEstatePage && ! empty($shortcodeFormForDetailPage))
 			|| ($this->isDetailAddressPage($pageContent) && ! empty($shortcodeFormForDetailPage))) {
 			$pageContent = ($this->isFormPage($pageContent) || $this->isDetailEstatePage($pageContent) || $this->isDetailAddressPage($pageContent)) ? $pageContent : $shortcode['form'];
-			$scripts = $this->renderScriptForFormPage($scripts, $pluginPath, $script, $pageContent, $async, $shortcodeFormForDetailPage);
+			$scripts = $this->renderScriptForFormPage($scripts, $pluginPath, $script, $pageContent, $async, $isDetailEstatePage, $shortcodeFormForDetailPage);
 		}
 
 		return $scripts;
@@ -157,6 +158,21 @@ class ScriptLoaderGenericConfigurationDefault
 		});
 
 		return $filteredMetaKeys;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCurrentPostContent(): string
+	{
+		$post_id = get_the_ID();
+		if ($post_id) {
+			$post = get_post($post_id);
+
+			return $post->post_content;
+		}
+
+		return '';
 	}
 
 	/**
@@ -229,12 +245,13 @@ class ScriptLoaderGenericConfigurationDefault
 	 * @param mixed $pageContent
 	 * @param string $async
 	 * @param string $shortcodeFormForDetailPage
+	 * @param bool $isDetailEstatePage
 	 * @return array
 	 */
 
-	private function renderScriptForFormPage(array $scripts, string $pluginPath, string $script, $pageContent, string $async, string $shortcodeFormForDetailPage = ''): array
+	private function renderScriptForFormPage(array $scripts, string $pluginPath, string $script, $pageContent, string $async, bool $isDetailEstatePage, string $shortcodeFormForDetailPage = ''): array
 	{
-		$forms = $this->getFormsByPageContent($pageContent, $shortcodeFormForDetailPage);
+		$forms = $this->getFormsByPageContent($pageContent, $isDetailEstatePage, $shortcodeFormForDetailPage);
 
 		$scripts[] = (new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
@@ -310,10 +327,11 @@ class ScriptLoaderGenericConfigurationDefault
 	/**
 	 * @param mixed $pageContent
 	 * @param string $shortcodeFormForDetailPage
+	 * @param bool $isDetailEstatePage
 	 * @return array
 	 */
 
-	private function getFormsByPageContent($pageContent, string $shortcodeFormForDetailPage): array
+	private function getFormsByPageContent($pageContent, bool $isDetailEstatePage, string $shortcodeFormForDetailPage): array
 	{
 		if (is_array($pageContent)) {
 			$pageContent = implode(',', $pageContent);
@@ -328,7 +346,7 @@ class ScriptLoaderGenericConfigurationDefault
 		}, $this->extractFormNames($pageContent));
 		$names = implode(',', $names);
 
-		if ($this->isDetailEstatePage($pageContent) || $this->isDetailAddressPage($pageContent)) {
+		if ($isDetailEstatePage || $this->isDetailAddressPage($pageContent)) {
 			$names = "'" . esc_sql($shortcodeFormForDetailPage) . "'";
 		}
 
@@ -415,7 +433,8 @@ class ScriptLoaderGenericConfigurationDefault
 
     private function renderStyleForEstateDetailPage(string $pluginPath, string $style): array {
         $styles = [];
-        $pageContent = get_the_content();
+        $pageContent = $this->getCurrentPostContent();
+
         if (empty($pageContent)) {
             return $styles;
         }
