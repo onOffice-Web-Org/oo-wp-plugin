@@ -352,8 +352,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 52) {
-			dbDelta($this->getCreateQueryFormFieldConfig());
+			$this->updateContactImageTypesForDetailPage();
 			$dbversion = 53;
+		}
+
+		if ($dbversion == 51) {
+			dbDelta($this->getCreateQueryFormFieldConfig());
+			$dbversion = 52;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1306,5 +1311,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 		) $charsetCollate;";
 
 		return $sql;
+	}
+
+	/**
+	 * @return void
+	 */
+
+	private function updateContactImageTypesForDetailPage()
+	{
+		$pDataDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
+		if(!empty($pDataDetailViewOptions) && in_array('imageUrl', $pDataDetailViewOptions->getAddressFields())){
+			$pDataDetailViewOptions->setContactImageTypes([ImageTypes::PASSPORTPHOTO]);
+			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
+		}
 	}
 }
