@@ -32,8 +32,8 @@ use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Controller\Redirector\EstateRedirector;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
-use onOffice\WPlugin\Utility\Redirector;
 
 /**
  *
@@ -101,15 +101,15 @@ class EstateIdRequestGuard
 	/**
 	 *
 	 * @param  int  $estateId
-	 * @param  Redirector  $pRedirector
+	 * @param  EstateRedirector  $pEstateRedirector
 	 * @param bool $pEstateRedirection
 	 *
 	 * @return void
 	 */
 
-	public function estateDetailUrlChecker( int $estateId, Redirector $pRedirector, bool $pEstateRedirection ) {
+	public function estateDetailUrlChecker(int $estateId, EstateRedirector $pEstateRedirector, bool $pEstateRedirection ) {
 		$estateTitle = $this->_estateData->getValue( 'objekttitel' );
-		$pRedirector->redirectDetailView($estateId, $estateTitle, $pEstateRedirection);
+		$pEstateRedirector->redirectDetailView($estateId, $estateTitle, $pEstateRedirection);
 	}
 
 	/**
