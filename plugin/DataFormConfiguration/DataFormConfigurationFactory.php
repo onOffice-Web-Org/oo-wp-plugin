@@ -180,11 +180,36 @@ class DataFormConfigurationFactory
 		$this->_pGeoPositionFieldHandler->readValues($pConfig);
 		$rowFields = $this->configureGeoFields($rowFields);
 
+		if ($this->_type !== Form::TYPE_APPLICANT_SEARCH){
+			$rowActivityConfig = $this->_pRecordManagerRead->readActivityConfigByFormId($formId);
+			$this->configureActivity($pConfig, $rowActivityConfig);
+		}
+
 		foreach ($rowFields as $fieldRow) {
 			$this->configureFieldsByRow($fieldRow, $pConfig);
 		}
 
 		return $pConfig;
+	}
+
+
+	/**
+	 * @param DataFormConfiguration\DataFormConfiguration $pFormConfiguration
+	 * @param array|null $row
+	 * @return void
+	 */
+	private function configureActivity(DataFormConfiguration\DataFormConfiguration $pFormConfiguration, array $row = null)
+	{
+		if (empty($row)) {
+			return;
+		}
+		$pFormConfiguration->setWriteActivity((bool)$row['write_activity'] ?? false);
+		$pFormConfiguration->setActionKind($row['action_kind'] ?? '');
+		$pFormConfiguration->setActionType($row['action_type'] ?? '');
+		$pFormConfiguration->setCharacteristic($row['characteristic'] ?? '');
+		$pFormConfiguration->setRemark($row['remark'] ?? '');
+		$pFormConfiguration->setOriginContact($row['origin_contact'] ?? '');
+		$pFormConfiguration->setAdvisorylevel($row['advisory_level'] ?? '');
 	}
 
 
@@ -283,7 +308,7 @@ class DataFormConfigurationFactory
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
 		$pConfig->setNewsletterCheckbox((bool)$row['newsletter']);
 		$pConfig->setShowEstateContext((bool)$row['show_estate_context']);
-		$pConfig->setContactTypeField($row['contact_type'] ?? '');
+		$pConfig->setContactTypeField($row['contact_type'] ?? []);
 	}
 
 
@@ -336,7 +361,7 @@ class DataFormConfigurationFactory
 		$pConfig->setPages($row['pages']);
 		$pConfig->setCreateOwner((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
-		$pConfig->setContactTypeField($row['contact_type'] ?? '');
+		$pConfig->setContactTypeField($row['contact_type'] ?? []);
 	}
 
 
@@ -354,7 +379,7 @@ class DataFormConfigurationFactory
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCreateInterest((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
-		$pConfig->setContactTypeField($row['contact_type'] ?? '');
+		$pConfig->setContactTypeField($row['contact_type'] ?? []);
 	}
 
 

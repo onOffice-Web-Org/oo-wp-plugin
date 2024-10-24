@@ -167,6 +167,8 @@ class RecordManagerReadForm
 		$result['filterable'] = array_keys(array_filter(array_column($resultFieldConfig, 'filterable', 'fieldname')));
 		$result['hidden'] = array_keys(array_filter(array_column($resultFieldConfig, 'hidden', 'fieldname')));
 
+		$result['contact_type'] = $this->readContactTypesByFormId($result['form_id']);
+
 		return $result;
 	}
 
@@ -262,5 +264,24 @@ class RecordManagerReadForm
 		$returnValues['all'] = array_sum($returnValues);
 
 		return $returnValues;
+	}
+
+	/**
+	 *
+	 * @param int $formId
+	 * @return array
+	 *
+	 */
+
+	public function readActivityConfigByFormId(int $formId): array
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlFields = "SELECT *
+			FROM {$prefix}oo_plugin_form_activityconfig
+			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($formId)."";
+
+		return $pWpDb->get_row($sqlFields, ARRAY_A) ?? [];
 	}
 }

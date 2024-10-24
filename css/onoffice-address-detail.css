@@ -1,0 +1,58 @@
+.oo-address {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin-bottom: 4rem;
+}
+.oo-address-name {
+    flex: 1 0 100%;
+}
+.oo-address-picture {
+    margin-bottom: 0.25rem;
+}
+.oo-address-fieldlist {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+.oo-address-field {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+.oo-address-field-label {
+    margin-right: 0.5rem;
+    font-weight: bold;
+    word-break: break-word;
+}
+.oo-address-field-label {
+    word-break: break-word;
+}
+.oo-address-estatelist {
+    margin-bottom: 4rem;
+}
+.oo-address-form {
+    margin-bottom: 4rem;
+}
+@media only screen and (min-width: 960px) {
+    .oo-address {
+        flex-direction: row;
+        margin-bottom: 7.5rem;
+    }
+    .oo-address-picture {
+        flex: 1 0 50%;
+        padding-right: 2rem
+    }
+    .oo-address-fieldlist {
+        flex: 1 0 50%;
+        padding-left: 2rem;
+    }
+    .oo-address-estatelist {
+        margin-bottom: 7.5rem;
+    }
+    .oo-address-form {
+        margin-bottom: 7.5rem;
+    }
+}

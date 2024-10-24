@@ -74,6 +74,8 @@ class TestClassDataListViewFactoryAddress
 		$this->assertEquals($row['template'], $pDataListViewAddress->getTemplate());
 		$this->assertEquals($row['filterable'], $pDataListViewAddress->getFilterableFields());
 		$this->assertEquals($row['hidden'], $pDataListViewAddress->getHiddenFields());
+		$this->assertEquals($row['convertInputTextToSelectForField'], $pDataListViewAddress->getConvertInputTextToSelectForField());
+		$this->assertEquals($row['bildWebseite'], $pDataListViewAddress->getBildWebseite());
 	}
 
 
@@ -97,6 +99,8 @@ class TestClassDataListViewFactoryAddress
 			'sortby' => 'field25',
 			'sortorder' => 'DESC',
 			'template' => 'testtemplate',
+			'convertInputTextToSelectForField' => ['Ort'],
+			'bildWebseite' => true,
 		];
 
 		return $row;

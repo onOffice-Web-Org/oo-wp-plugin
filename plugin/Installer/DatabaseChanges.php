@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 46;
+	const MAX_VERSION = 53;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -319,6 +319,43 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 46;
 		}
 
+		if ($dbversion == 46) {
+			dbDelta($this->getCreateQueryContactTypes());
+			$this->migrateContactTypes();
+			$dbversion = 47;
+		}
+
+		if ($dbversion == 47) {
+			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 48;
+		}
+
+		if ($dbversion == 48) {
+			dbDelta($this->getCreateQueryAddressFieldConfig());
+			$dbversion = 49;
+		}
+	
+		if ($dbversion == 49) {
+			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
+			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
+			$dbversion = 50;
+		}
+
+		if ($dbversion == 50) {
+			dbDelta($this->getCreateQueryFormActivityConfig());
+			$dbversion = 51;
+		}
+
+		if ($dbversion == 51) {
+			dbDelta($this->getCreateQueryListViewsAddress());
+			$dbversion = 52;
+		}
+
+		if ($dbversion == 52) {
+			$this->updateContactImageTypesForDetailPage();
+			$dbversion = 53;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -404,13 +441,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
-			`sortBySetting` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined',
+			`sortBySetting` ENUM('0','1','2') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined',
 			`sortByUserDefinedDefault` VARCHAR(200) NOT NULL COMMENT 'Standardsortierung',
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
 			`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
 			`show_map` tinyint(1) NOT NULL DEFAULT '1',
 			`show_price_on_request` tinyint(1) NOT NULL DEFAULT '0',
+			`markedPropertiesSort` VARCHAR( 255 ) NOT NULL DEFAULT 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz',
+			`sortByTags` tinytext NOT NULL,
+			`sortByTagsDirection` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -535,6 +575,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`fieldname` tinytext NOT NULL,
 			`filterable` tinyint(1) NOT NULL DEFAULT '0',
 			`hidden` tinyint(1) NOT NULL DEFAULT '0',
+			`convertInputTextToSelectForField` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`address_fieldconfig_id`)
 		) $charsetCollate;";
 
@@ -607,6 +648,45 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryContactTypes()
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_contacttypes";
+		$sql =  "CREATE TABLE $tableName (
+			`contacttype_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` int(11) NOT NULL,
+			`contact_type` varchar(100) NOT NULL,
+			PRIMARY KEY (`contacttype_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return void
+	 */
+	private function migrateContactTypes()
+	{
+		$prefix = $this->getPrefix();
+		$tableForm = $prefix."oo_plugin_forms";
+		$tableContactTypes = $prefix."oo_plugin_contacttypes";
+		$contactTypes = $this->_pWPDB->get_results("SELECT form_id, contact_type 
+			FROM $tableForm
+			WHERE contact_type IS NOT NULL 
+			AND contact_type != '' ", ARRAY_A);
+
+		if (!empty($contactTypes) && is_array($contactTypes)) {
+			foreach ($contactTypes as $contactType) {
+				$formId = esc_sql((int) $contactType['form_id']);
+				$value = esc_sql($contactType['contact_type']);
+				$this->_pWPDB->insert($tableContactTypes, ['form_id' => $formId, 'contact_type' => $value]);
+			}
+		}
+	}
 
 	/**
 	 *
@@ -628,6 +708,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`template` tinytext NOT NULL,
 			`recordsPerPage` int(10) NOT NULL DEFAULT '10',
 			`showPhoto` tinyint(1) NOT NULL DEFAULT '0',
+			`bildWebseite` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
@@ -907,6 +988,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_form_translated_labels",
 			$prefix."oo_plugin_fieldconfig_estate_customs_labels",
 			$prefix."oo_plugin_fieldconfig_estate_translated_labels",
+			$prefix."oo_plugin_contacttypes",
+			$prefix."oo_plugin_fieldconfig_address_customs_labels",
+			$prefix."oo_plugin_fieldconfig_address_translated_labels",
+			$prefix."oo_plugin_form_activityconfig",
 		);
 
 		foreach ($tables as $table)	{
@@ -1159,5 +1244,79 @@ class DatabaseChanges implements DatabaseChangesInterface
 			SET country_active = 1, radius_active = 1";
 
 		$this->_pWPDB->query($sql);
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigAddressCustomsLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_address_customs_labels";
+		$sql = "CREATE TABLE $tableName (
+			`customs_labels_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` bigint(20) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			PRIMARY KEY (`customs_labels_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigAddressTranslatedLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_address_translated_labels";
+		$sql = "CREATE TABLE $tableName (
+			`translated_label_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`input_id` bigint(20) NOT NULL,
+			`locale` tinytext NULL DEFAULT NULL,
+			`value` text,
+			PRIMARY KEY (`translated_label_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFormActivityConfig(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_form_activityconfig";
+		$sql = "CREATE TABLE $tableName (
+			`form_activityconfig_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` int(11) NOT NULL,
+			`write_activity` tinyint(1) NOT NULL DEFAULT '0',
+			`action_kind` tinytext NOT NULL,
+			`action_type` tinytext NOT NULL,
+			`origin_contact` tinytext NOT NULL,
+			`advisory_level` tinytext NOT NULL,
+			`characteristic` VARCHAR(255) NOT NULL,
+			`remark` text NOT NULL,
+			PRIMARY KEY (`form_activityconfig_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return void
+	 */
+
+	private function updateContactImageTypesForDetailPage()
+	{
+		$pDataDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
+		if(!empty($pDataDetailViewOptions) && in_array('imageUrl', $pDataDetailViewOptions->getAddressFields())){
+			$pDataDetailViewOptions->setContactImageTypes([ImageTypes::PASSPORTPHOTO]);
+			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
+		}
 	}
 }

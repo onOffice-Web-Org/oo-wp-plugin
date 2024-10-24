@@ -73,7 +73,7 @@ class InputModelRenderer
 		foreach ($pFormModel->getInputModel() as $pInputModel) {
 			$pInputField = $this->createInputField($pInputModel, $pFormModel);
 			$italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
-			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON) {
+			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_SORTABLE_TAGS) {
 				echo '<p id="" class="wp-clearfix custom-input-field">';
 				echo '<label class="howto custom-label" for="'. esc_html($pInputField->getGuiId()).'">';
 				echo $pInputModel->getLabel(). $italicText;
@@ -293,6 +293,17 @@ class InputModelRenderer
                 }
 				$pInstance->setCheckedValues($pInputModel->getValue());
 			break;
+
+			case InputModelOption::HTML_TYPE_SORTABLE_TAGS:
+				$pInstance = new SortableTagsRenderer($elementName, $pInputModel->getValuesAvailable());
+				$pInstance->setValue($pInputModel->getValue());
+				$pInstance->setLabel($pInputModel->getLabel());
+				break;
+
+			case InputModelBase::HTML_TYPE_TEXTAREA:
+				$pInstance = new InputFieldTextAreaRenderer('textarea', $elementName);
+				$pInstance->setValue($pInputModel->getValue());
+				break;
 		}
 
 		if ($pInstance !== null) {
@@ -336,6 +347,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
 			case InputModelOption::HTML_SEARCH_FIELD_FOR_FIELD_LISTS:
 			case InputModelOption::HTML_TYPE_TOGGLE_SWITCH:
+			case InputModelOption::HTML_TYPE_SELECT_TWO:
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}

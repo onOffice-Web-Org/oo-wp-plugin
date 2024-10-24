@@ -155,13 +155,6 @@ abstract class AdminPageSettingsBase
 			     . esc_html__( 'The view has been saved.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
-		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'false' ) {
-			echo '<div class="notice notice-error is-dismissible"><p>'
-			     . esc_html__( 'There was a problem saving the view. Please make '
-			                   . 'sure the name of the view is unique, even across all estate list types.',
-					'onoffice-for-wp-websites' )
-			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
-		}
 		do_action( 'add_meta_boxes', get_current_screen()->id, null );
 		$this->generateMetaBoxes();
 
@@ -264,6 +257,9 @@ abstract class AdminPageSettingsBase
 		$row['oo_plugin_fieldconfig_estate_translated_labels'] =
 			(array)($row['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
 			(array)($values->{'customlabel-lang'}) ?? [];
+		$row['oo_plugin_fieldconfig_address_translated_labels'] =
+			(array)($row['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
+			(array)($values->{'customlabel-lang'}) ?? [];
 
 		if ($checkResult) {
 			$this->updateValues($row, $pResultObject, $recordId);
@@ -327,6 +323,9 @@ abstract class AdminPageSettingsBase
 		$row['oo_plugin_fieldconfig_estate_translated_labels'] =
 			(array)($row['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
 			(array)($values->{'customlabel-lang'} ?? [] );
+		$row['oo_plugin_fieldconfig_address_translated_labels'] =
+			(array)($row['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
+			(array)($values->{'customlabel-lang'}) ?? [];
 			
 		if ( $checkResult ) {
 			$this->updateValues( $row, $pResultObject, $recordId );
