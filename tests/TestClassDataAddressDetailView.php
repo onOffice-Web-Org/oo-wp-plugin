@@ -25,6 +25,7 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\DataView\DataAddressDetailView;
 use WP_UnitTestCase;
+use onOffice\WPlugin\Types\ImageTypes;
 
 class TestClassDataAddressDetailView
 	extends WP_UnitTestCase
@@ -50,7 +51,7 @@ class TestClassDataAddressDetailView
 		$this->assertEquals(self::DEFAULT_FIELDS, $pDataAddressDetailView->getFields());
 		$this->assertEquals('detail', $pDataAddressDetailView->getName());
 		$this->assertEquals(0, $pDataAddressDetailView->getPageId());
-		$this->assertEquals([], $pDataAddressDetailView->getPictureTypes());
+		$this->assertEquals([ImageTypes::PASSPORTPHOTO], $pDataAddressDetailView->getPictureTypes());
 		$this->assertEquals('', $pDataAddressDetailView->getTemplate());
 		$this->assertEquals([], $pDataAddressDetailView->getPageIdsHaveDetailShortCode());
 		$this->assertEquals([], $pDataAddressDetailView->getCustomLabels());
