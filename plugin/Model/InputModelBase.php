@@ -93,6 +93,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_TEXTAREA = 'textarea';
 
+	/** */
+	const HTML_TYPE_EMAIL_SUBJECT = 'emailSubject';
+
 	/** @var string */
 	private $_name = null;
 
