@@ -200,6 +200,7 @@ class EstateList
 
 			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles();
 			$this->_pEstateFiles->getAllFiles($fileCategories, $estateIds, $this->_pEnvironment->getSDKWrapper());
+			$this->_pEstateFiles->getFilesByEstateIds($estateIds, $this->_pEnvironment->getSDKWrapper());
 		}
 
 		if ($pDataListView->getRandom()) {
@@ -852,6 +853,24 @@ class EstateList
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstateFileUrl($imageId, $currentEstate, $options);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getEstateFilesInfo(): array
+	{
+		$currentEstate = $this->_currentEstate['mainId'];
+		return $this->_pEstateFiles->getEstateAllFilesById($currentEstate);
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getEstateFilesCount(): int
+	{
+		$currentEstate = $this->_currentEstate['mainId'];
+		return count($this->_pEstateFiles->getEstateAllFilesById($currentEstate));
 	}
 
 	/**
