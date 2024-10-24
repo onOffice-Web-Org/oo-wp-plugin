@@ -242,7 +242,7 @@ implements AddressListBase
 			$parameters['data'] []= 'imageUrl';
 		}
 
-		if ($pDataListView->getBildWebseite()) {
+		if ($this->_pDataViewAddress->getBildWebseite()) {
 			$parameters['data'] []= 'bildWebseite';
 		}
 
@@ -606,8 +606,7 @@ implements AddressListBase
 	 */
 	public function generateImageAlt(int $addressId): string
 	{
-		$arRecords = array_combine(array_column($this->_records, 'id'), $this->_records); // changed from recordsRaw to records
-		$addressRawElements = $arRecords[$addressId]['elements'] ?? [];
+		$addressRawElements = $this->_recordsRaw[$addressId]['elements'] ?? [];
 		if (empty($addressRawElements)) {
 			return '';
 		}
