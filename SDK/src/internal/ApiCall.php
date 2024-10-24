@@ -180,7 +180,7 @@ class ApiCall
 					if($params["formatoutput"] == true)
 					{
 						$cachedResponse["data"]["records"] = $this->filterRecords($cachedResponse["data"]["records"], $params["filter"], $params['outputlanguage']);
-						if($params["sortby"] != null)
+						if(in_array("sortby", $params) && $params["sortby"] != null)
 							$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse["data"]["records"], $params["filter"], $params["sortby"], $params["sortorder"] ?? 'ASC');
 						$cachedResponse["data"]["meta"]["cntabsolute"] = count($cachedResponse["data"]["records"]);
 
