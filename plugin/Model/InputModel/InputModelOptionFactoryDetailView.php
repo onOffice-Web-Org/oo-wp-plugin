@@ -81,6 +81,9 @@ class InputModelOptionFactoryDetailView
 	const INPUT_SHOW_PRICE_ON_REQUEST = 'show_price_on_request';
 
 	/** */
+	const INPUT_CONTACT_PERSON = 'contact_person';
+
+	/** */
 	const INPUT_CONTACT_IMAGE_TYPES = 'contact_image_types';
 
 	/** @var string */
@@ -131,9 +134,12 @@ class InputModelOptionFactoryDetailView
 		self::INPUT_SHOW_PRICE_ON_REQUEST => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
 		],
+		self::INPUT_CONTACT_PERSON => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
+		],
 		self::INPUT_CONTACT_IMAGE_TYPES => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
-		]
+		],
 	];
 
 
