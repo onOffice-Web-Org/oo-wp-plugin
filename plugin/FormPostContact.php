@@ -147,6 +147,7 @@ class FormPostContact
 		$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
 		$writeActivity = $pFormConfig->getWriteActivity();
 		$contactType = $pFormConfig->getContactType();
+		$enableCreateTask = $pFormConfig->getEnableCreateTask();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
 		$latestAddressIdOnEnterPrise = null;
@@ -159,6 +160,10 @@ class FormPostContact
 			->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 		if ($writeActivity) {
 			$this->_pFormPostContactConfiguration->getFormAddressCreator()->createAgentsLog($pFormConfig, $addressId, $estateId);
+		}
+
+		if ($enableCreateTask) {
+			$this->_pFormPostContactConfiguration->getFormAddressCreator()->createTask($pFormConfig, $addressId, $estateId);
 		}
 
 		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {

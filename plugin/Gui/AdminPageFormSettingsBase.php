@@ -96,6 +96,8 @@ abstract class AdminPageFormSettingsBase
 	/** */
 	const CUSTOM_LABELS = 'customlabels';
 
+	/** */
+	const FORM_VIEW_TASKCONFIG = 'viewtaskconfig';
 
 	/** @var bool */
 	private $_showEstateFields = false;
@@ -224,9 +226,14 @@ abstract class AdminPageFormSettingsBase
 			if (array_key_exists(RecordManager::TABLENAME_CONTACT_TYPES, $row)) {
 				$result = $result && $pRecordManagerUpdateForm->updateContactTypeByRow($row[RecordManager::TABLENAME_CONTACT_TYPES]);
 			}
+
 			if (array_key_exists(RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM, $row)) {
 				$result = $result && $pRecordManagerUpdateForm->updateActivityConfigByRow
 					($row[RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM]);
+			}
+
+			if (array_key_exists(RecordManager::TABLENAME_TASKCONFIG_FORMS, $row)) {
+				$result = $result && $pRecordManagerUpdateForm->updateTasksConfigByRow($row[RecordManager::TABLENAME_TASKCONFIG_FORMS]);
 			}
 		} else {
 			$action = RecordManagerFactory::ACTION_INSERT;
@@ -242,6 +249,8 @@ abstract class AdminPageFormSettingsBase
 				$row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] = $rowFieldConfig;
 				$row[RecordManager::TABLENAME_CONTACT_TYPES] =
 					$this->prepareRelationValues(RecordManager::TABLENAME_CONTACT_TYPES, 'form_id', $row, $recordId);
+				$row[RecordManager::TABLENAME_TASKCONFIG_FORMS]['form_id'] = $recordId;
+				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_TASKCONFIG_FORMS);
 				$row[RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM]['form_id'] = $recordId;
 				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM);
 				$pRecordManagerInsertForm->insertAdditionalValues($row);

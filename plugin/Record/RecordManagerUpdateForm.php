@@ -112,4 +112,21 @@ class RecordManagerUpdateForm
 
 		return $result && $pWpDb->insert($pWpDb->prefix.self::TABLENAME_ACTIVITY_CONFIG_FORM, $row);
 	}
+
+	/**
+	 * @param array $row
+	 *
+	 * @return bool
+	 */
+	public function updateTasksConfigByRow(array $row): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$pWpDb->delete($prefix.'oo_plugin_form_taskconfig', ['form_id' => $this->getRecordId()]);
+
+		$result = true;
+		$row['form_id'] = $this->getRecordId();
+
+		return $result && $pWpDb->insert($pWpDb->prefix.'oo_plugin_form_taskconfig', $row);
+	}
 }
