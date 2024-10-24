@@ -136,5 +136,7 @@ class DataSimilarEstatesSettingsHandler
 		$pDataViewSimilar->setPictureTypes
 			($row[DataViewSimilarEstates::PICTURES] ??
 				$pDataViewSimilar->getPictureTypes());
+		$pDataViewSimilar->setSameEstateAgent
+			($row[DataViewSimilarEstates::FIELD_SAME_ESTATE_AGENT] ?? false);
 	}
 }

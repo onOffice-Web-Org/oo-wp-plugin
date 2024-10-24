@@ -327,6 +327,27 @@ class FormModelBuilderSimilarEstateSettings
 	 * @throws ExceptionInputModelMissingField
 	 */
 
+	public function createInputModelSameEstateAgent()
+	{
+		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
+
+		$labelSameEstateAgent = __('Only show properties from the same estate agent', 'onoffice-for-wp-websites');
+
+		$pInputModelSameEstateAgent = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SAME_ESTATE_AGENT, $labelSameEstateAgent);
+		$pInputModelSameEstateAgent->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+
+		$pInputModelSameEstateAgent->setValuesAvailable(1);
+		$pInputModelSameEstateAgent->setValue($pDataViewSimilarEstates->getSameEstateAgent());
+
+		return $pInputModelSameEstateAgent;
+	}
+
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
+
 	public function createInputModelSameEstateRadius()
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
