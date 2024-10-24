@@ -161,11 +161,13 @@ class TestClassAddressList
 		$pSDKWrapper->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
 			$addressParametersWithoutFormat['data'][] = 'imageUrl';
+			$addressParametersWithoutFormat['data'][] = 'bildWebseite';
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormat, null, $responseRaw);
 		$addressParametersWithFormat['data'][] = 'imageUrl';
+		$addressParametersWithFormat['data'][] = 'bildWebseite';
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithFormat, null, $responseRaw);
 		$pSDKWrapper->addResponseByParameters
@@ -317,6 +319,7 @@ class TestClassAddressList
 	{
 		$pAddressView = new DataListViewAddress(3, 'testView');
 		$pAddressView->setShowPhoto(true);
+		$pAddressView->setBildWebseite(true);
 
 		$pAddressList = $this->_pAddressList->withDataListViewAddress($pAddressView);
 		$pAddressList->loadAddresses();
