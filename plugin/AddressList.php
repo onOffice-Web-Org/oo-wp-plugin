@@ -39,6 +39,8 @@ use onOffice\WPlugin\Controller\GeoPositionFieldHandlerEmpty;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Filter\DefaultFilterBuilder;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddress;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
@@ -142,8 +144,13 @@ implements AddressListBase
 	/** @var array */
 	private $_countEstates = [];
 
+	/** @var array */
+	private $_estateIdsForContact = [];
+
 	/** @var FieldsCollection */
 	private $_pFieldsCollection = [];
+
+	private $_geoFilter = null;
 
 	/**
 	 *
@@ -187,11 +194,85 @@ implements AddressListBase
 		$this->_pApiClientAction->addRequestToQueue()->sendRequests();
 
 		$records = $this->_pApiClientAction->getResultRecords();
+		$this->fetchEstatesForAddressIds($addressIds);
 		$this->fillAddressesById($records);
 		$this->_pDataViewAddress->setFields($fields);
 
 		$this->addRawRecordsByAPICall(clone $this->_pApiClientAction, $parametersRaw);
-        $this->buildFieldsCollectionForAddressCustomLabel();
+		$this->buildFieldsCollectionForAddressCustomLabel();
+	}
+
+	/**
+	 * @param int $currentPage
+	 * @param bool $formatOutput
+	 * @return array
+	 * @throws UnknownViewException
+	 */
+	private function getAddressParameters(int $currentPage, bool $formatOutput)
+	{
+		$language = Language::getDefault();
+		$pFieldModifierHandler = $this->generateRecordModifier();
+		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
+		$numRecordsPerPage = $this->getRecordsPerPage();
+
+		$offset = 0;
+
+		if ($currentPage > 0) {
+			$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
+		}
+
+		if(isset($_GET['geo_search']) && count(explode(',',$_GET['geo_search'])) == 2 )
+			$filter['geo'][0]['loc'] = $_GET['geo_search'];
+
+		$parameters = array(
+			'listname' => $this->_pDataViewAddress->getName(),
+			'data' => $pFieldModifierHandler->getAllAPIFields(),
+			'listoffset' => $offset,
+			'listlimit' => $numRecordsPerPage,
+			'sortby' => $this->_pDataViewAddress->getSortby(),
+			'sortorder' => $this->_pDataViewAddress->getSortorder(),
+			'filter' => $filter,
+			'filterid' => $this->_pDataViewAddress->getFilterId(),
+			'outputlanguage' => $language,
+			'formatoutput' => $formatOutput,
+			'params_list_cache'=> $this->getAddressParametersForCache($language, $formatOutput)
+		);
+
+		if ($this->_pDataViewAddress->getShowPhoto()) {
+			$parameters['data'] []= 'imageUrl';
+		}
+
+		if ($this->_pDataViewAddress->getBildWebseite()) {
+			$parameters['data'] []= 'bildWebseite';
+		}
+
+		return $parameters;
+	}
+
+	/**
+	 * @param string $lang
+	 * @param bool $formatOutput
+	 * @return array
+	 * @throws UnknownViewException
+	 */
+	public function getAddressParametersForCache(string $lang, bool $formatOutput)
+	{
+		$pFieldModifierHandler = $this->generateRecordModifier();
+
+		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
+		$fields = array_merge($pFieldModifierHandler->getAllAPIFields(), array_keys($filter));
+		$fields[] = $this->_pDataViewAddress->getSortby();
+
+		$params = array(
+			'listname' => $this->_pDataViewAddress->getName(),
+			'data' => $fields,
+			'listlimit' => 500,
+			'filter' => $filter,
+			'filterid' => $this->_pDataViewAddress->getFilterId(),
+			'outputlanguage' => $lang,
+			'formatoutput' => $formatOutput,
+		);
+		return $params;
 	}
 
 	/**
@@ -208,25 +289,19 @@ implements AddressListBase
 	{
 		global $numpages, $multipage, $page, $more;
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
-		$pModifier = $this->generateRecordModifier();
-
-		$pDataListViewToApi = $this->_pEnvironment->getDataListViewAddressToAPIParameters();
-
 		$newPage = $inputPage === 0 ? 1 : $inputPage;
-		$apiOnlyFields = $pModifier->getAllAPIFields();
-		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields, $this->_pDataViewAddress, $newPage, true);
+
+		$parameters = $this->getAddressParameters($newPage, true);
+		$parametersRaw = $this->getAddressParameters($newPage, false);
 
 		$this->_pApiClientAction->setParameters($parameters);
-		$this->_pApiClientAction->addRequestToQueue();
-
-		$addressParameterRaws = $pDataListViewToApi->buildParameters($this->_addressParametersForImageAlt,
-			$this->_pDataViewAddress, $newPage);
-		$this->addRawRecordsByAPICall(clone $this->_pApiClientAction, $addressParameterRaws);
-
-		$this->getCountEstateForAddress($this->getAddressIds());
-
+		$this->_pApiClientAction->addRequestToQueue()->sendRequests();
 		$this->_records = $this->_pApiClientAction->getResultRecords();
+
+		$this->fetchEstatesForAddressIds($this->getAddressIds());
 		$this->fillAddressesById($this->_records);
+
+		$this->addRawRecordsByAPICall(clone $this->_pApiClientAction, $parametersRaw);
 
 		$resultMeta = $this->_pApiClientAction->getResultMeta();
 		$numpages = ceil($resultMeta['cntabsolute']/$this->_pDataViewAddress->getRecordsPerPage());
@@ -253,8 +328,8 @@ implements AddressListBase
 		}
 
 		// only active fields
-		$fields = array_intersect($fields,
-			array_keys($this->_pEnvironment->getFieldnames()->getFieldList(onOfficeSDK::MODULE_ADDRESS)));
+		// $fields = array_intersect($fields,
+		// 	array_keys($this->_pEnvironment->getFieldnames()->getFieldList(onOfficeSDK::MODULE_ADDRESS)));
 
 		$pAddressFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler($fields);
 		return $pAddressFieldModifierHandler;
@@ -269,7 +344,6 @@ implements AddressListBase
 			$elements = $address['elements'];
 
 			$additionalContactData = $this->collectAdditionalContactData($elements);
-			unset($elements['id']);
 			$this->_addressesById[$address['id']] = array_merge($elements, $additionalContactData);
 		}
 	}
@@ -280,7 +354,7 @@ implements AddressListBase
 	 * @throws NotFoundException
 	 * @throws API\ApiClientException
 	 */
-	private function getCountEstateForAddress(array $addressIds)
+	public function fetchEstatesForAddressIds(array $addressIds)
 	{
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 
@@ -292,13 +366,18 @@ implements AddressListBase
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
 		$pAPIClientAction->setParameters($parameters);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
-		$this->collectCountEstates($pAPIClientAction->getResultRecords(), $addressIds);
+		$results = $pAPIClientAction->getResultRecords();
+		foreach ($addressIds as $addressId) {
+			$records = $results[0]['elements'] ?? [];
+			$this->_estateIdsForContact[$addressId] = $records[$addressId];
+		}
+		$this->collectCountEstates($results, $addressIds);
 	}
 
 	/**
 	 * @param array $responseArrayContacts
 	 * @param array $addressIds
-     */
+	 */
 	private function collectCountEstates(array $responseArrayContacts, array $addressIds)
 	{
 		$records = $responseArrayContacts[0]['elements'] ?? [];
@@ -336,6 +415,14 @@ implements AddressListBase
 	public function getCountEstates(int $addressId)
 	{
 		return intval($this->_countEstates[$addressId]);
+	}
+    /**
+     * @param int $addressId
+     * @return array
+     */
+	public function getEstateIdsForContact(int $addressId)
+	{
+		return $this->_estateIdsForContact[$addressId];
 	}
 
 	/**
@@ -432,12 +519,12 @@ implements AddressListBase
 			$label = $this->_pEnvironment->getFieldnames()->getFieldLabel($field, $recordType);
 		}
 		if ($this->_pDataViewAddress instanceof DataAddressDetailView) {
-            try {
-                $pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
-            } catch (DependencyException | NotFoundException $e) {
-                return $raw ? $label : esc_html($label);
-            }
-            $dataView = $this->_pDataViewAddress->getCustomLabels();
+			try {
+					$pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
+			} catch (DependencyException | NotFoundException $e) {
+					return $raw ? $label : esc_html($label);
+			}
+			$dataView = $this->_pDataViewAddress->getCustomLabels();
 			if (!empty( $dataView[ $field ][ $pLanguage ])) {
 				$label = $dataView[ $field ][ $pLanguage ];
 			}
@@ -472,7 +559,6 @@ implements AddressListBase
 			$pFieldBuilderShort->addCustomLabelFieldsAddressFrontend($this->_pFieldsCollection, $this->_pDataViewAddress->getName());
 		}
 	}
-
 	/**
 	 * @return string[] An array of visible fields
 	 * @throws Field\UnknownFieldException
@@ -525,7 +611,7 @@ implements AddressListBase
 			return '';
 		}
 
-		$contactCategory = $addressRawElements['contactCategory'];
+		$contactCategory = array_key_exists('contactCategory',$addressRawElements) ? $addressRawElements['contactCategory'] : '';
 
 		switch ($contactCategory) {
 			case AddressList::CONTACT_CATEGORY_ASSOCIATION:
@@ -567,6 +653,43 @@ implements AddressListBase
 
 		return $imageAlt;
 	}
+	/** @param array $geoFilter */
+	public function setGeoFilter($geoFilter)
+	{
+		$this->_geoFilter = $geoFilter;
+	}
+	/**
+	 * @return bool
+	 */
+	public function getHasGeoFilter(): bool
+	{
+		return ($this->_geoFilter != null);
+	}
+	/**
+	 * @return object
+	 */
+	public function getGeoFilter(): object
+	{
+		return $this->_geoFilter;
+	}
+	/**
+	 * @return DefaultFilterBuilder
+	 * @throws UnknownViewException
+	 */
+	public function getDefaultFilterBuilder(): DefaultFilterBuilderListViewAddress
+		{ return $this->_pEnvironment->getDefaultFilterBuilder(); }
+
+	/** @param DefaultFilterBuilder $pDefaultFilterBuilder */
+	public function setDefaultFilterBuilder(DefaultFilterBuilder $pDefaultFilterBuilder)
+		{ $this->_pEnvironment->setDefaultFilterBuilder($pDefaultFilterBuilder); }
+
+	/**
+	 * @return int
+	 */
+	protected function getRecordsPerPage()
+	{
+		return $this->_pDataViewAddress->getRecordsPerPage();
+	}
 
 	public function getAddressLink(string $addressId): string
 	{
@@ -586,7 +709,7 @@ implements AddressListBase
 	 */
 	public function getAddressIds(): array
 	{
-		return array_column($this->_recordsRaw, 'id');
+		return array_column($this->_records, 'id');
 	}
 		/**
 	 * @return array
@@ -596,17 +719,16 @@ implements AddressListBase
 		return $this->_addressesById;
 	}
 
-    /**
-     * @param APIClientActionGeneric $addressApiCall
-     * @param array $parameters
-     * @throws API\ApiClientException
-     */
-    private function addRawRecordsByAPICall(APIClientActionGeneric $addressApiCall, array $parameters) {
-        $addressApiCall->setParameters($parameters);
-        $addressApiCall->addRequestToQueue()->sendRequests();
-        $recordsRaw = $addressApiCall->getResultRecords();
+	/**
+	 * @param APIClientActionGeneric $addressApiCall
+	 * @param array $parameters
+	 * @throws API\ApiClientException
+	 */
+	private function addRawRecordsByAPICall(APIClientActionGeneric $addressApiCall, array $parameters) {
+		$addressApiCall->setParameters($parameters);
+		$addressApiCall->addRequestToQueue()->sendRequests();
+		$recordsRaw = $addressApiCall->getResultRecords();
 
-        $this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
-
-    }
+		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+	}
 }

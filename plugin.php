@@ -144,7 +144,7 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 
 add_action('admin_init', function () use ( $pDI ) {
 	if ( strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
-		$pDI->get(CacheHandler::class)->clear();
+		$pDI->get(CacheHandler::class)->renew();
 		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
 		update_option('onoffice-notice-cache-was-cleared', true);
 		wp_safe_redirect($location);
@@ -182,8 +182,8 @@ add_action('wp', [FormPostHandler::class, 'initialCheck']);
 
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_ajax']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
-add_action('oo_cache_cleanup', function() use ($pDI) {
-	$pDI->get(CacheHandler::class)->clean();
+add_action('oo_cache_renew', function() use ($pDI) {
+	$pDI->get(CacheHandler::class)->renew();
 });
 add_action('admin_notices', [$pAdminViewController, 'generalAdminNoticeSEO']);
 add_action('init', function() use ($pAdminViewController) {
@@ -321,19 +321,19 @@ function custom_cron_schedules($schedules) {
 
 add_filter('cron_schedules', 'custom_cron_schedules');
 
-if (!wp_next_scheduled('oo_cache_cleanup')) {
+if (!wp_next_scheduled('oo_cache_renew')) {
 	$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
-	wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_cleanup');
+	wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
 }
 
 add_action('update_option_onoffice-settings-duration-cache', function($old_value, $value) {
 	if ($old_value !== $value) {
-		$timestamp = wp_next_scheduled('oo_cache_cleanup');
+		$timestamp = wp_next_scheduled('oo_cache_renew');
 		if ($timestamp) {
-			wp_unschedule_event($timestamp, 'oo_cache_cleanup');
+			wp_unschedule_event($timestamp, 'oo_cache_renew');
 		}
 
-		wp_schedule_event(time(), $value, 'oo_cache_cleanup');
+		wp_schedule_event(time(), $value, 'oo_cache_renew');
 	}
 }, 10, 2);
 
@@ -491,5 +491,6 @@ function filter_script_loader_tag($tag, $handle) {
 	}
 	return $tag;
 }
+
 
 return $pDI;
