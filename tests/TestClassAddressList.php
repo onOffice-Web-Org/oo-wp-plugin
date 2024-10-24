@@ -241,6 +241,12 @@ class TestClassAddressList
 		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parametersDefaultRaw, null, $response);
 		$pSDKWrapper->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $response);
+		$parameters['data'][] = 'bildWebseite';
+		$pSDKWrapper->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $response);
+		$pSDKWrapper->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parametersRaw, null, $response);
+		$parametersRaw['data'][] = 'bildWebseite';
 		$pSDKWrapper->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parametersRaw, null, $response);
 		$pSDKWrapper->addResponseByParameters
