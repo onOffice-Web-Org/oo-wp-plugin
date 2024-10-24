@@ -86,6 +86,9 @@ abstract class RecordManager
 	/** */
 	const TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS = 'oo_plugin_fieldconfig_address_translated_labels';
 
+	/** */
+	const TABLENAME_ACTIVITY_CONFIG_FORM = 'oo_plugin_form_activityconfig';
+
 	/**
 	 *
 	 * @deprecated get wpdb via DI

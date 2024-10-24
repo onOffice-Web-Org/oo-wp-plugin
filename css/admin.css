@@ -576,6 +576,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 }
 
 #listSettings .custom-input-field,
+#viewcontactimagetypes .custom-input-field,
 #viewpicturetypes .custom-input-field {
 	display: block;
 }
@@ -584,11 +585,13 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	width: 100%;
 }
 
+#viewcontactimagetypes .custom-input-field label,
 #viewpicturetypes .custom-input-field label {
 	float: left;
 	max-width: 50%;
 }
 
+#viewcontactimagetypes .custom-input-field input,
 #viewpicturetypes .custom-input-field input {
 	float: right;
 	max-width: 50%;
@@ -677,6 +680,19 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 
 .oo-poststuff .custom-input-field .field-item-detail {
 	margin-left: 5px;
+}
+
+.oo-poststuff .custom-input-field textarea[name=oopluginformactivityconfig-remark] {
+	min-height: 100px;
+}
+
+.oo-poststuff .select2-container--default.select2-container--disabled .select2-selection--multiple {
+	background-color: #f6f7f7;
+	border-color: #dcdcde;
+}
+
+.oo-poststuff .select2-container--default .select2-selection--multiple[aria-disabled="true"] .select2-selection__choice {
+    opacity: 0.5;
 }
 
 .oo-search-field {
