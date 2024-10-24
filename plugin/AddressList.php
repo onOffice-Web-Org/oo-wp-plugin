@@ -242,8 +242,13 @@ implements AddressListBase
 			$parameters['data'] []= 'imageUrl';
 		}
 
+		if ($pDataListView->getBildWebseite()) {
+			$parameters['data'] []= 'bildWebseite';
+		}
+
 		return $parameters;
 	}
+
 	/**
 	 * @param string $lang
 	 * @param bool $formatOutput
