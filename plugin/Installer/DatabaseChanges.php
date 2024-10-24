@@ -353,8 +353,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 52) {
-			$this->updateValueGeoFieldsForForms();
+			$this->updateContactImageTypesForDetailPage();
 			$dbversion = 53;
+		}
+
+		if ($dbversion == 53) {
+			$this->updateValueGeoFieldsForForms();
+			$dbversion = 54;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1311,6 +1316,20 @@ class DatabaseChanges implements DatabaseChangesInterface
 	/**
 	 * @return void
 	 */
+
+	private function updateContactImageTypesForDetailPage()
+	{
+		$pDataDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
+		if(!empty($pDataDetailViewOptions) && in_array('imageUrl', $pDataDetailViewOptions->getAddressFields())){
+			$pDataDetailViewOptions->setContactImageTypes([ImageTypes::PASSPORTPHOTO]);
+			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
+		}
+	}
+
+	/**
+	 * @return void
+	 */
+
 	public function updateValueGeoFieldsForForms()
 	{
 		$prefix = $this->getPrefix();

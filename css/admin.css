@@ -584,6 +584,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 }
 
 #listSettings .custom-input-field,
+#viewcontactimagetypes .custom-input-field,
 #viewpicturetypes .custom-input-field {
 	display: block;
 }
@@ -592,11 +593,13 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	width: 100%;
 }
 
+#viewcontactimagetypes .custom-input-field label,
 #viewpicturetypes .custom-input-field label {
 	float: left;
 	max-width: 50%;
 }
 
+#viewcontactimagetypes .custom-input-field input,
 #viewpicturetypes .custom-input-field input {
 	float: right;
 	max-width: 50%;
