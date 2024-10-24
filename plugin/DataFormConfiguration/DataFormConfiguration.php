@@ -103,6 +103,9 @@ class DataFormConfiguration
 	/** @var string */
 	private $_advisorylevel = '';
 
+	/** @var array */
+	private $_pagePerForm = [];
+
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -131,6 +134,10 @@ class DataFormConfiguration
 	/** @return array */
 	public function getInputs(): array
 		{ return $this->_inputs; }
+
+	/** @return array */
+	public function getPagePerForm(): array
+		{ return $this->_pagePerForm; }
 
 	/** @param string $formType */
 	public function setFormType(string $formType)
@@ -187,6 +194,14 @@ class DataFormConfiguration
 	/** @param string $requiredField */
 	public function addMarkdownFields(string $markdownFields)
 		{ $this->_markdownFields []= $markdownFields; }
+
+	/** 
+	 * @param string $fieldName
+	 * @param string $pagePerForm 
+	 */
+	public function addPagePerForm(string $fieldName, string $pagePerForm)
+		{ $this->_pagePerForm [$fieldName] = (int) $pagePerForm; }
+
 	/**
 	 *
 	 * @param string $input

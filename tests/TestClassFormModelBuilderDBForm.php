@@ -545,6 +545,16 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelPerPageForm
+	 */
+	public function testGetInputModelPerPageForm()
+	{
+		$pInputModelPerPageForm = $this->_pInstance->getInputModelPerPageForm();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelPerPageForm);
+		$this->assertEquals($pInputModelPerPageForm->getHtmlType(), 'hidden');
+	}
+
+	/**
 	 *
 	 */
 	private function getResponseFieldCharacteristic()

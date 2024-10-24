@@ -122,6 +122,9 @@ class InputModelDBFactoryConfigForm
 	/** */
 	const INPUT_FORM_ADVISORY_LEVEL = 'advisoryLevel';
 
+	/** */
+	const INPUT_FORM_PAGE_PER_FORM = 'formPagePerForm';
+
 	/** @var array */
 	private $_inputConfig = [
 		self::INPUT_FORM_NAME => [
@@ -252,6 +255,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_ADVISORY_LEVEL => [
 			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
 			self::KEY_FIELD => 'advisory_level',
+		],
+		self::INPUT_FORM_PAGE_PER_FORM=> [
+			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
+			self::KEY_FIELD => 'page_per_form',
 		],
 	];
 

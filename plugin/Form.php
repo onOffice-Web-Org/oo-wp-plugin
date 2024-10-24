@@ -212,6 +212,15 @@ class Form
 
 	/**
 	 * @param string $field
+	 * @return int
+	 */
+	public function getPagePerForm(string $field): int
+	{
+		return $this->getDataFormConfiguration()->getPagePerForm()[$field] ?? 1;
+	}
+
+	/**
+	 * @param string $field
 	 * @return bool
 	 */
 	public function isHiddenField(string $field): bool

@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 53;
+	const MAX_VERSION = 54;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -334,7 +334,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryAddressFieldConfig());
 			$dbversion = 49;
 		}
-	
+
 		if ($dbversion == 49) {
 			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
 			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
@@ -354,6 +354,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 52) {
 			$this->updateContactImageTypesForDetailPage();
 			$dbversion = 53;
+		}
+
+		if ($dbversion == 53) {
+			dbDelta($this->getCreateQueryFormFieldConfig());
+			$dbversion = 54;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -551,6 +556,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`markdown` tinyint(1) NOT NULL DEFAULT '0',
 			`hidden_field` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
+			`page_per_form` int(6) NOT NULL DEFAULT '1',
 			PRIMARY KEY (`form_fieldconfig_id`)
 		) $charsetCollate;";
 
