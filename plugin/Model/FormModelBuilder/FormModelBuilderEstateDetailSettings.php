@@ -660,4 +660,30 @@ class FormModelBuilderEstateDetailSettings
 
 		return $pInputModelShowTotalCostsCalculator;
 	}
+
+	/**
+	 *
+	 * @return InputModelOption
+	 *
+	 * @throws ExceptionInputModelMissingField
+	 */
+
+	public function createInputModelContactImageTypes(): InputModelOption
+	{
+		$allContactImage = ImageTypes::getImageTypesForAddress();
+
+		$pInputModelContactImageTypes = $this->_pInputModelDetailViewFactory->create
+			(InputModelOptionFactoryDetailView::INPUT_CONTACT_IMAGE_TYPES, null, true);
+		$pInputModelContactImageTypes->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelContactImageTypes->setValuesAvailable($allContactImage);
+		$contactImageTypes = $this->_pDataDetailView->getContactImageTypes();
+
+		if ($contactImageTypes == null) {
+			$contactImageTypes = array();
+		}
+
+		$pInputModelContactImageTypes->setValue($contactImageTypes);
+
+		return $pInputModelContactImageTypes;
+	}
 }
