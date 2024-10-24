@@ -31,7 +31,7 @@ class FieldParkingLot{
 	 * @param array $currentEstate
 	 * @return array
 	 */
-	public function renderParkingLot($currentEstate): array
+	public function renderParkingLot(array $currentEstate): array
 	{
 		$language = new Language();
 		$locale = $language->getLocale();
