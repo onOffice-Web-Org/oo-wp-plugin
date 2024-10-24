@@ -23,42 +23,39 @@ namespace onOffice\WPlugin\Field;
 use Exception;
 use NumberFormatter;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\ArrayContainer;
 
 class FieldParkingLot{
     
 	
 	/**
-	 * @param object $parkingArray
-	 * @param object $currentEstate
+	 * @param array $currentEstate
 	 * @return array
 	 */
-	public function renderParkingLot($parkingArray, $currentEstate): array
+	public function renderParkingLot($currentEstate): array
 	{
 		$language = new Language();
 		$locale = $language->getLocale();
 		$locale = !empty($locale) ? $locale : 'de_DE';
-		if($currentEstate->getValueRaw('codeWaehrung'))
-		$codeCurrency = $currentEstate->getValueRaw('codeWaehrung');
-		$parkingArray = $parkingArray->getValueRaw('multiParkingLot');
-		unset($currentEstate['codeWaehrung']);
+		$codeCurrency = $currentEstate['codeWaehrung'];
+		$parkingArray = $currentEstate['multiParkingLot'];
 		$codeCurrency = !empty($codeCurrency) ? $codeCurrency : 'EUR';
 		$messages = [];
 		foreach ( $parkingArray as $key => $parking ) {
 			$parkingName   = '';
 			$marketingType = '';
 			$isCount         = $parking['Count'];
-
 			if ( $isCount == 0 ) {
 				continue;
 			}
 			$parkingName = $this->getParkingName( $key, $parking['Count'] );
-			if ( ! empty( $parking['MarketingType'] ) ) {
+			if ( ! empty( $parking['MarketingType'] ) && (int) $parking['Price'] > 0) {
 				$marketingType = $this->getMarketingType( $parking['MarketingType'] );
 			}
 			$price = $this->formatPriceParking( $parking['Price'] ?? '0', $locale, $codeCurrency );
-			/* translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type */
-			$element = sprintf( _n( '%1$s at %2$s%3$s', '%1$s at %2$s each%3$s', $isCount, 'onoffice-for-wp-websites' ), $parkingName, $price, $marketingType );
 
+			$element = $this->formatElement($parkingName, $price, $marketingType, (int) $parking['Price'], $parking['Count']);
+		
 			array_push( $messages, $element );
 		}
 
@@ -66,7 +63,28 @@ class FieldParkingLot{
 	}
 	
 	/**
-	 * @return array
+	 * @param string $parkingName
+	 * @param string $price
+	 * @param string $marketingType
+	 * @param int $priceValue
+	 * @param int $count
+	 * @return string
+	 */
+	private function formatElement(string $parkingName, string $price, string $marketingType, int $priceValue, int $count): string
+	{
+		if ($priceValue > 0) {
+			/* translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type */
+			return sprintf(_n('%1$s, %2$s%3$s', '%1$s, %2$s %3$s', $count, 'onoffice-for-wp-websites'), $parkingName, $price, $marketingType);
+		}
+		/* translators: 1: Count and name of parking lot */
+		return sprintf(_n('%1$s', '%1$s', $count, 'onoffice-for-wp-websites'), $parkingName);
+	}
+
+	/**
+	 * @param string $str
+	 * @param string $locale
+	 * @param string $codeCurrency
+	 * @return string
 	 */
 	public function formatPriceParking(string $str, string $locale, string $codeCurrency): string
 	{

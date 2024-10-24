@@ -673,11 +673,13 @@ class EstateList
 			$this->addMetaTags(GenerateMetaDataSocial::TWITTER_KEY, $recordModified);
 		}
 
-		$recordModified = new ArrayContainerEscape($recordModified);
-		if ($recordModified['multiParkingLot']) {
-			$parking = new FieldParkingLot();
-			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
+		if (!empty($recordModified['multiParkingLot']) && !empty($recordModified['codeWaehrung'])) {
+			$parking = $this->_pEnvironment->getContainer()->get(FieldParkingLot::class);
+			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified);
+			unset($recordModified['codeWaehrung']);
 		}
+
+		$recordModified = new ArrayContainerEscape($recordModified);
 
 		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
 			if ($this->enableShowPriceOnRequestText() ) {
