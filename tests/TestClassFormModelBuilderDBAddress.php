@@ -144,6 +144,23 @@ class TestClassFormModelBuilderDBAddress
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress::createInputModelBildWebseite
+	 */
+	public function testCreateInputModelBildWebseite()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBAddress::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->createInputModelBildWebseite();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress::getInputModelCustomLabelLanguageSwitch
 	 */
 	public function testGetInputModelCustomLabelLanguageSwitch()
