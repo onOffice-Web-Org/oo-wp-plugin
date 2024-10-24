@@ -271,6 +271,64 @@
     width: 100%;
 }
 
+.oo-costs-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.oo-costs-container .oo-donut-chart {
+    width: 40%;
+    padding-bottom: 40%;
+    border-radius: 50%;
+    position: relative;
+}
+
+.oo-costs-container .oo-donut-chart::before {
+    content: '';
+    position: absolute;
+    background: white;
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.oo-costs-container .oo-costs-overview {
+    width: 50%;
+}
+
+.oo-costs-container .oo-costs-overview > div {
+    margin-bottom: 5px;
+}
+
+.oo-costs-container .oo-costs-overview .oo-price-label,
+.oo-costs-container .oo-costs-overview .oo-costs-item {
+    display: flex;
+    align-items: center;
+}
+
+.oo-costs-container .oo-costs-overview .oo-price-label {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.oo-costs-container .oo-costs-overview .oo-total-costs-label {
+    margin-left: 12px;
+}
+
+.oo-costs-container .oo-costs-overview .color-indicator {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
 /* address list */
 .oo-address-listframe .oo-address-image {
     width: 100%;
