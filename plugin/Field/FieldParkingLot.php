@@ -65,11 +65,11 @@ class FieldParkingLot{
 	 * @param string $parkingName
 	 * @param string $price
 	 * @param string $marketingType
-	 * @param int $priceValue
+	 * @param string $priceValue
 	 * @param int $count
 	 * @return string
 	 */
-	private function formatElement(string $parkingName, string $price, string $marketingType, int $priceValue, int $count): string
+	private function formatElement(string $parkingName, string $price, string $marketingType, string $priceValue, int $count): string
 	{
 		if ($priceValue !== '0.00') {
 			/* translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type */
