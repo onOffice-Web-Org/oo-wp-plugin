@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\DataView;
 
 use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
+use onOffice\WPlugin\Types\ImageTypes;
 
 /**
  *
@@ -223,6 +224,11 @@ class DataDetailView
 	/** @var bool */
 	private $_showPriceOnRequest = false;
 
+	/** @var string[] */
+	private $_contactImageTypes = [
+		ImageTypes::PASSPORTPHOTO
+	];
+
     /** @var string[] */
     private $_priceFields = [
         'kaufpreis',
@@ -236,6 +242,7 @@ class DataDetailView
         'wochmietbto',
         'kaufpreis_pro_qm',
         'mietpreis_pro_qm',
+        'calculatedPrice'
     ];
 
 	/**
@@ -433,4 +440,18 @@ class DataDetailView
     {
         return $this->_priceFields;
     }
+
+	/** @return array */
+	public function getContactImageTypes(): array
+		{ return $this->_contactImageTypes; }
+
+	/** @param array $contactImageTypes */
+	public function setContactImageTypes(array $contactImageTypes)
+		{ $this->_contactImageTypes = $contactImageTypes; }
+
+	/** @param array $priceFields */
+	public function setListFieldsShowPriceOnRequest(array $priceFields)
+	{
+		$this->_priceFields = $priceFields;
+	}
 }

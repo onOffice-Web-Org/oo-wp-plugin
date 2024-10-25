@@ -28,6 +28,8 @@ use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use Exception;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\DataView\DataViewSimilarEstates;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\DataView\DataSimilarView;
@@ -41,7 +43,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 52;
+	const MAX_VERSION = 55;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -334,7 +336,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryAddressFieldConfig());
 			$dbversion = 49;
 		}
-
+	
 		if ($dbversion == 49) {
 			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
 			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
@@ -347,8 +349,24 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 51) {
-			dbDelta($this->getCreateQueryListviews());
+			dbDelta($this->getCreateQueryListViewsAddress());
 			$dbversion = 52;
+		}
+
+		if ($dbversion == 52) {
+			$this->updateContactImageTypesForDetailPage();
+			$dbversion = 53;
+		}
+
+		if ($dbversion == 53) {
+			$this->updatePriceFieldsOptionForSimilarEstate();
+			$this->updatePriceFieldsOptionDetailView();
+			$dbversion = 54;
+		}
+
+		if ($dbversion == 54) {
+			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 55;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -704,6 +722,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`template` tinytext NOT NULL,
 			`recordsPerPage` int(10) NOT NULL DEFAULT '10',
 			`showPhoto` tinyint(1) NOT NULL DEFAULT '0',
+			`bildWebseite` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
@@ -1300,5 +1319,44 @@ class DatabaseChanges implements DatabaseChangesInterface
 		) $charsetCollate;";
 
 		return $sql;
+	}
+
+	/**
+	 * @return void
+	 */
+
+	private function updateContactImageTypesForDetailPage()
+	{
+		$pDataDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
+		if(!empty($pDataDetailViewOptions) && in_array('imageUrl', $pDataDetailViewOptions->getAddressFields())){
+			$pDataDetailViewOptions->setContactImageTypes([ImageTypes::PASSPORTPHOTO]);
+			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function updatePriceFieldsOptionForSimilarEstate()
+	{
+		$pDataSimilarViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
+		if (!empty($pDataSimilarViewOptions)) {
+			$pDataViewSimilarEstates = new DataViewSimilarEstates();
+			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setListFieldsShowPriceOnRequest($pDataViewSimilarEstates->getListFieldsShowPriceOnRequest());
+			$this->_pWpOption->updateOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function updatePriceFieldsOptionDetailView()
+	{
+		$pDataDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
+		if (!empty($pDataDetailViewOptions)) {
+			$pDataDataDetailView = new DataDetailView();
+			$pDataDetailViewOptions->setListFieldsShowPriceOnRequest($pDataDataDetailView->getListFieldsShowPriceOnRequest());
+			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
+		}
 	}
 }
