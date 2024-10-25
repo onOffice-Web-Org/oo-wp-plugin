@@ -24,12 +24,16 @@ namespace onOffice\tests;
 
 use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
-use onOffice\WPlugin\Controller\AddressListEnvironment;
+use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
+use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Factory\AddressListFactory;
 
 class TestClassAddressListFactory
 	extends \WP_UnitTestCase
 {
+	/** @var Container */
+	private $_pContainer;
+
 	/**
 	 * @var AddressListFactory
 	 */
@@ -43,9 +47,8 @@ class TestClassAddressListFactory
 		$pContainerBuilder = new ContainerBuilder();
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
-		$pAddressListEnvironment = $pContainer->get(AddressListEnvironment::class);
-
-		$this->_pFactory = new AddressListFactory($pAddressListEnvironment);
+		$detailViewHandler = new DataAddressDetailViewHandler(null);
+		$this->_pFactory = new AddressListFactory($detailViewHandler);
 	}
 
 	/**
@@ -61,6 +64,6 @@ class TestClassAddressListFactory
 	 */
 	public function testCreate()
 	{
-		$this->assertInstanceOf(AddressList::class, $this->_pFactory->create());
+		$this->assertInstanceOf(AddressList::class, $this->_pFactory->create(new DataListViewAddress(0, 'default')));
 	}
 }

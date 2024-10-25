@@ -7,6 +7,10 @@ onOffice.checkboxAdmin = function() {
 			{
 				element: "input[name^=oopluginaddressfieldconfig-hidden]",
 				invert: false
+			},
+			{
+				element: "input[name^=oopluginaddressfieldconfig-convertInputTextToSelectForField]",
+				invert: false
 			}
 		],
 
@@ -57,6 +61,34 @@ onOffice.checkboxAdmin = function() {
 				invert: true
 			},
 		],
+
+		// view: create activity form
+		"input[name=oopluginformactivityconfig-writeactivity]": [
+			{
+				element: "select[name=oopluginformactivityconfig-actionkind]",
+				invert: false
+			},
+			{
+				element: "select[name=oopluginformactivityconfig-actiontype]",
+				invert: false
+			},
+			{
+				element: "select[name^=oopluginformactivityconfig-characteristic]",
+				invert: false
+			},
+			{
+				element: "textarea[name=oopluginformactivityconfig-remark]",
+				invert: false
+			},
+			{
+				element: "select[name^=oopluginformactivityconfig-origincontact]",
+				invert: false
+			},
+			{
+				element: "select[name^=oopluginformactivityconfig-advisorylevel]",
+				invert: false
+			}
+		]
 	};
 };
 

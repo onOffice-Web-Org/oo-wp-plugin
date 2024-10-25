@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin;
 
+use Exception;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
@@ -33,6 +34,9 @@ use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Factory\AddressListFactory;
+use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 use function sanitize_text_field;
 use function home_url;
 
@@ -56,6 +60,8 @@ class FormPostContact
 	/** @var string */
 	private $_messageDuplicateAddressData = '';
 
+	/** @var AddressListFactory */
+	private $_pAddressDetailFactory;
 	/**
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
@@ -68,9 +74,11 @@ class FormPostContact
 		FormPostConfiguration $pFormPostConfiguration,
 		FormPostContactConfiguration $pFormPostContactConfiguration,
 		SearchcriteriaFields $pSearchcriteriaFields,
-		FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm)
+		FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm,
+		AddressListFactory $pAddressDetailFactory)
 	{
 		$this->_pFormPostContactConfiguration = $pFormPostContactConfiguration;
+		$this->_pAddressDetailFactory = $pAddressDetailFactory;
 
 		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
 	}
@@ -137,6 +145,7 @@ class FormPostContact
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
+		$writeActivity = $pFormConfig->getWriteActivity();
 		$contactType = $pFormConfig->getContactType();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
@@ -148,6 +157,9 @@ class FormPostContact
 			->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType, $estateId);
 		$this->_messageDuplicateAddressData = $this->_pFormPostContactConfiguration->getFormAddressCreator()
 			->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
+		if ($writeActivity) {
+			$this->_pFormPostContactConfiguration->getFormAddressCreator()->createAgentsLog($pFormConfig, $addressId, $estateId);
+		}
 
 		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
 			// No subscription for newsletter, which is ok
@@ -210,12 +222,30 @@ class FormPostContact
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
 		}
+		$pDataAddressDetailViewHandler = new DataAddressDetailViewHandler();
+		$pAddressDataView = $pDataAddressDetailViewHandler->getAddressDetailView();
+
+		$referrerURL = get_site_url().$requestParams['referrer'];
+
+		if(intval($pAddressDataView->getPageId()) != 0 && (
+			str_starts_with($referrerURL, get_permalink($pAddressDataView->getPageId()))
+			|| str_starts_with($referrerURL, get_permalink($pAddressDataView->getPageId()))))
+		{
+			//if form posted on address detail page, change recipient
+			$addressId = str_replace(get_permalink($pAddressDataView->getPageId()),"",$referrerURL);
+			$addressId = preg_replace('/-.*|\/.*|\D+/', '', $addressId);
+
+			$defaultFields = ['defaultemail' => 'Email'];
+			$addressList = $this->_pAddressDetailFactory->create($pAddressDataView);
+			$addressList->loadAddressesById([$addressId], $defaultFields);
+			$requestParams['recipient'] = $addressList->getCurrentAddress()[$addressId]['Email'];
+		}
+
 		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();
 		$pAPIClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
 		$pAPIClientAction->setParameters($requestParams);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
-
 		if (!$pAPIClientAction->getResultStatus()) {
 			throw new ApiClientException($pAPIClientAction);
 		}

@@ -36,6 +36,12 @@ use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
+use onOffice\WPlugin\WP\InstalledLanguageReader;
+use onOffice\WPlugin\Types\Field;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  *
@@ -90,6 +96,7 @@ class FormModelBuilderDBAddress
 		$this->setValues([
 			DataListViewAddress::FIELDS => self::$_defaultFields,
 			'recordsPerPage' => self::DEFAULT_RECORDS_PER_PAGE,
+			'showPhoto' => true
 		]);
 		if ($listViewId !== null)
 		{
@@ -99,6 +106,7 @@ class FormModelBuilderDBAddress
 			$values['fields'] = array_column($resultByField, 'fieldname');
 			$values['filterable'] = $this->arrayColumnTrue($resultByField, 'filterable');
 			$values['hidden'] = $this->arrayColumnTrue($resultByField, 'hidden');
+			$values['convertInputTextToSelectForField'] = $this->arrayColumnTrue($resultByField, 'convertInputTextToSelectForField');
 
 			if ((int)$values['recordsPerPage'] === 0) {
 				$values['recordsPerPage'] = self::DEFAULT_RECORDS_PER_PAGE;
@@ -228,8 +236,19 @@ class FormModelBuilderDBAddress
 		$pSortableFieldsList = parent::createSortableFieldList($module, $htmlType);
 		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
 		$pInputModelIsHidden = $this->getInputModelIsHidden();
+
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+		foreach ($pSortableFieldsList->getValuesAvailable() as $key => $pField) {
+			$field = Field::createByRow($key, $pField);
+			$pFieldsCollectionUsedFields->addField($field);
+		}
+
+		$pInputModelConvertInputTextToSelectField = $this->getInputModelConvertInputTextToSelectField();
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
+		$pSortableFieldsList->addReferencedInputModel($pInputModelConvertInputTextToSelectField);
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 
 		return $pSortableFieldsList;
 	}
@@ -343,5 +362,97 @@ class FormModelBuilderDBAddress
 		$pInputModelRecordsPerPage->setHintHtml(__('You can show up to 500 data records per page.', 'onoffice-for-wp-websites'));
 
 		return $pInputModelRecordsPerPage;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function getInputModelConvertInputTextToSelectField()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigAddress();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Display as selection list instead of text input', 'onoffice-for-wp-websites');
+		$type = InputModelDBFactoryConfigAddress::INPUT_FIELD_CONVERT_INPUT_TEXT_TO_SELECT_FOR_FIELD;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelConvertInputTextToSelectForField'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 *
+	 */
+
+	public function callbackValueInputModelConvertInputTextToSelectForField(InputModelBase $pInputModel, string $key)
+	{
+		$valueFromConfig = $this->getValue('convertInputTextToSelectForField');
+
+		$convertInputTextToSelectForFields = is_array($valueFromConfig) ? $valueFromConfig : array();
+		$value = in_array($key, $convertInputTextToSelectForFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelBildWebseite()
+	{
+		$labelPhoto = __('Image website', 'onoffice-for-wp-websites');
+		$pInputModelBildWebseite = $this->getInputModelDBFactory()->create
+			(InputModelDBFactory::INPUT_BILD_WEBSEITE, $labelPhoto);
+		$pInputModelBildWebseite->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelBildWebseite->setValuesAvailable(1);
+		$pictureTypeSelected = $this->getValue($pInputModelBildWebseite->getField());
+		$pInputModelBildWebseite->setValue((int)$pictureTypeSelected);
+
+		return $pInputModelBildWebseite;
+	}
+
+	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return InputModelDB
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getInputModelCustomLabel(FieldsCollection $pFieldsCollection): InputModelDB
+	{
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$pInputModelBuilder = $pContainer->get(InputModelBuilderCustomLabel::class);
+		return $pInputModelBuilder->createInputModelCustomLabel($pFieldsCollection, $this->getValue('customlabel', []));
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function getInputModelCustomLabelLanguageSwitch(): InputModelDB
+	{
+		$pInputModel = new InputModelDB('customlabel_newlang',
+			__('Add custom label language', 'onoffice-for-wp-websites'));
+		$pInputModel->setTable('language-custom-label');
+		$pInputModel->setField('language');
+
+		$pLanguageReader = new InstalledLanguageReader;
+		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
+			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
+		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
+		$pInputModel->setValueCallback(function (InputModelDB $pInputModel) {
+			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
+		});
+		return $pInputModel;
 	}
 }

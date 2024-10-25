@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\API\DataViewToAPI;
 
-use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\DataView\DataViewAddress;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddressFactory;
 use onOffice\WPlugin\Language;
 
@@ -59,10 +59,11 @@ class DataListViewAddressToAPIParameters
 	 * @param array $fields
 	 * @param DataListViewAddress $pDataListView
 	 * @param int $page
+	 * @param bool $raw
 	 * @return array
 	 */
 
-	public function buildParameters(array $fields, DataListViewAddress $pDataListView, int $page): array
+	public function buildParameters(array $fields, DataViewAddress $pDataListView, int $page, bool $raw = false): array
 	{
 		$pBuilderListViewAddress = $this->_pFilterBuilderFactory->create($pDataListView);
 
@@ -83,11 +84,15 @@ class DataListViewAddressToAPIParameters
 			'filter' => $pBuilderListViewAddress->buildFilter(),
 			'filterid' => $pDataListView->getFilterId(),
 			'outputlanguage' => Language::getDefault(),
-			'formatoutput' => true,
+			'formatoutput' => $raw,
 		);
 
 		if ($pDataListView->getShowPhoto()) {
 			$parameters['data'] []= 'imageUrl';
+		}
+
+		if ($pDataListView->getBildWebseite()) {
+			$parameters['data'] []= 'bildWebseite';
 		}
 
 		return $parameters;
