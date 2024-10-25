@@ -23,7 +23,6 @@ if (count($visible) === 0) {
 	return;
 }
 $actionUrl = '';
-$redirectedHiddenInput = '';
 if (!empty($pEstates->getForwardingPageId())) {
     $actionUrl = esc_url(home_url('/' . get_page($pEstates->getForwardingPageId())->post_name));
 }
