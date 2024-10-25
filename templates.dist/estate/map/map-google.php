@@ -51,14 +51,17 @@ return (function (EstateList $pEstatesClone) {
 
 	if ($estateData === []) {
 	    return;
-    } ?>
+    }
+	$listViewId = $pEstatesClone->getListViewId();
+	$mapId = 'oo_gmap_' . $listViewId;
+    ?>
     <script type="text/javascript">
     (function() {
         var gmapInit = function() {
             var estates = <?php echo json_encode($estateData, JSON_PRETTY_PRINT); ?>;
             var settings = {zoom: null};
 
-            var mapElement = document.getElementById('gmap');
+            var mapElement = document.getElementById('<?php echo esc_js($mapId); ?>');
             var map = new google.maps.Map(mapElement, settings.mapConfig);
             var bounds = new google.maps.LatLngBounds();
 
@@ -89,6 +92,6 @@ return (function (EstateList $pEstatesClone) {
         google.maps.event.addDomListener(window, "load", gmapInit);
     })();
     </script>
-    <div id="gmap" style="width: 100%; height: 100%;"></div>
+    <div class="oo-gmap" id="<?php echo esc_attr($mapId) ?>" style="width: 100%; height: 100%;"></div>
 <?php
 });
