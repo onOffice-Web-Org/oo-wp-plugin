@@ -320,5 +320,14 @@ class EstateDetail
 	{
 		return $this->getDataView()->getShowStatus();
 	}
-
+	/**
+	 * Returns addresslink for given addressid
+	 * @param string $id
+	 * @return string  
+	 */
+	public function getAddressLink(string $id) : string 
+	{
+		$link = $this->getEnvironment()->getAddressList()->getAddressLink($id);
+		return $link;
+	}
 }
