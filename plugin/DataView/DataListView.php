@@ -188,6 +188,7 @@ class DataListView
 		'wochmietbto',
 		'kaufpreis_pro_qm',
 		'mietpreis_pro_qm',
+		'calculatedPrice'
 	];
 
 	/**
