@@ -73,11 +73,13 @@ class TestClassAddressList
 				'01234567890',
 				'01122334455',
 			],
+			'id' => 13
 		),
 		37 => array(
 			'Name' => 'Fleißig',
 			'KdNr' => 12,
 			'Vorname' => 'Heinrich',
+			'id' => 37
 		),
 	];
 
