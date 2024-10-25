@@ -110,6 +110,9 @@ class AdminPageEstateDetail
 	/** */
 	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
 
+	/** */
+	const FORM_VIEW_CONTACT_IMAGE_TYPES = 'viewcontactimagetypes';
+
 	/**
 	 *
 	 */
@@ -248,6 +251,9 @@ class AdminPageEstateDetail
 		$pFormPictureTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
 		$this->createMetaBoxByForm($pFormPictureTypes, 'side');
 
+		$pFormContactImageTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_IMAGE_TYPES);
+		$this->createMetaBoxByForm($pFormContactImageTypes, 'side');
+
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
 
@@ -321,6 +327,14 @@ class AdminPageEstateDetail
 		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
+
+		$pInputModelContactImageTypes = $pFormModelBuilder->createInputModelContactImageTypes();
+		$pFormModelContactImageTypes = new FormModel();
+		$pFormModelContactImageTypes->setPageSlug($this->getPageSlug());
+		$pFormModelContactImageTypes->setGroupSlug(self::FORM_VIEW_CONTACT_IMAGE_TYPES);
+		$pFormModelContactImageTypes->setLabel(__('Contact Image', 'onoffice-for-wp-websites'));
+		$pFormModelContactImageTypes->addInputModel($pInputModelContactImageTypes);
+		$this->addFormModel($pFormModelContactImageTypes);
 
 		$pInputModelAccessControl = $pFormModelBuilder->createInputRestrictAccessControl();
 		$pFormModelAccessControl  = new FormModel();
