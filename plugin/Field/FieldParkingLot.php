@@ -97,7 +97,9 @@ class FieldParkingLot{
 	}
 
 	/**
-	 *
+	 * @param string $marketingType
+	 * @throws \Exception
+	 * @return string
 	 */
 	public function getMarketingType( string $marketingType ): string
 	{
@@ -117,7 +119,9 @@ class FieldParkingLot{
 	}
 
 	/**
-	 *
+	 * @param string $parkingName
+	 * @param int $count
+	 * @return string
 	 */
 	public function getParkingName(string $parkingName, int $count): string
 	{
