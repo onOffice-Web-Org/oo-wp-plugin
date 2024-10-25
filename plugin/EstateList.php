@@ -673,7 +673,7 @@ class EstateList
 			$this->addMetaTags(GenerateMetaDataSocial::TWITTER_KEY, $recordModified);
 		}
 
-		if (!empty($recordModified['multiParkingLot']) && !empty($recordModified['codeWaehrung'])) {
+		if (!empty($recordModified['multiParkingLot'])) {
 			$parking = $this->_pEnvironment->getContainer()->get(FieldParkingLot::class);
 			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified);
 			unset($recordModified['codeWaehrung']);

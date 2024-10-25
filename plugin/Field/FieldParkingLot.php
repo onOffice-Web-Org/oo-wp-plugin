@@ -36,7 +36,9 @@ class FieldParkingLot{
 		$language = new Language();
 		$locale = $language->getLocale();
 		$locale = !empty($locale) ? $locale : 'de_DE';
+		if (!empty($currentEstate['codeWaehrung']))
 		$codeCurrency = $currentEstate['codeWaehrung'];
+
 		$parkingArray = $currentEstate['multiParkingLot'];
 		$codeCurrency = !empty($codeCurrency) ? $codeCurrency : 'EUR';
 		$messages = [];
