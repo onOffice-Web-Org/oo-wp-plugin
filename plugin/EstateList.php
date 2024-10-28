@@ -578,6 +578,15 @@ class EstateList
 
 		$fields = $this->_pDataView->getAddressFields();
 
+		if ($this->_pDataView instanceof DataDetailView && !empty($this->_pDataView->getContactImageTypes())) {
+			if (in_array(ImageTypes::PASSPORTPHOTO, $this->_pDataView->getContactImageTypes()) && !in_array('imageUrl', $fields)){
+				$fields [] = 'imageUrl';
+			}
+			if (in_array(ImageTypes::BILDWEBSEITE, $this->_pDataView->getContactImageTypes())){
+				$fields [] = ImageTypes::BILDWEBSEITE;
+			}
+		}
+
 		$defaultFields = ['defaultemail' => 'Email', 'defaultphone' => 'Telefon1', 'defaultfax' => 'Telefax1'];
 		foreach ($defaultFields as $defaultField => $newField) {
 			if (in_array($defaultField, $fields)) {
@@ -956,6 +965,12 @@ class EstateList
 		foreach ($addressIds as $addressId) {
 			$currentAddressData = $this->_pEnvironment->getAddressList()->getAddressById($addressId);
 			$pArrayContainerCurrentAddress = new ArrayContainerEscape($currentAddressData);
+
+			if (!empty($pArrayContainerCurrentAddress['bildWebseite'])) {
+				$pArrayContainerCurrentAddress['imageUrl'] = $pArrayContainerCurrentAddress['bildWebseite'];
+				unset($pArrayContainerCurrentAddress['bildWebseite']);
+			}
+
 			$result []= $pArrayContainerCurrentAddress;
 		}
 
@@ -1278,4 +1293,16 @@ class EstateList
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
 		{ return $this->_pEnvironment; }
+
+	/**
+	 * @return mixed
+	 */
+	public function getListViewId()
+	{
+		if ($this->getDataView() instanceof DataListView) {
+			return $this->getDataView()->getId();
+		}
+
+		return 'estate_detail';
+	}
 }

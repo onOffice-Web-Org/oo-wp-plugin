@@ -69,6 +69,14 @@
     z-index: 888;
 }
 
+.oo-detailsmap .oo-map, .oo-estate-map .oo-map, .oo-detailsmap .oo-gmap, .oo-estate-map .oo-gmap {
+    height: 300px !important;
+}
+
+.oo-estate-map .oo-map .leaflet-top, .oo-estate-map .oo-map .leaflet-bottom {
+    z-index: 888;
+}
+
 /* estate sort */
 .oo-estate-sort {
     padding: 15px;
@@ -209,7 +217,8 @@
     border-bottom: 2px solid #efefef;
 }
 
-.oo-detailslisttd:nth-child(odd) {
+.oo-detailslisttd:nth-child(odd),
+.oo-field-label {
     font-weight: 700;
 }
 

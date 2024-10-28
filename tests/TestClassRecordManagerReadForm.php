@@ -148,6 +148,24 @@ class TestClassRecordManagerReadForm
 		];
 	}
 
+	/**
+	 * @param int $formId
+	 *
+	 * @return array
+	 */
+	private function getActivityConfigRow(int $formId): array
+	{
+		return [
+			'form_activityconfig_id' => 1,
+			'form_id' => $formId,
+			'write_activity' => '1',
+			'action_kind' => 'action_kind',
+			'action_type' => 'action_type',
+			'characteristic' => 'characteristic1,characteristic2',
+			'remark' => 'comment'
+		];
+	}
+
 	public function testGetRecords()
 	{
 		$pFieldsForm = $this->_pRecordManagerReadForm->getRecords();
@@ -241,5 +259,17 @@ class TestClassRecordManagerReadForm
 		]));
 		$pFieldsForm = $this->_pRecordManagerReadForm->readContactTypesByFormId(1);
 		$this->assertEquals(2, count($pFieldsForm));
+	}
+
+	/**
+	 *
+	 */
+	public function testReadActivityConfigByFormId()
+	{
+		$this->_pRecordManagerReadForm->method('readActivityConfigByFormId')->will($this->returnValueMap([
+			[1, $this->getActivityConfigRow(1)]
+		]));
+		$pActivityConfig = $this->_pRecordManagerReadForm->readActivityConfigByFormId(1);
+		$this->assertEquals(7, count($pActivityConfig));
 	}
 }

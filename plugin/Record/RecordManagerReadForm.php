@@ -267,6 +267,25 @@ class RecordManagerReadForm
 	}
 
 	/**
+	 *
+	 * @param int $formId
+	 * @return array
+	 *
+	 */
+
+	public function readActivityConfigByFormId(int $formId): array
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlFields = "SELECT *
+			FROM {$prefix}oo_plugin_form_activityconfig
+			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($formId)."";
+
+		return $pWpDb->get_row($sqlFields, ARRAY_A) ?? [];
+	}
+
+	/**
 	 * @param string $name
 	 * @param string|null $id
 	 *

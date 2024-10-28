@@ -269,6 +269,9 @@ abstract class AdminPageSettingsBase
 		$row['oo_plugin_fieldconfig_estate_translated_labels'] =
 			(array)($row['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
 			(array)($values->{'customlabel-lang'}) ?? [];
+		$row['oo_plugin_fieldconfig_address_translated_labels'] =
+			(array)($row['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
+			(array)($values->{'customlabel-lang'}) ?? [];
 
 		if ($checkResult) {
 			$this->updateValues($row, $pResultObject, $recordId);
@@ -332,6 +335,9 @@ abstract class AdminPageSettingsBase
 		$row['oo_plugin_fieldconfig_estate_translated_labels'] =
 			(array)($row['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
 			(array)($values->{'customlabel-lang'} ?? [] );
+		$row['oo_plugin_fieldconfig_address_translated_labels'] =
+			(array)($row['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
+			(array)($values->{'customlabel-lang'}) ?? [];
 			
 		if ( $checkResult ) {
 			$this->updateValues( $row, $pResultObject, $recordId );
