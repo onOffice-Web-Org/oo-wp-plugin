@@ -47,6 +47,7 @@ use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function esc_html;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\DataView\DataAddressDetailView;
+use onOffice\WPlugin\Controller\AddressDetailUrl;
 
 /**
  *
@@ -152,6 +153,9 @@ implements AddressListBase
 
 	private $_geoFilter = null;
 
+	/** @var AddressDetailUrl */
+	private $_pLanguageSwitcher;
+
 	/**
 	 *
 	 * @param DataViewAddress $pDataViewAddress
@@ -166,6 +170,7 @@ implements AddressListBase
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 		$this->_pApiClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+		$this->_pLanguageSwitcher = new AddressDetailUrl();
 	}
 
 	/**
@@ -691,17 +696,40 @@ implements AddressListBase
 		return $this->_pDataViewAddress->getRecordsPerPage();
 	}
 
+	/**
+	 * @param string $addressId
+	 * @return string
+	 */
 	public function getAddressLink(string $addressId): string
 	{
-			$pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
-					->getAddressDetailView()->getPageId();
+		$pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
+				->getAddressDetailView()->getPageId();
 
-			$url = get_page_link( $pageId ) . $addressId;
-			$fullLinkElements = parse_url( $url );
-			if ( empty( $fullLinkElements['query'] ) ) {
-					$url .= '/';
-			}
-			return $url;
+		$currentAddress = $this->getAddressById($addressId);
+		$firstName = $currentAddress['Vorname'] ?? '';
+		$lastName = $currentAddress['Name'] ?? '';
+		$company = $currentAddress['Zusatz1'] ?? '';
+		$parts = [];
+		if (!empty($firstName)) {
+			$parts[] = strtolower($firstName);
+		}
+		if (!empty($lastName)) {
+			$parts[] = strtolower($lastName);
+		}
+		if (!empty($company)) {
+			$parts[] = strtolower($company);
+		}
+		$addressTitle = implode(' ', $parts);
+
+		$url      = get_page_link( $pageId );
+		$fullLink = $this->_pLanguageSwitcher->createAddressDetailLink( $url, $addressId, $addressTitle );
+
+		$fullLinkElements = parse_url( $fullLink );
+		if ( empty( $fullLinkElements['query'] ) ) {
+				$fullLink .= '/';
+		}
+
+		return $fullLink;
 	}
 
 		/**
