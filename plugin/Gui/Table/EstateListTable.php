@@ -33,7 +33,7 @@ use onOffice\WPlugin\Gui\Table\CustomQuickEditTable;
 use onOffice\WPlugin\Gui\Table\QuickEditTable;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
-use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use WP_List_Table;
 use function __;
@@ -218,22 +218,23 @@ class EstateListTable extends ListTable implements QuickEditTable
 			'name' => [
 				self::KEY_NAME => __('List name', 'onoffice-for-wp-websites'),
 				self::KEY_DEFAULT => [],
-				self::KEY_TYPE => InputModelOption::HTML_TYPE_TEXT
+				self::KEY_TYPE => InputModelBase::HTML_TYPE_TEXT,
+				self::KEY_DESCRIPTION => __('If the list name is changed, the new shortcode must then be updated manually on the corresponding page.', 'onoffice-for-wp-websites')
 			],
 			'list_type' => [
 				self::KEY_NAME => __('List type', 'onoffice-for-wp-websites'),
 				self::KEY_DEFAULT => FormModelBuilderDBEstateListSettings::getListViewLabels(),
-				self::KEY_TYPE => InputModelOption::HTML_TYPE_SELECT
+				self::KEY_TYPE => InputModelBase::HTML_TYPE_SELECT
 			],
 			'filterId' => [
 				self::KEY_NAME => __('Selected filter', 'onoffice-for-wp-websites'),
 				self::KEY_DEFAULT => array(0 => '') + $this->readFilters(onOfficeSDK::MODULE_ESTATE),
-				self::KEY_TYPE => InputModelOption::HTML_TYPE_SELECT
+				self::KEY_TYPE => InputModelBase::HTML_TYPE_SELECT
 			],
 			'template' => [
 				self::KEY_NAME => __('Template', 'onoffice-for-wp-websites'),
 				self::KEY_DEFAULT => [],
-				self::KEY_TYPE => InputModelOption::HTML_TYPE_SELECT,
+				self::KEY_TYPE => InputModelBase::HTML_TYPE_SELECT,
 				self::KEY_MODULE => onOfficeSDK::MODULE_ESTATE
 			]
 		];

@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\Gui\Table;
 
-use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Template\TemplateCall;
 
 
@@ -57,10 +57,10 @@ class CustomQuickEditTable
 			}
 
 			switch ($fieldConfig['type']) {
-				case InputModelOption::HTML_TYPE_SELECT:
+				case InputModelBase::HTML_TYPE_SELECT:
 					$html .= $this->renderSelectField($fieldName, $fieldConfig, self::CLASS_LEFT_STYLE);
 					break;
-				case InputModelOption::HTML_TYPE_TEXT:
+				case InputModelBase::HTML_TYPE_TEXT:
 					$html .= $this->renderTextField($fieldName, $fieldConfig, self::CLASS_LEFT_STYLE);
 					break;
 			}
@@ -144,10 +144,11 @@ class CustomQuickEditTable
 		$html .= '<div class="inline-edit-col">';
 		$html .= '<label>';
 		$html .= '<span class="title" style="width: 7em">'. esc_html($fieldConfig['name']) .'</span>';
-		$html .= '<span class="input-text-wrap">';
-		$html .= '<input type="text" style="width: 90%" name=' . esc_attr($fieldName) . ' id="' . esc_attr($fieldConfig['name']) . '" value="">';
-		$html .= '</span>';
+		$html .= '<input type="text" name=' . esc_attr($fieldName) . ' id="' . esc_attr($fieldConfig['name']) . '" value="">';
 		$html .= '</label>';
+		if (!empty($fieldConfig['description'])) {
+			$html .= '<div class="inline-edit-col">' . esc_html($fieldConfig['description']) . '</div>';
+		}
 		$html .= '</div>';
 		$html .= '</fieldset>';
 

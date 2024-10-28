@@ -35,6 +35,9 @@ interface QuickEditTable
 	/** */
 	const KEY_MODULE = 'module';
 
+	/** */
+	const KEY_DESCRIPTION = 'description';
+
 	/**
 	 *
 	 * @return array
