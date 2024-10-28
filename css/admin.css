@@ -932,7 +932,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 
 .estatelists .inline-edit-col input, .estatelists .inline-edit-col select {    
 	width: 100%;
-    max-width: 80%;
+	max-width: 80%;
 }
 #wpbody-content .estatelists .inline-edit-row fieldset {
 	padding: 0;

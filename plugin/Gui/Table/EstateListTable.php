@@ -226,17 +226,17 @@ class EstateListTable extends ListTable implements QuickEditTable
 				self::KEY_DEFAULT => FormModelBuilderDBEstateListSettings::getListViewLabels(),
 				self::KEY_TYPE => InputModelBase::HTML_TYPE_SELECT
 			],
-			'filterId' => [
-				self::KEY_NAME => __('Selected filter', 'onoffice-for-wp-websites'),
-				self::KEY_DEFAULT => array(0 => '') + $this->readFilters(onOfficeSDK::MODULE_ESTATE),
-				self::KEY_TYPE => InputModelBase::HTML_TYPE_SELECT
-			],
 			'template' => [
 				self::KEY_NAME => __('Template', 'onoffice-for-wp-websites'),
 				self::KEY_DEFAULT => [],
 				self::KEY_TYPE => InputModelBase::HTML_TYPE_SELECT,
 				self::KEY_MODULE => onOfficeSDK::MODULE_ESTATE
-			]
+			],
+			'filterId' => [
+				self::KEY_NAME => __('Selected filter', 'onoffice-for-wp-websites'),
+				self::KEY_DEFAULT => array(0 => '') + $this->readFilters(onOfficeSDK::MODULE_ESTATE),
+				self::KEY_TYPE => InputModelBase::HTML_TYPE_SELECT
+			],
 		];
 	}
 
