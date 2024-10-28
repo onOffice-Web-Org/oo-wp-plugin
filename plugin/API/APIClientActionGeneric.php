@@ -100,7 +100,6 @@ class APIClientActionGeneric
 	 */
 	public function sendRequests(bool $saveToCache = true)
 	{
-		error_log("3. ApiClientAction:".$saveToCache);
 		$this->_pSDKWrapper->sendRequests($saveToCache);
 	}
 
