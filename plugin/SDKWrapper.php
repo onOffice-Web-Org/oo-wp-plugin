@@ -220,7 +220,6 @@ class SDKWrapper
 			$addressLists = $this->get_address_lists($listName);
 			$this->_caches = [new DBCache(['ttl' => 3600]),];
 			foreach ($this->_caches as $pCache) {
-				$pCache->clearAll();
 				foreach ($estateLists as $list) {
 					$pListView = $pDataListViewFactory->getListViewByName($list->name);
 					$pEstateList = new EstateList($pListView);
