@@ -24,16 +24,13 @@ namespace onOffice\tests;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use onOffice\WPlugin\Controller\EstateDetailUrl;
-use onOffice\WPlugin\Utility\Redirector;
-use onOffice\WPlugin\WP\WPPageWrapper;
-use onOffice\tests\RedirectWrapperMocker;
+use onOffice\WPlugin\Controller\Redirector\EstateRedirector;
 
-class TestClassRedirectIfOldUrl
+class TestClassEstateRedirectIfOldUrl
 	extends \WP_UnitTestCase
 {
 	/**
-	 * @var Redirector
+	 * @var EstateRedirector
 	 */
 	private $_pRedirectIfOldUrl;
 
@@ -50,7 +47,7 @@ class TestClassRedirectIfOldUrl
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH );
 		$this->_pContainer        = $pContainerBuilder->build();
-		$this->_pRedirectIfOldUrl = $this->_pContainer->get( Redirector::class );
+		$this->_pRedirectIfOldUrl = $this->_pContainer->get( EstateRedirector::class );
 		$_SERVER['REQUEST_URI'] = '/detail-view/123';
 	}
 
@@ -59,27 +56,11 @@ class TestClassRedirectIfOldUrl
 	 */
 	public function stestInstance()
 	{
-		$this->assertInstanceOf( Redirector::class, $this->_pRedirectIfOldUrl );
+		$this->assertInstanceOf( EstateRedirector::class, $this->_pRedirectIfOldUrl );
 	}
 
 	/**
-	 * @covers \onOffice\WPlugin\Utility\Redirector::getCurrentLink
-	 */
-	public function testGetCurrentLink()
-	{
-		$this->assertEquals( 'http://example.org/detail-view/123', $this->_pRedirectIfOldUrl->getCurrentLink() );
-	}
-
-	/**
-	 * @covers \onOffice\WPlugin\Utility\Redirector::getUri
-	 */
-	public function testGetUri()
-	{
-		$this->assertEquals( 'detail-view/123', $this->_pRedirectIfOldUrl->getUri() );
-	}
-
-	/**
-	 * @covers \onOffice\WPlugin\Utility\Redirector::redirectDetailView
+	 * @covers \onOffice\WPlugin\Controller\Redirector\EstateRedirector::redirectDetailView
 	 */
 	public function testRedirectDetailViewSameUrl()
 	{
@@ -102,7 +83,7 @@ class TestClassRedirectIfOldUrl
 	}
 
 	/**
-	 * @covers \onOffice\WPlugin\Utility\Redirector::redirectDetailView
+	 * @covers \onOffice\WPlugin\Controller\Redirector\EstateRedirector::redirectDetailView
 	 */
 	public function testRedirectDetailViewNotMatchRule()
 	{
