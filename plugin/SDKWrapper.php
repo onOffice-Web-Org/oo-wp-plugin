@@ -102,7 +102,7 @@ class SDKWrapper
 		$this->_pSDK->setApiCurlOptions(
 			[
 				CURLOPT_SSL_VERIFYPEER => true,
-				CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+				CURLOPT_PROTOCOLS => CURLPROTO_HTTPS
 			]
 		);
 	}
@@ -179,6 +179,7 @@ class SDKWrapper
 
 	private function createCacheForList($parameters, string $module, int $page = 1)
 	{
+		error_log("2 createCacheForList");
 		//1 get first page
 		$pApiClientAction = new APIClientActionGeneric($this, onOfficeSDK::ACTION_ID_READ, $module);
 		$pApiClientAction->setParameters($parameters);
@@ -192,7 +193,8 @@ class SDKWrapper
 		{
 			for ($curPage = 2; $curPage < $numpages+1; $curPage++)
 			{
-				$parameters['offset'] = $curPage-1;
+				error_log("2.1 pages Foreach");
+				$parameters['offset'] = (500 * ($curPage -1));
 				$tmpRecords = $this->createCacheForList($parameters, $module, $curPage);
 				$records = array_merge_recursive($records, $tmpRecords);
 			}
@@ -218,7 +220,10 @@ class SDKWrapper
 			$languages = Language::getAllWPMLLanguages();
 			$estateLists = $this->get_estate_lists($listName);
 			$addressLists = $this->get_address_lists($listName);
-			foreach ($this->getCache() as $pCache) {
+			$this->_caches = [new DBCache(['ttl' => 3600]),];
+			foreach ($this->_caches as $pCache) {
+				$pCache->clearAll();
+				error_log("CACHE Clean");
 				foreach ($estateLists as $list) {
 					$pListView = $pDataListViewFactory->getListViewByName($list->name);
 					$pEstateList = new EstateList($pListView);
@@ -227,6 +232,7 @@ class SDKWrapper
 					$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
 					foreach ($languages as $lang) {
 						foreach ([true,false] as $value) { //call one for raw and one for formattedOutput
+							error_log("1. CACHE FOR:".$list->name);
 							$params = $pEstateList->getEstateParametersForCache($lang, $value);
 							$response = $this->createCacheForList($params, 'estate');
 							$pApiAction = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'estate', $params, '', null);

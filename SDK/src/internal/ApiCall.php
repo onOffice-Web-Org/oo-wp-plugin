@@ -113,7 +113,6 @@ class ApiCall
 		{
 			return;
 		}
-
 		$responseHttp = $this->getFromHttp($token, $actionParameters, $httpFetch);
 
 		$result = json_decode($responseHttp, true);
@@ -141,9 +140,9 @@ class ApiCall
 				$this->_errors[$requestId] = $resultHttp;
 			}
 		}
-
-		if($saveToCache)
+		if($saveToCache === true) {
 			$this->writeCacheForResponses($idsForCache);
+		}
 	}
 
 	/**
@@ -156,7 +155,6 @@ class ApiCall
 
 	private function collectOrGatherRequests($token, $secret, HttpFetch $httpFetch = null, bool $saveToCache = true)
 	{
-		$saveToCache = true;
 		$actionParameters = array();
 		$actionParametersOrder = array();
 
@@ -205,8 +203,8 @@ class ApiCall
 		if(isset($sortby))
 		{
 			usort($newRecords, function ($a, $b) use ($sortBy, $sortOrder) {
-				$sortA = $a['elements'][$sortBy];
-				$sortB = $b['elements'][$sortBy];
+				$sortA = in_array($sortBy,$a['elements']) ? $a['elements'][$sortBy] : '';
+				$sortB = in_array($sortBy,$b['elements']) ? $b['elements'][$sortBy] : '';
 				if ($sortOrder === 'ASC') {
 					return ($sortA > $sortB) ? 1 : -1;
 				}
@@ -241,9 +239,18 @@ class ApiCall
 
 				if(strtolower($op) === '=')
 				{
-					if(!array_key_exists($key,$item["elements"]) || strtolower($item["elements"][$key]) != strtolower($val)){
-						unset($filtredArray[$index]);
-						break;
+					if(is_array($val))
+					{
+						if(!array_key_exists($key,$item["elements"]) || !in_array($item["elements"][$key],$val)){
+							unset($filtredArray[$index]);
+							break;
+						}
+
+					} else {
+						if(!array_key_exists($key,$item["elements"]) || strtolower($item["elements"][$key]) != strtolower($val)){
+							unset($filtredArray[$index]);
+							break;
+						}
 					}
 				}
 				elseif (strtolower($op) === 'like')
@@ -256,10 +263,10 @@ class ApiCall
 				}
 				elseif (strtolower($op) === 'in')
 				{
-					$elVal = strtolower($item["elements"][$key]);
+					$elVal = $item["elements"][$key];
 					if($key === "Id") {
-						$elVal = str_replace(',','',$elVal);
-						$elVal = str_replace('.','',$elVal);
+						$elVal = str_replace(',','',strtolower($elVal));
+						$elVal = str_replace('.','',strtolower($elVal));
 					}
 
 					if(!in_array($elVal, $val)){
