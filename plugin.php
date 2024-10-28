@@ -302,7 +302,7 @@ add_filter('wpml_ls_language_url', function($url, $data) use ($pDI) {
 		/** @var AddressIdRequestGuard $pAddressIdGuard */
 		$pAddressIdGuard = $pDI->get(AddressIdRequestGuard::class);
 		$pEstateDetailUrl = $pDI->get(AddressDetailUrl::class);
-		$oldUrl = $pDI->get(AddressRedirector::class)->getCurrentLink();
+		$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
 		return $pAddressIdGuard->createAddressDetailLinkForSwitchLanguageWPML($url, $addressId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
 	}
 }, 10, 2);
