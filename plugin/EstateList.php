@@ -1336,6 +1336,18 @@ class EstateList
 		{ return $this->_pEnvironment; }
 
 	/**
+	 * @return mixed
+	 */
+	public function getListViewId()
+	{
+		if ($this->getDataView() instanceof DataListView) {
+			return $this->getDataView()->getId();
+		}
+
+		return 'estate_detail';
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function getShowTotalCostsCalculator(): bool
@@ -1346,5 +1358,4 @@ class EstateList
 
 		return false;
 	}
-
 }
