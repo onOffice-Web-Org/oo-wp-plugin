@@ -138,6 +138,7 @@ class TestClassDataViewSimilarEstates
 			'wochmietbto',
 			'kaufpreis_pro_qm',
 			'mietpreis_pro_qm',
+			'calculatedPrice',
 		];
 		$this->assertEquals($expectedPriceFields, $pDataViewSimilarEstates->getListFieldsShowPriceOnRequest());
 	}
