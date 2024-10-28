@@ -90,7 +90,6 @@ class DBCache
 		if(isset($parameters['parameters']['listname']))
 		{
 			$parametersSerialized = $parameters['parameters']['listname'].intval($parameters['parameters']['formatoutput']).$parameters['parameters']['outputlanguage'];
-			error_log("CACHE FOR:".$parametersSerialized);
 		}
 		$parametersHashed = md5( $parametersSerialized );
 		return $parametersHashed;
