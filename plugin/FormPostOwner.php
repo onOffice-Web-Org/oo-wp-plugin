@@ -114,6 +114,7 @@ class FormPostOwner
 				$checkDuplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
 				$contactType = $pDataFormConfiguration->getContactType();
 				$enableCreateTask = $pDataFormConfiguration->getEnableCreateTask();
+				$writeActivity = $pDataFormConfiguration->getWriteActivity();
 				$latestAddressIdOnEnterPrise = null;
 				if ($checkDuplicate) {
 					$latestAddressIdOnEnterPrise = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
