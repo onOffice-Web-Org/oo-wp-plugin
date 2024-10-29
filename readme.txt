@@ -76,6 +76,30 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.2 (2024-10-29) =
+
+**Added**
+
+* Forms can trigger writing of tasks in onOffice enterprise
+
+* Forms can trigger writing of activities in onOffice enterprise
+
+* SEO friendly URL for address detail page
+
+* Image with better resolution for addresses (bildWebseite)
+
+**Changed**
+
+* Default template for address details
+
+**Fixed**
+
+* Maps on pages with multiple property lists
+
+* Displaying price on request for calculated prices
+
+* Social Meta Data in Settings
+
 = 5.1.4 (2024-10-09) =
 
 **Added**
