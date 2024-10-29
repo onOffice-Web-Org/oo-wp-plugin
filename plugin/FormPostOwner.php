@@ -113,7 +113,7 @@ class FormPostOwner
 			if ( $pDataFormConfiguration->getCreateOwner() ) {
 				$checkDuplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
 				$contactType = $pDataFormConfiguration->getContactType();
-				$writeActivity = $pDataFormConfiguration->getWriteActivity();
+				$enableCreateTask = $pDataFormConfiguration->getEnableCreateTask();
 				$latestAddressIdOnEnterPrise = null;
 				if ($checkDuplicate) {
 					$latestAddressIdOnEnterPrise = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
@@ -132,6 +132,9 @@ class FormPostOwner
 					$this->_pFormPostOwnerConfiguration->getFormAddressCreator()->createAgentsLog($pDataFormConfiguration, $addressId, $estateId);
 				}
 				$this->setNewsletter( $addressId );
+				if ($enableCreateTask) {
+					$this->_pFormPostOwnerConfiguration->getFormAddressCreator()->createTask($pDataFormConfiguration, $addressId, $estateId);
+				}
 			}
 		} finally {
 			if ( null != $recipient ) {

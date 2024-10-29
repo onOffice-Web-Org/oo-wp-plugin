@@ -97,6 +97,7 @@ class FormPostInterest
 						$contactType = $pFormConfiguration->getContactType();
 				$writeActivity = $pFormConfiguration->getWriteActivity();
 				$latestAddressIdOnEnterPrise = null;
+				$enableCreateTask = $pFormConfiguration->getEnableCreateTask();
 				if ($checkDuplicate) {
 					$latestAddressIdOnEnterPrise = $this->_pFormPostInterestConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
 				}
@@ -109,6 +110,9 @@ class FormPostInterest
 					$this->_pFormPostInterestConfiguration->getFormAddressCreator()->createAgentsLog($pFormConfiguration, $addressId, null);
 				}
 				$this->setNewsletter( $addressId );
+				if ($enableCreateTask) {
+					$this->_pFormPostInterestConfiguration->getFormAddressCreator()->createTask($pFormConfiguration, $addressId, $estateId);
+				}
 			}
 		} finally {
 			if ( $recipient != null ) {

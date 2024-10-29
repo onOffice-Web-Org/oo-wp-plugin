@@ -313,6 +313,35 @@ class TestClassFormPostInterest
 		$this->assertEquals(['Name', 'vermarktungsart', 'stp_anzahl__von' , 'stp_anzahl__bis'], $pFormData->getMissingFields());
 	}
 
+	/**
+	 *
+	 */
+	public function testCreateTask()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'Email' => 'john@doemail.com',
+			'vermarktungsart' => 'kauf',
+			'kaufpreis__von' => '200000.00',
+			'kaufpreis__bis' => '800000.00',
+			'objekttyp' => ['reihenendhaus', 'reihenhaus'],
+			'krit_bemerkung_oeffentlich' => 'comment3',
+			'stp_anzahl__von' => '20.00',
+			'stp_anzahl__bis' => '40.00',
+			'gdprcheckbox' => 'y'
+		];
+		$pConfig = $this->getNewDataFormConfigurationInterest();
+		$this->addApiResponseCreateAddress(true);
+		$this->addApiResponseCreateSearchCriteria(true);
+		$this->addApiResponseSendMail(true);
+		$this->addApiResponseCreateTask();
+		$this->_pFormPostInterest->initialCheck($pConfig, 2);
+		$pFormData = $this->_pFormPostInterest->getFormDataInstance('interestform', 2);
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+	}
+
 
 	/**
 	 *
@@ -502,5 +531,30 @@ class TestClassFormPostInterest
 				'message' => 'Unknown error',
 			],
 		];
+	}
+
+	/**
+	 *
+	 */
+	public function addApiResponseCreateTask()
+	{
+		$parameters = [
+			'data' => [
+				'Prio' => 3,
+				'Verantwortung' => 'Tobias',
+				'Art' => 1,
+				'Status' => 1,
+				'Bearbeiter' => 'Tobias',
+				'Betreff' => 'Task subject',
+				'Aufgabe' => 'Task description'
+			],
+			'relatedAddressId' => 320,
+		];
+
+		$responseJson = file_get_contents(__DIR__.'/resources/ApiResponseCreateTask.json');
+		$response = json_decode($responseJson, true);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_CREATE, 'task', '', $parameters, null, $response);
 	}
 }

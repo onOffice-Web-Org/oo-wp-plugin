@@ -66,6 +66,10 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
+use onOffice\WPlugin\Record\AddressIdRequestGuard;
+use onOffice\WPlugin\Controller\Redirector\AddressRedirector;
+use onOffice\WPlugin\Controller\Redirector\EstateRedirector;
+use onOffice\WPlugin\Controller\AddressDetailUrl;
 
 const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
 
@@ -282,14 +286,25 @@ function customFieldCallback( $pDI, $format, $limitEllipsis, $meta_key ) {
 
 
 add_filter('wpml_ls_language_url', function($url, $data) use ($pDI) {
-	/** @var EstateIdRequestGuard $pEstateIdGuard */
-	$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
-	$pEstateDetailUrl = $pDI->get(EstateDetailUrl::class);
-	$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
 	$pWPQueryWrapper = $pDI->get(WPQueryWrapper::class);
 	$estateId = (int) $pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
+	$addressId = (int) $pWPQueryWrapper->getWPQuery()->get('address_id', 0);
 
-	return $pEstateIdGuard->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
+	if (!empty($estateId)) {
+		/** @var EstateIdRequestGuard $pEstateIdGuard */
+		$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
+		$pEstateDetailUrl = $pDI->get(EstateDetailUrl::class);
+		$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
+		return $pEstateIdGuard->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
+	}
+	
+	if (!empty($addressId)) {
+		/** @var AddressIdRequestGuard $pAddressIdGuard */
+		$pAddressIdGuard = $pDI->get(AddressIdRequestGuard::class);
+		$pEstateDetailUrl = $pDI->get(AddressDetailUrl::class);
+		$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
+		return $pAddressIdGuard->createAddressDetailLinkForSwitchLanguageWPML($url, $addressId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
+	}
 }, 10, 2);
 
 register_activation_hook(__FILE__, [Installer::class, 'install']);
@@ -393,7 +408,26 @@ add_action('parse_request', function(WP $pWP) use ($pDI, $pEstateRedirection) {
 			include(get_query_template('404'));
 			die();
 		}
-		$pEstateIdGuard->estateDetailUrlChecker( $estateId, $pDI->get( Redirector::class ), $pEstateRedirection);
+		$pEstateIdGuard->estateDetailUrlChecker( $estateId, $pDI->get( EstateRedirector::class ), $pEstateRedirection);
+	}
+});
+
+$pAddressRedirection = apply_filters('oo_is_address_detail_page_redirection', true);
+
+add_action('parse_request', function(WP $pWP) use ($pDI, $pAddressRedirection) {
+	$addressId = $pWP->query_vars['address_id'] ?? '';
+	/** @var AddressIdRequestGuard $pAddressIdGuard */
+	$pAddressIdGuard = $pDI->get(AddressIdRequestGuard::class);
+
+	if ($addressId !== '') {
+		$addressId = (int)$addressId;
+
+		if ($addressId === 0 || !$pAddressIdGuard->isValid($addressId)) {
+			$pWP->handle_404();
+			include(get_query_template('404'));
+			die();
+		}
+		$pAddressIdGuard->addressDetailUrlChecker($addressId, $pDI->get(AddressRedirector::class), $pAddressRedirection);
 	}
 });
 
