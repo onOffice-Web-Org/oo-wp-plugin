@@ -571,7 +571,9 @@ implements AddressListBase
 	{
 			$pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
 					->getAddressDetailView()->getPageId();
-
+			if($pageId == 0) {
+				return "";
+			}
 			$url = get_page_link( $pageId ) . $addressId;
 			$fullLinkElements = parse_url( $url );
 			if ( empty( $fullLinkElements['query'] ) ) {

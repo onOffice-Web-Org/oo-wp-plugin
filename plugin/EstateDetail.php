@@ -327,7 +327,6 @@ class EstateDetail
 	 */
 	public function getAddressLink(string $id) : string 
 	{
-		$link = $this->getEnvironment()->getAddressList()->getAddressLink($id);
-		return $link;
+		return $this->getEnvironment()->getAddressList()->getAddressLink($id);
 	}
 }
