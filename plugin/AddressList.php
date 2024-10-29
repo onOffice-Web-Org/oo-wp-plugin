@@ -277,6 +277,10 @@ implements AddressListBase
 			'outputlanguage' => $lang,
 			'formatoutput' => $formatOutput,
 		);
+
+		if($this->_pDataViewAddress instanceof DataListViewAddress) {
+			$params['sortby'] = $this->_pDataViewAddress->getSortby();
+		}
 		return $params;
 	}
 
