@@ -247,6 +247,20 @@ class ApiCall
 						}
 
 					} else {
+						if(array_key_exists($key,$item["elements"]) 
+							&& (strtolower($item["elements"][$key]) == "nein" || strtolower($item["elements"][$key]) == "ja")
+							&& is_bool($val)) // check boolean values
+						{
+							if(strtolower($item["elements"][$key]) == "nein" && intval($val) != 0){
+								unset($filtredArray[$index]);
+								break;
+							}
+							if(strtolower($item["elements"][$key]) == "ja" && intval($val) != 1){
+								unset($filtredArray[$index]);
+								break;
+							}
+						}
+
 						if(!array_key_exists($key,$item["elements"]) || strtolower($item["elements"][$key]) != strtolower($val)){
 							unset($filtredArray[$index]);
 							break;
