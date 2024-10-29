@@ -265,11 +265,12 @@ class ApiCall
 				{
 					$elVal = $item["elements"][$key];
 					if($key === "Id") {
-						$elVal = str_replace(',','',strtolower($elVal));
-						$elVal = str_replace('.','',strtolower($elVal));
+						$elVal = str_replace(',','',$elVal);
+						$elVal = str_replace('.','',$elVal);
 					}
 
-					if(!in_array($elVal, $val)){
+					$lowerVal = array_map('strtolower', $val);
+					if(!in_array(strtolower($elVal), $lowerVal)){
 						unset($filtredArray[$index]);
 						break;
 					}
@@ -355,10 +356,10 @@ class ApiCall
 		if(is_string($elements[$key]) && (str_contains($elements[$key],'€') || str_contains($elements[$key],'$'))) {
 			$curr = "USD";
 			$formatter = new \NumberFormatter($lang, \NumberFormatter::CURRENCY);
-			// $elVal = str_replace(' €',"\xc2\xa0$",$elVal);
-			// $elVal = str_replace(' $',"\xc2\xa0$",$elVal);
-			$elVal = preg_replace("/[^0-9]/", '', $elVal);
+			$elVal = str_replace(' €',"\xc2\xa0$",$elVal);
+			$elVal = str_replace(' $',"\xc2\xa0$",$elVal);
 			$elVal = trim($elVal);
+
 			$elVal = $formatter->parseCurrency($elVal, $curr);
 		}
 		$dateVal = date_create_from_format('Y-m-d H:i:s', $val); //1955-12-29
