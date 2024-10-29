@@ -121,7 +121,9 @@ class TestClassAddressList
 				'filter' => [],
 				'filterid' => 0,
 				'outputlanguage' => Language::getDefault(),
-				'formatoutput' => true
+				'formatoutput' => true,
+				'sortby' => '',
+				'sortorder' => ''
 			]
 		];
 		$parametersDefaultRaw = [
@@ -142,7 +144,9 @@ class TestClassAddressList
 				'filter' => [],
 				'filterid' => 0,
 				'outputlanguage' => Language::getDefault(),
-				'formatoutput' => false
+				'formatoutput' => false,
+				'sortby' => '',
+				'sortorder' => ''
 			]
 		];
 		$parameters = [
@@ -163,7 +167,9 @@ class TestClassAddressList
 				'filter' => [],
 				'filterid' => 0,
 				'outputlanguage' => Language::getDefault(),
-				'formatoutput' => true
+				'formatoutput' => true,
+				'sortby' => '',
+				'sortorder' => ''
 			]
 		];
 		$parametersRaw = [
@@ -184,7 +190,9 @@ class TestClassAddressList
 				'filter' => [],
 				'filterid' => 0,
 				'outputlanguage' => Language::getDefault(),
-				'formatoutput' => false
+				'formatoutput' => false,
+				'sortby' => '',
+				'sortorder' => ''
 			]
 		];
 		$parametersLoadedById = [

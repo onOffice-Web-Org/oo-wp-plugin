@@ -280,6 +280,7 @@ implements AddressListBase
 
 		if($this->_pDataViewAddress instanceof DataListViewAddress) {
 			$params['sortby'] = $this->_pDataViewAddress->getSortby();
+			$params['sortorder'] = $this->_pDataViewAddress->getSortorder();
 		}
 		return $params;
 	}
