@@ -59,6 +59,7 @@ onOffice.checkboxAdmin = function() {
 			{
 				element: "input[name^=oopluginformfieldconfig-hiddenfield]",
 				invert: true
+			}
 		],
 
 		// view: create new [task] form
