@@ -182,6 +182,7 @@ class TestClassFormPostContact
 		$this->configureSDKWrapperForCreateAddressWithDuplicateCheck();
 		$this->configureSDKWrapperForFieldsAddressEstate();
 		$this->configureSDKWrapperForCreateAgentsLog();
+		$this->configureSDKWrapperForCreateTask();
 	}
 
 
@@ -323,6 +324,65 @@ class TestClassFormPostContact
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_CREATE, 'address', '', $parameters, null, $response);
+	}
+
+	/**
+	 *
+	 */
+	public function configureSDKWrapperForCreateTask()
+	{
+		$parameters = [
+			'data' => [
+				'Prio' => 3,
+				'Verantwortung' => 'Tobias',
+				'Art' => 1,
+				'Status' => 1,
+				'Bearbeiter' => 'Tobias',
+				'Betreff' => 'Task subject',
+				'Aufgabe' => 'Task description'
+			],
+			'relatedAddressId' => 320,
+		];
+
+		$responseJson = file_get_contents(__DIR__.'/resources/ApiResponseCreateTask.json');
+		$response = json_decode($responseJson, true);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_CREATE, 'task', '', $parameters, null, $response);
+	}
+
+	/**
+	 *
+	 */
+	public function testCreateTask()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'Email' => 'john.doe@my-onoffice.com',
+			'Plz' => '52068',
+			'Ort' => 'Aachen',
+			'Telefon1' => '0815/2345677',
+			'AGB_akzeptiert' => 'y',
+			'newsletter' => 'y',
+			'Id' => '1337',
+			'Anrede' => '',
+			'tmpField' => 'content',
+		];
+
+		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$pDataFormConfiguration->setEnableCreateTask(true);
+		$pDataFormConfiguration->setTaskResponsibility('Tobias');
+		$pDataFormConfiguration->setTaskProcessor('Tobias');
+		$pDataFormConfiguration->setTaskPriority(3);
+		$pDataFormConfiguration->setTaskType(1);
+		$pDataFormConfiguration->setTaskSubject('Task subject');
+		$pDataFormConfiguration->setTaskDescription('Task description');
+		$pDataFormConfiguration->setTaskStatus(1);
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+
+		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
 	}
 
 
