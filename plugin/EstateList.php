@@ -225,7 +225,11 @@ class EstateList
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'] []= 'vermarktungsart';
 		$estateParametersRaw['data'] []= 'preisAufAnfrage';
-		$estateParametersRaw['data'] []= 'waehrung';
+
+		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
+			$estateParametersRaw['data'] []= 'waehrung';
+		}
+
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
@@ -328,6 +332,9 @@ class EstateList
 				$requestParams['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 				$requestParams['data'][] = 'vermarktungsart';
 				$requestParams['data'][] = 'preisAufAnfrage';
+				if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
+					$requestParams['data'][] = 'waehrung';
+				}
 			}
 			if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
 				$requestParams['data'][] = 'preisAufAnfrage';
@@ -670,7 +677,7 @@ class EstateList
 			$this->addMetaTags(GenerateMetaDataSocial::TWITTER_KEY, $recordModified);
 		}
 
-		if (!empty($recordModified['multiParkingLot'])) {
+		if (!empty($recordModified['multiParkingLot']) && !empty($recordRaw['waehrung'])) {
 			$parking = $this->_pEnvironment->getContainer()->get(FieldParkingLot::class);
 			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordRaw['waehrung']);
 		}
