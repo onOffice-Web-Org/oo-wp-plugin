@@ -679,7 +679,7 @@ class EstateList
 
 		if (!empty($recordModified['multiParkingLot'])) {
 			$parking = $this->_pEnvironment->getContainer()->get(FieldParkingLot::class);
-			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordRaw['waehrung']);
+			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordRaw['waehrung'] ?? '');
 		}
 
 		$recordModified = new ArrayContainerEscape($recordModified);

@@ -32,11 +32,12 @@ class FieldParkingLot{
 	 * @param string $codeCurrency
 	 * @return array
 	 */
-	public function renderParkingLot(array $currentEstate, string $codeCurrency = 'EUR'): array
+	public function renderParkingLot(array $currentEstate, string $codeCurrency): array
 	{
 		$language = new Language();
 		$locale = $language->getLocale();
 		$locale = !empty($locale) ? $locale : 'de_DE';
+		$codeCurrency = !empty($codeCurrency) ? $codeCurrency : 'EUR';
 
 		$parkingArray = $currentEstate['multiParkingLot'];
 		$messages = [];
