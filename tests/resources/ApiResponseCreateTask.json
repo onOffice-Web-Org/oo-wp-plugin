@@ -1,0 +1,23 @@
+{
+  "actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:create",
+  "resourceid": "",
+  "resourcetype": "task",
+  "cacheable": false,
+  "identifier": "",
+  "data": {
+    "meta": {
+      "cntabsolute": null
+    },
+    "records": [
+      {
+        "id": 6065,
+        "type": "task",
+        "elements": []
+      }
+    ]
+  },
+  "status": {
+    "errorcode": 0,
+    "message": "OK"
+  }
+}

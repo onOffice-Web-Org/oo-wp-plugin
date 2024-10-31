@@ -1247,7 +1247,7 @@ class EstateList
 	 */
 	public function getShowReferenceEstate(): string
 	{
-		if ( $this->_pDataView instanceof DataListView ) {
+		if ( $this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataViewSimilarEstates) {
 			return $this->_pDataView->getShowReferenceEstate();
 		}
 
