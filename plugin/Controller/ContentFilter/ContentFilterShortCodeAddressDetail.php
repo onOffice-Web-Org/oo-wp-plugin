@@ -97,7 +97,7 @@ class ContentFilterShortCodeAddressDetail {
 				'onoffice-for-wp-websites') . '</p>';
 
 		if (is_user_logged_in()) {
-			$html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--admin">' . esc_html($description) . '</p>';
+			$html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--admin">' . $description . '</p>';
 		}
 		$html .= '</div>';
 
