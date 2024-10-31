@@ -78,10 +78,10 @@ class ContentFilterShortCodeAddressDetail {
 	public function renderHtmlHelperUserIfEmptyAddressId()
 	{
 		$pDataAddressDetail = $this->getRandomAddressDetail();
-		$addressTitle = __("address list documentation", 'onoffice-for-wp-websites');
+		$addressTitle = __("Address list documentation", 'onoffice-for-wp-websites');
 		$linkAddressDetail = __("https://wp-plugin.onoffice.com/en/first-steps/address-lists/",
 			'onoffice-for-wp-websites');
-		$linkAddressDetail = '<a href=' . $linkAddressDetail . '>' . $addressTitle . '</a>';
+		$linkAddressDetail = '<a href=' . esc_attr($linkAddressDetail) . '>' . esc_html($addressTitle) . '</a>';
 		$description = sprintf(__("The plugin couldn't find any addresses. Please make sure that you have published some addresses, as described in the %s",
 			'onoffice-for-wp-websites'), $linkAddressDetail);
 		if (!empty($pDataAddressDetail)) {
@@ -97,7 +97,7 @@ class ContentFilterShortCodeAddressDetail {
 				'onoffice-for-wp-websites') . '</p>';
 
 		if (is_user_logged_in()) {
-			$html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--admin">' . $description . '</p>';
+			$html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--admin">' . esc_html($description) . '</p>';
 		}
 		$html .= '</div>';
 
