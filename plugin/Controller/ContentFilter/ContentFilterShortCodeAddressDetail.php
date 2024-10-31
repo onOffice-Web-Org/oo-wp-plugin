@@ -78,7 +78,7 @@ class ContentFilterShortCodeAddressDetail {
 	/**
 	 * @return string
 	 */
-	public function renderHtmlHelperUserIfEmptyAddressId()
+	public function renderHtmlHelperUserIfEmptyAddressId(): string
 	{
 		$pDataAddressDetail = $this->getRandomAddressDetail();
 		$addressTitle = __("Address list documentation", 'onoffice-for-wp-websites');
@@ -108,7 +108,7 @@ class ContentFilterShortCodeAddressDetail {
 	/**
 	 * @return array
 	 */
-	public function getRandomAddressDetail()
+	public function getRandomAddressDetail(): array
 	{
 		$pEnvironment = new AddressListEnvironmentDefault();
 		$pSDKWrapper = $pEnvironment->getSDKWrapper();
