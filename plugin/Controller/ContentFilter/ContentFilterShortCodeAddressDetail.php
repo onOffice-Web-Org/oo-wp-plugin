@@ -75,14 +75,16 @@ class ContentFilterShortCodeAddressDetail {
 					->render();
     }
 
+	/**
+	 * @return string
+	 */
 	public function renderHtmlHelperUserIfEmptyAddressId()
 	{
 		$pDataAddressDetail = $this->getRandomAddressDetail();
 		$addressTitle = __("Address list documentation", 'onoffice-for-wp-websites');
 		$linkAddressDetail = __("https://wp-plugin.onoffice.com", 'onoffice-for-wp-websites');
 		$linkAddressDetail = '<a href=' . esc_attr($linkAddressDetail) . '>' . esc_html($addressTitle) . '</a>';
-		$description = sprintf(__("The plugin couldn't find any addresses. Please make sure that you have published some addresses, as described in the %s",
-			'onoffice-for-wp-websites'), $linkAddressDetail);
+		$description = sprintf(__("The plugin couldn't find any addresses. Please make sure that you have published some addresses, as described in the %s", 'onoffice-for-wp-websites'), $linkAddressDetail);
 		if (!empty($pDataAddressDetail)) {
 			$titleDefault = __('Example address', 'onoffice-for-wp-websites');
 			$addressTitle = $this->createAddressTitle($pDataAddressDetail['elements']['Vorname'], $pDataAddressDetail['elements']['Name'], $pDataAddressDetail['elements']['Zusatz1']);
@@ -103,6 +105,9 @@ class ContentFilterShortCodeAddressDetail {
 		return $html;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getRandomAddressDetail()
 	{
 		$pEnvironment = new AddressListEnvironmentDefault();
