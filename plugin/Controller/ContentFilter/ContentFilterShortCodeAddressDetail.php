@@ -82,7 +82,7 @@ class ContentFilterShortCodeAddressDetail {
 		$linkAddressDetail = __("https://wp-plugin.onoffice.com/en/first-steps/address-lists/",
 			'onoffice-for-wp-websites');
 		$linkAddressDetail = '<a href=' . $linkAddressDetail . '>' . $addressTitle . '</a>';
-		$description = sprintf(__("The plugin couldn't find any addresss. Please make sure that you have published some addresss, as described in the %s",
+		$description = sprintf(__("The plugin couldn't find any addresses. Please make sure that you have published some addresses, as described in the %s",
 			'onoffice-for-wp-websites'), $linkAddressDetail);
 		if (!empty($pDataAddressDetail)) {
 			$titleDefault = __('Example address', 'onoffice-for-wp-websites');
