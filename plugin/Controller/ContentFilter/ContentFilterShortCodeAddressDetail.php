@@ -79,8 +79,7 @@ class ContentFilterShortCodeAddressDetail {
 	{
 		$pDataAddressDetail = $this->getRandomAddressDetail();
 		$addressTitle = __("Address list documentation", 'onoffice-for-wp-websites');
-		$linkAddressDetail = __("https://wp-plugin.onoffice.com/en/first-steps/address-lists/",
-			'onoffice-for-wp-websites');
+		$linkAddressDetail = __("https://wp-plugin.onoffice.com", 'onoffice-for-wp-websites');
 		$linkAddressDetail = '<a href=' . esc_attr($linkAddressDetail) . '>' . esc_html($addressTitle) . '</a>';
 		$description = sprintf(__("The plugin couldn't find any addresses. Please make sure that you have published some addresses, as described in the %s",
 			'onoffice-for-wp-websites'), $linkAddressDetail);
@@ -147,7 +146,7 @@ class ContentFilterShortCodeAddressDetail {
 		$addressId = $pAddressListDetail['elements']['id'];
 		$fullLink = '#';
 
-		$url = $this->getPageLink();
+		$url = get_page_link();
 		$fullLink = $pLanguageSwitcher->createAddressDetailLink($url, $addressId, $addressTitle);
 		$fullLinkElements = parse_url($fullLink);
 		if (empty($fullLinkElements['query'])) {
@@ -178,13 +177,4 @@ class ContentFilterShortCodeAddressDetail {
 
 		return implode(' ', $parts);
 	}
-
-	/**
-	 * @return string
-	 */
-	public function getPageLink(): string
-	{
-		return get_page_link();
-	}
-
 }
