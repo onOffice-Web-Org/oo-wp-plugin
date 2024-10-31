@@ -74,6 +74,14 @@ class ContentFilterShortCodeAddressDetail {
 					->withAddressList($pAddressList)
 					->render();
     }
+  
+    /**
+     * @return string
+     */
+    public function getViewName(): string
+    {
+        return $this->_pDataAddressDetailViewHandler->getAddressDetailView()->getName();
+    }
 
 	/**
 	 * @return string
@@ -132,14 +140,6 @@ class ContentFilterShortCodeAddressDetail {
 
 		return [];
 	}
-  
-    /**
-     * @return string
-     */
-    public function getViewName(): string
-    {
-        return $this->_pDataAddressDetailViewHandler->getAddressDetailView()->getName();
-    }
 
 	/**
 	 * @return string
