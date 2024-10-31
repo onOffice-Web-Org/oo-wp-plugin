@@ -121,15 +121,16 @@ class ContentFilterShortCodeAddressDetail {
 		$pEnvironment = new AddressListEnvironmentDefault();
 		$pSDKWrapper = $pEnvironment->getSDKWrapper();
 		$language = Language::getDefault();
+    
+		$requestParams = [
+			'data' => ['Vorname', 'Name', 'Zusatz1'],
+			'outputlanguage' => $language
+		];
+    $requestParams['filter']['homepage_veroeffentlichen'][] = ['op' => '=', 'val' => 1];
+
 		$pApiClientAction = new APIClientActionGeneric
 		($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
-		$estateParametersRaw['data'] = ['Vorname', 'Name', 'Zusatz1'];
-		$estateParametersRaw['outputlanguage'] = $language;
-		$estateParametersRaw['filter'] = ['homepage_veroeffentlichen' => [
-			['op' => '=', 'val' => 1],
-		]];
-
-		$pApiClientAction->setParameters($estateParametersRaw);
+		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
 		$pAddressList = $pApiClientAction->getResultRecords();
 
