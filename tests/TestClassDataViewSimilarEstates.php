@@ -51,6 +51,8 @@ class TestClassDataViewSimilarEstates
 		$this->assertEquals(10, $pDataViewSimilarEstates->getRadius());
 		$this->assertEquals(6, $pDataViewSimilarEstates->getRecordsPerPage());
 		$this->assertEquals(false, $pDataViewSimilarEstates->getShowPriceOnRequest());
+		$this->assertEquals('0', $pDataViewSimilarEstates->getShowReferenceEstate());
+		$this->assertEquals(0, $pDataViewSimilarEstates->getFilterId());
 	}
 
 
@@ -75,7 +77,10 @@ class TestClassDataViewSimilarEstates
 		$this->assertTrue($pDataViewSimilarEstates->getShowPriceOnRequest());
 		$this->assertEquals(['Id' => 'ASC'], $pDataViewSimilarEstates->getSortBy());
 		$this->assertNull($pDataViewSimilarEstates->getSortOrder());
-		$this->assertNull($pDataViewSimilarEstates->getFilterId());
+		$pDataViewSimilarEstates->setFilterId(10);
+		$this->assertEquals($pDataViewSimilarEstates->getFilterId(), 10);
+		$pDataViewSimilarEstates->setShowReferenceEstate('0');
+		$this->assertEquals($pDataViewSimilarEstates->getShowReferenceEstate(), '0');
 	}
 
 
