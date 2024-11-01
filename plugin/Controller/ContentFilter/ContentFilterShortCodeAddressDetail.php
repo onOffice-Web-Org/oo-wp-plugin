@@ -84,23 +84,23 @@ class ContentFilterShortCodeAddressDetail {
         return $this->_pDataAddressDetailViewHandler->getAddressDetailView()->getName();
     }
 
-    /**
-     * @return string
-     */
-    private function renderHtmlHelperUserIfEmptyAddressId(): string
-    {
-        $pDataDetail = $this->getRandomAddressDetail();
-        $firstName = $pDataDetail['elements']['Vorname'] ?? '';
-        $lastName = $pDataDetail['elements']['Name'] ?? '';
-        $company = $pDataDetail['elements']['Zusatz1'] ?? '';
+	/**
+	 * @return string
+	 */
+	private function renderHtmlHelperUserIfEmptyAddressId(): string
+	{
+		$pDataDetail = $this->getRandomAddressDetail();
+		$firstName = $pDataDetail['elements']['Vorname'] ?? '';
+		$lastName = $pDataDetail['elements']['Name'] ?? '';
+		$company = $pDataDetail['elements']['Zusatz1'] ?? '';
 
-        $itemTitle = AddressIdRequestGuard::createAddressTitle($firstName, $lastName, $company);
-        $type = __('address', 'onoffice-for-wp-websites');
-        $documentLink = __('https://wp-plugin.onoffice.com/', 'onoffice-for-wp-websites');
-        $linkDetail = '<a class="oo-detailview-helper-link" href=' . $this->getAddressLink($pDataDetail, $itemTitle) . '>' . (!empty($itemTitle) ? esc_html($itemTitle) : esc_html(__('Example address', 'onoffice-for-wp-websites'))) . '</a>';
+		$itemTitle = AddressIdRequestGuard::createAddressTitle($firstName, $lastName, $company);
+		$type = __('address', 'onoffice-for-wp-websites');
+		$documentLink = __('https://wp-plugin.onoffice.com/', 'onoffice-for-wp-websites');
+		$linkDetail = '<a class="oo-detailview-helper-link" href=' . $this->getAddressLink($pDataDetail, $itemTitle) . '>' . (!empty($itemTitle) ? esc_html($itemTitle) : esc_html(__('Example address', 'onoffice-for-wp-websites'))) . '</a>';
 
-        return RenderHtmlHelperUsers::renderHtmlHelperUserIfEmptyId($type, $documentLink, $linkDetail, $pDataDetail);
-    }
+		return RenderHtmlHelperUsers::renderHtmlHelperUserIfEmptyId($type, $documentLink, $linkDetail, $pDataDetail);
+	}
 
 
 	/**
@@ -116,7 +116,7 @@ class ContentFilterShortCodeAddressDetail {
 			'data' => ['Vorname', 'Name', 'Zusatz1'],
 			'outputlanguage' => $language
 		];
-    $requestParams['filter']['homepage_veroeffentlichen'][] = ['op' => '=', 'val' => 1];
+		$requestParams['filter']['homepage_veroeffentlichen'][] = ['op' => '=', 'val' => 1];
 
 		$pApiClientAction = new APIClientActionGeneric
 		($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
