@@ -32,6 +32,7 @@ use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Record\AddressIdRequestGuard;
 
 class ContentFilterShortCodeAddressDetail {
 
@@ -74,50 +75,52 @@ class ContentFilterShortCodeAddressDetail {
 					->withAddressList($pAddressList)
 					->render();
     }
+  
+    /**
+     * @return string
+     */
+    public function getViewName(): string
+    {
+        return $this->_pDataAddressDetailViewHandler->getAddressDetailView()->getName();
+    }
 
-	public function renderHtmlHelperUserIfEmptyAddressId()
-	{
-		$pDataAddressDetail = $this->getRandomAddressDetail();
-		$addressTitle = __("address list documentation", 'onoffice-for-wp-websites');
-		$linkAddressDetail = __("https://wp-plugin.onoffice.com/en/first-steps/address-lists/",
-			'onoffice-for-wp-websites');
-		$linkAddressDetail = '<a href=' . $linkAddressDetail . '>' . $addressTitle . '</a>';
-		$description = sprintf(__("The plugin couldn't find any addresss. Please make sure that you have published some addresss, as described in the %s",
-			'onoffice-for-wp-websites'), $linkAddressDetail);
-		if (!empty($pDataAddressDetail)) {
-			$titleDefault = __('Example address', 'onoffice-for-wp-websites');
-			$addressTitle = $this->createAddressTitle($pDataAddressDetail['elements']['Vorname'], $pDataAddressDetail['elements']['Name'], $pDataAddressDetail['elements']['Zusatz1']);
-			$linkAddressDetail = $this->getAddressLink($pDataAddressDetail, $addressTitle);
-			$linkAddressDetail = '<a class="oo-detailview-helper-link" href=' . esc_attr($linkAddressDetail) . '>' . (!empty($addressTitle) ? esc_html($addressTitle) : esc_html($titleDefault)) . '</a>';
-			$description = sprintf(__('Since you are logged in, here is a link to a random address so that you can preview the detail page: %s',
-				'onoffice-for-wp-websites'), $linkAddressDetail);
-		}
-		$html = '<div class="oo-detailview-helper">';
-		$html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--default">' . __('You have opened the detail page, but we do not know which address to show you, because there is no address ID in the URL. Please go to an address list and open an address from there.',
-				'onoffice-for-wp-websites') . '</p>';
+    /**
+     * @return string
+     */
+    private function renderHtmlHelperUserIfEmptyAddressId(): string
+    {
+        $pDataDetail = $this->getRandomAddressDetail();
+        $firstName = $pDataDetail['elements']['Vorname'] ?? '';
+        $lastName = $pDataDetail['elements']['Name'] ?? '';
+        $company = $pDataDetail['elements']['Zusatz1'] ?? '';
 
-		if (is_user_logged_in()) {
-			$html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--admin">' . $description . '</p>';
-		}
-		$html .= '</div>';
+        $itemTitle = AddressIdRequestGuard::createAddressTitle($firstName, $lastName, $company);
+        $type = __('address', 'onoffice-for-wp-websites');
+        $documentLink = __('https://wp-plugin.onoffice.com/', 'onoffice-for-wp-websites');
+        $linkDetail = '<a class="oo-detailview-helper-link" href=' . $this->getAddressLink($pDataDetail, $itemTitle) . '>' . (!empty($itemTitle) ? esc_html($itemTitle) : esc_html(__('Example address', 'onoffice-for-wp-websites'))) . '</a>';
 
-		return $html;
-	}
+        return RenderHtmlHelperUsers::renderHtmlHelperUserIfEmptyId($type, $documentLink, $linkDetail, $pDataDetail);
+    }
 
-	public function getRandomAddressDetail()
+
+	/**
+	 * @return array
+	 */
+	private function getRandomAddressDetail(): array
 	{
 		$pEnvironment = new AddressListEnvironmentDefault();
 		$pSDKWrapper = $pEnvironment->getSDKWrapper();
 		$language = Language::getDefault();
+
+		$requestParams = [
+			'data' => ['Vorname', 'Name', 'Zusatz1'],
+			'outputlanguage' => $language
+		];
+    $requestParams['filter']['homepage_veroeffentlichen'][] = ['op' => '=', 'val' => 1];
+
 		$pApiClientAction = new APIClientActionGeneric
 		($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
-		$estateParametersRaw['data'] = ['Vorname', 'Name', 'Zusatz1'];
-		$estateParametersRaw['outputlanguage'] = $language;
-		$estateParametersRaw['filter'] = ['homepage_veroeffentlichen' => [
-			['op' => '=', 'val' => 1],
-		]];
-
-		$pApiClientAction->setParameters($estateParametersRaw);
+		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
 		$pAddressList = $pApiClientAction->getResultRecords();
 
@@ -128,26 +131,20 @@ class ContentFilterShortCodeAddressDetail {
 
 		return [];
 	}
-  
-    /**
-     * @return string
-     */
-    public function getViewName(): string
-    {
-        return $this->_pDataAddressDetailViewHandler->getAddressDetailView()->getName();
-    }
 
 	/**
+	 * @param array $pAddressListDetail
+	 * @param string $addressTitle
 	 * @return string
 	 */
-	public function getAddressLink(array $pAddressListDetail, string $addressTitle): string
+	private function getAddressLink(array $pAddressListDetail, string $addressTitle): string
 	{
 		$pLanguageSwitcher = new AddressDetailUrl;
 
 		$addressId = $pAddressListDetail['elements']['id'];
 		$fullLink = '#';
 
-		$url = $this->getPageLink();
+		$url = get_page_link();
 		$fullLink = $pLanguageSwitcher->createAddressDetailLink($url, $addressId, $addressTitle);
 		$fullLinkElements = parse_url($fullLink);
 		if (empty($fullLinkElements['query'])) {
@@ -156,35 +153,4 @@ class ContentFilterShortCodeAddressDetail {
 
 		return $fullLink;
 	}
-
-	/**
-	 * @param string|null $firstName
-	 * @param string|null $lastName
-	 * @param string|null $company
-	 * @return string
-	 */
-	private function createAddressTitle(string $firstName, string $lastName, string $company): string
-	{
-		$parts = [];
-		if (!empty($firstName)) {
-			$parts[] = strtolower($firstName);
-		}
-		if (!empty($lastName)) {
-			$parts[] = strtolower($lastName);
-		}
-		if (!empty($company)) {
-			$parts[] = strtolower($company);
-		}
-
-		return implode(' ', $parts);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getPageLink(): string
-	{
-		return get_page_link();
-	}
-
 }
