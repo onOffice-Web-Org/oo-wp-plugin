@@ -93,7 +93,7 @@ class ContentFilterShortCodeEstateDetail
 	/**
 	 * @return string
 	 */
-	private function renderHtmlHelperUserIfEmptyEstateId(): string
+	public function renderHtmlHelperUserIfEmptyEstateId(): string
 	{
 		$pDataDetail = $this->getRandomEstateDetail();
 		$itemTitle = empty($pDataDetail['elements']["objekttitel"]) ? __('Example estate', 'onoffice-for-wp-websites') : $pDataDetail['elements']["objekttitel"];

@@ -39,9 +39,8 @@ class RenderHtmlHelperUsers
         $title       = sprintf(__("%s list documentation", 'onoffice-for-wp-websites'), ucfirst($type));
         $linkDetail  = !empty($pDataDetail) ? $linkDetail : '<a href=' . esc_url($documentationLink) . '>' . esc_html($title) . '</a>';
         $description = sprintf(__("The plugin couldn't find any %s. Please make sure that you have published some %s, as described in the %s", 'onoffice-for-wp-websites'), $type, $type, $linkDetail);
-        
         $html = '<div class="oo-detailview-helper">';
-        $html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--default">' . sprintf(__("You have opened the detail page, but we do not know which %s to show you, because there is no ID in the URL. Please go to a %s list and open a %s from there.", 'onoffice-for-wp-websites'), $type, $type, $type) . '</p>';
+        $html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--default">' . sprintf(__("You have opened the detail page, but we do not know which %s to show you, because there is no %s ID in the URL. Please go to an %s list and open an %s from there.", 'onoffice-for-wp-websites'), $type, $type, $type, $type) . '</p>';
 
         if (!empty($pDataDetail)) {
             $description = sprintf(__('Since you are logged in, here is a link to a random %s so that you can preview the detail page: %s', 'onoffice-for-wp-websites'), $type, $linkDetail);
