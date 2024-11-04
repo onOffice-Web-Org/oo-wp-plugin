@@ -76,6 +76,23 @@
                     },
                     "default": "Kein vorzeitiger Beginn"
                 }
+            },
+            {
+              "id": 5,
+              "type": "actionkind",
+              "elements": {
+                "key": "Aufgabe",
+                "label": "Aufgabe",
+                "types": {
+                  "Angebot erstellen": "Angebot erstellen",
+                  "Objektaufnahme": "Objektaufnahme"
+                },
+                "default": "Telefax",
+                "typesByDatabaseId": {
+                  "217": "Objektaufnahme",
+                  "215": "Angebot erstellen"
+                }
+              }
             }
         ]
     },

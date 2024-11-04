@@ -111,7 +111,6 @@ class RecordManagerInsertGeneric
 		$this->_pWPDB->suppress_errors($suppressErrors);
 	}
 
-
 	/**
 	 * @param array $values
 	 * @param string $table

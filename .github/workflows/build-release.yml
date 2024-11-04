@@ -59,7 +59,7 @@ jobs:
           zip -r ../release.zip .
 
       - name: Upload release as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release
           path: /tmp/release.zip
