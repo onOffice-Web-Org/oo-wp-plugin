@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 5.1.4
+Version: 5.2
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -303,7 +303,7 @@ add_filter('wpml_ls_language_url', function($url, $data) use ($pDI) {
 		/** @var AddressIdRequestGuard $pAddressIdGuard */
 		$pAddressIdGuard = $pDI->get(AddressIdRequestGuard::class);
 		$pEstateDetailUrl = $pDI->get(AddressDetailUrl::class);
-		$oldUrl = $pDI->get(AddressRedirector::class)->getCurrentLink();
+		$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
 		return $pAddressIdGuard->createAddressDetailLinkForSwitchLanguageWPML($url, $addressId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
 	}
 }, 10, 2);
