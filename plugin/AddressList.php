@@ -472,6 +472,7 @@ implements AddressListBase
 		$this->_pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldBuilderShort->addFieldsAddressEstate($this->_pFieldsCollection);
+		$pFieldBuilderShort->addFieldsEstateDecoratorReadAddressBackend($this->_pFieldsCollection);
 
 		if ($this->_pDataViewAddress instanceof DataListViewAddress && !empty($this->_pDataViewAddress->getName())) {
 			$pFieldBuilderShort->addCustomLabelFieldsAddressFrontend($this->_pFieldsCollection, $this->_pDataViewAddress->getName());
@@ -491,6 +492,7 @@ implements AddressListBase
 		$pBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollection = new FieldsCollection();
 		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$pBuilderShort->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection);
 		if (!empty($this->getDataViewAddress()->getConvertInputTextToSelectForField())) {
 			$pBuilderShort->addFieldAddressCityValues($pFieldsCollection);
 		}
