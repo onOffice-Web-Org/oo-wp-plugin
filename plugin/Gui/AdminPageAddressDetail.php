@@ -489,6 +489,7 @@ class AdminPageAddressDetail
 		$pFieldsCollectionBuilder = $pAddressListEnvironmentDefault->getFieldsCollectionBuilderShort();
 		$pDefaultFieldsCollection = new FieldsCollection();
 		$pFieldsCollectionBuilder->addFieldsAddressEstate($pDefaultFieldsCollection);
+		$pFieldsCollectionBuilder->addFieldsEstateDecoratorReadAddressBackend($pDefaultFieldsCollection);
 
 		foreach ($pDefaultFieldsCollection->getAllFields() as $pField) {
 			if (!in_array($pField->getModule(), [onOfficeSDK::MODULE_ADDRESS], true)) {
