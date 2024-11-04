@@ -492,7 +492,6 @@ implements AddressListBase
 		$pBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollection = new FieldsCollection();
 		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$pBuilderShort->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection);
 		if (!empty($this->getDataViewAddress()->getConvertInputTextToSelectForField())) {
 			$pBuilderShort->addFieldAddressCityValues($pFieldsCollection);
 		}
