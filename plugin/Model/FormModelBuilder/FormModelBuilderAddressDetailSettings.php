@@ -294,11 +294,28 @@ class FormModelBuilderAddressDetailSettings
 		$pInputModelFieldsConfig = $this->_pInputModelAddressDetailFactory->create
 		(InputModelOptionFactoryAddressDetailView::INPUT_FIELD_CONFIG, null, true);
 		$fields = $this->_pDataAddressDetail->getFields();
+		$pFieldsCollection = $this->getFieldsCollection();
 
-		$fieldNames = $this->getFieldnames()->getFieldList($module);
+		$fieldNames = [];
+		if (is_array($module)) {
+			foreach ($module as $submodule) {
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule);
+				$fieldNames = array_merge($fieldNames, $newFields);
+			}
+		} else {
+			$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+		}
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
-		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNames));
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesArray);
 		$pInputModelFieldsConfig->setValue($fields);
 
 		return $pInputModelFieldsConfig;
