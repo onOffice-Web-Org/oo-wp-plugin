@@ -140,6 +140,9 @@ class ContentFilterShortCodeAddressDetail {
 	private function getAddressLink(array $pAddressListDetail, string $addressTitle): string
 	{
 		$pLanguageSwitcher = new AddressDetailUrl;
+		if (empty($pAddressListDetail)) {
+			return '';
+		}
 
 		$addressId = $pAddressListDetail['elements']['id'];
 		$fullLink = '#';
