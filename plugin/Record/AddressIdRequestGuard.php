@@ -32,6 +32,7 @@ use onOffice\WPlugin\Factory\AddressListFactory;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Controller\Redirector\AddressRedirector;
+use onOffice\WPlugin\AddressList;
 
 /**
  *
@@ -109,7 +110,7 @@ class AddressIdRequestGuard
 		$firstName = $this->_addressData->getValue('Vorname');
 		$lastName = $this->_addressData->getValue('Name');
 		$company = $this->_addressData->getValue('Zusatz1');
-		$addressTitle = $this->createAddressTitle($firstName, $lastName, $company);
+		$addressTitle = AddressList::createAddressTitle($firstName, $lastName, $company);
 		$pRedirector->redirectDetailView($addressId, $addressTitle, $pAddressRedirection);
 	}
 
@@ -134,7 +135,7 @@ class AddressIdRequestGuard
 				$firstName = $this->_addressData->getValue('Vorname');
 				$lastName = $this->_addressData->getValue('Name');
 				$company = $this->_addressData->getValue('Zusatz1');
-				$addressDetailTitle = $this->createAddressTitle($firstName, $lastName, $company);
+				$addressDetailTitle = AddressList::createAddressTitle($firstName, $lastName, $company);
 			}
 		}
 		$detailLinkForWPML = $pAddressDetailUrl->createAddressDetailLink($url, $addressId, $addressDetailTitle, $oldUrl, true);
@@ -181,7 +182,7 @@ class AddressIdRequestGuard
 			$firstName = $pApiClientAction->getResultRecords()[0]['elements']['Vorname'];
 			$lastName = $pApiClientAction->getResultRecords()[0]['elements']['Name'];
 			$company = $pApiClientAction->getResultRecords()[0]['elements']['Zusatz1'];
-			$addressTitleByLocales[ $key ] = $this->createAddressTitle($firstName, $lastName, $company);
+			$addressTitleByLocales[ $key ] = AddressList::createAddressTitle($firstName, $lastName, $company);
 		}
 
 		return $addressTitleByLocales;
@@ -219,27 +220,5 @@ class AddressIdRequestGuard
 		add_filter('locale', function () use ($locale) {
 			return $locale;
 		});
-	}
-
-	/**
-	 * @param string|null $firstName
-	 * @param string|null $lastName
-	 * @param string|null $company
-	 * @return string
-	 */
-	private function createAddressTitle(string $firstName, string $lastName, string $company): string
-	{
-		$parts = [];
-		if (!empty($firstName)) {
-			$parts[] = strtolower($firstName);
-		}
-		if (!empty($lastName)) {
-			$parts[] = strtolower($lastName);
-		}
-		if (!empty($company)) {
-			$parts[] = strtolower($company);
-		}
-
-		return implode(' ', $parts);
 	}
 }

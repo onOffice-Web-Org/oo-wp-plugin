@@ -294,6 +294,33 @@
     flex-wrap: wrap;
 }
 
+/* address map */
+.oo-address-map {
+    padding: 0 15px;
+    width: 100%;
+}
+
+.oo-detailsmap {
+    position: relative;
+    height: auto;
+}
+
+.oo-detailsmap #map, .oo-address-map #map, .oo-detailsmap #gmap, .oo-address-map #gmap  {
+    height: 300px !important;
+}
+
+.oo-address-map #map .leaflet-top, .oo-address-map #map .leaflet-bottom {
+    z-index: 888;
+}
+
+.oo-detailsmap .oo-map, .oo-address-map .oo-map, .oo-detailsmap .oo-gmap, .oo-address-map .oo-gmap {
+    height: 300px !important;
+}
+
+.oo-address-map .oo-map .leaflet-top, .oo-address-map .oo-map .leaflet-bottom {
+    z-index: 888;
+}
+
 /* responsive */
 @media only screen and (max-width: 991px) {
     .oo-listobject, .oo-searchformfield {
