@@ -305,6 +305,7 @@ add_filter('wpml_ls_language_url', function($url, $data) use ($pDI) {
 		$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
 		return $pAddressIdGuard->createAddressDetailLinkForSwitchLanguageWPML($url, $addressId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
 	}
+	return $url;
 }, 10, 2);
 
 register_activation_hook(__FILE__, [Installer::class, 'install']);
