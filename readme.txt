@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.2.1 (2024-11-05) =
+
+**Fixed**
+
+* Language switch for WPML
+
 = 5.2 (2024-10-30) =
 
 **Added**
