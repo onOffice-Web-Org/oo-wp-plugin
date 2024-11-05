@@ -453,8 +453,8 @@ implements EstateListBase
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
 
-		$filter = $this->getDefaultFilterBuilder()->buildFilter();
-		$fields = array_merge($pFieldModifierHandler->getAllAPIFields(), array_keys($filter));
+		$filter = [];
+		$fields = $pFieldModifierHandler->getAllAPIFields();
 
 		$requestParams = [
 			'listname' => $this->_pDataView->getName(),
@@ -468,6 +468,7 @@ implements EstateListBase
 		];
 		if($pListView instanceof DataListView) {
 			$requestParams['sortby'] = $pListView->getSortby();
+			$requestParams['sortorder'] = $pListView->getSortorder();
 		}
 
 		$requestParams['data'][] = 'preisAufAnfrage';
