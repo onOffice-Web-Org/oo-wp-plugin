@@ -40,7 +40,7 @@ return (function (AddressList $pAddressClone) {
 		if (.0 !== $position['lng'] && .0 !== $position['lat']) {
 			$addressData[] = [
 				'position' => $position,
-				'title' => ['title' => $title],
+				'title' => $title,
 				'visible' => true,
 			];
 		}
