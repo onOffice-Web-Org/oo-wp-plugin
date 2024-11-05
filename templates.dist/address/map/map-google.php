@@ -39,8 +39,8 @@ return (function (AddressList $pAddressClone) {
 		$title = AddressList::createAddressTitle($escapedValues['Vorname'], $escapedValues['Name'], $escapedValues['Zusatz1']);
 		if (.0 !== $position['lng'] && .0 !== $position['lat']) {
 			$addressData[] = [
-				'latlng' => $position,
-				'options' => ['title' => $title],
+				'position' => $position,
+				'title' => ['title' => $title],
 				'visible' => true,
 			];
 		}
