@@ -230,7 +230,6 @@ implements AddressListBase
 			$filter['geo'][0]['loc'] = $_GET['geo_search'];
 
 		$parameters = array(
-			'listname' => $this->_pDataViewAddress->getName(),
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
 			'listoffset' => $offset,
 			'listlimit' => $numRecordsPerPage,
@@ -239,9 +238,13 @@ implements AddressListBase
 			'filter' => $filter,
 			'filterid' => $this->_pDataViewAddress->getFilterId(),
 			'outputlanguage' => $language,
-			'formatoutput' => $formatOutput,
-			'params_list_cache'=> $this->getAddressParametersForCache($language, $formatOutput)
+			'formatoutput' => $formatOutput
 		);
+
+		if ($this->_pDataViewAddress instanceof DataListViewAddress) {
+			$parameters['params_list_cache'] = $this->getAddressParametersForCache($language, $formatOutput);
+			$parameters = array('listname' => $this->_pDataViewAddress->getName()) + $parameters;
+		}
 
 		if ($this->_pDataViewAddress->getShowPhoto()) {
 			$parameters['data'] []= 'imageUrl';
@@ -263,8 +266,9 @@ implements AddressListBase
 	public function getAddressParametersForCache(string $lang, bool $formatOutput)
 	{
 		$pFieldModifierHandler = $this->generateRecordModifier();
+		$pFieldModifierHandler = $this->generateRecordModifier();
+    $filter = $this->_pEnvironment->getDefaultFilterBuilder()->getDefaultFilter();
 
-		$filter = [];
 		$fields = $pFieldModifierHandler->getAllAPIFields();
 		$fields[] = $this->_pDataViewAddress->getSortby();
 
@@ -306,12 +310,14 @@ implements AddressListBase
 
 		$this->_pApiClientAction->setParameters($parameters);
 		$this->_pApiClientAction->addRequestToQueue()->sendRequests();
-		$this->_records = $this->_pApiClientAction->getResultRecords();
+		$result = $this->_pApiClientAction->getResult();
+		$this->_records = $result["data"]["records"];
 
 		$this->fetchEstatesForAddressIds($this->getAddressIds());
 		$this->fillAddressesById($this->_records);
 
 		$this->addRawRecordsByAPICall(clone $this->_pApiClientAction, $parametersRaw);
+		$this->_recordsRaw = array_combine(array_column($this->_recordsRaw, 'id'), $this->_recordsRaw);
 
 		$resultMeta = $this->_pApiClientAction->getResultMeta();
 		$numpages = ceil($resultMeta['cntabsolute']/$this->_pDataViewAddress->getRecordsPerPage());
@@ -736,6 +742,17 @@ implements AddressListBase
 
 		return $fullLink;
 	}
+
+		/**
+	 *
+	 * @param $field
+	 * @return string
+	 */
+
+	 public function getFieldInformation(string $field): array
+	 {
+		 return $this->_pEnvironment->getFieldnames()->getFieldInformation($field, onOfficeSDK::MODULE_ADDRESS);
+	 }
 
 		/**
 	 * @return array

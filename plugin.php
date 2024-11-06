@@ -297,7 +297,7 @@ add_filter('wpml_ls_language_url', function($url, $data) use ($pDI) {
 		$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
 		return $pEstateIdGuard->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
 	}
-	
+
 	if (!empty($addressId)) {
 		/** @var AddressIdRequestGuard $pAddressIdGuard */
 		$pAddressIdGuard = $pDI->get(AddressIdRequestGuard::class);

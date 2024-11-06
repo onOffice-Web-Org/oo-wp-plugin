@@ -177,7 +177,7 @@ class ApiCall
 				{
 					if($params["formatoutput"] == true)
 					{
-						$cachedResponse["data"]["records"] = $this->filterRecords($cachedResponse["data"]["records"], $params["filter"], $params['outputlanguage']);
+						$cachedResponse["data"]["records"] = $this->filterRecords($cachedResponse, $params["filter"]);
 						if(in_array("sortby", $params) && $params["sortby"] != null)
 							$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse["data"]["records"], $params["filter"], $params["sortby"], $params["sortorder"] ?? 'ASC');
 						$cachedResponse["data"]["meta"]["cntabsolute"] = count($cachedResponse["data"]["records"]);
@@ -220,17 +220,22 @@ class ApiCall
 		return array_slice($records, $offset, $limit);
 	}
 
-	private function filterRecords(array $records, array $filter, string $lang = 'de_DE')
+	private function filterRecords(array $cachedResponse, array $filter)
 	{
+		$records = $cachedResponse["data"]["records"];
+		$recordsRaw = $cachedResponse["raw"]["data"]["records"];
+		$fieldTypes = $cachedResponse["types"];
+
 		$filtredArray = [];
 		$calculator = new Vincenty();
 		$isGeoAndMin = 0;
 		$isGeoAndMax = 0;
 
 		foreach($records as $index => $item) {
+			$itemRaw = $recordsRaw[$index];
 			$filtredArray[$index] = $item;
-			foreach($filter as $key => $value) {
-				if($key == "veroeffentlichen" || $key == "referenz" || $key == "homepage_veroeffentlichen")
+			foreach($filter as $fieldName => $value) {
+				if($fieldName == "veroeffentlichen" || $fieldName == "referenz" || $fieldName == "homepage_veroeffentlichen")
 					continue;
 				$op = $value[0]["op"];
 				$val = $value[0]["val"];
@@ -241,27 +246,39 @@ class ApiCall
 				{
 					if(is_array($val))
 					{
-						if(!array_key_exists($key,$item["elements"]) || !in_array($item["elements"][$key],$val)){
+						if(!array_key_exists($fieldName,$item["elements"]) || !in_array($item["elements"][$fieldName],$val)){
 							unset($filtredArray[$index]);
 							break;
 						}
 
 					} else {
-						if(array_key_exists($key,$item["elements"]) 
-							&& (strtolower($item["elements"][$key]) == "nein" || strtolower($item["elements"][$key]) == "ja")
-							&& is_bool($val)) // check boolean values
+						//int compare
+						if(array_key_exists($fieldName,$item["elements"])
+							&& $fieldTypes[$fieldName] === "integer"
+						  && intval($itemRaw["elements"][$fieldName]) != intval($val))
 						{
-							if(strtolower($item["elements"][$key]) == "nein" && intval($val) != 0){
-								unset($filtredArray[$index]);
-								break;
-							}
-							if(strtolower($item["elements"][$key]) == "ja" && intval($val) != 1){
-								unset($filtredArray[$index]);
-								break;
-							}
+							unset($filtredArray[$index]);
+							break;
+						}
+						//float compare
+						if(array_key_exists($fieldName,$item["elements"])
+							&& $fieldTypes[$fieldName] === "float"
+						  && floatval($itemRaw["elements"][$fieldName]) != floatval($val))
+						{
+							unset($filtredArray[$index]);
+							break;
+						}
+						//boolean compare
+						if(array_key_exists($fieldName,$item["elements"])
+							&& $fieldTypes[$fieldName] === "boolean"
+						  && boolval($itemRaw["elements"][$fieldName]) != boolval($val))
+						{
+							unset($filtredArray[$index]);
+							break;
 						}
 
-						if(!array_key_exists($key,$item["elements"]) || strtolower($item["elements"][$key]) != strtolower($val)){
+						//string compare
+						if(!array_key_exists($fieldName,$item["elements"]) || strtolower($item["elements"][$fieldName]) != strtolower($val)){
 							unset($filtredArray[$index]);
 							break;
 						}
@@ -270,15 +287,15 @@ class ApiCall
 				elseif (strtolower($op) === 'like')
 				{
 					$val = str_replace('%','',$val);
-					if(!array_key_exists($key,$item["elements"]) || !str_contains($item["elements"][$key], $val)){
+					if(!array_key_exists($fieldName,$item["elements"]) || !str_contains($item["elements"][$fieldName], $val)){
 						unset($filtredArray[$index]);
 						break;
 					}
 				}
 				elseif (strtolower($op) === 'in')
 				{
-					$elVal = $item["elements"][$key];
-					if($key === "Id") {
+					$elVal = $item["elements"][$fieldName];
+					if($fieldName === "Id") {
 						$elVal = str_replace(',','',$elVal);
 						$elVal = str_replace('.','',$elVal);
 					}
@@ -291,14 +308,16 @@ class ApiCall
 				}
 				elseif ($op === '<=')
 				{
-					if($this->isBigger($key, $val, $item["elements"], $lang)){
+					if(!array_key_exists($fieldName,$item["elements"])
+						&& $this->isBigger($fieldName, $val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
 						unset($filtredArray[$index]);
 						break;
 					}
 				}
 				elseif ($op === '>=')
 				{
-					if($this->isSmaller($key, $val, $item["elements"], $lang)){
+					if(!array_key_exists($fieldName,$item["elements"])
+						&& $this->isSmaller($fieldName, $val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
 						unset($filtredArray[$index]);
 						break;
 					}
@@ -342,7 +361,7 @@ class ApiCall
 			$newFilter = $filter;
 			$newFilter['geo'][0]["val"] = 1000; //km
 			$newFilter['geo'][0]["min"] = 0;
-			$filtredArray = $this->filterRecords($records, $newFilter, $lang);
+			$filtredArray = $this->filterRecords($cachedResponse, $newFilter);
 			$filtredArray = $this->sortRecords($filtredArray, $newFilter, 'geo_distance', 'ASC');
 			if($filtredArray > $isGeoAndMin)
 				$filtredArray = array_slice($filtredArray, 0, $isGeoAndMin);
@@ -357,35 +376,24 @@ class ApiCall
 	/**
 	 * @param array $responses
 	 */
-	private function isBigger(string $key, mixed $val, array $elements, string $lang = 'de_DE')
+	private function isBigger(string $key, mixed $filterVal, mixed $rawValue, string $type)
 	{
-		return $this->isSmaller($key, $val, $elements, $lang, false);
+		return $this->isSmaller($key, $filterVal, $rawValue, $type, false);
 	}
 	/**
 	 * @param array $responses
 	 */
-	private function isSmaller(string $key, mixed $val, array $elements, string $lang = 'de_DE', bool $isSmaller = true)
+	private function isSmaller(string $key, mixed $filterVal, mixed $rawValue, string $type, bool $isSmaller = true)
 	{
-		$elVal = $elements[$key];
-		if(is_string($elements[$key]) && (str_contains($elements[$key],'€') || str_contains($elements[$key],'$'))) {
-			$curr = "USD";
-			$formatter = new \NumberFormatter($lang, \NumberFormatter::CURRENCY);
-			$elVal = str_replace(' €',"\xc2\xa0$",$elVal);
-			$elVal = str_replace(' $',"\xc2\xa0$",$elVal);
-			$elVal = trim($elVal);
-
-			$elVal = $formatter->parseCurrency($elVal, $curr);
-		}
-		$dateVal = date_create_from_format('Y-m-d H:i:s', $val); //1955-12-29
-		if($dateVal === false){ //compare Int
-			$elVal = preg_replace("/[^0-9 ]/", '', $elVal);
+		if($type === 'float' || $type === 'integer') {
 			if($isSmaller){
-				return (floatval($elVal) < floatval($val));
+				return (floatval($rawValue) < floatval($filterVal));
 			} else {
-				return (floatval($elVal) > floatval($val));
+				return (floatval($rawValue) > floatval($filterVal));
 			}
-		} else { //compare Dates
-			$compare = date_create_from_format('d.m.Y', $elVal);
+		} else if($type === 'date') {
+			$dateVal = date_create_from_format('Y-m-d H:i:s', $filterVal); //1955-12-29
+			$compare = date_create_from_format('Y-m-d', $rawValue);
 			if($isSmaller) {
 				return ($compare != false && $compare < $dateVal);
 			} else {

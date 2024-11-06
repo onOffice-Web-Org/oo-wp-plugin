@@ -454,6 +454,7 @@ implements EstateListBase
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
 
 		$filter = [];
+		$filter = $this->getDefaultFilterBuilder()->getDefaultFilter();
 		$fields = $pFieldModifierHandler->getAllAPIFields();
 
 		$requestParams = [
@@ -1250,6 +1251,17 @@ implements EstateListBase
 
 		return $estatePictureUrl;
 	}
+
+	/**
+	 *
+	 * @param $field
+	 * @return string
+	 */
+
+	 public function getFieldInformation(string $field): array
+	 {
+		 return $this->getEnvironment()->getFieldnames()->getFieldInformation($field, onOfficeSDK::MODULE_ESTATE);
+	 }
 
 	/**
 	 *

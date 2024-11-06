@@ -46,6 +46,8 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddressFactory;
 
 use onOffice\SDK\internal\ApiAction;
 use onOffice\SDK\internal\Request;
+use PhpParser\Node\Stmt\TryCatch;
+use onOffice\WPlugin\Field\UnknownFieldException;
 
 /**
  *
@@ -202,7 +204,7 @@ class SDKWrapper
 	/**
 	 * cleans Cache and create new Cache from all lists
 	 * (does not create cache for detail pages and similar objects)
-	 * @throws ApiClientException
+	 *
 	 */
 	 public function renewCache(string $listName = null)
 	 {
@@ -216,9 +218,11 @@ class SDKWrapper
 			$pDefaultFilterBuilderListViewAddressFactory = $this->_pContainer->get(DefaultFilterBuilderListViewAddressFactory::class);
 
 			$languages = Language::getAllWPMLLanguages();
-			$estateLists = $this->get_estate_lists($listName);
-			$addressLists = $this->get_address_lists($listName);
-			$this->_caches = [new DBCache(['ttl' => 3600]),];
+			$estateLists = $this->getEstateLists($listName);
+			$addressLists = $this->getAddressLists($listName);
+			$this->_caches = [new DBCache(['ttl' => 3600])];
+			$fieldsInformation = $this->getAllFields($languages);
+
 			foreach ($this->_caches as $pCache) {
 				foreach ($estateLists as $list) {
 					$pListView = $pDataListViewFactory->getListViewByName($list->name);
@@ -227,14 +231,21 @@ class SDKWrapper
 					$pListViewFilterBuilder = $pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
 					$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
 					foreach ($languages as $lang) {
-						foreach ([true,false] as $value) { //call one for raw and one for formattedOutput
-							$params = $pEstateList->getEstateParametersForCache($lang, $value);
-							$response = $this->createCacheForList($params, 'estate');
-							$pApiAction = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'estate', $params, '', null);
-							$pRequest = new Request($pApiAction);
-							$usedParameters = $pRequest->getApiAction()->getActionParameters();
-							$pCache->write($usedParameters,serialize($response));
-						}
+						$paramsRaw = $pEstateList->getEstateParametersForCache($lang, false); // raw
+						$responseRaw = $this->createCacheForList($paramsRaw, 'estate');
+						$pApiActionRaw = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'estate', $paramsRaw, '', null);
+						$pRequest = new Request($pApiActionRaw);
+						$usedParametersRaw = $pRequest->getApiAction()->getActionParameters();
+						$pCache->write($usedParametersRaw,serialize($responseRaw));
+
+						$params = $pEstateList->getEstateParametersForCache($lang, true); // formatted
+						$response = $this->createCacheForList($params, 'estate');
+						$pApiAction = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'estate', $params, '', null);
+						$pRequest = new Request($pApiAction);
+						$usedParameters = $pRequest->getApiAction()->getActionParameters();
+						$response['raw'] = $responseRaw;
+						$response['types'] = $fieldsInformation['estate'];
+						$pCache->write($usedParameters,serialize($response));
 					}
 				}
 				foreach ($addressLists as $list) {
@@ -244,20 +255,59 @@ class SDKWrapper
 					$pListViewFilterBuilder = $pDefaultFilterBuilderListViewAddressFactory->create($pListView);
 					$addressList->setDefaultFilterBuilder($pListViewFilterBuilder);
 					foreach ($languages as $lang) {
-						foreach ([true,false] as $value) { //call one for raw and one for formattedOutput
-							$params = $addressList->getAddressParametersForCache($lang, $value);
-							$response = $this->createCacheForList($params, 'address');
-							$pApiAction = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'address', $params, '', null);
-							$pRequest = new Request($pApiAction);
-							$usedParameters = $pRequest->getApiAction()->getActionParameters();
-							$pCache->write($usedParameters,serialize($response));
-						}
+						$paramsRaw = $addressList->getAddressParametersForCache($lang, false); // raw
+						$responseRaw = $this->createCacheForList($paramsRaw, 'address');
+						$pApiActionRaw = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'address', $paramsRaw, '', null);
+						$pRequestRaw = new Request($pApiActionRaw);
+						$usedParametersRaw = $pRequestRaw->getApiAction()->getActionParameters();
+						$pCache->write($usedParametersRaw,serialize($responseRaw));
+
+						$params = $addressList->getAddressParametersForCache($lang, true); // formatted
+						$response = $this->createCacheForList($params, 'address');
+						$pApiAction = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'address', $params, '', null);
+						$pRequest = new Request($pApiAction);
+						$usedParameters = $pRequest->getApiAction()->getActionParameters();
+						$response['raw'] = $responseRaw;
+						$response['types'] = $fieldsInformation['address'];
+						$pCache->write($usedParameters,serialize($response));
 					}
 				}
 			}
 	 }
+	/**
+	 * return all Fields from Api, to save in Cache
+	 * @param array $language
+	 * @return $fieldsByModule
+	 */
+	 private function getAllFields(array $languages)
+	 {
+		$fieldsByModule = [];
+		foreach ($languages as $lang) {
+			$parametersGetFieldList = [
+				'labels' => true,
+				'showContent' => true,
+				'showTable' => true,
+				'language' => $lang,
+				'modules' => [onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE],
+				'realDataTypes' => true,
+			];
 
-	 private function get_estate_lists(string $listName = null) : array
+			$pApiClientActionFields = new APIClientActionGeneric($this, onOfficeSDK::ACTION_ID_GET, 'fields');
+			$pApiClientActionFields->setParameters($parametersGetFieldList);
+			$pApiClientActionFields->addRequestToQueue()->sendRequests();
+
+			$records = $pApiClientActionFields->getResultRecords();
+			foreach ($records as $moduleProperties) {
+				foreach ($moduleProperties['elements'] as $fieldName => $fieldProperties) {
+					if($fieldName != 'label')
+						$fieldsByModule[$moduleProperties['id']][$fieldName] = $fieldProperties['type'];
+				}
+			}
+		}
+		return $fieldsByModule;
+	}
+
+	 private function getEstateLists(string $listName = null) : array
 	 {
 		 $pRecordRead = new RecordManagerReadListViewEstate();
 		 $pRecordRead->setLimit(100);
@@ -276,7 +326,7 @@ class SDKWrapper
 		 return $pRecordRead->getRecordsSortedAlphabetically();
 	 }
 
-	 private function get_address_lists(string $listName = null) : array
+	 private function getAddressLists(string $listName = null) : array
 	 {
 		 $pRecordRead = new RecordManagerReadListViewAddress();
 		 $pRecordRead->setLimit(100);
