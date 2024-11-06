@@ -74,6 +74,7 @@ class HttpFetch
 			curl_setopt($curlResource, $option, $value);
 		}
 
+		curl_setopt($curlResource, CURLOPT_CONNECTTIMEOUT, 2);
 		$result = curl_exec($curlResource);
 
 		if (!$result)
