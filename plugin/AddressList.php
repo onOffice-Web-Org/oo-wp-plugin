@@ -266,8 +266,7 @@ implements AddressListBase
 	public function getAddressParametersForCache(string $lang, bool $formatOutput)
 	{
 		$pFieldModifierHandler = $this->generateRecordModifier();
-		$pFieldModifierHandler = $this->generateRecordModifier();
-    $filter = $this->_pEnvironment->getDefaultFilterBuilder()->getDefaultFilter();
+		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->getDefaultFilter();
 
 		$fields = $pFieldModifierHandler->getAllAPIFields();
 		$fields[] = $this->_pDataViewAddress->getSortby();

@@ -453,7 +453,6 @@ implements EstateListBase
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
 
-		$filter = [];
 		$filter = $this->getDefaultFilterBuilder()->getDefaultFilter();
 		$fields = $pFieldModifierHandler->getAllAPIFields();
 
