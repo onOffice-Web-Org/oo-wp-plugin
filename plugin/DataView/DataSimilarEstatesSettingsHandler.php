@@ -114,7 +114,7 @@ class DataSimilarEstatesSettingsHandler
 		array $row)
 	{
 		$pDataViewSimilar->setFields
-		($row[DataViewSimilarEstates::FIELDS] ?? false);
+		($row[DataViewSimilarEstates::FIELDS] ?? []);
 		$pDataViewSimilar->setSameEstateKind
 			($row[DataViewSimilarEstates::FIELD_SAME_KIND] ?? false);
 		$pDataViewSimilar->setSameMarketingMethod
@@ -136,5 +136,7 @@ class DataSimilarEstatesSettingsHandler
 		$pDataViewSimilar->setPictureTypes
 			($row[DataViewSimilarEstates::PICTURES] ??
 				$pDataViewSimilar->getPictureTypes());
+		$pDataViewSimilar->setFilterId($row['filterId'] ?? $pDataViewSimilar->getFilterId());
+		$pDataViewSimilar->setShowReferenceEstate($row['showReferenceEstate'] ?? $pDataViewSimilar->getShowReferenceEstate());
 	}
 }
