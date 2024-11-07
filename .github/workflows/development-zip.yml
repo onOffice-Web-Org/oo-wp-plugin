@@ -46,6 +46,7 @@ jobs:
       ref: ${{ github.event.pull_request.head.sha }}
       expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
       overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
+      checkVersion: false
   
   comment:
     name: Pack a development zip and comment on the PR
