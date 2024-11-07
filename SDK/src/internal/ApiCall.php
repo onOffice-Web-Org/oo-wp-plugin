@@ -177,7 +177,7 @@ class ApiCall
 				{
 					if($params["formatoutput"] == true)
 					{
-						$cachedResponse["data"]["records"] = $this->filterRecords($cachedResponse, $params["filter"]);
+						$this->filterRecords($cachedResponse, $params["filter"]);
 						if(in_array("sortby", $params) && $params["sortby"] != null)
 							$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse["data"]["records"], $params["filter"], $params["sortby"], $params["sortorder"] ?? 'ASC');
 						$cachedResponse["data"]["meta"]["cntabsolute"] = count($cachedResponse["data"]["records"]);
@@ -220,20 +220,19 @@ class ApiCall
 		return array_slice($records, $offset, $limit);
 	}
 
-	private function filterRecords(array $cachedResponse, array $filter)
+	private function filterRecords(array &$cachedResponse, array $filter)
 	{
 		$records = $cachedResponse["data"]["records"];
-		$recordsRaw = $cachedResponse["raw"]["data"]["records"];
+		$filteredArray = $records;
+		$filteredArrayRaw = $cachedResponse["raw"]["data"]["records"];
 		$fieldTypes = $cachedResponse["types"];
 
-		$filtredArray = [];
 		$calculator = new Vincenty();
 		$isGeoAndMin = 0;
 		$isGeoAndMax = 0;
 
-		foreach($records as $index => $item) {
-			$itemRaw = $recordsRaw[$index];
-			$filtredArray[$index] = $item;
+		foreach($filteredArray as $index => $item) {
+			$itemRaw = $filteredArrayRaw[$index];
 			foreach($filter as $fieldName => $value) {
 				if($fieldName == "veroeffentlichen" || $fieldName == "referenz" || $fieldName == "homepage_veroeffentlichen")
 					continue;
@@ -244,42 +243,95 @@ class ApiCall
 
 				if(strtolower($op) === '=')
 				{
+					if(!array_key_exists($fieldName,$item["elements"]))
+					{
+						unset($filteredArray[$index]);
+						unset($filteredArrayRaw[$index]);
+						break;
+					}
 					if(is_array($val))
 					{
-						if(!array_key_exists($fieldName,$item["elements"]) || !in_array($item["elements"][$fieldName],$val)){
-							unset($filtredArray[$index]);
+						if(!in_array($item["elements"][$fieldName],$val)){
+							unset($filteredArray[$index]);
+							unset($filteredArrayRaw[$index]);
 							break;
 						}
 
 					} else {
 						//int compare
-						if(array_key_exists($fieldName,$item["elements"])
-							&& $fieldTypes[$fieldName] === "integer"
+						if($fieldTypes[$fieldName] === "integer"
 						  && intval($itemRaw["elements"][$fieldName]) != intval($val))
 						{
-							unset($filtredArray[$index]);
+							unset($filteredArray[$index]);
+							unset($filteredArrayRaw[$index]);
 							break;
 						}
 						//float compare
-						if(array_key_exists($fieldName,$item["elements"])
-							&& $fieldTypes[$fieldName] === "float"
+						if($fieldTypes[$fieldName] === "float"
 						  && floatval($itemRaw["elements"][$fieldName]) != floatval($val))
 						{
-							unset($filtredArray[$index]);
+							unset($filteredArray[$index]);
+							unset($filteredArrayRaw[$index]);
 							break;
 						}
 						//boolean compare
-						if(array_key_exists($fieldName,$item["elements"])
-							&& $fieldTypes[$fieldName] === "boolean"
-						  && boolval($itemRaw["elements"][$fieldName]) != boolval($val))
+						if($fieldTypes[$fieldName] === "boolean"
+						  && (intval($itemRaw["elements"][$fieldName]) != intval($val)))
 						{
-							unset($filtredArray[$index]);
+							unset($filteredArray[$index]);
+							unset($filteredArrayRaw[$index]);
 							break;
 						}
 
 						//string compare
-						if(!array_key_exists($fieldName,$item["elements"]) || strtolower($item["elements"][$fieldName]) != strtolower($val)){
-							unset($filtredArray[$index]);
+						if($fieldTypes[$fieldName] === "string"
+						  && strtolower($item["elements"][$fieldName]) != strtolower($val)){
+							unset($filteredArray[$index]);
+							unset($filteredArrayRaw[$index]);
+							break;
+						}
+					}
+				}
+				elseif(strtolower($op) === '!=')
+				{
+					if(is_array($val))
+					{
+						if(!in_array($item["elements"][$fieldName],$val)){
+							unset($filteredArray[$index]);
+							unset($filteredArrayRaw[$index]);
+							break;
+						}
+
+					} else {
+						//int compare
+						if($fieldTypes[$fieldName] === "integer"
+						  && intval($itemRaw["elements"][$fieldName]) == intval($val))
+						{
+							unset($filteredArray[$index]);
+							unset($filteredArrayRaw[$index]);
+							break;
+						}
+						//float compare
+						if($fieldTypes[$fieldName] === "float"
+						  && floatval($itemRaw["elements"][$fieldName]) == floatval($val))
+						{
+							unset($filteredArray[$index]);
+							unset($filteredArrayRaw[$index]);
+							break;
+						}
+						//boolean compare
+						if($fieldTypes[$fieldName] === "boolean"
+						  && boolval($itemRaw["elements"][$fieldName]) == boolval($val))
+						{
+							unset($filteredArray[$index]);
+							unset($filteredArrayRaw[$index]);
+							break;
+						}
+
+						//string compare
+						if(strtolower($item["elements"][$fieldName]) == strtolower($val)){
+							unset($filteredArray[$index]);
+							unset($filteredArrayRaw[$index]);
 							break;
 						}
 					}
@@ -287,38 +339,42 @@ class ApiCall
 				elseif (strtolower($op) === 'like')
 				{
 					$val = str_replace('%','',$val);
-					if(!array_key_exists($fieldName,$item["elements"]) || !str_contains($item["elements"][$fieldName], $val)){
-						unset($filtredArray[$index]);
+					if(!array_key_exists($fieldName,$itemRaw["elements"]) || !str_contains($itemRaw["elements"][$fieldName], $val)){
+						unset($filteredArray[$index]);
+						unset($filteredArrayRaw[$index]);
 						break;
 					}
 				}
 				elseif (strtolower($op) === 'in')
 				{
-					$elVal = $item["elements"][$fieldName];
+					$elVal = $itemRaw["elements"][$fieldName];
 					if($fieldName === "Id") {
 						$elVal = str_replace(',','',$elVal);
 						$elVal = str_replace('.','',$elVal);
 					}
 
 					$lowerVal = array_map('strtolower', $val);
-					if(!in_array(strtolower($elVal), $lowerVal)){
-						unset($filtredArray[$index]);
+					if(!in_array(strtolower($elVal ?? ''), $lowerVal)){
+						unset($filteredArray[$index]);
+						unset($filteredArrayRaw[$index]);
 						break;
 					}
 				}
 				elseif ($op === '<=')
 				{
-					if(!array_key_exists($fieldName,$item["elements"])
-						&& $this->isBigger($fieldName, $val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
-						unset($filtredArray[$index]);
+					if(!array_key_exists($fieldName,$itemRaw["elements"])
+						|| $this->isBigger($fieldName, $val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
+						unset($filteredArray[$index]);
+						unset($filteredArrayRaw[$index]);
 						break;
 					}
 				}
 				elseif ($op === '>=')
 				{
-					if(!array_key_exists($fieldName,$item["elements"])
-						&& $this->isSmaller($fieldName, $val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
-						unset($filtredArray[$index]);
+					if(!array_key_exists($fieldName,$itemRaw["elements"])
+						|| $this->isSmaller($fieldName, $val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
+						unset($filteredArray[$index]);
+						unset($filteredArrayRaw[$index]);
 						break;
 					}
 				}
@@ -339,7 +395,7 @@ class ApiCall
 						|| !is_array($selectedCoordinates) || count($selectedCoordinates) != 2)
 						continue;
 					if($item["elements"]['laengengrad'] == null || $item["elements"]['breitengrad'] == null){
-						unset($filtredArray[$index]);
+						unset($filteredArray[$index]);
 						break;
 					}
 
@@ -348,30 +404,32 @@ class ApiCall
 					$distance = $calculator->getDistance($coordinate1, $coordinate2);
 
 					if(intval($distance/1000) > $km){
-						unset($filtredArray[$index]);
+						unset($filteredArray[$index]);
+						unset($filteredArrayRaw[$index]);
 						break;
 					} else {
-						$filtredArray[$index]["elements"]['geo_distance'] = intval($distance);
+						$filteredArray[$index]["elements"]['geo_distance'] = intval($distance);
 					}
 				}
 			}
 		}
-		if($isGeoAndMin > 0 && count($filtredArray) < $isGeoAndMin)
+		if($isGeoAndMin > 0 && count($filteredArray) < $isGeoAndMin)
 		{
 			$newFilter = $filter;
 			$newFilter['geo'][0]["val"] = 1000; //km
 			$newFilter['geo'][0]["min"] = 0;
-			$filtredArray = $this->filterRecords($cachedResponse, $newFilter);
-			$filtredArray = $this->sortRecords($filtredArray, $newFilter, 'geo_distance', 'ASC');
-			if($filtredArray > $isGeoAndMin)
-				$filtredArray = array_slice($filtredArray, 0, $isGeoAndMin);
+			$this->filterRecords($cachedResponse, $newFilter);
+			$filteredArray = $this->sortRecords($cachedResponse["data"]["records"], $newFilter, 'geo_distance', 'ASC');
+			if($filteredArray > $isGeoAndMin)
+				$filteredArray = array_slice($filteredArray, 0, $isGeoAndMin);
 		}
-		if($isGeoAndMax > 0 && count($filtredArray) > $isGeoAndMax)
+		if($isGeoAndMax > 0 && count($filteredArray) > $isGeoAndMax)
 		{
-			$filtredArray = $this->sortRecords($filtredArray, $filter, 'geo_distance', 'ASC');
-			$filtredArray = array_slice($filtredArray, 0, $isGeoAndMax);
+			$filteredArray = $this->sortRecords($filteredArray, $filter, 'geo_distance', 'ASC');
+			$filteredArray = array_slice($filteredArray, 0, $isGeoAndMax);
 		}
-		return $filtredArray;
+		$cachedResponse["data"]["records"] = $filteredArray;
+		$cachedResponse["raw"]["data"]["records"] = $filteredArrayRaw;
 	}
 	/**
 	 * @param array $responses
@@ -385,6 +443,7 @@ class ApiCall
 	 */
 	private function isSmaller(string $key, mixed $filterVal, mixed $rawValue, string $type, bool $isSmaller = true)
 	{
+		error_log("isSmaller".$key." -> Type:".$type." rv: ".$rawValue. " fv: ".$filterVal);
 		if($type === 'float' || $type === 'integer') {
 			if($isSmaller){
 				return (floatval($rawValue) < floatval($filterVal));
