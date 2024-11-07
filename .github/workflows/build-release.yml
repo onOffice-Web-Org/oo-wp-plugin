@@ -40,7 +40,7 @@ jobs:
           deno-version: v1.x
 
       - name: Check version
-        if: ${{ inputs.checkVersion != true }}
+        if: ${{ inputs.checkVersion == true }}
         run: deno run --allow-read scripts/check-version-in-config-files.ts ${{ inputs.expectedVersion }}
 
       - name: Setup PHP
