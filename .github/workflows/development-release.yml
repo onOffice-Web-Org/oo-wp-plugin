@@ -35,6 +35,7 @@ jobs:
     with:
       expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
       overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
+      checkVersion: false
   
   deploy:
     name: Deploy development version
@@ -45,7 +46,7 @@ jobs:
       SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
     steps:
       - name: Download release
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: release
           path: /tmp/release
