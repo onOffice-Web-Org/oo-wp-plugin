@@ -51,6 +51,7 @@ use function json_decode;
 use onOffice\WPlugin\DataView\DataAddressDetailView;
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
+use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 
 /**
  *
@@ -264,7 +265,7 @@ class TestClassAddressList
 	private function runTestGetRows(bool $raw, string $containerClass)
 	{
 		$this->_pAddressList->loadAddressesById([13, 37], ['Name', 'KdNr', 'Vorname', 'phone']);
-		$records = $this->_pAddressList->getRows($raw);
+		$records = $this->_pAddressList->getRows(AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, $raw);
 		$expectationRecords = $this->_expectedRecords;
 
 		foreach ($expectationRecords as $recordId => $values) {
