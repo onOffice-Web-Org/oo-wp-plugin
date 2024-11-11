@@ -133,7 +133,7 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement, parentCon
 			var receiver = receivers[i];
 			var receiverElement = mainElement.parent().parent().find(receiver.element);
 			var invert = receiver.invert;
-      let required = receiver.required;
+			let required = receiver.required;
 
 			if (parentContainer && $(parentContainer).is(':hidden')) {
 				continue;
