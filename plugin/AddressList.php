@@ -650,6 +650,14 @@ implements AddressListBase
 		return $this->_pDataViewAddress->getId();
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function getShowMapConfig(): bool
+	{
+		return $this->_pDataViewAddress->getShowMap();
+	}
+
 		/**
 	 * @return array
 	 */

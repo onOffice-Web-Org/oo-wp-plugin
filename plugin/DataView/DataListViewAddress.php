@@ -78,6 +78,9 @@ class DataListViewAddress
 	/** @var bool */
 	private $_bildWebseite = false;
 
+	/** @var bool */
+	private $_showMap = false;
+
 	/**
 	 *
 	 * @param int $id
@@ -195,4 +198,12 @@ class DataListViewAddress
 	/** @param bool $bildWebseite */
 	public function setBildWebseite(bool $bildWebseite)
 		{ $this->_bildWebseite = $bildWebseite; }
+
+	/** @return bool */
+	public function getShowMap(): bool
+		{ return (bool) $this->_showMap; }
+
+	/** @param bool $showMap */
+	public function setShowMap(bool $showMap)
+		{ $this->_showMap = $showMap; }
 }
