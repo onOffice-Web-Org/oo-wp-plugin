@@ -247,7 +247,7 @@ class InputModelRenderer
 				if ( $pInputModel->getMaxValueHtml() != null ) {
 					$pInstance->setMaxValue( $pInputModel->getMaxValueHtml() );
 				}
-				if ( $pInputModel->getMinValueHtml() != null ) {
+				if ( $pInputModel->getMinValueHtml() !== null ) {
 					$pInstance->setMinValue( $pInputModel->getMinValueHtml() );
 				}
 				if ( $pInputModel->getHintHtml() != null ) {

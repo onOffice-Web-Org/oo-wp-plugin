@@ -695,6 +695,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	margin-left: 5px;
 }
 
+.oo-poststuff .custom-input-field textarea[name=oopluginformtaskconfig-description],
 .oo-poststuff .custom-input-field textarea[name=oopluginformactivityconfig-remark] {
 	min-height: 100px;
 }

@@ -59,6 +59,39 @@ onOffice.checkboxAdmin = function() {
 			{
 				element: "input[name^=oopluginformfieldconfig-hiddenfield]",
 				invert: true
+			}
+		],
+
+		// view: create new [task] form
+		"input[name=oopluginformtaskconfig-enablecreatetask]": [
+			{
+				element: "select[name=oopluginformtaskconfig-responsibility]",
+				invert: false
+			},
+			{
+				element: "select[name=oopluginformtaskconfig-processor]",
+				invert: false
+			},
+			{
+				element: "select[name=oopluginformtaskconfig-type]",
+				invert: false,
+				required: true
+			},
+			{
+				element: "select[name=oopluginformtaskconfig-priority]",
+				invert: false
+			},
+			{
+				element: "input[name=oopluginformtaskconfig-subject]",
+				invert: false
+			},
+			{
+				element: "textarea[name=oopluginformtaskconfig-description]",
+				invert: false
+			},
+			{
+				element: "select[name=oopluginformtaskconfig-status]",
+				invert: false
 			},
 		],
 
@@ -100,9 +133,12 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement, parentCon
 			var receiver = receivers[i];
 			var receiverElement = mainElement.parent().parent().find(receiver.element);
 			var invert = receiver.invert;
+      let required = receiver.required;
+
 			if (parentContainer && $(parentContainer).is(':hidden')) {
 				continue;
 			}
+
 			if (receiverElement.length) {
 				if (mainElement.prop('checked')) {
 					if (!invert) {
@@ -111,6 +147,9 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement, parentCon
 					} else {
 						receiverElement.prop('disabled', 'disabled');
 						receiverElement.removeAttr('checked');
+					}
+					if (required) {
+						receiverElement.attr('required', 'required');
 					}
 				} else {
 					if (!invert) {
@@ -121,6 +160,9 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement, parentCon
 							continue;
 						}
 						receiverElement.removeAttr('disabled');
+					}
+					if (required) {
+						receiverElement.attr('required', 'required');
 					}
 				}
 			}

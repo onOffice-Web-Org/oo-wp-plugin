@@ -1214,7 +1214,7 @@ class EstateList
 	 */
 	public function getShowReferenceEstate(): string
 	{
-		if ( $this->_pDataView instanceof DataListView ) {
+		if ( $this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataViewSimilarEstates) {
 			return $this->_pDataView->getShowReferenceEstate();
 		}
 
@@ -1293,4 +1293,16 @@ class EstateList
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
 		{ return $this->_pEnvironment; }
+
+	/**
+	 * @return mixed
+	 */
+	public function getListViewId()
+	{
+		if ($this->getDataView() instanceof DataListView) {
+			return $this->getDataView()->getId();
+		}
+
+		return 'estate_detail';
+	}
 }

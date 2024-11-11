@@ -73,14 +73,14 @@ class AdminPageApiSettings
 		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleMapsKey();
 		$this->addFormModelGoogleCaptcha();
-		$this->addFormModelSocialMetaData();
 		$this->addFormModelHoneypot();
 		$this->addFormModelFavorites($pageSlug);
         $this->addFormModelDetailView($pageSlug);
 		$this->addFormModelPagination($pageSlug);
 		$this->addFormModelSeparatorFormatSettings($pageSlug);
 		$this->addFormModelGoogleBotSettings();
-	}
+		$this->addFormModelSocialMetaData();
+    }
 
 
 	/**
@@ -233,7 +233,7 @@ class AdminPageApiSettings
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelTwitterCards);
 		$pFormModel->addInputModel($pInputModelOpenGraph);
-		$pFormModel->setGroupSlug('onoffice-settings');
+		$pFormModel->setGroupSlug('onoffice-social-metadata');
 		$pFormModel->setPageSlug($this->getPageSlug());
 		$pFormModel->setLabel(__('Social MetaData', 'onoffice-for-wp-websites'));
 
@@ -491,8 +491,18 @@ class AdminPageApiSettings
         $pInputModelShowTitleUrl->setValue(get_option($pInputModelShowTitleUrl->getIdentifier()) == 1);
         $pInputModelShowTitleUrl->setDescriptionTextHTML(__('If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used.', 'onoffice-for-wp-websites'));
 
+        $groupSlugView = 'onoffice-address-detail-view';
+        $showTitleInUrl = __('Show Name and Company in the URL', 'onoffice-for-wp-websites');
+        $pInputModelShowInfoContactUrl = new InputModelOption($groupSlugView, 'showInfoUserUrl',
+            $showTitleInUrl, InputModelOption::SETTING_TYPE_BOOLEAN);
+        $pInputModelShowInfoContactUrl->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+        $pInputModelShowInfoContactUrl->setValuesAvailable(1);
+        $pInputModelShowInfoContactUrl->setValue(get_option($pInputModelShowInfoContactUrl->getIdentifier()) == 1);
+        $pInputModelShowInfoContactUrl->setDescriptionTextHTML(__('If this checkbox is selected, the name and company of the address will be included in the URLs of the address detail views. The name and company will be placed after the record number, eg. <code>/1234-firstname-lastname-company</code>.', 'onoffice-for-wp-websites'));
+
         $pFormModel = new FormModel();
         $pFormModel->addInputModel($pInputModelShowTitleUrl);
+        $pFormModel->addInputModel($pInputModelShowInfoContactUrl);
         $pFormModel->setGroupSlug($groupSlugView);
         $pFormModel->setPageSlug($pageSlug);
         $pFormModel->setLabel(__('Detail View URLs', 'onoffice-for-wp-websites'));
@@ -617,11 +627,10 @@ class AdminPageApiSettings
 	 */
 	private function addFormModelSeparatorFormatSettings(string $pageSlug)
 	{
-		$groupSlugPaging = 'onoffice-settings';
 		$labelSeparatorFormatSettings = __('Separator Format Settings', 'onoffice-for-wp-websites');
 		$labelSeparatorCharacterFormat = __('Thousand Separator Format', 'onoffice-for-wp-websites');
 
-		$pInputModelSeparatorCharacterFormat = new InputModelOption($groupSlugPaging, 'thousand-separator',
+		$pInputModelSeparatorCharacterFormat = new InputModelOption('onoffice-settings', 'thousand-separator',
 			$labelSeparatorCharacterFormat, InputModelOption::SETTING_TYPE_STRING);
 		$pInputModelSeparatorCharacterFormat->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$selectedThousandValue = get_option($pInputModelSeparatorCharacterFormat->getIdentifier(), '.');
@@ -634,7 +643,7 @@ class AdminPageApiSettings
 
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelSeparatorCharacterFormat);
-		$pFormModel->setGroupSlug($groupSlugPaging);
+		$pFormModel->setGroupSlug('onoffice-thousand-separator');
 		$pFormModel->setPageSlug($pageSlug);
 		$pFormModel->setLabel($labelSeparatorFormatSettings);
 	

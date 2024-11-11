@@ -114,7 +114,7 @@ class DataSimilarEstatesSettingsHandler
 		array $row)
 	{
 		$pDataViewSimilar->setFields
-		($row[DataViewSimilarEstates::FIELDS] ?? false);
+		($row[DataViewSimilarEstates::FIELDS] ?? []);
 		$pDataViewSimilar->setSameEstateKind
 			($row[DataViewSimilarEstates::FIELD_SAME_KIND] ?? false);
 		$pDataViewSimilar->setSameMarketingMethod
@@ -122,9 +122,9 @@ class DataSimilarEstatesSettingsHandler
 		$pDataViewSimilar->setSamePostalCode
 			($row[DataViewSimilarEstates::FIELD_SAME_POSTAL_CODE] ?? false);
 		$pDataViewSimilar->setRadius
-			($row[DataViewSimilarEstates::FIELD_RADIUS] ?? $pDataViewSimilar->getRadius());
+			((int) ($row[DataViewSimilarEstates::FIELD_RADIUS] ?? $pDataViewSimilar->getRadius()));
 		$pDataViewSimilar->setRecordsPerPage
-			($row[DataViewSimilarEstates::FIELD_AMOUNT] ?? $pDataViewSimilar->getRecordsPerPage());
+			((int) ($row[DataViewSimilarEstates::FIELD_AMOUNT] ?? $pDataViewSimilar->getRecordsPerPage()));
 		$pDataViewSimilar->setTemplate
 			($row[DataViewSimilarEstates::FIELD_SIMILAR_ESTATES_TEMPLATE] ??
 				$pDataViewSimilar->getTemplate());
@@ -136,5 +136,7 @@ class DataSimilarEstatesSettingsHandler
 		$pDataViewSimilar->setPictureTypes
 			($row[DataViewSimilarEstates::PICTURES] ??
 				$pDataViewSimilar->getPictureTypes());
+		$pDataViewSimilar->setFilterId($row['filterId'] ?? $pDataViewSimilar->getFilterId());
+		$pDataViewSimilar->setShowReferenceEstate($row['showReferenceEstate'] ?? $pDataViewSimilar->getShowReferenceEstate());
 	}
 }
