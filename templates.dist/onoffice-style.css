@@ -300,12 +300,7 @@
     width: 100%;
 }
 
-.oo-detailsmap {
-    position: relative;
-    height: auto;
-}
-
-.oo-detailsmap .oo-map, .oo-address-map .oo-map, .oo-detailsmap .oo-gmap, .oo-address-map .oo-gmap {
+.oo-address-map .oo-gmap {
     height: 300px !important;
 }
 
