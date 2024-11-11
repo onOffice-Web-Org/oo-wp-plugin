@@ -195,16 +195,16 @@ class ApiCall
 		$this->_requestQueue = array();
 	}
 
-	private function sortRecords(array $records, array $filter, string $sortby, string $sortorder)
+	private function sortRecords(array $newRecords, array $filter, string $sortby, string $sortorder)
 	{
-		$newRecords = $records;
 		$sortBy = (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'geo_distance' : $sortby;
 		$sortOrder =  (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'ASC' : $sortorder;
 		if(isset($sortby))
 		{
 			usort($newRecords, function ($a, $b) use ($sortBy, $sortOrder) {
-				$sortA = in_array($sortBy,$a['elements']) ? $a['elements'][$sortBy] : '';
-				$sortB = in_array($sortBy,$b['elements']) ? $b['elements'][$sortBy] : '';
+				$sortA = in_array($sortBy, array_keys($a['elements'])) ? $a['elements'][$sortBy] : '';
+				$sortB = in_array($sortBy, array_keys($b['elements'])) ? $b['elements'][$sortBy] : '';
+
 				if ($sortOrder === 'ASC') {
 					return ($sortA > $sortB) ? 1 : -1;
 				}
@@ -232,7 +232,8 @@ class ApiCall
 		$isGeoAndMax = 0;
 
 		foreach($filteredArray as $index => $item) {
-			$itemRaw = $filteredArrayRaw[$index];
+			$k = array_search($item["id"], array_column($filteredArrayRaw, "id"));
+			$itemRaw = $filteredArrayRaw[$k];
 			foreach($filter as $fieldName => $value) {
 				if($fieldName == "veroeffentlichen" || $fieldName == "referenz" || $fieldName == "homepage_veroeffentlichen")
 					continue;
@@ -409,6 +410,7 @@ class ApiCall
 						break;
 					} else {
 						$filteredArray[$index]["elements"]['geo_distance'] = intval($distance);
+						$filteredArrayRaw[$k]["elements"]['geo_distance'] = intval($distance);
 					}
 				}
 			}
@@ -418,12 +420,14 @@ class ApiCall
 			$newFilter = $filter;
 			$newFilter['geo'][0]["val"] = 1000; //km
 			$newFilter['geo'][0]["min"] = 0;
+			$cachedResponse["data"]["records"] = $filteredArray;
+			$cachedResponse["raw"]["data"]["records"] = $filteredArrayRaw;
 			$this->filterRecords($cachedResponse, $newFilter);
 			$filteredArray = $this->sortRecords($cachedResponse["data"]["records"], $newFilter, 'geo_distance', 'ASC');
 			if($filteredArray > $isGeoAndMin)
 				$filteredArray = array_slice($filteredArray, 0, $isGeoAndMin);
 		}
-		if($isGeoAndMax > 0 && count($filteredArray) > $isGeoAndMax)
+		else if($isGeoAndMax > 0 && count($filteredArray) > $isGeoAndMax)
 		{
 			$filteredArray = $this->sortRecords($filteredArray, $filter, 'geo_distance', 'ASC');
 			$filteredArray = array_slice($filteredArray, 0, $isGeoAndMax);
@@ -443,7 +447,6 @@ class ApiCall
 	 */
 	private function isSmaller(string $key, mixed $filterVal, mixed $rawValue, string $type, bool $isSmaller = true)
 	{
-		error_log("isSmaller".$key." -> Type:".$type." rv: ".$rawValue. " fv: ".$filterVal);
 		if($type === 'float' || $type === 'integer') {
 			if($isSmaller){
 				return (floatval($rawValue) < floatval($filterVal));
