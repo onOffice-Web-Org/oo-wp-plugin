@@ -52,7 +52,7 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
     <div class="oo-address-fieldlist">
         <?php
             foreach ($escapedValues as $field => $value) {
-                if (in_array($field, $addressName) || empty($value)) {
+                if (in_array($field, $addressName) || empty($value) || $field == 'id') {
                     continue;
                 }
                 echo '<div class="oo-address-field">';
