@@ -38,17 +38,6 @@ use WP_UnitTestCase;
 class TestClassDataViewSimilarEstates
 	extends WP_UnitTestCase
 {
-	/** */
-	const DEFAULT_PICTURE_TYPES = [
-		ImageTypes::TITLE,
-		ImageTypes::PHOTO,
-		ImageTypes::PHOTO_BIG,
-		ImageTypes::PANORAMA,
-		ImageTypes::GROUNDPLAN,
-		ImageTypes::LOCATION_MAP,
-		ImageTypes::ENERGY_PASS_RANGE,
-	];
-
 	/**
 	 *
 	 */
@@ -120,7 +109,7 @@ class TestClassDataViewSimilarEstates
 		];
 		$this->assertEquals($expectedFields, $pDataViewSimilarEstates->getFields());
 		$this->assertEquals('SimilarEstates', $pDataViewSimilarEstates->getName());
-		$this->assertEquals(self::DEFAULT_PICTURE_TYPES, $pDataViewSimilarEstates->getPictureTypes());
+		$this->assertEquals([ImageTypes::TITLE], $pDataViewSimilarEstates->getPictureTypes());
 		$this->assertEquals('', $pDataViewSimilarEstates->getTemplate());
 	}
 

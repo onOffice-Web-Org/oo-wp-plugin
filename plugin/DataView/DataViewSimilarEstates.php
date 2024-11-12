@@ -102,13 +102,7 @@ class DataViewSimilarEstates
 
 	/** @var string[] */
 	private $_pictureTypes = [
-		ImageTypes::TITLE,
-		ImageTypes::PHOTO,
-		ImageTypes::PHOTO_BIG,
-		ImageTypes::PANORAMA,
-		ImageTypes::GROUNDPLAN,
-		ImageTypes::LOCATION_MAP,
-		ImageTypes::ENERGY_PASS_RANGE,
+		ImageTypes::TITLE
 	];
 
 	/** @var bool */
