@@ -101,7 +101,9 @@ class DataViewSimilarEstates
 	private $_customLabel = [];
 
 	/** @var string[] */
-	private $_pictureTypes = [];
+	private $_pictureTypes = [
+		ImageTypes::TITLE
+	];
 
 	/** @var bool */
 	private $_showPriceOnRequest = false;
