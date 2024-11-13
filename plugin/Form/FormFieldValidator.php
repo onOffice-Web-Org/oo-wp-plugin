@@ -112,6 +112,9 @@ class FormFieldValidator
 				$returnValue = $value;
 			}
 		}
+		if ($pField->getName() === 'Email') {
+			$returnValue = trim($value);
+		}
 		return $returnValue;
 	}
 

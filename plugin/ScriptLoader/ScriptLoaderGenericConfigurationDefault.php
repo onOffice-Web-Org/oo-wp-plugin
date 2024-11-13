@@ -266,8 +266,13 @@ class ScriptLoaderGenericConfigurationDefault
 			$this->localizeFormPreviewScript();
 		}
 
-		if (get_option('onoffice-settings-honeypot') == true && $this->checkFormType($forms, [Form::TYPE_CONTACT, Form::TYPE_OWNER, Form::TYPE_INTEREST])) {
-			$scripts[] = (new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/dist/onoffice-honeypot.min.js', $pluginPath)))
+		if ($this->checkFormType($forms, [Form::TYPE_CONTACT, Form::TYPE_OWNER, Form::TYPE_INTEREST])) {
+			if (get_option('onoffice-settings-honeypot') == true) {
+				$scripts[] = (new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/dist/onoffice-honeypot.min.js', $pluginPath)))
+						->setDependencies(['jquery'])
+						->setLoadInFooter(true);
+			}
+			$scripts[] = (new IncludeFileModel($script, 'onoffice-custom-fields', plugins_url('/dist/onoffice-custom-fields.min.js', $pluginPath)))
 					->setDependencies(['jquery'])
 					->setLoadInFooter(true);
 		}
