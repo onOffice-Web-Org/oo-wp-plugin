@@ -30,6 +30,7 @@ use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use TypeError;
 use WP_UnitTestCase;
+use onOffice\WPlugin\Types\ImageTypes;
 
 class TestClassDataDetailView
 	extends WP_UnitTestCase
@@ -99,6 +100,17 @@ class TestClassDataDetailView
 		'Thüringen' => 5
 	];
 
+	/** */
+	const DEFAULT_PICTURE_TYPES = [
+		ImageTypes::TITLE,
+		ImageTypes::PHOTO,
+		ImageTypes::PHOTO_BIG,
+		ImageTypes::PANORAMA,
+		ImageTypes::GROUNDPLAN,
+		ImageTypes::LOCATION_MAP,
+		ImageTypes::ENERGY_PASS_RANGE,
+	];
+
 	/**
 	 *
 	 */
@@ -112,7 +124,7 @@ class TestClassDataDetailView
 		$this->assertEquals(MovieLinkTypes::MOVIE_LINKS_PLAYER, $pDataDetailView->getMovieLinks());
 		$this->assertEquals('detail', $pDataDetailView->getName());
 		$this->assertEquals(0, $pDataDetailView->getPageId());
-		$this->assertEquals([], $pDataDetailView->getPictureTypes());
+		$this->assertEquals(self::DEFAULT_PICTURE_TYPES, $pDataDetailView->getPictureTypes());
 		$this->assertEquals(true, $pDataDetailView->hasDetailView());
 		$this->assertEquals('', $pDataDetailView->getTemplate());
 		$this->assertEquals('', $pDataDetailView->getShortCodeForm());
