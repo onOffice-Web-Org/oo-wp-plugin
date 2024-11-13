@@ -234,6 +234,11 @@ class ApiCall
 		foreach($filteredArray as $index => $item) {
 			$k = array_search($item["id"], array_column($filteredArrayRaw, "id"));
 			$itemRaw = $filteredArrayRaw[$k];
+			if($itemRaw == null)
+			{
+				error_log("Error in ApiCall by filtering records: ItemRaw is null");
+				continue;
+			}
 			foreach($filter as $fieldName => $value) {
 				if($fieldName == "veroeffentlichen" || $fieldName == "referenz" || $fieldName == "homepage_veroeffentlichen")
 					continue;
@@ -247,14 +252,12 @@ class ApiCall
 					if(!array_key_exists($fieldName,$item["elements"]))
 					{
 						unset($filteredArray[$index]);
-						unset($filteredArrayRaw[$index]);
 						break;
 					}
 					if(is_array($val))
 					{
 						if(!in_array($item["elements"][$fieldName],$val)){
 							unset($filteredArray[$index]);
-							unset($filteredArrayRaw[$index]);
 							break;
 						}
 
@@ -264,7 +267,6 @@ class ApiCall
 						  && intval($itemRaw["elements"][$fieldName]) != intval($val))
 						{
 							unset($filteredArray[$index]);
-							unset($filteredArrayRaw[$index]);
 							break;
 						}
 						//float compare
@@ -272,23 +274,20 @@ class ApiCall
 						  && floatval($itemRaw["elements"][$fieldName]) != floatval($val))
 						{
 							unset($filteredArray[$index]);
-							unset($filteredArrayRaw[$index]);
 							break;
 						}
 						//boolean compare
 						if($fieldTypes[$fieldName] === "boolean"
-						  && (intval($itemRaw["elements"][$fieldName]) != intval($val)))
+							&& (intval($itemRaw["elements"][$fieldName]) != intval($val)))
 						{
 							unset($filteredArray[$index]);
-							unset($filteredArrayRaw[$index]);
 							break;
 						}
 
 						//string compare
-						if($fieldTypes[$fieldName] === "string"
+						if(($fieldTypes[$fieldName] === "varchar" || $fieldTypes[$fieldName] === "varchar")
 						  && strtolower($item["elements"][$fieldName]) != strtolower($val)){
 							unset($filteredArray[$index]);
-							unset($filteredArrayRaw[$index]);
 							break;
 						}
 					}
@@ -299,40 +298,35 @@ class ApiCall
 					{
 						if(!in_array($item["elements"][$fieldName],$val)){
 							unset($filteredArray[$index]);
-							unset($filteredArrayRaw[$index]);
 							break;
 						}
 
 					} else {
 						//int compare
 						if($fieldTypes[$fieldName] === "integer"
-						  && intval($itemRaw["elements"][$fieldName]) == intval($val))
+							&& intval($itemRaw["elements"][$fieldName]) == intval($val))
 						{
 							unset($filteredArray[$index]);
-							unset($filteredArrayRaw[$index]);
 							break;
 						}
 						//float compare
 						if($fieldTypes[$fieldName] === "float"
-						  && floatval($itemRaw["elements"][$fieldName]) == floatval($val))
+							&& floatval($itemRaw["elements"][$fieldName]) == floatval($val))
 						{
 							unset($filteredArray[$index]);
-							unset($filteredArrayRaw[$index]);
 							break;
 						}
 						//boolean compare
 						if($fieldTypes[$fieldName] === "boolean"
-						  && boolval($itemRaw["elements"][$fieldName]) == boolval($val))
+							&& boolval($itemRaw["elements"][$fieldName]) == boolval($val))
 						{
 							unset($filteredArray[$index]);
-							unset($filteredArrayRaw[$index]);
 							break;
 						}
 
 						//string compare
 						if(strtolower($item["elements"][$fieldName]) == strtolower($val)){
 							unset($filteredArray[$index]);
-							unset($filteredArrayRaw[$index]);
 							break;
 						}
 					}
@@ -342,7 +336,6 @@ class ApiCall
 					$val = str_replace('%','',$val);
 					if(!array_key_exists($fieldName,$itemRaw["elements"]) || !str_contains($itemRaw["elements"][$fieldName], $val)){
 						unset($filteredArray[$index]);
-						unset($filteredArrayRaw[$index]);
 						break;
 					}
 				}
@@ -357,7 +350,6 @@ class ApiCall
 					$lowerVal = array_map('strtolower', $val);
 					if(!in_array(strtolower($elVal ?? ''), $lowerVal)){
 						unset($filteredArray[$index]);
-						unset($filteredArrayRaw[$index]);
 						break;
 					}
 				}
@@ -366,7 +358,6 @@ class ApiCall
 					if(!array_key_exists($fieldName,$itemRaw["elements"])
 						|| $this->isBigger($fieldName, $val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
 						unset($filteredArray[$index]);
-						unset($filteredArrayRaw[$index]);
 						break;
 					}
 				}
@@ -375,7 +366,6 @@ class ApiCall
 					if(!array_key_exists($fieldName,$itemRaw["elements"])
 						|| $this->isSmaller($fieldName, $val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
 						unset($filteredArray[$index]);
-						unset($filteredArrayRaw[$index]);
 						break;
 					}
 				}
@@ -406,7 +396,6 @@ class ApiCall
 
 					if(intval($distance/1000) > $km){
 						unset($filteredArray[$index]);
-						unset($filteredArrayRaw[$index]);
 						break;
 					} else {
 						$filteredArray[$index]["elements"]['geo_distance'] = intval($distance);
@@ -544,10 +533,10 @@ class ApiCall
 	) {
 
 		$request = array
-			(
-				'token' => $token,
-				'request' => array('actions' => $actionParameters),
-			);
+		(
+			'token' => $token,
+			'request' => array('actions' => $actionParameters),
+		);
 
 		if (null === $httpFetch) {
 			$httpFetch = new HttpFetch($this->getApiUrl(), json_encode($request));
