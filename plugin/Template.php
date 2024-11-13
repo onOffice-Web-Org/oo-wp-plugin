@@ -27,6 +27,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use onOffice\WPlugin\Controller\EstateListBase;
+use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
 use onOffice\WPlugin\Template\TemplateCallbackBuilder;
 use onOffice\WPlugin\Utility\__String;
 use RuntimeException;
@@ -114,6 +115,10 @@ class Template
 		$getListName = $pTemplateCallback->buildCallbackEstateListName($pEstates);
 		unset($templateData, $pTemplateCallback, $pContainer);
 
+		if(!empty($pForm)) {
+            $scriptLoader = new ScriptLoaderGenericConfigurationDefault;
+            $scriptLoader->addFormScripts($pForm->getFormId());
+        }
 		ob_start();
 		include $templatePath;
 		return ob_get_clean();

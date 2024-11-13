@@ -84,6 +84,23 @@ class ScriptLoaderGenericConfigurationDefault
 		return array_merge($values, $this->addScripts($pluginPath, $script, $style, $defer, $async));
 	}
 
+    /**
+     * @param string $formType
+     * @return void
+     */
+	public function addFormScripts(string $formType) {
+        $pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+        $scriptType = IncludeFileModel::TYPE_SCRIPT;
+        $pageContent = get_the_content();
+        $async = IncludeFileModel::LOAD_ASYNC;
+        $shortcodeFormForDetailPage = !empty(get_option('onoffice-default-view')) ? get_option('onoffice-default-view')->getShortCodeForm() : '';
+
+        $scripts = $this->renderScriptForForm([], $pluginPath, $scriptType, $pageContent, $async, $shortcodeFormForDetailPage, $formType);
+        foreach ($scripts as $script) {
+            wp_enqueue_script($script->getIdentifier() , $script->getFilePath(), $script->getDependencies() );
+        }
+    }
+
 	/**
 	 * @param string $pluginPath
 	 * @param string $script
@@ -117,13 +134,13 @@ class ScriptLoaderGenericConfigurationDefault
 			$scripts = $this->renderScriptForEstateDetailPage($scripts, $pluginPath, $script, $defer);
 		}
 
-		$shortcodeFormForDetailPage = !empty(get_option('onoffice-default-view')) ? get_option('onoffice-default-view')->getShortCodeForm() : '';
+		/*$shortcodeFormForDetailPage = !empty(get_option('onoffice-default-view')) ? get_option('onoffice-default-view')->getShortCodeForm() : '';
 		if ($this->isFormPage($pageContent) || (is_array($shortcode) && !empty($shortcode['form']))
 			|| ($this->isDetailEstatePage($pageContent) && ! empty($shortcodeFormForDetailPage))
 			|| ($this->isDetailAddressPage($pageContent) && ! empty($shortcodeFormForDetailPage))) {
 			$pageContent = ($this->isFormPage($pageContent) || $this->isDetailEstatePage($pageContent) || $this->isDetailAddressPage($pageContent)) ? $pageContent : $shortcode['form'];
 			$scripts = $this->renderScriptForFormPage($scripts, $pluginPath, $script, $pageContent, $async, $shortcodeFormForDetailPage);
-		}
+		}*/
 
 		return $scripts;
 	}
@@ -229,12 +246,17 @@ class ScriptLoaderGenericConfigurationDefault
 	 * @param mixed $pageContent
 	 * @param string $async
 	 * @param string $shortcodeFormForDetailPage
+	 * @param string $formType
 	 * @return array
 	 */
 
-	private function renderScriptForFormPage(array $scripts, string $pluginPath, string $script, $pageContent, string $async, string $shortcodeFormForDetailPage = ''): array
+	private function renderScriptForForm(array $scripts, string $pluginPath, string $script, $pageContent, string $async, string $shortcodeFormForDetailPage = '', string $formType = ''): array
 	{
-		$forms = $this->getFormsByPageContent($pageContent, $shortcodeFormForDetailPage);
+		if (empty($formType)) {
+		    $forms = $this->getFormsByPageContent($pageContent, $shortcodeFormForDetailPage);
+        } else {
+            $forms = $this->getFormsByNames($formType);
+        }
 
 		$scripts[] = (new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
@@ -319,26 +341,34 @@ class ScriptLoaderGenericConfigurationDefault
 			$pageContent = implode(',', $pageContent);
 		}
 
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-
 		$names = array_map(function ($item) {
 			return "'" . esc_sql($item) . "'";
 		}, $this->extractFormNames($pageContent));
 		$names = implode(',', $names);
 
 		if ($this->isDetailEstatePage($pageContent) || $this->isDetailAddressPage($pageContent)) {
-			$names = "'" . esc_sql($shortcodeFormForDetailPage) . "'";
+			$names = $shortcodeFormForDetailPage;
 		}
 
-		$pRecordManagerReadForm = $pContainer->get(RecordManagerReadForm::class);
-		$pRecordManagerReadForm->addColumn('form_type');
-		$pRecordManagerReadForm->addColumn('captcha');
-		$pRecordManagerReadForm->addWhere("`name` IN(" . $names . ")");
-
-		return $pRecordManagerReadForm->getRecords();
+		return $this->getFormsByNames($names);
 	}
+
+    /**
+     * @param string $names
+     * @return array
+     */
+	private function getFormsByNames(string $names) {
+        $pContainerBuilder = new ContainerBuilder;
+        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+        $pContainer = $pContainerBuilder->build();
+
+        $pRecordManagerReadForm = $pContainer->get(RecordManagerReadForm::class);
+        $pRecordManagerReadForm->addColumn('form_type');
+        $pRecordManagerReadForm->addColumn('captcha');
+        $pRecordManagerReadForm->addWhere("`name` IN('" . esc_sql($names) . "')");
+
+        return $pRecordManagerReadForm->getRecords();
+    }
 
 	/**
 	 * @param string $pageContent
