@@ -298,9 +298,10 @@
 .oo-address-map {
     padding: 0 15px;
     width: 100%;
+    margin-bottom: 15px;
 }
 
-.oo-address-map .oo-gmap {
+.oo-address-map .oo-gmap, .oo-address-map .oo-map {
     height: 300px !important;
 }
 
