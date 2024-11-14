@@ -31,7 +31,7 @@ require 'SearchFormAddress.php';
  *
  */
 ?>
-<div class="oo-estate-map">
+<div class="oo-address-map">
     <?php require('map/map.php'); ?>
 </div>
 <div class="oo-address-listframe oo-listframe">
