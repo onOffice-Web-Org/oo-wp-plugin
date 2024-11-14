@@ -31,6 +31,7 @@ use onOffice\WPlugin\Template\TemplateCallbackBuilder;
 use onOffice\WPlugin\Utility\__String;
 use RuntimeException;
 use const WP_PLUGIN_DIR;
+use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
 
 /**
  *
@@ -46,6 +47,12 @@ class Template
 
 	/** */
 	const KEY_ADDRESSLIST = 'addresslist';
+
+	/** */
+	const KEY_ESTATEDETAIL = 'estatedetail';
+
+	/** */
+	const KEY_ADDRESSDETAIL = 'addressdetail';
 
 	/** @var string */
 	private $_templateName = '';
@@ -112,6 +119,27 @@ class Template
 		$pTemplateCallback = $pContainer->get(TemplateCallbackBuilder::class);
 		$generateSortDropDown = $pTemplateCallback->buildCallbackListSortDropDown($pEstates);
 		$getListName = $pTemplateCallback->buildCallbackEstateListName($pEstates);
+		$scriptLoader = $pContainer->get(ScriptLoaderGenericConfigurationDefault::class);
+
+		if (!empty($pEstates)) {
+			if ($pEstates instanceof EstateList && !($pEstates instanceof EstateDetail)) {
+				$scriptLoader->addEstateScripts(self::KEY_ESTATELIST);
+			} elseif ($pEstates instanceof EstateDetail) {
+				$scriptLoader->addEstateScripts(self::KEY_ESTATEDETAIL);
+			}
+		}
+
+		if (!empty($pForm)) {
+			$scriptLoader->addFormScripts($pForm->getFormType(), $pForm->needsReCaptcha());
+		}
+
+		if (!empty($pAddressList)) {
+			if ($pAddressList instanceof AddressList && !($pAddressList instanceof AddressDetail)) {
+				$scriptLoader->addAddressScripts(self::KEY_ADDRESSLIST);
+			} elseif ($pAddressList instanceof AddressDetail) {
+				$scriptLoader->addAddressScripts(self::KEY_ADDRESSDETAIL);
+			}
+		}
 		unset($templateData, $pTemplateCallback, $pContainer);
 
 		ob_start();
