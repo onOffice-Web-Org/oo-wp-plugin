@@ -1,6 +1,6 @@
 jQuery(document).ready(function($){
-	$('[name="Email"]').keyup(function(){
-		oldVal = $(this).val();
+	$('oo-form [name="Email"], #nonoffice-form [name="Email"]').keyup(function() {
+		const oldVal = $(this).val();
 		const sanitizedVal = oldVal.replace(/\s/g, '');
 		$(this).val(sanitizedVal);
 	});

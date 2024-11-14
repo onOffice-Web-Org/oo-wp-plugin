@@ -272,7 +272,7 @@ class ScriptLoaderGenericConfigurationDefault
 						->setDependencies(['jquery'])
 						->setLoadInFooter(true);
 			}
-			$scripts[] = (new IncludeFileModel($script, 'onoffice-custom-fields', plugins_url('/dist/onoffice-custom-fields.min.js', $pluginPath)))
+			$scripts[] = (new IncludeFileModel($script, 'onoffice-prevent-whitespace-fields', plugins_url('/dist/onoffice-prevent-whitespace-fields.min.js', $pluginPath)))
 					->setDependencies(['jquery'])
 					->setLoadInFooter(true);
 		}
