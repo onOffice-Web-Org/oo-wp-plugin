@@ -34,6 +34,8 @@ use const WP_PLUGIN_DIR;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\DataView\DataAddressDetailView;
 
 /**
  *
@@ -136,9 +138,9 @@ class Template
 		}
 
 		if (!empty($pAddressList)) {
-			if ($pAddressList instanceof AddressList && !($pAddressList instanceof AddressDetail)) {
+			if ($pAddressList->getDataViewAddress() instanceof DataListViewAddress) {
 				$scriptLoader->addAddressScripts(self::KEY_ADDRESSLIST);
-			} elseif ($pAddressList instanceof AddressDetail) {
+			} elseif ($pAddressList->getDataViewAddress() instanceof DataAddressDetailView) {
 				$scriptLoader->addAddressScripts(self::KEY_ADDRESSDETAIL);
 			}
 		}

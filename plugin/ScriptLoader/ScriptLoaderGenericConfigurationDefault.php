@@ -131,13 +131,13 @@ class ScriptLoaderGenericConfigurationDefault
 		$scriptType = IncludeFileModel::TYPE_SCRIPT;
 		$defer = IncludeFileModel::LOAD_DEFER;
 		$style = IncludeFileModel::TYPE_STYLE;
+		$scripts = [];
 		$styles = [];
 		
 		if ($key === Template::KEY_ADDRESSLIST) {
 			$scripts = $this->renderScriptForAddressListPage([], $pluginPath, $scriptType);
 		}
 		if ($key === Template::KEY_ADDRESSDETAIL) {
-			$scripts = $this->renderScriptForAddressDetailPage([], $pluginPath, $scriptType, $defer);
 			$styles = $this->renderStyleForAddressDetail($style, $pluginPath);
 		}
 		$this->enqueueScripts($scripts);
