@@ -310,6 +310,7 @@ class AdminPageEstateDetail
 		$pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
 		$pInputShowStatus = $pFormModelBuilder->createInputModelShowStatus();
 		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
+		$pInputModelShowEnergyCertificate = $pFormModelBuilder->createInputModelShowEnergyCertificate();
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
@@ -318,6 +319,7 @@ class AdminPageEstateDetail
 		$pFormModelLayoutDesign->addInputModel( $pInputModelShortCodeForm );
 		$pFormModelLayoutDesign->addInputModel($pInputShowStatus);
 		$pFormModelLayoutDesign->addInputModel($pInputModelShowPriceOnRequest);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowEnergyCertificate);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
