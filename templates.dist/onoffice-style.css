@@ -282,12 +282,16 @@
 .oo-details-energy-certificate {
     position: relative;
     height: auto;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    border-bottom: 2px solid #efefef;
 }
 
 .oo-details-energy-certificate .energy-certificate-container {
     width: 100%;
     margin-top: 1.5rem;
     margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
 }
 
 .oo-details-energy-certificate .segmented-bar {
