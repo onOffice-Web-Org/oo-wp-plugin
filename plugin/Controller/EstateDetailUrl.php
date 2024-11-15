@@ -35,7 +35,7 @@ class EstateDetailUrl
 	 * @param string|null $title
 	 * @param string|null $oldUrl
 	 * @param bool $flag
-	 * @param string|null $switchLocale
+	 * @param string $switchLocale
 	 *
 	 * @return string
 	 */
