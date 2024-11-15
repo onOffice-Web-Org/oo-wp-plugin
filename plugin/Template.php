@@ -32,6 +32,8 @@ use onOffice\WPlugin\Utility\__String;
 use RuntimeException;
 use const WP_PLUGIN_DIR;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataListView;
 
 /**
  *
@@ -122,9 +124,9 @@ class Template
 		$scriptLoader = $pContainer->get(ScriptLoaderGenericConfigurationDefault::class);
 
 		if (!empty($pEstates)) {
-			if ($pEstates instanceof EstateList && !($pEstates instanceof EstateDetail)) {
+			if ($pEstates->getDataView() instanceof DataListView) {
 				$scriptLoader->addEstateScripts(self::KEY_ESTATELIST);
-			} elseif ($pEstates instanceof EstateDetail) {
+			} elseif ($pEstates->getDataView() instanceof DataDetailView) {
 				$scriptLoader->addEstateScripts(self::KEY_ESTATEDETAIL);
 			}
 		}
