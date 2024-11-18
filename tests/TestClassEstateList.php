@@ -228,6 +228,7 @@ class TestClassEstateList
 
 	public function testGetFieldLabel()
 	{
+		$this->_pEstateList->loadEstates();
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldObjektArt = new Field('objektart', 'estate', 'testLabel');
 		$pFieldObjektArt->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
@@ -673,13 +674,14 @@ class TestClassEstateList
 		$pFieldObjektTyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldsCollection->addField($pFieldObjektArt);
 		$pFieldsCollection->addField($pFieldObjektTyp);
+		$this->_pEstateList->loadEstates();
 
 		$expectation = [
 			'objektart' => [
 				'name' => 'objektart',
 				'type' => 'singleselect',
 				'value' => 'haus',
-				'label' => '',
+				'label' => 'testLabel',
 				'default' => null,
 				'length' => null,
 				'permittedvalues' => [],
@@ -695,7 +697,7 @@ class TestClassEstateList
 				'name' => 'objekttyp',
 				'type' => 'singleselect',
 				'value' => 'reihenhaus',
-				'label' => '',
+				'label' => 'testLabel',
 				'default' => null,
 				'length' => null,
 				'permittedvalues' => [],
@@ -901,6 +903,16 @@ class TestClassEstateList
 
 	/**
 	 *
+	 */
+
+	public function testGetPermittedValues()
+	{
+		$this->_pEstateList->loadEstates();
+		$this->assertEquals(['A', 'B', 'C'], $this->_pEstateList->getPermittedValues('energyClass'));
+	}
+ 
+	/**
+	 *
 	 * @before
 	 *
 	 */
@@ -1095,9 +1107,13 @@ class TestClassEstateList
 			'objektnr_extern',
 			'plz',
 			'land',
+			'energyClass',
 		];
 		foreach ($fieldNames as $fieldName) {
 			$field = new Field($fieldName, 'estate', 'testLabel');
+			if ($fieldName === 'energyClass') {
+				$field->setPermittedvalues(['A', 'B', 'C']);
+			}
 			$fieldsCollection->addField($field);
 		}
 		return $fieldsCollection;

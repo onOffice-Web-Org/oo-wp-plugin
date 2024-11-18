@@ -62,7 +62,7 @@ use onOffice\WPlugin\Field\FieldParkingLot;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 
 class EstateList
-implements EstateListBase
+	implements EstateListBase
 {
 	const DEFAULT_LIMIT_CHARACTER_DESCRIPTION = 150;
 
@@ -115,6 +115,12 @@ implements EstateListBase
 
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
+
+	/** @var FieldsCollection */
+	private $_pFieldsCollection;
+
+	/** @var string */
+	private $_energyCertificate = '';
 
 	/**
 	 * @param DataView $pDataView
@@ -208,6 +214,21 @@ implements EstateListBase
 
 		$this->_numEstatePages = $this->getNumEstatePages();
 		$this->resetEstateIterator();
+		$this->buildFieldsCollectionForEstate();
+	}
+
+	/**
+	 *
+	 */
+	private function buildFieldsCollectionForEstate()
+	{
+		$this->_pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($this->_pFieldsCollection)
+			->addFieldsEstateGeoPositionFrontend($this->_pFieldsCollection)
+			->addCustomLabelFieldsEstateFrontend($this->_pFieldsCollection, $this->_pDataView->getName(), $listType);
 	}
 
 	/**
@@ -225,6 +246,12 @@ implements EstateListBase
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'][] = 'vermarktungsart';
 		$estateParametersRaw['data'][] = 'preisAufAnfrage';
+
+		if ($this->getShowEnergyCertificate()) {
+			$energyCertificateFields = ['energieausweistyp', 'energyClass'];
+			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $energyCertificateFields);
+		}
+
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
@@ -826,18 +853,10 @@ implements EstateListBase
 	public function getFieldLabel($field): string
 	{
 		$recordType = onOfficeSDK::MODULE_ESTATE;
-		$pFieldsCollection = new FieldsCollection();
-		$pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
-		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
-		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
-		$pFieldBuilderShort
-			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
-			->addFieldsEstateGeoPositionFrontend($pFieldsCollection)
-			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
+		$pLanguage = $this->_pEnvironment->getContainer()->get( Language::class )->getLocale();
 
 		try {
-			$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+			$label = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 		} catch (UnknownFieldException $pE) {
 			$label = $this->getEnvironment()->getFieldnames()->getFieldLabel($field, $recordType);
 		}
@@ -851,6 +870,20 @@ implements EstateListBase
 
 		$fieldNewName = esc_html($label);
 		return $fieldNewName;
+	}
+
+	/**
+	 * @param string $field
+	 * @return array
+	 */
+	public function getPermittedValues(string $field): array
+	{
+		$recordType = onOfficeSDK::MODULE_ESTATE;
+		if (!$this->_pFieldsCollection->containsFieldByModule($recordType, $field)) {
+			return [];
+		}
+
+		return $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getPermittedvalues();
 	}
 
 	/**
@@ -1325,6 +1358,12 @@ implements EstateListBase
 		} else {
 			return false;
 		}
+	}
+
+	/** @return bool */
+	public function getShowEnergyCertificate(): bool
+	{
+		return $this->_pDataView instanceof DataDetailView && $this->_pDataView->getShowEnergyCertificate();
 	}
 
 	/** @return EstateFiles */

@@ -133,7 +133,7 @@ class EstateIdRequestGuard
 				$estateDetailTitle = $this->_estateData->getValue('objekttitel');
 			}
 		}
-		$detailLinkForWPML = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true);
+		$detailLinkForWPML = $pEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateDetailTitle, $oldUrl, true, $switchLocale);
 		$this->addSwitchFilterToLocaleHook($currentLocale);
 
 		return $detailLinkForWPML;
