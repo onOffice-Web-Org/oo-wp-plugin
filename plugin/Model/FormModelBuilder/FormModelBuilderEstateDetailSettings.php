@@ -637,6 +637,22 @@ class FormModelBuilderEstateDetailSettings
 	 *
 	 * @return InputModelOption
 	 *
+	 */
+
+	public function createInputModelShowEnergyCertificate(): InputModelOption
+	{
+		$labelShowEnergyCertificate = __('Show energy certificate with a scale', 'onoffice-for-wp-websites');
+
+		$pInputModelShowEnergyCertificate = $this->_pInputModelDetailViewFactory->create
+		(InputModelOptionFactoryDetailView::INPUT_SHOW_ENERGY_CERTIFICATE, $labelShowEnergyCertificate);
+		$pInputModelShowEnergyCertificate->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelShowEnergyCertificate->setValue($this->_pDataDetailView->getShowEnergyCertificate());
+		$pInputModelShowEnergyCertificate->setValuesAvailable(1);
+
+		return $pInputModelShowEnergyCertificate;
+	}
+
+	/**
 	 * @throws ExceptionInputModelMissingField
 	 */
 
