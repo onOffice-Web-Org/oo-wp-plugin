@@ -19,6 +19,9 @@ var CaptchaCallback = function () {
 
 (function() {
 	onOffice.captchaControl = function(formElement, submitButtonElement) {
+		if (!submitButtonElement) {
+			return;
+		}
 		submitButtonElement.onclick = function(event) {
 			const recaptcha = formElement.querySelector('.g-recaptcha');
 			const grecaptchaId = recaptcha.getAttribute('data-grecaptcha-id');

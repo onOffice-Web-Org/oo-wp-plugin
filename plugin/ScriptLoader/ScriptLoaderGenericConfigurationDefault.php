@@ -129,7 +129,6 @@ class ScriptLoaderGenericConfigurationDefault
 	{
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$scriptType = IncludeFileModel::TYPE_SCRIPT;
-		$defer = IncludeFileModel::LOAD_DEFER;
 		$style = IncludeFileModel::TYPE_STYLE;
 		$scripts = [];
 		$styles = [];
