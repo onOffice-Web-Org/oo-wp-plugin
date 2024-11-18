@@ -153,6 +153,7 @@ class ScriptLoaderGenericConfigurationDefault
 		foreach ($scripts as $script) {
 			if (!wp_script_is($script->getIdentifier())) {
 				wp_enqueue_script($script->getIdentifier(), $script->getFilePath(), $script->getDependencies());
+				$this->localizeScript($script->getIdentifier());
 			}
 		}
 	}
@@ -170,8 +171,6 @@ class ScriptLoaderGenericConfigurationDefault
 		}
 	}
 
-
-	
 	/**
 	 * @param array $scripts
 	 * @param string $pluginPath
@@ -203,14 +202,18 @@ class ScriptLoaderGenericConfigurationDefault
 			$scripts[] = (new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true);
-			$this->localizeApplyThousandSeparatorScript();
+		}
+
+		if (get_option('onoffice-settings-captcha-sitekey') !== '' && $recaptcha) {
+			$scripts[] = (new IncludeFileModel($script, 'onoffice-captchacontrol', plugins_url('/dist/onoffice-captchacontrol.min.js', $pluginPath)))
+					->setDependencies(['jquery'])
+					->setLoadInFooter(false);
 		}
 
 		if ($formType === Form::TYPE_APPLICANT_SEARCH) {
 			$scripts[] = (new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/dist/onoffice-form-preview.min.js', $pluginPath)))
 					->setDependencies(['jquery'])
 					->setLoadInFooter(true);
-			$this->localizeFormPreviewScript();
 		}
 
 		if (in_array($formType, [Form::TYPE_CONTACT, Form::TYPE_OWNER, Form::TYPE_INTEREST])) {
@@ -218,11 +221,6 @@ class ScriptLoaderGenericConfigurationDefault
 				$scripts[] = (new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/dist/onoffice-honeypot.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true);
-			}
-			if (get_option('onoffice-settings-captcha-sitekey') !== '' && $recaptcha) {
-				$scripts[] = (new IncludeFileModel($script, 'onoffice-captchacontrol', plugins_url('/dist/onoffice-captchacontrol.min.js', $pluginPath)))
-						->setDependencies(['jquery'])
-						->setLoadInFooter(false);
 			}
 		}
 
@@ -348,25 +346,31 @@ class ScriptLoaderGenericConfigurationDefault
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true);
 
-		$this->localizeFormPreviewScript();
-		$this->localizeApplyThousandSeparatorScript();
-
 		return $scripts;
 	}
 
 	/**
+	 * @param string $scriptIdentifier
 	 * @return void
 	 */
-	private function localizeFormPreviewScript()
+	private function localizeScript(string $scriptIdentifier)
 	{
-		wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
-			'amount_none' => __('0 matches', 'onoffice-for-wp-websites'),
-			'amount_one' => __('Show exact match', 'onoffice-for-wp-websites'),
-			/* translators: %s is the amount of results */
-			'amount_other' => __('Show %s matches', 'onoffice-for-wp-websites'),
-			'nonce_estate' => wp_create_nonce('onoffice-estate-preview'),
-			'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),
-		]);
+		switch ($scriptIdentifier) {
+			case 'onoffice-form-preview':
+				wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
+					'amount_none' => __('0 matches', 'onoffice-for-wp-websites'),
+					'amount_one' => __('Show exact match', 'onoffice-for-wp-websites'),
+					'amount_other' => __('Show %s matches', 'onoffice-for-wp-websites'),
+					'nonce_estate' => wp_create_nonce('onoffice-estate-preview'),
+					'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),
+				]);
+				break;
+			case 'onoffice-apply-thousand-separator':
+				wp_localize_script('onoffice-apply-thousand-separator', 'onoffice_apply_thousand_separator', [
+					'thousand_separator_format' => get_option('onoffice-settings-thousand-separator')
+				]);
+				break;
+		}
 	}
 
     /**
@@ -437,14 +441,4 @@ class ScriptLoaderGenericConfigurationDefault
         }
         return $onofficeCssStyleVersion;
     }
-
-	/**
-	 * @return void
-	 */
-	private function localizeApplyThousandSeparatorScript()
-	{
-		wp_localize_script('onoffice-apply-thousand-separator', 'onoffice_apply_thousand_separator', [
-			'thousand_separator_format' => get_option('onoffice-settings-thousand-separator')
-		]);
-	}
 }
