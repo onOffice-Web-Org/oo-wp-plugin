@@ -36,6 +36,7 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataAddressDetailView;
+use onOffice\WPlugin\DataView\DataView;
 
 /**
  *
@@ -125,7 +126,7 @@ class Template
 		$getListName = $pTemplateCallback->buildCallbackEstateListName($pEstates);
 		$scriptLoader = $pContainer->get(ScriptLoaderGenericConfigurationDefault::class);
 
-		if (!empty($pEstates)) {
+		if (!empty($pEstates) && !empty($pEstates->getDataView())) {
 			if ($pEstates->getDataView() instanceof DataListView) {
 				$scriptLoader->addEstateScripts(self::KEY_ESTATELIST);
 			} elseif ($pEstates->getDataView() instanceof DataDetailView) {
@@ -137,7 +138,7 @@ class Template
 			$scriptLoader->addFormScripts($pForm->getFormType(), $pForm->needsReCaptcha());
 		}
 
-		if (!empty($pAddressList)) {
+		if (!empty($pAddressList) && !empty($pAddressList->getDataViewAddress())) {
 			if ($pAddressList->getDataViewAddress() instanceof DataListViewAddress) {
 				$scriptLoader->addAddressScripts(self::KEY_ADDRESSLIST);
 			} elseif ($pAddressList->getDataViewAddress() instanceof DataAddressDetailView) {
