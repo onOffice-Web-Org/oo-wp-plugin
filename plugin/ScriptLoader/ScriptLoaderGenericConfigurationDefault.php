@@ -92,7 +92,7 @@ class ScriptLoaderGenericConfigurationDefault
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$scriptType = IncludeFileModel::TYPE_SCRIPT;
 		$async = IncludeFileModel::LOAD_ASYNC;
-		
+
 		$scripts = $this->renderScriptForForm([], $pluginPath, $scriptType, $async, $formType, $recaptcha);
 		$this->enqueueScripts($scripts);
 	}
@@ -151,7 +151,8 @@ class ScriptLoaderGenericConfigurationDefault
 	{
 		foreach ($scripts as $script) {
 			if (!wp_script_is($script->getIdentifier())) {
-				wp_enqueue_script($script->getIdentifier(), $script->getFilePath(), $script->getDependencies());
+				wp_enqueue_script($script->getIdentifier(), $script->getFilePath(), $script->getDependencies(), false, $script->getLoadInFooter());
+				wp_script_add_data($script->getIdentifier(), $script->getLoadAsynchronous(), true);
 				$this->localizeScript($script->getIdentifier());
 			}
 		}
