@@ -71,9 +71,9 @@ class ScriptLoaderGenericConfigurationDefault
 			new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)),
 			new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath))
 		];
-		$styleVersion = $this->getOnOfficeStyleVersion();
-		$onOfficeStyleUri = $this->getStyleUriByVersion($styleVersion);
-		$values []= (new IncludeFileModel($style, $styleVersion, $onOfficeStyleUri));
+
+		$onOfficeStyleUri = $this->getStyleUriByVersion();
+		$values []= (new IncludeFileModel($style, 'onoffice_style', $onOfficeStyleUri));
 		if (Favorites::isFavorizationEnabled()) {
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/dist/favorites.min.js', $pluginPath)))
 				->setDependencies(['jquery']);
@@ -376,69 +376,30 @@ class ScriptLoaderGenericConfigurationDefault
     /**
      * @return string
      */
-    public function getStyleUriByVersion($styleVersion): string
+    public function getStyleUriByVersion(): string
     {
         $pluginPath = ONOFFICE_PLUGIN_DIR . '/index.php';
+        $styleFileTemplatePath = '/onoffice-theme/templates/onoffice-style.css';
+        $styleFileInTheme = get_stylesheet_directory() . $styleFileTemplatePath;
+        $styleFileInParentTheme = get_template_directory() . $styleFileTemplatePath;
 
-        if ($styleVersion == 'onoffice_defaultview')
+        if (file_exists($styleFileInTheme))
         {
-            return plugins_url('/css/onoffice_defaultview.css', $pluginPath);
+            return get_stylesheet_directory_uri() . $styleFileTemplatePath;
         }
 
-        $onofficeCssStyleFilePath = get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css';
-        if (file_exists($onofficeCssStyleFilePath))
-        {
-            return get_stylesheet_directory_uri() . '/onoffice-theme/templates/onoffice-style.css';
+        if (file_exists($styleFileInParentTheme)) {
+            return get_template_directory_uri() . $styleFileTemplatePath;
         }
 
-        $onofficeCssStyleFilePath = get_template_directory() . '/onoffice-theme/templates/onoffice-style.css';
-        if (file_exists($onofficeCssStyleFilePath)) {
-            return get_template_directory_uri() . '/onoffice-theme/templates/onoffice-style.css';
-        }
+        $styleFilePluginPath = 'onoffice-personalized/templates/onoffice-style.css';
+        $styleFileInPersonalizedPlugin = plugin_dir_path( ONOFFICE_PLUGIN_DIR ) . $styleFilePluginPath;
 
-        $onofficeCssStyleFilePath = plugin_dir_path( ONOFFICE_PLUGIN_DIR ) . 'onoffice-personalized/templates/onoffice-style.css';
-        if (file_exists($onofficeCssStyleFilePath))
+        if (file_exists($styleFileInPersonalizedPlugin))
         {
-            return plugins_url('onoffice-personalized/templates/onoffice-style.css', '');
+            return plugins_url($styleFilePluginPath, '');
         }
 
         return plugins_url('templates.dist/onoffice-style.css', $pluginPath);
-    }
-
-    /**
-     * @return string
-     */
-    public function getOnOfficeStyleVersion()
-    {
-        $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ] = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
-            . 'onoffice-personalized' );
-        $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_THEME ]  = glob( get_stylesheet_directory()
-            . '/onoffice-theme' );
-        $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_PARENT_THEME ] = glob( get_template_directory()
-            . '/onoffice-theme' );
-
-        $defaultview = 'onoffice_defaultview';
-        $newstyle = 'onoffice_style';
-
-        $onofficeCssStyleVersion = $defaultview;
-        if ( ! empty( $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_THEME ] ) ) {
-            $onofficeCssStyleVersion = ! empty( glob( get_stylesheet_directory()
-                . '/onoffice-theme/templates/onoffice-style.css' ) )
-                ? $newstyle
-                : $defaultview;
-        } elseif ( ! empty( $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_PARENT_THEME ] ) ) {
-            $onofficeCssStyleVersion = ! empty( glob( get_template_directory()
-                . '/onoffice-theme/templates/onoffice-style.css' ) )
-                ? $newstyle
-                : $defaultview;
-        } elseif ( ! empty( $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ] ) ) {
-            $onofficeCssStyleVersion = ! empty( glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
-                . 'onoffice-personalized/templates/onoffice-style.css' ) )
-                ? $newstyle
-                : $defaultview;
-        } elseif ( ! empty( glob( ONOFFICE_PLUGIN_DIR . '/templates.dist/onoffice-style.css' ) ) ) {
-            $onofficeCssStyleVersion = $newstyle;
-        }
-        return $onofficeCssStyleVersion;
     }
 }
