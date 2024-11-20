@@ -148,6 +148,7 @@ class DataDetailViewHandler
 		$pDataDetailView->setShowPriceOnRequest($row[DataDetailView::FIELD_PRICE_ON_REQUEST] ?? false);
 		$pDataDetailView->setShowTotalCostsCalculator($row[DataDetailView::FIELD_TOTAL_COSTS_CALCULATOR] ?? false);
 		$pDataDetailView->setContactImageTypes($row['contact_image_types'] ?? []);
+		$pDataDetailView->setShowEnergyCertificate($row['show_energy_certificate'] ?? false);
 		return $pDataDetailView;
 	}
 }

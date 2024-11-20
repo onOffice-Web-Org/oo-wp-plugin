@@ -87,6 +87,9 @@ class InputModelOptionFactoryDetailView
 	const INPUT_SHOW_TOTAL_COSTS_CALCULATOR = 'show_total_costs_calculator';
 
 	/** @var string */
+	const INPUT_SHOW_ENERGY_CERTIFICATE = 'show_energy_certificate';
+
+	/** @var string */
 	private $_optionGroup = null;
 
 
@@ -135,6 +138,9 @@ class InputModelOptionFactoryDetailView
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
 		],
 		self::INPUT_SHOW_TOTAL_COSTS_CALCULATOR => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
+		],
+		self::INPUT_SHOW_ENERGY_CERTIFICATE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
 		],
 		self::INPUT_CONTACT_IMAGE_TYPES => [

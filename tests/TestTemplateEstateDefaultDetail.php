@@ -67,6 +67,9 @@ class TestTemplateEstateDefaultDetail
 				'getLinkEmbedPlayers',
 				'getDetailView',
 				'getTotalCostsData',
+				'getShowEnergyCertificate',
+				'getPermittedValues',
+				'getRawValues',
 			])
 			->setConstructorArgs([$pDataView])
 			->getMock();
@@ -89,6 +92,8 @@ class TestTemplateEstateDefaultDetail
 			'ausstatt_beschr' => 'teilweise mit einer alten Mauer aus Findlingen umgeben',
 			'sonstige_angaben' => 'Vereinbaren sie noch heute einen Besichtigungstermin',
 			'MPAreaButlerUrlWithAddress' => 'areabutler.de',
+			'energyClass' => 'A',
+			'baujahr' => 'testField',
 		];
 
 		$totalCostsData = [
@@ -118,7 +123,18 @@ class TestTemplateEstateDefaultDetail
 			]
 		];
 
+		$estateDataRaw = [
+			52 => [
+				'id' => 52,
+				'type' => 'estate',
+				'elements' => [
+					'energieausweistyp' => 'Endenergiebedarf',
+					'energyClass' => 'A',
+				]
+			]
+		];
 		$pArrayContainerEstateDetail = new ArrayContainerEscape($estateData);
+		$pArrayContainerEstateDetailRaw = new ArrayContainerEscape($estateDataRaw);
 
 		$this->_pEstate->setEstateId(52);
 		$this->_pEstate->method('estateIterator')
@@ -128,6 +144,8 @@ class TestTemplateEstateDefaultDetail
 				return 'label-'.$field;
 			}));
 		$this->_pEstate->method('getTotalCostsData')->willReturn($totalCostsData);
+		$this->_pEstate->method('getRawValues')
+			->will($this->onConsecutiveCalls($pArrayContainerEstateDetailRaw, false));
 
 		$contactData = [
 			'Name' => 'Parker',
@@ -162,6 +180,8 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('getEstateLinks')->willReturn([$oguloLink]);
 		$this->_pEstate->method('getLinkEmbedPlayers')->willReturn([]);
 		$this->_pEstate->method('getDetailView')->willReturn('1');
+		$this->_pEstate->method('getShowEnergyCertificate')->willReturn(true);
+		$this->_pEstate->method('getPermittedValues')->willReturn(['A' => 'A', 'B' => 'B', 'C' => 'C']);
 	}
 
 	/**
