@@ -77,7 +77,7 @@ class TestClassRecordManagerInsertGeneric
 		$recordOutput = [
 			'test1' => 'abc',
 			'test2' => 'cde',
-			'fieldname' => '',
+			'fieldname' => [],
 			'order' => 0,
 		];
 

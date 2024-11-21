@@ -104,7 +104,7 @@ class TestClassRecordStructure
 		),
 		RecordManager::TABLENAME_FIELDCONFIG => array(
 			'order' => 0,
-			'fieldname' => '',
+			'fieldname' => [],
 		),
 		RecordManager::TABLENAME_LISTVIEW_CONTACTPERSON => array(
 			'order' => 0,
@@ -127,7 +127,7 @@ class TestClassRecordStructure
 		),
 		RecordManager::TABLENAME_FIELDCONFIG_ADDRESS => array(
 			'order' => 0,
-			'fieldname' => '',
+			'fieldname' => [],
 		),
 		RecordManager::TABLENAME_FORMS => array(
 			'name' => null,
