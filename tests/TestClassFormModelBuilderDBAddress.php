@@ -35,6 +35,9 @@ use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Types\Field;
 
 class TestClassFormModelBuilderDBAddress
 	extends WP_UnitTestCase
@@ -45,6 +48,12 @@ class TestClassFormModelBuilderDBAddress
 	/** @var InputModelDBFactory */
 	private $_pInputModelFactoryDBEntry;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
+
+	/** @var FormModelBuilderDBAddress */
+	private $_pFormModelBuilderDBAddressSettings;
+
 	/**
 	 * @before
 	 */
@@ -54,6 +63,28 @@ class TestClassFormModelBuilderDBAddress
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend'])
+				->setConstructorArgs([$this->_pContainer])
+				->getMock();
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('fax1', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsEstateDecoratorReadAddressBackend')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('fax2', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+		$this->_pFormModelBuilderDBAddressSettings = new FormModelBuilderDBAddress($this->_pContainer);
 	}
 
 	/**
@@ -97,18 +128,10 @@ class TestClassFormModelBuilderDBAddress
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress::createSearchFieldForFieldLists
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder::createSearchFieldForFieldLists
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder::groupByContent
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder::getFieldNamesByModule
 	 */
 	public function testCreateSearchFieldForFieldLists()
 	{
-		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
-			->setConstructorArgs([new FieldsCollection()])
-			->getMock();
-
-		$pFormModelBuilderDBAddress = new FormModelBuilderDBAddress($pFieldnames);
-		$pInputModelDB = $pFormModelBuilderDBAddress->createSearchFieldForFieldLists('address', 'searchFieldForFieldLists');
+		$pInputModelDB = $this->_pFormModelBuilderDBAddressSettings->createSearchFieldForFieldLists('address', 'searchFieldForFieldLists');
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'searchFieldForFieldLists');
 	}
@@ -118,11 +141,7 @@ class TestClassFormModelBuilderDBAddress
 	 */
 	public function testCreateInputModelRecordsPerPage()
 	{
-		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
-			->setConstructorArgs([new FieldsCollection()])
-			->getMock();
-		$pFormModelBuilderDBAddress = new FormModelBuilderDBAddress($pFieldnames);
-		$pInputModelDB = $pFormModelBuilderDBAddress->createInputModelRecordsPerPage();
+		$pInputModelDB = $this->_pFormModelBuilderDBAddressSettings->createInputModelRecordsPerPage();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'number');
 	}
@@ -132,15 +151,10 @@ class TestClassFormModelBuilderDBAddress
 	 */
 	public function testGetInputModelConvertInputTextToSelectField()
 	{
-		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
-			->setConstructorArgs([new FieldsCollection()])
-			->getMock();
-		$pInstance = new FormModelBuilderDBAddress($pFieldnames);
-
-		$pInputModelDB = $pInstance->getInputModelConvertInputTextToSelectField();
+		$pInputModelDB = $this->_pFormModelBuilderDBAddressSettings->getInputModelConvertInputTextToSelectField();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
-		$this->assertEquals([$pInstance, 'callbackValueInputModelConvertInputTextToSelectForField'], $pInputModelDB->getValueCallback());
+		$this->assertEquals([$this->_pFormModelBuilderDBAddressSettings, 'callbackValueInputModelConvertInputTextToSelectForField'], $pInputModelDB->getValueCallback());
 	}
 
 	/**

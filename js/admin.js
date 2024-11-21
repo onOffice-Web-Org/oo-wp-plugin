@@ -275,7 +275,7 @@ jQuery(document).ready(function($){
 			convertTextToSelectForField.parent().remove();
 		}
 
-		if (fieldName !== 'fax' || fieldName !== 'mobile' || fieldName !== 'phone' || fieldName !== 'email' || fieldName !== 'imageUrl') {
+		if (fieldName === 'fax' || fieldName === 'mobile' || fieldName === 'phone' || fieldName === 'email' || fieldName === 'imageUrl') {
 			const filterableSelectors = ['oopluginaddressfieldconfig-filterable'];
 			let filterable = clonedElement.find('input[name^=' + filterableSelectors.join('],input[name^=') + ']');
 			filterable.parent().remove();
