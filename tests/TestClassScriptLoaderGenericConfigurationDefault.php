@@ -80,24 +80,13 @@ class TestClassScriptLoaderGenericConfigurationDefault
 	/**
 	 * @covers onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault::getStyleUriByVersion
 	 */
-	public function testGetOnOfficeStyleVersion()
+	public function testGetStyleUriByVersion()
 	{
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
-		$onofficeCssStyleFilePath = $pScriptLoaderGenericConfigurationDefault->getStyleUriByVersion('onoffice_defaultview');
-		$this->assertEquals($onofficeCssStyleFilePath, plugins_url('css/onoffice_defaultview.css', $pluginPath));
+		$onofficeCssStyleFilePath = $pScriptLoaderGenericConfigurationDefault->getStyleUriByVersion();
+		$this->assertEquals($onofficeCssStyleFilePath, plugins_url('templates.dist/onoffice-style.css', $pluginPath));
 		$this->assertNotEmpty($onofficeCssStyleFilePath);
-	}
-
-	/**
-	 * @covers onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault::getOnOfficeStyleVersion
-	 */
-	public function testGetStyleUriByVersion()
-	{
-		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
-		$onofficeCssStyleVersion = $pScriptLoaderGenericConfigurationDefault->getOnOfficeStyleVersion();
-		$this->assertEquals($onofficeCssStyleVersion, 'onoffice_style');
-		$this->assertNotEmpty($onofficeCssStyleVersion);
 	}
 
 	/**
@@ -118,10 +107,8 @@ class TestClassScriptLoaderGenericConfigurationDefault
 			file_put_contents(get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css', 'onoffice-style.css');
 		}
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
-		$onofficeCssStyleVersion = $pScriptLoaderGenericConfigurationDefault->getOnOfficeStyleVersion();
-		$onofficeCssStyleFilePath = $pScriptLoaderGenericConfigurationDefault->getStyleUriByVersion($onofficeCssStyleVersion);
+		$onofficeCssStyleFilePath = $pScriptLoaderGenericConfigurationDefault->getStyleUriByVersion();
 
-		$this->assertEquals($onofficeCssStyleVersion, 'onoffice_style');
 		$this->assertEquals($onofficeCssStyleFilePath, get_stylesheet_directory_uri() . '/onoffice-theme/templates/onoffice-style.css');
 		unlink(get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css');
 	}
