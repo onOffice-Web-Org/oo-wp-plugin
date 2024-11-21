@@ -180,11 +180,38 @@ class DataFormConfigurationFactory
 		$this->_pGeoPositionFieldHandler->readValues($pConfig);
 		$rowFields = $this->configureGeoFields($rowFields);
 
+		if ($this->_type !== Form::TYPE_APPLICANT_SEARCH){
+			$rowActivityConfig = $this->_pRecordManagerRead->readActivityConfigByFormId($formId);
+			$this->configureActivity($pConfig, $rowActivityConfig);
+			$rowTaskConfig = $this->_pRecordManagerRead->readFormTaskConfigByFormId($formId);
+			$this->configureTask($pConfig, $rowTaskConfig);
+		}
+
 		foreach ($rowFields as $fieldRow) {
 			$this->configureFieldsByRow($fieldRow, $pConfig);
 		}
 
 		return $pConfig;
+	}
+
+
+	/**
+	 * @param DataFormConfiguration\DataFormConfiguration $pFormConfiguration
+	 * @param array|null $row
+	 * @return void
+	 */
+	private function configureActivity(DataFormConfiguration\DataFormConfiguration $pFormConfiguration, array $row = null)
+	{
+		if (empty($row)) {
+			return;
+		}
+		$pFormConfiguration->setWriteActivity((bool)$row['write_activity'] ?? false);
+		$pFormConfiguration->setActionKind($row['action_kind'] ?? '');
+		$pFormConfiguration->setActionType($row['action_type'] ?? '');
+		$pFormConfiguration->setCharacteristic($row['characteristic'] ?? '');
+		$pFormConfiguration->setRemark($row['remark'] ?? '');
+		$pFormConfiguration->setOriginContact($row['origin_contact'] ?? '');
+		$pFormConfiguration->setAdvisorylevel($row['advisory_level'] ?? '');
 	}
 
 
@@ -264,6 +291,27 @@ class DataFormConfigurationFactory
 		array_splice($result, $arrayPosition, 0, $geoPositionFields);
 
 		return $result;
+	}
+
+	/**
+	 * @param DataFormConfiguration\DataFormConfiguration $pFormConfiguration
+	 * @param array|null $row
+	 * @return void
+	 */
+	private function configureTask(DataFormConfiguration\DataFormConfiguration $pFormConfiguration, array $row = null)
+	{
+		if (empty($row)) {
+			return;
+		}
+
+		$pFormConfiguration->setEnableCreateTask((bool)$row['enable_create_task']);
+		$pFormConfiguration->setTaskResponsibility($row['responsibility']);
+		$pFormConfiguration->setTaskProcessor($row['processor']);
+		$pFormConfiguration->setTaskType($row['type']);
+		$pFormConfiguration->setTaskPriority($row['priority']);
+		$pFormConfiguration->setTaskSubject($row['subject']);
+		$pFormConfiguration->setTaskDescription($row['description']);
+		$pFormConfiguration->setTaskStatus($row['status']);
 	}
 
 

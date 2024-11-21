@@ -101,25 +101,34 @@ class DataViewSimilarEstates
 	private $_customLabel = [];
 
 	/** @var string[] */
-	private $_pictureTypes = [];
+	private $_pictureTypes = [
+		ImageTypes::TITLE
+	];
 
 	/** @var bool */
 	private $_showPriceOnRequest = false;
 
 	/** @var string[] */
 	private $_priceFields = [
-			'kaufpreis',
-			'erbpacht',
-			'nettokaltmiete',
-			'warmmiete',
-			'pacht',
-			'kaltmiete',
-			'miete_pauschal',
-			'saisonmiete',
-			'wochmietbto',
-			'kaufpreis_pro_qm',
-			'mietpreis_pro_qm',
+		'kaufpreis',
+		'erbpacht',
+		'nettokaltmiete',
+		'warmmiete',
+		'pacht',
+		'kaltmiete',
+		'miete_pauschal',
+		'saisonmiete',
+		'wochmietbto',
+		'kaufpreis_pro_qm',
+		'mietpreis_pro_qm',
+		'calculatedPrice'
 	];
+
+	/** @var string */
+	private $_showReferenceEstate = '0';
+
+	/** @var int */
+	private $_filterId = 0;
 
 	/** @param bool $sameEstateKind */
 	public function setSameEstateKind(bool $sameEstateKind)
@@ -206,8 +215,12 @@ class DataViewSimilarEstates
 		{ return null; }
 
 	/** @return int */
-	public function getFilterId()
-		{ return null; }
+	public function getFilterId(): int
+		{ return $this->_filterId; }
+
+	/** @param int $filterId */
+	public function setFilterId(int $filterId)
+		{ $this->_filterId = $filterId; }
 
 	/** @return bool */
 	public function getRandom(): bool
@@ -236,4 +249,18 @@ class DataViewSimilarEstates
 	{
 		return $this->_priceFields;
 	}
+
+	/** @param array $priceFields */
+	public function setListFieldsShowPriceOnRequest(array $priceFields)
+	{
+		$this->_priceFields = $priceFields;
+	}
+
+	/** @return string */
+	public function getShowReferenceEstate(): string
+		{ return $this->_showReferenceEstate; }
+
+	/** @param string $showReferenceEstate */
+	public function setShowReferenceEstate(string $showReferenceEstate)
+		{ $this->_showReferenceEstate = $showReferenceEstate; }
 }

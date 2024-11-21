@@ -101,6 +101,89 @@ class InputModelDBFactoryConfigForm
     /** */
     const INPUT_FORM_CONTACT_TYPE = 'contactType';
 
+	/** */
+	const INPUT_FORM_WRITE_ACTIVITY = 'writeActivity';
+
+	/** */
+	const INPUT_FORM_ACTION_KIND = 'actionKind';
+
+	/** */
+	const INPUT_FORM_ACTION_TYPE = 'actionType';
+
+	/** */
+	const INPUT_FORM_CHARACTERISTIC = 'characteristic';
+
+	/** */
+	const INPUT_FORM_REMARK = 'remark';
+
+	/** */
+	const INPUT_FORM_ORIGIN_CONTACT = 'originContact';
+
+	/** */
+	const INPUT_FORM_ADVISORY_LEVEL = 'advisoryLevel';
+
+	/** */
+	const INPUT_FORM_ENABLE_CREATE_TASK = 'enableCreateTask';
+
+	/** */
+	const INPUT_FORM_TASK_RESPONSIBILITY = 'responsibility';
+
+	/** */
+	const INPUT_FORM_TASK_PROCESSOR = 'processor';
+
+	/** */
+	const INPUT_FORM_TASK_TYPE = 'type';
+
+	/** */
+	const INPUT_FORM_TASK_PRIORITY = 'priority';
+
+	/** */
+	const INPUT_FORM_TASK_SUBJECT = 'subject';
+
+	/** */
+	const INPUT_FORM_TASK_DESCRIPTION = 'description';
+
+	/** */
+	const INPUT_FORM_TASK_STATUS = 'status';
+
+	/** */
+	const TASK_HIGHEST_PRIORITY = 1;
+
+	/** */
+	const TASK_HIGH_PRIORITY = 2;
+
+	/** */
+	const TASK_NORMAL_PRIORITY = 3;
+
+	/** */
+	const TASK_LOW_PRIORITY = 4;
+
+	/** */
+	const TASK_LOWEST_PRIORITY = 5;
+
+	/** */
+	const TASK_STATUS_NOT_START = 1;
+
+	/** */
+	const TASK_STATUS_IN_PROCESS = 2;
+
+	/** */
+	const TASK_STATUS_COMPLETED = 3;
+
+	/** */
+	const TASK_STATUS_DEFERRED = 4;
+
+	/** */
+	const TASK_STATUS_CANCELLED = 5;
+
+	/** */
+	const TASK_STATUS_MISCELLANEOUS = 6;
+
+	/** */
+	const TASK_STATUS_CHECKED = 7;
+
+	/** */
+	const TASK_STATUS_NEED_CLARIFICATION = 8;
 
 	/** @var array */
 	private $_inputConfig = [
@@ -204,6 +287,66 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_HIDDEN_FIELD => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'hidden_field',
+		],
+		self::INPUT_FORM_WRITE_ACTIVITY => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'write_activity',
+		],
+		self::INPUT_FORM_ACTION_KIND => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'action_kind',
+		],
+		self::INPUT_FORM_ACTION_TYPE => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'action_type',
+		],
+		self::INPUT_FORM_CHARACTERISTIC => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'characteristic',
+		],
+		self::INPUT_FORM_REMARK => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'remark',
+		],
+		self::INPUT_FORM_ORIGIN_CONTACT => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'origin_contact',
+		],
+		self::INPUT_FORM_ADVISORY_LEVEL => [
+			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
+			self::KEY_FIELD => 'advisory_level',
+		],
+		self::INPUT_FORM_ENABLE_CREATE_TASK => [
+			self::KEY_TABLE => 'oo_plugin_form_taskconfig',
+			self::KEY_FIELD => 'enable_create_task',
+		],
+		self::INPUT_FORM_TASK_RESPONSIBILITY => [
+			self::KEY_TABLE => 'oo_plugin_form_taskconfig',
+			self::KEY_FIELD => 'responsibility',
+		],
+		self::INPUT_FORM_TASK_PROCESSOR => [
+			self::KEY_TABLE => 'oo_plugin_form_taskconfig',
+			self::KEY_FIELD => 'processor',
+		],
+		self::INPUT_FORM_TASK_TYPE => [
+			self::KEY_TABLE => 'oo_plugin_form_taskconfig',
+			self::KEY_FIELD => 'type',
+		],
+		self::INPUT_FORM_TASK_PRIORITY => [
+			self::KEY_TABLE => 'oo_plugin_form_taskconfig',
+			self::KEY_FIELD => 'priority',
+		],
+		self::INPUT_FORM_TASK_SUBJECT => [
+			self::KEY_TABLE => 'oo_plugin_form_taskconfig',
+			self::KEY_FIELD => 'subject',
+		],
+		self::INPUT_FORM_TASK_DESCRIPTION => [
+			self::KEY_TABLE => 'oo_plugin_form_taskconfig',
+			self::KEY_FIELD => 'description',
+		],
+		self::INPUT_FORM_TASK_STATUS => [
+			self::KEY_TABLE => 'oo_plugin_form_taskconfig',
+			self::KEY_FIELD => 'status',
 		],
 	];
 

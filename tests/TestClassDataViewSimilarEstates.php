@@ -51,6 +51,8 @@ class TestClassDataViewSimilarEstates
 		$this->assertEquals(10, $pDataViewSimilarEstates->getRadius());
 		$this->assertEquals(6, $pDataViewSimilarEstates->getRecordsPerPage());
 		$this->assertEquals(false, $pDataViewSimilarEstates->getShowPriceOnRequest());
+		$this->assertEquals('0', $pDataViewSimilarEstates->getShowReferenceEstate());
+		$this->assertEquals(0, $pDataViewSimilarEstates->getFilterId());
 	}
 
 
@@ -75,7 +77,10 @@ class TestClassDataViewSimilarEstates
 		$this->assertTrue($pDataViewSimilarEstates->getShowPriceOnRequest());
 		$this->assertEquals(['Id' => 'ASC'], $pDataViewSimilarEstates->getSortBy());
 		$this->assertNull($pDataViewSimilarEstates->getSortOrder());
-		$this->assertNull($pDataViewSimilarEstates->getFilterId());
+		$pDataViewSimilarEstates->setFilterId(10);
+		$this->assertEquals($pDataViewSimilarEstates->getFilterId(), 10);
+		$pDataViewSimilarEstates->setShowReferenceEstate('0');
+		$this->assertEquals($pDataViewSimilarEstates->getShowReferenceEstate(), '0');
 	}
 
 
@@ -104,7 +109,7 @@ class TestClassDataViewSimilarEstates
 		];
 		$this->assertEquals($expectedFields, $pDataViewSimilarEstates->getFields());
 		$this->assertEquals('SimilarEstates', $pDataViewSimilarEstates->getName());
-		$this->assertEquals([], $pDataViewSimilarEstates->getPictureTypes());
+		$this->assertEquals([ImageTypes::TITLE], $pDataViewSimilarEstates->getPictureTypes());
 		$this->assertEquals('', $pDataViewSimilarEstates->getTemplate());
 	}
 
@@ -138,6 +143,7 @@ class TestClassDataViewSimilarEstates
 			'wochmietbto',
 			'kaufpreis_pro_qm',
 			'mietpreis_pro_qm',
+			'calculatedPrice',
 		];
 		$this->assertEquals($expectedPriceFields, $pDataViewSimilarEstates->getListFieldsShowPriceOnRequest());
 	}

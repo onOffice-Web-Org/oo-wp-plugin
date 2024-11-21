@@ -81,6 +81,52 @@ class DataFormConfiguration
 
 	/** @var array */
 	private $_hiddenFields = [];
+
+	/** @var bool */
+	private $_writeActivity = false;
+
+	/** @var string */
+	private $_actionKind = '';
+
+	/** @var string */
+	private $_actionType = '';
+
+	/** @var string */
+	private $_characteristic = '';
+
+	/** @var string */
+	private $_remark = '';
+
+	/** @var string */
+	private $_originContact = '';
+
+	/** @var string */
+	private $_advisorylevel = '';
+
+	/** @var bool */
+	private $_enableCreateTask = false;
+
+	/** @var string */
+	private $_taskResponsibility = '';
+
+	/** @var string */
+	private $_taskProcessor = '';
+
+	/** @var int */
+	private $_taskType = 0;
+
+	/** @var string */
+	private $_taskSubject = '';
+
+	/** @var string */
+	private $_taskDescription = '';
+
+	/** @var int */
+	private $_taskStatus = 0;
+
+	/** @var int */
+	private $_taskPriority = 0;
+
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -249,4 +295,124 @@ class DataFormConfiguration
 
 		return $this->_recipient;
 	}
+
+	/** @return bool */
+	public function getWriteActivity(): bool
+		{ return $this->_writeActivity; }
+
+	/** @param bool $writeActivity */
+	public function setWriteActivity(bool $writeActivity)
+		{ $this->_writeActivity = $writeActivity; }
+
+	/** @return string */
+	public function getActionKind(): string
+		{ return $this->_actionKind; }
+
+	/** @param string $actionKind */
+	public function setActionKind(string $actionKind)
+		{ $this->_actionKind = $actionKind; }
+	
+	/** @return string */
+	public function getActionType(): string
+		{ return $this->_actionType; }
+
+	/** @param string $actionType */
+	public function setActionType(string $actionType)
+		{ $this->_actionType = $actionType; }
+
+	/** @return string */
+	public function getCharacteristic(): string
+		{ return $this->_characteristic; }
+
+	/** @param string $characteristic */
+	public function setCharacteristic(string $characteristic)
+		{ $this->_characteristic = $characteristic; }
+	
+	/** @return string */
+	public function getRemark(): string
+		{ return $this->_remark; }
+
+	/** @param string $remark */
+	public function setRemark(string $remark)
+		{ $this->_remark = $remark; }
+	
+	/** @return string */
+	public function getOriginContact(): string
+		{ return $this->_originContact; }
+
+	/** @param string $originContact */
+	public function setOriginContact(string $originContact)
+		{ $this->_originContact = $originContact; }
+	
+	/** @return string */
+	public function getAdvisorylevel(): string
+		{ return $this->_advisorylevel; }
+
+	/** @param string $advisorylevel */
+	public function setAdvisorylevel(string $advisorylevel)
+		{ $this->_advisorylevel = $advisorylevel; }
+
+	/** @return bool */
+	public function getEnableCreateTask(): bool
+		{ return $this->_enableCreateTask; }
+
+	/** @param bool $enableCreateTask */
+	public function setEnableCreateTask(bool $enableCreateTask)
+		{ $this->_enableCreateTask = $enableCreateTask; }
+
+	/** @return string */
+	public function getTaskResponsibility(): string
+		{ return $this->_taskResponsibility; }
+
+	/** @param string $taskResponsibility */
+	public function setTaskResponsibility(string $taskResponsibility)
+		{ $this->_taskResponsibility = $taskResponsibility; }
+
+	/** @return string */
+	public function getTaskProcessor(): string
+		{ return $this->_taskProcessor; }
+
+	/** @param string $taskProcessor */
+	public function setTaskProcessor(string $taskProcessor)
+		{ $this->_taskProcessor = $taskProcessor; }
+
+	/** @return int */
+	public function getTaskType(): int
+		{ return $this->_taskType; }
+
+	/** @param int $taskType */
+	public function setTaskType(int $taskType)
+		{ $this->_taskType = $taskType; }
+
+	/** @return int */
+	public function getTaskPriority(): int
+		{ return $this->_taskPriority; }
+
+	/** @param int $taskPriority */
+	public function setTaskPriority(int $taskPriority)
+		{ $this->_taskPriority = $taskPriority; }
+
+	/** @return string */
+	public function getTaskSubject(): string
+		{ return $this->_taskSubject; }
+
+	/** @param string $taskSubject */
+	public function setTaskSubject(string $taskSubject)
+		{ $this->_taskSubject = $taskSubject; }
+
+	/** @return string */
+	public function getTaskDescription(): string
+		{ return $this->_taskDescription; }
+
+	/** @param string $taskDescription */
+	public function setTaskDescription(string $taskDescription)
+		{ $this->_taskDescription = $taskDescription; }
+
+	/** @return int */
+	public function getTaskStatus(): int
+		{ return $this->_taskStatus; }
+
+	/** @param int $taskStatus */
+	public function setTaskStatus(int $taskStatus)
+		{ $this->_taskStatus = $taskStatus; }
 }
