@@ -30,6 +30,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Cache\CacheHandler;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\FormData;
@@ -402,5 +403,73 @@ class FormAddressCreator
 		}
 
 		return $addressData;
+	}
+
+	/**
+	 * @param DataFormConfiguration $pFormConfig
+	 * @param int $addressId
+	 * @param int|null $estateId
+	 *
+	 * @return void
+	 */
+	public function createAgentsLog(DataFormConfiguration $pFormConfig, int $addressId, int $estateId = null)
+	{
+		if (empty($pFormConfig->getActionKind()) && empty($pFormConfig->getActionType()) && empty($pFormConfig->getCharacteristic()) && empty($pFormConfig->getRemark())) {
+			return;
+		}
+		$requestParams = [
+			'addressids' => [$addressId],
+			'actionkind' => $pFormConfig->getActionKind() ?: null,
+			'actiontype' => $pFormConfig->getActionType() ?: null,
+			'origincontact' => $pFormConfig->getOriginContact() ?: null,
+			'features' => !empty($pFormConfig->getCharacteristic()) ? explode(',', $pFormConfig->getCharacteristic()) : null,
+			'note' => $pFormConfig->getRemark(),
+		];
+
+		if (!empty($estateId)) {
+			$requestParams['estateid'] = $estateId;
+			$requestParams['advisorylevel'] = $pFormConfig->getAdvisorylevel() ?: null;
+		}
+
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'agentslog');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+	}
+
+	/**
+	 * @param DataFormConfiguration $pFormConfig
+	 * @param int $addressId
+	 * @param int|null $estateId
+	 *
+	 * @return void
+	 */
+	public function createTask(DataFormConfiguration $pFormConfig, int $addressId, int $estateId = null)
+	{
+		if (empty($pFormConfig->getTaskType()) || empty($pFormConfig->getTaskStatus())) {
+			return;
+		}
+
+		$requestParams = [
+			'data' => [
+				'Prio' => $pFormConfig->getTaskPriority(),
+				'Verantwortung' => $pFormConfig->getTaskResponsibility(),
+				'Art' => $pFormConfig->getTaskType(),
+				'Status' => $pFormConfig->getTaskStatus(),
+				'Bearbeiter' => $pFormConfig->getTaskProcessor(),
+				'Betreff' => $pFormConfig->getTaskSubject(),
+				'Aufgabe' => $pFormConfig->getTaskDescription()
+			],
+			'relatedAddressId' => $addressId,
+		];
+
+		if (!empty($estateId)) {
+			$requestParams['relatedEstateId'] = $estateId;
+		}
+
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'task');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
 	}
 }

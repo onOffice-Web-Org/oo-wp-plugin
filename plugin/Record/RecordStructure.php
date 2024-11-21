@@ -84,7 +84,7 @@ class RecordStructure
 			),
 			'fieldname' => array(
 				self::NULL_ALLOWED => false,
-				self::EMPTY_VALUE => '',
+				self::EMPTY_VALUE => [],
 			),
 		),
 		RecordManager::TABLENAME_LISTVIEW_CONTACTPERSON => array(
@@ -146,7 +146,7 @@ class RecordStructure
 			),
 			'fieldname' => array(
 				self::NULL_ALLOWED => false,
-				self::EMPTY_VALUE => '',
+				self::EMPTY_VALUE => [],
 			),
 			'convertInputTextToSelectForField' => array(
 				self::NULL_ALLOWED => false,
@@ -205,6 +205,28 @@ class RecordStructure
 		],
 		RecordManager::TABLENAME_CONTACT_TYPES => array(
 			'contact_type' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+		),
+		RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM => array(
+			'write_activity' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 0,
+			),
+			'action_kind' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+			'action_type' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+			'characteristic' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+			'remark' => array(
 				self::NULL_ALLOWED => false,
 				self::EMPTY_VALUE => '',
 			),

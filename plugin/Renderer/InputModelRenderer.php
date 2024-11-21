@@ -245,7 +245,7 @@ class InputModelRenderer
 				if ( $pInputModel->getMaxValueHtml() != null ) {
 					$pInstance->setMaxValue( $pInputModel->getMaxValueHtml() );
 				}
-				if ( $pInputModel->getMinValueHtml() != null ) {
+				if ( $pInputModel->getMinValueHtml() !== null ) {
 					$pInstance->setMinValue( $pInputModel->getMinValueHtml() );
 				}
 				if ( $pInputModel->getHintHtml() != null ) {
@@ -298,6 +298,11 @@ class InputModelRenderer
 				$pInstance = new SortableTagsRenderer($elementName, $pInputModel->getValuesAvailable());
 				$pInstance->setValue($pInputModel->getValue());
 				$pInstance->setLabel($pInputModel->getLabel());
+				break;
+
+			case InputModelBase::HTML_TYPE_TEXTAREA:
+				$pInstance = new InputFieldTextAreaRenderer('textarea', $elementName);
+				$pInstance->setValue($pInputModel->getValue());
 				break;
 		}
 

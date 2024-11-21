@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 5.1.3
+Stable tag: 5.2.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,44 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 5.2.1 (2024-11-05) =
+
+**Fixed**
+
+* Language switch for WPML
+
+= 5.2 (2024-10-30) =
+
+**Added**
+
+* Forms can trigger writing of tasks in onOffice enterprise
+
+* Forms can trigger writing of activities in onOffice enterprise
+
+* SEO friendly URL for address detail page
+
+* Image with better resolution for addresses (bildWebseite)
+
+**Changed**
+
+* Default template for address details
+
+**Fixed**
+
+* Maps on pages with multiple property lists
+
+* Displaying price on request for calculated prices
+
+* Social Meta Data in Settings
+
+= 5.1.4 (2024-10-09) =
+
+**Added**
+
+* Customizable labels for addresses
+* Count of all addresses
+* Count of properties by address
 
 = 5.1.3 (2024-09-30) =
 

@@ -46,6 +46,7 @@ jobs:
       ref: ${{ github.event.pull_request.head.sha }}
       expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
       overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
+      checkVersion: false
   
   comment:
     name: Pack a development zip and comment on the PR
@@ -53,7 +54,7 @@ jobs:
     needs: [get-versions, dev-build]
     steps:
       - name: Download release
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: release
           path: /tmp/release/onoffice-for-wp-websites
@@ -69,7 +70,7 @@ jobs:
         run: zip -r ./onoffice-${{ needs.get-versions.outputs.developmentVersion }}.zip ./onoffice-for-wp-websites/ 
 
       - name: Upload development zip
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: onoffice-${{ needs.get-versions.outputs.developmentVersion }}-please-unpack
           path: /tmp/release/onoffice-${{ needs.get-versions.outputs.developmentVersion }}.zip  # Uploading a .zip leads to a .zip inside a .zip, but uploading the folder takes significantly longer.

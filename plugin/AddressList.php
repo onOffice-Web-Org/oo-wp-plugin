@@ -43,6 +43,9 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function esc_html;
+use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\DataView\DataAddressDetailView;
+use onOffice\WPlugin\Controller\AddressDetailUrl;
 
 /**
  *
@@ -126,6 +129,9 @@ implements AddressListBase
 	/** @var AddressListEnvironment */
 	private $_pEnvironment = null;
 
+	/** @var APIClientActionGeneric */
+	private $_pApiClientAction = null;
+
 	/** @var DataListViewAddress */
 	private $_pDataViewAddress = null;
 
@@ -136,6 +142,13 @@ implements AddressListBase
 
 	/** @var array */
 	private $_countEstates = [];
+
+	/** @var FieldsCollection */
+	private $_pFieldsCollection = [];
+
+	/** @var AddressDetailUrl */
+	private $_pLanguageSwitcher;
+
 	/**
 	 *
 	 * @param DataViewAddress $pDataViewAddress
@@ -147,6 +160,10 @@ implements AddressListBase
 	{
 		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
 		$this->_pDataViewAddress = $pDataViewAddress ?? new DataListViewAddress(0, 'default');
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+		$this->_pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+		$this->_pLanguageSwitcher = new AddressDetailUrl();
 	}
 
 	/**
@@ -159,28 +176,27 @@ implements AddressListBase
 	public function loadAddressesById(array $addressIds, array $fields)
 	{
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
-		$pApiCall = new APIClientActionGeneric
-			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
 		$parameters = [
 			'recordids' => $addressIds,
 			'data' => $fields,
 			'outputlanguage' => Language::getDefault(),
 			'formatoutput' => true,
 		];
-        $parametersRaw = [
-            'recordids' => $addressIds,
-            'data' => $this->_addressParametersForImageAlt,
-            'outputlanguage' => Language::getDefault(),
-            'formatoutput' => false,
-        ];
-		$pApiCall->setParameters($parameters);
-		$pApiCall->addRequestToQueue()->sendRequests();
+		$parametersRaw = [
+				'recordids' => $addressIds,
+				'data' => $this->_addressParametersForImageAlt,
+				'outputlanguage' => Language::getDefault(),
+				'formatoutput' => false,
+		];
+		$this->_pApiClientAction->setParameters($parameters);
+		$this->_pApiClientAction->addRequestToQueue()->sendRequests();
 
-		$records = $pApiCall->getResultRecords();
+		$records = $this->_pApiClientAction->getResultRecords();
 		$this->fillAddressesById($records);
 		$this->_pDataViewAddress->setFields($fields);
 
-        $this->addRawRecordsByAPICall(clone $pApiCall, $parametersRaw);
+		$this->addRawRecordsByAPICall(clone $this->_pApiClientAction, $parametersRaw);
+        $this->buildFieldsCollectionForAddressCustomLabel();
 	}
 
 	/**
@@ -205,26 +221,25 @@ implements AddressListBase
 		$apiOnlyFields = $pModifier->getAllAPIFields();
 		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields, $this->_pDataViewAddress, $newPage, true);
 
-		$pApiCall = new APIClientActionGeneric
-			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
-		$pApiCall->setParameters($parameters);
-		$pApiCall->addRequestToQueue();
+		$this->_pApiClientAction->setParameters($parameters);
+		$this->_pApiClientAction->addRequestToQueue();
 
 		$addressParameterRaws = $pDataListViewToApi->buildParameters($this->_addressParametersForImageAlt,
 			$this->_pDataViewAddress, $newPage);
-		$this->addRawRecordsByAPICall(clone $pApiCall, $addressParameterRaws);
+		$this->addRawRecordsByAPICall(clone $this->_pApiClientAction, $addressParameterRaws);
 
 		$this->getCountEstateForAddress($this->getAddressIds());
 
-		$this->_records = $pApiCall->getResultRecords();
+		$this->_records = $this->_pApiClientAction->getResultRecords();
 		$this->fillAddressesById($this->_records);
 
-		$resultMeta = $pApiCall->getResultMeta();
+		$resultMeta = $this->_pApiClientAction->getResultMeta();
 		$numpages = ceil($resultMeta['cntabsolute']/$this->_pDataViewAddress->getRecordsPerPage());
 
 		$multipage = $numpages > 1;
 		$more = true;
 		$page = $newPage;
+		$this->buildFieldsCollectionForAddressCustomLabel();
 	}
 
 	/**
@@ -236,6 +251,10 @@ implements AddressListBase
 
 		if ($this->getDataViewAddress() instanceof DataListViewAddress && $this->_pDataViewAddress->getShowPhoto()) {
 			$fields []= 'imageUrl';
+		}
+
+		if ($this->getDataViewAddress() instanceof DataListViewAddress && $this->_pDataViewAddress->getBildWebseite()) {
+			$fields []= 'bildWebseite';
 		}
 
 		// only active fields
@@ -255,7 +274,6 @@ implements AddressListBase
 			$elements = $address['elements'];
 
 			$additionalContactData = $this->collectAdditionalContactData($elements);
-			unset($elements['id']);
 			$this->_addressesById[$address['id']] = array_merge($elements, $additionalContactData);
 		}
 	}
@@ -289,8 +307,29 @@ implements AddressListBase
 	{
 		$records = $responseArrayContacts[0]['elements'] ?? [];
 
-		foreach ($addressIds as $index => $addressId) {
-			$this->_countEstates[$addressId] = array_key_exists($addressId,$records) ? count($records[$addressId]) : 0;
+		foreach ($addressIds as $index => $addressId)
+		{
+			if(!array_key_exists($addressId,$records) || count($records[$addressId]) == 0) {
+				$this->_countEstates[$addressId] = 0;
+				continue;
+			}
+
+			$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+			$parameters = [
+				"filter" => [
+					"Id" => [["op" => "IN", "val" => $records[$addressId]]],
+					"verkauft" => [["op" => "=", "val" => "0"]],
+					"veroeffentlichen" => [["op" => "=", "val" => "1"]],
+					"status" => [["op" => "=", "val" => "1"]]
+				],
+				"listlimit" => 500
+			];
+			$pAPIClientAction = new APIClientActionGeneric
+				($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+			$pAPIClientAction->setParameters($parameters);
+			$pAPIClientAction->addRequestToQueue()->sendRequests();
+			$responseMeta = $pAPIClientAction->getResultMeta();
+			$this->_countEstates[$addressId] = (array_key_exists("cntabsolute",$responseMeta)) ? intval($responseMeta["cntabsolute"]) : 0;
 		}
 	}
 
@@ -340,6 +379,15 @@ implements AddressListBase
 	}
 
 	/**
+	 * @return int
+	 * @throws API\ApiClientException
+	 */
+	public function getAddressOverallCount()
+	{
+		return $this->_pApiClientAction->getResultMeta()['cntabsolute'];
+	}
+
+	/**
 	 * @param bool $raw
 	 * @return array
 	 */
@@ -348,6 +396,12 @@ implements AddressListBase
 		$pAddressFieldModifier = $this->generateRecordModifier();
 		return array_map(function($values) use ($pAddressFieldModifier, $raw): ArrayContainer {
 			$valuesNew = $pAddressFieldModifier->processRecord($values);
+
+			if (!empty($valuesNew['bildWebseite'])) {
+				$valuesNew['imageUrl'] = $valuesNew['bildWebseite'];
+				unset($valuesNew['bildWebseite']);
+			}
+
 			return $this->getArrayContainerByRow($raw, $valuesNew);
 		}, $this->_addressesById);
 	}
@@ -372,10 +426,27 @@ implements AddressListBase
 	 * @param bool $raw
 	 * @return string
 	 */
-	public function getFieldLabel($field, bool $raw = false): string
+	public function getFieldLabel(string $field, bool $raw = false): string
 	{
-		$label = $this->_pEnvironment->getFieldnames()
-			->getFieldLabel($field, onOfficeSDK::MODULE_ADDRESS);
+		$recordType = onOfficeSDK::MODULE_ADDRESS;
+
+		try {
+			$label = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+		} catch (UnknownFieldException $pE) {
+			$label = $this->_pEnvironment->getFieldnames()->getFieldLabel($field, $recordType);
+		}
+		if ($this->_pDataViewAddress instanceof DataAddressDetailView) {
+            try {
+                $pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
+            } catch (DependencyException | NotFoundException $e) {
+                return $raw ? $label : esc_html($label);
+            }
+            $dataView = $this->_pDataViewAddress->getCustomLabels();
+			if (!empty( $dataView[ $field ][ $pLanguage ])) {
+				$label = $dataView[ $field ][ $pLanguage ];
+			}
+		}
+
 		return $raw ? $label : esc_html($label);
 	}
 
@@ -390,6 +461,20 @@ implements AddressListBase
 			->getFieldnames()
 			->getFieldInformation($field, onOfficeSDK::MODULE_ADDRESS);
 		return $fieldInformation['type'];
+	}
+
+	/**
+	 *
+	 */
+	private function buildFieldsCollectionForAddressCustomLabel()
+	{
+		$this->_pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
+		$pFieldBuilderShort->addFieldsAddressEstate($this->_pFieldsCollection);
+
+		if ($this->_pDataViewAddress instanceof DataListViewAddress && !empty($this->_pDataViewAddress->getName())) {
+			$pFieldBuilderShort->addCustomLabelFieldsAddressFrontend($this->_pFieldsCollection, $this->_pDataViewAddress->getName());
+		}
 	}
 
 	/**
@@ -416,6 +501,7 @@ implements AddressListBase
 				->getAsRow();
 			$result[$field]['name'] = $field;
 			$result[$field]['value'] = $value;
+			$result[$field]['label'] = $this->getFieldLabel($field);
 		}
 		return $result;
 	}
@@ -486,17 +572,42 @@ implements AddressListBase
 		return $imageAlt;
 	}
 
+	/**
+	 * @param string $addressId
+	 * @return string
+	 */
 	public function getAddressLink(string $addressId): string
 	{
-			$pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
-					->getAddressDetailView()->getPageId();
+		$pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
+			->getAddressDetailView()->getPageId();
+		if($pageId == 0) {
+			return "";
+		}
+		$currentAddress = $this->getAddressById($addressId);
+		$firstName = $currentAddress['Vorname'] ?? '';
+		$lastName = $currentAddress['Name'] ?? '';
+		$company = $currentAddress['Zusatz1'] ?? '';
+		$parts = [];
+		if (!empty($firstName)) {
+			$parts[] = strtolower($firstName);
+		}
+		if (!empty($lastName)) {
+			$parts[] = strtolower($lastName);
+		}
+		if (!empty($company)) {
+			$parts[] = strtolower($company);
+		}
+		$addressTitle = implode(' ', $parts);
 
-			$url = get_page_link( $pageId ) . $addressId;
-			$fullLinkElements = parse_url( $url );
-			if ( empty( $fullLinkElements['query'] ) ) {
-					$url .= '/';
-			}
-			return $url;
+		$url      = get_page_link( $pageId );
+		$fullLink = $this->_pLanguageSwitcher->createAddressDetailLink( $url, $addressId, $addressTitle );
+
+		$fullLinkElements = parse_url( $fullLink );
+		if ( empty( $fullLinkElements['query'] ) ) {
+				$fullLink .= '/';
+		}
+
+		return $fullLink;
 	}
 
 		/**

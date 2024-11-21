@@ -172,6 +172,24 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 						]
 					);
 				}
+
+				//duplicate data related oo_plugin_form_activityconfig table
+				$tableActivityConfig = $prefix . self::TABLENAME_ACTIVITY_CONFIG_FORM;
+				$activityConfigByFormId = "SELECT * FROM {$this->_pWPDB->_escape($tableActivityConfig)} WHERE form_id='{$this->_pWPDB->_escape($listViewRoot['form_id'])}'";
+				$activityConfigRows = $this->_pWPDB->get_results($activityConfigByFormId, 'ARRAY_A');
+				if (!empty($activityConfigRows) && (count($activityConfigRows) !== 0)) {
+					$this->duplicateDataRelated( $duplicateListViewId, $activityConfigRows,
+						$tableActivityConfig, 'form_id', 'form_activityconfig_id' );
+				}
+
+				//duplicate data related oo_plugin_form_taskconfig table
+				$tableTaskConfig = $prefix . self::TABLENAME_TASKCONFIG_FORMS;
+				$taskConfigByFormId = "SELECT * FROM {$this->_pWPDB->_escape($tableTaskConfig)} WHERE form_id='{$this->_pWPDB->_escape($listViewRoot['form_id'])}'";
+				$taskConfigRows = $this->_pWPDB->get_results($taskConfigByFormId, 'ARRAY_A');
+				if (!empty($taskConfigRows) && (count($taskConfigRows) !== 0)) {
+					$this->duplicateDataRelated($duplicateListViewId, $taskConfigRows,
+						$tableTaskConfig, 'form_id', 'form_taskconfig_id');
+ 				}
 			}
 		}
 	}

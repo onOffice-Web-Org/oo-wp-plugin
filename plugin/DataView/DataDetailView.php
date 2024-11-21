@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\DataView;
 
 use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
+use onOffice\WPlugin\Types\ImageTypes;
 
 /**
  *
@@ -173,7 +174,15 @@ class DataDetailView
 	];
 
 	/** @var string[] */
-	private $_pictureTypes = [];
+	private $_pictureTypes = [
+		ImageTypes::TITLE,
+		ImageTypes::PHOTO,
+		ImageTypes::PHOTO_BIG,
+		ImageTypes::PANORAMA,
+		ImageTypes::GROUNDPLAN,
+		ImageTypes::LOCATION_MAP,
+		ImageTypes::ENERGY_PASS_RANGE,
+	];
 
 	/** @var string */
 	private $_template = '';
@@ -223,6 +232,14 @@ class DataDetailView
 	/** @var bool */
 	private $_showPriceOnRequest = false;
 
+	/** @var string[] */
+	private $_contactImageTypes = [
+		ImageTypes::PASSPORTPHOTO
+	];
+
+	/** @var bool */
+	private $_showEnergyCertificate = false;
+
     /** @var string[] */
     private $_priceFields = [
         'kaufpreis',
@@ -236,6 +253,7 @@ class DataDetailView
         'wochmietbto',
         'kaufpreis_pro_qm',
         'mietpreis_pro_qm',
+        'calculatedPrice'
     ];
 
 	/**
@@ -425,6 +443,14 @@ class DataDetailView
 	public function setShowPriceOnRequest(bool $priceOnRequest)
 	{ $this->_showPriceOnRequest = $priceOnRequest; }
 
+	/** @return bool */
+	public function getShowEnergyCertificate(): bool
+	{ return $this->_showEnergyCertificate; }
+
+	/** @param bool $showEnergyCertificate */
+	public function setShowEnergyCertificate(bool $showEnergyCertificate)
+	{ $this->_showEnergyCertificate = $showEnergyCertificate; }
+
 
     /**
      * @return array
@@ -433,4 +459,18 @@ class DataDetailView
     {
         return $this->_priceFields;
     }
+
+	/** @return array */
+	public function getContactImageTypes(): array
+		{ return $this->_contactImageTypes; }
+
+	/** @param array $contactImageTypes */
+	public function setContactImageTypes(array $contactImageTypes)
+		{ $this->_contactImageTypes = $contactImageTypes; }
+
+	/** @param array $priceFields */
+	public function setListFieldsShowPriceOnRequest(array $priceFields)
+	{
+		$this->_priceFields = $priceFields;
+	}
 }
