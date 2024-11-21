@@ -340,11 +340,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 49) {
-			$this->migrationsDataShortCodeFormForDetailView();
-			$dbversion = 50;
-		}
-	
-		if ($dbversion == 49) {
 			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
 			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
 			$dbversion = 50;
