@@ -516,6 +516,9 @@ abstract class AdminPageFormSettingsBase
 	{
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
+
+        $pFormTaskConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_TASKCONFIG);
+        $this->createMetaBoxByForm($pFormTaskConfig, 'normal');
 	}
 
 
