@@ -274,7 +274,6 @@ implements AddressListBase
 			$elements = $address['elements'];
 
 			$additionalContactData = $this->collectAdditionalContactData($elements);
-			unset($elements['id']);
 			$this->_addressesById[$address['id']] = array_merge($elements, $additionalContactData);
 		}
 	}
@@ -580,8 +579,10 @@ implements AddressListBase
 	public function getAddressLink(string $addressId): string
 	{
 		$pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
-				->getAddressDetailView()->getPageId();
-
+			->getAddressDetailView()->getPageId();
+		if($pageId == 0) {
+			return "";
+		}
 		$currentAddress = $this->getAddressById($addressId);
 		$firstName = $currentAddress['Vorname'] ?? '';
 		$lastName = $currentAddress['Name'] ?? '';

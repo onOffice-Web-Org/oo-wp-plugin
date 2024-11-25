@@ -308,4 +308,22 @@ class RecordManagerReadForm
 
 		return $result['count'] == 0;
 	}
+
+	/**
+	 *
+	 * @param int $formId
+	 * @return array
+	 *
+	 */
+	public function readFormTaskConfigByFormId(int $formId): array
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlFields = "SELECT *
+			FROM {$prefix}oo_plugin_form_taskconfig
+			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($formId)."";
+
+		return $pWpDb->get_row($sqlFields, ARRAY_A) ?? [];
+	}
 }
