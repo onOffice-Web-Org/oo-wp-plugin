@@ -72,6 +72,7 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->setActionType('test2');
 		$pDataFormConfiguration->setCharacteristic('test3');
 		$pDataFormConfiguration->setRemark('comment');
+		$pDataFormConfiguration->addPagePerForm('test-field','1');
 		$pDataFormConfiguration->setEnableCreateTask(true);
 		$pDataFormConfiguration->setTaskResponsibility('Tobias');
 		$pDataFormConfiguration->setTaskProcessor('Tobias');
@@ -121,6 +122,7 @@ class TestClassDataFormConfiguration
 		$this->assertEquals('test2', $pDataFormConfiguration->getActionType());
 		$this->assertEquals('test3', $pDataFormConfiguration->getCharacteristic());
 		$this->assertEquals('comment', $pDataFormConfiguration->getRemark());
+		$this->assertEquals(['test-field' => 1], $pDataFormConfiguration->getPagePerForm());
 		$this->assertTrue($pDataFormConfiguration->getEnableCreateTask());
 		$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskResponsibility());
 		$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskProcessor());
