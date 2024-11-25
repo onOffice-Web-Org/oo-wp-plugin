@@ -777,4 +777,17 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
 		$this->assertEquals([$pInstance, 'callbackValueInputModelConvertInputTextToSelectCityField'], $pInputModelDB->getValueCallback());
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelForwardingPage
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getPages
+	 */
+	public function testCreateInputModelForwardingPage()
+	{
+		$pInputModelDB = $this->_pFormModelBuilderDBEstateListSettings->createInputModelForwardingPage();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertNotEmpty($pInputModelDB->getValuesAvailable());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
 }

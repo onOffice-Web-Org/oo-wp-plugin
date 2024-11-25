@@ -43,7 +43,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 55;
+	const MAX_VERSION = 56;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -369,6 +369,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 55;
 		}
 
+		if ($dbversion == 55) {
+			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 56;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -464,6 +469,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`markedPropertiesSort` VARCHAR( 255 ) NOT NULL DEFAULT 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz',
 			`sortByTags` tinytext NOT NULL,
 			`sortByTagsDirection` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
+			`forwardingPageId` int(11) NOT NULL,
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";

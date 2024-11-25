@@ -191,6 +191,9 @@ class DataListView
 		'calculatedPrice'
 	];
 
+	/** @var int */
+	private $_forwardingPageId = 0;
+
 	/**
 	 *
 	 * @param int $id
@@ -484,4 +487,12 @@ class DataListView
 	/** @param array $convertTextToSelectForCityField */
 	public function setConvertTextToSelectForCityField(array $convertTextToSelectForCityField)
 		{ $this->_convertTextToSelectForCityField = $convertTextToSelectForCityField; }
+
+	/** @param int $forwardingPageId */
+	public function setForwardingPageId(int $forwardingPageId)
+		{ $this->_forwardingPageId = $forwardingPageId; }
+
+	/** @return int */
+	public function getForwardingPageId(): int
+		{ return $this->_forwardingPageId; }
 }

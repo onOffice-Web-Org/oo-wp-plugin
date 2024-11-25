@@ -944,4 +944,50 @@ class FormModelBuilderDBEstateListSettings
 
 		return $pInputModelFieldsConfig;
 	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelForwardingPage()
+	{
+
+		$labelForwardingPage = __('Select page', 'onoffice-for-wp-websites');
+		$pInputModelForwardingPage = $this->getInputModelDBFactory()->create
+		(InputModelDBFactory::INPUT_FORWARDING_PAGE_ID, $labelForwardingPage);
+		$pInputModelForwardingPage->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelForwardingPage->setValuesAvailable(array('' => '') + $this->getPages());
+		$pluginDocumentationLink = __("https://wp-plugin.onoffice.com/", 'onoffice-for-wp-websites');
+		$documentLinkHTML = '<a href="' . esc_attr($pluginDocumentationLink) . '" target="_blank">' . __( 'Documentation', 'onoffice-for-wp-websites') . '</a>';
+		$pInputModelForwardingPage->setValue($this->getValue($pInputModelForwardingPage->getField()));
+		$pInputModelForwardingPage->setDescriptionTextHTML(sprintf(__('You can find out more about the property search in our %s.', 'onoffice-for-wp-websites'), $documentLinkHTML));
+
+		return $pInputModelForwardingPage;
+	}
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function getPages(): array
+	{
+		$data = [];
+
+		if (empty(get_pages())) {
+			return [];
+		}
+
+		foreach (get_pages() as $value) {
+			if (empty($value)) {
+				continue;
+			}
+			$data[$value->ID] = $value->post_title;
+		}
+
+		return $data;
+	}
 }
