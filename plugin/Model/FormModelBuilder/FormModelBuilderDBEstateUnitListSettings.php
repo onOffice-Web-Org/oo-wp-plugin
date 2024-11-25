@@ -30,6 +30,7 @@ use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Types\ImageTypes;
 use function __;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -86,7 +87,8 @@ class FormModelBuilderDBEstateUnitListSettings
 		} else {
 			$this->setValues(array(
 				DataListView::FIELDS => self::$_defaultFields,
-				'show_status' => self::DEFAULT_RECORDS_SHOW_STATUS
+,				'show_status' => self::DEFAULT_RECORDS_SHOW_STATUS,
+				'pictures' => [ImageTypes::TITLE],
 			));
 		}
 
