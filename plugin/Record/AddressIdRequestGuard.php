@@ -227,7 +227,7 @@ class AddressIdRequestGuard
 	 * @param string|null $company
 	 * @return string
 	 */
-	private function createAddressTitle(string $firstName, string $lastName, string $company): string
+	public static function createAddressTitle(string $firstName, string $lastName, string $company): string
 	{
 		$parts = [];
 		if (!empty($firstName)) {
