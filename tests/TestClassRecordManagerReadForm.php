@@ -236,6 +236,27 @@ class TestClassRecordManagerReadForm
 	}
 
 	/**
+	 * @param int $formId
+	 *
+	 * @return array
+	 */
+	private function getFormTaskConfigByFormId(int $formId): array
+	{
+		return [
+			'form_taskconfig_id ' => 1,
+			'form_id' => $formId,
+			'enable_create_task' => true,
+			'responsibility' => 'Tobias',
+			'processor' => 'Tobias',
+			'type' => 1,
+			'priority' => 1,
+			'subject' => 'Test subject',
+			'description' => 'Test description',
+			'status' => 1,
+		];
+	}
+
+	/**
 	 *
 	 */
 	public function testReadActivityConfigByFormId()
@@ -245,5 +266,17 @@ class TestClassRecordManagerReadForm
 		]));
 		$pActivityConfig = $this->_pRecordManagerReadForm->readActivityConfigByFormId(1);
 		$this->assertEquals(7, count($pActivityConfig));
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testReadFormTaskConfigByFormId()
+	{
+		$this->_pRecordManagerReadForm->method('readFormTaskConfigByFormId')->will($this->returnValueMap([
+			[1, $this->getFormTaskConfigByFormId(1)]
+		]));
+		$pActivityConfig = $this->_pRecordManagerReadForm->readFormTaskConfigByFormId(1);
+		$this->assertEquals(10, count($pActivityConfig));
 	}
 }

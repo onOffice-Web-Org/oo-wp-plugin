@@ -98,6 +98,9 @@ class AdminPageSimilarEstates
 	/** */
 	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
 
+	/** */
+	const FORM_VIEW_FILTER_RECORDS = 'viewFilterRecords';
+
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
@@ -206,6 +209,9 @@ class AdminPageSimilarEstates
 
 		$pFormPictureTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
 		$this->createMetaBoxByForm($pFormPictureTypes, 'normal');
+
+		$pFormFilterRecords = $this->getFormModelByGroupSlug(self::FORM_VIEW_FILTER_RECORDS);
+		$this->createMetaBoxByForm($pFormFilterRecords, 'normal');
 	}
 
 	/**
@@ -264,6 +270,16 @@ class AdminPageSimilarEstates
 		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
 		$pFormModelPictureTypes->addInputModel($pInputModelSimilarEstatesPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
+
+		$pInputModelShowReferenceEstate = $pFormModelBuilder->createInputModelShowReferenceEstates();
+		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
+		$pFormModelFilterRecords = new FormModel();
+		$pFormModelFilterRecords->setPageSlug($this->getPageSlug());
+		$pFormModelFilterRecords->setGroupSlug(self::FORM_VIEW_FILTER_RECORDS);
+		$pFormModelFilterRecords->setLabel(__('Filter & Records', 'onoffice-for-wp-websites'));
+		$pFormModelFilterRecords->addInputModel($pInputModelShowReferenceEstate);
+		$pFormModelFilterRecords->addInputModel($pInputModelFilter);
+		$this->addFormModel($pFormModelFilterRecords);
 
 		$pFieldsCollection = $this->readAllFields();
 		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
