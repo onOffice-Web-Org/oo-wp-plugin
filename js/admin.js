@@ -298,27 +298,27 @@ jQuery(document).ready(function($){
 
 	if ($('#multi-page-container').length) {
 		var cbAdmin = new onOffice.checkboxAdmin();
+		$('input[name="oopluginforms-template"]').change(function() {
+			if ($(this).is(':checked') && $(this).val().includes('ownerleadgeneratorform.php')) {
+				isMultiplePages = true;
+				$('#single-page-container').hide().find('input, select, textarea').prop('disabled', true);
+				$('#multi-page-container').show();
+				$('#multi-page-container ul').find('input, select, textarea').prop('disabled', false);
+				$('.add-page-button').show()
+				parentContainer = '#multi-page-container';
+			} else {
+				isMultiplePages = false;
+				$('#single-page-container').show().find('input, select, textarea').prop('disabled', false);
+				$('#multi-page-container').hide();
+				$('#multi-page-container ul').find('input, select, textarea').prop('disabled', true);
+				$('.add-page-button').hide()
+				parentContainer = '#single-page-container';
+			}
+			cbAdmin.changeCbStatus(document, parentContainer);
+		});
+
 		FormMultiPageManager.init();
 	}
-
-	$('input[name="oopluginforms-template"]').change(function() {
-		if ($(this).is(':checked') && $(this).val().includes('ownerleadgeneratorform.php')) {
-			isMultiplePages = true;
-			$('#single-page-container').hide().find('input, select, textarea').prop('disabled', true);
-			$('#multi-page-container').show();
-			$('#multi-page-container ul').find('input, select, textarea').prop('disabled', false);
-			$('.add-page-button').show()
-			parentContainer = '#multi-page-container';
-		} else {
-			isMultiplePages = false;
-			$('#single-page-container').show().find('input, select, textarea').prop('disabled', false);
-			$('#multi-page-container').hide();
-			$('#multi-page-container ul').find('input, select, textarea').prop('disabled', true);
-			$('.add-page-button').hide()
-			parentContainer = '#single-page-container';
-		}
-		cbAdmin.changeCbStatus(document, parentContainer);
-	});
 
 	$('.oo-search-field .input-search').on('click', function(event) {
 		event.stopPropagation();
