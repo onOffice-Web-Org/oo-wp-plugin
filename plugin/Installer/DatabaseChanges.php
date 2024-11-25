@@ -729,6 +729,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`showPhoto` tinyint(1) NOT NULL DEFAULT '0',
 			`bildWebseite` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
+			`show_map` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
