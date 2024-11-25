@@ -117,11 +117,11 @@ class FormModelBuilderEstateDetailSettings
 
 	/**
 	 *
-	 * @return InputModelDB
+	 * @return InputModelOption
 	 *
 	 */
 
-	public function createInputModelPictureTypes()
+	public function createInputModelPictureTypes(): InputModelOption
 	{
 		$allPictureTypes = ImageTypes::getAllImageTypesTranslated();
 
@@ -130,19 +130,6 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelPictureTypes->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
 		$pictureTypes = $this->_pDataDetailView->getPictureTypes();
-
-		if (null == $pictureTypes)
-		{
-			$pictureTypes = array(
-				'Titelbild',
-				'Foto',
-				'Foto_gross',
-				'Panorama',
-				'Grundriss',
-				'Lageplan',
-				'Epass_Skala',
-			);
-		}
 
 		$pInputModelPictureTypes->setValue($pictureTypes);
 
@@ -572,17 +559,17 @@ class FormModelBuilderEstateDetailSettings
 
 	/**
 	 *
-	 * @return InputModelDB
+	 * @return InputModelOption
 	 *
 	 */
 
-	public function createInputModelShowPriceOnRequest()
+	public function createInputModelShowPriceOnRequest(): InputModelOption
 	{
 		$labelShowPriceOnRequest = __('Show price on request', 'onoffice-for-wp-websites');
 
 		$pInputModelShowPriceOnRequest = $this->_pInputModelDetailViewFactory->create
 		(InputModelOptionFactoryDetailView::INPUT_SHOW_PRICE_ON_REQUEST, $labelShowPriceOnRequest);
-		$pInputModelShowPriceOnRequest->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowPriceOnRequest->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
 		$pInputModelShowPriceOnRequest->setValue($this->_pDataDetailView->getShowPriceOnRequest());
 		$pInputModelShowPriceOnRequest->setValuesAvailable(1);
 
@@ -633,6 +620,22 @@ class FormModelBuilderEstateDetailSettings
 	 *
 	 * @return InputModelOption
 	 *
+	 */
+
+	public function createInputModelShowEnergyCertificate(): InputModelOption
+	{
+		$labelShowEnergyCertificate = __('Show energy certificate with a scale', 'onoffice-for-wp-websites');
+
+		$pInputModelShowEnergyCertificate = $this->_pInputModelDetailViewFactory->create
+		(InputModelOptionFactoryDetailView::INPUT_SHOW_ENERGY_CERTIFICATE, $labelShowEnergyCertificate);
+		$pInputModelShowEnergyCertificate->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelShowEnergyCertificate->setValue($this->_pDataDetailView->getShowEnergyCertificate());
+		$pInputModelShowEnergyCertificate->setValuesAvailable(1);
+
+		return $pInputModelShowEnergyCertificate;
+	}
+
+	/**
 	 * @throws ExceptionInputModelMissingField
 	 */
 

@@ -337,10 +337,11 @@ class FormModelBuilderSimilarEstateSettings
 
 		$pInputModelRadius = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_RADIUS, $labelRadius);
-		$pInputModelRadius->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelRadius->setHtmlType(InputModelBase::HTML_TYPE_NUMBER);
 
 		$pInputModelRadius->setValuesAvailable(1);
 		$pInputModelRadius->setValue($pDataViewSimilarEstates->getRadius());
+		$pInputModelRadius->setMinValueHtml(0);
 
 		return $pInputModelRadius;
 	}
@@ -359,10 +360,11 @@ class FormModelBuilderSimilarEstateSettings
 
 		$pInputModelAmount = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_AMOUNT, $labelAmount);
-		$pInputModelAmount->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelAmount->setHtmlType(InputModelBase::HTML_TYPE_NUMBER);
 
 		$pInputModelAmount->setValuesAvailable(1);
 		$pInputModelAmount->setValue($pDataViewSimilarEstates->getRecordsPerPage());
+		$pInputModelAmount->setMinValueHtml(0);
 
 		return $pInputModelAmount;
 	}
@@ -447,33 +449,20 @@ class FormModelBuilderSimilarEstateSettings
 
 	/**
 	 *
-	 * @return InputModelDB
+	 * @return InputModelOption
 	 *
 	 */
 
-	public function createInputModelPictureTypes()
+	public function createInputModelPictureTypes(): InputModelOption
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 		$allPictureTypes = ImageTypes::getAllImageTypesTranslated();
 
 		$pInputModelPictureTypes = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_PICTURE_TYPE, null, true);
-		$pInputModelPictureTypes->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelPictureTypes->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
 		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
 		$pictureTypes = $pDataViewSimilarEstates->getPictureTypes();
-
-		if (null == $pictureTypes)
-		{
-			$pictureTypes = array(
-				'Titelbild',
-				'Foto',
-				'Foto_gross',
-				'Panorama',
-				'Grundriss',
-				'Lageplan',
-				'Epass_Skala',
-			);
-		}
 
 		$pInputModelPictureTypes->setValue($pictureTypes);
 

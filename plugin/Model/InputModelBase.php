@@ -153,8 +153,8 @@ abstract class InputModelBase
 	/** @var int */
 	private $_maxValue = 0;
 
-	/** @var int */
-	private $_minValue = 0;
+	/** @var ?int */
+	private $_minValue = null;
 
 	/** @var string */
 	private $_templateDirectory = '';
@@ -328,12 +328,12 @@ abstract class InputModelBase
 	public function setMaxValueHtml(int $maxValue)
 		{ $this->_maxValue = $maxValue; }
 
-	/**@return int */
-	public function getMinValueHtml(): int
+	/** @return ?int */
+	public function getMinValueHtml(): ?int
 		{ return $this->_minValue; }
 
-	/** @param int $minValue */
-	public function setMinValueHtml(int $minValue)
+	/** @param ?int $minValue */
+	public function setMinValueHtml(?int $minValue)
 		{ $this->_minValue = $minValue; }
 
 	/** @return string */
