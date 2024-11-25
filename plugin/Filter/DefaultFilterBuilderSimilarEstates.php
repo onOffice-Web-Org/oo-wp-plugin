@@ -68,10 +68,7 @@ class DefaultFilterBuilderSimilarEstates
 			],
 			'reserviert' => [
 				['op' => '!=', 'val' => 1],
-			],
-			'referenz' => [
-				['op' => '!=', 'val' => 1],
-			],
+			]
 		];
 
 		$pFilterConfiguration = $this->_pFilterConfigurationSimilarEstates;

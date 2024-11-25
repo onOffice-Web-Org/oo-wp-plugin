@@ -26,6 +26,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\DataView\DataSimilarEstatesSettingsHandler;
 use onOffice\WPlugin\DataView\DataListView;
@@ -356,10 +357,11 @@ class FormModelBuilderSimilarEstateSettings
 
 		$pInputModelRadius = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_RADIUS, $labelRadius);
-		$pInputModelRadius->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelRadius->setHtmlType(InputModelBase::HTML_TYPE_NUMBER);
 
 		$pInputModelRadius->setValuesAvailable(1);
 		$pInputModelRadius->setValue($pDataViewSimilarEstates->getRadius());
+		$pInputModelRadius->setMinValueHtml(0);
 
 		return $pInputModelRadius;
 	}
@@ -378,10 +380,11 @@ class FormModelBuilderSimilarEstateSettings
 
 		$pInputModelAmount = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_AMOUNT, $labelAmount);
-		$pInputModelAmount->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelAmount->setHtmlType(InputModelBase::HTML_TYPE_NUMBER);
 
 		$pInputModelAmount->setValuesAvailable(1);
 		$pInputModelAmount->setValue($pDataViewSimilarEstates->getRecordsPerPage());
+		$pInputModelAmount->setMinValueHtml(0);
 
 		return $pInputModelAmount;
 	}
@@ -466,33 +469,20 @@ class FormModelBuilderSimilarEstateSettings
 
 	/**
 	 *
-	 * @return InputModelDB
+	 * @return InputModelOption
 	 *
 	 */
 
-	public function createInputModelPictureTypes()
+	public function createInputModelPictureTypes(): InputModelOption
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 		$allPictureTypes = ImageTypes::getAllImageTypesTranslated();
 
 		$pInputModelPictureTypes = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_PICTURE_TYPE, null, true);
-		$pInputModelPictureTypes->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelPictureTypes->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
 		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
 		$pictureTypes = $pDataViewSimilarEstates->getPictureTypes();
-
-		if (null == $pictureTypes)
-		{
-			$pictureTypes = array(
-				'Titelbild',
-				'Foto',
-				'Foto_gross',
-				'Panorama',
-				'Grundriss',
-				'Lageplan',
-				'Epass_Skala',
-			);
-		}
 
 		$pInputModelPictureTypes->setValue($pictureTypes);
 
@@ -557,5 +547,71 @@ class FormModelBuilderSimilarEstateSettings
 		$pInputModelFieldsConfig->setValue($fields);
 
 		return $pInputModelFieldsConfig;
+	}
+
+	/**
+	 * @return InputModelOption
+	 */
+	public function createInputModelShowReferenceEstates(): InputModelOption
+	{
+		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
+		$labelShowReferenceEstate = __('Reference estates', 'onoffice-for-wp-websites');
+
+		$pInputModelShowReferenceEstate = $this->_pInputModelSimilarViewFactory->create
+		(InputModelOptionFactorySimilarView::INPUT_SHOW_REFERENCE_ESTATE, $labelShowReferenceEstate);
+		$pInputModelShowReferenceEstate->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelShowReferenceEstate->setValue($pDataViewSimilarEstates->getShowReferenceEstate());
+		$pInputModelShowReferenceEstate->setValuesAvailable(self::getListViewReferenceEstates());
+		$pDataDetailViewHandler = $this->_pContainer->get(DataDetailViewHandler::class);
+		$pDataDetailView = $pDataDetailViewHandler->getDetailView();
+		$restrictAccessControl = $pDataDetailView->getViewRestrict();
+		if ($restrictAccessControl) {
+			$restrictedPageDetail = '<a href="' . esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')) . '" target="_blank">' . __('restricted',
+				'onoffice-for-wp-websites') . '</a>';
+			$pInputModelShowReferenceEstate->setHintHtml(sprintf(__('Reference estates will not link to their detail page, because the access is %s.',
+				'onoffice-for-wp-websites'), $restrictedPageDetail));
+		} else {
+			$restrictedPageDetail = '<a href="' . esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')) . '" target="_blank">' . __('not restricted',
+				'onoffice-for-wp-websites') . '</a>';
+			$pInputModelShowReferenceEstate->setHintHtml(sprintf(__('Reference estates will link to their detail page, because the access is %s.',
+				'onoffice-for-wp-websites'), $restrictedPageDetail));
+		}
+
+		return $pInputModelShowReferenceEstate;
+	}
+
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
+	public function createInputModelFilter(): InputModelOption
+	{
+		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
+		$labelFilterName = __('Filter', 'onoffice-for-wp-websites');
+
+		$pInputModelFilterName = $this->_pInputModelSimilarViewFactory->create
+		(InputModelOptionFactorySimilarView::INPUT_FILTERID, $labelFilterName);
+		$pInputModelFilterName->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$availableFilters = array(0 => '') + $this->readFilters(onOfficeSDK::MODULE_ESTATE);
+		$pInputModelFilterName->setValuesAvailable($availableFilters);
+		$pInputModelFilterName->setValue($pDataViewSimilarEstates->getFilterId());
+		$linkUrl = __("https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en", "onoffice-for-wp-websites");
+		$linkLabel = '<a href="' . $linkUrl . '" target="_blank">' . __('Learn more.', 'onoffice-for-wp-websites') . '</a>';
+		$pInputModelFilterName->setHintHtml(sprintf(__('Choose an estate filter from onOffice enterprise. %s',
+			'onoffice-for-wp-websites'), $linkLabel));
+
+		return $pInputModelFilterName;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getListViewReferenceEstates(): array
+	{
+		return [
+			DataListView::HIDE_REFERENCE_ESTATE => __('Hide reference estates', 'onoffice-for-wp-websites'),
+			DataListView::SHOW_REFERENCE_ESTATE => __('Show reference estates (alongside others)', 'onoffice-for-wp-websites'),
+			DataListView::SHOW_ONLY_REFERENCE_ESTATE => __('Show only reference estates (filter out all others)', 'onoffice-for-wp-websites'),
+		];
 	}
 }

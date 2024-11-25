@@ -69,6 +69,14 @@
     z-index: 888;
 }
 
+.oo-detailsmap .oo-map, .oo-estate-map .oo-map, .oo-detailsmap .oo-gmap, .oo-estate-map .oo-gmap {
+    height: 300px !important;
+}
+
+.oo-estate-map .oo-map .leaflet-top, .oo-estate-map .oo-map .leaflet-bottom {
+    z-index: 888;
+}
+
 /* estate sort */
 .oo-estate-sort {
     padding: 15px;
@@ -269,6 +277,60 @@
 .oo-area-butler .oo-area-butler-iframe {
     height: 500px;
     width: 100%;
+}
+
+.oo-details-energy-certificate {
+    position: relative;
+    height: auto;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    border-bottom: 2px solid #efefef;
+}
+
+.oo-details-energy-certificate .energy-certificate-container {
+    width: 100%;
+    margin-top: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+}
+
+.oo-details-energy-certificate .segmented-bar {
+    display: flex;
+    white-space: nowrap;
+    align-items: flex-end;
+}
+
+.oo-details-energy-certificate .segment {
+    flex: 1;
+    text-align: center;
+    height: 5px;
+    position: relative;
+    border-left: 1px solid #fff;
+}
+
+.oo-details-energy-certificate .segment:first-child {
+    border-left: none;
+}
+
+.oo-details-energy-certificate .segment span {
+    height: 28px;
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.oo-details-energy-certificate .energy-certificate-label span {
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+.oo-details-energy-certificate .segment.selected {
+    height: 34px;
+}
+
+.oo-details-energy-certificate .segment.selected span {
+    color: #fff;
 }
 
 /* address list */

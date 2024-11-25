@@ -76,6 +76,12 @@ class InputModelOptionFactorySimilarView
 	/** */
 	const INPUT_PICTURE_TYPE = DataSimilarView::PICTURES;
 
+	/** */
+	const INPUT_SHOW_REFERENCE_ESTATE = 'showReferenceEstate';
+
+	/** */
+	const INPUT_FILTERID = 'filterId';
+
 	/** @var string */
 	private $_optionGroup = null;
 
@@ -114,6 +120,12 @@ class InputModelOptionFactorySimilarView
 		],
 		self::INPUT_FIELD_SIMILAR_ESTATES_SAME_ESTATE_AGENT => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
+		],
+		self::INPUT_SHOW_REFERENCE_ESTATE => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
+		],
+		self::INPUT_FILTERID => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER
 		]
 	];
 

@@ -265,6 +265,16 @@ class EstateDetail
 		return $pSimilarEstates->generateHtmlOutput($this->_estateId);
 	}
 
+	/**
+	 *
+	 * @param $field
+	 * @return string
+	 */
+
+	 public function getFieldInformation(string $field): array
+	 {
+		 return $this->getEnvironment()->getFieldnames()->getFieldInformation($field, onOfficeSDK::MODULE_ESTATE);
+	 }
 
 	/**
 	 *
@@ -320,5 +330,13 @@ class EstateDetail
 	{
 		return $this->getDataView()->getShowStatus();
 	}
-
+	/**
+	 * Returns addresslink for given addressid
+	 * @param string $id
+	 * @return string  
+	 */
+	public function getAddressLink(string $id) : string 
+	{
+		return $this->getEnvironment()->getAddressList()->getAddressLink($id);
+	}
 }
