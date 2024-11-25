@@ -25,9 +25,6 @@ use onOffice\WPlugin\Types\MapProvider;
 /** @var AddressList $pAddressList */
 (function (MapProvider $pMapProvider, AddressList $pAddressList) {
 	$pCallback = null;
-	if (!$pAddressList->getShowMapConfig()) {
-		return;
-	}
 	switch ($pMapProvider->getActiveMapProvider()) {
 		case MapProvider::GOOGLE_MAPS:
 			$pCallback = require 'map-google.php';
