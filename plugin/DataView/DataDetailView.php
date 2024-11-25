@@ -174,7 +174,15 @@ class DataDetailView
 	];
 
 	/** @var string[] */
-	private $_pictureTypes = [];
+	private $_pictureTypes = [
+		ImageTypes::TITLE,
+		ImageTypes::PHOTO,
+		ImageTypes::PHOTO_BIG,
+		ImageTypes::PANORAMA,
+		ImageTypes::GROUNDPLAN,
+		ImageTypes::LOCATION_MAP,
+		ImageTypes::ENERGY_PASS_RANGE,
+	];
 
 	/** @var string */
 	private $_template = '';
@@ -228,6 +236,9 @@ class DataDetailView
 	private $_contactImageTypes = [
 		ImageTypes::PASSPORTPHOTO
 	];
+
+	/** @var bool */
+	private $_showEnergyCertificate = false;
 
     /** @var string[] */
     private $_priceFields = [
@@ -431,6 +442,14 @@ class DataDetailView
 	/** @param bool $priceOnRequest */
 	public function setShowPriceOnRequest(bool $priceOnRequest)
 	{ $this->_showPriceOnRequest = $priceOnRequest; }
+
+	/** @return bool */
+	public function getShowEnergyCertificate(): bool
+	{ return $this->_showEnergyCertificate; }
+
+	/** @param bool $showEnergyCertificate */
+	public function setShowEnergyCertificate(bool $showEnergyCertificate)
+	{ $this->_showEnergyCertificate = $showEnergyCertificate; }
 
 
     /**
