@@ -161,11 +161,13 @@ class AdminPageAddressListSettings
 	private function addFormModelTemplate()
 	{
 		$pInputModelTemplate = $this->_pFormModelBuilderAddress->createInputModelTemplate('address');
+		$pInputModelShowMap = $this->_pFormModelBuilderAddress->createInputModelShowMap();
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowMap);
 		$this->addFormModel($pFormModelLayoutDesign);
 	}
 

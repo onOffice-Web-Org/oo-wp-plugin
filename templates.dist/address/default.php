@@ -31,6 +31,11 @@ require 'SearchFormAddress.php';
  *
  */
 ?>
+<?php if ($pAddressList->getShowMapConfig()) { ?>
+<div class="oo-address-map">
+    <?php require('map/map.php'); ?>
+</div>
+<?php } ?>
 <div class="oo-address-listframe oo-listframe">
 	<?php
 	/* @var $pAddressList AddressList */

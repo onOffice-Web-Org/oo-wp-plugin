@@ -76,6 +76,7 @@ class TestClassDataListViewFactoryAddress
 		$this->assertEquals($row['hidden'], $pDataListViewAddress->getHiddenFields());
 		$this->assertEquals($row['convertInputTextToSelectForField'], $pDataListViewAddress->getConvertInputTextToSelectForField());
 		$this->assertEquals($row['bildWebseite'], $pDataListViewAddress->getBildWebseite());
+		$this->assertEquals($row['show_map'], $pDataListViewAddress->getShowMap());
 	}
 
 
@@ -101,6 +102,7 @@ class TestClassDataListViewFactoryAddress
 			'template' => 'testtemplate',
 			'convertInputTextToSelectForField' => ['Ort'],
 			'bildWebseite' => true,
+			'show_map' => '1',
 		];
 
 		return $row;
