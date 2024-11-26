@@ -225,8 +225,7 @@ $dimensions = [
 						}
 					}
 					?>
-					<div class="oo-detailstable">
-						<?php
+					<?php
 						$fields = [
 							'baujahr',
 							'energieausweistyp',
@@ -241,18 +240,21 @@ $dimensions = [
 							$fields[] = 'energieverbrauchskennwert';
 						}
 
-						foreach ($fields as $field) {
-							if (empty($currentEstate[$field])) {
-								continue;
-							}
+						$filteredFields = array_filter($fields, function($field) use ($currentEstate) {
+							return !empty($currentEstate[$field]);
+						});
 
-							echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
-								. '<div class="oo-detailslisttd">'
-								. (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field]))
-								. '</div>' . "\n";
+						if (!empty($filteredFields)) {
+							echo '<div class="oo-detailstable">';
+							foreach ($filteredFields as $field) {
+								echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
+									. '<div class="oo-detailslisttd">'
+									. (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field]))
+									. '</div>' . "\n";
+							}
+							echo '</div>';
 						}
-						?>
-					</div>
+					?>
 				</div>
 			<?php } ?>
 
@@ -270,9 +272,11 @@ $dimensions = [
 				</div>
 			<?php } ?>
 
-			<div class="oo-units">
-				<?php echo $pEstates->getEstateUnits(); ?>
-			</div>
+			<?php if ($pEstates->getEstateUnits() !== "") { ?>
+				<div class="oo-units">
+					<?php echo $pEstates->getEstateUnits(); ?>
+				</div>
+			<?php } ?>
 		</div>
 		<div class="oo-details-sidebar">
 			<div class="oo-asp">
@@ -372,14 +376,14 @@ $dimensions = [
 					} ?>
 				<?php endforeach; ?>
 			</div>
-			<div class="oo-asp oo-detailsexpose">
-				<?php if ($pEstates->getDocument() != '') : ?>
+			<?php if ($pEstates->getDocument() != '') : ?>
+				<div class="oo-asp oo-detailsexpose">
 					<h2><?php esc_html_e('Documents', 'onoffice-for-wp-websites'); ?></h2>
 					<a href="<?php echo $pEstates->getDocument(); ?>">
 						<?php esc_html_e('PDF expose', 'onoffice-for-wp-websites'); ?>
 					</a>
-				<?php endif; ?>
-			</div>
+				</div>
+			<?php endif; ?>
 
 			<?php
 
