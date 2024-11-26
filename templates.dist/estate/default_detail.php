@@ -273,7 +273,7 @@ $dimensions = [
 			<?php if (!empty($pEstates->getTotalCostsData())) { 
 				$totalCostsData = $pEstates->getTotalCostsData();
 				?>
-				<div class="oo-detailsfreetext">
+				<div class="oo-detailspricecalculator">
 					<h2><?php esc_html_e('Total costs', 'onoffice-for-wp-websites'); ?></h2>
 					<div class="oo-costs-container">
 						<div class="oo-donut-chart"></div>
