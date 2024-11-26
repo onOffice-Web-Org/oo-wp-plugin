@@ -389,6 +389,18 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSameEstateAgent
+	 */
+	public function testCreateInputModelSameEstateAgent()
+	{
+		$pFormModelBuilderSimilarEstateSettings = new FormModelBuilderSimilarEstateSettings($this->_pContainer);
+		$pFormModelBuilderSimilarEstateSettings->generate('test');
+
+		$pInputModelDB = $pFormModelBuilderSimilarEstateSettings->createInputModelSameEstateAgent();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelShowReferenceEstates
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::getListViewReferenceEstates
 	 */
