@@ -37,7 +37,6 @@
 		"addMainLangId": true,
 		"sortby": null,
 		"sortorder": null,
-		"filterid": null,
 		"georangesearch": {
             "radius": 500,
             "country": "DEU",

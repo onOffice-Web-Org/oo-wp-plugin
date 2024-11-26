@@ -889,13 +889,15 @@ class TestClassEstateList
 				'getSortorder',
 				'getFields',
 				'getSameMarketingMethod',
-				'getSameEstateAgent'
+				'getSameEstateAgent',
+				'getPictureTypes'
 			])
 			->getMock();
 		$pDataDetailView->method('getRecordsPerPage')->willReturn(10);
 		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp', 'objekttitel']);
 		$pDataDetailView->method('getSameMarketingMethod')->willReturn(true);
 		$pDataDetailView->method('getSameEstateAgent')->willReturn(true);
+		$pDataDetailView->method('getPictureTypes')->willReturn(['Titelbild','Foto']);
 		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
 		$this->_pEstateList->setContactPersonIds([50,52]);
 

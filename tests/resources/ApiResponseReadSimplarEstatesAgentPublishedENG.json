@@ -52,7 +52,6 @@
 		"listoffset": 0,
 		"sortby": null,
 		"sortorder": null,
-		"filterid": null,
 		"georangesearch": {
             "radius": 500,
             "country": "DEU",
