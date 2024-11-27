@@ -100,10 +100,6 @@ class ScriptLoaderGenericConfigurationDefault
 
 	public function addEstateScripts(string $key) 
 	{
-		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		$scriptType = IncludeFileModel::TYPE_SCRIPT;
-		$async = IncludeFileModel::LOAD_ASYNC;
-		$style = IncludeFileModel::TYPE_STYLE;
 		$scripts = [];
 		$styles = [];
 
@@ -111,8 +107,8 @@ class ScriptLoaderGenericConfigurationDefault
 			$scripts = $this->renderScriptForEstateListPage();
 		}
 		if ($key === Template::KEY_ESTATEDETAIL) {
-			$scripts = $this->renderScriptForEstateDetailPage([], $pluginPath, $scriptType, $async);
-			$styles = $this->renderStyleForEstateDetailPage($pluginPath, $style);
+			$scripts = $this->renderScriptForEstateDetailPage();
+			$styles = $this->renderStyleForEstateDetailPage();
 		}
 		$this->enqueueScripts($scripts);
 		$this->enqueueStyles($styles);
@@ -304,14 +300,10 @@ class ScriptLoaderGenericConfigurationDefault
     }
 
 	/**
-	 * @param array $scripts
-	 * @param string $pluginPath
-	 * @param string $script
-	 * @param string $defer
 	 * @return array
 	 */
 
-	private function renderScriptForAddressDetailPage(array $scripts, string $pluginPath, string $script, string $defer): array
+	private function renderScriptForAddressDetailPage(): array
 	{
 		$scripts = [
 			'slick',
@@ -322,14 +314,10 @@ class ScriptLoaderGenericConfigurationDefault
 	}
 
 	/**
-	 * @param array $scripts
-	 * @param string $pluginPath
-	 * @param string $script
-	 * @param string $defer
 	 * @return array
 	 */
 
-	private function renderScriptForEstateDetailPage(array $scripts, string $pluginPath, string $script, string $defer): array
+	private function renderScriptForEstateDetailPage(): array
 	{
 		$scripts = [
 			'slick',
@@ -339,13 +327,11 @@ class ScriptLoaderGenericConfigurationDefault
 		return $scripts;
 	}
 
-    /**
-     * @param string $pluginPath
-     * @param string $style
-     * @return array
-     */
+	/**
+	 * @return array
+	 */
 
-	private function renderStyleForEstateDetailPage(string $pluginPath, string $style): array 
+	private function renderStyleForEstateDetailPage(): array 
 	{
 		$styles = [
 			'slick',
