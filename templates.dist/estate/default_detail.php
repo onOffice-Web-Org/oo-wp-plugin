@@ -376,7 +376,7 @@ $dimensions = [
 					} ?>
 				<?php endforeach; ?>
 			</div>
-			<?php if ($pEstates->getDocument() != '') : ?>
+			<?php if ($pEstates->getDocument() !== "") : ?>
 				<div class="oo-asp oo-detailsexpose">
 					<h2><?php esc_html_e('Documents', 'onoffice-for-wp-websites'); ?></h2>
 					<a href="<?php echo $pEstates->getDocument(); ?>">
