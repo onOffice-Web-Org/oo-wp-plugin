@@ -55,6 +55,8 @@ class IncludeFileModel
     /** @var string */
 	private $_loadAsynchronous = '';
 
+	/** @var bool */
+	private $_loadWhenNecessary = false;
 
 	/**
 	 *
@@ -175,4 +177,25 @@ class IncludeFileModel
 		$this->_loadAsynchronous = $loadAsynchronous;
 		return $this;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function getLoadWhenNecessary(): bool
+	{
+		return $this->_loadWhenNecessary;
+	}
+
+	/**
+	 *
+	 * @param bool $loadWhenNecessary
+	 * @return $this
+	 *
+	 */
+
+	 public function setLoadWhenNecessary(bool $loadWhenNecessary): self
+	 {
+		 $this->_loadWhenNecessary = $loadWhenNecessary;
+		 return $this;
+	 }
 }

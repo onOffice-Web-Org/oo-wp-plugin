@@ -78,6 +78,7 @@ class ScriptLoaderGenericConfigurationDefault
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/dist/favorites.min.js', $pluginPath)))
 				->setDependencies(['jquery']);
 		}
+		$values = array_merge($values, $this->registerScriptAndStyles($pluginPath, $script, $style, $async, $defer));
 
 		return $values;
 	}
@@ -89,11 +90,7 @@ class ScriptLoaderGenericConfigurationDefault
 
 	public function addFormScripts(string $formType, bool $recaptcha) 
 	{
-		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		$scriptType = IncludeFileModel::TYPE_SCRIPT;
-		$async = IncludeFileModel::LOAD_ASYNC;
-
-		$scripts = $this->renderScriptForForm([], $pluginPath, $scriptType, $async, $formType, $recaptcha);
+		$scripts = $this->renderScriptForForm($formType, $recaptcha);
 		$this->enqueueScripts($scripts);
 	}
 
@@ -111,7 +108,7 @@ class ScriptLoaderGenericConfigurationDefault
 		$styles = [];
 
 		if ($key === Template::KEY_ESTATELIST) {
-			$scripts = $this->renderScriptForEstateListPage([], $pluginPath, $scriptType, $async);
+			$scripts = $this->renderScriptForEstateListPage();
 		}
 		if ($key === Template::KEY_ESTATEDETAIL) {
 			$scripts = $this->renderScriptForEstateDetailPage([], $pluginPath, $scriptType, $async);
@@ -127,17 +124,14 @@ class ScriptLoaderGenericConfigurationDefault
 
 	public function addAddressScripts(string $key) 
 	{
-		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		$scriptType = IncludeFileModel::TYPE_SCRIPT;
-		$style = IncludeFileModel::TYPE_STYLE;
 		$scripts = [];
 		$styles = [];
 		
 		if ($key === Template::KEY_ADDRESSLIST) {
-			$scripts = $this->renderScriptForAddressListPage([], $pluginPath, $scriptType);
+			$scripts = $this->renderScriptForAddressListPage();
 		}
 		if ($key === Template::KEY_ADDRESSDETAIL) {
-			$styles = $this->renderStyleForAddressDetail($style, $pluginPath);
+			$styles = $this->renderStyleForAddressDetail();
 		}
 		$this->enqueueScripts($scripts);
 		$this->enqueueStyles($styles);
@@ -149,11 +143,9 @@ class ScriptLoaderGenericConfigurationDefault
 	 */
 	private function enqueueScripts(array $scripts)
 	{
-		foreach ($scripts as $script) {
-			if (!wp_script_is($script->getIdentifier())) {
-				wp_enqueue_script($script->getIdentifier(), $script->getFilePath(), $script->getDependencies(), false, $script->getLoadInFooter());
-				wp_script_add_data($script->getIdentifier(), $script->getLoadAsynchronous(), true);
-				$this->localizeScript($script->getIdentifier());
+		foreach ($scripts as $identifier) {
+			if (!wp_script_is($identifier)) {
+				wp_enqueue_script($identifier);
 			}
 		}
 	}
@@ -164,78 +156,149 @@ class ScriptLoaderGenericConfigurationDefault
 	 */
 	private function enqueueStyles(array $styles)
 	{
-		foreach ($styles as $style) {
-			if (!wp_style_is($style->getIdentifier())) {
-				wp_enqueue_style($style->getIdentifier(), $style->getFilePath(), $style->getDependencies());
+		foreach ($styles as $identifier) {
+			if (!wp_style_is($identifier)) {
+				wp_enqueue_style($identifier);
 			}
 		}
 	}
 
 	/**
-	 * @param array $scripts
 	 * @param string $pluginPath
 	 * @param string $script
 	 * @param string $async
+	 * @param string $defer
+	 * @return array
+	 */
+	private function registerScriptAndStyles(string $pluginPath, string $script, $style, string $async, string $defer): array
+	{
+		$values = [
+			(new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($script, 'onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath)))
+				->setLoadInFooter(true)
+				->setLoadAsynchronous($async)
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($script, 'onoffice-estatetype', plugins_url('/dist/onoffice-estatetype.min.js', $pluginPath)))
+				->setDependencies(['onoffice-multiselect'])
+				->setLoadInFooter(true)
+				->setLoadAsynchronous($async)
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($script, 'onoffice-leadform', plugins_url('/dist/onoffice-leadform.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/dist/onoffice-prevent-double-form-submission.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadAsynchronous($defer)
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/dist/onoffice_defaultview.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($script, 'onoffice-sort-list-selector', plugins_url('/dist/onoffice-sort-list-selector.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/dist/onoffice-form-preview.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($style, 'onoffice-address-detail', plugins_url('/css/onoffice-address-detail.css', $pluginPath)))
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($style, 'slick', plugins_url('/third_party/slick/slick.css', $pluginPath)))
+				->setLoadWhenNecessary(true),
+			(new IncludeFileModel($style, 'slick-theme', plugins_url('/third_party/slick/slick-theme.css', $pluginPath)))
+				->setLoadWhenNecessary(true),
+		];
+
+		if (get_option('onoffice-settings-captcha-sitekey') !== '') {
+			$values[] = (new IncludeFileModel($script, 'onoffice-captchacontrol', plugins_url('/dist/onoffice-captchacontrol.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(false)
+				->setLoadWhenNecessary(true);
+		}
+		if (get_option('onoffice-settings-honeypot')) {
+			$values[] = (new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/dist/onoffice-honeypot.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true)
+				->setLoadWhenNecessary(true);
+		}
+
+		return $values;
+	}
+
+	/**
 	 * @param string $formType
 	 * @param bool $recaptcha
 	 * @return array
 	 */
-	private function renderScriptForForm(array $scripts, string $pluginPath, string $script, string $async, string $formType, bool $recaptcha): array
+	private function renderScriptForForm(string $formType, bool $recaptcha): array
 	{
-		$scripts[] = (new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
-		$scripts[] = (new IncludeFileModel($script, 'onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath)))
-				->setLoadInFooter(true)
-				->setLoadAsynchronous($async);
-		$scripts[] = (new IncludeFileModel($script, 'onoffice-estatetype', plugins_url('/dist/onoffice-estatetype.min.js', $pluginPath)))
-				->setDependencies(['onoffice-multiselect'])
-				->setLoadInFooter(true)
-				->setLoadAsynchronous($async);
-		$scripts[] = (new IncludeFileModel($script, 'onoffice-leadform', plugins_url('/dist/onoffice-leadform.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
-		$scripts[] = (new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/dist/onoffice-prevent-double-form-submission.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
-		if (!empty(get_option('onoffice-settings-thousand-separator'))) {
-			$scripts[] = (new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
-		}
+		$scripts = [
+			'onoffice-custom-select', 
+			'onoffice-multiselect', 
+			'onoffice-estatetype', 
+			'onoffice-leadform', 
+			'onoffice-prevent-double-form-submission', 
+			'onoffice-apply-thousand-separator'
+		];
 
-		if (get_option('onoffice-settings-captcha-sitekey') !== '' && $recaptcha) {
-			$scripts[] = (new IncludeFileModel($script, 'onoffice-captchacontrol', plugins_url('/dist/onoffice-captchacontrol.min.js', $pluginPath)))
-					->setDependencies(['jquery'])
-					->setLoadInFooter(false);
+		if ($recaptcha) {
+			$scripts[] = 'onoffice-captchacontrol';
 		}
 
 		if ($formType === Form::TYPE_APPLICANT_SEARCH) {
-			$scripts[] = (new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/dist/onoffice-form-preview.min.js', $pluginPath)))
-					->setDependencies(['jquery'])
-					->setLoadInFooter(true);
+			$scripts[] = 'onoffice-form-preview';
 		}
 
 		if (in_array($formType, [Form::TYPE_CONTACT, Form::TYPE_OWNER, Form::TYPE_INTEREST])) {
-			if (get_option('onoffice-settings-honeypot')) {
-				$scripts[] = (new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/dist/onoffice-honeypot.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
-			}
+			$scripts[] = 'onoffice-honeypot';
 		}
 
 		return $scripts;
 	}
 
 	/**
-	 * @param string $style
-	 * @param string $pluginPath
 	 * @return array
 	 */
-	private function renderStyleForAddressDetail(string $style, string $pluginPath): array
+
+	private function renderScriptForEstateListPage(): array
+	{
+		$scripts = [
+			'onoffice-sort-list-selector', 
+			'onoffice-form-preview', 
+			'onoffice-custom-select', 
+			'onoffice-multiselect', 
+			'onoffice-estatetype', 
+			'onoffice-apply-thousand-separator'
+		];
+
+		return $scripts;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function renderStyleForAddressDetail(): array
 	{
 		$styles = [
-			new IncludeFileModel($style, 'onoffice-address-detail', plugins_url('/css/onoffice-address-detail.css', $pluginPath))
+			'onoffice-address-detail'
 		];
         return $styles;
     }
@@ -250,13 +313,10 @@ class ScriptLoaderGenericConfigurationDefault
 
 	private function renderScriptForAddressDetailPage(array $scripts, string $pluginPath, string $script, string $defer): array
 	{
-		$scripts[] = (new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true)
-				->setLoadAsynchronous($defer);
-		$scripts[] = (new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/dist/onoffice_defaultview.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
+		$scripts = [
+			'slick',
+			'onoffice_defaultview'
+		];
 
 		return $scripts;
 	}
@@ -271,13 +331,10 @@ class ScriptLoaderGenericConfigurationDefault
 
 	private function renderScriptForEstateDetailPage(array $scripts, string $pluginPath, string $script, string $defer): array
 	{
-		$scripts[] = (new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true)
-				->setLoadAsynchronous($defer);
-		$scripts[] = (new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/dist/onoffice_defaultview.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
+		$scripts = [
+			'slick',
+			'onoffice_defaultview'
+		];
 
 		return $scripts;
 	}
@@ -291,69 +348,31 @@ class ScriptLoaderGenericConfigurationDefault
 	private function renderStyleForEstateDetailPage(string $pluginPath, string $style): array 
 	{
 		$styles = [
-			new IncludeFileModel($style, 'slick', plugins_url('/third_party/slick/slick.css', $pluginPath)),
-			new IncludeFileModel($style, 'slick-theme', plugins_url('/third_party/slick/slick-theme.css', $pluginPath))
+			'slick',
+			'slick-theme'
 		];
 		return $styles;
 	}
 
 	/**
-	 * @param array $scripts
-	 * @param string $pluginPath
-	 * @param string $script
 	 * @return array
 	 */
 
-	private function renderScriptForAddressListPage(array $scripts, string $pluginPath, string $script): array
+	private function renderScriptForAddressListPage(): array
 	{
 		$scripts = [
-			(new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true),
+			'onoffice-custom-select'
 		];
 
 		return $scripts;
 	}
 
-	/**
-	 * @param array $scripts
-	 * @param string $pluginPath
-	 * @param string $script
-	 * @param string $style
-	 * @param string $defer
-	 * @return array
-	 */
-
-	private function renderScriptForEstateListPage(array $scripts, string $pluginPath, string $script, string $async): array
-	{
-		$scripts[] = (new IncludeFileModel($script, 'onoffice-sort-list-selector', plugins_url('/dist/onoffice-sort-list-selector.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
-		$scripts[] = (new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/dist/onoffice-form-preview.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
-		$scripts[] = (new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
-		$scripts[] = (new IncludeFileModel($script, 'onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath)))
-				->setLoadInFooter(true)
-				->setLoadAsynchronous($async);
-		$scripts[] = (new IncludeFileModel($script, 'onoffice-estatetype', plugins_url('/dist/onoffice-estatetype.min.js', $pluginPath)))
-				->setDependencies(['onoffice-multiselect'])
-				->setLoadInFooter(true)
-				->setLoadAsynchronous($async);
-		$scripts[] = (new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
-
-		return $scripts;
-	}
 
 	/**
 	 * @param string $scriptIdentifier
 	 * @return void
 	 */
-	private function localizeScript(string $scriptIdentifier)
+	public function localizeScript(string $scriptIdentifier)
 	{
 		switch ($scriptIdentifier) {
 			case 'onoffice-form-preview':
