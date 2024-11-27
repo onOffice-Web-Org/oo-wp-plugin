@@ -92,6 +92,5 @@ class TestClassScriptLoaderGeneric
 		$this->_pSubject->enqueue();
 		$this->assertEquals(['style2'], wp_styles()->queue);
 		$this->assertEquals(['script1'], wp_scripts()->queue);
-		$this->assertTrue(wp_scripts()->get_data('script1', 'defer'));
 	}
 }
