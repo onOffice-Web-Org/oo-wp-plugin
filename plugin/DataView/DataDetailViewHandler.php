@@ -148,7 +148,7 @@ class DataDetailViewHandler
 		$pDataDetailView->setShowPriceOnRequest($row[DataDetailView::FIELD_PRICE_ON_REQUEST] ?? false);
 		$pDataDetailView->setContactImageTypes($row['contact_image_types'] ?? []);
 		$pDataDetailView->setShowEnergyCertificate($row['show_energy_certificate'] ?? false);
-		$pDataDetailView->setContactPerson($row['contact_person'] ?? '');
+		$pDataDetailView->setContactPerson($row['contact_person'] ?? '0');
 		return $pDataDetailView;
 	}
 }
