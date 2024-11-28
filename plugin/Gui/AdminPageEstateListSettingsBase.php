@@ -190,6 +190,10 @@ abstract class AdminPageEstateListSettingsBase
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_SAME_NAME_MESSAGE => __('There was a problem saving the list. The Name field has been exist.', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_EMPTY_NAME_MESSAGE => __('There was a problem saving the list. The Name field must not be empty.', 'onoffice-for-wp-websites'),
+			self::VIEW_UNSAVED_CHANGE_SAME_NAME_MESSAGE => __('Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_UNSAVED_CHANGE_EMPTY_NAME_MESSAGE => __('The Name field must not be empty. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 		);
 	}
 
