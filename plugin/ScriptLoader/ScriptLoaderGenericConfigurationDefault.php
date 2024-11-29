@@ -48,13 +48,31 @@ class ScriptLoaderGenericConfigurationDefault
 	/** */
 	const FORM_TAG = 'oo_form';
 
+	private $_pConfiguration = [];
+
+
+    public function __construct()
+    {
+        $this->_pConfiguration = $this->generateScriptLoaderGenericConfiguration();
+    }
+
+    /**
+     *
+     * @return array
+     *
+     */
+
+    public function getScriptLoaderGenericConfiguration(): array {
+        return $this->_pConfiguration;
+    }
+
 	/**
 	 *
 	 * @return array
 	 *
 	 */
 
-	public function getScriptLoaderGenericConfiguration(): array
+	private function generateScriptLoaderGenericConfiguration(): array
 	{
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$script = IncludeFileModel::TYPE_SCRIPT;
@@ -227,7 +245,7 @@ class ScriptLoaderGenericConfigurationDefault
 			$values[] = (new IncludeFileModel($script, 'onoffice-captchacontrol', plugins_url('/dist/onoffice-captchacontrol.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(false)
-				->setLoadWhenNecessary(true);
+				->setLoadWhenNecessary(false);
 		}
 		if (get_option('onoffice-settings-honeypot')) {
 			$values[] = (new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/dist/onoffice-honeypot.min.js', $pluginPath)))
