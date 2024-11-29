@@ -79,7 +79,7 @@ class FormPostHandler
 
 	static public function initialCheck()
 	{
-		$formName = filter_input(INPUT_POST, 'oo_formid', FILTER_SANITIZE_STRING);
+		$formName = filter_input(INPUT_POST, 'oo_formid', @FILTER_SANITIZE_STRING);
 		$formNo = filter_input(INPUT_POST, 'oo_formno', FILTER_SANITIZE_NUMBER_INT);
 
 		if ($formName !== null && $formNo !== null) {
