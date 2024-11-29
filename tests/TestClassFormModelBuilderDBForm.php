@@ -621,6 +621,95 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::checkLogicDeleteOrRenameTemplate
+	 */
+	public function testCheckLogicNotDeleteOrRenameTemplate()
+	{
+		$dataByScreenId = $this->_pInstance->checkLogicDeleteOrRenameTemplate('onoffice-editlistview');
+		$this->assertEquals($dataByScreenId['status'], false);
+		$this->assertEquals($dataByScreenId['elements'], []);
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::checkLogicDeleteOrRenameTemplate
+	 */
+	public function testCheckLogicDeleteOrRenameTemplate()
+	{
+		$filePath = plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php') . 'templates.dist/estate/default_detail_copy.php';
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
+			->disableOriginalConstructor()
+			->setMethods(['getTemplateDefaultListForFolderName'])
+			->getMock();
+		$pInstance->method('getTemplateDefaultListForFolderName')->willReturn([
+			'estate' => ['default.php', 'default_units.php', 'default_detail.php', 'similar_estates.php', 'default_detail_copy.php']
+		]);
+
+		copy(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php') . 'templates.dist/estate/default_detail.php', $filePath);
+		touch($filePath);
+		if (file_exists($filePath)) {
+			unlink($filePath);
+		}
+
+		$dataByScreenId = $pInstance->checkLogicDeleteOrRenameTemplate('onoffice-editlistview');
+		$this->assertEquals($dataByScreenId['status'], true);
+		$this->assertEquals(array_values($dataByScreenId['elements']), ['default_detail_copy.php']);
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::checkLogicDeleteOrRenameActiveTemplate
+	 */
+	public function testCheckLogicNotDeleteOrRenameActiveTemplate()
+	{
+		$activeTemplatePath = 'oo-wp-plugin/templates.dist/estate/default.php';
+		$statusCheckLogicDeleteOrRenameActiveTemplate = $this->_pInstance->checkLogicDeleteOrRenameActiveTemplate('onoffice-editlistview', $activeTemplatePath);
+		$this->assertEquals($statusCheckLogicDeleteOrRenameActiveTemplate, false);
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::checkLogicDeleteOrRenameActiveTemplate
+	 */
+	public function testCheckLogicDeleteOrRenameActiveTemplate()
+	{
+		$activeTemplatePath = plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php') . 'templates.dist/estate/default_copy.php';
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
+			->disableOriginalConstructor()
+			->setMethods(['getTemplateDefaultListForFolderName'])
+			->getMock();
+		$pInstance->method('getTemplateDefaultListForFolderName')->willReturn([
+			'estate' => ['default.php', 'default_units.php', 'default_detail.php', 'similar_estates.php', 'default_copy.php']
+		]);
+
+		copy(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php') . 'templates.dist/estate/default_detail.php', $activeTemplatePath);
+		touch($activeTemplatePath);
+		if (file_exists($activeTemplatePath)) {
+			unlink($activeTemplatePath);
+		}
+
+		$statusCheckLogicDeleteOrRenameActiveTemplate = $pInstance->checkLogicDeleteOrRenameActiveTemplate('onoffice-editlistview', $activeTemplatePath);
+		$this->assertEquals($statusCheckLogicDeleteOrRenameActiveTemplate, true);
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::checkLogicChooseWrongTemplate
+	 */
+	public function testCheckLogicChooseWrongTemplate()
+	{
+		$activeTemplatePath = plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php') . 'templates.dist/estate/default_detail.php';
+		$statusCheckLogicChooseWrongTemplate = $this->_pInstance->checkLogicChooseWrongTemplate('onoffice-editlistview', null, $activeTemplatePath);
+		$this->assertEquals($statusCheckLogicChooseWrongTemplate, true);
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::checkLogicChooseWrongTemplate
+	 */
+	public function testCheckLogicChooseCorrentTemplate()
+	{
+		$activeTemplatePath = plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php') . 'templates.dist/estate/default.php';
+		$statusCheckLogicChooseWrongTemplate = $this->_pInstance->checkLogicChooseWrongTemplate('onoffice-editlistview', null, $activeTemplatePath);
+		$this->assertEquals($statusCheckLogicChooseWrongTemplate, false);
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelEnableCreateTask
 	 */
 	public function testCreateInputModelEnableCreateTask()
