@@ -99,7 +99,7 @@ class DefaultFilterBuilderListView
 		}
 
 		$filter = $this->addEstateCityFilterWhenConvertTextToSelect($filter);
-		$filterWithRegion = $this->addSubRegionFilter($filter);
+		$filterWithRegion = $this->addSubRegionFilter($filter, $filterableFields);
 
 		return $filterWithRegion;
 	}
@@ -127,11 +127,12 @@ class DefaultFilterBuilderListView
 
 	/**
 	 * @param array $baseFilter
+	 * @param array $filterableFields
 	 * @return array
 	 */
-	private function addSubRegionFilter(array $baseFilter): array
+	private function addSubRegionFilter(array $baseFilter, array $filterableFields): array
 	{
-		if (in_array('regionaler_zusatz', $this->_pDataListView->getFilterableFields(), true)) {
+		if (in_array('regionaler_zusatz', $filterableFields)) {
 			$additionalRegions = [];
 			$pRegionController = $this->_pEnvironment->getRegionController();
 			$pRegionController->fetchRegions();
