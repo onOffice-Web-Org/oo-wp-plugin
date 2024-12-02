@@ -125,13 +125,14 @@ class Template
 		$generateSortDropDown = $pTemplateCallback->buildCallbackListSortDropDown($pEstates);
 		$getListName = $pTemplateCallback->buildCallbackEstateListName($pEstates);
 		$scriptLoader = $pContainer->get(ScriptLoaderGenericConfigurationDefault::class);
+        $scriptLoader->addBasicScripts();
 
-		if (!empty($pEstates) && !empty($pEstates->getDataView())) {
+        if (!empty($pEstates) && !empty($pEstates->getDataView())) {
 			if ($pEstates->getDataView() instanceof DataListView) {
 				$scriptLoader->addEstateScripts(self::KEY_ESTATELIST);
 			} elseif ($pEstates->getDataView() instanceof DataDetailView) {
 				$scriptLoader->addEstateScripts(self::KEY_ESTATEDETAIL);
-			}
+            }
 		}
 
 		if (!empty($pForm)) {
@@ -145,7 +146,9 @@ class Template
 				$scriptLoader->addAddressScripts(self::KEY_ADDRESSDETAIL);
 			}
 		}
-		unset($templateData, $pTemplateCallback, $pContainer);
+		/*to be able to overwrite third party styles onOffice styling is loaded last*/
+        $scriptLoader->addBasicStyles();
+        unset($templateData, $pTemplateCallback, $pContainer);
 
 		ob_start();
 		include $templatePath;

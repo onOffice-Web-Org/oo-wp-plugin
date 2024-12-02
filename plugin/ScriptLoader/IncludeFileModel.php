@@ -56,7 +56,7 @@ class IncludeFileModel
 	private $_loadAsynchronous = '';
 
 	/** @var bool */
-	private $_loadWhenNecessary = false;
+	private $_loadBeforeRenderingTemplate = false;
 
 	/**
 	 *
@@ -181,9 +181,9 @@ class IncludeFileModel
 	/**
 	 * @return bool
 	 */
-	public function getLoadWhenNecessary(): bool
+	public function getLoadBeforeRenderingTemplate(): bool
 	{
-		return $this->_loadWhenNecessary;
+		return $this->_loadBeforeRenderingTemplate;
 	}
 
 	/**
@@ -193,9 +193,9 @@ class IncludeFileModel
 	 *
 	 */
 
-	 public function setLoadWhenNecessary(bool $loadWhenNecessary): self
+	 public function setLoadBeforeRenderingTemplate(bool $loadWhenNecessary): self
 	 {
-		 $this->_loadWhenNecessary = $loadWhenNecessary;
+		 $this->_loadBeforeRenderingTemplate = $loadWhenNecessary;
 		 return $this;
 	 }
 }

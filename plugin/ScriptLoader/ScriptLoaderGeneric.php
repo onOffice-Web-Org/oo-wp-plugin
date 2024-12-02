@@ -60,16 +60,14 @@ class ScriptLoaderGeneric
 	{
 		/* @var $pIncludeModel IncludeFileModel */
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_SCRIPT) as $pIncludeModel) {
-			if ($pIncludeModel->getLoadWhenNecessary()){
-				continue;
+			if ($pIncludeModel->getLoadBeforeRenderingTemplate()){
+                wp_enqueue_script($pIncludeModel->getIdentifier());
 			}
-			wp_enqueue_script($pIncludeModel->getIdentifier());
 		}
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_STYLE) as $pIncludeModel) {
-			if ($pIncludeModel->getLoadWhenNecessary()){
-				continue;
+			if ($pIncludeModel->getLoadBeforeRenderingTemplate()){
+                wp_enqueue_style($pIncludeModel->getIdentifier());
 			}
-			wp_enqueue_style($pIncludeModel->getIdentifier());
 		}
 	}
 
