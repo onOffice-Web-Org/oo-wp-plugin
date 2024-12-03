@@ -274,7 +274,7 @@ $dimensions = [
 				<?php echo $pEstates->getEstateUnits(); ?>
 			</div>
 		</div>
-		<div class="oo-details-sidebar">
+		<div class="oo-details-sidebar"> 
 			<div class="oo-asp">
 				<h2><?php echo esc_html__('Contact person', 'onoffice-for-wp-websites'); ?></h2>
 				<?php
