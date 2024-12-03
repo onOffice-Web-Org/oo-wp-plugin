@@ -83,36 +83,18 @@ class ScriptLoaderGenericConfigurationDefault
 		$values = [
 			(new IncludeFileModel($script, 'select2', plugins_url('/vendor/select2/select2/dist/js/select2.min.js', $pluginPath)))
 				->setLoadInFooter(true)
+                ->setLoadBeforeRenderingTemplate(true)
 				->setLoadAsynchronous($defer),
-			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
-			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),
-			new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)),
-			new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath))
+            (new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true),
+            (new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true),
+            (new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true),
+            (new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true)
 		];
-		$values []= (new IncludeFileModel($style, 'onoffice_style', $this->getStyleUriByVersion()));
+		$values []= (new IncludeFileModel($style, 'onoffice_style', $this->getStyleUriByVersion()))->setLoadBeforeRenderingTemplate(true);
 		$values = array_merge($values, $this->registerScriptAndStyles($pluginPath, $script, $style, $async, $defer));
 
 		return $values;
 	}
-
-    public function addBasicScripts()
-    {
-        $scripts = [
-            'select2'
-        ];
-        $this->enqueueScripts($scripts);
-    }
-    public function addBasicStyles()
-    {
-        $styles = [
-            'select2',
-            'onoffice-default',
-            'onoffice-multiselect',
-            'onoffice-forms',
-            'onoffice_style'
-        ];
-        $this->enqueueStyles($styles);
-    }
 
 	/**
 	 * @param string $formType

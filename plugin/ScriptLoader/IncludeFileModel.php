@@ -188,14 +188,14 @@ class IncludeFileModel
 
 	/**
 	 *
-	 * @param bool $loadWhenNecessary
+	 * @param bool $loadBeforeRenderingTemplate
 	 * @return $this
 	 *
 	 */
 
-	 public function setLoadBeforeRenderingTemplate(bool $loadWhenNecessary): self
+	 public function setLoadBeforeRenderingTemplate(bool $loadBeforeRenderingTemplate): self
 	 {
-		 $this->_loadBeforeRenderingTemplate = $loadWhenNecessary;
+		 $this->_loadBeforeRenderingTemplate = $loadBeforeRenderingTemplate;
 		 return $this;
 	 }
 }

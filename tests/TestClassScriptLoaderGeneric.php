@@ -56,7 +56,9 @@ class TestClassScriptLoaderGeneric
 				$pModel1->setDependencies(['testdep']);
 				$pModel1->setLoadInFooter(true);
 				$pModel1->setLoadAsynchronous('defer');
+				$pModel1->setLoadBeforeRenderingTemplate(true);
 				$pModel2 = new IncludeFileModel(IncludeFileModel::TYPE_STYLE, 'style2', '/test/file.css');
+				$pModel2->setLoadBeforeRenderingTemplate(true);
 				return [$pModel1, $pModel2];
 		}));
 		$this->_pSubject = new ScriptLoaderGeneric($pConfig);
