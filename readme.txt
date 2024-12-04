@@ -76,6 +76,36 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.3 (2024-12-05) =
+
+**Added**
+
+* Graphical implementation of energy certificate
+
+* Filtering in similar properties
+
+* Option to display all or only the main contact person on property detail pages
+
+* Map view with address locations to address list
+
+* Linking to a contact from the property detail page
+
+**Changed**
+
+* Error handling in similar properties
+
+* Order of "Activities" and "Tasks" boxes in form settings
+
+* Improved display of image type selection in property list settings
+
+**Fixed**
+
+* Using forms with reCaptcha in footer section
+
+* Empty value for "Radius" in similar properties
+
+* Wrong redirects caused by umlauts and special characters in URL for multilingual websites
+
 = 5.2.1 (2024-11-05) =
 
 **Fixed**
