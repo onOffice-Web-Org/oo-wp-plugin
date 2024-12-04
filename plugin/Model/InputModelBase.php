@@ -93,6 +93,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_TEXTAREA = 'textarea';
 
+	/** */
+	const HTML_VERTICAL_RADIO = 'verticalRadio';
+
 	/** @var string */
 	private $_name = null;
 

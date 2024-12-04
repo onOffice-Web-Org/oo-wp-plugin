@@ -830,7 +830,8 @@ class TestClassEstateList
 				'getPageId',
 				'getViewRestrict',
 				'getShowPriceOnRequest',
-				'getListFieldsShowPriceOnRequest'
+				'getListFieldsShowPriceOnRequest',
+				'getContactPerson'
 			])
 			->getMock();
 		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
@@ -845,6 +846,7 @@ class TestClassEstateList
 		$pDataDetailView->method('getViewRestrict')->willReturn(true);
 		$pDataDetailView->method('getShowPriceOnRequest')->willReturn(true);
 		$pDataDetailView->method('getListFieldsShowPriceOnRequest')->willReturn(['kaufpreis', 'erbpacht']);
+		$pDataDetailView->method('getContactPerson')->willReturn('1');
 
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
 		                               ->disableOriginalConstructor()

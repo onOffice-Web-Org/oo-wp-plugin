@@ -113,6 +113,9 @@ class AdminPageEstateDetail
 	/** */
 	const FORM_VIEW_CONTACT_IMAGE_TYPES = 'viewcontactimagetypes';
 
+	/** */
+	const FORM_VIEW_CONTACT_PERSON = 'viewcontactperson';
+
 	/**
 	 *
 	 */
@@ -263,6 +266,9 @@ class AdminPageEstateDetail
 		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_ADDITIONAL_MEDIA);
 		$this->createMetaBoxByForm($pFormDocumentTypes, 'side');
 
+		$pFormContactPerson = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_PERSON);
+		$this->createMetaBoxByForm($pFormContactPerson, 'side');
+
 	}
 
 	/**
@@ -361,6 +367,14 @@ class AdminPageEstateDetail
 		$pFormModelDocumentTypes->addInputModel($pInputModelObjectLinks);
 		$pFormModelDocumentTypes->addInputModel($pInputModelLinks);
 		$this->addFormModel($pFormModelDocumentTypes);
+
+		$pInputModelContactPerson = $pFormModelBuilder->createInputModelContactPerson();
+		$pFormModelContactPerson = new FormModel();
+		$pFormModelContactPerson->setPageSlug($this->getPageSlug());
+		$pFormModelContactPerson->setGroupSlug(self::FORM_VIEW_CONTACT_PERSON);
+		$pFormModelContactPerson->setLabel(__('Contact Person', 'onoffice-for-wp-websites'));
+		$pFormModelContactPerson->addInputModel($pInputModelContactPerson);
+		$this->addFormModel($pFormModelContactPerson);
 
 		$pFieldsCollection = $this->readAllFields();
 		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);

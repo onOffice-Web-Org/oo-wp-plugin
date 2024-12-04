@@ -294,6 +294,7 @@ $dimensions = [
 				]);
 
 				foreach ($pEstates->getEstateContacts() as $contactData) : ?>
+					<div class="oo-aspinfo-wrapper">
 					<?php
 					$imageUrl      = $contactData['imageUrl'];
 					$formOfAddress = $contactData['Anrede'];
@@ -370,6 +371,7 @@ $dimensions = [
 							echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($contactData[$field]) . '</p></div>';
 						}
 					} ?>
+					</div>
 				<?php endforeach; ?>
 			</div>
 			<div class="oo-asp oo-detailsexpose">
