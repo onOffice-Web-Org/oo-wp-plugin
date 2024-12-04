@@ -905,6 +905,14 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	}
 }
 
+.oo-poststuff .oo-vertical-radio {
+	margin-top: 13px;
+}
+
+.oo-poststuff .oo-vertical-radio .oo-information-text {
+	margin-bottom: 0;
+}
+
 .reCAPTCHA_badge .badge {
 	display: inline-block;
 	background-color: #9acd32;
