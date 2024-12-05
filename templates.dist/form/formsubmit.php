@@ -28,7 +28,7 @@ if ($pForm->needsReCaptcha() && $key !== '') {
 	<script>
 		function submitForm<?php echo $pFormNo; ?>() {
 			const selectorFormById = `form[id="onoffice-form"] input[name="oo_formno"][value="<?php echo $pFormNo; ?>"]`;
-			const form = document.querySelector(selectorFormById).parentElement;
+			const form = document.querySelector(selectorFormById).closest('#onoffice-form, .oo-form, #leadgeneratorform');
 			const submitButtonElement = form.querySelector('.submit_button');
 			form.submit();
 			submitButtonElement.disabled = true;
@@ -45,7 +45,7 @@ if ($pForm->needsReCaptcha() && $key !== '') {
 	<script>
 		(function() {
 			const selectorFormById = `form[id="onoffice-form"] input[name="oo_formno"][value="<?php echo $pFormNo; ?>"]`;
-			const form = document.querySelector(selectorFormById).parentElement;
+			const form = document.querySelector(selectorFormById).closest('#onoffice-form, .oo-form, #leadgeneratorform');
 			const submitButtonElement = form.querySelector('.submit_button');
 			onOffice.captchaControl(form, submitButtonElement);
 		})();

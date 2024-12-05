@@ -199,7 +199,7 @@
     right: 25px;
 }
 
-.oo-detailspicture {
+.oo-detailspicture, .oo-detailspicture.slick-slide {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
