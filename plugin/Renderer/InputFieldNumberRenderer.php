@@ -61,7 +61,7 @@ class InputFieldNumberRenderer
 			$max = 'max="' . esc_html( $this->getMaxValue() ) . '"';
 		}
 		$min = '';
-		if ( ! empty( $this->getMinValue() ) ) {
+		if ( $this->getMinValue() !== null ) {
 			$min = ' min="' . esc_html( $this->getMinValue() ) . '"';
 		}
 		echo '<input type="' . esc_html( $this->getType() ) . '" name="' . esc_html( $this->getName() )

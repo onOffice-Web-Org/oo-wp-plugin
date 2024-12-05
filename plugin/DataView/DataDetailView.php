@@ -57,6 +57,15 @@ class DataDetailView
 	/** */
 	const FIELD_PRICE_ON_REQUEST = 'show_price_on_request';
 
+	/** */
+	const FIELD_CONTACT_PERSON = 'contact_person';
+
+	/** @var string */
+	const SHOW_ALL_CONTACT_PERSONS = '0';
+
+	/** @var int */
+	const SHOW_MAIN_CONTACT_PERSON = '1';
+
 	/** @var string[] */
 	private $_fields = [
 		'objekttitel',
@@ -174,7 +183,15 @@ class DataDetailView
 	];
 
 	/** @var string[] */
-	private $_pictureTypes = [];
+	private $_pictureTypes = [
+		ImageTypes::TITLE,
+		ImageTypes::PHOTO,
+		ImageTypes::PHOTO_BIG,
+		ImageTypes::PANORAMA,
+		ImageTypes::GROUNDPLAN,
+		ImageTypes::LOCATION_MAP,
+		ImageTypes::ENERGY_PASS_RANGE,
+	];
 
 	/** @var string */
 	private $_template = '';
@@ -229,6 +246,9 @@ class DataDetailView
 		ImageTypes::PASSPORTPHOTO
 	];
 
+	/** @var bool */
+	private $_showEnergyCertificate = false;
+
     /** @var string[] */
     private $_priceFields = [
         'kaufpreis',
@@ -244,6 +264,9 @@ class DataDetailView
         'mietpreis_pro_qm',
         'calculatedPrice'
     ];
+
+	/** @var string */
+	private $_contactPerson = '0';
 
 	/**
 	 *
@@ -432,6 +455,14 @@ class DataDetailView
 	public function setShowPriceOnRequest(bool $priceOnRequest)
 	{ $this->_showPriceOnRequest = $priceOnRequest; }
 
+	/** @return bool */
+	public function getShowEnergyCertificate(): bool
+	{ return $this->_showEnergyCertificate; }
+
+	/** @param bool $showEnergyCertificate */
+	public function setShowEnergyCertificate(bool $showEnergyCertificate)
+	{ $this->_showEnergyCertificate = $showEnergyCertificate; }
+
 
     /**
      * @return array
@@ -454,4 +485,12 @@ class DataDetailView
 	{
 		$this->_priceFields = $priceFields;
 	}
+
+	/** @return string */
+	public function getContactPerson(): string
+		{ return $this->_contactPerson; }
+
+	/** @param string $contactPerson */
+	public function setContactPerson(string $contactPerson)
+		{ $this->_contactPerson = $contactPerson; }
 }
