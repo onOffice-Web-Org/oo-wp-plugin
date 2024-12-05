@@ -46,6 +46,7 @@ use function esc_html;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\DataView\DataAddressDetailView;
 use onOffice\WPlugin\Controller\AddressDetailUrl;
+use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 
 /**
  *
@@ -243,9 +244,10 @@ implements AddressListBase
 	}
 
 	/**
+	 * @param string $modifier
 	 * @return ViewFieldModifierHandler
 	 */
-	private function generateRecordModifier(): ViewFieldModifierHandler
+	private function generateRecordModifier(string $modifier = AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT): ViewFieldModifierHandler
 	{
 		$fields = $this->_pDataViewAddress->getFields();
 
@@ -261,7 +263,7 @@ implements AddressListBase
 		$fields = array_intersect($fields,
 			array_keys($this->_pEnvironment->getFieldnames()->getFieldList(onOfficeSDK::MODULE_ADDRESS)));
 
-		$pAddressFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler($fields);
+		$pAddressFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler($fields, $modifier);
 		return $pAddressFieldModifierHandler;
 	}
 
@@ -274,7 +276,6 @@ implements AddressListBase
 			$elements = $address['elements'];
 
 			$additionalContactData = $this->collectAdditionalContactData($elements);
-			unset($elements['id']);
 			$this->_addressesById[$address['id']] = array_merge($elements, $additionalContactData);
 		}
 	}
@@ -389,12 +390,13 @@ implements AddressListBase
 	}
 
 	/**
+	 * @param string $modifier
 	 * @param bool $raw
 	 * @return array
 	 */
-	public function getRows(bool $raw = false): array
+	public function getRows(string $modifier = AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, bool $raw = false): array
 	{
-		$pAddressFieldModifier = $this->generateRecordModifier();
+		$pAddressFieldModifier = $this->generateRecordModifier($modifier);
 		return array_map(function($values) use ($pAddressFieldModifier, $raw): ArrayContainer {
 			$valuesNew = $pAddressFieldModifier->processRecord($values);
 
@@ -574,14 +576,38 @@ implements AddressListBase
 	}
 
 	/**
+	 * @param string|null $firstName
+	 * @param string|null $lastName
+	 * @param string|null $company
+	 * @return string
+	 */
+	public static function createAddressTitle(string $firstName, string $lastName, string $company): string
+	{
+		$parts = [];
+		if (!empty($firstName)) {
+			$parts[] = strtolower($firstName);
+		}
+		if (!empty($lastName)) {
+			$parts[] = strtolower($lastName);
+		}
+		if (!empty($company)) {
+			$parts[] = strtolower($company);
+		}
+
+		return implode(' ', $parts);
+	}
+
+	/**
 	 * @param string $addressId
 	 * @return string
 	 */
 	public function getAddressLink(string $addressId): string
 	{
 		$pageId = $this->_pEnvironment->getDataAddressDetailViewHandler()
-				->getAddressDetailView()->getPageId();
-
+			->getAddressDetailView()->getPageId();
+		if($pageId == 0) {
+			return "";
+		}
 		$currentAddress = $this->getAddressById($addressId);
 		$firstName = $currentAddress['Vorname'] ?? '';
 		$lastName = $currentAddress['Name'] ?? '';
@@ -607,6 +633,30 @@ implements AddressListBase
 		}
 
 		return $fullLink;
+	}
+
+	/**
+	 *
+	 */
+	public function resetAddresssIterator()
+	{
+		reset($this->_records);
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getListViewId()
+	{
+		return $this->_pDataViewAddress->getId();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getShowMapConfig(): bool
+	{
+		return $this->_pDataViewAddress->getShowMap();
 	}
 
 		/**

@@ -35,6 +35,7 @@ jobs:
     with:
       expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
       overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
+      checkVersion: false
   
   deploy:
     name: Deploy development version

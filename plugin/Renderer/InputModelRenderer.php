@@ -73,7 +73,7 @@ class InputModelRenderer
 		foreach ($pFormModel->getInputModel() as $pInputModel) {
 			$pInputField = $this->createInputField($pInputModel, $pFormModel);
 			$italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
-			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_SORTABLE_TAGS) {
+			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_SORTABLE_TAGS && $pInputModel->getHtmlType() !== InputModelBase::HTML_VERTICAL_RADIO ) {
 				echo '<p id="" class="wp-clearfix custom-input-field">';
 				echo '<label class="howto custom-label" for="'. esc_html($pInputField->getGuiId()).'">';
 				echo $pInputModel->getLabel(). $italicText;
@@ -245,7 +245,7 @@ class InputModelRenderer
 				if ( $pInputModel->getMaxValueHtml() != null ) {
 					$pInstance->setMaxValue( $pInputModel->getMaxValueHtml() );
 				}
-				if ( $pInputModel->getMinValueHtml() != null ) {
+				if ( $pInputModel->getMinValueHtml() !== null ) {
 					$pInstance->setMinValue( $pInputModel->getMinValueHtml() );
 				}
 				if ( $pInputModel->getHintHtml() != null ) {
@@ -304,15 +304,22 @@ class InputModelRenderer
 				$pInstance = new InputFieldTextAreaRenderer('textarea', $elementName);
 				$pInstance->setValue($pInputModel->getValue());
 				break;
-
+        
 			case InputModelBase::HTML_TYPE_EMAIL_SUBJECT:
 				$pInstance = new InputFieldSubjectForFormRenderer($elementName, $pInputModel->getValue());
 				if ($pInputModel->getHintHtml() != null) {
 					$pInstance->setHint($pInputModel->getHintHtml());
 				}
 			break;
+        
+			case InputModelOption::HTML_VERTICAL_RADIO:
+				$pInstance = new InputFieldVerticalRadioRenderer($elementName, $pInputModel->getValuesAvailable());
+				if ($pInputModel->getHintHtml() != null) {
+					$pInstance->setHint($pInputModel->getHintHtml());
+				}
+				$pInstance->setCheckedValue($pInputModel->getValue());
+				break;
 		}
-
 		if ($pInstance !== null) {
 			if ($onOfficeInputFields) {
 				$pInstance->addAdditionalAttribute('class', 'onoffice-input');
