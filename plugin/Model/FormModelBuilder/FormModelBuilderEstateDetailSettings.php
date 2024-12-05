@@ -619,6 +619,24 @@ class FormModelBuilderEstateDetailSettings
 	 * @return InputModelOption
 	 * @throws ExceptionInputModelMissingField
 	 */
+	public function createInputModelContactPerson(): InputModelOption
+	{
+		$pInputModelContactPerson = $this->_pInputModelDetailViewFactory->create(InputModelOptionFactoryDetailView::INPUT_CONTACT_PERSON, '');
+		$pInputModelContactPerson->setHtmlType(InputModelBase::HTML_VERTICAL_RADIO);
+		$pInputModelContactPerson->setValuesAvailable([
+			DataDetailView::SHOW_ALL_CONTACT_PERSONS => __('Show all contact persons', 'onoffice-for-wp-websites'),
+			DataDetailView::SHOW_MAIN_CONTACT_PERSON => __('Only show main contact person', 'onoffice-for-wp-websites'),
+		]);
+		$pInputModelContactPerson->setValue($this->_pDataDetailView->getContactPerson());
+		$pInputModelContactPerson->setHintHtml(__('The main contact person is the address data record of the broker type, which is stored in the first place in onOffice enterprise.', 'onoffice-for-wp-websites'));
+
+		return $pInputModelContactPerson;
+	}
+
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
 	public function createInputModelTotalCostsCalculator(): InputModelOption
 	{
 		$labelShowTotalCostsCalculator = __('Show total price calculator', 'onoffice-for-wp-websites');

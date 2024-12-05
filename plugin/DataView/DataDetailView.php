@@ -58,6 +58,15 @@ class DataDetailView
 	const FIELD_PRICE_ON_REQUEST = 'show_price_on_request';
 
 	/** */
+	const FIELD_CONTACT_PERSON = 'contact_person';
+
+	/** @var string */
+	const SHOW_ALL_CONTACT_PERSONS = '0';
+
+	/** @var int */
+	const SHOW_MAIN_CONTACT_PERSON = '1';
+
+	/** */
 	const FIELD_TOTAL_COSTS_CALCULATOR = 'show_total_costs_calculator';
 
 	/** */
@@ -288,6 +297,9 @@ class DataDetailView
 		'Thüringen' => 5
 	];
 
+	/** @var string */
+	private $_contactPerson = '0';
+
 	/**
 	 *
 	 */
@@ -516,4 +528,12 @@ class DataDetailView
 	{
 		$this->_priceFields = $priceFields;
 	}
+
+	/** @return string */
+	public function getContactPerson(): string
+		{ return $this->_contactPerson; }
+
+	/** @param string $contactPerson */
+	public function setContactPerson(string $contactPerson)
+		{ $this->_contactPerson = $contactPerson; }
 }
