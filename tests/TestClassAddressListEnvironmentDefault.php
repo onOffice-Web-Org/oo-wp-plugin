@@ -25,7 +25,6 @@ namespace onOffice\tests;
 
 use DI\DependencyException;
 use DI\NotFoundException;
-use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\OutputFields;
@@ -54,18 +53,6 @@ class TestClassAddressListEnvironmentDefault
 	public function prepare()
 	{
 		$this->_pEnvironment = new AddressListEnvironmentDefault();
-	}
-
-	/**
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	public function testGetDataListViewAddressToAPIParameters()
-	{
-		$pDataListViewAddressToAPIParameters = $this->_pEnvironment
-			->getDataListViewAddressToAPIParameters();
-		$this->assertInstanceOf(DataListViewAddressToAPIParameters::class,
-			$pDataListViewAddressToAPIParameters);
 	}
 
 	/**
