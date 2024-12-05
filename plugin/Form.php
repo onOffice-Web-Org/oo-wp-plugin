@@ -647,6 +647,18 @@ class Form
 
 	/**
 	 *
+	 * @return string
+	 *
+	 */
+
+	public function getFormType()
+	{
+		return esc_html($this->getDataFormConfiguration()->getFormType());
+	}
+ 
+
+	/**
+	 *
 	 * @return bool
 	 *
 	 */

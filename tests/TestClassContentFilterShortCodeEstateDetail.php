@@ -39,6 +39,8 @@ use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\EstateList;
 
 class TestClassContentFilterShortCodeEstateDetail
 	extends \WP_UnitTestCase
@@ -78,6 +80,7 @@ class TestClassContentFilterShortCodeEstateDetail
 				'getSimilarEstates',
 				'loadSingleEstate',
 				'getListViewId',
+				'getDataView',
 			])
 			->disableOriginalConstructor()
 			->getMock();

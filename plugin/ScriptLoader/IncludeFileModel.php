@@ -55,6 +55,8 @@ class IncludeFileModel
     /** @var string */
 	private $_loadAsynchronous = '';
 
+	/** @var bool */
+	private $_loadBeforeRenderingTemplate = false;
 
 	/**
 	 *
@@ -175,4 +177,25 @@ class IncludeFileModel
 		$this->_loadAsynchronous = $loadAsynchronous;
 		return $this;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function getLoadBeforeRenderingTemplate(): bool
+	{
+		return $this->_loadBeforeRenderingTemplate;
+	}
+
+	/**
+	 *
+	 * @param bool $loadBeforeRenderingTemplate
+	 * @return $this
+	 *
+	 */
+
+	 public function setLoadBeforeRenderingTemplate(bool $loadBeforeRenderingTemplate): self
+	 {
+		 $this->_loadBeforeRenderingTemplate = $loadBeforeRenderingTemplate;
+		 return $this;
+	 }
 }

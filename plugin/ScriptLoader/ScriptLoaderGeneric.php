@@ -60,11 +60,14 @@ class ScriptLoaderGeneric
 	{
 		/* @var $pIncludeModel IncludeFileModel */
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_SCRIPT) as $pIncludeModel) {
-			wp_enqueue_script($pIncludeModel->getIdentifier());
-			wp_script_add_data($pIncludeModel->getIdentifier(), $pIncludeModel->getLoadAsynchronous(), true);
+			if ($pIncludeModel->getLoadBeforeRenderingTemplate()){
+                wp_enqueue_script($pIncludeModel->getIdentifier());
+			}
 		}
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_STYLE) as $pIncludeModel) {
-			wp_enqueue_style($pIncludeModel->getIdentifier());
+			if ($pIncludeModel->getLoadBeforeRenderingTemplate()){
+                wp_enqueue_style($pIncludeModel->getIdentifier());
+			}
 		}
 	}
 
@@ -78,7 +81,8 @@ class ScriptLoaderGeneric
 		/* @var $pIncludeModel IncludeFileModel */
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_SCRIPT) as $pIncludeModel) {
 			wp_register_script($pIncludeModel->getIdentifier(), $pIncludeModel->getFilePath(),
-				$pIncludeModel->getDependencies(), false, $pIncludeModel->getLoadInFooter());
+				$pIncludeModel->getDependencies(), false, array('strategy' => $pIncludeModel->getLoadAsynchronous(), 'in_footer' => $pIncludeModel->getLoadInFooter()));
+			$this->_pConfiguration->localizeScript($pIncludeModel->getIdentifier());
 		}
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_STYLE) as $pIncludeModel) {
 			wp_register_style($pIncludeModel->getIdentifier(), $pIncludeModel->getFilePath(),

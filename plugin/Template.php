@@ -31,6 +31,12 @@ use onOffice\WPlugin\Template\TemplateCallbackBuilder;
 use onOffice\WPlugin\Utility\__String;
 use RuntimeException;
 use const WP_PLUGIN_DIR;
+use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\DataView\DataAddressDetailView;
+use onOffice\WPlugin\DataView\DataView;
 
 /**
  *
@@ -46,6 +52,12 @@ class Template
 
 	/** */
 	const KEY_ADDRESSLIST = 'addresslist';
+
+	/** */
+	const KEY_ESTATEDETAIL = 'estatedetail';
+
+	/** */
+	const KEY_ADDRESSDETAIL = 'addressdetail';
 
 	/** @var string */
 	private $_templateName = '';
@@ -112,7 +124,29 @@ class Template
 		$pTemplateCallback = $pContainer->get(TemplateCallbackBuilder::class);
 		$generateSortDropDown = $pTemplateCallback->buildCallbackListSortDropDown($pEstates);
 		$getListName = $pTemplateCallback->buildCallbackEstateListName($pEstates);
-		unset($templateData, $pTemplateCallback, $pContainer);
+		$scriptLoader = $pContainer->get(ScriptLoaderGenericConfigurationDefault::class);
+
+        if (!empty($pEstates) && !empty($pEstates->getDataView())) {
+			if ($pEstates->getDataView() instanceof DataListView) {
+				$scriptLoader->addEstateScripts(self::KEY_ESTATELIST);
+			} elseif ($pEstates->getDataView() instanceof DataDetailView) {
+				$scriptLoader->addEstateScripts(self::KEY_ESTATEDETAIL);
+            }
+		}
+
+		if (!empty($pForm)) {
+			$scriptLoader->addFormScripts($pForm->getFormType(), $pForm->needsReCaptcha());
+		}
+
+		if (!empty($pAddressList) && !empty($pAddressList->getDataViewAddress())) {
+			if ($pAddressList->getDataViewAddress() instanceof DataListViewAddress) {
+				$scriptLoader->addAddressScripts(self::KEY_ADDRESSLIST);
+			} elseif ($pAddressList->getDataViewAddress() instanceof DataAddressDetailView) {
+				$scriptLoader->addAddressScripts(self::KEY_ADDRESSDETAIL);
+			}
+		}
+
+        unset($templateData, $pTemplateCallback, $pContainer);
 
 		ob_start();
 		include $templatePath;
