@@ -73,6 +73,7 @@ jQuery(document).ready(function($){
 			parentItem.find('.field-item-detail').css('opacity', '1');
 		});
 		$(this).parent().parent().remove();
+		document.dispatchEvent(new CustomEvent('fieldListUpdated'));
 	});
 
 	$('.oo-search-field .input-search').on('input', function() {
@@ -156,6 +157,7 @@ jQuery(document).ready(function($){
 				}
 			});
 			document.dispatchEvent(event);
+			document.dispatchEvent(new CustomEvent('fieldListUpdated'));
 		} else {
 			var valElName = $(btn).attr('value');
 			var checkedFields = [];
@@ -167,6 +169,7 @@ jQuery(document).ready(function($){
 				parentItem.find('.field-item-detail').css('opacity', '1');
 			});
 			$('*#sortableFieldsList').find('#menu-item-' + valElName).remove();
+			document.dispatchEvent(new CustomEvent('fieldListUpdated'));
 		}
 
 		return checkedFields;
