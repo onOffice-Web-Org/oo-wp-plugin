@@ -66,6 +66,7 @@ class TestTemplateEstateDefaultDetail
 				'getEstateLinks',
 				'getLinkEmbedPlayers',
 				'getDetailView',
+				'getTotalCostsData',
 				'getShowEnergyCertificate',
 				'getPermittedValues',
 				'getRawValues',
@@ -95,6 +96,33 @@ class TestTemplateEstateDefaultDetail
 			'baujahr' => 'testField',
 		];
 
+		$totalCostsData = [
+			'kaufpreis' => [
+				'raw' => 123456.56,
+				'default' => '123.456,56 €'
+			],
+			'bundesland' => [
+				'raw' => 4321,
+				'default' => '4.321 €'
+			],
+			'aussen_courtage' => [
+				'raw' => 22222,
+				'default' => '22.222 €'
+			],
+			'notary_fees' => [
+				'raw' => 1852,
+				'default' => '1.852 €'
+			],
+			'land_register_entry' => [
+				'raw' => 617,
+				'default' => '617 €'
+			],
+			'total_costs' => [
+				'raw' => 152468.56,
+				'default' => '152.468,56 €'
+			]
+		];
+
 		$estateDataRaw = [
 			52 => [
 				'id' => 52,
@@ -115,6 +143,7 @@ class TestTemplateEstateDefaultDetail
 			->will($this->returnCallback(function(string $field): string {
 				return 'label-'.$field;
 			}));
+		$this->_pEstate->method('getTotalCostsData')->willReturn($totalCostsData);
 		$this->_pEstate->method('getRawValues')
 			->will($this->onConsecutiveCalls($pArrayContainerEstateDetailRaw, false));
 
