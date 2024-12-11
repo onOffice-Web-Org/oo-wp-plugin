@@ -327,6 +327,9 @@ class AdminPageFormSettingsContact
 		$this->createMetaBoxByForm($pFormActivities, 'side');
 
 		parent::generateMetaBoxes();
+
+        $pFormTaskConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_TASKCONFIG);
+        $this->createMetaBoxByForm($pFormTaskConfig, 'normal');
 	}
 
 
