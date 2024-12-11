@@ -179,7 +179,7 @@ class ApiCall
 					{
 						$this->filterRecords($cachedResponse, $params["filter"]);
 						if(in_array("sortby", $params) && $params["sortby"] != null)
-							$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse["data"]["records"], $params["filter"], $params["sortby"], $params["sortorder"] ?? 'ASC');
+							$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse, $params["filter"], $params["sortby"], $params["sortorder"] ?? 'ASC');
 						$cachedResponse["data"]["meta"]["cntabsolute"] = count($cachedResponse["data"]["records"]);
 
 						$cachedResponse["data"]["records"] =
@@ -195,16 +195,23 @@ class ApiCall
 		$this->_requestQueue = array();
 	}
 
-	private function sortRecords(array $newRecords, array $filter, string $sortby, string $sortorder)
+	private function sortRecords(array $cachedResponse, array $filter, string $sortby, string $sortorder)
 	{
+		$newRecords = $cachedResponse["data"]["records"];
+		$fieldTypes = $cachedResponse["types"];
 		$sortBy = (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'geo_distance' : $sortby;
 		$sortOrder =  (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'ASC' : $sortorder;
 		if(isset($sortby))
 		{
-			usort($newRecords, function ($a, $b) use ($sortBy, $sortOrder) {
+			usort($newRecords, function ($a, $b) use ($sortBy, $sortOrder, $fieldTypes) {
 				$sortA = in_array($sortBy, array_keys($a['elements'])) ? $a['elements'][$sortBy] : '';
 				$sortB = in_array($sortBy, array_keys($b['elements'])) ? $b['elements'][$sortBy] : '';
 
+				if($fieldTypes[$sortBy] === "integer" || $fieldTypes[$sortBy] === "float")
+				{
+					$sortA = floatval($sortA);
+					$sortB = floatval($sortB);
+				}
 				if ($sortOrder === 'ASC') {
 					return ($sortA > $sortB) ? 1 : -1;
 				}
@@ -412,13 +419,15 @@ class ApiCall
 			$cachedResponse["data"]["records"] = $filteredArray;
 			$cachedResponse["raw"]["data"]["records"] = $filteredArrayRaw;
 			$this->filterRecords($cachedResponse, $newFilter);
-			$filteredArray = $this->sortRecords($cachedResponse["data"]["records"], $newFilter, 'geo_distance', 'ASC');
+			$filteredArray = $this->sortRecords($cachedResponse, $newFilter, 'geo_distance', 'ASC');
 			if($filteredArray > $isGeoAndMin)
 				$filteredArray = array_slice($filteredArray, 0, $isGeoAndMin);
 		}
 		else if($isGeoAndMax > 0 && count($filteredArray) > $isGeoAndMax)
 		{
-			$filteredArray = $this->sortRecords($filteredArray, $filter, 'geo_distance', 'ASC');
+			$cachedResponse["data"]["records"] = $filteredArray;
+			$cachedResponse["raw"]["data"]["records"] = $filteredArrayRaw;
+			$filteredArray = $this->sortRecords($cachedResponse, $filter, 'geo_distance', 'ASC');
 			$filteredArray = array_slice($filteredArray, 0, $isGeoAndMax);
 		}
 		$cachedResponse["data"]["records"] = $filteredArray;

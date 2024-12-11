@@ -494,6 +494,8 @@ class EstateList
 			'addMainLangId' => true
 		];
 		if($pListView instanceof DataListView) {
+			$requestParams['data'][] = $pListView->getSortby();
+			$requestParams['data'] = array_merge($requestParams['data'], $pListView->getSortByUserValues());
 			$requestParams['sortby'] = $pListView->getSortby();
 			$requestParams['sortorder'] = $pListView->getSortorder();
 		}
