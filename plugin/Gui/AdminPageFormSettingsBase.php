@@ -516,10 +516,9 @@ abstract class AdminPageFormSettingsBase
 	protected function generateMetaBoxes()
 	{
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
-		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
-
-        $pFormTaskConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_TASKCONFIG);
-        $this->createMetaBoxByForm($pFormTaskConfig, 'normal');
+		if($pFormLayoutDesign !== null) {
+            $this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
+        }
 	}
 
 
