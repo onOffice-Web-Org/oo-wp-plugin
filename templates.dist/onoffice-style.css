@@ -199,7 +199,7 @@
     right: 25px;
 }
 
-.oo-detailspicture {
+.oo-detailspicture, .oo-detailspicture.slick-slide {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -247,7 +247,7 @@
     margin-bottom: 10px;
 }
 
-.oo-contact-info {
+.oo-contact-info, .oo-aspinfo-wrapper {
     margin-bottom: 15px;
 }
 
@@ -346,6 +346,21 @@
 .oo-address-listframe .oo-listinfotableview {
     display: flex;
     flex-wrap: wrap;
+}
+
+/* address map */
+.oo-address-map {
+    padding: 0 15px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.oo-address-map .oo-gmap, .oo-address-map .oo-map {
+    height: 300px !important;
+}
+
+.oo-address-map .oo-map .leaflet-top, .oo-address-map .oo-map .leaflet-bottom {
+    z-index: 888;
 }
 
 /* responsive */

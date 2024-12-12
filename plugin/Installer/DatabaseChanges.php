@@ -43,7 +43,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 56;
+	const MAX_VERSION = 57;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -336,7 +336,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryAddressFieldConfig());
 			$dbversion = 49;
 		}
-
+	
 		if ($dbversion == 49) {
 			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
 			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
@@ -370,8 +370,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 55) {
-			dbDelta($this->getCreateQueryFormFieldConfig());
+			dbDelta($this->getCreateQueryListViewsAddress());
 			$dbversion = 56;
+		}
+
+		if ($dbversion == 56) {
+			dbDelta($this->getCreateQueryFormFieldConfig());
+			$dbversion = 57;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -729,6 +734,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`showPhoto` tinyint(1) NOT NULL DEFAULT '0',
 			`bildWebseite` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
+			`show_map` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
