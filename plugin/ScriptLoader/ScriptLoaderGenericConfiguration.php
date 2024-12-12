@@ -36,4 +36,11 @@ interface ScriptLoaderGenericConfiguration
 	 */
 
 	public function getScriptLoaderGenericConfiguration(): array;
+
+	/**
+	 * @param string $scriptIdentifier
+	 * @return void
+	 */
+
+	public function localizeScript(string $scriptIdentifier);
 }
