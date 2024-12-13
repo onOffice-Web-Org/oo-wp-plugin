@@ -237,12 +237,12 @@ class ScriptLoaderGenericConfigurationDefault
 		if ($this->checkFormType($forms, [Form::TYPE_CONTACT, Form::TYPE_OWNER, Form::TYPE_INTEREST])) {
 			if (get_option('onoffice-settings-honeypot') == true) {
 				$scripts[] = (new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/dist/onoffice-honeypot.min.js', $pluginPath)))
-						->setDependencies(['jquery'])
-						->setLoadInFooter(true);
-			}
-			$scripts[] = (new IncludeFileModel($script, 'onoffice-prevent-whitespace-fields', plugins_url('/dist/onoffice-prevent-whitespace-fields.min.js', $pluginPath)))
 					->setDependencies(['jquery'])
 					->setLoadInFooter(true);
+			}
+			$scripts[] = (new IncludeFileModel($script, 'onoffice-prevent-whitespace-fields', plugins_url('/dist/onoffice-prevent-whitespace-fields.min.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
 		}
 
 		return $values;
