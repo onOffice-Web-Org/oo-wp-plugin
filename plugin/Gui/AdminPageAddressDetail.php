@@ -54,6 +54,7 @@ use const ONOFFICE_PLUGIN_DIR;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
 
 /**
  *
@@ -268,11 +269,13 @@ class AdminPageAddressDetail
 		$pFormModelEstates->addInputModel($pInputModelShortCodeReferenceEstate);
 		$this->addFormModel($pFormModelEstates);
 
+		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
 		$pEnvironment = new AddressListEnvironmentDefault();
 		$pBuilderShort = $pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollection = new FieldsCollection();
 		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS, $pFieldsCollection);
+		$pBuilderShort->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection);
+		$fieldNames = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS,
 			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldNames);
 		$this->addSearchFieldForFieldLists(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder);
@@ -486,6 +489,7 @@ class AdminPageAddressDetail
 		$pFieldsCollectionBuilder = $pAddressListEnvironmentDefault->getFieldsCollectionBuilderShort();
 		$pDefaultFieldsCollection = new FieldsCollection();
 		$pFieldsCollectionBuilder->addFieldsAddressEstate($pDefaultFieldsCollection);
+		$pFieldsCollectionBuilder->addFieldsEstateDecoratorReadAddressBackend($pDefaultFieldsCollection);
 
 		foreach ($pDefaultFieldsCollection->getAllFields() as $pField) {
 			if (!in_array($pField->getModule(), [onOfficeSDK::MODULE_ADDRESS], true)) {
