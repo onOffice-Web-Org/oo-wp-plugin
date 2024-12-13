@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
+use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPQueryWrapper;
@@ -32,7 +33,6 @@ use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Language;
-use onOffice\WPlugin\Record\AddressIdRequestGuard;
 
 class ContentFilterShortCodeAddressDetail {
 
@@ -94,7 +94,7 @@ class ContentFilterShortCodeAddressDetail {
 		$lastName = $pDataDetail['elements']['Name'] ?? '';
 		$company = $pDataDetail['elements']['Zusatz1'] ?? '';
 
-		$itemTitle = AddressIdRequestGuard::createAddressTitle($firstName, $lastName, $company);
+		$itemTitle = AddressList::createAddressTitle($firstName, $lastName, $company);
 		$type = __('address', 'onoffice-for-wp-websites');
 		$documentLink = __('https://wp-plugin.onoffice.com/', 'onoffice-for-wp-websites');
 		$linkDetail = '<a class="oo-detailview-helper-link" href=' . $this->getAddressLink($pDataDetail, $itemTitle) . '>' . (!empty($itemTitle) ? esc_html($itemTitle) : esc_html(__('Example address', 'onoffice-for-wp-websites'))) . '</a>';
