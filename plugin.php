@@ -70,6 +70,7 @@ use onOffice\WPlugin\Record\AddressIdRequestGuard;
 use onOffice\WPlugin\Controller\Redirector\AddressRedirector;
 use onOffice\WPlugin\Controller\Redirector\EstateRedirector;
 use onOffice\WPlugin\Controller\AddressDetailUrl;
+use onOffice\WPlugin\Controller\TemplateSelection;
 
 const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
 
@@ -526,5 +527,11 @@ function filter_script_loader_tag($tag, $handle) {
 	}
 	return $tag;
 }
+
+add_action('plugins_loaded', function() use ($pDI) {
+	if (is_admin()) {
+		$pDI->get(TemplateSelection::class)->processWPPageTemplatesFile();
+	}
+});
 
 return $pDI;
