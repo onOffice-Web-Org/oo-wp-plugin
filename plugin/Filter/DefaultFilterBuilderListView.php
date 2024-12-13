@@ -98,8 +98,8 @@ class DefaultFilterBuilderListView
 			$filter['preisAufAnfrage'][] = ['op' => '!=', 'val' => 1];
 		}
 
-		$filter = $this->addEstateCityFilterWhenConvertTextToSelect($filter);
-		$filterWithRegion = $this->addSubRegionFilter($filter);
+		$filter = $this->addEstateCityFilterWhenConvertTextToSelect($filter, $filterableFields);
+		$filterWithRegion = $this->addSubRegionFilter($filter, $filterableFields);
 
 		return $filterWithRegion;
 	}
@@ -127,11 +127,12 @@ class DefaultFilterBuilderListView
 
 	/**
 	 * @param array $baseFilter
+	 * @param array $filterableFields
 	 * @return array
 	 */
-	private function addSubRegionFilter(array $baseFilter): array
+	private function addSubRegionFilter(array $baseFilter, array $filterableFields): array
 	{
-		if (in_array('regionaler_zusatz', $this->_pDataListView->getFilterableFields(), true)) {
+		if (in_array('regionaler_zusatz', $filterableFields)) {
 			$additionalRegions = [];
 			$pRegionController = $this->_pEnvironment->getRegionController();
 			$pRegionController->fetchRegions();
@@ -154,11 +155,12 @@ class DefaultFilterBuilderListView
 
 	/**
 	 * @param array $baseFilter
+	 * @param array $filterableFields
 	 * @return array
 	 */
-	private function addEstateCityFilterWhenConvertTextToSelect(array $baseFilter): array
+	private function addEstateCityFilterWhenConvertTextToSelect(array $baseFilter, array $filterableFields): array
 	{
-		if (in_array('ort', $this->_pDataListView->getFilterableFields(), true) && !empty($this->_pDataListView->getConvertTextToSelectForCityField())) {
+		if (in_array('ort', $filterableFields) && !empty($this->_pDataListView->getConvertTextToSelectForCityField())) {
 			$additionalEstateCities = [];
 			$estateCityValue = $this->_pEnvironment->getInputVariableReader()->getFieldValue('ort');
 
