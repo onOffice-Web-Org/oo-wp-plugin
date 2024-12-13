@@ -83,6 +83,10 @@ class InputModelDBFactoryConfigAddress
 			self::KEY_TABLE => 'oo_plugin_listviews_address',
 			self::KEY_FIELD => 'bildWebseite',
 		],
+		InputModelDBFactory::INPUT_SHOW_MAP => [
+			self::KEY_TABLE => 'oo_plugin_listviews_address',
+			self::KEY_FIELD => 'show_map',
+		],
 	];
 
 

@@ -7,6 +7,7 @@ use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\Template;
 use RuntimeException;
 use SebastianBergmann\Environment\Runtime;
+use onOffice\WPlugin\DataView\DataListView;
 
 class TestClassTemplate extends \WP_UnitTestCase
 {
@@ -35,6 +36,7 @@ class TestClassTemplate extends \WP_UnitTestCase
 				'getDocument',
 				'getCurrentEstateId',
 				'getSimilarEstates',
+				'getDataView',
 			])
 			->disableOriginalConstructor()
 			->getMock();
@@ -55,6 +57,13 @@ class TestClassTemplate extends \WP_UnitTestCase
 			'sonstige_angaben' => 'Vereinbaren sie noch heute einen Besichtigungstermin',
 		];
 
+		$pListView = new DataListView(1, 'asd');
+		$pListView->setSortByUserValues(['kaltmiete', 'kaufpreis']);
+		$pListView->setSortby('kaufpreis');
+		$pListView->setSortorder('DESC');
+		$pListView->setSortBySetting(1);
+		$pListView->setSortByUserDefinedDefault('kaltmiete');
+		$pListView->setSortByUserDefinedDirection(1);
 		$pArrayContainerEstateDetail = new ArrayContainerEscape($estateData);
 
 		$this->_pEstate->setEstateId(52);
@@ -68,6 +77,7 @@ class TestClassTemplate extends \WP_UnitTestCase
 		$this->_pEstate->method('getEstatePictures')->willReturn([]);
 
 		$this->_pEstate->method('getEstateContacts')->willReturn([]);
+		$this->_pEstate->method('getDataView')->willReturn($pListView);
 	}
 
 	public function testRender_templatesInThemeDir()
