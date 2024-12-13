@@ -507,14 +507,6 @@ $dimensions = [
 			?>
 
 		</div>
-		<?php
-		if (get_option('onoffice-pagination-paginationbyonoffice')) { ?>
-			<div>
-				<?php
-				wp_link_pages();
-				?>
-			</div>
-		<?php } ?>
 		<div class="oo-similar">
 			<?php echo $pEstates->getSimilarEstates(); ?>
 		</div>
