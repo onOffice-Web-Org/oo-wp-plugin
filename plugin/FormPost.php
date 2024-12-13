@@ -122,10 +122,7 @@ abstract class FormPost
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
 
-		if ($this->_pFormPostConfiguration->getPostMessage() !== "") {
-			$pFormData->setStatus(self::MESSAGE_SUCCESS);
-			return;
-		} elseif ($pFormData->getMissingFields() === [] && !$this->checkCaptcha($pConfig)) {
+		if ($pFormData->getMissingFields() === [] && !$this->checkCaptcha($pConfig)) {
 			$pFormData->setStatus(self::MESSAGE_RECAPTCHA_SPAM);
 			return;
 		} elseif ($pFormData->getMissingFields() !== []) {
