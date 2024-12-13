@@ -199,7 +199,7 @@
     right: 25px;
 }
 
-.oo-detailspicture {
+.oo-detailspicture, .oo-detailspicture.slick-slide {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -247,7 +247,7 @@
     margin-bottom: 10px;
 }
 
-.oo-contact-info {
+.oo-contact-info, .oo-aspinfo-wrapper {
     margin-bottom: 15px;
 }
 
