@@ -69,7 +69,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 ?>
 
 <script>
-	$(document).ready(function() {
+	jQuery(document).ready(function($) {
 		var oOPaging = new onOffice.paging('leadform');
 		oOPaging.setFormId('leadgeneratorform');
 		oOPaging.setup();
