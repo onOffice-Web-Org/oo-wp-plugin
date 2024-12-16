@@ -125,7 +125,7 @@ class InputFieldComplexSortableDetailListRenderer
 		foreach ($fieldsByPage as $fields) {
 			echo '<div class="list-fields-for-each-page">';
 			echo '<span class="page-title">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</span>';
-			echo '<ul class="filter-fields-list attachSortableFieldsList fieldsListPage-' . esc_attr($page) . ' sortableFieldsListForForm">';
+			echo '<ul class="filter-fields-list attachSortableFieldsList multi-page-list fieldsListPage-' . esc_attr($page) . ' sortableFieldsListForForm">';
 			$i = 1;
 
 			foreach ($fields as $key => $properties) {

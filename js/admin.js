@@ -137,7 +137,7 @@ jQuery(document).ready(function($){
 		},
 
 		initializeSortable: function() {
-			$(".fieldsListPage-1, .fieldsListPage-2, .fieldsListPage-3, .fieldsListPage-4, .fieldsListPage-5, .fieldsListPage-6").sortable({
+			$(".multi-page-list").sortable({
 				connectWith: ".filter-fields-list",
 				handle: ".menu-item-bar",
 				placeholder: "ui-sortable-placeholder",

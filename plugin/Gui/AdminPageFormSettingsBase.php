@@ -934,7 +934,7 @@ abstract class AdminPageFormSettingsBase
 	 */
 	private function updatePageNumbers($values, string $fieldName) 
 	{
-		if (!isset($values->$fieldName) || !is_array($values->$fieldName)) {
+		if ( !property_exists($values, $fieldName) || !is_array($values->$fieldName)) {
 			return $values;
 		}
 	
@@ -943,8 +943,7 @@ abstract class AdminPageFormSettingsBase
 	
 		foreach ($values->$fieldName as $key => $value) {
 			if (!isset($data[$value])) {
-				$data[$value] = (string)$currentValue;
-				$currentValue++;
+				$data[$value] = (string)$currentValue++;
 			}
 			$values->$fieldName[$key] = $data[$value];
 		}
