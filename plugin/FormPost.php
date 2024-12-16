@@ -122,13 +122,16 @@ abstract class FormPost
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
 
-		if ($pFormData->getMissingFields() === [] && !$this->checkCaptcha($pConfig)) {
+		if ($this->_pFormPostConfiguration->getPostMessage() !== "") {
+			$pFormData->setStatus(self::MESSAGE_SUCCESS);
+			return;
+		} elseif ($pFormData->getMissingFields() === [] && !$this->checkCaptcha($pConfig)) {
 			$pFormData->setStatus(self::MESSAGE_RECAPTCHA_SPAM);
 			return;
 		} elseif ($pFormData->getMissingFields() !== []) {
 			$pFormData->setStatus(self::MESSAGE_REQUIRED_FIELDS_MISSING);
 			return;
-		}
+		} 
 
 		try {
 			$this->analyseFormContentByPrefix($pFormData);

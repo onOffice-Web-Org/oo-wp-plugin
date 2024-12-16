@@ -473,7 +473,7 @@ class TestClassFormPostContact
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
-		$this->assertEquals(FormPost::MESSAGE_SUCCESS, 'success'); // $pFormData->getStatus()
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus()); 
 	}
 
 
@@ -513,7 +513,7 @@ class TestClassFormPostContact
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
-		$this->assertEquals(FormPost::MESSAGE_SUCCESS, 'success'); // $pFormData->getStatus()
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
 	}
 
 	/**

@@ -31,8 +31,6 @@ $estateValues = array();
 $miscValues = array();
 $hiddenValues = array();
 
-$unique_id = uniqid();
-
 $showFormAsModal = $pForm->getShowFormAsModal() || $pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS;
 
 if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
@@ -77,18 +75,18 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
 <script>
 	jQuery(document).ready(function() {
-		var oOPaging = new onOffice.paging('leadform_<?php echo $unique_id; ?>');
-		oOPaging.setFormId('leadgeneratorform_<?php echo $unique_id; ?>');
+		var oOPaging = new onOffice.paging('leadform-<?php echo sanitize_title($pForm->getFormId()); ?>');
+		oOPaging.setFormId('leadgeneratorform-<?php echo sanitize_title($pForm->getFormId()); ?>');
 		oOPaging.setup();
 	});
 </script>
 
-<div id="onoffice-lead_<?php echo $unique_id; ?>" <?php echo $showFormAsModal ? 'style="display:none;"' : ''; ?>>
+<div id="onoffice-lead-<?php echo sanitize_title($pForm->getFormId()); ?>" <?php echo $showFormAsModal ? 'style="display:none;"' : ''; ?>>
 	<p>
-		<form name="leadgenerator" action="" method="post" id="leadgeneratorform_<?php echo $unique_id; ?>">
+		<form name="leadgenerator" action="" method="post" id="leadgeneratorform-<?php echo sanitize_title($pForm->getFormId()); ?>">
 			<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
 			<input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
-			<div id="leadform_<?php echo $unique_id; ?>">
+			<div id="leadform-<?php echo sanitize_title($pForm->getFormId()); ?>">
 				<?php
 					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
 						echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
@@ -113,7 +111,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 					<p>
 						<div style="float:right">
 							<?php
-							$pForm->setGenericSetting('formId', 'leadgeneratorform_' . $unique_id);
+							$pForm->setGenericSetting('formId', 'leadgeneratorform-' . sanitize_title($pForm->getFormId()));
 							include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 							?>
 						</div>
@@ -138,7 +136,7 @@ if (in_array($pForm->getFormStatus(), [
 		FormPost::MESSAGE_ERROR,
 		FormPost::MESSAGE_REQUIRED_FIELDS_MISSING,
 	]) && $pForm->getShowFormAsModal()) {
-	echo '<a href="#TB_inline?width=700&height=650&z&inlineId=onoffice-lead_' . $unique_id . '" class="thickbox">';
+	echo '<a href="#TB_inline?width=700&height=650&z&inlineId=onoffice-lead-' . sanitize_title($pForm->getFormId()) . '" class="thickbox">';
 	echo esc_html__('Open the Form', 'onoffice-for-wp-websites');
 	echo '</a>';
 }
