@@ -701,6 +701,10 @@ class EstateList
 		ksort($fields);
 
 		if ($fields !== [] && $allAddressIds !== []) {
+			if ($this->_pDataView instanceof DataDetailView && $this->_pDataView->getContactPerson() === DataDetailView::SHOW_MAIN_CONTACT_PERSON) {
+				$allAddressIds = [$allAddressIds[0]];
+			}
+
 			$this->_pEnvironment->getAddressList()->loadAddressesById($allAddressIds, $fields);
 		}
 	}

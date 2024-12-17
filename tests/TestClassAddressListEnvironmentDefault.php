@@ -32,6 +32,7 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use WP_UnitTestCase;
+use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 
 /**
  *
@@ -91,7 +92,7 @@ class TestClassAddressListEnvironmentDefault
 		$pViewFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler([
 			'imageUrl',
 			'testField1',
-		]);
+		], AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
 		$this->assertInstanceOf(ViewFieldModifierHandler::class, $pViewFieldModifierHandler);
 	}
 

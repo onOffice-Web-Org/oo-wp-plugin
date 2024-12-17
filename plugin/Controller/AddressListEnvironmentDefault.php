@@ -142,12 +142,12 @@ class AddressListEnvironmentDefault
 
 	/**
 	 * @param array $fields
+	 * @param string $modified
 	 * @return ViewFieldModifierHandler
 	 */
-	public function getViewFieldModifierHandler(array $fields): ViewFieldModifierHandler
+	public function getViewFieldModifierHandler(array $fields, $modified): ViewFieldModifierHandler
 	{
-		return new ViewFieldModifierHandler($fields, onOfficeSDK::MODULE_ADDRESS,
-			AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
+		return new ViewFieldModifierHandler($fields, onOfficeSDK::MODULE_ADDRESS, $modified);
 	}
 
     /**

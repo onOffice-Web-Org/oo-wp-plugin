@@ -72,9 +72,10 @@ interface AddressListEnvironment
 
 	/**
 	 * @param array $fields
+	 * @param string $modifier
 	 * @return ViewFieldModifierHandler
 	 */
-	public function getViewFieldModifierHandler(array $fields): ViewFieldModifierHandler;
+	public function getViewFieldModifierHandler(array $fields, string $modifier): ViewFieldModifierHandler;
 
 	/**
 	 * @return FieldsCollectionBuilderShort
