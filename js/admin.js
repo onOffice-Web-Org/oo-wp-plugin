@@ -137,7 +137,7 @@ jQuery(document).ready(function($){
 		},
 
 		initializeSortable: function() {
-			$(".multi-page-list").sortable({
+			$('.multi-page-list').sortable({
 				connectWith: ".filter-fields-list",
 				handle: ".menu-item-bar",
 				placeholder: "ui-sortable-placeholder",
@@ -230,7 +230,7 @@ jQuery(document).ready(function($){
 		createNewPage: function(pageNumber) {
 			const newPage = $('<div>', { class: `list-fields-for-each-page fieldsListPage-${pageNumber}` })
 				.append(`<span class="page-title">${onOffice_loc_settings.page_title} ${pageNumber}</span>`)
-				.append(`<ul class="filter-fields-list attachSortableFieldsList fieldsListPage-${pageNumber} sortableFieldsListForForm"></ul>`)
+				.append(`<ul class="filter-fields-list attachSortableFieldsList multi-page-list fieldsListPage-${pageNumber} sortableFieldsListForForm"></ul>`)
 				.append(`<div class="item-remove-page"><a class="item-remove-page-link submitdelete">${onOffice_loc_settings.remove_page}</a></div>`);
 
 			const clonedElement = $('#menu-item-dummy_key').clone();
