@@ -212,8 +212,22 @@ class TestClassDefaultFilterBuilderListView
 			('regionaler_zusatz', onOfficeSDK::MODULE_ESTATE, FieldTypes::FIELD_TYPE_MULTISELECT);
 		$this->_pInputVariableReaderConfig->setValue('regionaler_zusatz', 'OstfriesischeInseln');
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setMethods(['addFieldsAddressEstate'])
 			->setConstructorArgs([new Container])
 			->getMock();
+
+		$pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->willReturnCallback(function (FieldsCollection $pFieldsCollection)
+			use ($pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
+			{
+				$pFieldObjektart = new Field('regionaler_zusatz', onOfficeSDK::MODULE_ESTATE);
+				$pFieldObjektart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldObjektart);
+
+				return $pFieldsCollectionBuilderShort;
+			});
+
 		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort, $this->_pEnvironment);
 
 		$expected = [
