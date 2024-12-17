@@ -226,8 +226,9 @@ implements AddressListBase
 			$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
 		}
 
-		if(isset($_GET['geo_search']) && count(explode(',',$_GET['geo_search'])) == 2 )
+		if(isset($_GET['geo_search']) && count(explode(',',$_GET['geo_search'])) == 2 ) {
 			$filter['geo'][0]['loc'] = $_GET['geo_search'];
+		}
 
 		$parameters = array(
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
@@ -242,7 +243,7 @@ implements AddressListBase
 		);
 
 		if ($this->_pDataViewAddress instanceof DataListViewAddress) {
-			$parameters['params_list_cache'] = $this->getAddressParametersForCache($language, $formatOutput);
+			$parameters['params_list_cache'] = $this->getAddressListParametersForCache($language, $formatOutput);
 			$parameters = array('listname' => $this->_pDataViewAddress->getName()) + $parameters;
 		}
 
@@ -263,7 +264,7 @@ implements AddressListBase
 	 * @return array
 	 * @throws UnknownViewException
 	 */
-	public function getAddressParametersForCache(string $lang, bool $formatOutput)
+	public function getAddressListParametersForCache(string $lang, bool $formatOutput)
 	{
 		$pFieldModifierHandler = $this->generateRecordModifier();
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->getDefaultFilter();
@@ -281,10 +282,8 @@ implements AddressListBase
 			'formatoutput' => $formatOutput,
 		);
 
-		if($this->_pDataViewAddress instanceof DataListViewAddress) {
-			$params['sortby'] = $this->_pDataViewAddress->getSortby();
-			$params['sortorder'] = $this->_pDataViewAddress->getSortorder();
-		}
+		$params['sortby'] = $this->_pDataViewAddress->getSortby();
+		$params['sortorder'] = $this->_pDataViewAddress->getSortorder();
 		return $params;
 	}
 

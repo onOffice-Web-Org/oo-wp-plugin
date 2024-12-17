@@ -475,7 +475,7 @@ class EstateList
 	 * @return array
 	 * @throws UnknownViewException
 	 */
-	public function getEstateParametersForCache(string $lang, bool $formatOutput)
+	public function getEstateListParametersForCache (string $lang, bool $formatOutput)
 	{
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
@@ -493,15 +493,14 @@ class EstateList
 			'formatoutput' => $formatOutput,
 			'addMainLangId' => true
 		];
-		if($pListView instanceof DataListView) {
-			$requestParams['data'][] = $pListView->getSortby();
-			$requestParams['data'] = array_merge($requestParams['data'], $pListView->getSortByUserValues());
-			$requestParams['sortby'] = $pListView->getSortby();
-			$requestParams['sortorder'] = $pListView->getSortorder();
-		}
 
+		$requestParams['data'][] = $pListView->getSortby();
+		$requestParams['data'] = array_merge($requestParams['data'], $pListView->getSortByUserValues());
 		$requestParams['data'][] = 'preisAufAnfrage';
 		$requestParams['data'][] = 'referenz';
+		$requestParams['sortby'] = $pListView->getSortby();
+		$requestParams['sortorder'] = $pListView->getSortorder();
+
 
 		if ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
@@ -552,7 +551,7 @@ class EstateList
 		];
 
 		if ($pListView instanceof DataListView) {
-			$requestParams['params_list_cache'] = $this->getEstateParametersForCache($language, $formatOutput);
+			$requestParams['params_list_cache'] = $this->getEstateListParametersForCache($language, $formatOutput);
 			$requestParams = array('listname' => $this->_pDataView->getName()) + $requestParams;
 		}
 
