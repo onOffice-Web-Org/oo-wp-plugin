@@ -707,4 +707,8 @@ class Form
 	/** @var int $countAbsolute */
 	private function setCountAbsoluteResults(int $countAbsolute)
 		{ $this->_countAbsoluteResults = $countAbsolute; }
+
+	/** @return bool */
+	public function getShowFormAsModal(): bool
+		{ return $this->_pFormData->getDataFormConfiguration()->getShowFormAsModal(); }
 }
