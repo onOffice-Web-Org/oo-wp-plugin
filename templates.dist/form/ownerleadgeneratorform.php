@@ -100,7 +100,10 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
                 foreach ($addressValues as $pageNumber => $fields): ?>
                     <div class="lead-lightbox lead-page-<?php echo $pageNumber; ?>">
-                        <span><?php echo sprintf('%s', $pageTitles[$pageNumber]); ?></span>
+
+                        <?php if($totalPages > 1): ?>
+                            <span><?php echo sprintf('%s', $pageTitles[$pageNumber]); ?></span>
+                        <?php endif; ?>
                         <p>
                             <?php echo implode('<br>', $fields); ?>
                         </p>
