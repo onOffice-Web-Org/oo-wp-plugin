@@ -385,6 +385,7 @@ class DataFormConfigurationFactory
 		$pConfig->setCreateOwner((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
 		$pConfig->setContactTypeField($row['contact_type'] ?? []);
+		$pConfig->setShowFormAsModal((bool)$row['show_form_as_modal']);
 	}
 
 
