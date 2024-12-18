@@ -865,7 +865,6 @@ class FormModelBuilderDBForm
 	/**
 	 * @return InputModelDB
 	 */
-
 	public function createInputModelWriteActivity(): InputModelDB
 	{
 		$labelWriteActivity = __('Write activity', 'onoffice-for-wp-websites');
@@ -1063,6 +1062,21 @@ class FormModelBuilderDBForm
 		$pInputModelRemark->setValue($this->getValue('remark') ?? '');
 
 		return $pInputModelRemark;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelShowFormAsModal()
+	{
+		$labelShowFormAsModal = __('Show form as modal', 'onoffice-for-wp-websites');
+		$pInputModelFormShowFormAsModal = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_SHOW_FORM_AS_MODAL, $labelShowFormAsModal);
+		$pInputModelFormShowFormAsModal->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelFormShowFormAsModal->setValue($this->getValue($pInputModelFormShowFormAsModal->getField(), true));
+		$pInputModelFormShowFormAsModal->setValuesAvailable(1);
+
+		return $pInputModelFormShowFormAsModal;
 	}
 
 	/**

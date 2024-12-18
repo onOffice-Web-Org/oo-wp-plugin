@@ -497,11 +497,15 @@ abstract class AdminPageFormSettingsBase
 		$this->addFormModel($pFormModelName);
 
 		$pInputModelTemplate = $this->_pFormModelBuilder->createInputModelTemplate('form');
+		$pInputModelShowFormAsModal = $this->_pFormModelBuilder->createInputModelShowFormAsModal();
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		if ($this->getType() === Form::TYPE_OWNER) {
+			$pFormModelLayoutDesign->addInputModel($pInputModelShowFormAsModal);
+		}
 		$this->addFormModel($pFormModelLayoutDesign);
 	}
 
