@@ -27,7 +27,6 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 add_thickbox();
 
 $addressValues = array();
-$estateValues = array();
 $miscValues = array();
 $hiddenValues = array();
 
@@ -89,13 +88,6 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 						echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
 					}
 				?>
-
-				<div class="lead-lightbox lead-page-1">
-					<h2><?php echo esc_html__('Your contact details', 'onoffice-for-wp-websites'); ?></h2>
-					<p>
-						<?php echo implode('<br>', $addressValues); ?>
-					</p>
-				</div>
 
                 <?php
                 $pageTitles = [];
