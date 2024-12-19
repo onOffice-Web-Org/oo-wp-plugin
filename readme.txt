@@ -76,6 +76,26 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.4 (2024-12-19) =
+
+**Added**
+
+* Info text when an address detail page is not found
+
+* Option to display ownerleadgeneratorform embedded on the website
+
+* Extension to order fields in multipage forms like leadgenerator
+
+**Fixed**
+
+* Fatal error when creating applicant search form
+
+* Error when regionaler_zusatz is deactivated
+
+* Incorrect email adresses containing whitespaces
+
+* Box "Layout & Design" position in backend
+
 = 5.3 (2024-12-05) =
 
 **Added**
