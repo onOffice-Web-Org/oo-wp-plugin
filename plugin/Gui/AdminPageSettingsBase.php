@@ -571,7 +571,7 @@ abstract class AdminPageSettingsBase
 	public function doExtraEnqueues()
 	{
 		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/admin.min.js',
-			['jquery'], '', true);
+			['jquery', 'jquery-ui-draggable', 'jquery-ui-droppable'], '', true);
 
 		wp_register_script('oo-reference-estate-js',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-reference-estate-select.min.js', ['jquery'], '', true);

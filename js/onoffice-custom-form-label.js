@@ -17,10 +17,11 @@ onOffice.custom_labels_input_converter = function () {
             .querySelector('input[name*="oopluginfieldconfigformtranslatedlabels-value"].onoffice-input');
         var fieldname = element.parentElement.parentElement.parentElement
             .querySelector('span.menu-item-settings-name').textContent;
-        if (onOffice.custom_labels_inputs_converted.indexOf(fieldname) !== -1 && fieldname !== 'dummy_key') {
+        const uniqueFieldname = getUniqueFieldname(element, fieldname);
+        if (onOffice.custom_labels_inputs_converted.indexOf(uniqueFieldname) !== -1 && fieldname !== 'dummy_key') {
             return;
         }
-        onOffice.custom_labels_inputs_converted.push(fieldname);
+        onOffice.custom_labels_inputs_converted.push(uniqueFieldname);
         mainInput.name = 'customlabel-lang[' + fieldname + '][native]';
 
         (function () {
@@ -106,6 +107,16 @@ onOffice.custom_labels_input_converter = function () {
         }
     });
 };
+
+function getUniqueFieldname(mainInput, fieldName) {
+    if (document.querySelector('#multi-page-container')) {
+        var container = mainInput.closest('#multi-page-container, #single-page-container');
+        if (container) {
+            return container.id + '-' + fieldName;
+        }
+    }
+    return fieldName;
+}
 
 onOffice.custom_labels_input_converter();
 
