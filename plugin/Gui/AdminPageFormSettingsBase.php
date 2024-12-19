@@ -376,6 +376,8 @@ abstract class AdminPageFormSettingsBase
 			'fieldList' => $this->getFieldList(),
 			'installed_wp_languages' => $this->getInstalledLanguages(),
 			'language_native' => $pLanguage->getLocale(),
+			'page_title' => __('Page', 'onoffice-for-wp-websites'),
+			'remove_page' => __('Remove Page', 'onoffice-for-wp-websites'),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
 			self::VIEW_SAVE_SAME_NAME_MESSAGE => __('There was a problem saving the list. The Name field has been exist.', 'onoffice-for-wp-websites'),
@@ -893,11 +895,10 @@ abstract class AdminPageFormSettingsBase
 
 		$mainRecordId = $recordId != 0 ? $recordId : null;
 		$values = (object) $this->transformPostValues();
-
+		$values = $this->updatePageNumbers( $values, 'oopluginformfieldconfig-pageperform' );
 		$this->prepareValues( $values );
 		$this->customFontMarkdown( $values );
 		$pInputModelDBAdapterRow = new InputModelDBAdapterRow();
-
 		foreach ( $this->getFormModels() as $pFormModel ) {
 			foreach ( $pFormModel->getInputModel() as $pInputModel ) {
 				if ( $pInputModel instanceof InputModelDB ) {
@@ -940,6 +941,30 @@ abstract class AdminPageFormSettingsBase
 
 		wp_redirect( admin_url( 'admin.php?' . $pageQuery . $typeQuery . $idQuery . $statusQuery ) );
 		die();
+	}
+
+	/**
+	 * @param mixed $values
+	 * @param string $fieldName
+	 * @return mixed
+	 */
+	private function updatePageNumbers($values, string $fieldName) 
+	{
+		if ( !property_exists($values, $fieldName) || !is_array($values->$fieldName)) {
+			return $values;
+		}
+	
+		$data = [];
+		$currentValue = 1;
+	
+		foreach ($values->$fieldName as $key => $value) {
+			if (!isset($data[$value])) {
+				$data[$value] = (string)$currentValue++;
+			}
+			$values->$fieldName[$key] = $data[$value];
+		}
+	
+		return $values;
 	}
 
 	/** @return string */
