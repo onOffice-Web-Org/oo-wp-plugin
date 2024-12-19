@@ -408,6 +408,28 @@
     z-index: 888;
 }
 
+.oo-donut-chart-color0 {
+    fill:#3F9DE4;
+    background-color:#3F9DE4;
+}
+
+.oo-donut-chart-color1 {
+    fill:#3ac411;
+    background-color:#3ac411;
+}
+.oo-donut-chart-color2 {
+    fill:#9C27B0;
+    background-color:#9C27B0;
+}
+.oo-donut-chart-color3 {
+    fill:#D81B60;
+    background-color:#D81B60;
+}
+.oo-donut-chart-color4 {
+    fill:#FEC800;
+    background-color:#FEC800;
+}
+
 /* responsive */
 @media only screen and (max-width: 991px) {
     .oo-listobject, .oo-searchformfield {

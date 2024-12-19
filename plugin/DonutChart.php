@@ -32,13 +32,12 @@ use onOffice\WPlugin\EstateList;
  {
      private $values;
      private $valuesTitle;
-     private $colors;
+     private $colors = ['#3F9DE4', '#3ac411', '#9C27B0', '#D81B60', '#FEC800'];
 
-     public function __construct(array $values, array $valuesTitle, array $colors)
+     public function __construct(array $values, array $valuesTitle)
      {
          $this->values = $values;
          $this->valuesTitle = $valuesTitle;
-         $this->colors = $colors;
      }
 
      private function toRadians($angle)
@@ -46,19 +45,6 @@ use onOffice\WPlugin\EstateList;
          return $angle * pi() / 180;
      }
 
-
-     public function getColors($i = null) {
-         if ($i === null) {
-             return $this->colors;
-         }
- 
-         if (isset($this->colors[$i])) {
-             return $this->colors[$i];
-         } else {
-             return "";
-         }
-
-     }
      private function polarToCartesian($radius, $angle, $subtractGap = false)
      {
          $adjustedAngle = $this->toRadians($angle - 90);
@@ -95,7 +81,7 @@ use onOffice\WPlugin\EstateList;
                 "A 190,190,0,{$largeArcFlag},0," . $this->polarToCartesian(190, $angleStart)
              ];
 
-             $svgContent .= '<path d="' . implode(' ', $path) . '" fill="' . $this->colors[$counter] . '" ><title>'.$this->valuesTitle[$counter].'</title></path>' . "\n";
+             $svgContent .= '<path d="' . implode(' ', $path) . '" class="oo-donut-chart-color'.$counter.'"><title>'.$this->valuesTitle[$counter].'</title></path>' . "\n";
              $angleStart = $angleEnd;
              $counter++;
          }
