@@ -276,34 +276,16 @@ $dimensions = [
 				$totalCostsData = $pEstates->getTotalCostsData();
 
 				?>
-			
-			
-
 				<div class="oo-detailspricecalculator">
 					<h2><?php esc_html_e('Total costs', 'onoffice-for-wp-websites'); ?></h2>
 					<div class="oo-costs-container">
 						<div class="oo-donut-chart">
 						<?php 
-					
-
-
-
-
 							$values = [$totalCostsData['kaufpreis']['raw'], $totalCostsData['bundesland']['raw'], $totalCostsData['aussen_courtage']['raw'],$totalCostsData['notary_fees']['raw'], $totalCostsData['land_register_entry']['raw']];
 							$valuesTitle = [$totalCostsData['kaufpreis']['default'], $totalCostsData['bundesland']['default'], $totalCostsData['aussen_courtage']['default'],$totalCostsData['notary_fees']['default'], $totalCostsData['land_register_entry']['default']];
-
 							$chart = new DonutChart($values, $valuesTitle, ['#3F9DE4', '#3ac411', '#9C27B0', '#D81B60', '#FEC800'] );
-
-
 							echo $chart->generateSVG(); ?>
-
-
 						</div>
-
-						
-							
-						
-
 						<div class="oo-costs-overview">
 							<h3><?php esc_html_e('Overview of costs', 'onoffice-for-wp-websites'); ?></h3>
 							<div class="oo-costs-item">
