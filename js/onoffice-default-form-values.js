@@ -16,10 +16,11 @@ onOffice.default_values_input_converter = function () {
             .querySelector('input[name^=oopluginfieldconfigformdefaultsvalues-value].onoffice-input');
         var fieldname = element.parentElement.parentElement.parentElement
             .querySelector('span.menu-item-settings-name').textContent;
-        if (onOffice.default_values_inputs_converted.indexOf(fieldname) !== -1) {
+        const uniqueFieldname = getUniqueFieldname(element, fieldname);
+        if (onOffice.default_values_inputs_converted.indexOf(uniqueFieldname) !== -1) {
             return;
         }
-        onOffice.default_values_inputs_converted.push(fieldname);
+        onOffice.default_values_inputs_converted.push(uniqueFieldname);
         mainInput.name = 'defaultvalue-lang[' + fieldname + '][native]';
 
         (function () {
@@ -118,10 +119,11 @@ onOffice.default_values_input_converter = function () {
         }
 
         var fieldName = mainElement.textContent;
-        if (onOffice.default_values_inputs_converted.indexOf(fieldName) !== -1) {
+        const uniqueFieldname = getUniqueFieldname(mainInput, fieldName);
+        if (onOffice.default_values_inputs_converted.indexOf(uniqueFieldname) !== -1) {
             return;
         }
-        onOffice.default_values_inputs_converted.push(fieldName);
+        onOffice.default_values_inputs_converted.push(uniqueFieldname);
         mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
         var predefinedValuesIsArray = (typeof predefinedValues[fieldName] === 'object') &&
             Array.isArray(predefinedValues[fieldName]);
@@ -180,10 +182,12 @@ onOffice.default_values_input_converter = function () {
             return;
         }
         var fieldName = mainElement.textContent;
-        if (onOffice.default_values_inputs_converted.indexOf(fieldName) !== -1 || fieldName === 'dummy_key') {
+        const uniqueFieldname = getUniqueFieldname(mainInput, fieldName);
+        if (onOffice.default_values_inputs_converted.indexOf(uniqueFieldname) !== -1 || fieldName === 'dummy_key') {
             return;
         }
-        onOffice.default_values_inputs_converted.push(fieldName);
+        onOffice.default_values_inputs_converted.push(uniqueFieldname);
+        
         var fieldDefinition = getFieldDefinition(fieldName);
 
         if (fieldDefinition.type === "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:tinyint") {
@@ -346,8 +350,8 @@ document.addEventListener("addFieldItem", function(e) {
 
     var paragraph = e.detail.item.querySelectorAll('.menu-item-settings p')[2];
     paragraph.parentNode.insertBefore(p, paragraph.nextSibling);
-
-    var index = onOffice.default_values_inputs_converted.indexOf(fieldName);
+    const uniqueFieldname = getUniqueFieldname(paragraph, fieldName);
+    var index = onOffice.default_values_inputs_converted.indexOf(uniqueFieldname);
     if (index !== -1) {
         delete onOffice.default_values_inputs_converted[index];
     }
@@ -363,6 +367,16 @@ function getFieldDefinition(fieldName) {
         }
     }
     return {};
+}
+
+function getUniqueFieldname(mainInput, fieldName) {
+    if (document.querySelector('#multi-page-container')) {
+        var container = mainInput.closest('#multi-page-container, #single-page-container');
+        if (container) {
+            return container.id + '-' + fieldName;
+        }
+    }
+    return fieldName;
 }
 
 onOffice.default_values_input_converter();
