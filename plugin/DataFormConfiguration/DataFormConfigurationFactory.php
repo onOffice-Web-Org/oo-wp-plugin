@@ -244,6 +244,10 @@ class DataFormConfigurationFactory
 		if (array_key_exists('hidden_field', $row) && $row['hidden_field'] == 1) {
 			$pFormConfiguration->addHiddenFields($fieldName);
 		}
+
+		if (array_key_exists('page_per_form', $row)) {
+			$pFormConfiguration->addPagePerForm($fieldName, $row['page_per_form']);
+		}
 	}
 
 
