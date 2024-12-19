@@ -8,7 +8,7 @@ on:
 jobs:
   get-version:
     name: Get current version
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     outputs:
       currentVersion: ${{ steps.get-version.outputs.version }}
     steps:
@@ -26,7 +26,7 @@ jobs:
 
   deploy:
     name: Deploy stable version
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment: WordPress SVN
     needs: [get-version, build]
     env:
