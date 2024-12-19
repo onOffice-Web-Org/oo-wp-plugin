@@ -580,6 +580,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`markdown` tinyint(1) NOT NULL DEFAULT '0',
 			`hidden_field` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
+			`page_per_form` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_fieldconfig_id`)
 		) $charsetCollate;";
 
