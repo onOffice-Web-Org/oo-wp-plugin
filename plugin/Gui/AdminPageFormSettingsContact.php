@@ -316,17 +316,28 @@ class AdminPageFormSettingsContact
 	protected function generateMetaBoxes()
 	{
 		$pFormFormSpecific = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
-		$this->createMetaBoxByForm($pFormFormSpecific, 'side');
+        if($pFormFormSpecific !== null) {
+            $this->createMetaBoxByForm($pFormFormSpecific, 'side');
+        }
 
 		if ($this->_showGeoPositionSettings) {
 			$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
-			$this->createMetaBoxByForm($pFormGeoPosition, 'side');
+			if($pFormGeoPosition !== null) {
+                $this->createMetaBoxByForm($pFormGeoPosition, 'side');
+            }
 		}
 
 		$pFormActivities = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_ACTIVITYCONFIG);
-		$this->createMetaBoxByForm($pFormActivities, 'side');
+		if($pFormActivities !== null) {
+            $this->createMetaBoxByForm($pFormActivities, 'side');
+        }
 
 		parent::generateMetaBoxes();
+
+        $pFormTaskConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_TASKCONFIG);
+        if($pFormTaskConfig !== null) {
+            $this->createMetaBoxByForm($pFormTaskConfig, 'normal');
+        }
 	}
 
 

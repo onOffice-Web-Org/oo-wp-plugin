@@ -131,7 +131,7 @@ abstract class FormPost
 		} elseif ($pFormData->getMissingFields() !== []) {
 			$pFormData->setStatus(self::MESSAGE_REQUIRED_FIELDS_MISSING);
 			return;
-		}
+		} 
 
 		try {
 			$this->analyseFormContentByPrefix($pFormData);

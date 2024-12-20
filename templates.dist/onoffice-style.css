@@ -363,6 +363,10 @@
     z-index: 888;
 }
 
+#TB_overlay, #TB_window { 
+    z-index: 1050 !important; 
+}
+
 /* responsive */
 @media only screen and (max-width: 991px) {
     .oo-listobject, .oo-searchformfield {

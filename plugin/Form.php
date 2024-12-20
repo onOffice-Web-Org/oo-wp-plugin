@@ -212,6 +212,15 @@ class Form
 
 	/**
 	 * @param string $field
+	 * @return int
+	 */
+	public function getPagePerForm(string $field): int
+	{
+		return $this->getDataFormConfiguration()->getPagePerForm()[$field] ?? 1;
+	}
+
+	/**
+	 * @param string $field
 	 * @return bool
 	 */
 	public function isHiddenField(string $field): bool
@@ -707,4 +716,8 @@ class Form
 	/** @var int $countAbsolute */
 	private function setCountAbsoluteResults(int $countAbsolute)
 		{ $this->_countAbsoluteResults = $countAbsolute; }
+
+	/** @return bool */
+	public function getShowFormAsModal(): bool
+		{ return $this->_pFormData->getDataFormConfiguration()->getShowFormAsModal(); }
 }

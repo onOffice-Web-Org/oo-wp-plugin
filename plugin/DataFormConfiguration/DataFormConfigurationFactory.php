@@ -244,6 +244,10 @@ class DataFormConfigurationFactory
 		if (array_key_exists('hidden_field', $row) && $row['hidden_field'] == 1) {
 			$pFormConfiguration->addHiddenFields($fieldName);
 		}
+
+		if (array_key_exists('page_per_form', $row)) {
+			$pFormConfiguration->addPagePerForm($fieldName, $row['page_per_form']);
+		}
 	}
 
 
@@ -385,6 +389,7 @@ class DataFormConfigurationFactory
 		$pConfig->setCreateOwner((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
 		$pConfig->setContactTypeField($row['contact_type'] ?? []);
+		$pConfig->setShowFormAsModal((bool)$row['show_form_as_modal']);
 	}
 
 

@@ -35,7 +35,6 @@ use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPQueryWrapper;
-use function is_user_logged_in;
 
 class ContentFilterShortCodeEstateDetail
 {
@@ -80,7 +79,7 @@ class ContentFilterShortCodeEstateDetail
 		$pDetailView = $this->_pDataDetailViewHandler->getDetailView();
 		$pTemplate = $this->_pTemplate->withTemplateName($pDetailView->getTemplate());
 		$estateId = $this->_pWPQueryWrapper->getWPQuery()->query_vars['estate_id'] ?? 0;
-		if($estateId === 0){
+		if ($estateId === 0) {
 			return $this->renderHtmlHelperUserIfEmptyEstateId();
 		}
 		$pEstateDetailList = $this->_pEstateDetailFactory->createEstateDetail((int)$estateId);
@@ -91,36 +90,23 @@ class ContentFilterShortCodeEstateDetail
 			->render();
 	}
 
-	public function renderHtmlHelperUserIfEmptyEstateId()
+	/**
+	 * @return string
+	 */
+	public function renderHtmlHelperUserIfEmptyEstateId(): string
 	{
-		$pDataEstateDetail = $this->getRandomEstateDetail();
-		$estateTitle       = __( "estate list documentation", 'onoffice-for-wp-websites' );
-		$linkEstateDetail  = __( "https://wp-plugin.onoffice.com/en/first-steps/estate-lists/",
-			'onoffice-for-wp-websites' );
-		$linkEstateDetail  = '<a href=' . $linkEstateDetail . '>' . $estateTitle . '</a>';
-		$description       = sprintf( __( "The plugin couldn't find any estates. Please make sure that you have published some estates, as described in the %s",
-			'onoffice-for-wp-websites' ), $linkEstateDetail );
-		if ( ! empty( $pDataEstateDetail ) ) {
-			$titleDefault     = __( 'Example estate', 'onoffice-for-wp-websites' );
-			$estateTitle      = $pDataEstateDetail['elements']["objekttitel"] !== '' ? $pDataEstateDetail['elements']["objekttitel"] : $titleDefault;
-			$linkEstateDetail = $this->getEstateLink( $pDataEstateDetail );
-			$linkEstateDetail = '<a class="oo-detailview-helper-link" href=' . $linkEstateDetail . '>' . $estateTitle . '</a>';
-			$description      = sprintf( __( 'Since you are logged in, here is a link to a random estate so that you can preview the detail page: %s',
-				'onoffice-for-wp-websites' ), $linkEstateDetail );
-		}
-		$html = '<div class="oo-detailview-helper">';
-		$html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--default">' . __( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
-				'onoffice-for-wp-websites' ) . '</p>';
-
-		if ( is_user_logged_in() ) {
-			$html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--admin">' . $description . '</p>';
-		}
-		$html .= '</div>';
-
-		return $html;
+		$pDataDetail = $this->getRandomEstateDetail();
+		$itemTitle = empty($pDataDetail['elements']["objekttitel"]) ? __('Example estate', 'onoffice-for-wp-websites') : $pDataDetail['elements']["objekttitel"];
+		$type = __('estate', 'onoffice-for-wp-websites');
+		$documentLink = __('https://wp-plugin.onoffice.com/en/first-steps/estate-lists/', 'onoffice-for-wp-websites');
+		$linkDetail = '<a class="oo-detailview-helper-link" href=' . $this->getEstateLink($pDataDetail) . '>' . $itemTitle . '</a>';
+		return RenderHtmlHelperUsers::renderHtmlHelperUserIfEmptyId($type, $documentLink, $linkDetail, $pDataDetail);
 	}
 
-	public function getRandomEstateDetail()
+	/**
+	 * @return array
+	 */
+	public function getRandomEstateDetail(): array
 	{
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH );

@@ -92,10 +92,14 @@ class AdminPageFormSettingsApplicantSearch
 	protected function generateMetaBoxes()
 	{
 		$pFormFormSpecific = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
-		$this->createMetaBoxByForm($pFormFormSpecific, 'side');
+		if($pFormFormSpecific !== null) {
+            $this->createMetaBoxByForm($pFormFormSpecific, 'side');
+        }
 
 		$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
-		$this->createMetaBoxByForm($pFormGeoPosition, 'normal');
+		if($pFormGeoPosition !== null) {
+            $this->createMetaBoxByForm($pFormGeoPosition, 'normal');
+        }
 
 		parent::generateMetaBoxes();
 	}

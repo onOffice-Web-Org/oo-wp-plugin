@@ -123,6 +123,12 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_ADVISORY_LEVEL = 'advisoryLevel';
 
 	/** */
+	const INPUT_FORM_PAGE_PER_FORM = 'formPagePerForm';
+
+	/** */
+	const INPUT_FORM_SHOW_FORM_AS_MODAL = 'showFormAsModal';
+
+	/** */
 	const INPUT_FORM_ENABLE_CREATE_TASK = 'enableCreateTask';
 
 	/** */
@@ -315,6 +321,14 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_ADVISORY_LEVEL => [
 			self::KEY_TABLE => 'oo_plugin_form_activityconfig',
 			self::KEY_FIELD => 'advisory_level',
+		],
+		self::INPUT_FORM_PAGE_PER_FORM=> [
+			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
+			self::KEY_FIELD => 'page_per_form',
+		],
+		self::INPUT_FORM_SHOW_FORM_AS_MODAL => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'show_form_as_modal',
 		],
 		self::INPUT_FORM_ENABLE_CREATE_TASK => [
 			self::KEY_TABLE => 'oo_plugin_form_taskconfig',

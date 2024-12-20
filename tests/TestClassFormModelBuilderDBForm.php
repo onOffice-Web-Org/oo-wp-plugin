@@ -563,6 +563,28 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelPerPageForm
+	 */
+	public function testGetInputModelPerPageForm()
+	{
+		$pInputModelPerPageForm = $this->_pInstance->getInputModelPerPageForm();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelPerPageForm);
+		$this->assertEquals($pInputModelPerPageForm->getHtmlType(), 'hidden');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelShowFormAsModal
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getFieldsCollection
+	 */
+	public function testCreateInputModelShowFormAsModal()
+	{
+		$pInputModelDB = $this->_pInstance->createInputModelShowFormAsModal();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
 	 *
 	 */
 	private function getResponseFieldCharacteristic()

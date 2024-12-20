@@ -359,6 +359,7 @@ class TestClassDataFormConfigurationFactory
 					$this->assertEquals('action_type1', $pDataFormConfiguration->getActionType());
 					$this->assertEquals('action_kind1, action_type1', $pDataFormConfiguration->getCharacteristic());
 					$this->assertEquals('comment', $pDataFormConfiguration->getRemark());
+					$this->assertTrue($pDataFormConfiguration->getShowFormAsModal());
 					$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskResponsibility());
 					$this->assertEquals('Tobias', $pDataFormConfiguration->getTaskProcessor());
 					$this->assertEquals(1, $pDataFormConfiguration->getTaskType());
@@ -498,7 +499,8 @@ class TestClassDataFormConfigurationFactory
 			'availableOptions' => '1',
 			'show_estate_context' => '0',
 			'contact_type' => ['Owner', 'Investor'],
-            'default_recipient' => 'default@my-onoffice.com'
+			'default_recipient' => 'default@my-onoffice.com',
+			'show_form_as_modal' => '1',
 		];
 	}
 
