@@ -72,6 +72,7 @@ class DefaultValueRowSaver
 		foreach ($row as $field => $values) {
 			$values = is_object($values) ? (array) $values : $values;
 			if ($values !== [] && $values !== '') {
+				$values = $this->validateValues($field, $values);
 				$pField = $pUsedFieldsCollection->getFieldByKeyUnsafe($field);
 				$this->saveForFoundType($formId, $pField, $values);
 			}
@@ -189,5 +190,23 @@ class DefaultValueRowSaver
 			$locale = $this->_pLanguage->getLocale();
 		}
 		$pModel->addValueByLocale($locale, $value);
+	}
+
+	/**
+	 * @param string $field
+	 * @param mixed $values
+	 * @return mixed
+	 */
+	private function validateValues(string $field, $values)
+	{
+		if ($field === 'Email') {
+			if (is_array($values)) {
+				return array_map(function($value) {
+					return str_replace(' ', '', $value);
+				}, $values);
+			}
+			return str_replace(' ', '', $values);
+		}
+		return $values;
 	}
 }

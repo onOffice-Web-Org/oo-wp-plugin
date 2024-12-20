@@ -199,7 +199,7 @@
     right: 25px;
 }
 
-.oo-detailspicture {
+.oo-detailspicture, .oo-detailspicture.slick-slide {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -428,6 +428,10 @@
 .oo-donut-chart-color4 {
     fill:#FEC800;
     background-color:#FEC800;
+}
+
+#TB_overlay, #TB_window { 
+    z-index: 1050 !important; 
 }
 
 /* responsive */
