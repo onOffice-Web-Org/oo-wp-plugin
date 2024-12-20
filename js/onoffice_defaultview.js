@@ -26,43 +26,6 @@
                 }]
             });
 
-            if ($('.oo-costs-overview').length) {
-                initializeDonutChart();
-            }
-
-            function initializeDonutChart() {
-                const colors = ['#3F9DE4', '#3ac411', '#9C27B0', '#D81B60', '#FEC800'];
-                const data = [];
-                let totalCosts = 0;
-    
-                $('.oo-costs-overview > div').each(function(index) {
-                    const value = $(this).attr('data-value');
-                    const totalCostsValue = $(this).attr('total-costs-value');
-                    if (!isNaN(value)) {
-                        data.push({
-                            value: value,
-                            color: colors[index]
-                        });
-                        $(this).find('.color-indicator').css('background-color', colors[index]);
-                    }
-                    if (!isNaN(totalCostsValue)) {
-                        totalCosts = totalCostsValue;
-                    }
-                });
-    
-                let start = 0;
-                let gradientString = 'conic-gradient(';
-                data.forEach((item) => {
-                    const percentage = (item.value / totalCosts) * 100;
-                    const end = start + percentage;
-                    gradientString += `${item.color} ${start.toFixed(2)}% ${end.toFixed(2)}%, `;
-                    start = end;
-                });
-    
-                gradientString = gradientString.slice(0, -2) + ')';
-                $('.oo-donut-chart').css('background', gradientString);
-            }
-
             applyGradientToSegments();
 
             function applyGradientToSegments() {
