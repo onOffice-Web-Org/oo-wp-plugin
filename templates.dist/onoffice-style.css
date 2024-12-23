@@ -321,7 +321,9 @@
     height: 14px;
     border-radius: 50%;
     margin-right: 5px;
-    vertical-align: middle;
+    flex-basis: 14px;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .oo-details-energy-certificate {

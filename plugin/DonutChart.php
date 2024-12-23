@@ -75,8 +75,8 @@ use onOffice\WPlugin\EstateList;
              
              $path = [
                 "M" . $this->polarToCartesian(190, $angleStart),
-                "L" . $this->polarToCartesian(120, $angleStart),
-                "A 120,120,0,{$largeArcFlag},1," . $this->polarToCartesian(120, $angleEnd, true),
+                "L" . $this->polarToCartesian(130, $angleStart),
+                "A 130,130,0,{$largeArcFlag},1," . $this->polarToCartesian(130, $angleEnd, true),
                 "L" . $this->polarToCartesian(190, $angleEnd, true),
                 "A 190,190,0,{$largeArcFlag},0," . $this->polarToCartesian(190, $angleStart)
              ];
