@@ -59,6 +59,7 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldParkingLot;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 
 class EstateList
 	implements EstateListBase
@@ -109,6 +110,7 @@ class EstateList
 
 	private $_pWPOptionWrapper;
 
+	/** @var int */
 	private $_filterAddressId;
 
 	/** @var Redirector */
@@ -134,8 +136,7 @@ class EstateList
 		$this->_pEnvironment = $pEnvironment ?? new EstateListEnvironmentDefault($pContainer);
 		$this->_pDataView = $pDataView;
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
-		$this->_pApiClientAction = new APIClientActionGeneric
-			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+		$this->_pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
 		$this->_pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
@@ -186,8 +187,7 @@ class EstateList
 	 */
 	public function loadEstates(int $currentPage = 1, DataView $pDataListView = null)
 	{
-		if ($pDataListView === null)
-		{
+		if ($pDataListView === null) {
 			$pDataListView = $this->_pDataView;
 		}
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
@@ -213,7 +213,7 @@ class EstateList
 		}
 
 		$this->_numEstatePages = $this->getNumEstatePages();
-		$this->resetEstateIterator();		
+		$this->resetEstateIterator();
 		$this->buildFieldsCollectionForEstate();
 	}
 
@@ -244,8 +244,8 @@ class EstateList
 
 		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
-		$estateParametersRaw['data'] []= 'vermarktungsart';
-		$estateParametersRaw['data'] []= 'preisAufAnfrage';
+		$estateParametersRaw['data'][] = 'vermarktungsart';
+		$estateParametersRaw['data'][] = 'preisAufAnfrage';
 
 		if ($this->getShowEnergyCertificate()) {
 			$energyCertificateFields = ['energieausweistyp', 'energyClass'];
@@ -285,14 +285,14 @@ class EstateList
 	 * @param array $recordsRaw
 	 * @param array $result
 	 */
-	private function processRecordsRawForOrderEsates(&$recordsRaw, &$result) 
+	private function processRecordsRawForOrderEsates(&$recordsRaw, &$result)
 	{
 		foreach ($recordsRaw as $recordRaw) {
 			$labelTag = $this->getInfoTagOfProperty($recordRaw["elements"]);
 			$this->_recordsRaw[$recordRaw['id']] = $recordRaw;
 			$this->_recordsRaw[$recordRaw['id']]["elements"]["tagNameOfEstate"] = $labelTag[1] ?? '';
 
-			$records = array_filter($this->_records, function($record) use ($recordRaw) {
+			$records = array_filter($this->_records, function ($record) use ($recordRaw) {
 				return $recordRaw['id'] === $record['id'];
 			});
 
@@ -310,7 +310,8 @@ class EstateList
 
 		foreach ($sortByTags as $index => $key) {
 			if (($infoTagOfProperty["vermarktungsart"] === $key && $infoTagOfProperty["verkauft"] === "1") ||
-				(isset($infoTagOfProperty[$key]) && $infoTagOfProperty[$key] === "1")) {
+				(isset($infoTagOfProperty[$key]) && $infoTagOfProperty[$key] === "1")
+			) {
 				return [$index, $key];
 			}
 		}
@@ -331,8 +332,10 @@ class EstateList
 
 		$numRecordsPerPage = 500;
 
-		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
-			onOfficeSDK::MODULE_ESTATE);
+		$pFieldModifierHandler = new ViewFieldModifierHandler(
+			$pListView->getFields(),
+			onOfficeSDK::MODULE_ESTATE
+		);
 
 		$aggregatedData = [];
 		$totalFetched = 0;
@@ -381,7 +384,7 @@ class EstateList
 		if ($formatOutput !== true) {
 			usort($aggregatedData, [$this, 'sortMarkedProperties']);
 		}
-		
+
 		return $aggregatedData;
 	}
 
@@ -460,13 +463,57 @@ class EstateList
 			'parentids' => array_keys($estateIds),
 			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
 		];
-		$pAPIClientAction = new APIClientActionGeneric
-			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
+		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
 		$pAPIClientAction->setParameters($parameters);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
 		$this->collectEstateContactPerson($pAPIClientAction->getResultRecords(), $estateIds);
 	}
 
+	/**
+	 * @param string $lang
+	 * @param bool $formatOutput
+	 * @return array
+	 * @throws UnknownViewException
+	 */
+	public function getEstateListParametersForCache (string $lang, bool $formatOutput)
+	{
+		$pListView = $this->filterActiveInputFields($this->_pDataView);
+		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
+
+		$filter = $this->getDefaultFilterBuilder()->getDefaultFilter();
+		$fields = $pFieldModifierHandler->getAllAPIFields();
+
+		$requestParams = [
+			'listname' => $this->_pDataView->getName(),
+			'data' => $fields,
+			'filter' => $filter,
+			'estatelanguage' => $lang,
+			'outputlanguage' => $lang,
+			'listlimit' => 500,
+			'formatoutput' => $formatOutput,
+			'addMainLangId' => true
+		];
+
+		$requestParams['data'][] = $pListView->getSortby();
+		$requestParams['data'] = array_merge($requestParams['data'], $pListView->getSortByUserValues());
+		$requestParams['data'][] = 'preisAufAnfrage';
+		$requestParams['data'][] = 'referenz';
+		$requestParams['sortby'] = $pListView->getSortby();
+		$requestParams['sortorder'] = $pListView->getSortorder();
+
+
+		if ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+		}
+
+		if ($pListView instanceof DataListView && $pListView->getFilterId() !== 0) {
+			$requestParams['filterid'] = $pListView->getFilterId();
+		}
+
+		return $requestParams;
+	}
 	/**
 	 * @param int $currentPage
 	 * @param bool $formatOutput
@@ -477,12 +524,21 @@ class EstateList
 	{
 		$language = Language::getDefault();
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
-		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
+		$filter = $this->getDefaultFilterBuilder()->buildFilter();
+
+		if ($this->_filterAddressId != 0) {
+			$addressList = $this->_pEnvironment->getAddressList();
+			$addressList->fetchEstatesForAddressIds([$this->_filterAddressId]);
+			$estateIds = $addressList->getEstateIdsForContact($this->_filterAddressId);
+			$filter['Id'] = [["op" => "IN", "val" => $estateIds]];
+		}
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
 
-		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
-			onOfficeSDK::MODULE_ESTATE);
+		$pFieldModifierHandler = new ViewFieldModifierHandler(
+			$pListView->getFields(),
+			onOfficeSDK::MODULE_ESTATE
+		);
 
 		$requestParams = [
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
@@ -494,8 +550,13 @@ class EstateList
 			'addMainLangId' => true,
 		];
 
+		if ($pListView instanceof DataListView) {
+			$requestParams['params_list_cache'] = $this->getEstateListParametersForCache($language, $formatOutput);
+			$requestParams = array('listname' => $this->_pDataView->getName()) + $requestParams;
+		}
+
 		if (!$pListView->getRandom()) {
-			$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
+			$offset = ($currentPage - 1) * $numRecordsPerPage;
 			$this->_currentEstatePage = $currentPage;
 			$requestParams += [
 				'listoffset' => $offset
@@ -516,7 +577,20 @@ class EstateList
 		}
 
 		$requestParams += $this->addExtraParams();
+		if (isset($requestParams['georangesearch'])) {
+			unset($requestParams['listname']);
+			unset($requestParams['params_list_cache']);
+		}
 		return $requestParams;
+	}
+	/**
+	 * @param string $addressId
+	 * @return string
+	 */
+	public function getAddressLink(string $addressId): string
+	{
+		$addressList = $this->_pEnvironment->getAddressList();
+		return $addressList->getAddressLink(($addressId));
 	}
 
 	/**
@@ -532,7 +606,7 @@ class EstateList
 		}
 
 		if ($pListView->getSortorder() !== '') {
-			$requestParams['sortorder'] =$pListView->getSortorder();
+			$requestParams['sortorder'] = $pListView->getSortorder();
 		}
 
 		if ($pListView instanceof DataListView && $pListView->getSortByTags() !== '' && $this->_pDataView->getSortBySetting() === DataListView::SHOW_MARKED_PROPERTIES_SORT) {
@@ -606,11 +680,11 @@ class EstateList
 		$fields = $this->_pDataView->getAddressFields();
 
 		if ($this->_pDataView instanceof DataDetailView && !empty($this->_pDataView->getContactImageTypes())) {
-			if (in_array(ImageTypes::PASSPORTPHOTO, $this->_pDataView->getContactImageTypes()) && !in_array('imageUrl', $fields)){
-				$fields [] = 'imageUrl';
+			if (in_array(ImageTypes::PASSPORTPHOTO, $this->_pDataView->getContactImageTypes()) && !in_array('imageUrl', $fields)) {
+				$fields[] = 'imageUrl';
 			}
-			if (in_array(ImageTypes::BILDWEBSEITE, $this->_pDataView->getContactImageTypes())){
-				$fields [] = ImageTypes::BILDWEBSEITE;
+			if (in_array(ImageTypes::BILDWEBSEITE, $this->_pDataView->getContactImageTypes())) {
+				$fields[] = ImageTypes::BILDWEBSEITE;
 			}
 		}
 
@@ -645,8 +719,10 @@ class EstateList
 	{
 		global $numpages, $multipage, $more, $paged;
 
-		if (null !== $this->_numEstatePages &&
-			!$this->_pDataView->getRandom()) {
+		if (
+			null !== $this->_numEstatePages &&
+			!$this->_pDataView->getRandom()
+		) {
 			$multipage = true;
 
 			$paged = $this->_currentEstatePage;
@@ -654,8 +730,7 @@ class EstateList
 			$numpages = $this->_numEstatePages;
 		}
 
-		$pEstateFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
-			($this->_pDataView->getFields(), $modifier);
+		$pEstateFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler($this->_pDataView->getFields(), $modifier);
 
 		$currentRecord = current($this->_records);
 		next($this->_records);
@@ -671,7 +746,7 @@ class EstateList
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$fieldWaehrung = $this->_pEnvironment->getFieldnames()->getFieldInformation('waehrung', onOfficeSDK::MODULE_ESTATE);
-		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung']) ) {
+		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung'])) {
 			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung['permittedvalues']);
 		}
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'] ?? [];
@@ -685,16 +760,15 @@ class EstateList
 			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
 		}
 
-		if ( $checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption( 'onoffice-settings-title-and-description' ) == 0 ) {
-			add_action( 'wp_head', function () use ( $recordModified )
-			{
+		if ($checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0) {
+			add_action('wp_head', function () use ($recordModified) {
 				echo '<meta name="description" content="' . esc_attr(isset($recordModified["objektbeschreibung"])
 					? $this->limit_characters($recordModified["objektbeschreibung"]) : null) . '" />';
-			} );
+			});
 		}
 
-        $WPPluginChecker = new WPPluginChecker;
-        $isSEOPluginActive = $WPPluginChecker->isSEOPluginActive();
+		$WPPluginChecker = new WPPluginChecker;
+		$isSEOPluginActive = $WPPluginChecker->isSEOPluginActive();
 		$openGraphStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-opengraph');
 		$twitterCardsStatus = $this->_pWPOptionWrapper->getOption('onoffice-settings-twittercards');
 		if ($checkEstateIdRequestGuard && $openGraphStatus && !$isSEOPluginActive) {
@@ -711,7 +785,7 @@ class EstateList
 		}
 
 		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
-			if ($this->enableShowPriceOnRequestText() ) {
+			if ($this->enableShowPriceOnRequestText()) {
 				$priceFields = $this->_pDataView->getListFieldsShowPriceOnRequest();
 
 				foreach ($priceFields as $priceField) {
@@ -729,13 +803,15 @@ class EstateList
 	 * @param ArrayContainerEscape $recordModified
 	 * @param string $field
 	 */
-	private function displayTextPriceOnRequest($recordModified, $field){
-		if (!empty($recordModified[ $field ])) {
-			$recordModified[ $field ] = esc_html__('Price on request', 'onoffice-for-wp-websites');
+	private function displayTextPriceOnRequest($recordModified, $field)
+	{
+		if (!empty($recordModified[$field])) {
+			$recordModified[$field] = esc_html__('Price on request', 'onoffice-for-wp-websites');
 		}
 	}
 
-	public function custom_pre_get_document_title($title_parts_array, $recordModified) {
+	public function custom_pre_get_document_title($title_parts_array, $recordModified)
+	{
 		if (isset($recordModified["objekttitel"])) {
 			$title_parts_array = $recordModified["objekttitel"];
 		}
@@ -790,10 +866,10 @@ class EstateList
 			$label = $this->getEnvironment()->getFieldnames()->getFieldLabel($field, $recordType);
 		}
 
-		if ( $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
+		if ($this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates) {
 			$dataView = $this->_pDataView->getCustomLabels();
-			if (!empty( $dataView[ $field ][ $pLanguage ])) {
-				$label = $dataView[ $field ][ $pLanguage ];
+			if (!empty($dataView[$field][$pLanguage])) {
+				$label = $dataView[$field][$pLanguage];
 			}
 		}
 
@@ -823,17 +899,17 @@ class EstateList
 	public function getEstateLink(): string
 	{
 		$pageId = $this->_pEnvironment->getDataDetailViewHandler()
-		                              ->getDetailView()->getPageId();
+			->getDetailView()->getPageId();
 
 		$fullLink = '#';
-		if ( $pageId !== 0 ) {
+		if ($pageId !== 0) {
 			$estate   = $this->_currentEstate['mainId'];
 			$title    = $this->_currentEstate['title'] ?? '';
-			$url      = get_page_link( $pageId );
-			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink( $url, $estate, $title );
+			$url      = get_page_link($pageId);
+			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estate, $title);
 
-			$fullLinkElements = parse_url( $fullLink );
-			if ( empty( $fullLinkElements['query'] ) ) {
+			$fullLinkElements = parse_url($fullLink);
+			if (empty($fullLinkElements['query'])) {
 				$fullLink .= '/';
 			}
 		}
@@ -855,7 +931,7 @@ class EstateList
 			if (null !== $types && !in_array($image['type'], $types, true)) {
 				continue;
 			}
-			$estateFiles []= $image['id'];
+			$estateFiles[] = $image['id'];
 		}
 
 		return $estateFiles;
@@ -901,34 +977,35 @@ class EstateList
 		return $this->_pEstateFiles->getEstatePictureTitle($imageId, $currentEstate);
 	}
 
-    /**
-     * @param int $imageId
-     * @param int $breakpoint
-     * @param float|null $width
-     * @param float|null $height
-     * @param bool $maxWidth
-     * @return string
-     */
-    public function getResponsiveImageSource(int $imageId, int $breakpoint, float $width = null, float $height = null, bool $maxWidth = false) {
-        $sourceTag = '<source media="(' . ($maxWidth ? 'max-width:' : 'min-width:') . $breakpoint . 'px)" srcset="';
-        $pictureOptions1 = null;
-        $pictureOptions15 = null;
-        $pictureOptions2 = null;
-        $pictureOptions3 = null;
+	/**
+	 * @param int $imageId
+	 * @param int $breakpoint
+	 * @param float|null $width
+	 * @param float|null $height
+	 * @param bool $maxWidth
+	 * @return string
+	 */
+	public function getResponsiveImageSource(int $imageId, int $breakpoint, float $width = null, float $height = null, bool $maxWidth = false)
+	{
+		$sourceTag = '<source media="(' . ($maxWidth ? 'max-width:' : 'min-width:') . $breakpoint . 'px)" srcset="';
+		$pictureOptions1 = null;
+		$pictureOptions15 = null;
+		$pictureOptions2 = null;
+		$pictureOptions3 = null;
 
-        if(isset($width) || isset($height)) {
-            $pictureOptions1 = ['width'=> isset($width) ? $width : null, 'height'=> isset($height) ? $height : null];
-            $pictureOptions15 = ['width'=> isset($width) ? round($width * 1.5) : null, 'height'=>isset($height) ? round($height * 1.5) : null];
-            $pictureOptions2 = ['width'=> isset($width) ? round($width * 2) : null, 'height'=>isset($height) ? round($height * 2) : null];
-            $pictureOptions3 = ['width'=> isset($width) ?  round($width * 3) : null, 'height'=>isset($height) ? round($height * 3) : null];
-        }
+		if (isset($width) || isset($height)) {
+			$pictureOptions1 = ['width' => isset($width) ? $width : null, 'height' => isset($height) ? $height : null];
+			$pictureOptions15 = ['width' => isset($width) ? round($width * 1.5) : null, 'height' => isset($height) ? round($height * 1.5) : null];
+			$pictureOptions2 = ['width' => isset($width) ? round($width * 2) : null, 'height' => isset($height) ? round($height * 2) : null];
+			$pictureOptions3 = ['width' => isset($width) ?  round($width * 3) : null, 'height' => isset($height) ? round($height * 3) : null];
+		}
 
-        return  $sourceTag .
-            $this->getEstatePictureUrl($imageId, $pictureOptions1) . ' 1x,' .
-            $this->getEstatePictureUrl($imageId, $pictureOptions15) . ' 1.5x,' .
-            $this->getEstatePictureUrl($imageId, $pictureOptions2) . ' 2x,' .
-            $this->getEstatePictureUrl($imageId, $pictureOptions3) . ' 3x">';
-    }
+		return  $sourceTag .
+			$this->getEstatePictureUrl($imageId, $pictureOptions1) . ' 1x,' .
+			$this->getEstatePictureUrl($imageId, $pictureOptions15) . ' 1.5x,' .
+			$this->getEstatePictureUrl($imageId, $pictureOptions2) . ' 2x,' .
+			$this->getEstatePictureUrl($imageId, $pictureOptions3) . ' 3x">';
+	}
 
 	/**
 	 * @param int $imageId
@@ -958,7 +1035,7 @@ class EstateList
 	 */
 
 	public function hasDetailView(): bool
-    {
+	{
 		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->hasDetailView();
 	}
 
@@ -982,15 +1059,7 @@ class EstateList
 		$recordId = $this->_currentEstate['id'];
 		return $this->_estateContacts[$recordId] ?? [];
 	}
-	/**
-	 * @return bool
-	 */
-	public function isCurrentEstateContactsInAddressFilter()
-	{
-		$addressIds = $this->getEstateContactIds();
 
-		return !isset($this->_filterAddressId) || in_array($this->_filterAddressId,$addressIds);
-	}
 	/**
 	 * @return array
 	 */
@@ -1008,7 +1077,7 @@ class EstateList
 				unset($pArrayContainerCurrentAddress['bildWebseite']);
 			}
 
-			$result []= $pArrayContainerCurrentAddress;
+			$result[] = $pArrayContainerCurrentAddress;
 		}
 
 		return $result;
@@ -1063,8 +1132,8 @@ class EstateList
 	{
 		$document = '';
 		if ($this->_pDataView->getExpose() !== '') {
-			$documentlink = home_url('document-pdf/'.$this->_pDataView->getName()
-				.'/'.$this->getCurrentMultiLangEstateMainId());
+			$documentlink = home_url('document-pdf/' . $this->_pDataView->getName()
+				. '/' . $this->getCurrentMultiLangEstateMainId());
 			$document = esc_url($documentlink);
 		}
 		return $document;
@@ -1086,8 +1155,7 @@ class EstateList
 		if (!empty($this->_pDataView->getConvertTextToSelectForCityField())) {
 			$pFieldsCollectionBuilderShort->addFieldEstateCityValues($pFieldsCollection, $this->getShowReferenceEstate());
 		}
-		$pFieldsCollection->merge
-			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection));
+		$pFieldsCollection->merge(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection));
 		$pFieldsCollectionFieldDuplicatorForGeoEstate =
 			$pContainer->get(FieldsCollectionFieldDuplicatorForGeoEstate::class);
 		$pFieldsCollectionFieldDuplicatorForGeoEstate->duplicateFields($pFieldsCollection);
@@ -1097,11 +1165,13 @@ class EstateList
 		$pFieldsCollection = $pDistinctFieldsHandler->modifyFieldsCollectionForEstate($pDataView, $pFieldsCollection);
 
 		$fieldsValues = $pContainer->get(OutputFields::class)
-			->getVisibleFilterableFields($pDataView,
-				$pFieldsCollection, new GeoPositionFieldHandler);
+			->getVisibleFilterableFields(
+				$pDataView,
+				$pFieldsCollection,
+				new GeoPositionFieldHandler
+			);
 
-		if (array_key_exists("radius",$fieldsValues))
-		{
+		if (array_key_exists("radius", $fieldsValues)) {
 			$geoFields = $pDataView->getGeoFields();
 			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
 		}
@@ -1112,8 +1182,10 @@ class EstateList
 			$result[$field]['name'] = $field;
 			$result[$field]['value'] = $value;
 			$result[$field]['label'] = $this->getFieldLabel($field);
-			if (in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS) && 
-				!empty(get_option('onoffice-settings-thousand-separator'))) {
+			if (
+				in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS) &&
+				!empty(get_option('onoffice-settings-thousand-separator'))
+			) {
 				$result[$field]['is-apply-thousand-separator'] = true;
 			}
 		}
@@ -1166,9 +1238,9 @@ class EstateList
 		add_action('wp_head', function () use ($metaData, $keySocial) {
 			foreach ($metaData as $metaKey => $metaValue) {
 				if ($keySocial === GenerateMetaDataSocial::TWITTER_KEY) {
-					echo '<meta name="'.GenerateMetaDataSocial::TWITTER_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '">';
+					echo '<meta name="' . GenerateMetaDataSocial::TWITTER_KEY . ':' . esc_html($metaKey) . '" content="' . esc_attr($metaValue) . '">';
 				} elseif ($keySocial === GenerateMetaDataSocial::OPEN_GRAPH_KEY) {
-					echo '<meta property="'.GenerateMetaDataSocial::OPEN_GRAPH_KEY.':'.esc_html($metaKey).'" content="' . esc_attr($metaValue) . '">';
+					echo '<meta property="' . GenerateMetaDataSocial::OPEN_GRAPH_KEY . ':' . esc_html($metaKey) . '" content="' . esc_attr($metaValue) . '">';
 				}
 			}
 		}, 1);
@@ -1219,6 +1291,17 @@ class EstateList
 
 	/**
 	 *
+	 * @param $field
+	 * @return string
+	 */
+
+	 public function getFieldInformation(string $field): array
+	 {
+		 return $this->getEnvironment()->getFieldnames()->getFieldInformation($field, onOfficeSDK::MODULE_ESTATE);
+	 }
+
+	/**
+	 *
 	 */
 	public function resetEstateIterator()
 	{
@@ -1239,7 +1322,7 @@ class EstateList
 	 */
 	public function getShowReferenceStatus(): bool
 	{
-		if ( $this->_pDataView instanceof DataListView ) {
+		if ($this->_pDataView instanceof DataListView) {
 			return $this->_pDataView->getShowReferenceStatus();
 		} else {
 			return true;
@@ -1268,12 +1351,14 @@ class EstateList
 
 	/** @return array */
 	public function getAddressFields(): array
-		{ return $this->_pDataView->getAddressFields(); }
+	{
+		return $this->_pDataView->getAddressFields();
+	}
 
 	/** @return bool */
 	private function enableShowPriceOnRequestText()
 	{
-		if ( $this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
+		if ($this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates) {
 			return $this->_pDataView->getShowPriceOnRequest();
 		} else {
 			return false;
@@ -1288,54 +1373,78 @@ class EstateList
 
 	/** @return EstateFiles */
 	protected function getEstateFiles()
-		{ return $this->_pEstateFiles; }
+	{
+		return $this->_pEstateFiles;
+	}
 
 	/** @return DataView */
 	public function getDataView(): DataView
-		{ return $this->_pDataView; }
+	{
+		return $this->_pDataView;
+	}
 
 	/**
 	 * @return DefaultFilterBuilder
 	 * @throws UnknownViewException
 	 */
 	public function getDefaultFilterBuilder(): DefaultFilterBuilder
-		{ return $this->_pEnvironment->getDefaultFilterBuilder(); }
+	{
+		return $this->_pEnvironment->getDefaultFilterBuilder();
+	}
 
 	/** @param DefaultFilterBuilder $pDefaultFilterBuilder */
 	public function setDefaultFilterBuilder(DefaultFilterBuilder $pDefaultFilterBuilder)
-		{ $this->_pEnvironment->setDefaultFilterBuilder($pDefaultFilterBuilder); }
+	{
+		$this->_pEnvironment->setDefaultFilterBuilder($pDefaultFilterBuilder);
+	}
 
 	/** @return string */
 	public function getUnitsViewName()
-		{ return $this->_unitsViewName; }
+	{
+		return $this->_unitsViewName;
+	}
 
 	/** @param string $unitsViewName */
 	public function setUnitsViewName($unitsViewName)
-		{ $this->_unitsViewName = $unitsViewName; }
+	{
+		$this->_unitsViewName = $unitsViewName;
+	}
 
 	/** @param string $filterAddressId */
 	public function setFilterAddressId($filterAddressId)
-		{ $this->_filterAddressId = $filterAddressId; }
+	{
+		$this->_filterAddressId = $filterAddressId;
+	}
 
 	/** @return GeoSearchBuilder */
 	public function getGeoSearchBuilder(): GeoSearchBuilder
-		{ return $this->_pGeoSearchBuilder; }
+	{
+		return $this->_pGeoSearchBuilder;
+	}
 
 	/** @param GeoSearchBuilder $pGeoSearchBuilder */
 	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder)
-		{ $this->_pGeoSearchBuilder = $pGeoSearchBuilder; }
+	{
+		$this->_pGeoSearchBuilder = $pGeoSearchBuilder;
+	}
 
 	/** @return bool */
 	public function getFormatOutput(): bool
-		{ return $this->_formatOutput; }
+	{
+		return $this->_formatOutput;
+	}
 
 	/** @param bool $formatOutput */
 	public function setFormatOutput(bool $formatOutput)
-		{ $this->_formatOutput = $formatOutput; }
+	{
+		$this->_formatOutput = $formatOutput;
+	}
 
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
-		{ return $this->_pEnvironment; }
+	{
+		return $this->_pEnvironment;
+	}
 
 	/**
 	 * @return mixed
