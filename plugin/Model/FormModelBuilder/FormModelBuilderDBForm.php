@@ -134,18 +134,21 @@ class FormModelBuilderDBForm
 
 		foreach ($fieldNames as $pField) {
 			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$fieldNamesArray[$pField->getName()]['page'] = $this->getValue('fieldsPagePerForm')[$pField->getName()] ?? 1;
 			$pFieldsCollectionUsedFields->addField($pField);
 		}
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesArray);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
 		$pInputModelFieldsConfig->setValue($fields);
+		$pInputModelFieldsConfig->setPerPageForm($this->getValue('fieldsPagePerForm'));
 
 		$pModule = $this->getInputModelModule();
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
 		$pReferenceIsAvailableOptions = $this->getInputModelIsAvailableOptions();
 		$pReferenceIsMarkdown = $this->getInputModelIsMarkDown();
 		$pReferenceIsHiddenField = $this->getInputModelIsHiddenField();
+		$pInputModelPerPageForm = $this->getInputModelPerPageForm();
 		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValue($pFieldsCollectionUsedFields));
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValueLanguageSwitch());
@@ -153,10 +156,15 @@ class FormModelBuilderDBForm
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsMarkdown);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
+		$pInputModelFieldsConfig->addReferencedInputModel($pInputModelPerPageForm);
 		if($this->getFormType() === Form::TYPE_APPLICANT_SEARCH){
 			$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
 		} else {
 			$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsHiddenField);
+		}
+		if($this->getFormType() === Form::TYPE_OWNER){
+			$pInputModelFieldsConfig->setIsMultiPage(true);
+			$pInputModelFieldsConfig->setTemplate($this->getValue('template'));
 		}
 
 		return $pInputModelFieldsConfig;
@@ -224,6 +232,8 @@ class FormModelBuilderDBForm
 		$values['fieldsAvailableOptions'] = array();
 		$values['fieldsMarkdown'] = array();
 		$values['fieldsHiddenField'] = array();
+		$values['fieldsPagePerForm'] = array();
+		$values['template'] = array();
 		$pFactory = new DataFormConfigurationFactory($this->_formType);
 
 		if ($formId !== null) {
@@ -247,6 +257,8 @@ class FormModelBuilderDBForm
 		$values['remark'] = $pDataFormConfiguration->getRemark();
 		$values['origincontact'] = $pDataFormConfiguration->getOriginContact();
 		$values['advisorylevel'] = $pDataFormConfiguration->getAdvisorylevel();
+		$values['fieldsPagePerForm'] = $pDataFormConfiguration->getPagePerForm();
+		$values['template'] = $pDataFormConfiguration->getTemplate();
 		$values['enable_create_task'] = $pDataFormConfiguration->getEnableCreateTask();
 		$values['responsibility'] = $pDataFormConfiguration->getTaskResponsibility();
 		$values['processor'] = $pDataFormConfiguration->getTaskProcessor();
@@ -784,6 +796,32 @@ class FormModelBuilderDBForm
 	}
 
 	/**
+	 * @return InputModelDB|null
+	 */
+	public function getInputModelPerPageForm(): InputModelDB
+	{
+		$pInputModelFieldsConfig = new InputModelDBFactoryConfigForm();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFieldsConfig);
+		$type = InputModelDBFactoryConfigForm::INPUT_FORM_PAGE_PER_FORM;
+		$pInputModel = $pInputModelFactory->create($type, '', true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelFieldsPagePerForm'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param string $key
+	 */
+	public function callbackValueInputModelFieldsPagePerForm(InputModelBase $pInputModel, string $key)
+	{
+		$fieldsPagePerForm = $this->getValue('fieldsPagePerForm');
+		$pInputModel->setValue($fieldsPagePerForm[$key] ?? 1);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+	/**
 	 *
 	 * @param $module
 	 * @param string $htmlType
@@ -814,6 +852,7 @@ class FormModelBuilderDBForm
 
 		foreach ($fieldNames as $pField) {
 			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$fieldNamesArray[$pField->getName()]['page'] = $this->getValue('fieldsPagePerForm')[$pField->getName()] ?? 1;
 			$pFieldsCollectionUsedFields->addField($pField);
 		}
 
@@ -1023,6 +1062,21 @@ class FormModelBuilderDBForm
 		$pInputModelRemark->setValue($this->getValue('remark') ?? '');
 
 		return $pInputModelRemark;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelShowFormAsModal()
+	{
+		$labelShowFormAsModal = __('Show form as modal', 'onoffice-for-wp-websites');
+		$pInputModelFormShowFormAsModal = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_SHOW_FORM_AS_MODAL, $labelShowFormAsModal);
+		$pInputModelFormShowFormAsModal->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelFormShowFormAsModal->setValue($this->getValue($pInputModelFormShowFormAsModal->getField(), true));
+		$pInputModelFormShowFormAsModal->setValuesAvailable(1);
+
+		return $pInputModelFormShowFormAsModal;
 	}
 
 	/**

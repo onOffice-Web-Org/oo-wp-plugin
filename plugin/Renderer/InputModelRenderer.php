@@ -157,6 +157,8 @@ class InputModelRenderer
 				$pInstance->setExtraInputModels($pInputModel->getReferencedInputModels());
 				$pInstance->setContentRenderer($pContent);
 				$pInstance->setAllFields($pInputModel->getValuesAvailable());
+				$pInstance->setIsMultiPage($pInputModel->getIsMultiPage());
+				$pInstance->setTemplate($pInputModel->getTemplate());
 				break;
 
 			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
