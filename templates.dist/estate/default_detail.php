@@ -205,8 +205,8 @@ $dimensions = [
 							<div class="energy-certificate-container">
 								<div class="segmented-bar">
 									<?php
-									foreach ($energyClassPermittedValues as $label) {
-										$labelIndex = array_search($label, $labels);
+									foreach ($energyClassPermittedValues as $key => $label) {
+										$labelIndex = array_keys($energyClassPermittedValues)[$key];
 										echo '<div class="energy-certificate-label"><span>' . $labels[$labelIndex] . '</span></div>';
 										echo '<div class="segment' . ($selectedEnergyClass == $label ? ' selected' : '') . '"><span>' . $label . '</span></div>';
 									}
