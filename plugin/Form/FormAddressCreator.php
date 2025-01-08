@@ -342,10 +342,6 @@ class FormAddressCreator
 		$pApiClientAction->setResourceId((string) $addressId);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
 		$result = $pApiClientAction->getResultRecords();
-		
-		if (empty($result)) {
-			return array();
-		}
 
 		return $result[0]['elements'];
 	}

@@ -94,8 +94,6 @@ abstract class InputModelBase
 	const HTML_TYPE_TEXTAREA = 'textarea';
 
 	/** */
-	const HTML_TYPE_EMAIL_SUBJECT = 'emailSubject';
-  
 	const HTML_VERTICAL_RADIO = 'verticalRadio';
 
 	/** @var string */

@@ -110,7 +110,7 @@ class AdminPageFormSettingsContact
 			$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipient();
 		}
 		$pInputModelDefaultRecipient = $pFormModelBuilder->createInputModelDefaultRecipient();
-		$pInputModelSubject = $pFormModelBuilder->createInputModelSubject();
+		$pInputModelSubject = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT);
 		$pInputModelCaptcha = $pFormModelBuilder->createInputModelCaptchaRequired();
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
