@@ -636,10 +636,10 @@ implements AddressListBase
 	}
 
 	/**
-	 *
+	 * @return void
 	 */
-	public function resetAddresssIterator()
-	{
+	public function resetAddressesIterator(): void
+    {
 		reset($this->_records);
 	}
 

@@ -26,9 +26,8 @@
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 
-/* @var $pAddresss AddressList */
 return (function (AddressList $pAddressClone) {
-	$pAddressClone->resetAddresssIterator();
+	$pAddressClone->resetAddressesIterator();
 	$addressData = [];
 	foreach ($pAddressClone->getRows(AddressViewFieldModifierTypes::MODIFIER_TYPE_MAP) as $escapedValues) {
 		$position = [
