@@ -771,6 +771,8 @@ abstract class AdminPageFormSettingsBase
 			wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js');
 			wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css');
 			wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
+			wp_register_script('onoffice-custom-email-subject', plugins_url('/dist/onoffice-custom-email-subject.min.js', $pluginPath));
+			wp_enqueue_script('onoffice-custom-email-subject');
 		}
 	}
 
