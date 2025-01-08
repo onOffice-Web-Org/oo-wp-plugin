@@ -96,8 +96,12 @@ class FormPostContact
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfig->getRecipientByUserSelection();
-		$subject = $pFormConfig->getSubject();
-
+		$subject = $this->generateDefaultEmailSubject($pFormData->getFormtype(), $this->_pFormPostContactConfiguration->getNewsletterAccepted());
+		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
+		$estateId = $pWPQuery->get('estate_id', null);
+		if (!empty($pFormConfig->getSubject())) {
+			$subject = $this->generateCustomEmailSubject($pFormConfig->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pFormConfig->getInputs());
+		}
 		try {
 			if ($pFormConfig->getCreateAddress()) {
 				$this->createAddress($pFormData);
