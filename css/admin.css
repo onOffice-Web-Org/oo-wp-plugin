@@ -1009,3 +1009,66 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .add-page-container .add-page-button:hover {
 	border: 1px solid #0f4775;
 }
+
+.oo-poststuff .oo-email-subject-container .oo-email-subject-title {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 5px 5px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	min-height: 30px;
+	position: relative;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-insert-variable-button {
+	color: #646970;
+	border: 1px solid #646970;
+	background: #f6f7f7;
+	padding: 5px 10px;
+	border-radius: 4px;
+	cursor: pointer;
+	margin-bottom: 10px;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-insert-variable-button:hover {
+	background: #e0e0e0;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-email-subject-tag {
+	background-color: #e4e4e4;
+	border: 1px solid #aaa;
+	border-radius: 4px;
+	padding: 0px 4px;
+	margin: 3px;
+	display: inline-flex;
+	align-items: center;
+	cursor: default;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-email-subject-tag .oo-remove-tag {
+	cursor: pointer;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-email-subject-suggestions {
+	border: 1px solid #ccc;
+	background-color: #fff;
+	position: absolute;
+	z-index: 1000;
+	max-height: 150px;
+	overflow-y: auto;
+	display: none;
+	min-width: 220px;
+	box-shadow: rgba(32, 33, 36, 0.28) 0px 1px 6px;
+	border-bottom: 1px hidden rgb(255, 255, 255);
+	margin-top: -5px;
+	margin-left: 7px;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-suggestion-item {
+	padding: 5px;
+	cursor: pointer;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-suggestion-item:hover {
+	background-color: #f0f0f0;
+}

@@ -1082,6 +1082,22 @@ class FormModelBuilderDBForm
 	/**
 	 * @return InputModelDB
 	 */
+	public function createInputModelSubject(): InputModelDB
+	{
+		$labelSubject = __('Subject (optional)', 'onoffice-for-wp-websites');
+
+		$pInputModelFormSubject = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT, $labelSubject);
+		$pInputModelFormSubject->setHtmlType(InputModelBase::HTML_TYPE_EMAIL_SUBJECT);
+		$pInputModelFormSubject->setValue($this->getValue('subject'));
+		$pInputModelFormSubject->setHintHtml(__('We recommend a maximum number of characters between 40 and 60 or up to 10 words.', 'onoffice-for-wp-websites'));
+
+		return $pInputModelFormSubject;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
 	public function createInputModelEnableCreateTask(): InputModelDB
 	{
 		$labelEnableCreateTask = __('Create tasks in onOffice enterprise', 'onoffice-for-wp-websites');

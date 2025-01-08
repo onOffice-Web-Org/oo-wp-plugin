@@ -73,6 +73,7 @@ jQuery(document).ready(function($){
 			parentItem.find('.field-item-detail').css('opacity', '1');
 		});
 		$(this).parent().parent().remove();
+		document.dispatchEvent(new CustomEvent('fieldListUpdated'));
 	});
 
 	$('.oo-search-field .input-search').on('input', function() {
@@ -365,6 +366,7 @@ jQuery(document).ready(function($){
 				}
 			});
 			document.dispatchEvent(event);
+			document.dispatchEvent(new CustomEvent('fieldListUpdated'));
 			if ($('#multi-page-container').length) {
 				FormMultiPageManager.reorderPages()
 			}
@@ -383,6 +385,7 @@ jQuery(document).ready(function($){
 			} else {
 				$('*#sortableFieldsList').find('#menu-item-' + valElName).remove();
 			}
+			document.dispatchEvent(new CustomEvent('fieldListUpdated'));
 		}
 
 		return checkedFields;
@@ -448,7 +451,7 @@ jQuery(document).ready(function($){
 
 		if ($(pageContainer).length) {
 			let pageIdSelector = pageId || $('#multi-page-container').is(':visible') ? '.page-' + (pageId ?? '1') : '';
-			
+
 			if (myLabel.length) {
 				dummyKey = myLabel.find(pageContainer + ' #menu-item-dummy_key' + pageIdSelector);
 			} else {
@@ -485,7 +488,7 @@ jQuery(document).ready(function($){
 			var hiddenField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
 			hiddenField.parent().remove();
 		}
-		
+
 		if ($(pageContainer).length) {
 			clonedElement.find('input[name^="oopluginformfieldconfig-pageperform"]').val(pageId);
 		}
