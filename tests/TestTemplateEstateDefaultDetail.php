@@ -181,7 +181,7 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('getLinkEmbedPlayers')->willReturn([]);
 		$this->_pEstate->method('getDetailView')->willReturn('1');
 		$this->_pEstate->method('getShowEnergyCertificate')->willReturn(true);
-		$this->_pEstate->method('getPermittedValues')->willReturn(['A' => 'A', 'B' => 'B', 'C' => 'C']);
+		$this->_pEstate->method('getPermittedValues')->willReturn(['A', 'B', 'C']);
 	}
 
 	/**
