@@ -57,19 +57,17 @@ class UserCapabilities
 	/** */
 	const RULE_DEBUG_OUTPUT = 'debugOutput';
 
-	const OO_THEMECAP_MANAGE_BLOCK_REVIEWS_BLOCK = 'oo_themecap_manage_block_reviews_block';
-	const OO_THEMECAP_MANAGE_BLOCK_REVIEWS_MENU = 'oo_themecap_manage_block_reviews_menu';
-	//@TODO
-	//const OO_THEMECAP_MANAGE_RATINGS = 'oo_themecap_manage_ratings';
-	const OO_THEMECAP_SHARE_PROPERTIES = 'oo_themecap_share_properties';
-	const OO_THEMECAP_ADD_PROPERTY_SEARCH_IN_BANNER = 'oo_themecap_add_property_search_in_banner';
+	/** */
 	const OO_PLUGINCAP_MANAGE_FORM_OWNER = 'oo_plugincap_manage_form_owner';
-	const OO_PLUGINCAP_MANAGE_FORM_LEADGENERATOR = 'oo_plugincap_manage_form_leadgenerator';
 
+	/** */
+	const OO_PLUGINCAP_MANAGE_FORM_OWNER_LEADGENERATOR = 'oo_plugincap_manage_form_owner_leadgenerator';
+
+	/** */
 	const OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH = 'oo_plugincap_manage_form_applicantsearch';
-
-	const OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER_TEMPLATE = 'oo_plugincap_manage_form_newsletter_template';
-
+	
+	/** */
+	const OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER = 'oo_plugincap_manage_form_newsletter';
 
 	/** @var array */
 	private $_ruleToCapability = [
@@ -100,7 +98,6 @@ class UserCapabilities
 
 		throw new UnexpectedValueException($rule);
 	}
-
 
 	/**
 	 *
