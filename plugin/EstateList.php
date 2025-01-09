@@ -812,7 +812,18 @@ class EstateList
 			return [];
 		}
 
-		return $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getPermittedvalues();
+		$values = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getPermittedvalues();
+
+		if ($field === 'energyClass') {
+			$preferredOrder = ['A+', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+			usort($values, function ($a, $b) use ($preferredOrder) {
+				$posA = array_search($a, $preferredOrder);
+				$posB = array_search($b, $preferredOrder);
+				return $posA - $posB;
+			});
+		}
+
+		return $values;
 	}
 
 	/**
