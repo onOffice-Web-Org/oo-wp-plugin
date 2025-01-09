@@ -48,6 +48,9 @@ use onOffice\WPlugin\Utility\__String;
 class FormPostOwner
 	extends FormPost
 {
+	/** */
+	const PORTALFILTER_IDENTIFIER = '[onOffice-WP]';
+
 	/** @var FormData */
 	private $_pFormData = null;
 
@@ -97,15 +100,20 @@ class FormPostOwner
 		$this->_pFormData = $pFormData;
 
 		$recipient = $pDataFormConfiguration->getRecipientByUserSelection();
-		$subject = $pDataFormConfiguration->getSubject();
+
+		$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
+		$estateId = $pWPQuery->get('estate_id', null);
+		$subject = $this->generateDefaultEmailSubject($pFormData->getFormtype(), $this->_pFormPostOwnerConfiguration->getNewsletterAccepted());
+		if (!empty($pDataFormConfiguration->getSubject())) {
+			$subject = $this->generateCustomEmailSubject($pDataFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pDataFormConfiguration->getInputs());
+		}
 		$estateData = $this->getEstateData();
 
 		try {
 			if ( $pDataFormConfiguration->getCreateOwner() ) {
 				$checkDuplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
 				$contactType = $pDataFormConfiguration->getContactType();
-				$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
-				$estateId = $pWPQuery->get('estate_id', null);
+				$enableCreateTask = $pDataFormConfiguration->getEnableCreateTask();
 				$writeActivity = $pDataFormConfiguration->getWriteActivity();
 				$latestAddressIdOnEnterPrise = null;
 				if ($checkDuplicate) {
@@ -117,11 +125,17 @@ class FormPostOwner
 					->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 				$estateData = $this->getEstateData();
 				$estateId   = $this->createEstate( $estateData );
+				if (!empty($pDataFormConfiguration->getSubject())) {
+					$subject = $this->generateCustomEmailSubject($pDataFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pDataFormConfiguration->getInputs());
+				}
 				$this->createOwnerRelation( $estateId, $addressId );
 				if ($writeActivity) {
 					$this->_pFormPostOwnerConfiguration->getFormAddressCreator()->createAgentsLog($pDataFormConfiguration, $addressId, $estateId);
 				}
 				$this->setNewsletter( $addressId );
+				if ($enableCreateTask) {
+					$this->_pFormPostOwnerConfiguration->getFormAddressCreator()->createTask($pDataFormConfiguration, $addressId, $estateId);
+				}
 			}
 		} finally {
 			if ( null != $recipient ) {
@@ -303,7 +317,7 @@ class FormPostOwner
 			'addressdata' => $addressData,
 			'estateid' => $estateId,
 			'message' => $message . $this->_messageDuplicateAddressData,
-			'subject' => $subject,
+			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
 			'referrer' => $this->_pFormPostOwnerConfiguration->getReferrer(),
 			'formtype' => $formType,
 		];

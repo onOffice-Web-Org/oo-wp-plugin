@@ -110,7 +110,7 @@ class AdminPageFormSettingsContact
 			$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipient();
 		}
 		$pInputModelDefaultRecipient = $pFormModelBuilder->createInputModelDefaultRecipient();
-		$pInputModelSubject = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT);
+		$pInputModelSubject = $pFormModelBuilder->createInputModelSubject();
 		$pInputModelCaptcha = $pFormModelBuilder->createInputModelCaptchaRequired();
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
@@ -199,11 +199,32 @@ class AdminPageFormSettingsContact
 		$pFormModelFormActivitiy->addInputModel($pInputModelCharacteristic);
 		$pFormModelFormActivitiy->addInputModel($pInputModelRemark);
 
+		$pInputModelEnableCreateTask = $pFormModelBuilder->createInputModelEnableCreateTask();
+		$pInputModelTaskResponsibility = $pFormModelBuilder->createInputModelTaskResponsibility();
+		$pInputModelTaskProcessor = $pFormModelBuilder->createInputModelTaskProcessor();
+		$pInputModelTaskType = $pFormModelBuilder->createInputModelTaskType();
+		$pInputModelTaskPriority = $pFormModelBuilder->createInputModelTaskPriority();
+		$pInputModelTaskSubject = $pFormModelBuilder->createInputModelTaskSubject();
+		$pInputModelTaskDescription = $pFormModelBuilder->createInputModelTaskDescription();
+		$pInputModelTaskStatus = $pFormModelBuilder->createInputModelTaskStatus();
+		$pFormModelFormTask = new FormModel();
+		$pFormModelFormTask->setPageSlug($this->getPageSlug());
+		$pFormModelFormTask->setGroupSlug(self::FORM_VIEW_TASKCONFIG);
+		$pFormModelFormTask->setLabel(__('Tasks', 'onoffice-for-wp-websites'));
+		$pFormModelFormTask->addInputModel($pInputModelEnableCreateTask);
+		$pFormModelFormTask->addInputModel($pInputModelTaskResponsibility);
+		$pFormModelFormTask->addInputModel($pInputModelTaskProcessor);
+		$pFormModelFormTask->addInputModel($pInputModelTaskType);
+		$pFormModelFormTask->addInputModel($pInputModelTaskPriority);
+		$pFormModelFormTask->addInputModel($pInputModelTaskSubject);
+		$pFormModelFormTask->addInputModel($pInputModelTaskDescription);
+		$pFormModelFormTask->addInputModel($pInputModelTaskStatus);
+
 		$this->addFormModel($pFormModelFormSpecific);
 		$this->addFormModel($pFormModelFormActivitiy);
 		$this->buildGeoPositionSettings();
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
-
+		$this->addFormModel($pFormModelFormTask);
 
 		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
@@ -295,17 +316,28 @@ class AdminPageFormSettingsContact
 	protected function generateMetaBoxes()
 	{
 		$pFormFormSpecific = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
-		$this->createMetaBoxByForm($pFormFormSpecific, 'side');
+        if($pFormFormSpecific !== null) {
+            $this->createMetaBoxByForm($pFormFormSpecific, 'side');
+        }
 
 		if ($this->_showGeoPositionSettings) {
 			$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
-			$this->createMetaBoxByForm($pFormGeoPosition, 'side');
+			if($pFormGeoPosition !== null) {
+                $this->createMetaBoxByForm($pFormGeoPosition, 'side');
+            }
 		}
 
 		$pFormActivities = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_ACTIVITYCONFIG);
-		$this->createMetaBoxByForm($pFormActivities, 'side');
+		if($pFormActivities !== null) {
+            $this->createMetaBoxByForm($pFormActivities, 'side');
+        }
 
 		parent::generateMetaBoxes();
+
+        $pFormTaskConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_TASKCONFIG);
+        if($pFormTaskConfig !== null) {
+            $this->createMetaBoxByForm($pFormTaskConfig, 'normal');
+        }
 	}
 
 

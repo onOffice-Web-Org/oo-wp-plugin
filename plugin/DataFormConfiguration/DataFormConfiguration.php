@@ -103,6 +103,33 @@ class DataFormConfiguration
 	/** @var string */
 	private $_advisorylevel = '';
 
+	/** @var array */
+	private $_pagePerForm = [];
+
+	/** @var bool */
+	private $_enableCreateTask = false;
+
+	/** @var string */
+	private $_taskResponsibility = '';
+
+	/** @var string */
+	private $_taskProcessor = '';
+
+	/** @var int */
+	private $_taskType = 0;
+
+	/** @var string */
+	private $_taskSubject = '';
+
+	/** @var string */
+	private $_taskDescription = '';
+
+	/** @var int */
+	private $_taskStatus = 0;
+
+	/** @var int */
+	private $_taskPriority = 0;
+
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -131,6 +158,10 @@ class DataFormConfiguration
 	/** @return array */
 	public function getInputs(): array
 		{ return $this->_inputs; }
+
+	/** @return array */
+	public function getPagePerForm(): array
+		{ return $this->_pagePerForm; }
 
 	/** @param string $formType */
 	public function setFormType(string $formType)
@@ -187,6 +218,14 @@ class DataFormConfiguration
 	/** @param string $requiredField */
 	public function addMarkdownFields(string $markdownFields)
 		{ $this->_markdownFields []= $markdownFields; }
+
+	/** 
+	 * @param string $fieldName
+	 * @param string $pagePerForm 
+	 */
+	public function addPagePerForm(string $fieldName, string $pagePerForm)
+		{ $this->_pagePerForm [$fieldName] = (int) $pagePerForm; }
+
 	/**
 	 *
 	 * @param string $input
@@ -327,4 +366,68 @@ class DataFormConfiguration
 	/** @param string $advisorylevel */
 	public function setAdvisorylevel(string $advisorylevel)
 		{ $this->_advisorylevel = $advisorylevel; }
+
+	/** @return bool */
+	public function getEnableCreateTask(): bool
+		{ return $this->_enableCreateTask; }
+
+	/** @param bool $enableCreateTask */
+	public function setEnableCreateTask(bool $enableCreateTask)
+		{ $this->_enableCreateTask = $enableCreateTask; }
+
+	/** @return string */
+	public function getTaskResponsibility(): string
+		{ return $this->_taskResponsibility; }
+
+	/** @param string $taskResponsibility */
+	public function setTaskResponsibility(string $taskResponsibility)
+		{ $this->_taskResponsibility = $taskResponsibility; }
+
+	/** @return string */
+	public function getTaskProcessor(): string
+		{ return $this->_taskProcessor; }
+
+	/** @param string $taskProcessor */
+	public function setTaskProcessor(string $taskProcessor)
+		{ $this->_taskProcessor = $taskProcessor; }
+
+	/** @return int */
+	public function getTaskType(): int
+		{ return $this->_taskType; }
+
+	/** @param int $taskType */
+	public function setTaskType(int $taskType)
+		{ $this->_taskType = $taskType; }
+
+	/** @return int */
+	public function getTaskPriority(): int
+		{ return $this->_taskPriority; }
+
+	/** @param int $taskPriority */
+	public function setTaskPriority(int $taskPriority)
+		{ $this->_taskPriority = $taskPriority; }
+
+	/** @return string */
+	public function getTaskSubject(): string
+		{ return $this->_taskSubject; }
+
+	/** @param string $taskSubject */
+	public function setTaskSubject(string $taskSubject)
+		{ $this->_taskSubject = $taskSubject; }
+
+	/** @return string */
+	public function getTaskDescription(): string
+		{ return $this->_taskDescription; }
+
+	/** @param string $taskDescription */
+	public function setTaskDescription(string $taskDescription)
+		{ $this->_taskDescription = $taskDescription; }
+
+	/** @return int */
+	public function getTaskStatus(): int
+		{ return $this->_taskStatus; }
+
+	/** @param int $taskStatus */
+	public function setTaskStatus(int $taskStatus)
+		{ $this->_taskStatus = $taskStatus; }
 }
