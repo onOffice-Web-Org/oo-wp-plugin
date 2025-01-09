@@ -85,7 +85,7 @@ class AdminPageFormSettingsMain
 
 	private function initSubclassForAjax()
 	{
-		$type = filter_input(INPUT_POST, self::GET_PARAM_TYPE, @FILTER_SANITIZE_STRING);
+		$type = filter_input(INPUT_POST, self::GET_PARAM_TYPE, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		$id = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT);
 		$this->initSubClass($type, $id);
 	}
@@ -97,7 +97,7 @@ class AdminPageFormSettingsMain
 
 	public function initSubClassForGet()
 	{
-		$type = filter_input(INPUT_GET, self::GET_PARAM_TYPE, @FILTER_SANITIZE_STRING);
+		$type = filter_input(INPUT_GET, self::GET_PARAM_TYPE, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		$id = filter_input(INPUT_GET, self::PARAM_FORMID, FILTER_VALIDATE_INT);
 		$this->initSubClass($type, $id);
 	}

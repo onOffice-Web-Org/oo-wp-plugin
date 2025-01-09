@@ -113,7 +113,7 @@ class FormPostOwnerConfigurationDefault
 	 */
 	public function getNewsletterAccepted(): bool
 	{
-		return filter_var( $_POST['newsletter'] ?? null, @FILTER_SANITIZE_STRING ) === 'y';
+		return filter_var( $_POST['newsletter'] ?? null, FILTER_SANITIZE_FULL_SPECIAL_CHARS ) === 'y';
 	}
 
 
