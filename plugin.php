@@ -87,6 +87,10 @@ add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
 
 add_action('admin_menu', [$pAdminViewController, 'register_menu']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_css']);
+
+add_action('admin_head', [$pAdminViewController, 'role_styles']);
+
+
 add_action('init', [$pAdminViewController, 'onInit']);
 
 add_action('admin_bar_menu', function ( $wp_admin_bar ) {
