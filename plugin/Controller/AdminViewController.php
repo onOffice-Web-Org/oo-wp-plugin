@@ -331,6 +331,24 @@ class AdminViewController
 			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), 'v5.4.1');
 	}
 
+	public function role_styles()  {
+		if ( !current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH) ) {
+				echo '<style>
+					.subsubsub .applicantsearch {
+						display:none;
+					}
+					</style>';
+				
+		}
+		if ( !current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_OWNER) ) {
+				echo '<style>
+					.subsubsub .owner {
+						display:none;
+					}
+					</style>';
+		
+		}
+	}
 
 	/**
 	 *

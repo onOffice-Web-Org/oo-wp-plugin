@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 
 /**
@@ -84,7 +85,33 @@ class InputFieldTemplateListRenderer
 				}
 				echo '<summary>' . esc_html($templateValue['title']) . '</summary>';
 			}
+
 			foreach ($templateList as $key => $label) {
+
+				if(!current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH)){
+					if ($label === 'applicantsearchform.php') {
+						continue;
+					}
+				}
+
+				if(!current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER)){
+					if ($label === 'newsletter.php') {
+						continue;
+					}
+				}
+		
+				if(!current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_OWNER)){
+					if ($label === 'ownerform.php') {
+						continue;
+					}
+				}
+
+				if(!current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_OWNER_LEADGENERATOR)){
+					if ($label === 'ownerleadgeneratorform.php') {
+						continue;
+					}
+				}
+
 				$checked = false;
 				if ($label === $this->_checkedValue || $key === $this->_checkedValue) {
 					$checked = true;

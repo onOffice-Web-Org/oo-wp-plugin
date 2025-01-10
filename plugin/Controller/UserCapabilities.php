@@ -57,6 +57,18 @@ class UserCapabilities
 	/** */
 	const RULE_DEBUG_OUTPUT = 'debugOutput';
 
+	/** */
+	const OO_PLUGINCAP_MANAGE_FORM_OWNER = 'oo_plugincap_manage_form_owner';
+
+	/** */
+	const OO_PLUGINCAP_MANAGE_FORM_OWNER_LEADGENERATOR = 'oo_plugincap_manage_form_owner_leadgenerator';
+
+	/** */
+	const OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH = 'oo_plugincap_manage_form_applicantsearch';
+	
+	/** */
+	const OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER = 'oo_plugincap_manage_form_newsletter';
+
 	/** @var array */
 	private $_ruleToCapability = [
 		self::RULE_VIEW_MAIN_PAGE => 'edit_pages',
@@ -67,7 +79,6 @@ class UserCapabilities
 		self::RULE_EDIT_SETTINGS => 'edit_pages',
 		self::RULE_DEBUG_OUTPUT => 'edit_pages',
 	];
-
 
 	/**
 	 *
@@ -87,7 +98,6 @@ class UserCapabilities
 
 		throw new UnexpectedValueException($rule);
 	}
-
 
 	/**
 	 *
