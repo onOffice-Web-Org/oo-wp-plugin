@@ -161,6 +161,8 @@ class AdminViewController
 		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pDI = $pDIBuilder->build();
 
+		$pUserCapabilities->add_plugin_capabilities_to_roles();
+
 		// main page
 		add_menu_page( __( 'onOffice', 'onoffice-for-wp-websites' ), __( 'onOffice', 'onoffice-for-wp-websites' ),
 			$roleMainPage, $this->_pageSlug, function () use ( $pDI ) {
