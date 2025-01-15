@@ -116,28 +116,26 @@ class UserCapabilities
 	}
 
 
-	function add_plugin_capabilities_to_roles()
+	public function add_plugin_capabilities_to_roles()
     {
-		add_action('init', function() {
-			$roles = ['administrator', 'editor'];
-	
-			foreach ($roles as $role_name) {
-				$role = get_role($role_name);
-	
-				$role->add_cap(
-					self::OO_PLUGINCAP_MANAGE_FORM_OWNER,
-				);
-				$role->add_cap(
-					self::OO_PLUGINCAP_MANAGE_FORM_OWNER_LEADGENERATOR,
-				);
-				$role->add_cap(
-					self::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH,
-				);
-				$role->add_cap(
-					self::OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER,
-				);
-			}
-		}, 1);
+		$roles = ['administrator', 'editor'];
+		
+		foreach ($roles as $role_name) {
+			$role = get_role($role_name);
+
+			$role->add_cap(
+				self::OO_PLUGINCAP_MANAGE_FORM_OWNER,
+			);
+			$role->add_cap(
+				self::OO_PLUGINCAP_MANAGE_FORM_OWNER_LEADGENERATOR,
+			);
+			$role->add_cap(
+				self::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH,
+			);
+			$role->add_cap(
+				self::OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER,
+			);
+		}
     }
 
 

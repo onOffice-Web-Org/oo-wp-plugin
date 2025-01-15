@@ -132,6 +132,7 @@ class AdminViewController
 		if ($pSelectedSubPageForAddress instanceof AdminPageAjax) {
 			$this->_ajaxHooks['onoffice_page_'.$this->_pageSlug.'-addresses'] = $pSelectedSubPageForAddress;
 		}
+
 	}
 
 
@@ -160,8 +161,6 @@ class AdminViewController
 		$pDIBuilder = new ContainerBuilder();
 		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pDI = $pDIBuilder->build();
-
-		$pUserCapabilities->add_plugin_capabilities_to_roles();
 
 		// main page
 		add_menu_page( __( 'onOffice', 'onoffice-for-wp-websites' ), __( 'onOffice', 'onoffice-for-wp-websites' ),
