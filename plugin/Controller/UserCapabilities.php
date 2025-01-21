@@ -69,6 +69,9 @@ class UserCapabilities
 	/** */
 	const OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER = 'oo_plugincap_manage_form_newsletter';
 
+    const OO_PLUGINCAP_MANAGE_PLUGIN_TEMPLATES = 'oo_plugincap_manage_plugin_templates';
+
+
 	/** @var array */
 	private $_ruleToCapability = [
 		self::RULE_VIEW_MAIN_PAGE => 'edit_pages',

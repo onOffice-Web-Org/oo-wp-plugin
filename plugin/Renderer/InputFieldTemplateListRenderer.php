@@ -74,9 +74,19 @@ class InputFieldTemplateListRenderer
 			$this->setDefaultCheckedValue();
 		}
 		echo '<div class="template-list">';
-		foreach ($this->getValue() as $templateValue) {
+
+        $templates = [];
+        foreach ($this->getValue() as $templateValue) {
+            $isTheme = stripos($templateValue['folder'], 'onoffice-theme') !== false;
+            if(!$isTheme && !current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_PLUGIN_TEMPLATES)){
+                continue;
+            }
+            $templates[] = $templateValue;
+        }
+
+		foreach ($templates as $templateValue) {
 			$templateList = $templateValue['path'];
-			if (count($this->getValue()) > 1) {
+			if (count($templates) > 1) {
 				if (in_array($this->_checkedValue, $templateList) ||
 					array_key_exists($this->_checkedValue, $templateList)) {
 					echo '<details open>';
