@@ -65,7 +65,10 @@ class UserCapabilities
 
 	/** */
 	const OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH = 'oo_plugincap_manage_form_applicantsearch';
-	
+
+    /** */
+    const OO_PLUGINCAP_MANAGE_FORM_INTEREST = 'oo_plugincap_manage_form_interest';
+
 	/** */
 	const OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER = 'oo_plugincap_manage_form_newsletter';
 
@@ -129,6 +132,11 @@ class UserCapabilities
 			$role->add_cap(
 				self::OO_PLUGINCAP_MANAGE_FORM_OWNER,
 			);
+
+            $role->add_cap(
+				self::OO_PLUGINCAP_MANAGE_FORM_INTEREST,
+			);
+            
 			$role->add_cap(
 				self::OO_PLUGINCAP_MANAGE_FORM_OWNER_LEADGENERATOR,
 			);
