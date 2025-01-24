@@ -33,6 +33,11 @@ use onOffice\WPlugin\Renderer\InputFieldTemplateListRenderer;
 class TestClassInputTemplateListRenderer
 	extends \WP_UnitTestCase
 {
+    protected function setUp() : void
+    {
+        wp_set_current_user(1);
+    }
+
 	/**
 	 *
 	 */

@@ -231,12 +231,19 @@ class AdminPageFormList
 			     . '<li><a href="' . $linkAddNewContactForm . '"><p>' . esc_html__( 'Contact Form',
 					'onoffice-for-wp-websites' ) . '</p></a></li>'
 			     . '<li><a href="' . $linkAddNewInterestForm . '"><p>' . esc_html__( 'Interest Form',
-					'onoffice-for-wp-websites' ) . '</p></a></li>'
-			     . '<li><a href="' . $linkAddNewOwnerForm . '"><p>' . esc_html__( 'Owner Form',
-					'onoffice-for-wp-websites' ) . '</p></a></li>'
-			     . '<li><a href="' . $linkAddNewApplicantSearchForm . '"><p>' . esc_html__( 'Applicant Search Form',
-					'onoffice-for-wp-websites' ) . '</p></a></li>'
-			     . '</ul>'
+					'onoffice-for-wp-websites' ) . '</p></a></li>';
+
+				if (current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_OWNER))	{
+					echo '<li><a href="' . $linkAddNewOwnerForm . '"><p>' . esc_html__( 'Owner Form',
+					'onoffice-for-wp-websites' ) . '</p></a></li>';
+				}			
+
+				if (current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH))	{		
+			    	echo  '<li><a href="' . $linkAddNewApplicantSearchForm . '"><p>' . esc_html__( 'Applicant Search Form',
+					'onoffice-for-wp-websites' ) . '</p></a></li>';
+				}
+
+				echo '</ul>'
 			     . '</details>'
 			     . '</div>';
 		}
@@ -285,7 +292,6 @@ class AdminPageFormList
 			return $this->_pFormsTable;
 		});
 	}
-
 
 	/**
 	 *
