@@ -197,7 +197,7 @@ class DefaultValueRowSaver
 	 * @param mixed $values
 	 * @return mixed
 	 */
-	private function validateValues( $field, $values)
+	private function validateValues($field, $values)
 	{
 		if ($field === 'Email') {
 			if (is_array($values)) {
