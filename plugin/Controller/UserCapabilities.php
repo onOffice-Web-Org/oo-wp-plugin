@@ -57,6 +57,24 @@ class UserCapabilities
 	/** */
 	const RULE_DEBUG_OUTPUT = 'debugOutput';
 
+	/** */
+	const OO_PLUGINCAP_MANAGE_FORM_OWNER = 'oo_plugincap_manage_form_owner';
+
+	/** */
+	const OO_PLUGINCAP_MANAGE_FORM_OWNER_LEADGENERATOR = 'oo_plugincap_manage_form_owner_leadgenerator';
+
+	/** */
+	const OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH = 'oo_plugincap_manage_form_applicantsearch';
+
+	/** */
+	const OO_PLUGINCAP_MANAGE_FORM_INTEREST = 'oo_plugincap_manage_form_interest';
+
+	/** */
+	const OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER = 'oo_plugincap_manage_form_newsletter';
+
+	const OO_PLUGINCAP_MANAGE_PLUGIN_TEMPLATES = 'oo_plugincap_manage_plugin_templates';
+
+
 	/** @var array */
 	private $_ruleToCapability = [
 		self::RULE_VIEW_MAIN_PAGE => 'edit_pages',
@@ -67,7 +85,6 @@ class UserCapabilities
 		self::RULE_EDIT_SETTINGS => 'edit_pages',
 		self::RULE_DEBUG_OUTPUT => 'edit_pages',
 	];
-
 
 	/**
 	 *
@@ -88,7 +105,6 @@ class UserCapabilities
 		throw new UnexpectedValueException($rule);
 	}
 
-
 	/**
 	 *
 	 * @param string $rule
@@ -102,6 +118,38 @@ class UserCapabilities
 
 		if (!current_user_can($capability)) {
 			throw new UserCapabilitiesException();
+		}
+	}
+
+
+	public function add_plugin_capabilities_to_roles()
+	{
+		$roles = ['administrator', 'editor'];
+		
+		foreach ($roles as $role_name) {
+			$role = get_role($role_name);
+			if($role) {
+				$role->add_cap(
+					self::OO_PLUGINCAP_MANAGE_FORM_OWNER,
+				);
+
+				$role->add_cap(
+					self::OO_PLUGINCAP_MANAGE_FORM_INTEREST,
+				);
+
+				$role->add_cap(
+					self::OO_PLUGINCAP_MANAGE_FORM_OWNER_LEADGENERATOR,
+				);
+				$role->add_cap(
+					self::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH,
+				);
+				$role->add_cap(
+					self::OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER,
+				);
+				$role->add_cap(
+					self::OO_PLUGINCAP_MANAGE_PLUGIN_TEMPLATES,
+				);
+			}
 		}
 	}
 }
