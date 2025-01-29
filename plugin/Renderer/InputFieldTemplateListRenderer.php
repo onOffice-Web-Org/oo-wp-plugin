@@ -75,14 +75,14 @@ class InputFieldTemplateListRenderer
 		}
 		echo '<div class="template-list">';
 
-        $templates = [];
-        foreach ($this->getValue() as $templateValue) {
-            $isTheme = stripos($templateValue['folder'], 'onoffice-theme') !== false;
-            if(!$isTheme && !current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_PLUGIN_TEMPLATES)){
-                continue;
-            }
-            $templates[] = $templateValue;
-        }
+		$templates = [];
+		foreach ($this->getValue() as $templateValue) {
+			$isTheme = stripos($templateValue['folder'], 'onoffice-theme') !== false;
+			if(!$isTheme && !current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_PLUGIN_TEMPLATES)){
+				continue;
+			}
+			$templates[] = $templateValue;
+		}
 
 		foreach ($templates as $templateValue) {
 			$templateList = $templateValue['path'];
