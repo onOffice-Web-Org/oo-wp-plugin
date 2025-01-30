@@ -247,6 +247,10 @@ class EstateList
 		$estateParametersRaw['data'] []= 'vermarktungsart';
 		$estateParametersRaw['data'] []= 'preisAufAnfrage';
 
+		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
+			$estateParametersRaw['data'] []= 'waehrung';
+		}
+
 		if ($this->getShowEnergyCertificate()) {
 			$energyCertificateFields = ['energieausweistyp', 'energyClass'];
 			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $energyCertificateFields);
@@ -354,6 +358,9 @@ class EstateList
 				$requestParams['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 				$requestParams['data'][] = 'vermarktungsart';
 				$requestParams['data'][] = 'preisAufAnfrage';
+				if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
+					$requestParams['data'][] = 'waehrung';
+				}
 			}
 			if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
 				$requestParams['data'][] = 'preisAufAnfrage';
@@ -670,10 +677,6 @@ class EstateList
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
-		$fieldWaehrung = $this->_pEnvironment->getFieldnames()->getFieldInformation('waehrung', onOfficeSDK::MODULE_ESTATE);
-		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung']) ) {
-			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung['permittedvalues']);
-		}
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'] ?? [];
 
 		if ($this->getShowEstateMarketingStatus()) {
@@ -704,11 +707,12 @@ class EstateList
 			$this->addMetaTags(GenerateMetaDataSocial::TWITTER_KEY, $recordModified);
 		}
 
-		$recordModified = new ArrayContainerEscape($recordModified);
-		if ($recordModified['multiParkingLot']) {
-			$parking = new FieldParkingLot();
-			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
+		if (!empty($recordModified['multiParkingLot'])) {
+			$parking = $this->_pEnvironment->getContainer()->get(FieldParkingLot::class);
+			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordRaw['waehrung'] ?? '');
 		}
+
+		$recordModified = new ArrayContainerEscape($recordModified);
 
 		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
 			if ($this->enableShowPriceOnRequestText() ) {
