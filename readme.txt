@@ -76,6 +76,24 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.5 (2025-01-30) =
+
+**Added**
+
+* Customization of standard email subjects for forms
+
+**Fixed**
+
+* Order in energy certificate scale
+
+* Deprecated notices on PHP 8.3
+
+* Error causes by wrong type
+
+**Removed**
+
+* Pagination from detail page template
+
 = 5.4.1 (2024-12-20) =
 
 **Added**
