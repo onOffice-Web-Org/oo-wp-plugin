@@ -72,7 +72,7 @@ class RequestVariablesSanitizer
 		$variable = stripslashes_deep($inputVariable[$name] ?? null);
 
 		if($filter == FILTER_SANITIZE_FULL_SPECIAL_CHARS){
-			return self::sanitizeFilterString($inputVariable[$name]);
+			return self::sanitizeFilterString($inputVariable[$name] ?? null);
 		}
 
 		return filter_var($variable, $filter, $option ?? 0);
