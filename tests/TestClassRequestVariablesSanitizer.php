@@ -70,11 +70,11 @@ class TestClassRequestVariablesSanitizer
 		$this->assertEquals('abc', $result);
 	}
 
-    /**
-     *
-     * @covers onOffice\WPlugin\RequestVariablesSanitizer::sanitizeFilterString
-     *
-     */
+	/**
+	 *
+	 * @covers onOffice\WPlugin\RequestVariablesSanitizer::sanitizeFilterString
+	 *
+	 */
 	public function testFilterInputString()
 	{
 		$value = RequestVariablesSanitizer::sanitizeFilterString('<b>abcßÖÄÜüöäüABC</b>');
