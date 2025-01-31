@@ -26,9 +26,8 @@
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 
-/* @var $pAddresss AddressList */
 return (function (AddressList $pAddressClone) {
-	$pAddressClone->resetAddresssIterator();
+	$pAddressClone->resetAddressesIterator();
 	$addressData = [];
 	foreach ($pAddressClone->getRows(AddressViewFieldModifierTypes::MODIFIER_TYPE_MAP) as $escapedValues) {
 		$position = [
@@ -56,7 +55,7 @@ return (function (AddressList $pAddressClone) {
     <script type="text/javascript">
         (function () {
             var gmapInit = function () {
-                var addresss = <?php echo json_encode($addressData, JSON_PRETTY_PRINT); ?>;
+                var addresses = <?php echo json_encode($addressData, JSON_PRETTY_PRINT); ?>;
                 var settings = {zoom: null};
 
                 var mapElement = document.getElementById('<?php echo esc_js($mapId); ?>');
@@ -70,8 +69,8 @@ return (function (AddressList $pAddressClone) {
                     }
                 });
 
-                for (var i in addresss) {
-                    var addressConfig = addresss[i];
+                for (var i in addresses) {
+                    var addressConfig = addresses[i];
                     var latLng = new google.maps.LatLng(addressConfig.position.lat, addressConfig.position.lng);
                     bounds.extend(latLng);
 

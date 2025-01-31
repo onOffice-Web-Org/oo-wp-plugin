@@ -306,7 +306,14 @@ class InputModelRenderer
 				$pInstance = new InputFieldTextAreaRenderer('textarea', $elementName);
 				$pInstance->setValue($pInputModel->getValue());
 				break;
-
+        
+			case InputModelBase::HTML_TYPE_EMAIL_SUBJECT:
+				$pInstance = new InputFieldSubjectForFormRenderer($elementName, $pInputModel->getValue());
+				if ($pInputModel->getHintHtml() != null) {
+					$pInstance->setHint($pInputModel->getHintHtml());
+				}
+			break;
+        
 			case InputModelOption::HTML_VERTICAL_RADIO:
 				$pInstance = new InputFieldVerticalRadioRenderer($elementName, $pInputModel->getValuesAvailable());
 				if ($pInputModel->getHintHtml() != null) {

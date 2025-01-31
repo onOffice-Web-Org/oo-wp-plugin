@@ -193,11 +193,11 @@ class DefaultValueRowSaver
 	}
 
 	/**
-	 * @param string $field
+	 * @param string|int $field
 	 * @param mixed $values
 	 * @return mixed
 	 */
-	private function validateValues(string $field, $values)
+	private function validateValues($field, $values)
 	{
 		if ($field === 'Email') {
 			if (is_array($values)) {

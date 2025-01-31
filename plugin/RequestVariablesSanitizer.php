@@ -70,6 +70,37 @@ class RequestVariablesSanitizer
 	private function getFiltered(array $inputVariable, string $name, int $filter, $option = null)
 	{
 		$variable = stripslashes_deep($inputVariable[$name] ?? null);
-		return filter_var($variable, $filter, $option);
+
+		if($filter == FILTER_SANITIZE_FULL_SPECIAL_CHARS){
+			return self::sanitizeFilterString($inputVariable[$name] ?? null);
+		}
+
+		return filter_var($variable, $filter, $option ?? 0);
+	}
+
+	public static function filterInputString(int $type, string $var_name): string{
+		return self::sanitizeFilterString(filter_input($type, $var_name, FILTER_DEFAULT));
+	}
+
+    /**
+     * Sanitize Strings based on the deprecated FILTER_SANITIZE_STRING filter.
+     *
+     * @param $value
+     * @param array $flags
+     * @return string
+     */
+	public static function sanitizeFilterString($value, array $flags = []): string
+	{
+		$noQuotes = in_array(FILTER_FLAG_NO_ENCODE_QUOTES, $flags);
+		$options = ($noQuotes ? ENT_NOQUOTES : ENT_QUOTES) | ENT_SUBSTITUTE;
+		$optionsDecode = ($noQuotes ? ENT_QUOTES : ENT_NOQUOTES) | ENT_SUBSTITUTE;
+
+		$value = stripslashes($value);
+		$value = strip_tags($value);
+		$value = htmlspecialchars($value, $options);
+
+		// Fix that HTML entities are converted to entity numbers instead of entity name (e.g. ' -> &#34; and not ' -> &quote;)
+		$value = str_replace(["&quot;", "&#039;"], ["&#34;", "&#39;"], $value);
+		return html_entity_decode($value, $optionsDecode);
 	}
 }

@@ -105,6 +105,14 @@ class FormsTable
 			$pRecordRead->addWhere("`form_type` = '".esc_sql($this->_listType)."'");
 		}
 
+		if(!current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH)){
+			$pRecordRead->addWhere("`form_type` != 'applicantsearch'");
+		}
+
+		if(!current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_OWNER)){
+			$pRecordRead->addWhere("`form_type` != 'owner'");
+		}
+		
 		$pRecord = $pRecordRead->getRecordsSortedAlphabetically();
 		$pRecord = $this->handleRecord($pRecord);
 		$this->setItems($pRecord);

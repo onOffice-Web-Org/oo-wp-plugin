@@ -260,13 +260,13 @@ class FormModelBuilderDBForm
 		$values['fieldsPagePerForm'] = $pDataFormConfiguration->getPagePerForm();
 		$values['template'] = $pDataFormConfiguration->getTemplate();
 		$values['enable_create_task'] = $pDataFormConfiguration->getEnableCreateTask();
-		$values['responsibility'] = $pDataFormConfiguration->getTaskResponsibility();
-		$values['processor'] = $pDataFormConfiguration->getTaskProcessor();
-		$values['type'] = $pDataFormConfiguration->getTaskType();
-		$values['priority'] = $pDataFormConfiguration->getTaskPriority();
-		$values['subject'] = $pDataFormConfiguration->getTaskSubject();
-		$values['description'] = $pDataFormConfiguration->getTaskDescription();
-		$values['status'] = $pDataFormConfiguration->getTaskStatus();
+		$values['taskResponsibility'] = $pDataFormConfiguration->getTaskResponsibility();
+		$values['taskProcessor'] = $pDataFormConfiguration->getTaskProcessor();
+		$values['taskType'] = $pDataFormConfiguration->getTaskType();
+		$values['taskPriority'] = $pDataFormConfiguration->getTaskPriority();
+		$values['taskSubject'] = $pDataFormConfiguration->getTaskSubject();
+		$values['taskDescription'] = $pDataFormConfiguration->getTaskDescription();
+		$values['taskStatus'] = $pDataFormConfiguration->getTaskStatus();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -1082,6 +1082,22 @@ class FormModelBuilderDBForm
 	/**
 	 * @return InputModelDB
 	 */
+	public function createInputModelSubject(): InputModelDB
+	{
+		$labelSubject = __('Subject (optional)', 'onoffice-for-wp-websites');
+
+		$pInputModelFormSubject = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT, $labelSubject);
+		$pInputModelFormSubject->setHtmlType(InputModelBase::HTML_TYPE_EMAIL_SUBJECT);
+		$pInputModelFormSubject->setValue($this->getValue('subject'));
+		$pInputModelFormSubject->setHintHtml(__('We recommend a maximum number of characters between 40 and 60 or up to 10 words.', 'onoffice-for-wp-websites'));
+
+		return $pInputModelFormSubject;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
 	public function createInputModelEnableCreateTask(): InputModelDB
 	{
 		$labelEnableCreateTask = __('Create tasks in onOffice enterprise', 'onoffice-for-wp-websites');
@@ -1107,7 +1123,7 @@ class FormModelBuilderDBForm
 		$pInputModelResponsibility = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_RESPONSIBILITY, $labelTaskResponsibility);
 		$pInputModelResponsibility->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-		$pInputModelResponsibility->setValue($this->getValue('responsibility') ?? '');
+		$pInputModelResponsibility->setValue($this->getValue('taskResponsibility') ?? '');
 		$supervisorData =  ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->getSupervisorData();
 		$pInputModelResponsibility->setValuesAvailable($supervisorData);
 
@@ -1126,7 +1142,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskProcessor = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_PROCESSOR, $labelTaskProcessor);
 		$pInputModelTaskProcessor->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-		$pInputModelTaskProcessor->setValue($this->getValue('processor') ?? '');
+		$pInputModelTaskProcessor->setValue($this->getValue('taskProcessor') ?? '');
 		$supervisorData =  ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->getSupervisorData();
 		$pInputModelTaskProcessor->setValuesAvailable($supervisorData);
 
@@ -1161,7 +1177,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskType = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_TYPE, $labelTaskType . '*');
 		$pInputModelTaskType->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-		$pInputModelTaskType->setValue($this->getValue('type'));
+		$pInputModelTaskType->setValue($this->getValue('taskType'));
 		$taskType = ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->_taskType;
 		$pInputModelTaskType->setValuesAvailable($taskType);
 
@@ -1177,7 +1193,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskPriority = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_PRIORITY, $labelTaskPriority);
 		$pInputModelTaskPriority->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-		$pInputModelTaskPriority->setValue($this->getValue('priority') ?? '');
+		$pInputModelTaskPriority->setValue($this->getValue('taskPriority') ?? '');
 
 		$pInputModelTaskPriority->setValuesAvailable($this->getTasksPriority());
 
@@ -1193,7 +1209,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskSubject = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_SUBJECT, $labelTaskSubject);
 		$pInputModelTaskSubject->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
-		$pInputModelTaskSubject->setValue($this->getValue('subject') ?? '');
+		$pInputModelTaskSubject->setValue($this->getValue('taskSubject') ?? '');
 
 		return $pInputModelTaskSubject;
 	}
@@ -1207,7 +1223,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskDescription = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_DESCRIPTION, $labelTaskDescription);
 		$pInputModelTaskDescription->setHtmlType(InputModelBase::HTML_TYPE_TEXTAREA);
-		$pInputModelTaskDescription->setValue($this->getValue('description') ?? '');
+		$pInputModelTaskDescription->setValue($this->getValue('taskDescription') ?? '');
 
 		return $pInputModelTaskDescription;
 	}
@@ -1221,7 +1237,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskStatus = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_STATUS, $labelTaskStatus);
 		$pInputModelTaskStatus->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-		$pInputModelTaskStatus->setValue($this->getValue('status') ?? 0);
+		$pInputModelTaskStatus->setValue($this->getValue('taskStatus') ?? 0);
 		$pInputModelTaskStatus->setValuesAvailable($this->getTasksStatus());
 
 		return $pInputModelTaskStatus;
