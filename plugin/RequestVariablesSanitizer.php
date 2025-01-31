@@ -82,9 +82,13 @@ class RequestVariablesSanitizer
 		return self::sanitizeFilterString(filter_input($type, $var_name, FILTER_DEFAULT));
 	}
 
-	/**
-	 * Sanitize Strings based on the deprecated FILTER_SANITIZE_STRING filter.
-	 */
+    /**
+     * Sanitize Strings based on the deprecated FILTER_SANITIZE_STRING filter.
+     *
+     * @param $value
+     * @param array $flags
+     * @return string
+     */
 	public static function sanitizeFilterString($value, array $flags = []): string
 	{
 		$noQuotes = in_array(FILTER_FLAG_NO_ENCODE_QUOTES, $flags);
