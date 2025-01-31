@@ -77,13 +77,13 @@ class TestClassRequestVariablesSanitizer
      */
 	public function testFilterInputString()
 	{
-        $value = RequestVariablesSanitizer::sanitizeFilterString('<b>abcßÖÄÜüöäüABC</b>');
+		$value = RequestVariablesSanitizer::sanitizeFilterString('<b>abcßÖÄÜüöäüABC</b>');
 		$this->assertEquals('abcßÖÄÜüöäüABC', $value);
 
-        $value = RequestVariablesSanitizer::sanitizeFilterString('"');
+		$value = RequestVariablesSanitizer::sanitizeFilterString('"');
 		$this->assertEquals('&#34;', $value);
 
-        $value = RequestVariablesSanitizer::sanitizeFilterString('\'');
+		$value = RequestVariablesSanitizer::sanitizeFilterString('\'');
 		$this->assertEquals('&#39;', $value);
 
 	}
