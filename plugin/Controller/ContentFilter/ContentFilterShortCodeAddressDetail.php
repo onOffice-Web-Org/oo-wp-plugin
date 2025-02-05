@@ -23,10 +23,16 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
+use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\Factory\AddressListFactory;
+use onOffice\WPlugin\Controller\AddressDetailUrl;
+use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Language;
 
 class ContentFilterShortCodeAddressDetail {
 
@@ -60,13 +66,16 @@ class ContentFilterShortCodeAddressDetail {
         $addressDetailView =  $this->_pDataAddressDetailViewHandler->getAddressDetailView();
         $template = $this->_pTemplate->withTemplateName($addressDetailView->getTemplate());
         $addressId = $this->_pWPQueryWrapper->getWPQuery()->query_vars['address_id'] ?? 0;
+        if ($addressId === 0) {
+          return $this->renderHtmlHelperUserIfEmptyAddressId();
+        }
         $pAddressList = $this->_pAddressDetailFactory->createAddressDetail((int)$addressId);
         $pAddressList->loadSingleAddress($addressId);
         return $template
 					->withAddressList($pAddressList)
 					->render();
     }
-
+  
     /**
      * @return string
      */
@@ -74,4 +83,77 @@ class ContentFilterShortCodeAddressDetail {
     {
         return $this->_pDataAddressDetailViewHandler->getAddressDetailView()->getName();
     }
+
+	/**
+	 * @return string
+	 */
+	private function renderHtmlHelperUserIfEmptyAddressId(): string
+	{
+		$pDataDetail = $this->getRandomAddressDetail();
+		$firstName = $pDataDetail['elements']['Vorname'] ?? '';
+		$lastName = $pDataDetail['elements']['Name'] ?? '';
+		$company = $pDataDetail['elements']['Zusatz1'] ?? '';
+
+		$itemTitle = AddressList::createAddressTitle($firstName, $lastName, $company);
+		$type = __('address', 'onoffice-for-wp-websites');
+		$documentLink = __('https://wp-plugin.onoffice.com/', 'onoffice-for-wp-websites');
+		$linkDetail = '<a class="oo-detailview-helper-link" href=' . $this->getAddressLink($pDataDetail, $itemTitle) . '>' . (!empty($itemTitle) ? esc_html($itemTitle) : esc_html(__('Example address', 'onoffice-for-wp-websites'))) . '</a>';
+
+		return RenderHtmlHelperUsers::renderHtmlHelperUserIfEmptyId($type, $documentLink, $linkDetail, $pDataDetail);
+	}
+
+
+	/**
+	 * @return array
+	 */
+	private function getRandomAddressDetail(): array
+	{
+		$pEnvironment = new AddressListEnvironmentDefault();
+		$pSDKWrapper = $pEnvironment->getSDKWrapper();
+		$language = Language::getDefault();
+
+		$requestParams = [
+			'data' => ['Vorname', 'Name', 'Zusatz1'],
+			'outputlanguage' => $language
+		];
+		$requestParams['filter']['homepage_veroeffentlichen'][] = ['op' => '=', 'val' => 1];
+
+		$pApiClientAction = new APIClientActionGeneric
+		($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+		$pAddressList = $pApiClientAction->getResultRecords();
+
+		if (!empty($pAddressList)) {
+			$randomIdDetail = array_rand($pAddressList, 1);
+			return $pAddressList[ $randomIdDetail ];
+		}
+
+		return [];
+	}
+
+	/**
+	 * @param array $pAddressListDetail
+	 * @param string $addressTitle
+	 * @return string
+	 */
+	private function getAddressLink(array $pAddressListDetail, string $addressTitle): string
+	{
+		$pLanguageSwitcher = new AddressDetailUrl;
+		if (empty($pAddressListDetail)) {
+			return '';
+		}
+
+		$addressId = $pAddressListDetail['elements']['id'];
+		$fullLink = '#';
+
+		$url = get_page_link();
+		$fullLink = $pLanguageSwitcher->createAddressDetailLink($url, $addressId, $addressTitle);
+		$fullLinkElements = parse_url($fullLink);
+		if (empty($fullLinkElements['query'])) {
+			$fullLink .= '/';
+		}
+
+		return $fullLink;
+	}
 }
