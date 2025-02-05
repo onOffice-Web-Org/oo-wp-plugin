@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 5.2.1
+Version: 5.5
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -39,6 +39,7 @@ require __DIR__ . '/vendor/autoload.php';
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
 use DI\ContainerBuilder;
+use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Cache\CachedOutput;
 use onOffice\WPlugin\Cache\CacheHandler;
 use onOffice\WPlugin\Controller\AdminViewController;
@@ -87,7 +88,13 @@ add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
 
 add_action('admin_menu', [$pAdminViewController, 'register_menu']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_css']);
+
+add_action('admin_head', [$pAdminViewController, 'role_styles']);
+
+
 add_action('init', [$pAdminViewController, 'onInit']);
+
+add_action('init', [new UserCapabilities(), 'add_plugin_capabilities_to_roles']);
 
 add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 	if (is_network_admin()) {

@@ -200,15 +200,15 @@ $dimensions = [
 				<div class="oo-details-energy-certificate">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
 					<?php
-					function renderEnergyCertificate(string $energyCertificateType, array $energyClassPermittedValues, string $energyClass, string $type, array $labels) {
+					function renderEnergyCertificate(string $energyCertificateType, array $energyClassPermittedValues, string $selectedEnergyClass, string $type, array $labels) {
 						if ($energyCertificateType === $type) { ?>
 							<div class="energy-certificate-container">
 								<div class="segmented-bar">
 									<?php
 									foreach ($energyClassPermittedValues as $key => $label) {
-										$labelIndex = array_search($key, array_keys($energyClassPermittedValues));
+										$labelIndex = array_keys($energyClassPermittedValues)[$key];
 										echo '<div class="energy-certificate-label"><span>' . $labels[$labelIndex] . '</span></div>';
-										echo '<div class="segment'. ($energyClass == $key ? ' selected' : '') . '"><span>' . $label . '</span></div>';
+										echo '<div class="segment' . ($selectedEnergyClass == $label ? ' selected' : '') . '"><span>' . $label . '</span></div>';
 									}
 									if ($type === "Endenergiebedarf") {
 										echo '<div class="energy-certificate-label"><span>'.end($labels).'</span></div>';
@@ -294,6 +294,7 @@ $dimensions = [
 				]);
 
 				foreach ($pEstates->getEstateContacts() as $contactData) : ?>
+					<div class="oo-aspinfo-wrapper">
 					<?php
 					$imageUrl      = $contactData['imageUrl'];
 					$formOfAddress = $contactData['Anrede'];
@@ -370,6 +371,7 @@ $dimensions = [
 							echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($contactData[$field]) . '</p></div>';
 						}
 					} ?>
+					</div>
 				<?php endforeach; ?>
 			</div>
 			<div class="oo-asp oo-detailsexpose">
@@ -505,14 +507,6 @@ $dimensions = [
 			?>
 
 		</div>
-		<?php
-		if (get_option('onoffice-pagination-paginationbyonoffice')) { ?>
-			<div>
-				<?php
-				wp_link_pages();
-				?>
-			</div>
-		<?php } ?>
 		<div class="oo-similar">
 			<?php echo $pEstates->getSimilarEstates(); ?>
 		</div>
