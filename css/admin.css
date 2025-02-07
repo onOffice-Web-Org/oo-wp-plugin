@@ -138,20 +138,13 @@ body #onoffice-ajax span.viewusage .italic {
 	font-style: italic;
 }
 
-
 .accordion-section .accordion-trigger {
 	background: inherit;
-    color: #1d2327;
-    display: block;
-    position: relative;
     text-align: left;
-    width: 100%;
-    outline: 0;
     border: 0;
     padding: 8px 8px 11px 14px;
     cursor: pointer;
 }
-
 
 #poststuff .accordion-section-title.hndle {
 	padding: 0;
@@ -160,9 +153,12 @@ body #onoffice-ajax span.viewusage .italic {
 .accordion-section-title .dashicons {
     position: absolute;
     right: 10px;
-    left: auto;
-    color: #787c82;
-    border-radius: 50px;
+	color: #787c82;
+}
+
+.accordion-section-title .dashicons:hover {
+	color: #1d2327;
+
 }
 #listSettings p:empty {
 	display: none;
