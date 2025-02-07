@@ -140,10 +140,10 @@ body #onoffice-ajax span.viewusage .italic {
 
 .accordion-section .accordion-trigger {
 	background: inherit;
-    text-align: left;
-    border: 0;
-    padding: 8px 8px 11px 14px;
-    cursor: pointer;
+	text-align: left;
+	border: 0;
+	padding: 8px 8px 11px 14px;
+	cursor: pointer;
 }
 
 #poststuff .accordion-section-title.hndle {
