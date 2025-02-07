@@ -138,6 +138,28 @@ body #onoffice-ajax span.viewusage .italic {
 	font-style: italic;
 }
 
+.accordion-section .accordion-trigger {
+	background: inherit;
+	text-align: left;
+	border: 0;
+	padding: 8px 8px 11px 14px;
+	cursor: pointer;
+}
+
+#poststuff .accordion-section-title.hndle {
+	padding: 0;
+}
+
+.accordion-section-title .dashicons {
+    position: absolute;
+    right: 10px;
+	color: #787c82;
+}
+
+.accordion-section-title .dashicons:hover {
+	color: #1d2327;
+
+}
 #listSettings p:empty {
 	display: none;
 }
