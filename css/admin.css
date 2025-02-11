@@ -138,6 +138,28 @@ body #onoffice-ajax span.viewusage .italic {
 	font-style: italic;
 }
 
+.accordion-title {
+	display: flex;
+	justify-content: space-between;
+}
+
+.accordion-section .accordion-trigger {
+	background: inherit;
+	text-align: left;
+	border: 0;
+	cursor: pointer;
+	width: 100%;
+	padding: 0;
+}
+
+.accordion-section-title .dashicons {
+	color: #787c82;
+}
+
+.accordion-section-title .dashicons:hover {
+	color: #1d2327;
+
+}
 #listSettings p:empty {
 	display: none;
 }
@@ -426,6 +448,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	position: absolute;
 	box-sizing: border-box;
 	border: 1px solid #c3c4c7;
+	z-index: 1000;
 }
 
 .options-menu li a{
