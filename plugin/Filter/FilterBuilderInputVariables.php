@@ -102,9 +102,9 @@ class FilterBuilderInputVariables
 	private function getFieldFilter($fieldValue, string $type): array
 	{
 		$fieldFilter = [];
-        if(is_string($fieldValue)){
-            $fieldValue = html_entity_decode($fieldValue);
-        }
+		if(is_string($fieldValue)){
+			$fieldValue = html_entity_decode($fieldValue);
+		}
 		if (FieldTypes::isNumericType($type) || FieldTypes::isDateOrDateTime($type)) {
 			if (!is_array($fieldValue)) {
 				$fieldFilter []= ['op' => '=', 'val' => $fieldValue];
