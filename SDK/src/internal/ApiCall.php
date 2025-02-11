@@ -212,6 +212,11 @@ class ApiCall
 					$sortA = floatval($sortA);
 					$sortB = floatval($sortB);
 				}
+				if($fieldTypes[$sortBy] === "date")
+				{
+					$sortA = strtotime($sortA);
+					$sortB = strtotime($sortB);
+				}
 				if ($sortOrder === 'ASC') {
 					return ($sortA > $sortB) ? 1 : -1;
 				}
