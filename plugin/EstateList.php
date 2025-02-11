@@ -1010,6 +1010,11 @@ class EstateList
 		$addressIds = $this->getEstateContactIds();
 		$result = [];
 
+		// omit all but the main contact id
+		if ($this->_pDataView instanceof DataDetailView && $this->_pDataView->getContactPerson() === DataDetailView::SHOW_MAIN_CONTACT_PERSON) {
+			$addressIds = [$addressIds[0]];
+		}
+
 		foreach ($addressIds as $addressId) {
 			$currentAddressData = $this->_pEnvironment->getAddressList()->getAddressById($addressId);
 			$pArrayContainerCurrentAddress = new ArrayContainerEscape($currentAddressData);
