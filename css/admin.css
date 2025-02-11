@@ -138,6 +138,11 @@ body #onoffice-ajax span.viewusage .italic {
 	font-style: italic;
 }
 
+.accordion-title {
+	display: flex;
+	justify-content: space-between;
+}
+
 .accordion-section .accordion-trigger {
 	background: inherit;
 	text-align: left;
