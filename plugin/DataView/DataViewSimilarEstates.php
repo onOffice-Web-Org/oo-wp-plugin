@@ -79,6 +79,9 @@ class DataViewSimilarEstates
 	/** */
 	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_estate_translated_labels';
 
+	/** */
+	const FIELD_SAME_ESTATE_AGENT = 'same_estate_agent';
+
 	/** @var bool */
 	private $_sameEstateKind = true;
 
@@ -123,6 +126,9 @@ class DataViewSimilarEstates
 		'mietpreis_pro_qm',
 		'calculatedPrice'
 	];
+
+	/** @var bool */
+	private $_sameEstateAgent = false;
 
 	/** @var string */
 	private $_showReferenceEstate = '0';
@@ -181,6 +187,14 @@ class DataViewSimilarEstates
 	/** @return array */
 	public function getFields(): array
 	{ return $this->_fields;}
+
+	/** @return bool */
+	public function getSameEstateAgent(): bool
+		{ return $this->_sameEstateAgent; }
+
+	/** @param bool $sameEstateAgent */
+	public function setSameEstateAgent(bool $sameEstateAgent)
+		{ $this->_sameEstateAgent = $sameEstateAgent; }
 
 	/** @param array $fields */
 	public function setFields(array $fields)

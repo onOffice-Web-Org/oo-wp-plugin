@@ -52,6 +52,8 @@ class EstateViewSimilarEstates
 	/** @var EstateListBase[] */
 	private $_estateListsByMainId = [];
 
+	/** @var array */
+	private $_contactPersonIds = [];
 
 	/**
 	 *
@@ -61,11 +63,12 @@ class EstateViewSimilarEstates
 	 */
 
 	public function __construct(DataViewSimilarEstates $pDataDetailView,
-		EstateViewSimilarEstatesEnvironment $pEnvironment = null)
+		EstateViewSimilarEstatesEnvironment $pEnvironment = null, array $contactPersonIds = [])
 	{
 		$this->_pFilterConfiguration = new FilterConfigurationSimilarEstates($pDataDetailView);
 		$this->_pEnvironment = $pEnvironment ?? new EstateViewSimilarEstatesEnvironmentDefault
 			($pDataDetailView);
+		$this->_contactPersonIds = $contactPersonIds;
 	}
 
 
@@ -188,6 +191,7 @@ class EstateViewSimilarEstates
 
 		foreach ($pGenerator as $id => $pEstateListSub) {
 			$pEstateListSub->setFormatOutput(true);
+			$pEstateListSub->setContactPersonIds($this->_contactPersonIds);
 			$pEstateListSub->loadEstates();
 			$this->_estateListsByMainId[$id] = $pEstateListSub;
 		}

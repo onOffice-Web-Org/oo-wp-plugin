@@ -39,7 +39,6 @@ class DefaultFilterBuilderSimilarEstates
 	/** @var int[] */
 	private $_excludeIds = [];
 
-
 	/**
 	 *
 	 * @param FilterConfigurationSimilarEstates $pFilterConfigurationSimilarEstates

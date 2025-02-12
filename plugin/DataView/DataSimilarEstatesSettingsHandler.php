@@ -135,6 +135,8 @@ class DataSimilarEstatesSettingsHandler
 			($row[DataViewSimilarEstates::FIELD_PRICE_ON_REQUEST] ?? false);
 		$pDataViewSimilar->setPictureTypes
 			($row[DataViewSimilarEstates::PICTURES] ?? []);
+		$pDataViewSimilar->setSameEstateAgent
+			($row[DataViewSimilarEstates::FIELD_SAME_ESTATE_AGENT] ?? false);
 		$pDataViewSimilar->setFilterId($row['filterId'] ?? $pDataViewSimilar->getFilterId());
 		$pDataViewSimilar->setShowReferenceEstate($row['showReferenceEstate'] ?? $pDataViewSimilar->getShowReferenceEstate());
 	}
