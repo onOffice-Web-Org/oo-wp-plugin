@@ -20,7 +20,7 @@
  */
 
 use onOffice\WPlugin\EstateDetail;
-use onOffice\WPlugin\DonutChart;
+use onOffice\WPlugin\EstateCostsChart;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 /**
  *
@@ -283,7 +283,7 @@ $dimensions = [
 						<?php 
 							$values = [$totalCostsData['kaufpreis']['raw'], $totalCostsData['bundesland']['raw'], $totalCostsData['aussen_courtage']['raw'],$totalCostsData['notary_fees']['raw'], $totalCostsData['land_register_entry']['raw']];
 							$valuesTitle = [$totalCostsData['kaufpreis']['default'], $totalCostsData['bundesland']['default'], $totalCostsData['aussen_courtage']['default'],$totalCostsData['notary_fees']['default'], $totalCostsData['land_register_entry']['default']];
-							$chart = new DonutChart($values, $valuesTitle);
+							$chart = new EstateCostsChart($values, $valuesTitle);
 							echo $chart->generateSVG(); ?>
 						</div>
 						<div class="oo-costs-overview">

@@ -28,7 +28,7 @@ use onOffice\WPlugin\EstateList;
  * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
- class DonutChart
+ class EstateCostsChart
  {
      private $values;
      private $valuesTitle;
@@ -56,37 +56,39 @@ use onOffice\WPlugin\EstateList;
 
          return sprintf('%0.2f,%0.2f', $x, $y);
      }
-     
      public function generateSVG()
      {
-         $total = array_sum($this->values);
-         //$total = getTotalCostsData();
-         $anglePerValue = 360 / $total;
-         $angleStart = 0;
-         
-         $svgContent = "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"  viewbox=\"0 0 600 400\" width=\"100%\" height=\"100%\">\n";
-         $svgContent .= "<g style=\"stroke:black;stroke-width:0\">\n";
+    $total = array_sum($this->values);
+    //$total = getTotalCostsData();
+    $anglePerValue = 360 / $total;
+    $angleStart = 0;
 
-         $counter = 0;
-         foreach ($this->values as $value) {
-             $angleDelta = $value * $anglePerValue;
-             $largeArcFlag = $angleDelta > 180 ? 1 : 0;
-             $angleEnd = $angleStart + $angleDelta;
-             
-             $path = [
-                "M" . $this->polarToCartesian(190, $angleStart),
-                "L" . $this->polarToCartesian(130, $angleStart),
-                "A 130,130,0,{$largeArcFlag},1," . $this->polarToCartesian(130, $angleEnd, true),
-                "L" . $this->polarToCartesian(190, $angleEnd, true),
-                "A 190,190,0,{$largeArcFlag},0," . $this->polarToCartesian(190, $angleStart)
-             ];
+    $outerRadius = 300; 
+    $innerRadius = 200;
 
-             $svgContent .= '<path d="' . implode(' ', $path) . '" class="oo-donut-chart-color'.$counter.'"><title>'.$this->valuesTitle[$counter].'</title></path>' . "\n";
-             $angleStart = $angleEnd;
-             $counter++;
-         }
+    $svgContent = "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"-100 -150 800 700\" width=\"100%\" height=\"100%\">\n";
+    $svgContent .= "<g style=\"stroke:black;stroke-width:0\">\n";
 
-         $svgContent .= "</g>\n</svg>";
-         return $svgContent;
-     }
- }
+    $counter = 0;
+    foreach ($this->values as $value) {
+        $angleDelta = $value * $anglePerValue;
+        $largeArcFlag = $angleDelta > 180 ? 1 : 0;
+        $angleEnd = $angleStart + $angleDelta;
+
+        $path = [
+            "M" . $this->polarToCartesian($outerRadius, $angleStart),
+            "L" . $this->polarToCartesian($innerRadius, $angleStart),
+            "A {$innerRadius},{$innerRadius},0,{$largeArcFlag},1," . $this->polarToCartesian($innerRadius, $angleEnd, true),
+            "L" . $this->polarToCartesian($outerRadius, $angleEnd, true),
+            "A {$outerRadius},{$outerRadius},0,{$largeArcFlag},0," . $this->polarToCartesian($outerRadius, $angleStart)
+        ];
+
+        $svgContent .= '<path d="' . implode(' ', $path) . '" class="oo-donut-chart-color'.$counter.'"><title>'.$this->valuesTitle[$counter].'</title></path>' . "\n";
+        $angleStart = $angleEnd;
+        $counter++;
+    }
+
+    $svgContent .= "</g>\n</svg>";
+    return $svgContent;
+    }
+}

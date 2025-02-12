@@ -282,7 +282,7 @@
 .oo-costs-container {
     width: 100%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
 }
 
@@ -293,7 +293,7 @@
 
 
 .oo-costs-container .oo-costs-overview {
-    width: 40%;
+    width: 55%;
 }
 
 .oo-costs-container .oo-costs-overview > div {
