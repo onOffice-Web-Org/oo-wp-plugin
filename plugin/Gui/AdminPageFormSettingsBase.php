@@ -375,6 +375,8 @@ abstract class AdminPageFormSettingsBase
 			'fieldList' => $this->getFieldList(),
 			'installed_wp_languages' => $this->getInstalledLanguages(),
 			'language_native' => $pLanguage->getLocale(),
+			'page_title' => __('Page', 'onoffice-for-wp-websites'),
+			'remove_page' => __('Remove Page', 'onoffice-for-wp-websites'),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
 		];
@@ -495,11 +497,15 @@ abstract class AdminPageFormSettingsBase
 		$this->addFormModel($pFormModelName);
 
 		$pInputModelTemplate = $this->_pFormModelBuilder->createInputModelTemplate('form');
+		$pInputModelShowFormAsModal = $this->_pFormModelBuilder->createInputModelShowFormAsModal();
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		if ($this->getType() === Form::TYPE_OWNER) {
+			$pFormModelLayoutDesign->addInputModel($pInputModelShowFormAsModal);
+		}
 		$this->addFormModel($pFormModelLayoutDesign);
 	}
 
@@ -511,10 +517,9 @@ abstract class AdminPageFormSettingsBase
 	protected function generateMetaBoxes()
 	{
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
-		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
-
-        $pFormTaskConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_TASKCONFIG);
-        $this->createMetaBoxByForm($pFormTaskConfig, 'normal');
+		if($pFormLayoutDesign !== null) {
+            $this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
+        }
 	}
 
 
@@ -754,6 +759,8 @@ abstract class AdminPageFormSettingsBase
 			wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js');
 			wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css');
 			wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
+			wp_register_script('onoffice-custom-email-subject', plugins_url('/dist/onoffice-custom-email-subject.min.js', $pluginPath));
+			wp_enqueue_script('onoffice-custom-email-subject');
 		}
 	}
 
@@ -878,11 +885,10 @@ abstract class AdminPageFormSettingsBase
 
 		$mainRecordId = $recordId != 0 ? $recordId : null;
 		$values = (object) $this->transformPostValues();
-
+		$values = $this->updatePageNumbers( $values, 'oopluginformfieldconfig-pageperform' );
 		$this->prepareValues( $values );
 		$this->customFontMarkdown( $values );
 		$pInputModelDBAdapterRow = new InputModelDBAdapterRow();
-
 		foreach ( $this->getFormModels() as $pFormModel ) {
 			foreach ( $pFormModel->getInputModel() as $pInputModel ) {
 				if ( $pInputModel instanceof InputModelDB ) {
@@ -925,6 +931,30 @@ abstract class AdminPageFormSettingsBase
 
 		wp_redirect( admin_url( 'admin.php?' . $pageQuery . $typeQuery . $idQuery . $statusQuery ) );
 		die();
+	}
+
+	/**
+	 * @param mixed $values
+	 * @param string $fieldName
+	 * @return mixed
+	 */
+	private function updatePageNumbers($values, string $fieldName) 
+	{
+		if ( !property_exists($values, $fieldName) || !is_array($values->$fieldName)) {
+			return $values;
+		}
+	
+		$data = [];
+		$currentValue = 1;
+	
+		foreach ($values->$fieldName as $key => $value) {
+			if (!isset($data[$value])) {
+				$data[$value] = (string)$currentValue++;
+			}
+			$values->$fieldName[$key] = $data[$value];
+		}
+	
+		return $values;
 	}
 
 	/** @return string */
