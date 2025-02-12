@@ -421,4 +421,30 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
 		$this->assertEquals($pInputModelOption->getHtmlType(), 'searchFieldForFieldLists');
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelContactPerson
+	 */
+	public function testCreateInputModelContactPerson()
+	{
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
+		$pFormModelBuilderDBEstateDetailSettings->generate('test');
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelContactPerson();
+		$this->assertNotEmpty($pInputModelDB->getValuesAvailable());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'verticalRadio');
+		$this->assertEquals($pInputModelDB->getHintHtml(), 'The main contact person is the address data record of the broker type, which is stored in the first place in onOffice enterprise.');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelShowEnergyCertificate
+	 */
+	public function testCreateInputModelShowEnergyCertificate()
+	{
+		$this->_pFormModelBuilderEstateDetailSettings->generate('test');
+		$pInputModelOption = $this->_pFormModelBuilderEstateDetailSettings->createInputModelShowEnergyCertificate();
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'checkbox');
+	}
 }

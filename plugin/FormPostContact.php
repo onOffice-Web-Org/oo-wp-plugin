@@ -96,8 +96,12 @@ class FormPostContact
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfig->getRecipientByUserSelection();
-		$subject = $pFormConfig->getSubject();
-
+		$subject = $this->generateDefaultEmailSubject($pFormData->getFormtype(), $this->_pFormPostContactConfiguration->getNewsletterAccepted());
+		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
+		$estateId = $pWPQuery->get('estate_id', null);
+		if (!empty($pFormConfig->getSubject())) {
+			$subject = $this->generateCustomEmailSubject($pFormConfig->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pFormConfig->getInputs());
+		}
 		try {
 			if ($pFormConfig->getCreateAddress()) {
 				$this->createAddress($pFormData);
@@ -147,6 +151,7 @@ class FormPostContact
 		$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
 		$writeActivity = $pFormConfig->getWriteActivity();
 		$contactType = $pFormConfig->getContactType();
+		$enableCreateTask = $pFormConfig->getEnableCreateTask();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
 		$latestAddressIdOnEnterPrise = null;
@@ -159,6 +164,10 @@ class FormPostContact
 			->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 		if ($writeActivity) {
 			$this->_pFormPostContactConfiguration->getFormAddressCreator()->createAgentsLog($pFormConfig, $addressId, $estateId);
+		}
+
+		if ($enableCreateTask) {
+			$this->_pFormPostContactConfiguration->getFormAddressCreator()->createTask($pFormConfig, $addressId, $estateId);
 		}
 
 		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {

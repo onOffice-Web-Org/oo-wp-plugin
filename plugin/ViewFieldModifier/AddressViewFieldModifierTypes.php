@@ -34,10 +34,17 @@ class AddressViewFieldModifierTypes
 	/** */
 	const MODIFIER_TYPE_DEFAULT = 'modifierTypeDefault';
 
+	/** */
+	const MODIFIER_TYPE_TITLE = 'modifierTypeTitle';
+
+	/** */
+	const MODIFIER_TYPE_MAP = 'modifierTypeMap';
 
 	/** @var array */
 	private $_mapping = [
 		self::MODIFIER_TYPE_DEFAULT => AddressViewFieldModifierTypeDefault::class,
+		self::MODIFIER_TYPE_TITLE => AddressViewFieldModifierTypeTitle::class,
+		self::MODIFIER_TYPE_MAP => AddressViewFieldModifierTypeMap::class,
 	];
 
 

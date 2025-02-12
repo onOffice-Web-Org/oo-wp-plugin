@@ -58,6 +58,7 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\API\ApiClientException;
+use onOffice\WPlugin\Field\Collection\FieldLoaderSupervisorValues;
 
 /**
  *
@@ -86,6 +87,9 @@ class FormModelBuilderDBForm
 
 	/** @var array */
 	private $_originContact = [];
+
+	/** @var array */
+	private $_taskType = [];
 
 	/**
 	 * @param Container $pContainer
@@ -130,18 +134,21 @@ class FormModelBuilderDBForm
 
 		foreach ($fieldNames as $pField) {
 			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$fieldNamesArray[$pField->getName()]['page'] = $this->getValue('fieldsPagePerForm')[$pField->getName()] ?? 1;
 			$pFieldsCollectionUsedFields->addField($pField);
 		}
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesArray);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
 		$pInputModelFieldsConfig->setValue($fields);
+		$pInputModelFieldsConfig->setPerPageForm($this->getValue('fieldsPagePerForm'));
 
 		$pModule = $this->getInputModelModule();
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
 		$pReferenceIsAvailableOptions = $this->getInputModelIsAvailableOptions();
 		$pReferenceIsMarkdown = $this->getInputModelIsMarkDown();
 		$pReferenceIsHiddenField = $this->getInputModelIsHiddenField();
+		$pInputModelPerPageForm = $this->getInputModelPerPageForm();
 		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValue($pFieldsCollectionUsedFields));
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValueLanguageSwitch());
@@ -149,10 +156,15 @@ class FormModelBuilderDBForm
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsMarkdown);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
+		$pInputModelFieldsConfig->addReferencedInputModel($pInputModelPerPageForm);
 		if($this->getFormType() === Form::TYPE_APPLICANT_SEARCH){
 			$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
 		} else {
 			$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsHiddenField);
+		}
+		if($this->getFormType() === Form::TYPE_OWNER){
+			$pInputModelFieldsConfig->setIsMultiPage(true);
+			$pInputModelFieldsConfig->setTemplate($this->getValue('template'));
 		}
 
 		return $pInputModelFieldsConfig;
@@ -220,6 +232,8 @@ class FormModelBuilderDBForm
 		$values['fieldsAvailableOptions'] = array();
 		$values['fieldsMarkdown'] = array();
 		$values['fieldsHiddenField'] = array();
+		$values['fieldsPagePerForm'] = array();
+		$values['template'] = array();
 		$pFactory = new DataFormConfigurationFactory($this->_formType);
 
 		if ($formId !== null) {
@@ -243,6 +257,16 @@ class FormModelBuilderDBForm
 		$values['remark'] = $pDataFormConfiguration->getRemark();
 		$values['origincontact'] = $pDataFormConfiguration->getOriginContact();
 		$values['advisorylevel'] = $pDataFormConfiguration->getAdvisorylevel();
+		$values['fieldsPagePerForm'] = $pDataFormConfiguration->getPagePerForm();
+		$values['template'] = $pDataFormConfiguration->getTemplate();
+		$values['enable_create_task'] = $pDataFormConfiguration->getEnableCreateTask();
+		$values['taskResponsibility'] = $pDataFormConfiguration->getTaskResponsibility();
+		$values['taskProcessor'] = $pDataFormConfiguration->getTaskProcessor();
+		$values['taskType'] = $pDataFormConfiguration->getTaskType();
+		$values['taskPriority'] = $pDataFormConfiguration->getTaskPriority();
+		$values['taskSubject'] = $pDataFormConfiguration->getTaskSubject();
+		$values['taskDescription'] = $pDataFormConfiguration->getTaskDescription();
+		$values['taskStatus'] = $pDataFormConfiguration->getTaskStatus();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -772,6 +796,32 @@ class FormModelBuilderDBForm
 	}
 
 	/**
+	 * @return InputModelDB|null
+	 */
+	public function getInputModelPerPageForm(): InputModelDB
+	{
+		$pInputModelFieldsConfig = new InputModelDBFactoryConfigForm();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFieldsConfig);
+		$type = InputModelDBFactoryConfigForm::INPUT_FORM_PAGE_PER_FORM;
+		$pInputModel = $pInputModelFactory->create($type, '', true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelFieldsPagePerForm'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param string $key
+	 */
+	public function callbackValueInputModelFieldsPagePerForm(InputModelBase $pInputModel, string $key)
+	{
+		$fieldsPagePerForm = $this->getValue('fieldsPagePerForm');
+		$pInputModel->setValue($fieldsPagePerForm[$key] ?? 1);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+	/**
 	 *
 	 * @param $module
 	 * @param string $htmlType
@@ -802,6 +852,7 @@ class FormModelBuilderDBForm
 
 		foreach ($fieldNames as $pField) {
 			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$fieldNamesArray[$pField->getName()]['page'] = $this->getValue('fieldsPagePerForm')[$pField->getName()] ?? 1;
 			$pFieldsCollectionUsedFields->addField($pField);
 		}
 
@@ -814,7 +865,6 @@ class FormModelBuilderDBForm
 	/**
 	 * @return InputModelDB
 	 */
-
 	public function createInputModelWriteActivity(): InputModelDB
 	{
 		$labelWriteActivity = __('Write activity', 'onoffice-for-wp-websites');
@@ -900,8 +950,20 @@ class FormModelBuilderDBForm
 			foreach ($resultAction as $record) {
 				$this->_actionKind[$record['elements']['key']] = $record['elements']['label'];
 				$this->_actionType[$record['elements']['key']] = $record['elements']['types'];
+
+				if ($record['elements']['key'] === 'Aufgabe') {
+					foreach ($record['elements']['typesByDatabaseId'] as $key => $value) {
+						if (isset($record['elements']['types'][$value])) {
+							$this->_taskType[$key] = $record['elements']['types'][$value];
+						}
+						if ($value === 'Rückruf') {
+							$this->_taskType[$key] = __('Callback', 'onoffice-for-wp-websites');
+						}
+					}
+				}
 			}
 		}
+
 		if (!empty($resultCharacteristic)) {
 			foreach (array_column($resultCharacteristic, 'elements') as $value) {
 				if (isset($value['merkmal']))
@@ -1000,6 +1062,216 @@ class FormModelBuilderDBForm
 		$pInputModelRemark->setValue($this->getValue('remark') ?? '');
 
 		return $pInputModelRemark;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelShowFormAsModal()
+	{
+		$labelShowFormAsModal = __('Show form as modal', 'onoffice-for-wp-websites');
+		$pInputModelFormShowFormAsModal = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_SHOW_FORM_AS_MODAL, $labelShowFormAsModal);
+		$pInputModelFormShowFormAsModal->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelFormShowFormAsModal->setValue($this->getValue($pInputModelFormShowFormAsModal->getField(), true));
+		$pInputModelFormShowFormAsModal->setValuesAvailable(1);
+
+		return $pInputModelFormShowFormAsModal;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelSubject(): InputModelDB
+	{
+		$labelSubject = __('Subject (optional)', 'onoffice-for-wp-websites');
+
+		$pInputModelFormSubject = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT, $labelSubject);
+		$pInputModelFormSubject->setHtmlType(InputModelBase::HTML_TYPE_EMAIL_SUBJECT);
+		$pInputModelFormSubject->setValue($this->getValue('subject'));
+		$pInputModelFormSubject->setHintHtml(__('We recommend a maximum number of characters between 40 and 60 or up to 10 words.', 'onoffice-for-wp-websites'));
+
+		return $pInputModelFormSubject;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelEnableCreateTask(): InputModelDB
+	{
+		$labelEnableCreateTask = __('Create tasks in onOffice enterprise', 'onoffice-for-wp-websites');
+
+		$pInputModelEnableCreateTask = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_ENABLE_CREATE_TASK, $labelEnableCreateTask);
+		$pInputModelEnableCreateTask->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelEnableCreateTask->setValue($this->getValue('enable_create_task'));
+		$pInputModelEnableCreateTask->setValuesAvailable(1);
+
+		return $pInputModelEnableCreateTask;
+	}
+
+	/**
+	 * @return InputModelDB
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function createInputModelTaskResponsibility(): InputModelDB
+	{
+		$labelTaskResponsibility = __('Responsibility', 'onoffice-for-wp-websites');
+
+		$pInputModelResponsibility = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_RESPONSIBILITY, $labelTaskResponsibility);
+		$pInputModelResponsibility->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelResponsibility->setValue($this->getValue('taskResponsibility') ?? '');
+		$supervisorData =  ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->getSupervisorData();
+		$pInputModelResponsibility->setValuesAvailable($supervisorData);
+
+		return $pInputModelResponsibility;
+	}
+
+	/**
+	 * @return InputModelDB
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function createInputModelTaskProcessor(): InputModelDB
+	{
+		$labelTaskProcessor = __('Processor', 'onoffice-for-wp-websites');
+
+		$pInputModelTaskProcessor = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_PROCESSOR, $labelTaskProcessor);
+		$pInputModelTaskProcessor->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelTaskProcessor->setValue($this->getValue('taskProcessor') ?? '');
+		$supervisorData =  ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->getSupervisorData();
+		$pInputModelTaskProcessor->setValuesAvailable($supervisorData);
+
+		return $pInputModelTaskProcessor;
+	}
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getSupervisorData(): array
+	{
+		$pFieldLoader = $this->_pContainer->make(FieldLoaderSupervisorValues::class, ['isReturnValueForUserNameElements' => true]);
+		$pFieldCollectionSupervisor = $this->_pContainer->get(FieldsCollectionBuilder::class)->buildFieldsCollection($pFieldLoader);
+
+		$supervisors = [];
+		foreach ($pFieldCollectionSupervisor->getAllFields() as $pField) {
+			$supervisors = $pField->getPermittedvalues();
+		}
+
+		return $supervisors;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelTaskType(): InputModelDB
+	{
+		$labelTaskType = __('Type', 'onoffice-for-wp-websites');
+
+		$pInputModelTaskType = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_TYPE, $labelTaskType . '*');
+		$pInputModelTaskType->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelTaskType->setValue($this->getValue('taskType'));
+		$taskType = ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->_taskType;
+		$pInputModelTaskType->setValuesAvailable($taskType);
+
+		return $pInputModelTaskType;
+	}
+
+	/**
+	 * @return InputModelDB|null
+	 */
+	public function createInputModelTaskPriority(): InputModelDB
+	{
+		$labelTaskPriority = __('Priority', 'onoffice-for-wp-websites');
+		$pInputModelTaskPriority = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_PRIORITY, $labelTaskPriority);
+		$pInputModelTaskPriority->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelTaskPriority->setValue($this->getValue('taskPriority') ?? '');
+
+		$pInputModelTaskPriority->setValuesAvailable($this->getTasksPriority());
+
+		return $pInputModelTaskPriority;
+	}
+
+	/**
+	 * @return InputModelDB|null
+	 */
+	public function createInputModelTaskSubject(): InputModelDB
+	{
+		$labelTaskSubject = __('Subject', 'onoffice-for-wp-websites');
+		$pInputModelTaskSubject = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_SUBJECT, $labelTaskSubject);
+		$pInputModelTaskSubject->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
+		$pInputModelTaskSubject->setValue($this->getValue('taskSubject') ?? '');
+
+		return $pInputModelTaskSubject;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelTaskDescription(): InputModelDB
+	{
+		$labelTaskDescription = __('Task description', 'onoffice-for-wp-websites');
+		$pInputModelTaskDescription = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_DESCRIPTION, $labelTaskDescription);
+		$pInputModelTaskDescription->setHtmlType(InputModelBase::HTML_TYPE_TEXTAREA);
+		$pInputModelTaskDescription->setValue($this->getValue('taskDescription') ?? '');
+
+		return $pInputModelTaskDescription;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelTaskStatus(): InputModelDB
+	{
+		$labelTaskStatus = __('Status', 'onoffice-for-wp-websites');
+		$pInputModelTaskStatus = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_STATUS, $labelTaskStatus);
+		$pInputModelTaskStatus->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$pInputModelTaskStatus->setValue($this->getValue('taskStatus') ?? 0);
+		$pInputModelTaskStatus->setValuesAvailable($this->getTasksStatus());
+
+		return $pInputModelTaskStatus;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getTasksPriority(): array
+	{
+		return [
+			InputModelDBFactoryConfigForm::TASK_NORMAL_PRIORITY => __('standard', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigForm::TASK_HIGHEST_PRIORITY => __('highest', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigForm::TASK_HIGH_PRIORITY => __('high', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigForm::TASK_LOW_PRIORITY => __('low', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigForm::TASK_LOWEST_PRIORITY => __('lowest', 'onoffice-for-wp-websites'),
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getTasksStatus(): array
+	{
+		return [
+			InputModelDBFactoryConfigForm::TASK_STATUS_NOT_START => __('Not started', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigForm::TASK_STATUS_IN_PROCESS => __('In process', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigForm::TASK_STATUS_COMPLETED => __('Completed', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigForm::TASK_STATUS_DEFERRED => __('Deferred', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigForm::TASK_STATUS_CANCELLED => __('Cancelled', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigForm::TASK_STATUS_MISCELLANEOUS => __('Miscellaneous', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigForm::TASK_STATUS_CHECKED => __('Checked', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigForm::TASK_STATUS_NEED_CLARIFICATION => __('Need clarification', 'onoffice-for-wp-websites'),
+		];
 	}
 
 	/** @return string */

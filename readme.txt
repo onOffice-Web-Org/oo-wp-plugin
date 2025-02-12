@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 5.1.4
+Stable tag: 5.5
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,104 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 5.5 (2025-01-31) =
+
+**Added**
+
+* Customization of standard email subjects for forms
+
+**Fixed**
+
+* Order in energy certificate scale
+
+* Deprecated notices on PHP 8.3
+
+* Error causes by wrong type
+
+**Removed**
+
+* Pagination from detail page template
+
+= 5.4.1 (2024-12-20) =
+
+**Added**
+
+* Info text when an address detail page is not found
+
+* Option to display ownerleadgeneratorform embedded on the website
+
+* Extension to order fields in multipage forms like leadgenerator
+
+**Fixed**
+
+* Fatal error when creating applicant search form
+
+* Error when regionaler_zusatz is deactivated
+
+* Incorrect email adresses containing whitespaces
+
+* Box "Layout & Design" position in backend
+
+= 5.3 (2024-12-05) =
+
+**Added**
+
+* Graphical implementation of energy certificate
+
+* Filtering in similar properties
+
+* Option to display all or only the main contact person on property detail pages
+
+* Map view with address locations to address list
+
+* Linking to a contact from the property detail page
+
+**Changed**
+
+* Error handling in similar properties
+
+* Order of "Activities" and "Tasks" boxes in form settings
+
+* Improved display of image type selection in property list settings
+
+**Fixed**
+
+* Using forms with reCaptcha in footer section
+
+* Empty value for "Radius" in similar properties
+
+* Wrong redirects caused by umlauts and special characters in URL for multilingual websites
+
+= 5.2.1 (2024-11-05) =
+
+**Fixed**
+
+* Language switch for WPML
+
+= 5.2 (2024-10-30) =
+
+**Added**
+
+* Forms can trigger writing of tasks in onOffice enterprise
+
+* Forms can trigger writing of activities in onOffice enterprise
+
+* SEO friendly URL for address detail page
+
+* Image with better resolution for addresses (bildWebseite)
+
+**Changed**
+
+* Default template for address details
+
+**Fixed**
+
+* Maps on pages with multiple property lists
+
+* Displaying price on request for calculated prices
+
+* Social Meta Data in Settings
 
 = 5.1.4 (2024-10-09) =
 

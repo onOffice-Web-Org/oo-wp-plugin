@@ -25,8 +25,6 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
-use DI\Container;
-use DI\ContainerBuilder;
 use WP_UnitTestCase;
 use onOffice\WPlugin\Renderer\InputFieldTextAreaRenderer;
 

@@ -8,7 +8,7 @@ on:
 jobs:
   get-version:
     name: Get current version
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     outputs:
       currentVersion: ${{ steps.get-version.outputs.version }}
     steps:
@@ -26,14 +26,14 @@ jobs:
 
   deploy:
     name: Deploy stable version
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment: WordPress SVN
     needs: [get-version, build]
     env:
       SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
     steps:
       - name: Download release
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: release
           path: /tmp/release

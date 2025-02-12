@@ -228,6 +228,7 @@ class TestClassEstateList
 
 	public function testGetFieldLabel()
 	{
+		$this->_pEstateList->loadEstates();
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldObjektArt = new Field('objektart', 'estate', 'testLabel');
 		$pFieldObjektArt->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
@@ -673,13 +674,14 @@ class TestClassEstateList
 		$pFieldObjektTyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldsCollection->addField($pFieldObjektArt);
 		$pFieldsCollection->addField($pFieldObjektTyp);
+		$this->_pEstateList->loadEstates();
 
 		$expectation = [
 			'objektart' => [
 				'name' => 'objektart',
 				'type' => 'singleselect',
 				'value' => 'haus',
-				'label' => '',
+				'label' => 'testLabel',
 				'default' => null,
 				'length' => null,
 				'permittedvalues' => [],
@@ -695,7 +697,7 @@ class TestClassEstateList
 				'name' => 'objekttyp',
 				'type' => 'singleselect',
 				'value' => 'reihenhaus',
-				'label' => '',
+				'label' => 'testLabel',
 				'default' => null,
 				'length' => null,
 				'permittedvalues' => [],
@@ -828,7 +830,8 @@ class TestClassEstateList
 				'getPageId',
 				'getViewRestrict',
 				'getShowPriceOnRequest',
-				'getListFieldsShowPriceOnRequest'
+				'getListFieldsShowPriceOnRequest',
+				'getContactPerson'
 			])
 			->getMock();
 		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
@@ -843,6 +846,7 @@ class TestClassEstateList
 		$pDataDetailView->method('getViewRestrict')->willReturn(true);
 		$pDataDetailView->method('getShowPriceOnRequest')->willReturn(true);
 		$pDataDetailView->method('getListFieldsShowPriceOnRequest')->willReturn(['kaufpreis', 'erbpacht']);
+		$pDataDetailView->method('getContactPerson')->willReturn('1');
 
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
 		                               ->disableOriginalConstructor()
@@ -899,6 +903,16 @@ class TestClassEstateList
 		$this->assertEquals('1', $result['showGoogleMap']);
 	}
 
+	/**
+	 *
+	 */
+
+	public function testGetPermittedValues()
+	{
+		$this->_pEstateList->loadEstates();
+		$this->assertEquals(['A', 'B', 'C'], $this->_pEstateList->getPermittedValues('energyClass'));
+	}
+ 
 	/**
 	 *
 	 * @before
@@ -1094,9 +1108,13 @@ class TestClassEstateList
 			'objektnr_extern',
 			'plz',
 			'land',
+			'energyClass',
 		];
 		foreach ($fieldNames as $fieldName) {
 			$field = new Field($fieldName, 'estate', 'testLabel');
+			if ($fieldName === 'energyClass') {
+				$field->setPermittedvalues(['A', 'B', 'C']);
+			}
 			$fieldsCollection->addField($field);
 		}
 		return $fieldsCollection;
