@@ -290,8 +290,6 @@
     width: 40%;
 }
 
-
-
 .oo-costs-container .oo-costs-overview {
     width: 55%;
 }
@@ -313,6 +311,11 @@
 
 .oo-costs-container .oo-costs-overview .oo-total-costs-label {
     margin-left: 20px;
+}
+
+.oo-costs-notice {
+    font-size: 14px;
+    padding-top: 1.5rem
 }
 
 .oo-costs-container .oo-costs-overview .color-indicator {
