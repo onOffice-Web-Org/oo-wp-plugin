@@ -98,7 +98,7 @@ class CostsCalculator
 	 */
 	private function calculatePrice(float $price, float $rate): float
 	{
-		return round($price * $rate / 100,2);
+		return round($price * $rate / 100);
 	}
 
 	/**
