@@ -51,6 +51,10 @@ class CostsCalculator
 			return [];
 		}
 
+		if (!array_key_exists('waehrung',$recordRaw)) {
+			return [];
+		}
+
 		$currency = $currencySymbol[$recordRaw['waehrung']];
 
 		return $this->formatPrice($totalCostsData, $currency);
@@ -94,7 +98,7 @@ class CostsCalculator
 	 */
 	private function calculatePrice(float $price, float $rate): float
 	{
-		return round($price * $rate / 100);
+		return round($price * $rate / 100,2);
 	}
 
 	/**
@@ -143,6 +147,14 @@ class CostsCalculator
 		$this->_pSDKWrapper->sendRequests();
 		$result = $pAPIClientAction->getResultRecords();
 
-		return $result[0]['elements']['waehrung']['permittedvalues'] ?? [];
+		if (
+			!isset($result[0]) ||
+			!isset($result[0]['elements']) ||
+			!isset($result[0]['elements']['waehrung']) ||
+			!isset($result[0]['elements']['waehrung']['permittedvalues'])
+		) {
+			return [];
+		}
+			return $result[0]['elements']['waehrung']['permittedvalues'] ?? [];
 	}
 }

@@ -25,7 +25,6 @@
                     }
                 }]
             });
-
             applyGradientToSegments();
 
             function applyGradientToSegments() {

@@ -21,7 +21,6 @@
 
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\EstateList;
 /**
  *
  * @url http://www.onoffice.de
@@ -32,8 +31,6 @@ use onOffice\WPlugin\EstateList;
  {
      private $values;
      private $valuesTitle;
-     private $colors = ['#3F9DE4', '#3ac411', '#9C27B0', '#D81B60', '#FEC800'];
-
      public function __construct(array $values, array $valuesTitle)
      {
          $this->values = $values;
@@ -48,10 +45,8 @@ use onOffice\WPlugin\EstateList;
      private function polarToCartesian($radius, $angle, $subtractGap = false)
      {
          $adjustedAngle = $this->toRadians($angle - 90);
-         if ($subtractGap) {
-             $adjustedAngle -= asin(0 / $radius);
-         }
-         $x = 300+ $radius * cos($adjustedAngle);
+      
+         $x = 300 + $radius * cos($adjustedAngle);
          $y = 210 + $radius * sin($adjustedAngle);
 
          return sprintf('%0.2f,%0.2f', $x, $y);
@@ -59,7 +54,6 @@ use onOffice\WPlugin\EstateList;
      public function generateSVG()
      {
     $total = array_sum($this->values);
-    //$total = getTotalCostsData();
     $anglePerValue = 360 / $total;
     $angleStart = 0;
 
