@@ -36,6 +36,10 @@ use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\EstateList;
+use onOffice\WPlugin\Factory\EstateListFactory;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 
 /**
  *
@@ -335,6 +339,11 @@ abstract class FormPost
 			$replacement = $values[$field] ?? '';
 			if ($field === 'estateid' && $estateId !== null) {
 				$replacement = $estateId;
+			} else if($field === 'immonr' && $estateId !== null) {
+				$estateListFactory = new EstateListFactory(new DataDetailViewHandler());
+				$pEstateDetail = $estateListFactory->createEstateDetail($estateId);
+				$pEstateDetail->loadEstates();
+				$replacement = $pEstateDetail->estateIterator()['objektnr_extern'] ?? '';
 			} else if (array_key_exists($field, $inputs)) {
 				$fieldObject = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
 				if ($fieldObject->getIsRangeField()) {
