@@ -634,6 +634,39 @@ class FormModelBuilderEstateDetailSettings
 	}
 
 	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
+	public function createInputModelTotalCostsCalculator(): InputModelOption
+	{
+		$labelShowTotalCostsCalculator = __('Show total price calculator', 'onoffice-for-wp-websites');
+		$pInputModelShowTotalCostsCalculator = $this->_pInputModelDetailViewFactory->create
+		(InputModelOptionFactoryDetailView::INPUT_SHOW_TOTAL_COSTS_CALCULATOR, $labelShowTotalCostsCalculator);
+		$pInputModelShowTotalCostsCalculator->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelShowTotalCostsCalculator->setValue($this->_pDataDetailView->getShowTotalCostsCalculator());
+		$pInputModelShowTotalCostsCalculator->setValuesAvailable(1);
+
+		$fields = ['kaufpreis', 'aussen_courtage', 'bundesland'];
+		$pFieldsCollection = $this->getFieldsCollection();
+		$result = [];
+		foreach ($fields as $field) {
+			if ($pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $field)) {
+				$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)->getLabel();
+			} else {
+				$result[$field] = $field;
+			}
+		}
+
+		$textHint = sprintf(esc_html__(
+			'The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs.', 'onoffice-for-wp-websites'), 
+			'<code>'.$result['kaufpreis'].'</code>', '<code>'.$result['aussen_courtage'].'</code>', '<code>'.$result['bundesland'].'</code>', '<br>'
+		);
+		$pInputModelShowTotalCostsCalculator->setHintHtml($textHint);
+
+		return $pInputModelShowTotalCostsCalculator;
+	}
+
+	/**
 	 *
 	 * @return InputModelOption
 	 *
