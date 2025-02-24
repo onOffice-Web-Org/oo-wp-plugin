@@ -286,11 +286,15 @@ jQuery(document).ready(function($) {
             const label = $(this).find('.item-title').text().trim();
             fields.push({ value, label: `${label} (${value})` });
         });
+        console.log("HelloWorld!");
         fields.push({
             value: 'estateid',
-            label: 'estateID'
+            label: 'DatensatzNr (estateID)'
         });
-
+        fields.push({
+            value: 'immonr',
+            label: 'ImmoNR (objektNr_extern)'
+        });
         return fields;
     }
 
