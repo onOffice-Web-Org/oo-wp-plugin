@@ -51,7 +51,11 @@ class CostsCalculator
 			return [];
 		}
 
-		if (!array_key_exists('waehrung',$recordRaw)) {
+		if (!isset($recordRaw['waehrung'])) {
+			return [];
+		}
+
+		if (!isset($currencySymbol[$recordRaw['waehrung']])) {
 			return [];
 		}
 
