@@ -293,7 +293,7 @@ jQuery(document).ready(function($) {
         });
         fields.push({
             value: 'immonr',
-            label: 'ImmoNR (objektNr_extern)'
+            label: 'ImmoNr (objektNr_extern)'
         });
         return fields;
     }
