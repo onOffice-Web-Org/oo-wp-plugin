@@ -436,6 +436,21 @@ class TestClassFormModelBuilderEstateDetailSettings
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelTotalCostsCalculator
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::getFieldsCollection
+	 */
+	public function testCreateInputModelTotalCostsCalculator()
+	{
+		$pFormModelBuilderEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
+		$pFormModelBuilderEstateDetailSettings->generate('test');
+		$pInputModelOption = $pFormModelBuilderEstateDetailSettings->createInputModelTotalCostsCalculator();
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
+		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
+		$this->assertEquals($pInputModelOption->getHtmlType(), 'checkbox');
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelShowEnergyCertificate
 	 */
 	public function testCreateInputModelShowEnergyCertificate()

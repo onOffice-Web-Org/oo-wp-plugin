@@ -1,0 +1,47 @@
+{
+	"parameters": {
+		"labels": true,
+		"fieldList": ["waehrung"],
+		"language": "DEU",
+		"modules": ["estate"]
+	},
+	"response": {
+		"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+		"resourceid": "",
+		"resourcetype": "fields",
+		"cacheable": true,
+		"identifier": "",
+		"data": {
+			"meta": {
+				"cntabsolute": null
+			},
+			"records": [
+				{
+					"id": "estate",
+					"type": "",
+					"elements": {
+						"label": "Adressen",
+						"waehrung": {
+							"type": "multiselect",
+							"length": null,
+							"permittedvalues": {
+								"EUR": "€",
+								"CZK": "Kč",
+								"TRY": "₺"
+							},
+							"default": null,
+							"filters": [],
+							"dependencies": [],
+							"compoundFields": [],
+							"label": "Währung"
+						}
+					}
+				}
+			]
+		},
+		"status": {
+			"errorcode": 0,
+			"message": "OK"
+		}
+	}
+}
