@@ -81,6 +81,26 @@ class TestClassDataDetailView
 	];
 
 	/** */
+	const PROPERTY_TRANSFER_TAX = [
+		'Baden-Württemberg' => 5,
+		'Bayern' => 3.5,
+		'Berlin' => 6,
+		'Brandenburg' => 6.5,
+		'Bremen' => 5,
+		'Hamburg' => 5.5,
+		'Hessen' => 6,
+		'Mecklenburg-Vorpommern' => 6,
+		'Niedersachsen' => 5,
+		'Nordrhein-Westfalen' => 6.5,
+		'Rheinland-Pfalz' => 5,
+		'Saarland' => 6.5,
+		'Sachsen' => 5.5,
+		'Sachsen-Anhalt' => 5,
+		'Schleswig-Holstein' => 6.5,
+		'Thüringen' => 5
+	];
+
+	/** */
 	const DEFAULT_PICTURE_TYPES = [
 		ImageTypes::TITLE,
 		ImageTypes::PHOTO,
@@ -113,6 +133,7 @@ class TestClassDataDetailView
 		$this->assertEquals(LinksTypes::LINKS_EMBEDDED, $pDataDetailView->getOguloLinks());
 		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getObjectLinks());
 		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getLinks());
+		$this->assertEquals(self::PROPERTY_TRANSFER_TAX, $pDataDetailView->getPropertyTransferTax());
 	}
 
 	/**
@@ -146,6 +167,8 @@ class TestClassDataDetailView
 		$pDataDetailView->setShowPriceOnRequest(true);
 		$this->assertEquals(true, $pDataDetailView->getShowPriceOnRequest());
 		$this->assertTrue($pDataDetailView->getShowStatus());
+		$pDataDetailView->setShowTotalCostsCalculator(true);
+		$this->assertTrue($pDataDetailView->getShowTotalCostsCalculator());
 	}
 
 	/**
