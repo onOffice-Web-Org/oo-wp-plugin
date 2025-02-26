@@ -288,9 +288,12 @@ jQuery(document).ready(function($) {
         });
         fields.push({
             value: 'estateid',
-            label: 'estateID'
+            label: 'DatensatzNr (estateID)'
         });
-
+        fields.push({
+            value: 'immonr',
+            label: 'ImmoNr (objektNr_extern)'
+        });
         return fields;
     }
 
