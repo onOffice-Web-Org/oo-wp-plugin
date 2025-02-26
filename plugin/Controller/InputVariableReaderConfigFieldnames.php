@@ -101,22 +101,45 @@ class InputVariableReaderConfigFieldnames
 
 
 	/**
+	 * Get and process filtered input variables
 	 *
-	 * @param int $var
-	 * @param string $name
-	 * @param int $sanitizer
-	 * @return array
-	 *
+	 * @param int $var Input type (INPUT_GET, INPUT_POST)
+	 * @param string $name Parameter name
+	 * @param int $sanitizer Filter type (e.g. FILTER_SANITIZE_FULL_SPECIAL_CHARS)
+	 * @return mixed Processed value(s)
 	 */
-
 	public function getFilterVariable(int $var, string $name, int $sanitizer)
 	{
-		// filter_input() does not work in test environment
-		// @codeCoverageIgnoreStart
-		return filter_input($var, $name, $sanitizer, FILTER_FORCE_ARRAY);
-		// @codeCoverageIgnoreEnd
+		// Get raw input and force it to be an array
+		$rawValue = filter_input($var, $name, FILTER_UNSAFE_RAW, FILTER_FORCE_ARRAY);
+		
+		// Early return if not an array (e.g. null or false)
+		if (!is_array($rawValue)) {
+			return $rawValue;
+		}
+		
+		// Process each array value
+		$processedValue = array_map(function($item) use ($sanitizer) {
+			// First decode any HTML entities to get clean text
+			$value = html_entity_decode($item, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+			
+			// Only apply additional sanitization if a specific filter is requested
+			if ($sanitizer !== FILTER_DEFAULT) {
+				if ($sanitizer === FILTER_SANITIZE_FULL_SPECIAL_CHARS) {
+					// This preserves special characters like quotes while ensuring security
+					$value = strip_tags($value);
+				} else {
+					// Apply the original sanitizer for other filter types
+					$value = filter_var($value, $sanitizer);
+				}
+			}
+			
+			return $value;
+		}, $rawValue);
+	
+		return $processedValue;
 	}
-
+ 
 
 	/**
 	 *
