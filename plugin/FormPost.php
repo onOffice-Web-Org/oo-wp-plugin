@@ -36,9 +36,7 @@ use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
-use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\Factory\EstateListFactory;
-use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 
 /**
