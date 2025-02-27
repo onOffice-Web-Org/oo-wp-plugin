@@ -48,11 +48,12 @@ class FieldParkingLot{
 			if ( $isCount == 0 ) {
 				continue;
 			}
+			$parking['Price'] = $parking['Price'] ?? 0;
 			$parkingName = $this->getParkingName( $key, $parking['Count'] );
-			if ( ! empty( $parking['MarketingType'] ) && $parking['Price'] !== '0.00') {
+			if ( !empty( $parking['MarketingType'] ) && intval($parking['Price']) > 0 ) {
 				$marketingType = $this->getMarketingType( $parking['MarketingType'] );
 			}
-			$price = $this->formatPriceParking( $parking['Price'] ?? '0', $locale, $codeCurrency );
+			$price = $this->formatPriceParking( $parking['Price'], $locale, $codeCurrency );
 
 			$element = $this->formatElement($parkingName, $price, $marketingType, $parking['Price'], $parking['Count']);
 		
@@ -72,7 +73,7 @@ class FieldParkingLot{
 	 */
 	private function formatElement(string $parkingName, string $price, string $marketingType, string $priceValue, int $count): string
 	{
-		if ($priceValue !== '0.00') {
+		if (intval($priceValue) > 0) {
 			/* translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type */
 			return sprintf(_n('%1$s, %2$s%3$s', '%1$s, %2$s %3$s', $count, 'onoffice-for-wp-websites'), $parkingName, $price, $marketingType);
 		}
