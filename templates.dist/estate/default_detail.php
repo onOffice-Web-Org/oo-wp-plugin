@@ -20,8 +20,8 @@
  */
 
 use onOffice\WPlugin\EstateDetail;
+use onOffice\WPlugin\EstateCostsChart;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
-
 /**
  *
  *  Default template
@@ -29,6 +29,7 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
  */
 
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
+$supportTypeLinkFields = array('Homepage', 'facebook', 'instagram', 'linkedin', 'pinterest', 'tiktok', 'twitter', 'xing', 'youtube', 'bewertungslinkWebseite');
 /** @var EstateDetail $pEstates */
 
 /*  responsive picture properties
@@ -85,6 +86,8 @@ $dimensions = [
 		padding: 0 10px;
 	}
 </style>
+
+
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
@@ -270,6 +273,71 @@ $dimensions = [
 				</div>
 			<?php } ?>
 
+			<?php if (!empty($pEstates->getTotalCostsData())) { 
+				$totalCostsData = $pEstates->getTotalCostsData();
+
+				?>
+				<div class="oo-detailspricecalculator">
+					<h2><?php esc_html_e('Total costs', 'onoffice-for-wp-websites'); ?></h2>
+					<div class="oo-costs-container">
+						<div class="oo-donut-chart">
+						<?php 
+							$values = [$totalCostsData['kaufpreis']['raw'], $totalCostsData['bundesland']['raw'], $totalCostsData['aussen_courtage']['raw'],$totalCostsData['notary_fees']['raw'], $totalCostsData['land_register_entry']['raw']];
+							$valuesTitle = [$totalCostsData['kaufpreis']['default'], $totalCostsData['bundesland']['default'], $totalCostsData['aussen_courtage']['default'],$totalCostsData['notary_fees']['default'], $totalCostsData['land_register_entry']['default']];
+							$chart = new EstateCostsChart($values, $valuesTitle);
+							echo $chart->generateSVG(); ?>
+						</div>
+						<div class="oo-costs-overview">
+							<h3><?php esc_html_e('Overview of costs', 'onoffice-for-wp-websites'); ?></h3>
+							<div class="oo-costs-item">
+								<span class="color-indicator oo-donut-chart-color0"></span>
+								<div class="oo-price-label">
+									<div><b><?php echo esc_html($pEstates->getFieldLabel('kaufpreis')); ?></b></div>
+									<div><b><?php echo esc_html($totalCostsData['kaufpreis']['default']); ?></b></div>
+								</div>
+							</div>
+							<div class="oo-costs-item">
+								<span class="color-indicator oo-donut-chart-color1"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Property transfer tax', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['bundesland']['default']); ?></div>
+								</div>
+							</div>
+							<div class="oo-costs-item">
+								<span class="color-indicator oo-donut-chart-color2"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Broker commission', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['aussen_courtage']['default']); ?></div>
+								</div>
+							</div>
+							<div class="oo-costs-item">
+								<span class="color-indicator oo-donut-chart-color3"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Notary Fees', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['notary_fees']['default']); ?></div>
+								</div>
+							</div>
+							<div class="oo-costs-item">
+								<span class="color-indicator oo-donut-chart-color4"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Land Register Entry', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['land_register_entry']['default']); ?></div>
+								</div>
+							</div>
+							<div>
+								<div class="oo-price-label">
+									<div class="oo-total-costs-label"><b><?php esc_html_e('Total costs', 'onoffice-for-wp-websites'); ?></b></div>
+									<div><b><?php echo esc_html($totalCostsData['total_costs']['default']); ?></b></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="oo-costs-notice">
+						<?php echo esc_html__('Für die Berechnung der Notar- und Grundbuchkosten wird üblicherweise ein Standardwert von 1,5 % bzw. 0,5 % verwendet.', 'onoffice-for-wp-websites'); ?>
+					</div>
+				</div>
+			<?php } ?>
+
 			<div class="oo-units">
 				<?php echo $pEstates->getEstateUnits(); ?>
 			</div>
@@ -366,6 +434,9 @@ $dimensions = [
 								echo '<p>' . esc_html($item) . '</p>';
 							}
 							echo '</div>';
+						} else if (in_array($field, $supportTypeLinkFields)) { 
+							echo '<div class="oo-field-label">'. esc_html($pEstates->getFieldLabel($field)) .'</div>';
+							echo '<div class="oo-aspinfo oo-contact-info"><a href="' . esc_url($contactData[$field]) . '" target="_blank" rel="nofollow noopener" aria-label="Link to ' . esc_attr($pEstates->getFieldLabel($field)) . '">' . esc_html($contactData[$field]) . '</a></div>';
 						} else {
 							echo '<div class="oo-field-label">'. esc_html($pEstates->getFieldLabel($field)) .'</div>';
 							echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($contactData[$field]) . '</p></div>';
