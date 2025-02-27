@@ -76,6 +76,24 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.6 (2025-02-27) =
+
+**Added**
+
+* Total price calculator chart in property details
+* ImmoNr (objektnr_extern) variable to subject line in forms
+
+**Changed**
+
+* Display link fields as actual links
+* Naming of estateID to Datensatznr variable in subject line in forms
+
+**Fixed**
+
+* Special character encoding in parameters
+* Loading regions without id
+* Styling in backend settings
+
 = 5.5 (2025-01-31) =
 
 **Added**
