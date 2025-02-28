@@ -589,7 +589,7 @@ if (!empty($shortCodeForm)) {
 	</div>
 <?php } ?>
 <style>
-	.oo-video, .player-title {
+	.oo-video .player-title {
 		text-decoration: none;
 		color: #000;
 	}
