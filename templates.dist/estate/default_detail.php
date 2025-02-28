@@ -184,7 +184,6 @@ $dimensions = [
 					<?php echo $mapContent; ?>
 				</div>
 			<?php } ?>
-
 			<?php if ($pEstates->getShowEnergyCertificate()) {
 				$energyClass = $rawValues->getValueRaw($estateId)['elements']['energyClass'] ?? '';
 				$energyClassPermittedValues = $pEstates->getPermittedValues('energyClass');
