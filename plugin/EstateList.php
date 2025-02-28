@@ -1049,11 +1049,13 @@ class EstateList
 	public function getEstateContacts()
 	{
 		$addressIds = $this->getEstateContactIds();
+		$pAddressList = $this->_pEnvironment->getAddressList();
 		$result = [];
 
 		foreach ($addressIds as $addressId) {
-			$currentAddressData = $this->_pEnvironment->getAddressList()->getAddressById($addressId);
+			$currentAddressData = $pAddressList->getAddressById($addressId);
 			$pArrayContainerCurrentAddress = new ArrayContainerEscape($currentAddressData);
+			$pArrayContainerCurrentAddress['imageAlt'] = $pAddressList->generateImageAlt($addressId);
 
 			if (!empty($pArrayContainerCurrentAddress['bildWebseite'])) {
 				$pArrayContainerCurrentAddress['imageUrl'] = $pArrayContainerCurrentAddress['bildWebseite'];
