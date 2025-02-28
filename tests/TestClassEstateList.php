@@ -521,7 +521,7 @@ class TestClassEstateList
 	public function testGetEstateContacts()
 	{
 		$valueMap = [
-			['50', ['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email', 'imageAlt' => '']],
+			['50', ['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email',]],
 			['52', ['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email']],
 		];
 		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
@@ -534,7 +534,7 @@ class TestClassEstateList
 		$this->_pEstateList->estateIterator();
 		$this->assertEquals([], $this->_pEstateList->getEstateContacts());
 		$this->_pEstateList->estateIterator();
-		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email'])],
+		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email', 'imageAlt' => ''])],
 			$this->_pEstateList->getEstateContacts());
 		$this->_pEstateList->estateIterator();
 		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email'])],
