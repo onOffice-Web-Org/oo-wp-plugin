@@ -333,7 +333,7 @@ $dimensions = [
 						</div>
 					</div>
 					<div class="oo-costs-notice">
-						<?php echo esc_html__('Für die Berechnung der Notar- und Grundbuchkosten wird üblicherweise ein Standardwert von 1,5 % bzw. 0,5 % verwendet.', 'onoffice-for-wp-websites'); ?>
+						<?php echo esc_html__('A standard value of 1.5% and 0.5% is usually used to calculate notary and land registry costs.', 'onoffice-for-wp-websites'); ?>
 					</div>
 				</div>
 			<?php } ?>
