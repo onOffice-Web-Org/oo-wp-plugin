@@ -521,7 +521,7 @@ class TestClassEstateList
 	public function testGetEstateContacts()
 	{
 		$valueMap = [
-			['50', ['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email',]],
+			['50', ['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email', 'imageAlt' => '']],
 			['52', ['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email']],
 		];
 		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
