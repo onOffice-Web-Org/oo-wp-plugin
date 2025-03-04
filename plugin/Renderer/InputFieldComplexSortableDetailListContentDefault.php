@@ -31,6 +31,7 @@ use function __;
 use function esc_html;
 use function esc_html__;
 use const ONOFFICE_DI_CONFIG_PATH;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 
 /**
  *
@@ -69,6 +70,9 @@ class InputFieldComplexSortableDetailListContentDefault
 				continue;
 			}
 			if ($key !== 'Ort' && $pInputModel->getField() == 'convertInputTextToSelectForField' && !$isDummy) {
+				continue;
+			}
+			if (array_key_exists($key, FieldModuleCollectionDecoratorReadAddress::getNewAddressFields()) && !$isDummy && ($pInputModel->getField() === 'filterable' || $pInputModel->getField() === 'hidden')) {
 				continue;
 			}
 			$pInputModel->setIgnore($isDummy);
