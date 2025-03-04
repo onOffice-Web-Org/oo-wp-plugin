@@ -81,17 +81,11 @@ $dimensions = [
     ]
 ];
 ?>
-<style>
-	ul.oo-listparking {
-		padding: 0 10px;
-	}
-</style>
-
 
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
-	while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)) { 
+	while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)) {
 		$estateId = $pEstates->getCurrentEstateId();
 		$rawValues = $pEstates->getRawValues();
 		$energyCertificateFields = ["baujahr","endenergiebedarf","energieverbrauchskennwert","energieausweistyp","energieausweis_gueltig_bis","energyClass","energietraeger"];
@@ -171,7 +165,7 @@ $dimensions = [
 				</div>
 			<?php } ?>
 
-			<?php 
+			<?php
 			$areaButlerUrl = !empty($currentEstate['MPAreaButlerUrlWithAddress']) ? $currentEstate['MPAreaButlerUrlWithAddress'] : ($currentEstate['MPAreaButlerUrlNoAddress'] ?? '');
 			if (!empty($areaButlerUrl)) { ?>
 				<div class="oo-area-butler">
@@ -190,8 +184,7 @@ $dimensions = [
 					<?php echo $mapContent; ?>
 				</div>
 			<?php } ?>
-		
-			<?php if ($pEstates->getShowEnergyCertificate()) { 
+			<?php if ($pEstates->getShowEnergyCertificate()) {
 				$energyClass = $rawValues->getValueRaw($estateId)['elements']['energyClass'] ?? '';
 				$energyClassPermittedValues = $pEstates->getPermittedValues('energyClass');
 				$energyCertificateType = $rawValues->getValueRaw($estateId)['elements']['energieausweistyp'] ?? '';
@@ -273,7 +266,7 @@ $dimensions = [
 				</div>
 			<?php } ?>
 
-			<?php if (!empty($pEstates->getTotalCostsData())) { 
+			<?php if (!empty($pEstates->getTotalCostsData())) {
 				$totalCostsData = $pEstates->getTotalCostsData();
 
 				?>
@@ -281,7 +274,7 @@ $dimensions = [
 					<h2><?php esc_html_e('Total costs', 'onoffice-for-wp-websites'); ?></h2>
 					<div class="oo-costs-container">
 						<div class="oo-donut-chart">
-						<?php 
+						<?php
 							$values = [$totalCostsData['kaufpreis']['raw'], $totalCostsData['bundesland']['raw'], $totalCostsData['aussen_courtage']['raw'],$totalCostsData['notary_fees']['raw'], $totalCostsData['land_register_entry']['raw']];
 							$valuesTitle = [$totalCostsData['kaufpreis']['default'], $totalCostsData['bundesland']['default'], $totalCostsData['aussen_courtage']['default'],$totalCostsData['notary_fees']['default'], $totalCostsData['land_register_entry']['default']];
 							$chart = new EstateCostsChart($values, $valuesTitle);
@@ -333,7 +326,7 @@ $dimensions = [
 						</div>
 					</div>
 					<div class="oo-costs-notice">
-						<?php echo esc_html__('Für die Berechnung der Notar- und Grundbuchkosten wird üblicherweise ein Standardwert von 1,5 % bzw. 0,5 % verwendet.', 'onoffice-for-wp-websites'); ?>
+						<?php echo esc_html__('A standard value of 1.5% and 0.5% is usually used to calculate notary and land registry costs.', 'onoffice-for-wp-websites'); ?>
 					</div>
 				</div>
 			<?php } ?>
@@ -365,6 +358,7 @@ $dimensions = [
 					<div class="oo-aspinfo-wrapper">
 					<?php
 					$imageUrl      = $contactData['imageUrl'];
+					$imageAlt      = !empty($contactData['imageAlt']) ? $contactData['imageAlt'] : esc_html__('Contact person', 'onoffice-for-wp-websites');
 					$formOfAddress = $contactData['Anrede'];
 					$title         = $contactData['Titel'];
 					$firstName     = $contactData['Vorname'];
@@ -375,7 +369,7 @@ $dimensions = [
 					$town          = $contactData['Ort'];
 
 					if ($imageUrl) {
-						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" height="150px"></div>';
+						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" height="150px" alt="' . esc_html($imageAlt) . '"></div>';
 					}
 
 					// Output name, depending on available fields.
@@ -434,7 +428,7 @@ $dimensions = [
 								echo '<p>' . esc_html($item) . '</p>';
 							}
 							echo '</div>';
-						} else if (in_array($field, $supportTypeLinkFields)) { 
+						} else if (in_array($field, $supportTypeLinkFields)) {
 							echo '<div class="oo-field-label">'. esc_html($pEstates->getFieldLabel($field)) .'</div>';
 							echo '<div class="oo-aspinfo oo-contact-info"><a href="' . esc_url($contactData[$field]) . '" target="_blank" rel="nofollow noopener" aria-label="Link to ' . esc_attr($pEstates->getFieldLabel($field)) . '">' . esc_html($contactData[$field]) . '</a></div>';
 						} else {
@@ -465,7 +459,7 @@ $dimensions = [
 					return
 						'<a class="player-title" target="_blank" href="' . esc_attr($url) . '">
 							<div>' . esc_html($title) . '
-								<svg width="0.7em" version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
+								<svg width="0.7em" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
 									<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>
 									<path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/>
 								</svg>
