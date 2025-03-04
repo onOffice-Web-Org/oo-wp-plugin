@@ -534,10 +534,10 @@ class TestClassEstateList
 		$this->_pEstateList->estateIterator();
 		$this->assertEquals([], $this->_pEstateList->getEstateContacts());
 		$this->_pEstateList->estateIterator();
-		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email'])],
+		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email', 'imageAlt' => ''])],
 			$this->_pEstateList->getEstateContacts());
 		$this->_pEstateList->estateIterator();
-		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email'])],
+		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email', 'imageAlt' => ''])],
 			$this->_pEstateList->getEstateContacts());
 	}
 
