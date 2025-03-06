@@ -566,6 +566,7 @@
         background: transparent;
         text-decoration: underline;
         color: inherit !important;
+        text-align: left;
     }
 
     .oo-unitslink a:hover {
