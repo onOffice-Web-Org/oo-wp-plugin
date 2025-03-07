@@ -30,7 +30,7 @@
 
 <?php
 
-$dont_echo = ['vermarktungsstatus'];
+$dont_echo = ['vermarktungsstatus','objekttitel'];
 
 $pEstatesClone = clone $pEstates;
 $pEstatesClone->resetEstateIterator();
@@ -48,6 +48,7 @@ $pEstatesClone->resetEstateIterator();
                     $empty_columns = [];
                     while (
                         $current_property = $pEstatesClone->estateIterator()
+                       
                     ) {
                         if (!empty($current_property)) {
                             foreach ($current_property as $field => $value) {
@@ -146,7 +147,7 @@ $pEstatesClone->resetEstateIterator();
                         esc_html__('Details', 'oo_theme') .
                         '">';
                     if (!empty($pEstates->getEstateLink())) {
-                        echo '<a class="oo-units-btn" title="'.esc_html__('Zur Einheit', 'oo_theme').'" href="' .
+                        echo '<a class="oo-units-btn" title="'.esc_html__('Zur Einheit', 'oo_theme').' '.$current_property['objekttitel'].'" href="' .
                             esc_url($pEstates->getEstateLink()) .
                             '">';
                     }

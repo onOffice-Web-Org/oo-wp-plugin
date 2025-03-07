@@ -484,12 +484,13 @@
 }
 
 .oo-units__wrapper {
-    width: 100%;
-    margin-bottom: 16px;
+    margin-bottom: 32px;
     vertical-align: top;
     caption-side: bottom;
     border-collapse: collapse;
     text-align: left;
+    margin-left: 1px;
+    width: 91%;
 }
 
 .oo-units__data.--empty {
@@ -527,8 +528,9 @@
     gap: 16px;
     padding: 16px;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
-    border: 1px solid #dedcdc;
     transition: all 0.3s;
+    width: 100%;
+    border-top: 1px solid rgba(0, 0, 0, 0.25);
 }
 
 .oo-units__body .oo-units__data:not(.oo-unitslink):before {
@@ -562,6 +564,11 @@
 }
 
 @media (min-width: 1200px) {
+
+    .oo-units__wrapper {
+        margin-left: 0;
+    }
+
     .oo-unitslink a {
         background: transparent;
         text-decoration: underline;
