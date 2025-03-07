@@ -147,7 +147,7 @@ $pEstatesClone->resetEstateIterator();
                         esc_html__('Details', 'oo_theme') .
                         '">';
                     if (!empty($pEstates->getEstateLink())) {
-                        echo '<a class="oo-units-btn" title="'.esc_html__('Zur Einheit', 'oo_theme').' '.$current_property['objekttitel'].'" href="' .
+                        echo '<a class="oo-units-btn" title="'.esc_html__('Zur Einheit', 'oo_theme').': '.$current_property['objekttitel'].'" href="' .
                             esc_url($pEstates->getEstateLink()) .
                             '">';
                     }
