@@ -45,7 +45,7 @@ use onOffice\WPlugin\Form;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 56;
+	const MAX_VERSION = 59;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -372,8 +372,23 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 55) {
-			$this->migrationsDataShortCodeFormForDetailView();
+			dbDelta($this->getCreateQueryListViewsAddress());
 			$dbversion = 56;
+		}
+
+		if ($dbversion == 56) {
+			dbDelta($this->getCreateQueryForms());
+			$dbversion = 57;
+		}
+
+		if ($dbversion == 57) {
+			dbDelta($this->getCreateQueryFormFieldConfig());
+			$dbversion = 58;
+		}
+
+		if ($dbversion == 58) {
+			$this->migrationsDataShortCodeFormForDetailView();
+			$dbversion = 59;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -514,6 +529,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`default_recipient` tinyint(1) NOT NULL DEFAULT '0',
 			`contact_type` varchar(255) NULL DEFAULT NULL,
 			`page_shortcode` tinytext NOT NULL,
+			`show_form_as_modal` tinyint(1) NOT NULL DEFAULT '1',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -571,6 +587,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`markdown` tinyint(1) NOT NULL DEFAULT '0',
 			`hidden_field` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
+			`page_per_form` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_fieldconfig_id`)
 		) $charsetCollate;";
 
@@ -730,6 +747,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`showPhoto` tinyint(1) NOT NULL DEFAULT '0',
 			`bildWebseite` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
+			`show_map` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";

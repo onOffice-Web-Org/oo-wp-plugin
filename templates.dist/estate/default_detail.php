@@ -20,8 +20,8 @@
  */
 
 use onOffice\WPlugin\EstateDetail;
+use onOffice\WPlugin\EstateCostsChart;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
-
 /**
  *
  *  Default template
@@ -29,6 +29,7 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
  */
 
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
+$supportTypeLinkFields = array('Homepage', 'facebook', 'instagram', 'linkedin', 'pinterest', 'tiktok', 'twitter', 'xing', 'youtube', 'bewertungslinkWebseite');
 /** @var EstateDetail $pEstates */
 
 /*  responsive picture properties
@@ -80,15 +81,11 @@ $dimensions = [
     ]
 ];
 ?>
-<style>
-	ul.oo-listparking {
-		padding: 0 10px;
-	}
-</style>
+
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
-	while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)) { 
+	while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)) {
 		$estateId = $pEstates->getCurrentEstateId();
 		$rawValues = $pEstates->getRawValues();
 		$energyCertificateFields = ["baujahr","endenergiebedarf","energieverbrauchskennwert","energieausweistyp","energieausweis_gueltig_bis","energyClass","energietraeger"];
@@ -168,7 +165,7 @@ $dimensions = [
 				</div>
 			<?php } ?>
 
-			<?php 
+			<?php
 			$areaButlerUrl = !empty($currentEstate['MPAreaButlerUrlWithAddress']) ? $currentEstate['MPAreaButlerUrlWithAddress'] : ($currentEstate['MPAreaButlerUrlNoAddress'] ?? '');
 			if (!empty($areaButlerUrl)) { ?>
 				<div class="oo-area-butler">
@@ -187,8 +184,7 @@ $dimensions = [
 					<?php echo $mapContent; ?>
 				</div>
 			<?php } ?>
-		
-			<?php if ($pEstates->getShowEnergyCertificate()) { 
+			<?php if ($pEstates->getShowEnergyCertificate()) {
 				$energyClass = $rawValues->getValueRaw($estateId)['elements']['energyClass'] ?? '';
 				$energyClassPermittedValues = $pEstates->getPermittedValues('energyClass');
 				$energyCertificateType = $rawValues->getValueRaw($estateId)['elements']['energieausweistyp'] ?? '';
@@ -200,15 +196,15 @@ $dimensions = [
 				<div class="oo-details-energy-certificate">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
 					<?php
-					function renderEnergyCertificate(string $energyCertificateType, array $energyClassPermittedValues, string $energyClass, string $type, array $labels) {
+					function renderEnergyCertificate(string $energyCertificateType, array $energyClassPermittedValues, string $selectedEnergyClass, string $type, array $labels) {
 						if ($energyCertificateType === $type) { ?>
 							<div class="energy-certificate-container">
 								<div class="segmented-bar">
 									<?php
 									foreach ($energyClassPermittedValues as $key => $label) {
-										$labelIndex = array_search($key, array_keys($energyClassPermittedValues));
+										$labelIndex = array_keys($energyClassPermittedValues)[$key];
 										echo '<div class="energy-certificate-label"><span>' . $labels[$labelIndex] . '</span></div>';
-										echo '<div class="segment'. ($energyClass == $key ? ' selected' : '') . '"><span>' . $label . '</span></div>';
+										echo '<div class="segment' . ($selectedEnergyClass == $label ? ' selected' : '') . '"><span>' . $label . '</span></div>';
 									}
 									if ($type === "Endenergiebedarf") {
 										echo '<div class="energy-certificate-label"><span>'.end($labels).'</span></div>';
@@ -270,6 +266,71 @@ $dimensions = [
 				</div>
 			<?php } ?>
 
+			<?php if (!empty($pEstates->getTotalCostsData())) {
+				$totalCostsData = $pEstates->getTotalCostsData();
+
+				?>
+				<div class="oo-detailspricecalculator">
+					<h2><?php esc_html_e('Total costs', 'onoffice-for-wp-websites'); ?></h2>
+					<div class="oo-costs-container">
+						<div class="oo-donut-chart">
+						<?php
+							$values = [$totalCostsData['kaufpreis']['raw'], $totalCostsData['bundesland']['raw'], $totalCostsData['aussen_courtage']['raw'],$totalCostsData['notary_fees']['raw'], $totalCostsData['land_register_entry']['raw']];
+							$valuesTitle = [$totalCostsData['kaufpreis']['default'], $totalCostsData['bundesland']['default'], $totalCostsData['aussen_courtage']['default'],$totalCostsData['notary_fees']['default'], $totalCostsData['land_register_entry']['default']];
+							$chart = new EstateCostsChart($values, $valuesTitle);
+							echo $chart->generateSVG(); ?>
+						</div>
+						<div class="oo-costs-overview">
+							<h3><?php esc_html_e('Overview of costs', 'onoffice-for-wp-websites'); ?></h3>
+							<div class="oo-costs-item">
+								<span class="color-indicator oo-donut-chart-color0"></span>
+								<div class="oo-price-label">
+									<div><b><?php echo esc_html($pEstates->getFieldLabel('kaufpreis')); ?></b></div>
+									<div><b><?php echo esc_html($totalCostsData['kaufpreis']['default']); ?></b></div>
+								</div>
+							</div>
+							<div class="oo-costs-item">
+								<span class="color-indicator oo-donut-chart-color1"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Property transfer tax', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['bundesland']['default']); ?></div>
+								</div>
+							</div>
+							<div class="oo-costs-item">
+								<span class="color-indicator oo-donut-chart-color2"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Broker commission', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['aussen_courtage']['default']); ?></div>
+								</div>
+							</div>
+							<div class="oo-costs-item">
+								<span class="color-indicator oo-donut-chart-color3"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Notary Fees', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['notary_fees']['default']); ?></div>
+								</div>
+							</div>
+							<div class="oo-costs-item">
+								<span class="color-indicator oo-donut-chart-color4"></span>
+								<div class="oo-price-label">
+									<div><?php esc_html_e('Land Register Entry', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php echo esc_html($totalCostsData['land_register_entry']['default']); ?></div>
+								</div>
+							</div>
+							<div>
+								<div class="oo-price-label">
+									<div class="oo-total-costs-label"><b><?php esc_html_e('Total costs', 'onoffice-for-wp-websites'); ?></b></div>
+									<div><b><?php echo esc_html($totalCostsData['total_costs']['default']); ?></b></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="oo-costs-notice">
+						<?php echo esc_html__('A standard value of 1.5% and 0.5% is usually used to calculate notary and land registry costs.', 'onoffice-for-wp-websites'); ?>
+					</div>
+				</div>
+			<?php } ?>
+
 			<div class="oo-units">
 				<?php echo $pEstates->getEstateUnits(); ?>
 			</div>
@@ -294,8 +355,10 @@ $dimensions = [
 				]);
 
 				foreach ($pEstates->getEstateContacts() as $contactData) : ?>
+					<div class="oo-aspinfo-wrapper">
 					<?php
 					$imageUrl      = $contactData['imageUrl'];
+					$imageAlt      = !empty($contactData['imageAlt']) ? $contactData['imageAlt'] : esc_html__('Contact person', 'onoffice-for-wp-websites');
 					$formOfAddress = $contactData['Anrede'];
 					$title         = $contactData['Titel'];
 					$firstName     = $contactData['Vorname'];
@@ -306,7 +369,7 @@ $dimensions = [
 					$town          = $contactData['Ort'];
 
 					if ($imageUrl) {
-						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" height="150px"></div>';
+						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" height="150px" alt="' . esc_html($imageAlt) . '"></div>';
 					}
 
 					// Output name, depending on available fields.
@@ -365,11 +428,15 @@ $dimensions = [
 								echo '<p>' . esc_html($item) . '</p>';
 							}
 							echo '</div>';
+						} else if (in_array($field, $supportTypeLinkFields)) {
+							echo '<div class="oo-field-label">'. esc_html($pEstates->getFieldLabel($field)) .'</div>';
+							echo '<div class="oo-aspinfo oo-contact-info"><a href="' . esc_url($contactData[$field]) . '" target="_blank" rel="nofollow noopener" aria-label="Link to ' . esc_attr($pEstates->getFieldLabel($field)) . '">' . esc_html($contactData[$field]) . '</a></div>';
 						} else {
 							echo '<div class="oo-field-label">'. esc_html($pEstates->getFieldLabel($field)) .'</div>';
 							echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($contactData[$field]) . '</p></div>';
 						}
 					} ?>
+					</div>
 				<?php endforeach; ?>
 			</div>
 			<div class="oo-asp oo-detailsexpose">
@@ -392,7 +459,7 @@ $dimensions = [
 					return
 						'<a class="player-title" target="_blank" href="' . esc_attr($url) . '">
 							<div>' . esc_html($title) . '
-								<svg width="0.7em" version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
+								<svg width="0.7em" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
 									<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>
 									<path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/>
 								</svg>
@@ -505,14 +572,6 @@ $dimensions = [
 			?>
 
 		</div>
-		<?php
-		if (get_option('onoffice-pagination-paginationbyonoffice')) { ?>
-			<div>
-				<?php
-				wp_link_pages();
-				?>
-			</div>
-		<?php } ?>
 		<div class="oo-similar">
 			<?php echo $pEstates->getSimilarEstates(); ?>
 		</div>

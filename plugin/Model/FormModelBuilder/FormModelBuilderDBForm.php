@@ -134,18 +134,21 @@ class FormModelBuilderDBForm
 
 		foreach ($fieldNames as $pField) {
 			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$fieldNamesArray[$pField->getName()]['page'] = $this->getValue('fieldsPagePerForm')[$pField->getName()] ?? 1;
 			$pFieldsCollectionUsedFields->addField($pField);
 		}
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesArray);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
 		$pInputModelFieldsConfig->setValue($fields);
+		$pInputModelFieldsConfig->setPerPageForm($this->getValue('fieldsPagePerForm'));
 
 		$pModule = $this->getInputModelModule();
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
 		$pReferenceIsAvailableOptions = $this->getInputModelIsAvailableOptions();
 		$pReferenceIsMarkdown = $this->getInputModelIsMarkDown();
 		$pReferenceIsHiddenField = $this->getInputModelIsHiddenField();
+		$pInputModelPerPageForm = $this->getInputModelPerPageForm();
 		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValue($pFieldsCollectionUsedFields));
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValueLanguageSwitch());
@@ -153,10 +156,15 @@ class FormModelBuilderDBForm
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsMarkdown);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
+		$pInputModelFieldsConfig->addReferencedInputModel($pInputModelPerPageForm);
 		if($this->getFormType() === Form::TYPE_APPLICANT_SEARCH){
 			$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
 		} else {
 			$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsHiddenField);
+		}
+		if($this->getFormType() === Form::TYPE_OWNER){
+			$pInputModelFieldsConfig->setIsMultiPage(true);
+			$pInputModelFieldsConfig->setTemplate($this->getValue('template'));
 		}
 
 		return $pInputModelFieldsConfig;
@@ -224,6 +232,8 @@ class FormModelBuilderDBForm
 		$values['fieldsAvailableOptions'] = array();
 		$values['fieldsMarkdown'] = array();
 		$values['fieldsHiddenField'] = array();
+		$values['fieldsPagePerForm'] = array();
+		$values['template'] = array();
 		$pFactory = new DataFormConfigurationFactory($this->_formType);
 
 		if ($formId !== null) {
@@ -247,14 +257,16 @@ class FormModelBuilderDBForm
 		$values['remark'] = $pDataFormConfiguration->getRemark();
 		$values['origincontact'] = $pDataFormConfiguration->getOriginContact();
 		$values['advisorylevel'] = $pDataFormConfiguration->getAdvisorylevel();
+		$values['fieldsPagePerForm'] = $pDataFormConfiguration->getPagePerForm();
+		$values['template'] = $pDataFormConfiguration->getTemplate();
 		$values['enable_create_task'] = $pDataFormConfiguration->getEnableCreateTask();
-		$values['responsibility'] = $pDataFormConfiguration->getTaskResponsibility();
-		$values['processor'] = $pDataFormConfiguration->getTaskProcessor();
-		$values['type'] = $pDataFormConfiguration->getTaskType();
-		$values['priority'] = $pDataFormConfiguration->getTaskPriority();
-		$values['subject'] = $pDataFormConfiguration->getTaskSubject();
-		$values['description'] = $pDataFormConfiguration->getTaskDescription();
-		$values['status'] = $pDataFormConfiguration->getTaskStatus();
+		$values['taskResponsibility'] = $pDataFormConfiguration->getTaskResponsibility();
+		$values['taskProcessor'] = $pDataFormConfiguration->getTaskProcessor();
+		$values['taskType'] = $pDataFormConfiguration->getTaskType();
+		$values['taskPriority'] = $pDataFormConfiguration->getTaskPriority();
+		$values['taskSubject'] = $pDataFormConfiguration->getTaskSubject();
+		$values['taskDescription'] = $pDataFormConfiguration->getTaskDescription();
+		$values['taskStatus'] = $pDataFormConfiguration->getTaskStatus();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -784,6 +796,32 @@ class FormModelBuilderDBForm
 	}
 
 	/**
+	 * @return InputModelDB|null
+	 */
+	public function getInputModelPerPageForm(): InputModelDB
+	{
+		$pInputModelFieldsConfig = new InputModelDBFactoryConfigForm();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFieldsConfig);
+		$type = InputModelDBFactoryConfigForm::INPUT_FORM_PAGE_PER_FORM;
+		$pInputModel = $pInputModelFactory->create($type, '', true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelFieldsPagePerForm'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param string $key
+	 */
+	public function callbackValueInputModelFieldsPagePerForm(InputModelBase $pInputModel, string $key)
+	{
+		$fieldsPagePerForm = $this->getValue('fieldsPagePerForm');
+		$pInputModel->setValue($fieldsPagePerForm[$key] ?? 1);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+	/**
 	 *
 	 * @param $module
 	 * @param string $htmlType
@@ -814,6 +852,7 @@ class FormModelBuilderDBForm
 
 		foreach ($fieldNames as $pField) {
 			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$fieldNamesArray[$pField->getName()]['page'] = $this->getValue('fieldsPagePerForm')[$pField->getName()] ?? 1;
 			$pFieldsCollectionUsedFields->addField($pField);
 		}
 
@@ -826,7 +865,6 @@ class FormModelBuilderDBForm
 	/**
 	 * @return InputModelDB
 	 */
-
 	public function createInputModelWriteActivity(): InputModelDB
 	{
 		$labelWriteActivity = __('Write activity', 'onoffice-for-wp-websites');
@@ -1029,6 +1067,37 @@ class FormModelBuilderDBForm
 	/**
 	 * @return InputModelDB
 	 */
+	public function createInputModelShowFormAsModal()
+	{
+		$labelShowFormAsModal = __('Show form as modal', 'onoffice-for-wp-websites');
+		$pInputModelFormShowFormAsModal = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_SHOW_FORM_AS_MODAL, $labelShowFormAsModal);
+		$pInputModelFormShowFormAsModal->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelFormShowFormAsModal->setValue($this->getValue($pInputModelFormShowFormAsModal->getField(), true));
+		$pInputModelFormShowFormAsModal->setValuesAvailable(1);
+
+		return $pInputModelFormShowFormAsModal;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelSubject(): InputModelDB
+	{
+		$labelSubject = __('Subject (optional)', 'onoffice-for-wp-websites');
+
+		$pInputModelFormSubject = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT, $labelSubject);
+		$pInputModelFormSubject->setHtmlType(InputModelBase::HTML_TYPE_EMAIL_SUBJECT);
+		$pInputModelFormSubject->setValue($this->getValue('subject'));
+		$pInputModelFormSubject->setHintHtml(__('We recommend a maximum number of characters between 40 and 60 or up to 10 words.', 'onoffice-for-wp-websites'));
+
+		return $pInputModelFormSubject;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
 	public function createInputModelEnableCreateTask(): InputModelDB
 	{
 		$labelEnableCreateTask = __('Create tasks in onOffice enterprise', 'onoffice-for-wp-websites');
@@ -1054,7 +1123,7 @@ class FormModelBuilderDBForm
 		$pInputModelResponsibility = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_RESPONSIBILITY, $labelTaskResponsibility);
 		$pInputModelResponsibility->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-		$pInputModelResponsibility->setValue($this->getValue('responsibility') ?? '');
+		$pInputModelResponsibility->setValue($this->getValue('taskResponsibility') ?? '');
 		$supervisorData =  ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->getSupervisorData();
 		$pInputModelResponsibility->setValuesAvailable($supervisorData);
 
@@ -1073,7 +1142,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskProcessor = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_PROCESSOR, $labelTaskProcessor);
 		$pInputModelTaskProcessor->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-		$pInputModelTaskProcessor->setValue($this->getValue('processor') ?? '');
+		$pInputModelTaskProcessor->setValue($this->getValue('taskProcessor') ?? '');
 		$supervisorData =  ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->getSupervisorData();
 		$pInputModelTaskProcessor->setValuesAvailable($supervisorData);
 
@@ -1108,7 +1177,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskType = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_TYPE, $labelTaskType . '*');
 		$pInputModelTaskType->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-		$pInputModelTaskType->setValue($this->getValue('type'));
+		$pInputModelTaskType->setValue($this->getValue('taskType'));
 		$taskType = ['' => __('Please choose', 'onoffice-for-wp-websites')] + $this->_taskType;
 		$pInputModelTaskType->setValuesAvailable($taskType);
 
@@ -1124,7 +1193,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskPriority = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_PRIORITY, $labelTaskPriority);
 		$pInputModelTaskPriority->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-		$pInputModelTaskPriority->setValue($this->getValue('priority') ?? '');
+		$pInputModelTaskPriority->setValue($this->getValue('taskPriority') ?? '');
 
 		$pInputModelTaskPriority->setValuesAvailable($this->getTasksPriority());
 
@@ -1140,7 +1209,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskSubject = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_SUBJECT, $labelTaskSubject);
 		$pInputModelTaskSubject->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
-		$pInputModelTaskSubject->setValue($this->getValue('subject') ?? '');
+		$pInputModelTaskSubject->setValue($this->getValue('taskSubject') ?? '');
 
 		return $pInputModelTaskSubject;
 	}
@@ -1154,7 +1223,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskDescription = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_DESCRIPTION, $labelTaskDescription);
 		$pInputModelTaskDescription->setHtmlType(InputModelBase::HTML_TYPE_TEXTAREA);
-		$pInputModelTaskDescription->setValue($this->getValue('description') ?? '');
+		$pInputModelTaskDescription->setValue($this->getValue('taskDescription') ?? '');
 
 		return $pInputModelTaskDescription;
 	}
@@ -1168,7 +1237,7 @@ class FormModelBuilderDBForm
 		$pInputModelTaskStatus = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_TASK_STATUS, $labelTaskStatus);
 		$pInputModelTaskStatus->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-		$pInputModelTaskStatus->setValue($this->getValue('status') ?? 0);
+		$pInputModelTaskStatus->setValue($this->getValue('taskStatus') ?? 0);
 		$pInputModelTaskStatus->setValuesAvailable($this->getTasksStatus());
 
 		return $pInputModelTaskStatus;
