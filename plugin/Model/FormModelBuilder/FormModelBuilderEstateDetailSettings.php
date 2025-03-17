@@ -52,6 +52,7 @@ use onOffice\WPlugin\WP\InstalledLanguageReader;
 use DI\DependencyException;
 use DI\NotFoundException;
 use DI\Container;
+use onOffice\WPlugin\Form;
 
 /**
  *
@@ -457,7 +458,7 @@ class FormModelBuilderEstateDetailSettings
 	protected function readNameShortCodeForm()
 	{
 		$recordManagerReadForm = new RecordManagerReadForm();
-		$allRecordsForm = $recordManagerReadForm->getAllRecords();
+		$allRecordsForm = $recordManagerReadForm->getAllRecordsByFormType(Form::TYPE_CONTACT);
 		$shortCodeForm = array();
 
 		foreach ($allRecordsForm as $value) {
