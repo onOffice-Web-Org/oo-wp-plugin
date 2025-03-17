@@ -145,6 +145,7 @@ class AdminViewController
 		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_ESTATE, [$this->_pAdminListViewSettings, 'handleNotificationError']);
 		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_ADDRESS, [$this->_pAdminListViewSettingsAddress, 'handleNotificationError']);
 		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_FORM, [$this->_pAdminPageFormSettings, 'handleNotificationError']);
+
 	}
 
 
