@@ -122,7 +122,7 @@ class Installer
 		delete_option('onoffice-address-detail-view-showInfoUserUrl');
 		delete_option('onoffice-settings-captcha-secretkey');
 		delete_option('onoffice-notice-cache-was-cleared');
-		delete_option('office-settings-thousand-separator');
+		delete_option('onoffice-settings-thousand-separator');
 		delete_option('onoffice-default-address-view');
 		
 
