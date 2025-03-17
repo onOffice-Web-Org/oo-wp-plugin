@@ -93,6 +93,18 @@ abstract class AdminPageSettingsBase
 	/** */
 	const VIEW_LEAVE_WITHOUT_SAVING_TEXT = 'view_leave_without_saving_text';
 
+	/** */
+	const VIEW_SAVE_EMPTY_NAME_MESSAGE = 'view_save_empty_name_message';
+
+	/** */
+	const VIEW_SAVE_SAME_NAME_MESSAGE = 'view_save_same_name_message';
+
+	/** */
+	const VIEW_UNSAVED_CHANGE_EMPTY_NAME_MESSAGE = 'view_unsaved_change_empty_name_message';
+
+	/** */
+	const VIEW_UNSAVED_CHANGE_SAME_NAME_MESSAGE = 'view_unsaved_change_same_name_message';
+
 	/** @var string */
 	private $_pageTitle = null;
 
