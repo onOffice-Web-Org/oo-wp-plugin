@@ -490,7 +490,7 @@
     border-collapse: collapse;
     text-align: left;
     margin-left: 1px;
-    width: 91%;
+    width: 99%;
 }
 
 .oo-units__data.--empty {
@@ -535,16 +535,18 @@
 
 .oo-units__body .oo-units__data:not(.oo-unitslink):before {
     content: attr(data-label);
-    min-width: 40%;
-    width: 40%;
+    min-width: 50%;
+    width: 50%;
     -ms-hyphens: auto;
     hyphens: auto;
-    padding-right: 16px;
 }
 
 .oo-units__data {
     display: flex;
     padding: 0;
+    gap: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    padding-bottom: 8px;
 } 
   
 .oo-units__data.--empty {
@@ -593,8 +595,9 @@
         display: table-header-group;
     }
 
-      .oo-units__head .oo-units__data{
+    .oo-units__head .oo-units__data{
         min-width: 7.5rem;
+        text-transform: none;
     }
 
     .oo-units__body {
