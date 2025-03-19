@@ -43,7 +43,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 58;
+	const MAX_VERSION = 59;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -382,6 +382,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 57) {
 			dbDelta($this->getCreateQueryFormFieldConfig());
 			$dbversion = 58;
+		}
+
+		if ($dbversion = 58) {
+			$this->addColumnsForKeyfacts();
+			$dbversion = 59;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1274,6 +1279,19 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$prefix = $this->getPrefix();
 		$sql = "UPDATE {$prefix}oo_plugin_listviews
 			SET country_active = 1, radius_active = 1";
+
+		$this->_pWPDB->query($sql);
+	}
+
+	/**
+	 * @return void
+	 */
+	private function addColumnsForKeyfacts(): void
+	{
+		$sql = "ALTER TABLE
+		{$this->getPrefix()}oo_plugin_fieldconfig
+			ADD
+			COLUMN highlighted TINYINT(1) NOT NULL DEFAULT 0";
 
 		$this->_pWPDB->query($sql);
 	}
