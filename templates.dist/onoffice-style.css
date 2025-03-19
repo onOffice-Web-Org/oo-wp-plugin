@@ -222,7 +222,7 @@
     font-weight: 700;
 }
 
-.oo-detailsfreetext, .oo-detailsmap, .oo-area-butler, .oo-detailspricecalculator {
+.oo-detailsfreetext, .oo-detailsmap, .oo-area-butler, .oo-detailspricecalculator, .oo-units {
     padding-bottom: 15px;
     padding-top: 15px;
     border-bottom: 2px solid #efefef;
