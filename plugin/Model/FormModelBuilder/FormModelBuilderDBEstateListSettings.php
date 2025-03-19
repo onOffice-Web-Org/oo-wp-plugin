@@ -277,6 +277,25 @@ class FormModelBuilderDBEstateListSettings
 	 * @return InputModelDB
 	 *
 	 */
+	public function getInputModelisHighlight()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Feld besonders hervorheben', 'onoffice-for-wp-website');
+		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHT;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelIsHighlight'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
 
 	public function getInputModelConvertInputTextToSelectCityField()
 	{
@@ -325,6 +344,21 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel->setValuesAvailable($key);
 	}
 
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 *
+	 */
+	public function callbackValueInputModelIsHighlight(InputModelBase $pInputModel, $key)
+	{
+		// hier ist ein important Stück
+		$valueFromConf = $this->getValue('highlighted') ?? ['plz', 'ort'];
+		$filterableFields = is_array($valueFromConf) ? $valueFromConf : array();
+		$value = in_array($key, $filterableFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
 
 	/**
 	 *

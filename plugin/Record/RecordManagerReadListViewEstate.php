@@ -137,6 +137,7 @@ class RecordManagerReadListViewEstate
 			$result[DataView\DataListView::FIELDS] = $fields;
 			$result['filterable'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'filterable');
 			$result['hidden'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'hidden');
+			$result['highlighted'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'highlighted');
 			$result['availableOptions'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'availableOptions');
 			$result['convertTextToSelectForCityField'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'convertTextToSelectForCityField');
 		}
