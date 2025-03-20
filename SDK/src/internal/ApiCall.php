@@ -194,25 +194,39 @@ class ApiCall
 		$this->sendHttpRequests($token, $actionParameters, $actionParametersOrder, $httpFetch, $saveToCache);
 		$this->_requestQueue = array();
 	}
+	private function tofloat (string $num)
+	{
+		$dotPos = strrpos($num, '.');
+		$commaPos = strrpos($num, ',');
+		$sep = (($dotPos > $commaPos) && $dotPos) ? $dotPos : ((($commaPos > $dotPos) && $commaPos) ? $commaPos : false);
 
+		if (!$sep) {
+				return floatval(preg_replace("/[^0-9]/", "", $num));
+		}
+
+		return floatval(
+				preg_replace("/[^0-9]/", "", substr($num, 0, $sep)) . '.' .
+				preg_replace("/[^0-9]/", "", substr($num, $sep+1, strlen($num)))
+		);
+	}
 	private function sortRecords(array $cachedResponse, array $filter, string $sortby, string $sortorder)
 	{
 		$newRecords = $cachedResponse["data"]["records"];
 		$fieldTypes = $cachedResponse["types"];
 		$sortBy = (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'geo_distance' : $sortby;
-		$sortOrder =  (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'ASC' : $sortorder;
+		$sortOrder = (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'ASC' : $sortorder;
 		if(isset($sortby))
 		{
 			usort($newRecords, function ($a, $b) use ($sortBy, $sortOrder, $fieldTypes) {
 				$sortA = in_array($sortBy, array_keys($a['elements'])) ? $a['elements'][$sortBy] : '';
 				$sortB = in_array($sortBy, array_keys($b['elements'])) ? $b['elements'][$sortBy] : '';
-
-				if($fieldTypes[$sortBy] === "integer" || $fieldTypes[$sortBy] === "float")
+				if((array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "integer")
+					|| (array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "float"))
 				{
-					$sortA = floatval($sortA);
-					$sortB = floatval($sortB);
+					$sortA = $this->tofloat($sortA ?? "");
+					$sortB = $this->tofloat($sortB ?? "");
 				}
-				if($fieldTypes[$sortBy] === "date")
+				if(array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "date")
 				{
 					$sortA = strtotime($sortA);
 					$sortB = strtotime($sortB);
@@ -276,14 +290,14 @@ class ApiCall
 					} else {
 						//int compare
 						if($fieldTypes[$fieldName] === "integer"
-						  && intval($itemRaw["elements"][$fieldName]) != intval($val))
+							&& intval($itemRaw["elements"][$fieldName]) != intval($val))
 						{
 							unset($filteredArray[$index]);
 							break;
 						}
 						//float compare
 						if($fieldTypes[$fieldName] === "float"
-						  && floatval($itemRaw["elements"][$fieldName]) != floatval($val))
+							&& floatval($itemRaw["elements"][$fieldName]) != floatval($val))
 						{
 							unset($filteredArray[$index]);
 							break;
@@ -298,7 +312,7 @@ class ApiCall
 
 						//string compare
 						if(($fieldTypes[$fieldName] === "varchar" || $fieldTypes[$fieldName] === "varchar")
-						  && strtolower($item["elements"][$fieldName]) != strtolower($val)){
+							&& strtolower($item["elements"][$fieldName]) != strtolower($val)){
 							unset($filteredArray[$index]);
 							break;
 						}
