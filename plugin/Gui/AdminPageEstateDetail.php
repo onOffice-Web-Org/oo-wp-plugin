@@ -682,6 +682,8 @@ class AdminPageEstateDetail
 			(array) ( $valuesPrefixless['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? [] ) +
 			( $data );
 
+		$valuesPrefixless['highlighted'] = $values->{'oopluginfieldconfig-highlighted'};
+
 		return $valuesPrefixless;
 	}
 
