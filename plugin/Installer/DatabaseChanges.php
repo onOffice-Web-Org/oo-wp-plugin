@@ -39,11 +39,13 @@ use wpdb;
 use function dbDelta;
 use function esc_sql;
 use const ABSPATH;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\Form;
 
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 59;
+	const MAX_VERSION = 60;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -384,9 +386,14 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 58;
 		}
 
-		if ($dbversion = 58) {
-			$this->addColumnsForKeyfacts();
+		if ($dbversion == 58) {
+			$this->migrationsDataShortCodeFormForDetailView();
 			$dbversion = 59;
+		}
+
+		if ($dbversion = 59) {
+			$this->addColumnsForHighlights();
+			$dbversion = 60;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1286,7 +1293,22 @@ class DatabaseChanges implements DatabaseChangesInterface
 	/**
 	 * @return void
 	 */
-	private function addColumnsForKeyfacts(): void
+	private function migrationsDataShortCodeFormForDetailView()
+	{
+		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		if(!empty($pDataDetailViewOptions) && !empty($pDataDetailViewOptions->getShortCodeForm())){
+			$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadForm::class);
+			$allRecordsForm = $recordManagerReadForm->getRowByName($pDataDetailViewOptions->getShortCodeForm());
+			if ($allRecordsForm['form_type'] !== Form::TYPE_CONTACT) {
+				$this->_pWpOption->updateOption('onoffice-default-view', null);
+			}
+		}
+	}
+
+	/**
+	 * @return void
+	 */
+	private function addColumnsForHighlights(): void
 	{
 		$sql = "ALTER TABLE
 		{$this->getPrefix()}oo_plugin_fieldconfig
