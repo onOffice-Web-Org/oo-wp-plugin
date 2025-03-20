@@ -382,7 +382,7 @@ class AdminPageAddressListSettings
 		$pBoolToFieldList = new BooleanValueToFieldList(new InputModelDBFactoryConfigAddress, $pValues);
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigAddress::INPUT_FIELD_FILTERABLE);
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigAddress::INPUT_FIELD_HIDDEN);
-		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigAddress::INPUT_FIELD_HIGHLIGHT);
+		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigAddress::INPUT_FIELD_HIGHLIGHTED);
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigAddress::INPUT_FIELD_CONVERT_INPUT_TEXT_TO_SELECT_FOR_FIELD);
 	}
 

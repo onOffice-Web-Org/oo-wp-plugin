@@ -569,7 +569,7 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create(
-			InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHT,
+			InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHTED,
 			__('Feld besonders hervorheben', 'onoffice-for-wp-website'),
 			true
 		);

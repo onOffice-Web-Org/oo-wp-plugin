@@ -37,7 +37,7 @@ interface InputModelDBFactoryFilterableFields
 	const INPUT_FIELD_HIDDEN = 'inputhidden';
 
 	/** If filterable, it can also be highlighted*/
-	const INPUT_FIELD_HIGHLIGHT = 'highlight';
+	const INPUT_FIELD_HIGHLIGHTED = 'highlighted';
 
 	/** If filterable, it can also be availableOptions */
 	const INPUT_FIELD_AVAILABLE_OPTIONS = 'inputavailableOptions';
