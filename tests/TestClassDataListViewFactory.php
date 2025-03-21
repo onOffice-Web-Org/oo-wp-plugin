@@ -106,6 +106,7 @@ class TestClassDataListViewFactory
 		$this->assertEquals($this->_baseRow['random'], $pDataListView->getRandom());
 		$this->assertEquals($this->_baseRow['filterable'], $pDataListView->getFilterableFields());
 		$this->assertEquals($this->_baseRow['hidden'], $pDataListView->getHiddenFields());
+		$this->assertEquals($this->_baseRow['highlighted'], $pDataListView->getHighlightedFields());
 		$this->assertEquals($this->_baseRow['availableOptions'], $pDataListView->getAvailableOptions());
 		$this->assertEquals($this->_baseRow['sortBySetting'], $pDataListView->getSortBySetting());
 		$this->assertEquals($this->_baseRow['sortByUserDefinedDefault'], $pDataListView->getSortByUserDefinedDefault());
