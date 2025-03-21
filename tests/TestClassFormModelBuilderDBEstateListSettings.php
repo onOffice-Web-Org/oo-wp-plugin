@@ -669,6 +669,36 @@ class TestClassFormModelBuilderDBEstateListSettings
     }
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getInputModelIsHighlight
+	 */
+	public function testGetInputModelIsHighlight()
+	{
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+
+		$pInputModelDB = $pInstance->getInputModelIsHighlight();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
+		$this->assertEquals([$pInstance, 'callbackValueInputModelIsHighlight'], $pInputModelDB->getValueCallback());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::callbackValueInputModelIsHighlight
+	 */
+	public function testCallbackValueInputModelIsHighlight()
+	{
+		$key = 'field_key';
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+		$pInputModelBase = new InputModelDB('testInput', 'testLabel');
+		$pInputModelBase->setValue('bonjour');
+		$pInputModelBase->setValuesAvailable('field_key');
+
+		$pInstance->callbackValueInputModelIsHighlight($pInputModelBase, $key);
+		
+		$this->assertFalse($pInputModelBase->getValue());
+		$this->assertEquals($key, $pInputModelBase->getValuesAvailable());
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::callbackValueInputModelIsFilterable
 	 */
 	public function testCallbackValueInputModelIsFilterable()

@@ -75,10 +75,6 @@ class InputModelDBFactoryConfigAddress
 			self::KEY_TABLE => 'oo_plugin_address_fieldconfig',
 			self::KEY_FIELD => 'hidden',
 		],
-		self::INPUT_FIELD_HIGHLIGHTED => [
-			self::KEY_TABLE => 'oo_plugin_fieldconfig',
-			self::KEY_FIELD => 'highlighted',
-		],
 		self::INPUT_FIELD_CONVERT_INPUT_TEXT_TO_SELECT_FOR_FIELD => [
 			self::KEY_TABLE => 'oo_plugin_address_fieldconfig',
 			self::KEY_FIELD => 'convertInputTextToSelectForField',

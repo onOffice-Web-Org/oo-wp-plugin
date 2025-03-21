@@ -381,6 +381,37 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
 	}
 
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::getInputModelIsHighlight
+	 */
+	public function testGetInputModelIsHighlight()
+	{
+		$pInstance = new FormModelBuilderEstateDetailSettings();
+
+		$pInputModelDB = $pInstance->getInputModelIsHighlight();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
+		$this->assertEquals([$pInstance, 'callbackValueInputModelIsHighlight'], $pInputModelDB->getValueCallback());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::callbackValueInputModelIsHighlight
+	 */
+	public function testCallbackValueInputModelIsHighlight()
+	{
+		$key = 'field_key';
+		$pInstance = new FormModelBuilderEstateDetailSettings();
+		$pInputModelBase = new InputModelDB('testInput', 'testLabel');
+		$pInputModelBase->setValue('bonjour');
+		$pInputModelBase->setValuesAvailable('field_key');
+
+		$pInstance->callbackValueInputModelIsHighlight($pInputModelBase, $key);
+		
+		$this->assertFalse($pInputModelBase->getValue());
+		$this->assertEquals($key, $pInputModelBase->getValuesAvailable());
+	}
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelShowPriceOnRequest
 	 */

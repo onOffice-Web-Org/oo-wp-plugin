@@ -62,6 +62,7 @@ $dimensions = [
 </div>
 <div class="oo-listframe" id="oo-similarframe">
 	<?php
+	error_log("similar estates: " . print_r($pEstates, true));
 	while ( $currentEstate = $pEstates->estateIterator() ) {
 		$marketingStatus = $currentEstate['vermarktungsstatus'];
 		unset($currentEstate['vermarktungsstatus']);

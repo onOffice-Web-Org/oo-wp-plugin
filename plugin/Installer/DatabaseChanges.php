@@ -1313,7 +1313,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	{
 		$sql = "ALTER TABLE
 			{$this->getPrefix()}oo_plugin_fieldconfig
-			ADD COLUMN IF NOT EXISTS
+			ADD COLUMN
 			highlighted TINYINT(1) NOT NULL DEFAULT 0";
 
 		$this->_pWPDB->query($sql);
