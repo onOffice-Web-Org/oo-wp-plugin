@@ -586,7 +586,7 @@ class FormModelBuilderEstateDetailSettings
 	 */
 	public function callbackValueInputModelIsHighlight(InputModelBase $pInputModel, $key)
 	{
-		$valueFromConf = $this->_pDataDetailView->getHighlighted();
+		$valueFromConf = $this->_pDataDetailView->getHighlightedFields();
 		$filterableFields = is_array($valueFromConf) ? $valueFromConf : array();
 		$value = in_array($key, $filterableFields);
 		$pInputModel->setValue($value);

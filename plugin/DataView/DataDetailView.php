@@ -330,7 +330,7 @@ class DataDetailView
 	public function getFields(): array
 		{ return $this->_fields; }
 
-	public function getHighlighted(): array
+	public function getHighlightedFields(): array
 		{ return $this->_highlighted; }
 
 	/** @return array */
@@ -378,7 +378,7 @@ class DataDetailView
 		{ $this->_fields = $fields; }
 
 	/** @param array $keyfacts */
-	public function setHighlighted(array $highlighted)
+	public function setHighlightedFields(array $highlighted)
 		{ $this->_highlighted = $highlighted; }
 
 	/** @param array $pictureTypes */
