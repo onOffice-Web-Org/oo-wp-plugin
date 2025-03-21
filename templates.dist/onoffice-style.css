@@ -144,6 +144,10 @@
     padding: 2.5px 0;
 }
 
+.oo-listtd.--highlight {
+	text-decoration: underline;
+}
+
 .oo-detailslink a, .favorize {
     display: block;
     text-align: center;
@@ -215,6 +219,10 @@
     width: 25%;
     padding: 5px 0;
     border-bottom: 2px solid #efefef;
+}
+
+.oo-detailslisttd.--highlight {
+	text-decoration: underline;
 }
 
 .oo-detailslisttd:nth-child(odd),
