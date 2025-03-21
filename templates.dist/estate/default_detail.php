@@ -131,7 +131,14 @@ $dimensions = [
 			</div>
 			<div class="oo-detailstable">
 				<?php
-				foreach ($currentEstate as $field => $value) {
+				$keyfacts = array_flip($pEstates->getHighlightedFields());
+				$estateFacts = iterator_to_array($currentEstate);
+				// keep order but float keyfacts to the top
+				$estateFacts = array_merge(
+					array_intersect_key($estateFacts, $keyfacts), // get only highlighted fields
+					array_diff_key($estateFacts, $keyfacts) // get only non highlighted
+				);
+				foreach ($estateFacts as $field => $value) {
 					if ($pEstates->getShowEnergyCertificate() && in_array($field, $energyCertificateFields)) {
 						continue;
 					}
@@ -144,8 +151,9 @@ $dimensions = [
 					if (empty($value)) {
 						continue;
 					}
-					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
-						. '<div class="oo-detailslisttd">'
+					$class = 'oo-detailslisttd'. ($pEstates->isHighlightedField($field) ? ' --highlight' : '');
+					echo '<div class="'.$class.'">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
+						. '<div class="'.$class.'">'
 						. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
 						. '</div>' . "\n";
 				} ?>
