@@ -35,6 +35,8 @@ use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddressDetailSettings;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\Field;
 
 class TestClassFormModelBuilderAddressDetailSettings
 	extends WP_UnitTestCase
@@ -52,6 +54,9 @@ class TestClassFormModelBuilderAddressDetailSettings
 	private $_pFormModelBuilderAddressDetailSettings;
 
 	private $_pDataTest;
+
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
 
 	/**
 	 * @before
@@ -77,7 +82,28 @@ class TestClassFormModelBuilderAddressDetailSettings
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend'])
+				->setConstructorArgs([$this->_pContainer])
+				->getMock();
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('name', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldsCollection->addField($pField1);
 
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsEstateDecoratorReadAddressBackend')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('image', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
 		$pRecordManagerReadForm = $this->getMockBuilder(RecordManagerReadForm::class)->getMock();
 		$expectedObject = [(object) $this->getBaseRow(1, Form::TYPE_CONTACT)];
 		$pRecordManagerReadForm->method('getAllRecords')->willReturn($expectedObject);

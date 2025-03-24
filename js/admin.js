@@ -510,6 +510,15 @@ jQuery(document).ready(function($){
 			convertTextToSelectForField.parent().remove();
 		}
 
+		if (fieldName === 'fax' || fieldName === 'mobile' || fieldName === 'phone' || fieldName === 'email' || fieldName === 'imageUrl') {
+			const filterableSelectors = ['oopluginaddressfieldconfig-filterable'];
+			let filterable = clonedElement.find('input[name^=' + filterableSelectors.join('],input[name^=') + ']');
+			filterable.parent().remove();
+			const hiddenSelectors = ['oopluginaddressfieldconfig-hidden'];
+			let hidden = clonedElement.find('input[name^=' + hiddenSelectors.join('],input[name^=') + ']');
+			hidden.parent().remove();
+		}
+
 		if(onOffice_loc_settings.modulelabels && module){
 			var inputModule = clonedElement.find('input[name^=oopluginformfieldconfig-module]');
 			inputModule.val(module);
