@@ -46,8 +46,8 @@ use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\DataView\DataListView;
 use DI\ContainerBuilder;
 use DI\Container;
-use onOffice\WPlugin\Types\Field;
 use Exception;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 /**
  *
@@ -150,15 +150,23 @@ class FormModelBuilderAddressDetailSettings
 		(InputModelOptionFactoryAddressDetailView::INPUT_FIELD_CONFIG, null, true);
 
 		$fields = $this->_pDataAddressDetail->getFields();
-		$fieldNames = $this->getFieldnames()->getFieldList($module);
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = [];
+		if (is_array($module)) {
+			foreach ($module as $submodule) {
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule);
+				$fieldNames = array_merge($fieldNames, $newFields);
+			}
+		} else {
+			$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+		}
 
 		$fieldNamesArray = [];
 		$pFieldsCollectionUsedFields = new FieldsCollection;
 
-		foreach ($fieldNames as $name => $pField) {
-			$pFields = Field::createByRow($name, $pField);
-			$fieldNamesArray[$pFields->getName()] = $pFields->getAsRow();
-			$pFieldsCollectionUsedFields->addField($pFields);
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
 		}
 
 		$pInputModelFieldsConfig->setValue($fields);
@@ -168,6 +176,22 @@ class FormModelBuilderAddressDetailSettings
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 
 		return $pInputModelFieldsConfig;
+	}
+
+	/**
+	 * @return FieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	protected function getFieldsCollection(): FieldsCollection
+	{
+		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollection = new FieldsCollection();
+
+		$pFieldsCollectionBuilder
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection);
+		return $pFieldsCollection;
 	}
 
 	/**
@@ -270,11 +294,28 @@ class FormModelBuilderAddressDetailSettings
 		$pInputModelFieldsConfig = $this->_pInputModelAddressDetailFactory->create
 		(InputModelOptionFactoryAddressDetailView::INPUT_FIELD_CONFIG, null, true);
 		$fields = $this->_pDataAddressDetail->getFields();
+		$pFieldsCollection = $this->getFieldsCollection();
 
-		$fieldNames = $this->getFieldnames()->getFieldList($module);
+		$fieldNames = [];
+		if (is_array($module)) {
+			foreach ($module as $submodule) {
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule);
+				$fieldNames = array_merge($fieldNames, $newFields);
+			}
+		} else {
+			$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+		}
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
-		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNames));
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesArray);
 		$pInputModelFieldsConfig->setValue($fields);
 
 		return $pInputModelFieldsConfig;
