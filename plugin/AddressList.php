@@ -474,6 +474,7 @@ implements AddressListBase
 		$this->_pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldBuilderShort->addFieldsAddressEstate($this->_pFieldsCollection);
+		$pFieldBuilderShort->addFieldsEstateDecoratorReadAddressBackend($this->_pFieldsCollection);
 
 		if ($this->_pDataViewAddress instanceof DataListViewAddress && !empty($this->_pDataViewAddress->getName())) {
 			$pFieldBuilderShort->addCustomLabelFieldsAddressFrontend($this->_pFieldsCollection, $this->_pDataViewAddress->getName());
