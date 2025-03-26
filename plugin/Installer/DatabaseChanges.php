@@ -393,7 +393,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		if ($dbversion = 59) {
 			// new column 'highlighted' in 'oo_plugin_fieldconfig'
-			$this->addColumnsForHighlights();
+			dbDelta($this->addColumnsForHighlights());
 			$dbversion = 60;
 		}
 
@@ -1309,14 +1309,14 @@ class DatabaseChanges implements DatabaseChangesInterface
 	/**
 	 * @return void
 	 */
-	private function addColumnsForHighlights(): void
+	private function addColumnsForHighlights(): string
 	{
 		$sql = "ALTER TABLE
 			{$this->getPrefix()}oo_plugin_fieldconfig
 			ADD COLUMN
 			highlighted TINYINT(1) NOT NULL DEFAULT 0";
 
-		$this->_pWPDB->query($sql);
+		return $sql;
 	}
 
 	/**
