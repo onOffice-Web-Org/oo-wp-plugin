@@ -692,7 +692,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$pInputModelBase->setValue('bonjour');
 		$pInputModelBase->setValuesAvailable('field_key');
 
-		$pInstance->callbackValueInputModelIsHighlight($pInputModelBase, $key);
+		$pInstance->callbackValueInputModelIsHidden($pInputModelBase, $key);
 		
 		$this->assertFalse($pInputModelBase->getValue());
 		$this->assertEquals($key, $pInputModelBase->getValuesAvailable());

@@ -28,6 +28,7 @@ use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Field\FieldnamesEnvironment;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
+use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
@@ -387,12 +388,13 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testGetInputModelIsHighlight()
 	{
-		$pInstance = new FormModelBuilderEstateDetailSettings();
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
+		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 
-		$pInputModelDB = $pInstance->getInputModelIsHighlight();
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->getInputModelIsHighlight();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
-		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
-		$this->assertEquals([$pInstance, 'callbackValueInputModelIsHighlight'], $pInputModelDB->getValueCallback());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+		$this->assertEquals([$pFormModelBuilderDBEstateDetailSettings, 'callbackValueInputModelIsHighlight'], $pInputModelDB->getValueCallback());
 	}
 
 	/**
@@ -401,15 +403,18 @@ class TestClassFormModelBuilderEstateDetailSettings
 	public function testCallbackValueInputModelIsHighlight()
 	{
 		$key = 'field_key';
-		$pInstance = new FormModelBuilderEstateDetailSettings();
-		$pInputModelBase = new InputModelDB('testInput', 'testLabel');
-		$pInputModelBase->setValue('bonjour');
-		$pInputModelBase->setValuesAvailable('field_key');
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
+		$pFormModelBuilderDBEstateDetailSettings->generate('test');
 
-		$pInstance->callbackValueInputModelIsHighlight($pInputModelBase, $key);
-		
-		$this->assertFalse($pInputModelBase->getValue());
-		$this->assertEquals($key, $pInputModelBase->getValuesAvailable());
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->getInputModelIsHighlight();
+		$pInputModelDB = new InputModelDB('testInput', 'testLabel');
+		$pInputModelDB->setValue('bonjour');
+		$pInputModelDB->setValuesAvailable('field_key');
+
+		$pFormModelBuilderDBEstateDetailSettings->callbackValueInputModelIsHighlight($pInputModelDB, $key);
+
+		$this->assertFalse($pInputModelDB->getValue());
+		$this->assertEquals($key, $pInputModelDB->getValuesAvailable());
 	}
 
 	/**
