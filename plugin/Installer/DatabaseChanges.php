@@ -391,7 +391,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 59;
 		}
 
-		if ($dbversion = 59) {
+		if ($dbversion == 59) {
 			// new column 'highlighted' in 'oo_plugin_fieldconfig'
 			dbDelta($this->addColumnsForHighlights());
 			$dbversion = 60;
@@ -1311,10 +1311,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 */
 	private function addColumnsForHighlights(): string
 	{
-		$sql = "ALTER TABLE
-			{$this->getPrefix()}oo_plugin_fieldconfig
-			ADD COLUMN
-			highlighted TINYINT(1) NOT NULL DEFAULT 0";
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_fieldconfig";
+		$sql = "CREATE TABLE $tableName (
+			`highlighted` tinyint(1) NOT NULL DEFAULT '0',
+		) $charsetCollate;";
 
 		return $sql;
 	}
