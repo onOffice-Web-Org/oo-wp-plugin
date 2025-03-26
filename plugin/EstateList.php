@@ -1420,4 +1420,24 @@ class EstateList
 
 		return false;
 	}
+
+	/**
+	 * checks whether or not a given value is highlighted
+	 * @param string $value
+	 * @return bool
+	 */
+	public function isHighlightedField(string $value) : bool
+	{
+		return in_array($value, $this->getDataView()->getHighlightedFields());
+	}
+
+	/**
+	 * checks whether or not a given value is highlighted
+	 * @param string $value
+	 * @return bool
+	 */
+	public function getHighlightedFields() : array
+	{
+		return $this->getDataView()->getHighlightedFields();
+	}
 }

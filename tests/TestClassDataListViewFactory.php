@@ -55,6 +55,7 @@ class TestClassDataListViewFactory
 		'random' => 1,
 		'filterable' => ['field1', 'field3'],
 		'hidden' => ['field4', 'field3'],
+		'highlighted' => ['field5', 'field6'],
 		'availableOptions' => ['field2'],
 		'sortBySetting' => 1,
 		'sortByUserDefinedDefault' => 'kaufpreis',
@@ -106,6 +107,7 @@ class TestClassDataListViewFactory
 		$this->assertEquals($this->_baseRow['random'], $pDataListView->getRandom());
 		$this->assertEquals($this->_baseRow['filterable'], $pDataListView->getFilterableFields());
 		$this->assertEquals($this->_baseRow['hidden'], $pDataListView->getHiddenFields());
+		$this->assertEquals($this->_baseRow['highlighted'], $pDataListView->getHighlightedFields());
 		$this->assertEquals($this->_baseRow['availableOptions'], $pDataListView->getAvailableOptions());
 		$this->assertEquals($this->_baseRow['sortBySetting'], $pDataListView->getSortBySetting());
 		$this->assertEquals($this->_baseRow['sortByUserDefinedDefault'], $pDataListView->getSortByUserDefinedDefault());

@@ -45,7 +45,7 @@ use onOffice\WPlugin\Form;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 59;
+	const MAX_VERSION = 60;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -389,6 +389,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 58) {
 			$this->migrationsDataShortCodeFormForDetailView();
 			$dbversion = 59;
+		}
+
+		if ($dbversion == 59) {
+			// new column 'highlighted' in 'oo_plugin_fieldconfig'
+			dbDelta($this->addColumnsForHighlights());
+			$dbversion = 60;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1298,6 +1304,21 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->_pWpOption->updateOption('onoffice-default-view', null);
 			}
 		}
+	}
+
+	/**
+	 * @return void
+	 */
+	private function addColumnsForHighlights(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_fieldconfig";
+		$sql = "CREATE TABLE $tableName (
+			`highlighted` tinyint(1) NOT NULL DEFAULT '0',
+		) $charsetCollate;";
+
+		return $sql;
 	}
 
 	/**
