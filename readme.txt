@@ -76,6 +76,19 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 5.7 (2025-03-27) =
+
+**Changed**
+
+* Restriction of the form selection on the property detail page
+* Improved display of parking options (multiParkingLot) for properties
+
+**Fixed**
+
+* Missing fields of address
+* Missing austrian locale
+* Translation on property detail
+
 = 5.6 (2025-02-27) =
 
 **Added**
