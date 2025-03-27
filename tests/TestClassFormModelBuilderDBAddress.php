@@ -180,10 +180,10 @@ class TestClassFormModelBuilderDBAddress
 	public function testGetInputModelCustomLabelLanguageSwitch()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBAddress::class)
-		                  ->disableOriginalConstructor()
-		                  ->onlyMethods(['readAvailableLanguageNamesUsingNativeName'])
-		                  ->getMock();
-						  
+			->disableOriginalConstructor()
+			->addMethods(['readAvailableLanguageNamesUsingNativeName'])
+			->getMock();
+
 		$inputModel = $pInstance->getInputModelCustomLabelLanguageSwitch();
 		$this->assertInstanceOf(InputModelDB::class, $inputModel);
 		$this->assertEquals('Add custom label language', $inputModel->getLabel());

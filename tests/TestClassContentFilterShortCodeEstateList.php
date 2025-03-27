@@ -87,13 +87,13 @@ class TestClassContentFilterShortCodeEstateList
 		$pEstateListEnvironment = $this->getMockBuilder(EstateListEnvironment::class)
 			->getMock();
 		$pEstate = $this->getMockBuilder(EstateList::class)
-			->onlyMethods(['getEstateUnits',
+			->onlyMethods([
+				'getEstateUnits',
 				'estateIterator',
 				'getFieldLabel',
 				'getEstateContacts',
 				'getMovieEmbedPlayers',
 				'getEstatePictures',
-				'setEstateId',
 				'getEstateMovieLinks',
 				'getEstatePictureUrl',
 				'getEstatePictureTitle',
@@ -101,6 +101,7 @@ class TestClassContentFilterShortCodeEstateList
 				'getCurrentEstateId',
 				'loadEstates',
 			])
+			->addMethods(['setEstateId'])
 			->setConstructorArgs([$pDataListView, $pEstateListEnvironment])
 			->getMock();
 

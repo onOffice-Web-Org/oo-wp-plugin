@@ -156,24 +156,24 @@ class TestClassFormModelBuilderDBEstateListSettings
 	public function testCreateInputModelSortBySelectTwoStandard()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
-		                  ->disableOriginalConstructor()
-		                  ->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
-		                  ->getMock();
+			->disableOriginalConstructor()
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
+			->getMock();
 
 		$pInstance->method('readFieldnames')
-		          ->with('estate')
-		          ->willReturn([
-			          'wohnflaeche' => 'wohnflaeche',
-			          'grundstuecksflaeche' => 'grundstuecksflaeche',
-			          'gesamtflaeche' => 'gesamtflaeche',
-			          'kaufpreis' => 'Kaufpreis',
-			          'kaltmiete' => 'Kaltmiete']);
+			->with('estate')
+			->willReturn([
+				'wohnflaeche' => 'wohnflaeche',
+				'grundstuecksflaeche' => 'grundstuecksflaeche',
+				'gesamtflaeche' => 'gesamtflaeche',
+				'kaufpreis' => 'Kaufpreis',
+				'kaltmiete' => 'Kaltmiete']);
 
 		$pInstance->method('getOnlyDefaultSortByFields')
-		          ->with('estate')
-		          ->willReturn([
-			          'kaufpreis' => 'Kaufpreis',
-			          'kaltmiete' => 'Kaltmiete']);
+			->with('estate')
+			->willReturn([
+				'kaufpreis' => 'Kaufpreis',
+				'kaltmiete' => 'Kaltmiete']);
 		$data = [
 			"group" => [
 				"Popular" => [
@@ -530,6 +530,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 		                  ->disableOriginalConstructor()
 		                  ->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', "readFilters", 'getHintHtml'])
+						  ->addMethods(['getHintHtml'])
 		                  ->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);

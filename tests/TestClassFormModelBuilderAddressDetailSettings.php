@@ -231,7 +231,7 @@ class TestClassFormModelBuilderAddressDetailSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderAddressDetailSettings::class)
 		                  ->disableOriginalConstructor()
-		                  ->onlyMethods(['readAvailableLanguageNamesUsingNativeName'])
+		                  ->addMethods(['readAvailableLanguageNamesUsingNativeName'])
 		                  ->getMock();
 						  
 		$inputModel = $pInstance->getInputModelCustomLabelLanguageSwitch();
