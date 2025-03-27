@@ -7,6 +7,7 @@
 3. Run `composer check-platform-reqs` to ensure you have installed the required PHP extensions.
     - Example: The command tells you that the extensions `ext-mbstring` and `ext-simplexml` are missing. On Ubuntu, you can install these by running `sudo apt install php-mbstring php-simplexml`.
 4. Run `composer install` to install the dependencies.
+5. Run `npm run build` to create minified JavaScript files
 
 ## Make a release .zip
 

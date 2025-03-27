@@ -52,6 +52,9 @@ jobs:
       - name: Install development dependencies
         run: composer install
 
+      - name: Minify JavaScript files
+        run: npm run build
+
       - name: Build release
         run: PREFIX=/tmp/release/ make release
 
