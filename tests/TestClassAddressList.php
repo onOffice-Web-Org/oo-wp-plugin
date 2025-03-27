@@ -181,7 +181,7 @@ class TestClassAddressList
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersEstatesOfAddress, null, $responseEstatesOfAddress);
 
 		$pMockViewFieldModifierHandler = $this->getMockBuilder(ViewFieldModifierHandler::class)
-			->setMethods(['processRecord', 'getAllAPIFields'])
+			->onlyMethods(['processRecord', 'getAllAPIFields'])
 			->disableOriginalConstructor()
 			->getMock();
 		$pMockViewFieldModifierHandler->method('processRecord')->will($this->returnArgument(0));
@@ -189,7 +189,7 @@ class TestClassAddressList
 			->will($this->returnValue(['Name', 'KdNr', 'Vorname']));
 
 		$pMockFieldnames = $this->getMockBuilder(Fieldnames::class)
-			->setMethods(['getFieldLabel', 'loadLanguage', 'getFieldInformation'])
+			->onlyMethods(['getFieldLabel', 'loadLanguage', 'getFieldInformation'])
 			->setConstructorArgs([new FieldsCollection(), false,
 				$this->getMockBuilder(FieldnamesEnvironment::class)->getMock()])
 			->getMock();
@@ -210,7 +210,7 @@ class TestClassAddressList
 
 		$pMockOutputFields = $this->getMockBuilder(OutputFields::class)
 			->disableOriginalConstructor()
-			->setMethods(['getVisibleFilterableFields'])
+			->onlyMethods(['getVisibleFilterableFields'])
 			->getMock();
 		$pMockOutputFields->method('getVisibleFilterableFields')
 			->will($this->returnValue(['KdNr' => 4, 'Vorname' => null, 'Name' => 'Stefansson']));
@@ -378,7 +378,7 @@ class TestClassAddressList
 		$pDataDetailView = new DataAddressDetailView();
 		$pDataDetailViewHandler = $this->getMockBuilder(DataAddressDetailViewHandler::class)
 			->disableOriginalConstructor()
-			->setMethods(['getAddressDetailView'])
+			->onlyMethods(['getAddressDetailView'])
 			->getMock();
 		$pDataDetailViewHandler->method('getAddressDetailView')->willReturn($pDataDetailView);
 		$this->_pEnvironment->method('getDataAddressDetailViewHandler')->willReturn($pDataDetailViewHandler);

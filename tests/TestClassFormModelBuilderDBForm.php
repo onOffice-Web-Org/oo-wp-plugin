@@ -66,7 +66,7 @@ class TestClassFormModelBuilderDBForm
 		$this->_pContainer = $pContainerBuilder->build();
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormBackend'])
+				->onlyMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormBackend'])
 				->setConstructorArgs([$this->_pContainer])
 				->getMock();
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
@@ -154,7 +154,7 @@ class TestClassFormModelBuilderDBForm
 	{
 		$pInstance = $this->getMockBuilder( FormModelBuilderDBForm::class )
 		                  ->disableOriginalConstructor()
-		                  ->setMethods( [ 'getInputModelDBFactory', 'getValue' ] )
+		                  ->onlyMethods( [ 'getInputModelDBFactory', 'getValue' ] )
 		                  ->getMock();
 		add_option( 'onoffice-settings-default-email', 'a@a' );
 		$pInstance->method( 'getInputModelDBFactory' )->willReturn( $this->_pInputModelFactoryDBEntry );
@@ -172,7 +172,7 @@ class TestClassFormModelBuilderDBForm
 	{
 		$pInstance = $this->getMockBuilder( FormModelBuilderDBForm::class )
 		                  ->disableOriginalConstructor()
-		                  ->setMethods( [ 'getInputModelDBFactory', 'getValue' ] )
+		                  ->onlyMethods( [ 'getInputModelDBFactory', 'getValue' ] )
 		                  ->getMock();
 
 		$pInstance->method( 'getInputModelDBFactory' )->willReturn( $this->_pInputModelFactoryDBEntry );
@@ -190,7 +190,7 @@ class TestClassFormModelBuilderDBForm
 	{
 		$pInstance = $this->getMockBuilder( FormModelBuilderDBForm::class )
 		                  ->disableOriginalConstructor()
-		                  ->setMethods( [ 'getInputModelDBFactory', 'getValue', 'getFormType' ] )
+		                  ->onlyMethods( [ 'getInputModelDBFactory', 'getValue', 'getFormType' ] )
 		                  ->getMock();
 
 		$pInstance->method( 'getInputModelDBFactory' )->willReturn( $this->_pInputModelFactoryDBEntry );
@@ -209,7 +209,7 @@ class TestClassFormModelBuilderDBForm
 	{
 		$pInstance = $this->getMockBuilder( FormModelBuilderDBForm::class )
 		                  ->disableOriginalConstructor()
-		                  ->setMethods( [ 'getInputModelDBFactory', 'getValue' ] )
+		                  ->onlyMethods( [ 'getInputModelDBFactory', 'getValue' ] )
 		                  ->getMock();
 
 		$pInstance->method( 'getInputModelDBFactory' )->willReturn( $this->_pInputModelFactoryDBEntry );
@@ -227,7 +227,7 @@ class TestClassFormModelBuilderDBForm
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getDataContactType'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getDataContactType'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -246,12 +246,12 @@ class TestClassFormModelBuilderDBForm
 	{
 		$fieldCollectionBuilder = $this->getMockBuilder(FieldsCollectionBuilder::class)
 			->disableOriginalConstructor()
-			->setMethods([ 'buildFieldsCollection'])
+			->onlyMethods([ 'buildFieldsCollection'])
 			->getMock();
 
 		$pFieldsCollection = $this->getMockBuilder(FieldsCollection::class)
 			->disableOriginalConstructor()
-			->setMethods(['getFieldsByModule'])
+			->onlyMethods(['getFieldsByModule'])
 			->getMock();
 
 		$mockData = [
@@ -282,7 +282,7 @@ class TestClassFormModelBuilderDBForm
 	{
 		$fieldCollectionBuilder = $this->getMockBuilder(FieldsCollectionBuilder::class)
 			->disableOriginalConstructor()
-			->setMethods(['buildFieldsCollection'])
+			->onlyMethods(['buildFieldsCollection'])
 			->getMock();
 
 		$ex = $this->_pContainer->get(APIClientCredentialsException::class);
@@ -306,7 +306,7 @@ class TestClassFormModelBuilderDBForm
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -385,7 +385,7 @@ class TestClassFormModelBuilderDBForm
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
 		                  ->disableOriginalConstructor()
-		                  ->setMethods(['getInputModelDBFactory', 'getValue'])
+		                  ->onlyMethods(['getInputModelDBFactory', 'getValue'])
 		                  ->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -404,7 +404,7 @@ class TestClassFormModelBuilderDBForm
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
 		                  ->disableOriginalConstructor()
-		                  ->setMethods(['getInputModelDBFactory', 'getValue'])
+		                  ->onlyMethods(['getInputModelDBFactory', 'getValue'])
 		                  ->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -423,7 +423,7 @@ class TestClassFormModelBuilderDBForm
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);

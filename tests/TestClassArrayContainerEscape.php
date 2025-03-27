@@ -101,8 +101,8 @@ class TestClassArrayContainerEscape
 		$this->assertEquals(['cube&lt;', 'cylinder'], $pArrayContainerEscape['sphere']);
 		$this->assertEquals(['cube&lt;', 'cylinder'], $pArrayContainerEscape->getValue('sphere'));
 
-		$pArrayContainerEscape->offsetSet('foo', 'bar');
-		$this->assertEquals('bar', $pArrayContainerEscape->offsetGet('foo'));
+		$pArrayContainerEscape->offsetSet('bar', 'bar');
+		$this->assertEquals('bar', $pArrayContainerEscape->offsetGet('bar'));
 		$pArrayContainerEscape->offsetSet(null, 'baz');
 		$this->assertEquals('baz', $pArrayContainerEscape->offsetGet(4));
 		$pArrayContainerEscape->rewind();

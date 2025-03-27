@@ -112,7 +112,7 @@ class TestClassRecordManagerReadListViewEstate
 
 		$pWPDB = $this->getMockBuilder(wpdb::class)
 				->disableOriginalConstructor(['testUser', 'testPassword', 'testDB', 'testHost'])
-				->setMethods(['get_results', 'get_var'])
+				->onlyMethods(['get_results', 'get_var'])
 				->getMock();
 		$pWPDB->prefix = 'testPrefix';
 		$pWPDB->expects($this->once())
@@ -122,7 +122,7 @@ class TestClassRecordManagerReadListViewEstate
 				->method('get_var')
 				->willReturnOnConsecutiveCalls(3);
 		$pRecordManagerReadListViewEstate = $this->getMockBuilder(RecordManagerReadListViewEstate::class)
-				->setMethods(['getWpdb'])
+				->onlyMethods(['getWpdb'])
 				->getMock();
 
 		$pRecordManagerReadListViewEstate->method('getWpdb')->will($this->returnValue($pWPDB));

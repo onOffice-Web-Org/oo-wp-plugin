@@ -55,11 +55,11 @@ class TestClassContentFilterShortCodeLink
 	public function prepare()
 	{
 		$this->_pLogger = $this->getMockBuilder(Logger::class)
-			->setMethods(['logErrorAndDisplayMessage'])
+			->onlyMethods(['logErrorAndDisplayMessage'])
 			->getMock();
 
 		$this->_pLinkBuilderPage = $this->getMockBuilder(LinkBuilderPage::class)
-			->setMethods(['buildLinkByPath'])
+			->onlyMethods(['buildLinkByPath'])
 			->getMock();
 
 		$this->_pSubject = new ContentFilterShortCodeLink($this->_pLogger, $this->_pLinkBuilderPage);

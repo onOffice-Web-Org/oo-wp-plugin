@@ -64,7 +64,7 @@ class TestClassFormModelBuilderDBAddress
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend'])
+				->onlyMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend'])
 				->setConstructorArgs([$this->_pContainer])
 				->getMock();
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
@@ -99,7 +99,7 @@ class TestClassFormModelBuilderDBAddress
 		$pDbChanges->install();
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBAddress::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue'])
 			->getMock();
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
 		$pInstance->method('getValue')->willReturn('1');
@@ -116,7 +116,7 @@ class TestClassFormModelBuilderDBAddress
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBAddress::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue'])
 			->getMock();
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
 		$pInstance->method('getValue')->willReturn('1');
@@ -164,7 +164,7 @@ class TestClassFormModelBuilderDBAddress
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBAddress::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue'])
 			->getMock();
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
 		$pInstance->method('getValue')->willReturn('1');
@@ -181,7 +181,7 @@ class TestClassFormModelBuilderDBAddress
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBAddress::class)
 		                  ->disableOriginalConstructor()
-		                  ->setMethods(['readAvailableLanguageNamesUsingNativeName'])
+		                  ->onlyMethods(['readAvailableLanguageNamesUsingNativeName'])
 		                  ->getMock();
 						  
 		$inputModel = $pInstance->getInputModelCustomLabelLanguageSwitch();
