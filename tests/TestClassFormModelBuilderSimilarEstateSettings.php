@@ -410,7 +410,8 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 				->disableOriginalConstructor()
-				->onlyMethods(['getInputModelDBFactory', 'readFilters'])
+				->onlyMethods(['readFilters'])
+				->addMethods(['getInputModelDBFactory'])
 				->getMock();
 		$pInstance->method('readFilters')->willReturn(['a']);
 		$pInstance->generate('test');
