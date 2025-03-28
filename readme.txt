@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 5.6
+Stable tag: 5.7
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,19 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 5.7 (2025-03-27) =
+
+**Changed**
+
+* Restriction of the form selection on the property detail page
+* Improved display of parking options (multiParkingLot) for properties
+
+**Fixed**
+
+* Missing fields of address
+* Missing austrian locale
+* Translation on property detail
 
 = 5.6 (2025-02-27) =
 
