@@ -24,8 +24,8 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Controller;
 
 use DI\Container;
-use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
@@ -61,9 +61,14 @@ interface AddressListEnvironment
 	public function getOutputFields(): OutputFields;
 
 	/**
-	 * @return DataListViewAddressToAPIParameters
+	 * @return DefaultFilterBuilder
 	 */
-	public function getDataListViewAddressToAPIParameters(): DataListViewAddressToAPIParameters;
+	public function getDefaultFilterBuilder(): DefaultFilterBuilder;
+
+	/**
+	 * @param DefaultFilterBuilder $pDefaultFilterBuilder
+	 */
+	public function setDefaultFilterBuilder(DefaultFilterBuilder $pDefaultFilterBuilder);
 
 	/**
 	 * @param array $fields
