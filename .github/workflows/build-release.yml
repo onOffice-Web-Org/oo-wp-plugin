@@ -53,7 +53,7 @@ jobs:
         run: composer install
 
       - name: Minify JavaScript files
-        run: npm run build
+        run: node webpack.config.js
 
       - name: Build release
         run: PREFIX=/tmp/release/ make release
