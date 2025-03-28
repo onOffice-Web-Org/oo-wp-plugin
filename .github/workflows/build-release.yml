@@ -50,7 +50,9 @@ jobs:
           extensions: mbstring, mysqli, intl, curl
 
       - name: Install development dependencies
-        run: composer install
+        run: |
+          echo "is this running? helloooo?"
+          composer install
 
       - name: Minify JavaScript files
         run: |
