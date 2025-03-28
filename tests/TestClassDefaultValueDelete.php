@@ -48,7 +48,7 @@ class TestClassDefaultValueDelete
 	public function prepare()
 	{
 		$this->_pWPDB = $this->getMockBuilder(wpdb::class)
-			->setMethods(['query', 'prepare'])
+			->onlyMethods(['query', 'prepare'])
 			->disableOriginalConstructor()
 			->getMock();
 		$this->_pWPDB->prefix = 'wp_test_';

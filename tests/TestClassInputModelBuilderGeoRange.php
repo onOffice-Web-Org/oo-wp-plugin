@@ -171,7 +171,7 @@ class TestClassInputModelBuilderGeoRange
 		];
 
 		$pMockGeoPositionFieldHandler = $this->getMockBuilder(GeoPositionFieldHandler::class)
-			->setMethods(['getRadiusValue', 'getActiveFields', 'readValues'])
+			->onlyMethods(['getRadiusValue', 'getActiveFields', 'readValues'])
 			->getMock();
 		$pMockGeoPositionFieldHandler
 			->method('getRadiusValue')

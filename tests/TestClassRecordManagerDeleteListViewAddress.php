@@ -51,7 +51,7 @@ class TestClassRecordManagerDeleteListViewAddress
 	public function prepare()
 	{
 		$this->_pWPDB = $this->getMockBuilder(wpdb::class)
-			->setMethods(['delete'])
+			->onlyMethods(['delete'])
 			->disableOriginalConstructor()
 			->getMock();
 		$this->_pWPDB->prefix = 'wp_test_';

@@ -22,7 +22,7 @@ class TestClassTemplate extends \WP_UnitTestCase
 	public function setUpEstateDetail()
 	{
 		$this->_pEstate = $this->getMockBuilder(EstateDetail::class)
-			->setMethods([
+			->onlyMethods([
 				'getEstateUnits',
 				'estateIterator',
 				'getFieldLabel',

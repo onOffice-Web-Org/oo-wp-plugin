@@ -109,7 +109,7 @@ class TestClassDefaultFilterBuilderListViewAddress
 
 		$this->_pFilterBuilderInputVariables = $this->getMockBuilder(FilterBuilderInputVariables::class)
 			->setConstructorArgs([onOfficeSDK::MODULE_ADDRESS])
-			->setMethods(['getModule', 'getPostFieldsFilter'])
+			->onlyMethods(['getModule', 'getPostFieldsFilter'])
 			->getMock();
 	}
 

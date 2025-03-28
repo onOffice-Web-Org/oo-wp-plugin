@@ -76,7 +76,7 @@ class TestClassDefaultFilterBuilderListView
 	public function prepareMock()
 	{
 		$pEnvironment = $this->getMockBuilder(DefaultFilterBuilderListViewEnvironment::class)
-			->setMethods([
+			->onlyMethods([
 				'getFilterBuilderInputVariables',
 				'getInputVariableReader',
 				'getRegionController',
@@ -89,17 +89,17 @@ class TestClassDefaultFilterBuilderListView
 			->method('getFilterBuilderInputVariables')
 			->will($this->returnValue($this->getMockBuilder(FilterBuilderInputVariables::class)
 				->setConstructorArgs([onOfficeSDK::MODULE_ESTATE, true, $this->_pInputVariableReaderConfig])
-				->setMethods()
+				->onlyMethods([])
 				->getMock()));
 		$pEnvironment
 			->method('getInputVariableReader')
 			->will($this->returnValue(
 				$this->getMockBuilder(InputVariableReader::class)
 					->setConstructorArgs([onOfficeSDK::MODULE_ESTATE, $this->_pInputVariableReaderConfig])
-					->setMethods()
+					->onlyMethods([])
 					->getMock()));
 		$pRegionControllerMock = $this->getMockBuilder(RegionController::class)
-			->setMethods(['fetchRegions', 'getSubRegionsByParentRegion'])
+			->onlyMethods(['fetchRegions', 'getSubRegionsByParentRegion'])
 			->setConstructorArgs([false])
 			->getMock();
 		$pRegionControllerMock
@@ -212,7 +212,7 @@ class TestClassDefaultFilterBuilderListView
 			('regionaler_zusatz', onOfficeSDK::MODULE_ESTATE, FieldTypes::FIELD_TYPE_MULTISELECT);
 		$this->_pInputVariableReaderConfig->setValue('regionaler_zusatz', 'OstfriesischeInseln');
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate'])
+			->onlyMethods(['addFieldsAddressEstate'])
 			->setConstructorArgs([new Container])
 			->getMock();
 
@@ -276,7 +276,7 @@ class TestClassDefaultFilterBuilderListView
 
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->setConstructorArgs([new Container])
-			->setMethods(['addFieldsAddressEstate'])
+			->onlyMethods(['addFieldsAddressEstate'])
 			->getMock();
 		$module = onOfficeSDK::MODULE_ESTATE;
 
