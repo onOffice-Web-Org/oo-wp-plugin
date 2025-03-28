@@ -51,11 +51,8 @@ jobs:
 
       - name: Install development dependencies
         run: |
+          node webpack.config.js
           composer install
-          npm install terser
-
-      - name: Minify JavaScript files
-        run: npm run build
 
       - name: Build release
         run: PREFIX=/tmp/release/ make release
