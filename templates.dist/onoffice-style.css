@@ -562,6 +562,7 @@
     padding-bottom: 0;
     border-bottom: 0;
 }
+
 @media (min-width: 768px) {
     .oo-units__body {
       display: grid;
@@ -580,6 +581,7 @@
         text-decoration: underline;
         color: inherit !important;
         text-align: left;
+        margin: 0;
     }
 
     .oo-unitslink a:hover {
@@ -638,5 +640,9 @@
     .oo-units__body .oo-units__data:before {
         width: 40%;
         content: none;
+    }
+
+    .oo-units__data.oo-unitslink {
+        padding-bottom: 16px;
     }
 }

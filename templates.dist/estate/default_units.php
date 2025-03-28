@@ -45,21 +45,16 @@ $pEstatesClone->resetEstateIterator();
             <thead class="oo-units__head">
                 <tr class="oo-units__row">
                     <?php
-                    $empty_columns = [];
+                    $visible_columns = [];
                     while (
                         $current_property = $pEstatesClone->estateIterator()
-                       
+
                     ) {
                         if (!empty($current_property)) {
                             foreach ($current_property as $field => $value) {
                                 if (in_array($field, $dont_echo)) {
                                     continue;
                                 }
-
-                                if (!isset($empty_columns[$field])) {
-                                    $empty_columns[$field] = true;
-                                }
-
                                 if (
                                     !(
                                         (is_numeric($value) && 0 == $value) ||
@@ -72,7 +67,7 @@ $pEstatesClone->resetEstateIterator();
                                         empty($value)
                                     )
                                 ) {
-                                    $empty_columns[$field] = false;
+                                    $visible_columns [$field]= true;
                                 }
                             }
                         }
@@ -85,8 +80,7 @@ $pEstatesClone->resetEstateIterator();
                         foreach ($first_property as $field => $value) {
                             if (
                                 in_array($field, $dont_echo) ||
-                                (isset($empty_columns[$field]) &&
-                                    $empty_columns[$field])
+                                !isset($visible_columns[$field])
                             ) {
                                 continue;
                             }
@@ -111,9 +105,8 @@ $pEstatesClone->resetEstateIterator();
                     foreach ($current_property as $field => $value):
                         if (
                             in_array($field, $dont_echo) ||
-                            (isset($empty_columns[$field]) &&
-                                $empty_columns[$field])
-                        ) {
+                            !isset($visible_columns[$field])
+                            ) {
                             continue;
                         }
 
