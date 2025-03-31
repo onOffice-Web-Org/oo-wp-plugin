@@ -125,6 +125,7 @@ jQuery(document).ready(function($){
 			this.initializeDroppable();
 			this.checkSortableFieldsList();
 			this.bindEvents();
+			this.draggablePages();
 		},
 
 		checkTemplate: function() {
@@ -294,6 +295,26 @@ jQuery(document).ready(function($){
 			ulElement.removeClass(function(index, className) {
 				return (className.match(/(^|\s)fieldsListPage-\S+/g) || []).join(' ');
 			}).addClass(`fieldsListPage-${pageNumber}`);
+		},
+
+		draggablePages: function () {
+			console.log("hello test 123");
+			let pagesAll = $('.list-fields-for-each-page');
+			console.log(pagesAll.length);
+
+			$('#multi-page-container').sortable({
+				items: '.list-fields-for-each-page',
+				placeholder: "ui-state-highlight",
+				// helper: "clone", // or a function returning a custom element
+  				// opacity: 0.7, 
+				tolerance: "pointer",
+
+				update: function() {
+					const order = $("#multi-page-container").sortable("toArray");
+					console.log("Current Order:", order);
+				  }
+			})
+			// $('.list-fields-for-each-page').addClass('sortable-item');
 		}
 	};
 
@@ -558,4 +579,5 @@ jQuery(document).ready(function($){
 	var templateSelector = $(templateSelectorStr).first();
 	templateSelector.on('change', refreshTemplateMouseOver);
 	refreshTemplateMouseOver();
-})(jQuery);
+})
+(jQuery);
