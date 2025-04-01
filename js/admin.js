@@ -298,23 +298,24 @@ jQuery(document).ready(function($){
 		},
 
 		draggablePages: function () {
-			console.log("hello test 123");
-			let pagesAll = $('.list-fields-for-each-page');
-			console.log(pagesAll.length);
-
 			$('#multi-page-container').sortable({
 				items: '.list-fields-for-each-page',
-				placeholder: "ui-state-highlight",
-				// helper: "clone", // or a function returning a custom element
-  				// opacity: 0.7, 
-				tolerance: "pointer",
-
-				update: function() {
-					const order = $("#multi-page-container").sortable("toArray");
-					console.log("Current Order:", order);
-				  }
-			})
-			// $('.list-fields-for-each-page').addClass('sortable-item');
+				placeholder: 'sortable-placeholder',
+				tolerance: 'intersect',
+				cursor: 'move',
+				cursorAt: { top: 5, left: 5 },
+				delay: 80,
+				opacity: 0.8,
+				containment: 'parent',
+				forcePlaceholderSize: true,
+				start: function(e, ui) {
+					ui.placeholder.height(ui.item.height());
+					$('.list-fields-for-each-page').css('transition', 'all 0.08s');
+				},
+				stop: function(e, ui) {
+					$('.list-fields-for-each-page').css('transition', '');
+				}
+			});
 		}
 	};
 
