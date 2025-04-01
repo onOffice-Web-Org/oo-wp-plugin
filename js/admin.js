@@ -301,6 +301,7 @@ jQuery(document).ready(function($){
 
 		draggablePages: function () {
 			if ($('#multi-page-container .list-fields-for-each-page').length > 1) {
+				$('#multi-page-container .list-fields-for-each-page').css("cursor", "move");
 				$('#multi-page-container').sortable({
 					items: '.list-fields-for-each-page',
 					placeholder: 'sortable-placeholder',
