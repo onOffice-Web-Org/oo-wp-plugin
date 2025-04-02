@@ -238,7 +238,11 @@ class InputModelRenderer
                 }
                 $pInstance->addAdditionalAttribute('class', $cssClasses);
                 $pInstance->setMultiple($isMultiple);
-				$pInstance->setSelectedValue($pInputModel->getValue());
+				$pInstance->setIsFieldInactive($pInputModel->isFieldInactive());
+
+				if(!$pInputModel->isFieldInactive()){
+					$pInstance->setSelectedValue($pInputModel->getValue());
+				}
 				break;
 
 			case InputModelOption::HTML_TYPE_NUMBER:
