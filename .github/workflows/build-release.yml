@@ -50,7 +50,9 @@ jobs:
           extensions: mbstring, mysqli, intl, curl
 
       - name: Install development dependencies
-        run: composer install
+        run: |
+          composer install
+          npm install terser
 
       - name: Minify JavaScript files
         run: npm run build
