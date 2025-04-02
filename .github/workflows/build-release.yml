@@ -50,10 +50,12 @@ jobs:
           extensions: mbstring, mysqli, intl, curl
 
       - name: Install development dependencies
-        run: composer install
+        run: |
+          composer install
+          npm install terser
 
       - name: Minify JavaScript files
-        run: node webpack.config.js
+        run: npm run build
 
       - name: Build release
         run: PREFIX=/tmp/release/ make release
