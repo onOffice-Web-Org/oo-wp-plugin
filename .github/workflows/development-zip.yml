@@ -38,7 +38,7 @@ jobs:
   dev-build:
     name: Build development release
     needs: get-versions
-    uses: .github/workflows/build-release.yml@master
+    uses: ./.github/workflows/build-release.yml@master
     with:
       # The trigger makes this run on a merge commit, but we want to run
       # on the latest commit before the review.
