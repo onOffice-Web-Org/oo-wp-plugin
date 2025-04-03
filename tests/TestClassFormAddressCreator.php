@@ -115,6 +115,10 @@ class TestClassFormAddressCreator
 				$pField7->setLabel('newsletter');
 				$pFieldsCollection->addField($pField7);
 
+				$pFieldArtDaten = new Field('ArtDaten', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldArtDaten->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldArtDaten);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 	}
