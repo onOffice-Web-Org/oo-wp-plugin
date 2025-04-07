@@ -59,6 +59,7 @@ class TestTemplateEstateDefaultDetail
 				'getShortCodeForm',
 				'getEstatePictureUrl',
 				'getEstatePictureTitle',
+				'getEstatePictureValues',
 				'getDocument',
 				'getCurrentEstateId',
 				'getSimilarEstates',
@@ -173,6 +174,12 @@ class TestTemplateEstateDefaultDetail
 			.'#038;datensatz=52&#038;filename=Titelbild_362.jpg');
 		$this->_pEstate->method('getEstatePictureTitle')->with(362)
 			->willReturn('Fotolia_3286409_Subscription_XL');
+		$this->_pEstate->method('getEstatePictureValues')->with(362)
+			->willReturn([
+				'id' => 362,
+				'url' => 'https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&filename=Titelbild_362.jpg',
+				'title' => 'Fotolia_3286409_Subscription_XL'
+			]);
 		$this->_pEstate->method('getDocument')->willReturn('Document here');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
 		$this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
