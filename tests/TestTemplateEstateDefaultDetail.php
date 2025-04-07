@@ -178,7 +178,8 @@ class TestTemplateEstateDefaultDetail
 			->willReturn([
 				'id' => 362,
 				'url' => 'https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&filename=Titelbild_362.jpg',
-				'title' => 'Fotolia_3286409_Subscription_XL'
+				'title' => 'Fotolia_3286409_Subscription_XL',
+				'type' => \onOffice\WPlugin\Types\ImageTypes::TITLE
 			]);
 		$this->_pEstate->method('getDocument')->willReturn('Document here');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
