@@ -330,10 +330,11 @@ $dimensions = [
 					</div>
 				</div>
 			<?php } ?>
-
-			<div class="oo-units">
-				<?php echo $pEstates->getEstateUnits(); ?>
-			</div>
+			<?php if (!empty($pEstates->getEstateUnits())) : ?>
+				<div class="oo-units">
+					<?php echo $pEstates->getEstateUnits(); ?>
+				</div>
+			<?php endif; ?>
 		</div>
 		<div class="oo-details-sidebar">
 			<div class="oo-asp">
