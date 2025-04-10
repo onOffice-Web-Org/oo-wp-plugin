@@ -188,7 +188,7 @@ class TestClassEstateViewFieldModifierTypeDefault
 	private function getNewInstance(array $viewFields): EstateViewFieldModifierTypeDefault
 	{
 		$pEstateStatusLabel = $this->getMockBuilder(EstateStatusLabel::class)
-			->setMethods(['getLabel', 'getFieldsByPrio'])
+			->onlyMethods(['getLabel', 'getFieldsByPrio'])
 			->getMock();
 		return new EstateViewFieldModifierTypeDefault($viewFields, $pEstateStatusLabel);
 	}

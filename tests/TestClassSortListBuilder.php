@@ -56,7 +56,7 @@ class TestClassSortListBuilder
 		$this->_pListView->setSortByUserDefinedDirection(1);
 
 		$this->_pBuilder = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate','addCustomLabelFieldsEstateFrontend'])
+			->onlyMethods(['addFieldsAddressEstate','addCustomLabelFieldsEstateFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 

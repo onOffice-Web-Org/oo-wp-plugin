@@ -51,18 +51,18 @@ class TestClassLinkBuilderPage
 	public function prepare()
 	{
 		$pWPQuery = $this->getMockBuilder(WP_Query::class)
-			->setMethods(['get'])
+			->onlyMethods(['get'])
 			->getMock();
 		$pWPQuery->method('get')
 			->with('estate_id', 0)->will($this->onConsecutiveCalls('123', '0', '123'));
 
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
-			->setMethods(['getWPQuery'])
+			->onlyMethods(['getWPQuery'])
 			->getMock();
 		$pWPQueryWrapper->method('getWPQuery')->will($this->returnValue($pWPQuery));
 
 		$pWPPageWrapper = $this->getMockBuilder(WPPageWrapper::class)
-			->setMethods(['getPageByPath', 'getPageLinkByPost'])
+			->onlyMethods(['getPageByPath', 'getPageLinkByPost'])
 			->getMock();
 		$pPost = $this->getWPPost();
 		$pWPPageWrapper->method('getPageByPath')->with('hello')->will($this->returnValue($pPost));

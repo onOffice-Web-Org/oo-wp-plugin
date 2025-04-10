@@ -68,7 +68,7 @@ class TestClassInputFieldComplexSortableListRenderer
 	 */
 	public function testRenderEmptyValues() {
 		$pMockFieldnames = $this->getMockBuilder( Fieldnames::class )
-		                        ->setMethods( [
+		                        ->onlyMethods( [
 			                        'getFieldLabel',
 			                        'loadLanguage',
 			                        'getFieldInformation',
@@ -83,7 +83,7 @@ class TestClassInputFieldComplexSortableListRenderer
 
 		$pInputFieldComplexSortableListRenderer = $this->getMockBuilder( InputFieldComplexSortableListRenderer::class )
 		                                               ->setConstructorArgs( [ 'testRenderer', true ] )
-		                                               ->setMethods( [ 'getFieldnames' ] )
+		                                               ->onlyMethods( [ 'getFieldnames' ] )
 		                                               ->getMock();
 		$pInputFieldComplexSortableListRenderer->method( 'getFieldnames' )->willReturn( $pMockFieldnames );
 
@@ -100,7 +100,7 @@ class TestClassInputFieldComplexSortableListRenderer
 	 */
 	public function testRenderDeactivatedValues() {
 		$pMockFieldnames = $this->getMockBuilder( Fieldnames::class )
-		                        ->setMethods( [
+		                        ->onlyMethods( [
 			                        'getFieldLabel',
 			                        'loadLanguage',
 			                        'getFieldInformation',
@@ -120,7 +120,7 @@ class TestClassInputFieldComplexSortableListRenderer
 
 		$pInputFieldComplexSortableListRenderer = $this->getMockBuilder( InputFieldComplexSortableListRenderer::class )
 		                                               ->setConstructorArgs( [ 'testRenderer', true ] )
-		                                               ->setMethods( [ 'getFieldnames' ] )
+		                                               ->onlyMethods( [ 'getFieldnames' ] )
 		                                               ->getMock();
 		$pInputFieldComplexSortableListRenderer->method( 'getFieldnames' )->willReturn( $pMockFieldnames );
 
