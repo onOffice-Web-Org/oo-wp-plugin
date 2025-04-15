@@ -155,7 +155,13 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 
 add_action('admin_init', function () use ( $pDI ) {
 	if ( strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
-		$pDI->get(CacheHandler::class)->renew();
+		$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
+		$timestamp = wp_next_scheduled('oo_cache_renew');
+		if ($timestamp) {
+			wp_unschedule_event($timestamp, 'oo_cache_renew');
+		}
+
+		wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
 		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
 		update_option('onoffice-notice-cache-was-cleared', true);
 		wp_safe_redirect($location);
@@ -516,7 +522,7 @@ add_action('wp', function () {
 add_action('admin_notices', function () {
 	if (get_option('onoffice-notice-cache-was-cleared') == true) {
 		$class = 'notice notice-success is-dismissible';
-		$message = esc_html__('The cache was cleared successfully.', 'onoffice-for-wp-websites');
+		$message = esc_html__('Cache is being cleared in the background. This may take a few minutes.', 'onoffice-for-wp-websites');
 		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		update_option('onoffice-notice-cache-was-cleared', false);
 	}

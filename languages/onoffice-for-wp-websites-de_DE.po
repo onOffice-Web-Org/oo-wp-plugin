@@ -419,8 +419,8 @@ msgstr ""
 "Formularen aktivieren."
 
 #: plugin/Gui/AdminPageApiSettings.php:304
-msgid "Save changes and clear API cache"
-msgstr "Änderungen speichern und API-Cache leeren"
+msgid "Save changes"
+msgstr "Änderungen speichern"
 
 #: plugin/Gui/AdminPageApiSettings.php:316
 msgid "The cache was cleaned."
