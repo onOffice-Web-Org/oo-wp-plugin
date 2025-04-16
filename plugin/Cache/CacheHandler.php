@@ -107,7 +107,7 @@ class CacheHandler
 
 	public function renew()
 	{
-		$this->clean();
+		$this->clear();
 		$this->_pSDKWrapper->renewCache();
 	}
 }
