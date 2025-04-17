@@ -312,7 +312,7 @@ class ApiCall
 
 						//string compare
 						if(($fieldTypes[$fieldName] === "varchar" || $fieldTypes[$fieldName] === "varchar")
-							&& strtolower($item["elements"][$fieldName]) != strtolower($val)){
+							&& mb_strtolower($item["elements"][$fieldName]) != mb_strtolower($val)){
 							unset($filteredArray[$index]);
 							break;
 						}
@@ -351,7 +351,7 @@ class ApiCall
 						}
 
 						//string compare
-						if(strtolower($item["elements"][$fieldName]) == strtolower($val)){
+						if(mb_strtolower($item["elements"][$fieldName]) == mb_strtolower($val)){
 							unset($filteredArray[$index]);
 							break;
 						}
@@ -373,8 +373,8 @@ class ApiCall
 						$elVal = str_replace('.','',$elVal);
 					}
 
-					$lowerVal = array_map('strtolower', $val);
-					if(!in_array(strtolower($elVal ?? ''), $lowerVal)){
+					$lowerVal = array_map('mb_strtolower', $val);
+					if(!in_array(mb_strtolower($elVal ?? ''), $lowerVal)){
 						unset($filteredArray[$index]);
 						break;
 					}
