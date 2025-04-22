@@ -6,7 +6,7 @@ on:
 jobs:
   get-versions:
     name: Get versions
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     outputs:
       stableVersion: ${{ steps.get-stable-version.outputs.stableVersion }}
       developmentVersion: ${{ steps.get-development-version.outputs.developmentVersion }}
@@ -39,12 +39,15 @@ jobs:
   
   deploy:
     name: Deploy development version
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     environment: WordPress SVN
     needs: [get-versions, build]
     env:
       SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
     steps:
+      - name: install svn
+        run: sudo apt install subversion
+
       - name: Download release
         uses: actions/download-artifact@v4.1.7
         with:
