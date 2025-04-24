@@ -32,6 +32,9 @@ jobs:
     env:
       SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
     steps:
+      - name: install svn
+        run: sudo apt install subversion
+
       - name: Download release
         uses: actions/download-artifact@v4.1.7
         with:
