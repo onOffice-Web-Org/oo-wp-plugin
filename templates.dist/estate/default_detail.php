@@ -101,7 +101,18 @@ $dimensions = [
 			<div class="oo-detailsgallery" id="oo-galleryslide">
 				<?php
 				$estatePictures = $pEstates->getEstatePictures();
+				$sortedPictures = [];
 				foreach ($estatePictures as $id) {
+					$pictureValues = $pEstates->getEstatePictureValues($id);
+				
+					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE) {
+						array_unshift($sortedPictures, $id); // Set the title image at the beginning
+					} else {
+						$sortedPictures[] = $id; // Add other images to the array
+					}
+				}
+
+				foreach ($sortedPictures as $id) {
 					echo '<div class="oo-detailspicture">';
                     echo '<picture class="oo-picture">';
                     /**
