@@ -39,7 +39,8 @@ return (function(EstateList $pEstatesClone) {
             'lat' => (float)$currentEstateMap['breitengrad'],
             'lng' => (float)$currentEstateMap['laengengrad'],
         ];
-        $title = $currentEstateMap['objekttitel'];
+        $originalTitle = $currentEstateMap['objekttitel'];
+        $title = mb_strlen($originalTitle) > 60 ? preg_replace('/\s+\S*[\s\pZ\pC]*$/u', '', mb_substr($originalTitle, 0, 60)) . '...' : $originalTitle;
         $street = $currentEstateMap['strasse'];
         $number = $currentEstateMap['hausnummer'];
         $zip = $currentEstateMap['plz'];
