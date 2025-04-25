@@ -62,7 +62,7 @@
 }
 
 .oo-detailsmap #map, .oo-estate-map #map, .oo-detailsmap #gmap, .oo-estate-map #gmap  {
-    height: 300px !important;
+    height: 350px !important;
 }
 
 .oo-estate-map #map .leaflet-top, .oo-estate-map #map .leaflet-bottom {
@@ -70,11 +70,23 @@
 }
 
 .oo-detailsmap .oo-map, .oo-estate-map .oo-map, .oo-detailsmap .oo-gmap, .oo-estate-map .oo-gmap {
-    height: 300px !important;
+    height: 350px !important;
 }
 
 .oo-estate-map .oo-map .leaflet-top, .oo-estate-map .oo-map .leaflet-bottom {
     z-index: 888;
+}
+
+.oo-gmap .oo-infowindowtitle {
+    font-weight: 700;
+    font-size: 18px;
+    overflow: hidden;
+    color: #4a4a4a;
+    margin-bottom: 15px;
+}
+
+.oo-gmap .oo-infowindow .oo-infowindowaddress {
+    margin-bottom: 15px;
 }
 
 /* estate sort */
