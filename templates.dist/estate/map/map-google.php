@@ -64,7 +64,6 @@ return (function (EstateList $pEstatesClone) {
         $restrictedView = $pEstatesClone->getViewRestrict();
         if ( $reference && $restrictedView ) {
             $link = '';
-            echo 'reference restricted';
         } else {
             $link = $estateLink;
         }
@@ -109,6 +108,8 @@ return (function (EstateList $pEstatesClone) {
                 }
             });
 
+            const infowindow = new google.maps.InfoWindow();
+
             for (var i in estates) {
                 var estateConfig = estates[i];
                 var latLng = new google.maps.LatLng(estateConfig.position.lat, estateConfig.position.lng);
@@ -123,16 +124,24 @@ return (function (EstateList $pEstatesClone) {
                     });
 
                     if (!estateConfig.showInfoWindow) {
+                        const infoWindowHeader = document.createElement('p');
+                        infoWindowHeader.className = 'oo-infowindowtitle';
+                        infoWindowHeader.innerHTML = estateConfig.title;
+
                         const infoWindowContent = `
                             <div class="oo-infowindow">
-                                <p class="oo-infowindowtitle">${estateConfig.title}</p>
                                 ${estateConfig.address ? `<p class="oo-infowindowaddress">${estateConfig.address}</p>` : ''}
                                 ${estateConfig.link ? `<div class="oo-detailslink"><a class="oo-details-btn" href="${estateConfig.link}"><?php echo esc_html__('Show Details', 'onoffice-for-wp-websites'); ?></a></div>` : ''}
                             </div>
                         `;
-                        const infowindow = new google.maps.InfoWindow();
                         marker.addListener('click', () => {
-                            infowindow.setContent(infoWindowContent);
+                            infowindow.setOptions({
+                                ariaLabel: estateConfig.title,
+                                headerContent: infoWindowHeader,
+                                content: infoWindowContent,
+                                minWidth: 250,
+                                maxWidth: 350,
+                            });
                             infowindow.open(map, marker);
                         });
                     }
