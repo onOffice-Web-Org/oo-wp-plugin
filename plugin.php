@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 5.7
+Version: 6.0
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -155,7 +155,13 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 
 add_action('admin_init', function () use ( $pDI ) {
 	if ( strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
-		$pDI->get(CacheHandler::class)->clear();
+		$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
+		$timestamp = wp_next_scheduled('oo_cache_renew');
+		if ($timestamp) {
+			wp_unschedule_event($timestamp, 'oo_cache_renew');
+		}
+
+		wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
 		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
 		update_option('onoffice-notice-cache-was-cleared', true);
 		wp_safe_redirect($location);
@@ -193,8 +199,8 @@ add_action('wp', [FormPostHandler::class, 'initialCheck']);
 
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_ajax']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
-add_action('oo_cache_cleanup', function() use ($pDI) {
-	$pDI->get(CacheHandler::class)->clean();
+add_action('oo_cache_renew', function() use ($pDI) {
+	$pDI->get(CacheHandler::class)->renew();
 });
 add_action('admin_notices', [$pAdminViewController, 'generalAdminNoticeSEO']);
 add_action('init', function() use ($pAdminViewController) {
@@ -304,7 +310,7 @@ add_filter('wpml_ls_language_url', function($url, $data) use ($pDI) {
 		$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
 		return $pEstateIdGuard->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
 	}
-	
+
 	if (!empty($addressId)) {
 		/** @var AddressIdRequestGuard $pAddressIdGuard */
 		$pAddressIdGuard = $pDI->get(AddressIdRequestGuard::class);
@@ -344,28 +350,20 @@ function custom_cron_schedules($schedules) {
 
 add_filter('cron_schedules', 'custom_cron_schedules');
 
-if (!wp_next_scheduled('oo_cache_cleanup')) {
+if (!wp_next_scheduled('oo_cache_renew')) {
 	$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
-	wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_cleanup');
+	wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
 }
 
 add_action('update_option_onoffice-settings-duration-cache', function($old_value, $value) {
 	if ($old_value !== $value) {
-		$timestamp = wp_next_scheduled('oo_cache_cleanup');
+		$timestamp = wp_next_scheduled('oo_cache_renew');
 		if ($timestamp) {
-			wp_unschedule_event($timestamp, 'oo_cache_cleanup');
+			wp_unschedule_event($timestamp, 'oo_cache_renew');
 		}
 
-		wp_schedule_event(time(), $value, 'oo_cache_cleanup');
+		wp_schedule_event(time(), $value, 'oo_cache_renew');
 	}
-}, 10, 2);
-
-// Gets triggered before we know if it has to be updated at all, so that no value has to be changed
-add_action('pre_update_option', function($value, $option) use ($pDI) {
-	if (__String::getNew($option)->startsWith('onoffice')) {
-		$pDI->get(CacheHandler::class)->clear();
-	}
-	return $value;
 }, 10, 2);
 
 add_filter('query_vars', function(array $query_vars): array {
@@ -516,7 +514,7 @@ add_action('wp', function () {
 add_action('admin_notices', function () {
 	if (get_option('onoffice-notice-cache-was-cleared') == true) {
 		$class = 'notice notice-success is-dismissible';
-		$message = esc_html__('The cache was cleared successfully.', 'onoffice-for-wp-websites');
+		$message = esc_html__('Cache is being cleared in the background. This may take a few minutes.', 'onoffice-for-wp-websites');
 		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		update_option('onoffice-notice-cache-was-cleared', false);
 	}
@@ -533,5 +531,6 @@ function filter_script_loader_tag($tag, $handle) {
 	}
 	return $tag;
 }
+
 
 return $pDI;

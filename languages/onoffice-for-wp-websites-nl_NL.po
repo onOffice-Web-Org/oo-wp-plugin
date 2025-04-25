@@ -421,7 +421,7 @@ msgstr ""
 "gebruik."
 
 #: plugin/Gui/AdminPageApiSettings.php:304
-msgid "Save changes and clear API cache"
+msgid "Save changes"
 msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:316

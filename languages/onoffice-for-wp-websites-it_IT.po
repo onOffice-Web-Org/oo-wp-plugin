@@ -418,7 +418,7 @@ msgstr ""
 "libero di abilitarlo nelle impostazioni del modulo per un uso successivo."
 
 #: plugin/Gui/AdminPageApiSettings.php:304
-msgid "Save changes and clear API cache"
+msgid "Save changes"
 msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:316

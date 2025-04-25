@@ -421,7 +421,7 @@ msgstr ""
 "Puede habilitarlo en la configuración del formulario para su uso posterior."
 
 #: plugin/Gui/AdminPageApiSettings.php:304
-msgid "Save changes and clear API cache"
+msgid "Save changes"
 msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:316

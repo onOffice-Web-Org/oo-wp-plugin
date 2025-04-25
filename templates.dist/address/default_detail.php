@@ -36,7 +36,7 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
         foreach ($addressName as $namePart) {
             $fullName .= !empty($escapedValues[$namePart]) ? $escapedValues[$namePart]. ' ' : '';
         }
-        echo substr_replace($fullName, '', -1);;
+        echo substr_replace($fullName, '', -1);
         ?>
     </h2>
     <?php
