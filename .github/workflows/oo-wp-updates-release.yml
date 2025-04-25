@@ -1,0 +1,46 @@
+name: onOffice WP-Updates Release
+
+on:
+    workflow_dispatch:
+
+jobs:
+    get-version:
+        name: Get current version
+        runs-on: ubuntu-latest
+        outputs:
+            currentVersion: ${{ steps.get-version.outputs.version }}
+        steps:
+            - name: Get version
+              id: get-version
+                # Get Version from plugin-php
+              run: |
+                  VERSION=$(grep -i "Version:" oo-wp-plugin/plugin.php | head -n 1 | sed 's/.*Version:[[:space:]]*//')
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+    build:
+        name: Build release
+        needs: get-version
+        uses: ./.github/workflows/build-release.yml
+        with:
+            expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
+
+    deploy:
+        name: Deploy to Update Server
+        runs-on: ubuntu-latest
+        needs: [get-version, build]
+
+        steps:
+            - name: Deployment final release json Updater File
+              id: create-json
+              uses: jsdaniell/create-json@v1.2.2
+              with:
+                  name: "updater.json"
+                  json: '{"version":"${{needs.get-version.outputs.currentVersion}}", "download_url": "https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/release.zip"}'
+
+            - name: Set SSH Key for Raidboxes Server
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: ${{ secrets.SSH_KEY_RAIDBOXES }}
+
+            - name: Upload Files to Release Server
+              run: rsync -e 'ssh -o StrictHostKeyChecking=no' /tmp/release.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin
