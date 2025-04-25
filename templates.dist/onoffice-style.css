@@ -77,7 +77,7 @@
     z-index: 888;
 }
 
-.oo-gmap .oo-infowindowtitle {
+.oo-gmap .oo-infowindowtitle, .oo-map .oo-infowindowtitle {
     font-weight: 700;
     font-size: 18px;
     overflow: hidden;
@@ -85,7 +85,7 @@
     margin-bottom: 15px;
 }
 
-.oo-gmap .oo-infowindow .oo-infowindowaddress {
+.oo-gmap .oo-infowindow .oo-infowindowaddress, .oo-map .oo-infowindow .oo-infowindowaddress {
     margin-bottom: 15px;
 }
 
