@@ -111,32 +111,32 @@ return (function (EstateList $pEstatesClone) {
             const infowindow = new google.maps.InfoWindow();
 
             for (var i in estates) {
-                var estateConfig = estates[i];
-                var latLng = new google.maps.LatLng(estateConfig.position.lat, estateConfig.position.lng);
+                var estate = estates[i];
+                var latLng = new google.maps.LatLng(estate.position.lat, estate.position.lng);
                 bounds.extend(latLng);
-                if (estateConfig.visible) {
+                if (estate.visible) {
                     // no marker but extended map bounds
                     const marker = new google.maps.Marker({
                         position: latLng,
                         icon: null,
                         map: map,
-                        title: estateConfig.title
+                        title: estate.title
                     });
 
-                    if (!estateConfig.showInfoWindow) {
+                    if (!estate.showInfoWindow) {
                         const infoWindowHeader = document.createElement('p');
                         infoWindowHeader.className = 'oo-infowindowtitle';
-                        infoWindowHeader.innerHTML = estateConfig.title;
+                        infoWindowHeader.innerHTML = estate.title;
 
                         const infoWindowContent = `
                             <div class="oo-infowindow">
-                                ${estateConfig.address ? `<p class="oo-infowindowaddress">${estateConfig.address}</p>` : ''}
-                                ${estateConfig.link ? `<div class="oo-detailslink"><a class="oo-details-btn" href="${estateConfig.link}"><?php echo esc_html__('Show Details', 'onoffice-for-wp-websites'); ?></a></div>` : ''}
+                                ${estate.address ? `<p class="oo-infowindowaddress">${estate.address}</p>` : ''}
+                                ${estate.link ? `<div class="oo-detailslink"><a class="oo-details-btn" href="${estate.link}"><?php echo esc_html__('Show Details', 'onoffice-for-wp-websites'); ?></a></div>` : ''}
                             </div>
                         `;
                         marker.addListener('click', () => {
                             infowindow.setOptions({
-                                ariaLabel: estateConfig.title,
+                                ariaLabel: estate.title,
                                 headerContent: infoWindowHeader,
                                 content: infoWindowContent,
                                 minWidth: 250,
