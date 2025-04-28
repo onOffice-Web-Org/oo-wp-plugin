@@ -24,19 +24,19 @@ if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
 
 // Give access to tests_add_filter() function.
 require_once $_tests_dir . '/includes/functions.php';
-// Start up the WP testing environment.
-require $_tests_dir . '/includes/bootstrap.php';
 
 /**
  * Manually load the plugin being tested.
  */
 function _manually_load_plugin() {
-	require_once ABSPATH . 'wp-admin/includes/plugin.php';
-
 	$pDI = require dirname( dirname( __FILE__ ) ) . '/plugin.php';
 	$pDI->set(DatabaseChangesInterface::class, autowire( DatabaseChangesDummy::class));
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+
+// Start up the WP testing environment.
+require $_tests_dir . '/includes/bootstrap.php';
+
 
 // The only deprecation warnings we need to ignore/handle are in PHP 7.4 so far
 if (PHP_VERSION_ID >= 70400) {
