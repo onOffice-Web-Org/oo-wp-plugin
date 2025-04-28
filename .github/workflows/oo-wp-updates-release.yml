@@ -33,12 +33,27 @@ jobs:
         needs: [get-version, build]
 
         steps:
+            - name: Download release artifact
+              uses: actions/download-artifact@v3
+              with:
+                name: release
+                path: /tmp
+
             - name: Deployment final release json Updater File
               id: create-json
               uses: jsdaniell/create-json@v1.2.2
               with:
                   name: "updater.json"
                   json: '{"version":"${{needs.get-version.outputs.currentVersion}}", "download_url": "https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/release.zip"}'
+
+            - name: Upload release build
+              uses: actions/upload-artifact@v3
+              with:
+                  name: oo-wp-plugin Release Bundle
+                  path: |
+                      /tmp/release.zip
+                      updater.json
+                  retention-days: 7
 
             - name: Set SSH Key for Raidboxes Server
               uses: webfactory/ssh-agent@v0.9.0
