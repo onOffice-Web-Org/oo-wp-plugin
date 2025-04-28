@@ -86,6 +86,9 @@ body #onoffice-ajax span.viewusage .italic {
 .sortableFieldsListForForm .menu-item-bar > .menu-item-handle,
 #sortableFieldsList .menu-item-bar > .menu-item-handle {
 	max-width: 430px;
+	display: flex;
+	align-items: center;
+	gap: 4px;
 }
 
 .sortableFieldsListForForm .menu-item-settings,

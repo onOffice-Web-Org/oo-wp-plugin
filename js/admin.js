@@ -126,6 +126,7 @@ jQuery(document).ready(function($){
 			this.checkSortableFieldsList();
 			this.bindEvents();
 			this.draggablePages();
+			this.multiSelectItems();
 		},
 
 		checkTemplate: function() {
@@ -326,7 +327,36 @@ jQuery(document).ready(function($){
 					$('#multi-page-container .list-fields-for-each-page').css("cursor", "default");
 				}
 			}
-		}
+		},
+
+		multiSelectItems: function() {
+			$('.list-fields-for-each-page').each(function() {
+			  $(this).find('.filter-fields-list').each(function() {
+				$(this).find('li').each(function() {
+				  var isDragging = false;
+		  
+				  // Track if dragging has started
+				  $(this).on('mousedown', function() {
+					isDragging = false;
+				  });
+		  
+				  // Mark dragging as true on mousemove (dragging detected)
+				  $(this).on('mousemove', function() {
+					isDragging = true;
+				  });
+		  
+				  // Handle the click event
+				  $(this).click(function(event) {
+					if (!isDragging) {
+					  // Toggle the checkbox only if it's not a drag
+					  $(this).find('.onoffice-input').prop('checked', !$(this).find('.onoffice-input').prop('checked'));
+					}
+				  });
+				});
+			  });
+			});
+		  }
+		  
 	};
 
 	if ($('#multi-page-container').length) {
