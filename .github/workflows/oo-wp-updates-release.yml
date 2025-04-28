@@ -16,9 +16,7 @@ jobs:
             - name: Get version
               id: get-version
                 # Get Version from plugin-php
-              run: |
-                  VERSION=$(grep -i "Version:" oo-wp-plugin/plugin.php | head -n 1 | sed 's/.*Version:[[:space:]]*//')
-                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+              run: echo "version=$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')" >> $GITHUB_OUTPUT
 
     build:
         name: Build release
