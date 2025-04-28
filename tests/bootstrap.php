@@ -26,12 +26,13 @@ if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
 require_once $_tests_dir . '/includes/functions.php';
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';
-require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 /**
  * Manually load the plugin being tested.
  */
 function _manually_load_plugin() {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
 	$pDI = require dirname( dirname( __FILE__ ) ) . '/plugin.php';
 	$pDI->set(DatabaseChangesInterface::class, autowire( DatabaseChangesDummy::class));
 }
