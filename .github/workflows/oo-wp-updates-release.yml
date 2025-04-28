@@ -60,4 +60,4 @@ jobs:
                   ssh-private-key: ${{ secrets.SSH_KEY_RAIDBOXES }}
 
             - name: Upload Files to Release Server
-              run: rsync -e 'ssh -o StrictHostKeyChecking=no' release.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin-test-folder
+              run: rsync -e 'ssh -o StrictHostKeyChecking=no' release.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin
