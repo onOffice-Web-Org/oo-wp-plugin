@@ -37,7 +37,6 @@ jobs:
               uses: actions/download-artifact@v4.1.7
               with:
                 name: release
-                path: /tmp
 
             - name: Deployment final release json Updater File
               id: create-json
@@ -51,7 +50,7 @@ jobs:
               with:
                   name: oo-wp-plugin Release Bundle
                   path: |
-                      /tmp/release.zip
+                      release.zip
                       updater.json
                   retention-days: 7
 
