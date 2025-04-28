@@ -47,7 +47,7 @@ jobs:
                   json: '{"version":"${{needs.get-version.outputs.currentVersion}}", "download_url": "https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/release.zip"}'
 
             - name: Upload release build
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: oo-wp-plugin Release Bundle
                   path: |
