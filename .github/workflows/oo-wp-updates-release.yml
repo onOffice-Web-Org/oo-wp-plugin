@@ -1,49 +1,59 @@
 name: onOffice WP-Updates Release
 
 on:
-    push:
-        tags:
-            - 'v*'
-    workflow_dispatch:
+  push:
+    tags:
+    - 'v*'
 
 jobs:
-    get-version:
-        name: Get current version
-        runs-on: ubuntu-latest
-        outputs:
-            currentVersion: ${{ steps.get-version.outputs.version }}
-        steps:
-            - name: Get version
-              id: get-version
-                # Get Version from plugin-php
-              run: |
-                  VERSION=$(grep -i "Version:" oo-wp-plugin/plugin.php | head -n 1 | sed 's/.*Version:[[:space:]]*//')
-                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+  get-version:
+    name: Get current version
+    runs-on: ubuntu-latest
+    outputs:
+      currentVersion: ${{ steps.get-version.outputs.version }}
+    steps:
+      - name: Get version
+        id: get-version
+        # Remove the leading 'v' from the tag.
+        run: echo "version=$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')" >> $GITHUB_OUTPUT
 
-    build:
-        name: Build release
-        needs: get-version
-        uses: ./.github/workflows/build-release.yml
+  build:
+    name: Build release
+    needs: get-version
+    uses: ./.github/workflows/build-release.yml
+    with:
+      expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
+
+  deploy:
+    name: Deploy to Update Server
+    runs-on: ubuntu-latest
+    needs: [get-version, build]
+    steps:
+      - name: Download release artifact
+        uses: actions/download-artifact@v4.1.7
         with:
-            expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
+          name: release
 
-    deploy:
-        name: Deploy to Update Server
-        runs-on: ubuntu-latest
-        needs: [get-version, build]
+      - name: Deployment final release json Updater File
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "updater.json"
+          json: '{"version":"${{needs.get-version.outputs.currentVersion}}", "download_url": "https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/release.zip"}'
 
-        steps:
-            - name: Deployment final release json Updater File
-              id: create-json
-              uses: jsdaniell/create-json@v1.2.2
-              with:
-                  name: "updater.json"
-                  json: '{"version":"${{needs.get-version.outputs.currentVersion}}", "download_url": "https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/release.zip"}'
+      - name: Upload release build
+        uses: actions/upload-artifact@v4
+        with:
+          name: oo-wp-plugin Release Bundle
+          path: |
+            release.zip
+            updater.json
+          retention-days: 7
 
-            - name: Set SSH Key for Raidboxes Server
-              uses: webfactory/ssh-agent@v0.9.0
-              with:
-                  ssh-private-key: ${{ secrets.SSH_KEY_RAIDBOXES }}
+      - name: Set SSH Key for Raidboxes Server
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY_RAIDBOXES }}
 
-            - name: Upload Files to Release Server
-              run: rsync -e 'ssh -o StrictHostKeyChecking=no' /tmp/release.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin
+      - name: Upload Files to Release Server
+        run: rsync -e 'ssh -o StrictHostKeyChecking=no' release.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin
