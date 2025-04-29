@@ -1,9 +1,10 @@
 name: Stable Release
 
 on:
-  push:
-    tags:
-    - 'v*'
+  # Deactivate release on wordpress
+  #push:
+  #  tags:
+  #  - 'v*'
 
 jobs:
   get-version:
