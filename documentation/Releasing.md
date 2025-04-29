@@ -37,6 +37,7 @@ Change version in `wp_enqueue_style('onoffice-admin-css', plugins_url('/css/admi
       - In the comment of the `readme.txt` as the `Stable tag`.
       - As the newest [changelog](#update-the-changelog) item in `readme.txt`.
       - In the comment of the `plugin.php` as the `Version`.
+      - Constant ONOFFICE_PLUGIN_VERSION
 3. Commit the new version with e.g. message "Update to version v3.2".
 4. To trigger the release, you create a new tag. This is easiest to do by creating a release on GitHub:
     1. Go to https://github.com/onOfficeGmbH/oo-wp-plugin/releases.
