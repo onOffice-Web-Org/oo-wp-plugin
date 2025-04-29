@@ -4,7 +4,7 @@ on:
   push:
     tags:
     - 'v*'
-  refactoringworkflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   get-version:
