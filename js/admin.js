@@ -330,31 +330,14 @@ jQuery(document).ready(function($){
 		},
 
 		multiSelectItems: function() {
-			$('.list-fields-for-each-page').each(function() {
-			  $(this).find('.filter-fields-list').each(function() {
-				$(this).find('li').each(function() {
-				  var isDragging = false;
-		  
-				  // Track if dragging has started
-				  $(this).on('mousedown', function() {
-					isDragging = false;
-				  });
-		  
-				  // Mark dragging as true on mousemove (dragging detected)
-				  $(this).on('mousemove', function() {
-					isDragging = true;
-				  });
-		  
-				  // Handle the click event
-				  $(this).click(function(event) {
-					if (!isDragging) {
-					  // Toggle the checkbox only if it's not a drag
-					  $(this).find('.onoffice-input').prop('checked', !$(this).find('.onoffice-input').prop('checked'));
-					}
-				  });
-				});
-			  });
-			});
+			$('.sortable-item').find('input[type="checkbox"]').on('change', function() {
+				if ($(this).prop('checked')) {
+					console.log("checked wow");
+					$(this).closest('.sortable-item').addClass('selected');
+				} else {
+					$(this).closest('.sortable-item').removeClass('selected');
+				}
+			})
 		  }
 		  
 	};

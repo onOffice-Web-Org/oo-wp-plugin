@@ -180,7 +180,7 @@ class InputFieldComplexSortableDetailListRenderer
 		echo '<li class="sortable-item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
 			.'<div class="menu-item-bar">'
 				.'<div class="menu-item-handle ui-sortable-handle">'
-					.'<input type="checkbox" class="onoffice-input">'
+					.'<input type="checkbox">'
 					.'<span class="item-title" '.$deactivatedStyle.'>'
 						.esc_html($label)
 						.esc_html($deactivatedInOnOffice)
