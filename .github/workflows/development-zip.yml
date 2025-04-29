@@ -11,7 +11,7 @@ on:
 
 jobs:
   get-versions:
-    if: github.event.review.state == 'approved' || github.event.label.name == 'deploy test'
+    if: github.event.review.state == 'approved' || github.event.label.name == 'deploy test' || github.ref_name == 'master'
     name: Get versions
     runs-on: ubuntu-latest
     outputs:
