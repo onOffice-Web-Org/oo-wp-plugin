@@ -177,7 +177,7 @@ class InputFieldComplexSortableDetailListRenderer
 			$type = InputModelBase::HTML_TYPE_TEXT;
 		}
 
-		echo '<li class="sortable-item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
+		echo '<li class="sortable-item item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
 			.'<div class="menu-item-bar">'
 				.'<div class="menu-item-handle ui-sortable-handle">'
 					.'<input type="checkbox">'
