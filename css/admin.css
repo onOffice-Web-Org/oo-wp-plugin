@@ -994,6 +994,23 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	cursor: move;
 }
 
+.sortable-item.selected {
+	pointer-events: none;
+}
+
+.sortable-item.selected input[type="checkbox"] {
+	pointer-events: auto;
+	position: relative;
+	z-index: 2;
+}
+
+#selection-group {
+	position: absolute;
+	border: 2px dashed blue;
+	background-color: rgba(0,0,255, 0.1);
+	pointer-events: auto;
+}
+
 .list-fields-for-each-page .ui-sortable-helper {
 	background-color: #e0e0e0;
 	border: 1px solid #ccc;

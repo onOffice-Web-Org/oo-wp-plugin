@@ -330,16 +330,79 @@ jQuery(document).ready(function($){
 		},
 
 		multiSelectItems: function() {
-			$('.sortable-item').find('input[type="checkbox"]').on('change', function() {
-				if ($(this).prop('checked')) {
-					console.log("checked wow");
-					$(this).closest('.sortable-item').addClass('selected');
+			const $container = $('.list-fields-for-each-page');
+
+			$container.on('change', '.sortable-item input[type="checkbox"]', (e) => {
+				const $checkbox = $(e.target);
+				const $item = $checkbox.closest('.sortable-item');
+
+				if ($checkbox.prop('checked')) {
+					$item.addClass('selected');
 				} else {
-					$(this).closest('.sortable-item').removeClass('selected');
+					$item.removeClass('selected');
 				}
+				this.updateSelectionGroup();
 			})
+		  },
+
+		  updateSelectionGroup: function() {
+			const $selected = $('.sortable-item.selected');
+			$('#selection-group').remove();
+
+			if ($selected.length === 0) return;
+			console.log("testing");
+
+			let top = Infinity, left = Infinity, right = 0, bottom = 0;
+
+			$selected.each(function() {
+				const offset = $(this).offset();
+				const width = $(this).outerWidth();
+				const height = $(this).outerHeight();
+
+				top = Math.min(top, offset.top);
+				left = Math.min(left, offset.left);
+				right = Math.max(right, offset.left + width);
+				bottom = Math.max(bottom, offset.top + height);
+			});
+
+			const $group = $('<div id="selection-group"></div>');
+			$group.css({
+				top: top,
+				left: left,
+				width: right - left,
+				height: bottom - top,
+			});
+
+			$('body').append($group);
+
+			$group.draggable({
+				drag: function (event, ui) {
+					const dx = ui.position.left - $(this).data('startLeft');
+					const dy = ui.position.top - $(this).data('startTop');
+		
+					$('.sortable-item.selected').each(function () {
+						const $el = $(this);
+						const startPos = $el.data('startOffset');
+						$el.offset({
+							top: startPos.top + dy,
+							left: startPos.left + dx
+						});
+					});
+				},
+				start: function (event, ui) {
+					const $group = $(this);
+					$group.data('startLeft', ui.position.left);
+					$group.data('startTop', ui.position.top);
+		
+					$('.sortable-item.selected').each(function () {
+						$(this).data('startOffset', $(this).offset());
+					});
+				},
+				stop: function () {
+					// Optional: update positions, backend, etc.
+				}
+			});
 		  }
-		  
 	};
 
 	if ($('#multi-page-container').length) {
