@@ -377,6 +377,9 @@ jQuery(document).ready(function($){
 					axis: 'y',
 					items: '.menu-item-bar',
 					connectWith: ".filter-fields-list",
+					stop: function(event, ui) {
+						FormMultiPageManager.reorderPages();
+					}
 				});
 
 			}
