@@ -53,7 +53,7 @@ jobs:
         run: composer install
 
       - name: Build release
-        run: PREFIX=/tmp/release/ make release
+        run: PREFIX=/tmp/release/onoffice-for-wp-websites make release
 
       - name: Override version
         if: ${{ inputs.overrideVersion != '' }}
@@ -62,7 +62,7 @@ jobs:
       - name: Zip release
         run: |
           cd /tmp/release/
-          zip -r ../release.zip .
+          zip -r ../release.zip onoffice-for-wp-websites
 
       - name: Upload release as artifact
         uses: actions/upload-artifact@v4
