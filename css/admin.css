@@ -1006,6 +1006,11 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	pointer-events: auto;
 }
 
+#selection-group .menu-item-bar {
+	pointer-events: none;
+}
+  
+
 .list-fields-for-each-page .ui-sortable-helper {
 	background-color: #e0e0e0;
 	border: 1px solid #ccc;

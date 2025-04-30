@@ -345,49 +345,63 @@ jQuery(document).ready(function($){
 			})
 		  },
 
-		  updateSelectionGroup: function() {
+		  updateSelectionGroup: function () {
 			const $container = $('.list-fields-for-each-page');
 			const $selected = $('.selected');
 			let $group = $('#selection-group');
-
+		
+			// Create group if needed
 			if ($group.length === 0 && $selected.length > 0) {
 				const $firstItem = $selected.first();
-				$group = $('<li id="selection-group" class="sortable-item"></li>');
+				$group = $(`
+					<li id="selection-group" class="sortable-item menu-item-bar">
+						<div class="group-wrapper"></div>
+					</li>
+				`);
 				$firstItem.before($group);
-			}
+				$('.filter-fields-list').sortable('destroy');
+				$('.filter-fields-list').sortable({
+					axis: 'y',
+					items: '.menu-item-bar',
+				});
 
-			// If no selected at all, destroy group and move items out
+			}
+		
+			const $groupWrapper = $group.find('.group-wrapper');
+		
+			// Ungroup if nothing is selected
 			if ($selected.length === 0 && $group.length > 0) {
-				$group.children().each(function () {
-					const $divItem = $(this);
-					const $liItem = $('<li class="sortable-item item"></li>').append($divItem.children());
-					$group.before($liItem);
+				$groupWrapper.children().each(function () {
+					const $item = $(this);
+					$item.removeClass('grouped');
+					$group.before($item);
 				});
 				$group.remove();
 				return;
 			}
-
-			
-
+		
 			// Move unselected out of group
-			$group.children().each(function () {
-				const $divItem = $(this);
-				if (!$divItem.hasClass('selected')) {
-					const $liItem = $('<li class="sortable-item item"></li>').append($divItem.children());
-					$group.before($liItem);
+			$groupWrapper.children().each(function () {
+				const $item = $(this);
+				if (!$item.hasClass('selected')) {
+					$item.removeClass('grouped');
+					$group.before($item);
 				}
 			});
-
+		
 			// Move selected into group
 			$('.selected').each(function () {
 				const $item = $(this);
 				if ($item.closest('#selection-group').length === 0) {
-					const $div = $('<div class="selected item"></div>').append($item.children());
-					$item.remove(); // Remove <li>
-					$group.append($div); // Add as <div>
+					$item.addClass('grouped');
+					$groupWrapper.append($item);
 				}
 			});
-		  }
+		}
+		
+		
+		
+		
 	};
 
 	if ($('#multi-page-container').length) {
