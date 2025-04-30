@@ -332,16 +332,29 @@ jQuery(document).ready(function($){
 		multiSelectItems: function() {
 			const $container = $('.list-fields-for-each-page');
 
-			$container.on('change', 'input[type="checkbox"]', (e) => {
-				const $checkbox = $(e.target);
+			$container.on('change', 'input[type="checkbox"]', (event) => {
+				const $checkbox = $(event.target);
 				const $item = $checkbox.closest('.item');
 
 				if ($checkbox.prop('checked')) {
 					$item.addClass('selected');
 				} else {
 					$item.removeClass('selected');
-				}
+				};
+
 				this.updateSelectionGroup();
+
+
+				$(document).on('click', (event) => {
+					if (!$(event.target).closest('.fieldsSortable').length) {
+						console.log("clicked somewhere");
+						$item.removeClass('selected');
+						$checkbox.prop('checked', false);
+
+						this.updateSelectionGroup();
+
+					}
+				});
 			})
 		  },
 
@@ -363,6 +376,7 @@ jQuery(document).ready(function($){
 				$('.filter-fields-list').sortable({
 					axis: 'y',
 					items: '.menu-item-bar',
+					connectWith: ".filter-fields-list",
 				});
 
 			}
