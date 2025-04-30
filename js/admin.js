@@ -331,32 +331,32 @@ jQuery(document).ready(function($){
 
 		multiSelectItems: function() {
 			const $container = $('.list-fields-for-each-page');
-
+		  
+			// Handle checkbox selection
 			$container.on('change', 'input[type="checkbox"]', (event) => {
-				const $checkbox = $(event.target);
-				const $item = $checkbox.closest('.item');
-
-				if ($checkbox.prop('checked')) {
-					$item.addClass('selected');
-				} else {
-					$item.removeClass('selected');
-				};
-
+			  const $checkbox = $(event.target);
+			  const $item = $checkbox.closest('.item');
+		  
+			  if ($checkbox.prop('checked')) {
+				$item.addClass('selected');
+			  } else {
+				$item.removeClass('selected');
+			  }
+		  
+			  this.updateSelectionGroup();
+			});
+		  
+			$(document).off('click.multiSelect').on('click.multiSelect', (event) => {
+			  if (!$(event.target).closest('.fieldsSortable').length) {
+				const $container = $('.list-fields-for-each-page');
+				$container.find('.selected').removeClass('selected');
+				$container.find('input[type="checkbox"]').prop('checked', false);
+		  
 				this.updateSelectionGroup();
-
-
-				$(document).on('click', (event) => {
-					if (!$(event.target).closest('.fieldsSortable').length) {
-						console.log("clicked somewhere");
-						$item.removeClass('selected');
-						$checkbox.prop('checked', false);
-
-						this.updateSelectionGroup();
-
-					}
-				});
-			})
+			  }
+			});
 		  },
+		  
 
 		  updateSelectionGroup: function () {
 			const $container = $('.list-fields-for-each-page');
