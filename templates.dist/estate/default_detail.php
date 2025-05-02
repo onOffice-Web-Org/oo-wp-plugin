@@ -28,7 +28,7 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
  *
  */
 
-$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
+$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress", "dreizeiler");
 $supportTypeLinkFields = array('Homepage', 'facebook', 'instagram', 'linkedin', 'pinterest', 'tiktok', 'twitter', 'xing', 'youtube', 'bewertungslinkWebseite');
 /** @var EstateDetail $pEstates */
 
@@ -161,6 +161,13 @@ $dimensions = [
 						. '</div>' . "\n";
 				} ?>
 			</div>
+
+			<?php if ($currentEstate["dreizeiler"] !== "") { ?>
+				<div class="oo-detailsfreetext">
+					<h2><?php echo esc_html($pEstates->getFieldLabel('dreizeiler')); ?></h2>
+					<?php echo nl2br($currentEstate["dreizeiler"]); ?>
+				</div>
+			<?php } ?>
 
 			<?php if ($currentEstate["objektbeschreibung"] !== "") { ?>
 				<div class="oo-detailsfreetext">
