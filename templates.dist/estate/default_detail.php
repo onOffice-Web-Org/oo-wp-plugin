@@ -168,14 +168,12 @@ $dimensions = [
 					<?php echo nl2br($currentEstate["dreizeiler"]); ?>
 				</div>
 			<?php } ?>
-
 			<?php if ($currentEstate["objektbeschreibung"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('objektbeschreibung')); ?></h2>
 					<?php echo nl2br($currentEstate["objektbeschreibung"]); ?>
 				</div>
 			<?php } ?>
-
 			<?php if ($currentEstate["lage"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('lage')); ?></h2>
