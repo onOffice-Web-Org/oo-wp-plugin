@@ -486,8 +486,47 @@ jQuery(document).ready(function($){
 				
 		
 				stop: function(event, ui) {
+					const $droppedGroup = ui.item;
+				
+					// Only proceed if it's a selection group
+					if ($droppedGroup.hasClass('selection-group')) {
+						const $nestedItems = $droppedGroup.find('.nested-items > .item');
+				
+						$($nestedItems.get().reverse()).each(function () {
+							const $item = $(this);
+							const groupId = $droppedGroup.attr('id');
+							const groupActionField = $droppedGroup.attr('action-field-name');
+				
+							// Transfer attributes and classes back to item
+							$item.attr('id', groupId); // Optionally create unique ID here instead
+							$item.attr('action-field-name', groupActionField);
+				
+							const wrapperClasses = $droppedGroup.attr('class') || '';
+							const transferableClasses = wrapperClasses
+								.split(/\s+/)
+								.filter(cls => /^page-\d+$/.test(cls))
+								.join(' ');
+				
+							$item.addClass(transferableClasses);
+							$item.addClass('sortable-item');
+							$item.addClass('selected'); // Maintain selection
+							$item.find('input[type="checkbox"]').prop('checked', true);
+				
+							// Insert item after the group
+							$droppedGroup.after($item);
+						});
+				
+						// Remove group wrapper
+						$droppedGroup.remove();
+					}
+				
+					// You can call reorder logic here if necessary
 					FormMultiPageManager.reorderPages();
+				
+					// Re-init sortable since DOM structure changed
+					FormMultiPageManager.updateSelectionGroup();
 				}
+				
 			});
 		}
 		
