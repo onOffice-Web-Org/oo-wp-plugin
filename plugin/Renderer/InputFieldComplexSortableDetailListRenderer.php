@@ -74,6 +74,11 @@ class InputFieldComplexSortableDetailListRenderer
 	 *
 	 */
 
+	 private function isOwnerLeadGeneratorForm(): bool
+	{
+    	return strpos($this->_template, 'ownerleadgeneratorform.php') !== false;
+	}
+
 	public function render()
 	{
 		$this->readInactiveFields();
@@ -81,7 +86,7 @@ class InputFieldComplexSortableDetailListRenderer
 		$allFields = $values[0] ?? [];
 
 		if ($this->_isMultiPage) {
-			$isOwnerLeadGeneratorForm = strpos($this->_template, 'ownerleadgeneratorform.php') !== false;
+			$isOwnerLeadGeneratorForm = $this->isOwnerLeadGeneratorForm();
 			echo '<div id="single-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'none' : 'block') . ';">';
 			$this->renderSinglePage($allFields);
 			echo '</div>';
@@ -180,7 +185,7 @@ class InputFieldComplexSortableDetailListRenderer
 		echo '<li class="sortable-item item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
 			.'<div class="menu-item-bar">'
 				.'<div class="menu-item-handle ui-sortable-handle">'
-					.'<input type="checkbox">'
+					.($this->isOwnerLeadGeneratorForm() ? '<input type="checkbox">' : '')
 					.'<span class="item-title" '.$deactivatedStyle.'>'
 						.esc_html($label)
 						.esc_html($deactivatedInOnOffice)
