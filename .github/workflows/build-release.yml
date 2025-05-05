@@ -59,17 +59,10 @@ jobs:
         if: ${{ inputs.overrideVersion != '' }}
         run: 'sed -i "s/Version: ${{ inputs.expectedVersion }}/Version: ${{ inputs.overrideVersion }}/" /tmp/release/plugin.php'
 
-      - name: Debug build output
-        run: |
-            echo "Inhalt von /tmp/release:"
-            ls -l /tmp/release
-            echo "---"
-            find /tmp/release
-
       - name: Zip release
         run: |
           cd /tmp/release/
-          zip -r ../release.zip onoffice-for-wp-websites
+          zip -r ../release.zip .
 
       - name: Upload release as artifact
         uses: actions/upload-artifact@v4
