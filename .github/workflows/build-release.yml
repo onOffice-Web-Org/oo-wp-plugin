@@ -53,7 +53,7 @@ jobs:
         run: composer install
 
       - name: Build release
-        run: PREFIX=/tmp/release/ make release
+        run: PREFIX="/tmp/release/${{ inputs.pluginFolder }}" make release
 
       - name: Override version
         if: ${{ inputs.overrideVersion != '' }}
@@ -62,7 +62,11 @@ jobs:
       - name: Zip release
         run: |
           cd /tmp/release/
-          zip -r ../release.zip .
+          TARGET="${{ inputs.pluginFolder }}"
+          if [ -z "$TARGET" ]; then
+            TARGET="."
+          fi
+          zip -r ../release.zip "$TARGET"
 
       - name: Upload release as artifact
         uses: actions/upload-artifact@v4
