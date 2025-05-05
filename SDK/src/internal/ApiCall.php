@@ -373,6 +373,9 @@ class ApiCall
 						$elVal = str_replace('.','',$elVal);
 					}
 
+					if(!is_array($val)) {
+						$val = array($val);
+					}
 					$lowerVal = array_map('mb_strtolower', $val);
 					if(!in_array(mb_strtolower($elVal ?? ''), $lowerVal)){
 						unset($filteredArray[$index]);
