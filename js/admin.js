@@ -347,7 +347,7 @@ jQuery(document).ready(function($){
 						// Transferable structural classes
 						const transferableClasses = ($item.attr('class') || '')
 							.split(/\s+/)
-							.filter(cls => /^page-\d+$/.test(cls) || /^fieldsListPage-\d+$/.test(cls))
+							.filter(cls => /^page-\d+$/.test(cls))
 							.join(' ');
 		
 						// Create the outer wrapper <li> with a nested <ul>
@@ -358,10 +358,10 @@ jQuery(document).ready(function($){
 							</li>
 						`);
 		
-						// Strip identifying attributes/classes from inner item
+						// Remove identifying attributes/classes from inner item
 						$item.removeAttr('id').removeAttr('action-field-name');
 						$item.removeClass(transferableClasses);
-						$item.removeClass('sortable-item'); // REMOVE from inner
+						$item.removeClass('sortable-item');
 		
 						// Insert wrapper before item and nest item inside <ul>
 						$item.before($wrapper);
@@ -377,7 +377,7 @@ jQuery(document).ready(function($){
 						const wrapperClasses = $wrapper.attr('class') || '';
 						const transferableClasses = wrapperClasses
 							.split(/\s+/)
-							.filter(cls => /^page-\d+$/.test(cls) || /^fieldsListPage-\d+$/.test(cls))
+							.filter(cls => /^page-\d+$/.test(cls))
 							.join(' ');
 		
 						$item.attr('id', restoredId);
@@ -410,7 +410,7 @@ jQuery(document).ready(function($){
 							const wrapperClasses = $wrapper.attr('class') || '';
 							const transferableClasses = wrapperClasses
 								.split(/\s+/)
-								.filter(cls => /^page-\d+$/.test(cls) || /^fieldsListPage-\d+$/.test(cls))
+								.filter(cls => /^page-\d+$/.test(cls))
 								.join(' ');
 		
 							$item.attr('id', restoredId);
@@ -449,6 +449,7 @@ jQuery(document).ready(function($){
 			$('.filter-fields-list').sortable({
 				axis: 'y',
 				handle: '.menu-item-handle', // Handle is the wrapper
+				items: '.sortable-item',
 				connectWith: ".filter-fields-list",
 		
 				start: function(event, ui) {
