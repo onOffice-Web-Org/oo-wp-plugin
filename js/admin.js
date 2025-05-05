@@ -448,36 +448,39 @@ jQuery(document).ready(function($){
 			$('.filter-fields-list').sortable('destroy');
 			$('.filter-fields-list').sortable({
 				axis: 'y',
-				handle: '.menu-item-handle', // Handle is the wrapper
+				handle: '.menu-item-handle, .menu-item-bar', // Handle is the wrapper
 				items: '.sortable-item',
 				connectWith: ".filter-fields-list",
 		
 				start: function(event, ui) {
+					const $draggedItem = ui.item;
+					
+					// Proceed only if dragging a selection group
+					if (!$draggedItem.hasClass('selection-group')) {
+					  return; // Skip nesting for non-selected items
+					}
+				
 					const $allSelected = $('.list-fields-for-each-page .selection-group');
-					const movingItemId = ui.item.attr('id');
-				
+					const movingItemId = $draggedItem.attr('id');
 					const selectedIds = $allSelected.map(function () {
-						return $(this).attr('id');
+					  return $(this).attr('id');
 					}).get();
-				
+					
 					const movingIndex = selectedIds.indexOf(movingItemId);
 					const beforeItems = selectedIds.slice(0, movingIndex);
 					const afterItems = selectedIds.slice(movingIndex + 1);
 				
-					const $movingWrapper = ui.item;
-				
-					// Create or find existing <ul> to nest into
-					let $childList = $movingWrapper.children('ul.nested-items');
+					let $childList = $draggedItem.children('ul.nested-items');
 					if (!$childList.length) {
-						$childList = $('<ul class="nested-items"></ul>').appendTo($movingWrapper);
+					  $childList = $('<ul class="nested-items"></ul>').appendTo($draggedItem);
 					}
 				
-					// Move selected items before the dragged one into the child <ul>
+					// Move selected items into the nested list
 					[...beforeItems, ...afterItems].forEach(id => {
-						const $el = $(`.selection-group#${id}`);
-						if ($el.length && $el[0] !== $movingWrapper[0]) {
-							$childList.append($el);
-						}
+					  const $el = $(`.selection-group#${id}`);
+					  if ($el.length && $el[0] !== $draggedItem[0]) {
+						$childList.append($el);
+					  }
 					});
 				},
 				
