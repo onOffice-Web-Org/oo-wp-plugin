@@ -329,94 +329,163 @@ jQuery(document).ready(function($){
 			}
 		},
 
-		multiSelectItems: function() {
+		multiSelectItems: function () {
 			const $container = $('.list-fields-for-each-page');
-		  
+		
 			// Handle checkbox selection
 			$container.on('change', 'input[type="checkbox"]', (event) => {
-			  const $checkbox = $(event.target);
-			  const $item = $checkbox.closest('.item');
-		  
-			  if ($checkbox.prop('checked')) {
-				$item.addClass('selected');
-			  } else {
-				$item.removeClass('selected');
-			  }
-		  
-			  this.updateSelectionGroup();
-			});
-		  
-			$(document).off('click.multiSelect').on('click.multiSelect', (event) => {
-			  if (!$(event.target).closest('.fieldsSortable').length) {
-				const $container = $('.list-fields-for-each-page');
-				$container.find('.selected').removeClass('selected');
-				$container.find('input[type="checkbox"]').prop('checked', false);
-		  
-				this.updateSelectionGroup();
-			  }
-			});
-		  },
-		  
-
-		  updateSelectionGroup: function () {
-			const $container = $('.list-fields-for-each-page');
-			const $selected = $('.selected');
-			let $group = $('#selection-group');
+				const $checkbox = $(event.target);
+				const $item = $checkbox.closest('.item');
 		
-			// Create group if needed
-			if ($group.length === 0 && $selected.length > 0) {
-				const $firstItem = $selected.first();
-				$group = $(`
-					<li id="selection-group" class="sortable-item menu-item-bar">
-						<div class="group-wrapper"></div>
-					</li>
-				`);
-				$firstItem.before($group);
-				$('.filter-fields-list').sortable('destroy');
-				$('.filter-fields-list').sortable({
-					axis: 'y',
-					items: '.menu-item-bar',
-					connectWith: ".filter-fields-list",
-					stop: function(event, ui) {
-						FormMultiPageManager.reorderPages();
+				if ($checkbox.prop('checked')) {
+					$item.addClass('selected');
+		
+					if (!$item.closest('.selection-group').length) {
+						const itemId = $item.attr('id');
+						const actionFieldName = $item.attr('action-field-name');
+		
+						// Transferable structural classes
+						const transferableClasses = ($item.attr('class') || '')
+							.split(/\s+/)
+							.filter(cls => /^page-\d+$/.test(cls) || /^fieldsListPage-\d+$/.test(cls))
+							.join(' ');
+		
+						// Create the outer wrapper <li> with a nested <ul>
+						const $wrapper = $(`
+							<li class="menu-item-handle sortable-item selection-group selection-group-${itemId} ${transferableClasses}"
+								id="${itemId}" action-field-name="${actionFieldName}">
+								<ul class="nested-items"></ul>
+							</li>
+						`);
+		
+						// Strip identifying attributes/classes from inner item
+						$item.removeAttr('id').removeAttr('action-field-name');
+						$item.removeClass(transferableClasses);
+						$item.removeClass('sortable-item'); // REMOVE from inner
+		
+						// Insert wrapper before item and nest item inside <ul>
+						$item.before($wrapper);
+						$wrapper.find('.nested-items').append($item);
 					}
-				});
-
-			}
+				} else {
+					const $wrapper = $item.closest('.selection-group');
+					if ($wrapper.length) {
+						const restoredId = $wrapper.attr('id');
+						const restoredActionField = $wrapper.attr('action-field-name');
 		
-			const $groupWrapper = $group.find('.group-wrapper');
+						// Restore classes
+						const wrapperClasses = $wrapper.attr('class') || '';
+						const transferableClasses = wrapperClasses
+							.split(/\s+/)
+							.filter(cls => /^page-\d+$/.test(cls) || /^fieldsListPage-\d+$/.test(cls))
+							.join(' ');
 		
-			// Ungroup if nothing is selected
-			if ($selected.length === 0 && $group.length > 0) {
-				$groupWrapper.children().each(function () {
-					const $item = $(this);
-					$item.removeClass('grouped');
-					$group.before($item);
-				});
-				$group.remove();
-				return;
-			}
+						$item.attr('id', restoredId);
+						$item.attr('action-field-name', restoredActionField);
+						$item.addClass(transferableClasses);
+						$item.addClass('sortable-item');
+						$item.removeClass('selected');
 		
-			// Move unselected out of group
-			$groupWrapper.children().each(function () {
-				const $item = $(this);
-				if (!$item.hasClass('selected')) {
-					$item.removeClass('grouped');
-					$group.before($item);
+						$wrapper.before($item);
+						$wrapper.remove();
+					} else {
+						$item.removeClass('selected');
+					}
+				}
+		
+				this.updateSelectionGroup();
+			});
+		
+			// Deselect everything when clicking outside
+			$(document).off('click.multiSelect').on('click.multiSelect', (event) => {
+				if (!$(event.target).closest('.fieldsSortable').length) {
+					$container.find('.selected').each(function () {
+						const $item = $(this);
+						const $wrapper = $item.closest('.selection-group');
+		
+						if ($wrapper.length) {
+							const restoredId = $wrapper.attr('id');
+							const restoredActionField = $wrapper.attr('action-field-name');
+		
+							const wrapperClasses = $wrapper.attr('class') || '';
+							const transferableClasses = wrapperClasses
+								.split(/\s+/)
+								.filter(cls => /^page-\d+$/.test(cls) || /^fieldsListPage-\d+$/.test(cls))
+								.join(' ');
+		
+							$item.attr('id', restoredId);
+							$item.attr('action-field-name', restoredActionField);
+							$item.addClass(transferableClasses);
+							$item.addClass('sortable-item');
+							$item.removeClass('selected');
+		
+							$wrapper.before($item);
+							$wrapper.remove();
+						} else {
+							$item.removeClass('selected');
+						}
+					});
+		
+					$container.find('input[type="checkbox"]').prop('checked', false);
+					this.updateSelectionGroup();
 				}
 			});
+		},
 		
-			// Move selected into group
-			$('.selected').each(function () {
-				const $item = $(this);
-				if ($item.closest('#selection-group').length === 0) {
-					$item.addClass('grouped');
-					$groupWrapper.append($item);
+
+		updateSelectionGroup: function () {
+			// Get all currently selected *wrapper* elements (outer <li>)
+			const $selectedGroups = $('.list-fields-for-each-page .selection-group');
+		
+			// Extract their IDs
+			const selectedIds = $selectedGroups.map(function () {
+				return $(this).attr('id');
+			}).get();
+		
+			console.log('Selected item IDs:', selectedIds);
+		
+			// Setup sortable again (destroy and re-init)
+			$('.filter-fields-list').sortable('destroy');
+			$('.filter-fields-list').sortable({
+				axis: 'y',
+				handle: '.menu-item-handle', // Handle is the wrapper
+				connectWith: ".filter-fields-list",
+		
+				start: function(event, ui) {
+					const $allSelected = $('.list-fields-for-each-page .selection-group');
+					const movingItemId = ui.item.attr('id');
+				
+					const selectedIds = $allSelected.map(function () {
+						return $(this).attr('id');
+					}).get();
+				
+					const movingIndex = selectedIds.indexOf(movingItemId);
+					const beforeItems = selectedIds.slice(0, movingIndex);
+					const afterItems = selectedIds.slice(movingIndex + 1);
+				
+					const $movingWrapper = ui.item;
+				
+					// Create or find existing <ul> to nest into
+					let $childList = $movingWrapper.children('ul.nested-items');
+					if (!$childList.length) {
+						$childList = $('<ul class="nested-items"></ul>').appendTo($movingWrapper);
+					}
+				
+					// Move selected items before the dragged one into the child <ul>
+					[...beforeItems, ...afterItems].forEach(id => {
+						const $el = $(`.selection-group#${id}`);
+						if ($el.length && $el[0] !== $movingWrapper[0]) {
+							$childList.append($el);
+						}
+					});
+				},
+				
+		
+				stop: function(event, ui) {
+					FormMultiPageManager.reorderPages();
 				}
 			});
 		}
-		
-		
 		
 		
 	};
