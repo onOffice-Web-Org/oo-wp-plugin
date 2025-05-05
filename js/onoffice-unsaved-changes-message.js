@@ -24,7 +24,7 @@ jQuery(document).ready(function($){
 	function generateUnsavedChangesMessage(href, message) {
 		return $(`
 			<div class='notice notice-error is-dismissible notice-unsaved-changes-message'>
-				<p>${message} 
+				<p>${message}
 				<a id='leaveWithoutSaving' href='${href}'>${onOfficeLocalized.view_leave_without_saving_text}</a></p>
 				<button type='button' class='notice-dismiss notice-save-view'></button>
 			</div>

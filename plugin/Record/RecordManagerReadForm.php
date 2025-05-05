@@ -322,7 +322,7 @@ class RecordManagerReadForm
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sql = "SELECT COUNT(*) AS count 
+		$sql = "SELECT COUNT(*) AS count
 			FROM {$prefix}oo_plugin_forms
 			WHERE name = '" . esc_sql($name) . "'";
 
