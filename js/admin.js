@@ -330,10 +330,10 @@ jQuery(document).ready(function($){
 		},
 
 		multiSelectItems: function () {
-			const $container = $('.list-fields-for-each-page');
+			const $container = $('#multi-page-container');
 		
-			// Handle checkbox selection
-			$container.on('change', 'input[type="checkbox"]', (event) => {
+			// Handle checkbox selection using static parent
+			$container.on('change', '.list-fields-for-each-page input[type="checkbox"]', (event) => {
 				const $checkbox = $(event.target);
 				const $item = $checkbox.closest('.item');
 		
@@ -399,7 +399,7 @@ jQuery(document).ready(function($){
 			// Deselect everything when clicking outside
 			$(document).off('click.multiSelect').on('click.multiSelect', (event) => {
 				if (!$(event.target).closest('.fieldsSortable').length) {
-					$container.find('.selected').each(function () {
+					$('.list-fields-for-each-page .selected').each(function () {
 						const $item = $(this);
 						const $wrapper = $item.closest('.selection-group');
 		
@@ -520,12 +520,20 @@ jQuery(document).ready(function($){
 						$droppedGroup.remove();
 					}
 				
+					// Clear selected class and uncheck the checkbox for dropped items
+					$('.list-fields-for-each-page .selected').each(function() {
+						const $item = $(this);
+						$item.removeClass('selected'); // Remove the 'selected' class
+						$item.find('input[type="checkbox"]').prop('checked', false); // Uncheck the checkbox
+					});
+				
 					// You can call reorder logic here if necessary
 					FormMultiPageManager.reorderPages();
 				
 					// Re-init sortable since DOM structure changed
 					FormMultiPageManager.updateSelectionGroup();
 				}
+				
 				
 			});
 		}
