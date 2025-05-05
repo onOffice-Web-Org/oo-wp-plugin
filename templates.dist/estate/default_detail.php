@@ -164,7 +164,7 @@ $dimensions = [
 
 			<?php if ($currentEstate["dreizeiler"] !== "") { ?>
 				<div class="oo-detailsfreetext">
-					<h2><?php echo esc_html($pEstates->getFieldLabel('dreizeiler')); ?></h2>
+					<h2><?php echo esc_html($pEstates->getFieldLabel('objektbeschreibung')); ?></h2>
 					<?php echo nl2br($currentEstate["dreizeiler"]); ?>
 				</div>
 			<?php } ?>
