@@ -23,6 +23,7 @@ jobs:
         expectedVersion: ${{ needs.get-version.outputs.stableVersion }}
         overrideVersion: ${{ needs.get-version.outputs.developmentVersion }}
         checkVersion: false
+        pluginFolder: onoffice-for-wp-websites
 
   deploy:
     name: Deploy to Update Server
