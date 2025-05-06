@@ -385,7 +385,7 @@ class ApiCall
 				elseif ($op === '<=')
 				{
 					if(!array_key_exists($fieldName,$itemRaw["elements"])
-						|| $this->isBigger($fieldName, $val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
+						|| $this->isBigger($val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
 						unset($filteredArray[$index]);
 						break;
 					}
@@ -393,7 +393,7 @@ class ApiCall
 				elseif ($op === '>=')
 				{
 					if(!array_key_exists($fieldName,$itemRaw["elements"])
-						|| $this->isSmaller($fieldName, $val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
+						|| $this->isSmaller($val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
 						unset($filteredArray[$index]);
 						break;
 					}
@@ -456,16 +456,18 @@ class ApiCall
 		$cachedResponse["raw"]["data"]["records"] = $filteredArrayRaw;
 	}
 	/**
-	 * @param array $responses
+	 * @param mixed $filterVal
+	 * @param mixed $rawValue
 	 */
-	private function isBigger(string $key, mixed $filterVal, mixed $rawValue, string $type)
+	private function isBigger($filterVal, $rawValue, string $type): bool
 	{
-		return $this->isSmaller($key, $filterVal, $rawValue, $type, false);
+		return $this->isSmaller($filterVal, $rawValue, $type, false);
 	}
 	/**
-	 * @param array $responses
+	 * @param mixed $filterVal
+	 * @param mixed $rawValue
 	 */
-	private function isSmaller(string $key, mixed $filterVal, mixed $rawValue, string $type, bool $isSmaller = true)
+	private function isSmaller($filterVal, $rawValue, string $type, bool $isSmaller = true): bool
 	{
 		if($type === 'float' || $type === 'integer') {
 			if($isSmaller){
