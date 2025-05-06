@@ -33,7 +33,8 @@ return (function (EstateList $pEstatesClone) {
     while ($currentEstateMap = $pEstatesClone->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
         $estateId = $pEstatesClone->getCurrentEstateId();
         $rawValues = $pEstatesClone->getRawValues();
-        $virtualAddressSet = (bool)$rawValues->getValueRaw($estateId)['elements']['virtualAddress'] ?? false;
+        $currentEstateRawValue = $rawValues->getValueRaw($estateId);
+        $virtualAddressSet = (bool)($currentEstateRawValue['elements']['virtualAddress'] ?? false);
         $visible = !$virtualAddressSet;
 
         $position = [
@@ -60,9 +61,8 @@ return (function (EstateList $pEstatesClone) {
         }
         $address = implode('<br>', $addressParts);
 
-        $estateId = $pEstatesClone->getCurrentEstateId();
         $estateLink = esc_url($pEstatesClone->getEstateLink());
-        $reference = filter_var($rawValues->getValueRaw($estateId)['elements']['referenz'], FILTER_VALIDATE_BOOLEAN);
+        $reference = filter_var($currentEstateRawValue['elements']['referenz'] ?? false, FILTER_VALIDATE_BOOLEAN);
         $restrictedView = $pEstatesClone->getViewRestrict();
         if ( $reference && $restrictedView ) {
             $link = '';
