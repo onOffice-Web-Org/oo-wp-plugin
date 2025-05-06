@@ -33,7 +33,7 @@ return (function (EstateList $pEstatesClone) {
     while ($currentEstateMap = $pEstatesClone->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
         $estateId = $pEstatesClone->getCurrentEstateId();
         $rawValues = $pEstatesClone->getRawValues();
-        $virtualAddressSet = (bool)$rawValues->getValueRaw($estateId)['elements']['virtualAddress'];
+        $virtualAddressSet = (bool)$rawValues->getValueRaw($estateId)['elements']['virtualAddress'] ?? false;
         $visible = !$virtualAddressSet;
 
         $position = [
