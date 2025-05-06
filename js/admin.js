@@ -434,75 +434,76 @@ jQuery(document).ready(function($){
 		
 
 		updateSelectionGroup: function () {
-			// Remove any existing sortable instance
+			// Tear down any existing sortable
 			$('.filter-fields-list').sortable('destroy');
 		  
-			// Initialize sortable with vertical-only, cross-list dragging and snap‑back
+			// Re‑init sortable
 			$('.filter-fields-list').sortable({
-			  axis: 'y',                          // only vertical movement allowed (jQuery UI docs) :contentReference[oaicite:0]{index=0}
-			  connectWith: '.filter-fields-list', // allow dragging between any .filter-fields-list (jQuery UI docs) :contentReference[oaicite:1]{index=1}
-			  revert: 'invalid',                  // animate back if dropped outside any connected list (jQuery UI docs) :contentReference[oaicite:2]{index=2}
+			  axis: 'y',                          // vertical only :contentReference[oaicite:5]{index=5}
+			  connectWith: '.filter-fields-list', // cross‑page dragging :contentReference[oaicite:6]{index=6}
+			  revert: 'invalid',                  // snap back on invalid drop :contentReference[oaicite:7]{index=7}
 		  
 			  start: function(event, ui) {
-				// If this is a selection-group, re‑group all selected wrappers under it
-				const $dragged = ui.item;
-				if (!$dragged.hasClass('selection-group')) return;
+				// Record original parent & index for potential cancel
+				ui.item.data('origParent', ui.item.parent());
+				ui.item.data('origIndex',  ui.item.index());              
 		  
+				// Multi‑select grouping logic (unchanged)
+				const $d = ui.item;
+				if (!$d.hasClass('selection-group')) return;
 				const $all = $('.list-fields-for-each-page .selection-group');
-				const ids = $all.map((_, el) => $(el).attr('id')).get();
-				const idx = ids.indexOf($dragged.attr('id'));
-				const before = ids.slice(0, idx), after = ids.slice(idx + 1);
-		  
-				let $list = $dragged.children('ul.nested-items');
-				if (!$list.length) {
-				  $list = $('<ul class="nested-items"></ul>').appendTo($dragged);
-				}
+				const ids = $all.map((_,el) => $(el).attr('id')).get();
+				const i   = ids.indexOf($d.attr('id'));
+				const before = ids.slice(0,i), after = ids.slice(i+1);
+				let $lst = $d.children('ul.nested-items');
+				if (!$lst.length) $lst = $('<ul class="nested-items"></ul>').appendTo($d);
 				[...before, ...after].forEach(id => {
-				  const $el = $(`.selection-group#${id}`);
-				  if ($el.length && $el[0] !== $dragged[0]) {
-					$list.append($el);
-				  }
+				  const $e = $(`.selection-group#${id}`);
+				  if ($e.length && $e[0]!==$d[0]) $lst.append($e);
 				});
 			  },
 		  
 			  stop: function(event, ui) {
-				const $tempGroup = ui.item;
-				if (!$tempGroup.hasClass('selection-group')) return;
-				
-				// 1) Move all the other item‑wrappers back into the list intact
-				const $childWrappers = $tempGroup
-				  .children('ul.nested-items')       // the UL holding nested wrappers & the dragged .item
-				  .children('.selection-group');     // select only the wrapper LIs
-				$childWrappers.insertAfter($tempGroup); // move them without changing their data :contentReference[oaicite:2]{index=2}
-			  
-				// 2) Rewrap the dragged .item itself into its own selection-group
-				const $orphanItems = $tempGroup
-				  .children('ul.nested-items')       // same UL
-				  .children('.item');                // now pick the raw .item nodes
-				const groupId     = $tempGroup.attr('id');               // original ID  
-				const actionField = $tempGroup.attr('action-field-name');  
-				const transferable = ($tempGroup.attr('class') || '')      // preserve any page-# classes
-				  .split(/\s+/).filter(c => /^page-\d+$/.test(c)).join(' ');
-				
-				$orphanItems.each(function() {
-				  const $item = $(this);
-				  // recreate the wrapper exactly as in multiSelectItems
-				  const $newWrapper = $(`
-					<li class="menu-item-handle sortable-item selection-group selection-group-${groupId} ${transferable}"
-						id="${groupId}" action-field-name="${actionField}">
-					  <ul class="nested-items"></ul>
-					</li>
-				  `);
-				  // nest the item inside and keep its checkbox & .selected
-				  $newWrapper.find('.nested-items').append($item);
-				  $tempGroup.before($newWrapper);
-				});
-			  
-				// 3) Remove only the temporary multi‑item wrapper
-				$tempGroup.remove();
-			  
-				// leave all .selected classes and checkboxes alone
-			  
+				const $grp = ui.item;
+		  
+				// Detect where the mouse was released
+				const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
+				const validDrop  = droppedOver && droppedOver.closest('.fieldsSortable');
+		  
+				if (!validDrop) {
+				  $(this).sortable('cancel');                    
+				  return;
+				}
+		  
+				// ✅ Valid drop → unwrap movement‑wrapper into individual wrappers
+				if ($grp.hasClass('selection-group')) {
+				  // 1) move back the other original wrappers
+				  const $others = $grp.children('ul.nested-items').children('.selection-group');
+				  $others.insertAfter($grp);                            
+		  
+				  // 2) rewrap the dragged .item into its own wrapper
+				  const $orphans = $grp.children('ul.nested-items').children('.item');
+				  const id  = $grp.attr('id'),
+						af  = $grp.attr('action-field-name'),
+						txf = ($grp.attr('class')||'').split(/\s+/).filter(c=>/^page-\d+$/.test(c)).join(' ');
+				  $orphans.each(function(){
+					const $it = $(this);
+					const $w  = $(`
+					  <li class="menu-item-handle sortable-item selection-group selection-group-${id} ${txf}"
+						  id="${id}" action-field-name="${af}">
+						<ul class="nested-items"></ul>
+					  </li>
+					`);
+					$w.find('.nested-items').append($it);
+					$grp.before($w);
+				  });
+		  
+				  // 3) remove only the temporary multi‑item wrapper
+				  $grp.remove();
+				}
+		  
+				// leave all .selected classes and checkboxes intact
+		  
 				FormMultiPageManager.reorderPages();
 				FormMultiPageManager.updateSelectionGroup();
 			  }
