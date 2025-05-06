@@ -1015,9 +1015,18 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	background-color: rgba(255, 0, 0, 0.1);
 }
 
+.postbox-select-all {
+	display: flex;
+	gap: 8px;
+	align-items: end;
+	padding: 12px 8px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
 .filter-fields-list {
 	position: relative; /* gives local context for left:0 */ 
-  }
+}
   
 
 .list-fields-for-each-page .ui-sortable-helper {
