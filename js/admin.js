@@ -230,6 +230,7 @@ jQuery(document).ready(function($){
 			this.initializeSortable();
 			this.checkTemplate();
 			this.draggablePages();
+			FormMultiPageManager.updateSelectionGroup();
 		},
 
 		createNewPage: function(pageNumber) {

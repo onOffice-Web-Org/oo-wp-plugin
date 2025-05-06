@@ -999,20 +999,18 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	position: relative;
 	z-index: 2;
 }
-
-#selection-group {
-	border: 2px dashed blue;
-	background-color: rgba(0,0,255, 0.1);
-	pointer-events: auto;
-}
-
 #selection-group .menu-item-bar {
 	pointer-events: none;
 }
 
 .selection-group {
-	border: 2px dashed red;
-	background-color: rgba(255, 0, 0, 0.1);
+	border: 2px dashed blue;
+	background-color: rgba(0, 0, 255, 0.1);
+}
+
+.selection-group .item.selected {
+	margin: 0;
+	margin: 4px 0;
 }
 
 .postbox-select-all {
@@ -1024,9 +1022,9 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	cursor: pointer;
 }
 
-.filter-fields-list {
+/* .filter-fields-list {
 	position: relative; /* gives local context for left:0 */ 
-}
+} */
   
 
 .list-fields-for-each-page .ui-sortable-helper {
