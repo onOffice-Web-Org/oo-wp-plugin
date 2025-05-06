@@ -758,7 +758,7 @@ class EstateList
 	 */
 	private function getExternalCommission(string $externalCommission)
 	{
-		if (preg_match('/(\d+[,]?\d*)\s*%/', $externalCommission, $matches)) {
+		if (preg_match('/(\d+[,]?\d*)/', $externalCommission, $matches)) {
 			return floatval(str_replace(',', '.', $matches[1]));
 		}
 

@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 5.7
+Stable tag: 5.8
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,17 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 5.8 (2025-04-29) =
+
+**Changed**
+
+* Styling Unit lists on the property detail page
+* Title image, if marked as such, is always displayed as the first image of the image slider
+
+**Fixed**
+
+* Total price calculator can also be displayed when the percentage sign is not entered in the external commission in onOffice enterprise
 
 = 5.7 (2025-03-27) =
 
