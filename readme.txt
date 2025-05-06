@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 5.2.1
+Stable tag: 5.8
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,116 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 5.8 (2025-04-29) =
+
+**Changed**
+
+* Styling Unit lists on the property detail page
+* Title image, if marked as such, is always displayed as the first image of the image slider
+
+**Fixed**
+
+* Total price calculator can also be displayed when the percentage sign is not entered in the external commission in onOffice enterprise
+
+= 5.7 (2025-03-27) =
+
+**Changed**
+
+* Restriction of the form selection on the property detail page
+* Improved display of parking options (multiParkingLot) for properties
+
+**Fixed**
+
+* Missing fields of address
+* Missing austrian locale
+* Translation on property detail
+
+= 5.6 (2025-02-27) =
+
+**Added**
+
+* Total price calculator chart in property details
+* ImmoNr (objektnr_extern) variable to subject line in forms
+
+**Changed**
+
+* Display link fields as actual links
+* Naming of estateID to Datensatznr variable in subject line in forms
+
+**Fixed**
+
+* Special character encoding in parameters
+* Loading regions without id
+* Styling in backend settings
+
+= 5.5 (2025-01-31) =
+
+**Added**
+
+* Customization of standard email subjects for forms
+
+**Fixed**
+
+* Order in energy certificate scale
+
+* Deprecated notices on PHP 8.3
+
+* Error causes by wrong type
+
+**Removed**
+
+* Pagination from detail page template
+
+= 5.4.1 (2024-12-20) =
+
+**Added**
+
+* Info text when an address detail page is not found
+
+* Option to display ownerleadgeneratorform embedded on the website
+
+* Extension to order fields in multipage forms like leadgenerator
+
+**Fixed**
+
+* Fatal error when creating applicant search form
+
+* Error when regionaler_zusatz is deactivated
+
+* Incorrect email adresses containing whitespaces
+
+* Box "Layout & Design" position in backend
+
+= 5.3 (2024-12-05) =
+
+**Added**
+
+* Graphical implementation of energy certificate
+
+* Filtering in similar properties
+
+* Option to display all or only the main contact person on property detail pages
+
+* Map view with address locations to address list
+
+* Linking to a contact from the property detail page
+
+**Changed**
+
+* Error handling in similar properties
+
+* Order of "Activities" and "Tasks" boxes in form settings
+
+* Improved display of image type selection in property list settings
+
+**Fixed**
+
+* Using forms with reCaptcha in footer section
+
+* Empty value for "Radius" in similar properties
+
+* Wrong redirects caused by umlauts and special characters in URL for multilingual websites
 
 = 5.2.1 (2024-11-05) =
 

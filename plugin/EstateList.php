@@ -59,6 +59,7 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldParkingLot;
+use onOffice\WPlugin\Field\CostsCalculator;
 
 class EstateList
 	implements EstateListBase
@@ -114,11 +115,15 @@ class EstateList
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
 
+	/** @var array */
+	private $_totalCostsData = [];
+
 	/** @var FieldsCollection */
 	private $_pFieldsCollection;
 
 	/** @var string */
 	private $_energyCertificate = '';
+
 
 	/**
 	 * @param DataView $pDataView
@@ -247,10 +252,21 @@ class EstateList
 		$estateParametersRaw['data'] []= 'vermarktungsart';
 		$estateParametersRaw['data'] []= 'preisAufAnfrage';
 
+		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
+			$estateParametersRaw['data'] []= 'waehrung';
+		}
+
+		if ($this->getShowTotalCostsCalculator()) {
+			$fields = ['kaufpreis', 'aussen_courtage', 'bundesland', 'waehrung'];
+			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $fields);
+		}
+
 		if ($this->getShowEnergyCertificate()) {
 			$energyCertificateFields = ['energieausweistyp', 'energyClass'];
 			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $energyCertificateFields);
 		}
+
+		$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
 
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
@@ -354,6 +370,9 @@ class EstateList
 				$requestParams['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 				$requestParams['data'][] = 'vermarktungsart';
 				$requestParams['data'][] = 'preisAufAnfrage';
+				if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
+					$requestParams['data'][] = 'waehrung';
+				}
 			}
 			if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
 				$requestParams['data'][] = 'preisAufAnfrage';
@@ -631,6 +650,10 @@ class EstateList
 		ksort($fields);
 
 		if ($fields !== [] && $allAddressIds !== []) {
+			if ($this->_pDataView instanceof DataDetailView && $this->_pDataView->getContactPerson() === DataDetailView::SHOW_MAIN_CONTACT_PERSON) {
+				$allAddressIds = [$allAddressIds[0]];
+			}
+
 			$this->_pEnvironment->getAddressList()->loadAddressesById($allAddressIds, $fields);
 		}
 	}
@@ -670,15 +693,20 @@ class EstateList
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
-		$fieldWaehrung = $this->_pEnvironment->getFieldnames()->getFieldInformation('waehrung', onOfficeSDK::MODULE_ESTATE);
-		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung']) ) {
-			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung['permittedvalues']);
-		}
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'] ?? [];
 
 		if ($this->getShowEstateMarketingStatus()) {
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
+		}
+
+		if ($this->getShowTotalCostsCalculator()) {
+			$externalCommission = $this->getExternalCommission($recordRaw['aussen_courtage'] ?? '');
+			$propertyTransferTax = $this->_pDataView->getPropertyTransferTax();
+			if (!empty((float) $recordRaw['kaufpreis']) && !empty($recordRaw['bundesland']) && $externalCommission !== null) {
+				$costsCalculator = $this->_pEnvironment->getContainer()->get(CostsCalculator::class);
+				$this->_totalCostsData = $costsCalculator->getTotalCosts($recordRaw, $propertyTransferTax, $externalCommission);
+			}
 		}
 
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
@@ -704,11 +732,12 @@ class EstateList
 			$this->addMetaTags(GenerateMetaDataSocial::TWITTER_KEY, $recordModified);
 		}
 
-		$recordModified = new ArrayContainerEscape($recordModified);
-		if ($recordModified['multiParkingLot']) {
-			$parking = new FieldParkingLot();
-			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
+		if (!empty($recordModified['multiParkingLot'])) {
+			$parking = $this->_pEnvironment->getContainer()->get(FieldParkingLot::class);
+			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordRaw['waehrung'] ?? '');
 		}
+
+		$recordModified = new ArrayContainerEscape($recordModified);
 
 		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
 			if ($this->enableShowPriceOnRequestText() ) {
@@ -717,12 +746,34 @@ class EstateList
 				foreach ($priceFields as $priceField) {
 					$this->displayTextPriceOnRequest($recordModified, $priceField);
 				}
+				$this->_totalCostsData = [];
 			}
 		}
 		// do not show priceOnRequest as single Field
 		unset($recordModified['preisAufAnfrage']);
 
 		return $recordModified;
+	}
+
+	/**
+	 * @param string $externalCommission
+	 * @return mixed
+	 */
+	private function getExternalCommission(string $externalCommission)
+	{
+		if (preg_match('/(\d+[,]?\d*)/', $externalCommission, $matches)) {
+			return floatval(str_replace(',', '.', $matches[1]));
+		}
+
+		return null;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getTotalCostsData(): array
+	{
+		return $this->_totalCostsData;
 	}
 
 	/**
@@ -812,7 +863,18 @@ class EstateList
 			return [];
 		}
 
-		return $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getPermittedvalues();
+		$values = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getPermittedvalues();
+
+		if ($field === 'energyClass') {
+			$preferredOrder = ['A+', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+			usort($values, function ($a, $b) use ($preferredOrder) {
+				$posA = array_search($a, $preferredOrder);
+				$posB = array_search($b, $preferredOrder);
+				return $posA - $posB;
+			});
+		}
+
+		return $values;
 	}
 
 	/**
@@ -997,11 +1059,13 @@ class EstateList
 	public function getEstateContacts()
 	{
 		$addressIds = $this->getEstateContactIds();
+		$pAddressList = $this->_pEnvironment->getAddressList();
 		$result = [];
 
 		foreach ($addressIds as $addressId) {
-			$currentAddressData = $this->_pEnvironment->getAddressList()->getAddressById($addressId);
+			$currentAddressData = $pAddressList->getAddressById($addressId);
 			$pArrayContainerCurrentAddress = new ArrayContainerEscape($currentAddressData);
+			$pArrayContainerCurrentAddress['imageAlt'] = $pAddressList->generateImageAlt($addressId);
 
 			if (!empty($pArrayContainerCurrentAddress['bildWebseite'])) {
 				$pArrayContainerCurrentAddress['imageUrl'] = $pArrayContainerCurrentAddress['bildWebseite'];
@@ -1347,5 +1411,17 @@ class EstateList
 		}
 
 		return 'estate_detail';
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getShowTotalCostsCalculator(): bool
+	{
+		if ($this->_pDataView instanceof DataDetailView) {
+			return $this->_pDataView->getShowTotalCostsCalculator();
+		}
+
+		return false;
 	}
 }
