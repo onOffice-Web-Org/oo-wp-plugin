@@ -430,6 +430,22 @@ jQuery(document).ready(function($){
 					this.updateSelectionGroup();
 				}
 			});
+
+			// Handle select-all checkbox toggle
+			$('#postbox-select-all').on('change', (event) => {
+				const isChecked = $(event.target).prop('checked');
+
+				// Get all checkboxes within the container (excluding #postbox-select-all itself)
+				const $checkboxes = $('#multi-page-container .list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
+
+				$checkboxes.each(function () {
+					const $cb = $(this);
+					// Avoid redundant triggers
+					if ($cb.prop('checked') !== isChecked) {
+						$cb.prop('checked', isChecked).trigger('change');
+					}
+				});		
+			});
 		},
 		
 
