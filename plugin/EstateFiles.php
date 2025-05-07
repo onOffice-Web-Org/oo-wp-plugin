@@ -146,7 +146,7 @@ class EstateFiles
 				$type = !empty($fileEntry['elements']['type']) ? $fileEntry['elements']['type'] : "";
 				$file = array(
 					'id' => $fileId,
-					'url' => $this->correctUrl($url),
+					'url' => !empty($url) ? $this->correctUrl($url) : '',
 					'title' => $title,
 					'type' => $type
 				);
