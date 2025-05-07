@@ -214,7 +214,7 @@ abstract class AdminPageAjax
 	protected function renderBulkActionControls(){
 		echo '<div style="float:right; margin-bottom: 20px;">';
 		echo '<label for="oo-bulk-action-selector-top" class="screen-reader-text">Mehrfachaktion wählen</label>';
-		echo '<select name="action" id="oo-bulk-action-selector-top">';
+		echo '<select id="oo-bulk-action-selector-top">';
 		echo '<option value="-1">Mehrfachaktionen</option>';
 		echo '<option value="bulk_delete">Löschen</option>';
 		echo '</select>';
