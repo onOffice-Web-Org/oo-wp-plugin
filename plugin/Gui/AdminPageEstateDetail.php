@@ -201,6 +201,7 @@ class AdminPageEstateDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
 		echo '</div>';
+		$this->renderBulkActionControls();
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
 		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Contact Person Fields', 'onoffice-for-wp-websites').'</span></h2>';
@@ -218,9 +219,6 @@ class AdminPageEstateDetail
 		echo '</div>';
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
-		echo '<button type="button" id="oo-bulk-delete-btn" class="button button-secondary">';
-		echo 'Bulk Delete';
-		echo '</button>';
 		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Real Estate Fields', 'onoffice-for-wp-websites').'</span></h2>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
@@ -585,6 +583,17 @@ class AdminPageEstateDetail
 		echo '<div class="inside">';
 		$pRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);
 		echo '</div>';
+		echo '</div>';
+	}
+
+	private function renderBulkActionControls(){
+		echo '<div style="float:right; margin-bottom: 20px;" class="alignleft actions bulkactions">';
+		echo '<label for="oo-bulk-action-selector-top" class="screen-reader-text">Mehrfachaktion wählen</label>';
+		echo '<select name="action" id="oo-bulk-action-selector-top">';
+		echo '<option value="-1">Mehrfachaktionen</option>';
+		echo '<option value="bulk_delete">Löschen</option>';
+		echo '</select>';
+		echo '<input type="button" id="oo-bulk-action-button" class="button action" value="Übernehmen">';
 		echo '</div>';
 	}
 
