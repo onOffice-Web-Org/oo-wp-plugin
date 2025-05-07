@@ -103,6 +103,6 @@ class InputFieldComplexSortableDetailListContentDefault
 
 		$pInputModelRenderer->buildForAjax($pFormModel);
 
-		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice-for-wp-websites').'</a>';
+		echo '<a class="item-delete-link submitdelete" id="oo-delete-button-'.$key.'">'.__('Delete', 'onoffice-for-wp-websites').'</a>';
 	}
 }

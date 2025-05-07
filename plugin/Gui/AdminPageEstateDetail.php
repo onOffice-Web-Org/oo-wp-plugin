@@ -218,6 +218,9 @@ class AdminPageEstateDetail
 		echo '</div>';
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
+		echo '<button type="button" id="oo-bulk-delete-btn" class="button button-secondary">';
+		echo 'Bulk Delete';
+		echo '</button>';
 		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Real Estate Fields', 'onoffice-for-wp-websites').'</span></h2>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
@@ -490,6 +493,8 @@ class AdminPageEstateDetail
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
 		wp_enqueue_script('oo-unsaved-changes-message');
+		wp_register_script('onoffice-bulk-delete', plugins_url('/dist/onoffice-bulk-delete.min.js', $pluginPath));
+		wp_enqueue_script('onoffice-bulk-delete');
 	}
 
 	/**
