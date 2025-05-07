@@ -251,6 +251,7 @@ class EstateList
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'] []= 'vermarktungsart';
 		$estateParametersRaw['data'] []= 'preisAufAnfrage';
+		$estateParametersRaw['data'] []= 'virtualAddress';
 
 		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
 			$estateParametersRaw['data'] []= 'waehrung';

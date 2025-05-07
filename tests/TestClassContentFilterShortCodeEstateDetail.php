@@ -81,6 +81,8 @@ class TestClassContentFilterShortCodeEstateDetail
 				'loadSingleEstate',
 				'getListViewId',
 				'getDataView',
+				'getEstateLink',
+				'getViewRestrict',
 			])
 			->disableOriginalConstructor()
 			->getMock();
@@ -147,6 +149,8 @@ class TestClassContentFilterShortCodeEstateDetail
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
 		$this->_pEstate->method('getSimilarEstates')->willReturn('');
 		$this->_pEstate->method('getListViewId')->willReturn('estate_detail');
+		$this->_pEstate->method('getEstateLink')->willReturn('http://example.org/detail/123649/');
+		$this->_pEstate->method('getViewRestrict')->willReturn(true);
 	}
 
 	public function testRender()
