@@ -125,6 +125,8 @@ jQuery(document).ready(function($){
 			this.initializeDroppable();
 			this.checkSortableFieldsList();
 			this.bindEvents();
+			this.draggablePages();
+			this.multiSelectItems();
 		},
 
 		checkTemplate: function() {
@@ -216,6 +218,7 @@ jQuery(document).ready(function($){
 					FormMultiPageManager.clickCount--;
 					FormMultiPageManager.reorderPages();
 					FormMultiPageManager.checkSortableFieldsList();
+					FormMultiPageManager.draggablePages();
 				}
 			});
 		},
@@ -226,6 +229,8 @@ jQuery(document).ready(function($){
 			$('#multi-page-container').append(newPage);
 			this.initializeSortable();
 			this.checkTemplate();
+			this.draggablePages();
+			FormMultiPageManager.updateSelectionGroup();
 		},
 
 		createNewPage: function(pageNumber) {
@@ -294,6 +299,220 @@ jQuery(document).ready(function($){
 			ulElement.removeClass(function(index, className) {
 				return (className.match(/(^|\s)fieldsListPage-\S+/g) || []).join(' ');
 			}).addClass(`fieldsListPage-${pageNumber}`);
+		},
+
+		draggablePages: function () {
+			if ($('#multi-page-container .list-fields-for-each-page').length > 1) {
+				$('#multi-page-container .list-fields-for-each-page').css("cursor", "move");
+				$('#multi-page-container').sortable({
+					items: '.list-fields-for-each-page',
+					placeholder: 'sortable-placeholder',
+					tolerance: 'intersect',
+					cursor: 'move',
+					cursorAt: { top: 5, left: 5 },
+					delay: 80,
+					opacity: 0.8,
+					axis: 'y',
+					forcePlaceholderSize: true,
+					start: function(e, ui) {
+						ui.placeholder.height(ui.item.height());
+						$('.list-fields-for-each-page').css('transition', 'all 0.08s');
+					},
+					stop: function(e, ui) {
+						$('.list-fields-for-each-page').css('transition', '');
+					}
+				});
+			} else {
+				if ($('#multi-page-container').data("ui-sortable")) {
+					$('#multi-page-container').sortable('destroy');
+					$('#multi-page-container .list-fields-for-each-page').css("cursor", "default");
+				}
+			}
+
+			$(document).on('mousemove', function (e) {
+				$('.list-fields-for-each-page').each(function () {
+				  const parent = this;
+				  const $parent = $(parent);
+				  const child = $parent.find('.filter-fields-list')[0];
+			  
+				  const isOverParent = parent === document.elementFromPoint(e.clientX, e.clientY) || $.contains(parent, document.elementFromPoint(e.clientX, e.clientY));
+				  const isOverChild = child && (child === document.elementFromPoint(e.clientX, e.clientY) || $.contains(child, document.elementFromPoint(e.clientX, e.clientY)));
+			  
+				  if (isOverParent && !isOverChild) {
+					$parent.addClass('hover-active');
+				  } else {
+					$parent.removeClass('hover-active');
+				  }
+				});
+			  });
+			  
+		},
+
+		multiSelectItems: function () {
+			const $container = $('#multi-page-container');
+		
+			const getTransferableClasses = ($el) =>
+				($el.attr('class') || '')
+					.split(/\s+/)
+					.filter(cls => /^page-\d+$/.test(cls))
+					.join(' ');
+		
+			const wrapItemInGroup = ($item) => {
+				const itemId = $item.attr('id');
+				const actionFieldName = $item.attr('action-field-name');
+				const transferableClasses = getTransferableClasses($item);
+		
+				const $wrapper = $(`
+					<li class="menu-item-handle sortable-item selection-group selection-group-${itemId} ${transferableClasses}"
+						id="${itemId}" action-field-name="${actionFieldName}">
+						<ul class="nested-items"></ul>
+					</li>
+				`);
+		
+				$item.removeAttr('id action-field-name')
+					.removeClass(`${transferableClasses} sortable-item`);
+		
+				$item.before($wrapper);
+				$wrapper.find('.nested-items').append($item);
+			};
+		
+			const unwrapItemFromGroup = ($item) => {
+				const $wrapper = $item.closest('.selection-group');
+				if ($wrapper.length) {
+					const restoredId = $wrapper.attr('id');
+					const restoredActionField = $wrapper.attr('action-field-name');
+					const transferableClasses = getTransferableClasses($wrapper);
+		
+					$item.attr({ id: restoredId, 'action-field-name': restoredActionField })
+						.addClass(`${transferableClasses} sortable-item`)
+						.removeClass('selected');
+		
+					$wrapper.before($item);
+					$wrapper.remove();
+				} else {
+					$item.removeClass('selected');
+				}
+			};
+		
+			$container.on('change', '.list-fields-for-each-page input[type="checkbox"]', (event) => {
+				const $checkbox = $(event.target);
+				const $item = $checkbox.closest('.item');
+		
+				if ($checkbox.prop('checked')) {
+					$item.addClass('selected');
+					if (!$item.closest('.selection-group').length) {
+						wrapItemInGroup($item);
+					}
+				} else {
+					unwrapItemFromGroup($item);
+				}
+		
+				this.updateSelectionGroup();
+			});
+		
+			$(document).off('click.multiSelect').on('click.multiSelect', (event) => {
+				if (!$(event.target).closest('.fieldsSortable').length) {
+					$('.list-fields-for-each-page .selected').each(function () {
+						unwrapItemFromGroup($(this));
+					});
+		
+					$container.find('input[type="checkbox"]').prop('checked', false);
+					this.updateSelectionGroup();
+				}
+			});
+		
+			$('#postbox-select-all').on('change', (event) => {
+				const isChecked = $(event.target).prop('checked');
+				const $checkboxes = $('#multi-page-container .list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
+		
+				$checkboxes.each(function () {
+					const $cb = $(this);
+					if ($cb.prop('checked') !== isChecked) {
+						$cb.prop('checked', isChecked).trigger('change');
+					}
+				});
+			});
+		},
+
+		updateSelectionGroup: function () {
+			const getTransferableClasses = ($el) =>
+				($el.attr('class') || '')
+					.split(/\s+/)
+					.filter(cls => /^page-\d+$/.test(cls))
+					.join(' ');
+		
+			const rewrapOrphans = ($grp, id, af, txf) => {
+				const $orphans = $grp.children('ul.nested-items').children('.item');
+				$orphans.each(function () {
+					const $it = $(this);
+					const $w = $(`
+						<li class="menu-item-handle sortable-item selection-group selection-group-${id} ${txf}"
+							id="${id}" action-field-name="${af}">
+							<ul class="nested-items"></ul>
+						</li>
+					`);
+					$w.find('.nested-items').append($it);
+					$grp.before($w);
+				});
+			};
+		
+			const restoreOriginalGroups = ($grp) => {
+				const $others = $grp.children('ul.nested-items').children('.selection-group');
+				$others.insertAfter($grp);
+			};
+		
+			$('.filter-fields-list').sortable('destroy');
+		
+			$('.filter-fields-list').sortable({
+				axis: 'y',
+				connectWith: '.filter-fields-list',
+				revert: 'invalid',
+		
+				start: function (event, ui) {
+					ui.item.data('origParent', ui.item.parent());
+					ui.item.data('origIndex', ui.item.index());
+		
+					const $d = ui.item;
+					if (!$d.hasClass('selection-group')) return;
+		
+					const $all = $('.list-fields-for-each-page .selection-group');
+					const ids = $all.map((_, el) => $(el).attr('id')).get();
+					const i = ids.indexOf($d.attr('id'));
+					const before = ids.slice(0, i), after = ids.slice(i + 1);
+					let $lst = $d.children('ul.nested-items');
+					if (!$lst.length) $lst = $('<ul class="nested-items"></ul>').appendTo($d);
+		
+					[...before, ...after].forEach(id => {
+						const $e = $(`.selection-group#${id}`);
+						if ($e.length && $e[0] !== $d[0]) $lst.append($e);
+					});
+				},
+		
+				stop: function (event, ui) {
+					const $grp = ui.item;
+					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
+					const validDrop = droppedOver && droppedOver.closest('.fieldsSortable');
+		
+					if (!validDrop) {
+						$(this).sortable('cancel');
+						return;
+					}
+		
+					if ($grp.hasClass('selection-group')) {
+						restoreOriginalGroups($grp);
+		
+						const id = $grp.attr('id');
+						const af = $grp.attr('action-field-name');
+						const txf = getTransferableClasses($grp);
+		
+						rewrapOrphans($grp, id, af, txf);
+						$grp.remove();
+					}
+		
+					FormMultiPageManager.reorderPages();
+					FormMultiPageManager.updateSelectionGroup();
+				}
+			});
 		}
 	};
 
@@ -558,4 +777,5 @@ jQuery(document).ready(function($){
 	var templateSelector = $(templateSelectorStr).first();
 	templateSelector.on('change', refreshTemplateMouseOver);
 	refreshTemplateMouseOver();
-})(jQuery);
+})
+(jQuery);
