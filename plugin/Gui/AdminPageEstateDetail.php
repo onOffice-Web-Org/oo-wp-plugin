@@ -201,10 +201,15 @@ class AdminPageEstateDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
 		echo '</div>';
-		$this->renderBulkActionControls();
+		$this->renderBulkActionControls('address', 'actionForaddress');
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Contact Person Fields', 'onoffice-for-wp-websites').'</span></h2>';
+		echo '<h2 class="hndle ui-sortable-handle">'
+				.'<span class="oo-sortable-checkbox-wrapper">'
+					.'<input type="checkbox" class="oo-sortable-checkbox-all"/>'
+				.'</span>'
+				.'<span>'.__('Contact Person Fields', 'onoffice-for-wp-websites').'</span>'
+			 .'</h2>';
 		$pRenderer->buildForAjax($pFormViewSortablecontactFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';

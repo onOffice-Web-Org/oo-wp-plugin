@@ -1102,6 +1102,6 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	align-items: center;
 }
 
-.oo-sortable-checkbox-wrapper .oo-sortable-checkbox {
+.oo-sortable-checkbox-wrapper input[type="checkbox"] {
 	transform: translateY(0.125rem);
 }
