@@ -201,7 +201,7 @@ class AdminPageEstateDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
 		echo '</div>';
-		$this->renderBulkActionControls('address', 'actionForaddress');
+		$this->renderBulkActionControls('address', esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)));
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
 		echo '<h2 class="hndle ui-sortable-handle">'
@@ -222,6 +222,7 @@ class AdminPageEstateDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'advanced', null);
 		echo '</div>';
+		$this->renderBulkActionControls('estate', esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)));
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
 		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Real Estate Fields', 'onoffice-for-wp-websites').'</span></h2>';
