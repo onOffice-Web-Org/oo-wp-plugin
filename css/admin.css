@@ -1095,3 +1095,13 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .oo-poststuff .oo-email-subject-container .oo-suggestion-item:hover {
 	background-color: #f0f0f0;
 }
+
+.oo-sortable-checkbox-wrapper {
+	height: 1.25rem;
+	display: inline-flex;
+	align-items: center;
+}
+
+.oo-sortable-checkbox-wrapper .oo-sortable-checkbox {
+	transform: translateY(0.125rem);
+}
