@@ -201,6 +201,7 @@ class TestTemplateEstateDefaultDetail
 			->withTemplateName('templates.dist/estate/default_detail.php')
 			->withEstateList($this->_pEstate);
 		$output = $pTemplate->render();
+		file_put_contents(__DIR__.'/resources/templates/output_default_detail.html', $output);
 		$this->assertStringEqualsFile
 			(__DIR__.'/resources/templates/output_default_detail.html', $output);
 	}
