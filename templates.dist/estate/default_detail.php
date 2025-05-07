@@ -155,6 +155,9 @@ $dimensions = [
 					if (empty($value)) {
 						continue;
 					}
+					if(($field === "innen_courtage" || $field === "aussen_courtage") && $currentEstate["provisionsfrei"] === "Ja"){
+						continue;
+					}
 					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
 						. '<div class="oo-detailslisttd">'
 						. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
