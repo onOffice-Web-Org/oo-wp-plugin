@@ -333,199 +333,170 @@ jQuery(document).ready(function($){
 		multiSelectItems: function () {
 			const $container = $('#multi-page-container');
 		
-			// Handle checkbox selection using static parent
+			const getTransferableClasses = ($el) =>
+				($el.attr('class') || '')
+					.split(/\s+/)
+					.filter(cls => /^page-\d+$/.test(cls))
+					.join(' ');
+		
+			const wrapItemInGroup = ($item) => {
+				const itemId = $item.attr('id');
+				const actionFieldName = $item.attr('action-field-name');
+				const transferableClasses = getTransferableClasses($item);
+		
+				const $wrapper = $(`
+					<li class="menu-item-handle sortable-item selection-group selection-group-${itemId} ${transferableClasses}"
+						id="${itemId}" action-field-name="${actionFieldName}">
+						<ul class="nested-items"></ul>
+					</li>
+				`);
+		
+				$item.removeAttr('id action-field-name')
+					.removeClass(`${transferableClasses} sortable-item`);
+		
+				$item.before($wrapper);
+				$wrapper.find('.nested-items').append($item);
+			};
+		
+			const unwrapItemFromGroup = ($item) => {
+				const $wrapper = $item.closest('.selection-group');
+				if ($wrapper.length) {
+					const restoredId = $wrapper.attr('id');
+					const restoredActionField = $wrapper.attr('action-field-name');
+					const transferableClasses = getTransferableClasses($wrapper);
+		
+					$item.attr({ id: restoredId, 'action-field-name': restoredActionField })
+						.addClass(`${transferableClasses} sortable-item`)
+						.removeClass('selected');
+		
+					$wrapper.before($item);
+					$wrapper.remove();
+				} else {
+					$item.removeClass('selected');
+				}
+			};
+		
 			$container.on('change', '.list-fields-for-each-page input[type="checkbox"]', (event) => {
 				const $checkbox = $(event.target);
 				const $item = $checkbox.closest('.item');
 		
 				if ($checkbox.prop('checked')) {
 					$item.addClass('selected');
-		
 					if (!$item.closest('.selection-group').length) {
-						const itemId = $item.attr('id');
-						const actionFieldName = $item.attr('action-field-name');
-		
-						// Transferable structural classes
-						const transferableClasses = ($item.attr('class') || '')
-							.split(/\s+/)
-							.filter(cls => /^page-\d+$/.test(cls))
-							.join(' ');
-		
-						// Create the outer wrapper <li> with a nested <ul>
-						const $wrapper = $(`
-							<li class="menu-item-handle sortable-item selection-group selection-group-${itemId} ${transferableClasses}"
-								id="${itemId}" action-field-name="${actionFieldName}">
-								<ul class="nested-items"></ul>
-							</li>
-						`);
-		
-						// Remove identifying attributes/classes from inner item
-						$item.removeAttr('id').removeAttr('action-field-name');
-						$item.removeClass(transferableClasses);
-						$item.removeClass('sortable-item');
-		
-						// Insert wrapper before item and nest item inside <ul>
-						$item.before($wrapper);
-						$wrapper.find('.nested-items').append($item);
+						wrapItemInGroup($item);
 					}
 				} else {
-					const $wrapper = $item.closest('.selection-group');
-					if ($wrapper.length) {
-						const restoredId = $wrapper.attr('id');
-						const restoredActionField = $wrapper.attr('action-field-name');
-		
-						// Restore classes
-						const wrapperClasses = $wrapper.attr('class') || '';
-						const transferableClasses = wrapperClasses
-							.split(/\s+/)
-							.filter(cls => /^page-\d+$/.test(cls))
-							.join(' ');
-		
-						$item.attr('id', restoredId);
-						$item.attr('action-field-name', restoredActionField);
-						$item.addClass(transferableClasses);
-						$item.addClass('sortable-item');
-						$item.removeClass('selected');
-		
-						$wrapper.before($item);
-						$wrapper.remove();
-					} else {
-						$item.removeClass('selected');
-					}
+					unwrapItemFromGroup($item);
 				}
 		
 				this.updateSelectionGroup();
 			});
 		
-			// Deselect everything when clicking outside
 			$(document).off('click.multiSelect').on('click.multiSelect', (event) => {
 				if (!$(event.target).closest('.fieldsSortable').length) {
 					$('.list-fields-for-each-page .selected').each(function () {
-						const $item = $(this);
-						const $wrapper = $item.closest('.selection-group');
-		
-						if ($wrapper.length) {
-							const restoredId = $wrapper.attr('id');
-							const restoredActionField = $wrapper.attr('action-field-name');
-		
-							const wrapperClasses = $wrapper.attr('class') || '';
-							const transferableClasses = wrapperClasses
-								.split(/\s+/)
-								.filter(cls => /^page-\d+$/.test(cls))
-								.join(' ');
-		
-							$item.attr('id', restoredId);
-							$item.attr('action-field-name', restoredActionField);
-							$item.addClass(transferableClasses);
-							$item.addClass('sortable-item');
-							$item.removeClass('selected');
-		
-							$wrapper.before($item);
-							$wrapper.remove();
-						} else {
-							$item.removeClass('selected');
-						}
+						unwrapItemFromGroup($(this));
 					});
 		
 					$container.find('input[type="checkbox"]').prop('checked', false);
 					this.updateSelectionGroup();
 				}
 			});
-
-			// Handle select-all checkbox toggle
+		
 			$('#postbox-select-all').on('change', (event) => {
 				const isChecked = $(event.target).prop('checked');
-
-				// Get all checkboxes within the container (excluding #postbox-select-all itself)
 				const $checkboxes = $('#multi-page-container .list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
-
+		
 				$checkboxes.each(function () {
 					const $cb = $(this);
-					// Avoid redundant triggers
 					if ($cb.prop('checked') !== isChecked) {
 						$cb.prop('checked', isChecked).trigger('change');
 					}
-				});		
+				});
 			});
 		},
 		
 
 		updateSelectionGroup: function () {
-			// Tear down any existing sortable
-			$('.filter-fields-list').sortable('destroy');
-		  
-			// Re‑init sortable
-			$('.filter-fields-list').sortable({
-			  axis: 'y',                          // vertical only :contentReference[oaicite:5]{index=5}
-			  connectWith: '.filter-fields-list', // cross‑page dragging :contentReference[oaicite:6]{index=6}
-			  revert: 'invalid',                  // snap back on invalid drop :contentReference[oaicite:7]{index=7}
-		  
-			  start: function(event, ui) {
-				// Record original parent & index for potential cancel
-				ui.item.data('origParent', ui.item.parent());
-				ui.item.data('origIndex',  ui.item.index());              
-		  
-				// Multi‑select grouping logic (unchanged)
-				const $d = ui.item;
-				if (!$d.hasClass('selection-group')) return;
-				const $all = $('.list-fields-for-each-page .selection-group');
-				const ids = $all.map((_,el) => $(el).attr('id')).get();
-				const i   = ids.indexOf($d.attr('id'));
-				const before = ids.slice(0,i), after = ids.slice(i+1);
-				let $lst = $d.children('ul.nested-items');
-				if (!$lst.length) $lst = $('<ul class="nested-items"></ul>').appendTo($d);
-				[...before, ...after].forEach(id => {
-				  const $e = $(`.selection-group#${id}`);
-				  if ($e.length && $e[0]!==$d[0]) $lst.append($e);
-				});
-			  },
-		  
-			  stop: function(event, ui) {
-				const $grp = ui.item;
-		  
-				// Detect where the mouse was released
-				const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
-				const validDrop  = droppedOver && droppedOver.closest('.fieldsSortable');
-		  
-				if (!validDrop) {
-				  $(this).sortable('cancel');                    
-				  return;
-				}
-		  
-				// ✅ Valid drop → unwrap movement‑wrapper into individual wrappers
-				if ($grp.hasClass('selection-group')) {
-				  // 1) move back the other original wrappers
-				  const $others = $grp.children('ul.nested-items').children('.selection-group');
-				  $others.insertAfter($grp);                            
-		  
-				  // 2) rewrap the dragged .item into its own wrapper
-				  const $orphans = $grp.children('ul.nested-items').children('.item');
-				  const id  = $grp.attr('id'),
-						af  = $grp.attr('action-field-name'),
-						txf = ($grp.attr('class')||'').split(/\s+/).filter(c=>/^page-\d+$/.test(c)).join(' ');
-				  $orphans.each(function(){
+			const getTransferableClasses = ($el) =>
+				($el.attr('class') || '')
+					.split(/\s+/)
+					.filter(cls => /^page-\d+$/.test(cls))
+					.join(' ');
+		
+			const rewrapOrphans = ($grp, id, af, txf) => {
+				const $orphans = $grp.children('ul.nested-items').children('.item');
+				$orphans.each(function () {
 					const $it = $(this);
-					const $w  = $(`
-					  <li class="menu-item-handle sortable-item selection-group selection-group-${id} ${txf}"
-						  id="${id}" action-field-name="${af}">
-						<ul class="nested-items"></ul>
-					  </li>
+					const $w = $(`
+						<li class="menu-item-handle sortable-item selection-group selection-group-${id} ${txf}"
+							id="${id}" action-field-name="${af}">
+							<ul class="nested-items"></ul>
+						</li>
 					`);
 					$w.find('.nested-items').append($it);
 					$grp.before($w);
-				  });
-		  
-				  // 3) remove only the temporary multi‑item wrapper
-				  $grp.remove();
+				});
+			};
+		
+			const restoreOriginalGroups = ($grp) => {
+				const $others = $grp.children('ul.nested-items').children('.selection-group');
+				$others.insertAfter($grp);
+			};
+		
+			$('.filter-fields-list').sortable('destroy');
+		
+			$('.filter-fields-list').sortable({
+				axis: 'y',
+				connectWith: '.filter-fields-list',
+				revert: 'invalid',
+		
+				start: function (event, ui) {
+					ui.item.data('origParent', ui.item.parent());
+					ui.item.data('origIndex', ui.item.index());
+		
+					const $d = ui.item;
+					if (!$d.hasClass('selection-group')) return;
+		
+					const $all = $('.list-fields-for-each-page .selection-group');
+					const ids = $all.map((_, el) => $(el).attr('id')).get();
+					const i = ids.indexOf($d.attr('id'));
+					const before = ids.slice(0, i), after = ids.slice(i + 1);
+					let $lst = $d.children('ul.nested-items');
+					if (!$lst.length) $lst = $('<ul class="nested-items"></ul>').appendTo($d);
+		
+					[...before, ...after].forEach(id => {
+						const $e = $(`.selection-group#${id}`);
+						if ($e.length && $e[0] !== $d[0]) $lst.append($e);
+					});
+				},
+		
+				stop: function (event, ui) {
+					const $grp = ui.item;
+					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
+					const validDrop = droppedOver && droppedOver.closest('.fieldsSortable');
+		
+					if (!validDrop) {
+						$(this).sortable('cancel');
+						return;
+					}
+		
+					if ($grp.hasClass('selection-group')) {
+						restoreOriginalGroups($grp);
+		
+						const id = $grp.attr('id');
+						const af = $grp.attr('action-field-name');
+						const txf = getTransferableClasses($grp);
+		
+						rewrapOrphans($grp, id, af, txf);
+						$grp.remove();
+					}
+		
+					FormMultiPageManager.reorderPages();
+					FormMultiPageManager.updateSelectionGroup();
 				}
-		  
-				// leave all .selected classes and checkboxes intact
-		  
-				FormMultiPageManager.reorderPages();
-				FormMultiPageManager.updateSelectionGroup();
-			  }
 			});
-		  }
+		}
 		  
 		  
 		  
