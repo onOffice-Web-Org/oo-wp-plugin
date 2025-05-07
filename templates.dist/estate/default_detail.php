@@ -584,9 +584,7 @@ $dimensions = [
 		</div>
 		<?php $similar = trim($pEstates->getSimilarEstates()); ?>
 		<?php if (!empty($similar)): ?>
-    		<div class="oo-similar">
-        		<?php echo $similar; ?>
-    		</div>
+        	<?php echo $similar; ?>
 		<?php endif; ?>
 	<?php } ?>
 
