@@ -994,15 +994,6 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	cursor: move;
 }
 
-#selection-group .selected input[type="checkbox"] {
-	pointer-events: auto;
-	position: relative;
-	z-index: 2;
-}
-#selection-group .menu-item-bar {
-	pointer-events: none;
-}
-
 .selection-group {
 	border: 2px dashed blue;
 	background-color: rgba(0, 0, 255, 0.1);
@@ -1021,12 +1012,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	font-weight: 600;
 	cursor: pointer;
 }
-
-/* .filter-fields-list {
-	position: relative; /* gives local context for left:0 */ 
-} */
   
-
 .list-fields-for-each-page .ui-sortable-helper {
 	background-color: #e0e0e0;
 	border: 1px solid #ccc;

@@ -415,7 +415,6 @@ jQuery(document).ready(function($){
 				});
 			});
 		},
-		
 
 		updateSelectionGroup: function () {
 			const getTransferableClasses = ($el) =>
@@ -497,11 +496,6 @@ jQuery(document).ready(function($){
 				}
 			});
 		}
-		  
-		  
-		  
-		
-		
 	};
 
 	if ($('#multi-page-container').length) {
