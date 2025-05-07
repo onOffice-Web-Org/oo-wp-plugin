@@ -328,6 +328,24 @@ jQuery(document).ready(function($){
 					$('#multi-page-container .list-fields-for-each-page').css("cursor", "default");
 				}
 			}
+
+			$(document).on('mousemove', function (e) {
+				$('.list-fields-for-each-page').each(function () {
+				  const parent = this;
+				  const $parent = $(parent);
+				  const child = $parent.find('.filter-fields-list')[0];
+			  
+				  const isOverParent = parent === document.elementFromPoint(e.clientX, e.clientY) || $.contains(parent, document.elementFromPoint(e.clientX, e.clientY));
+				  const isOverChild = child && (child === document.elementFromPoint(e.clientX, e.clientY) || $.contains(child, document.elementFromPoint(e.clientX, e.clientY)));
+			  
+				  if (isOverParent && !isOverChild) {
+					$parent.addClass('hover-active');
+				  } else {
+					$parent.removeClass('hover-active');
+				  }
+				});
+			  });
+			  
 		},
 
 		multiSelectItems: function () {

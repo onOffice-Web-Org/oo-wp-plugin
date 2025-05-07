@@ -995,7 +995,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 }
 
 .selection-group {
-	border: 2px dashed blue;
+	border: 2px dashed #2271B1;
 	background-color: rgba(0, 0, 255, 0.1);
 }
 
@@ -1035,6 +1035,12 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .list-fields-for-each-page .item-remove-page {
 	display: flex;
 	justify-content: flex-end;
+}
+
+.list-fields-for-each-page.hover-active {
+	background-color: #fafafa;
+	transition: 0.3s;
+	border-color: #2271B1;
 }
 
 .add-page-container {
