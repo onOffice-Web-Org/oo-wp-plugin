@@ -205,8 +205,8 @@ class AdminPageEstateDetail
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
 		echo '<h2 class="hndle ui-sortable-handle">'
-				.'<span class="oo-sortable-checkbox-wrapper">'
-					.'<input type="checkbox" class="oo-sortable-checkbox-all"/>'
+				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
+					.'<input type="checkbox" class="oo-sortable-checkbox-all" onchange="ooHandleCheckboxAllChange(event)"/>'
 				.'</span>'
 				.'<span>'.__('Contact Person Fields', 'onoffice-for-wp-websites').'</span>'
 			 .'</h2>';
@@ -225,7 +225,11 @@ class AdminPageEstateDetail
 		$this->renderBulkActionControls('estate', esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)));
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Real Estate Fields', 'onoffice-for-wp-websites').'</span></h2>';
+		echo '<h2 class="hndle ui-sortable-handle">'
+				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
+					.'<input type="checkbox" class="oo-sortable-checkbox-all" onchange="ooHandleCheckboxAllChange(event)"/>'
+				.'</span>'
+			 .'<span>'.__('Real Estate Fields', 'onoffice-for-wp-websites').'</span></h2>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
