@@ -167,7 +167,7 @@ class AdminPageAddressDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
 		echo '</div>';
-
+		$this->renderBulkActionControls();
 		echo '<div class="fieldsSortable postbox">';
 		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Fields', 'onoffice-for-wp-websites') . '</span></h2>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
@@ -359,6 +359,8 @@ class AdminPageAddressDetail
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
 		wp_enqueue_script('oo-unsaved-changes-message');
+		wp_register_script('onoffice-bulk-delete', plugins_url('/dist/onoffice-bulk-delete.min.js', $pluginPath));
+		wp_enqueue_script('onoffice-bulk-delete');
 	}
 
 	/**

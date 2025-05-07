@@ -755,6 +755,9 @@ abstract class AdminPageFormSettingsBase
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
 
+		wp_register_script('onoffice-bulk-delete', plugins_url('/dist/onoffice-bulk-delete.min.js', $pluginPath));
+		wp_enqueue_script('onoffice-bulk-delete');
+
 		if ($this->getType() !== Form::TYPE_APPLICANT_SEARCH) {
 			wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js');
 			wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css');
@@ -853,6 +856,7 @@ abstract class AdminPageFormSettingsBase
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections( get_current_screen()->id, 'side', null );
 		echo '</div>';
+		$this->renderBulkActionControls();
 		echo '<div class="fieldsSortable postbox">';
 		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields',
 				'onoffice-for-wp-websites' ) . '</span></h2>';

@@ -586,17 +586,6 @@ class AdminPageEstateDetail
 		echo '</div>';
 	}
 
-	private function renderBulkActionControls(){
-		echo '<div style="float:right; margin-bottom: 20px;" class="alignleft actions bulkactions">';
-		echo '<label for="oo-bulk-action-selector-top" class="screen-reader-text">Mehrfachaktion wählen</label>';
-		echo '<select name="action" id="oo-bulk-action-selector-top">';
-		echo '<option value="-1">Mehrfachaktionen</option>';
-		echo '<option value="bulk_delete">Löschen</option>';
-		echo '</select>';
-		echo '<input type="button" id="oo-bulk-action-button" class="button action" value="Übernehmen">';
-		echo '</div>';
-	}
-
 	/**
 	 *
 	 * @param $modules
