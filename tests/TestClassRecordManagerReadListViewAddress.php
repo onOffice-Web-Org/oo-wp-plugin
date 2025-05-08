@@ -138,12 +138,12 @@ class TestClassRecordManagerReadListViewAddress
 		$this->assertEquals(9, count($pRowAddress));
 	}
 
-	public function testReadFieldconfigByListviewId()
+	public function testGetFieldconfigByListviewId()
 	{
-		$this->_pRecordManagerReadListViewAddress->method('readFieldconfigByListviewId')->will($this->returnValueMap([
+		$this->_pRecordManagerReadListViewAddress->method('getFieldconfigByListviewId')->will($this->returnValueMap([
 			[1, $this->getBasicFieldsArray(1)]
 		]));
-		$pFieldsAddress = $this->_pRecordManagerReadListViewAddress->readFieldconfigByListviewId(1);
+		$pFieldsAddress = $this->_pRecordManagerReadListViewAddress->sgetFieldconfigByListviewId(1);
 		$this->assertEquals(4, count($pFieldsAddress));
 	}
 }

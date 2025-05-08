@@ -233,7 +233,7 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	private function readPicturetypesByListviewId(int $listviewId) : array
+	public function getPicturetypesByListviewId(int $listviewId) : array
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
@@ -266,7 +266,7 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	private function readSortbyuservaluesNyListviewId(int $listviewId) : array
+	public function getSortbyuservaluesByListviewId(int $listviewId) : array
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
@@ -298,7 +298,7 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	private function readFieldconfigByListviewId(int $listviewId) : array
+	public function getFieldconfigByListviewId(int $listviewId) : array
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
@@ -331,7 +331,7 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	private function readContactDataByListviewId(int $listviewId) : array
+	public function getContactDataByListviewId(int $listviewId) : array
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
@@ -376,59 +376,6 @@ class RecordManagerReadListViewEstate
 		}
 
 		return $result;
-	}
-
-
-	/**
-	 *
-	 * @param int $listviewId
-	 * @return array
-	 *
-	 */
-
-	public function getPictureTypesByListviewId(int $listviewId): array
-	{
-		return $this->readPicturetypesByListviewId($listviewId);
-	}
-
-
-	/**
-	 *
-	 * @param int $listviewId
-	 * @return array
-	 *
-	 */
-
-	public function getSortbauservaluesByListviewId(int $listviewId): array
-	{
-		return $this->readSortbyuservaluesNyListviewId($listviewId);
-	}
-
-
-	/**
-	 *
-	 * @param int $listviewId
-	 * @return array
-	 *
-	 */
-
-	public function getFieldconfigByListviewId(int $listviewId): array
-	{
-		return $this->readFieldconfigByListviewId($listviewId);
-	}
-
-
-
-	/**
-	 *
-	 * @param int $listviewId
-	 * @return array
-	 *
-	 */
-
-	public function getContactDataByListviewId(int $listviewId): array
-	{
-		return $this->readContactDataByListviewId($listviewId);
 	}
 
 

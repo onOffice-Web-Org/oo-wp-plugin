@@ -134,7 +134,7 @@ class RecordManagerReadListViewAddress
 			throw new \Exception(__('unknown address list name', 'onoffice-for-wp-websites'));
 		}
 
-		$resultFieldConfig = $this->readFieldconfigByListviewId($result[$this->getIdColumnMain()]);
+		$resultFieldConfig = $this->getFieldconfigByListviewId($result[$this->getIdColumnMain()]);
 		$result['fields'] = array_column($resultFieldConfig, 'fieldname');
 		$result['filterable'] = array_keys(array_filter(array_column($resultFieldConfig, 'filterable', 'fieldname')));
 		$result['hidden'] = array_keys(array_filter(array_column($resultFieldConfig, 'hidden', 'fieldname')));
@@ -150,7 +150,7 @@ class RecordManagerReadListViewAddress
 	 *
 	 */
 
-	public function readFieldconfigByListviewId(int $listviewId)
+	public function getFieldconfigByListviewId(int $listviewId)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
