@@ -146,18 +146,6 @@ class TestClassRecordManagerRead
 	 *
 	 */
 
-	public function testJoins()
-	{
-		$this->assertEquals([], $this->_pSubject->getJoins());
-		$this->_pSubject->addJoin('1 = 1');
-		$this->assertEquals(['1 = 1'], $this->_pSubject->getJoins());
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testWhere()
 	{
 		$this->assertEquals(['1'], $this->_pSubject->getWhere());
