@@ -17,15 +17,11 @@ function ooHandleBulkDelete(el = null){
 			deleteBtn.click();
 		}
 		else {
-			const lv4Parent = cb.parentElement?.parentElement?.parentElement?.parentElement;
-			if(!lv4Parent){
-				return;
+			//case of a newly added field that hasnt been saved yet, its enough to remove it from dom
+			const li = document.getElementById('menu-item-'+id);
+			if(li){
+				li.remove();
 			}
-			const deleteButtons =  lv4Parent.querySelectorAll('.item-delete-link.submitdelete');
-			if (!(deleteButtons instanceof NodeList) || deleteButtons.length !== 1) {
-				return;
-			}
-			deleteButtons[0].click();
 		}
 	});
 }
@@ -35,10 +31,7 @@ function ooHandleCheckboxAllChange(evt, containerId = null) {
 	const container = containerId ? document.getElementById(containerId) : document
 	const checkboxes = container.querySelectorAll('.oo-sortable-checkbox');
 
-	checkboxes.forEach(cb => {
-		if (cb !== masterCheckbox) {
-			cb.checked = masterCheckbox.checked;
-		}
-	});
+	checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
 }
+
 
