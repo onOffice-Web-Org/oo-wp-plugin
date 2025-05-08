@@ -59,7 +59,6 @@ class RecordManagerReadListViewEstate
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 		$columns = implode(', ', $this->getColumns());
-		$join = implode("\n", $this->getJoins()); //<-depricated ??
 		$where = "(".implode(") AND (", $this->getWhere()).")";
 
 		$sql = $pWpDb->prepare(
@@ -90,7 +89,6 @@ class RecordManagerReadListViewEstate
         $prefix = $this->getTablePrefix();
         $pWpDb = $this->getWpdb();
         $columns = implode(', ', $this->getColumns());
-        $join = implode("\n", $this->getJoins());
         $where = "(".implode(") AND (", $this->getWhere()).")";
         if (!empty($_GET["search"]))
         {

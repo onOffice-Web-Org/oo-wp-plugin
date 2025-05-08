@@ -188,10 +188,6 @@ abstract class RecordManagerRead
 	public function setLimit(int $limit)
 		{ $this->_limit = $limit; }
 
-	/** @param string $fullJoinStatement */
-	public function addJoin(string $fullJoinStatement)
-		{ $this->_joins []= $fullJoinStatement; }
-
 	/** @param string $where */
 	public function addWhere(string $where)
 		{ $this->_where []= $where; }
@@ -207,10 +203,6 @@ abstract class RecordManagerRead
 	/** @return string [] */
 	public function getColumns(): array
 		{ return $this->_columns;}
-
-	/** @return string [] */
-	public function getJoins(): array
-		{ return $this->_joins;}
 
 	/** @return int */
 	public function getOffset(): int

@@ -58,7 +58,6 @@ class RecordManagerReadForm
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 		$columns = implode(', ', $this->getColumns());
-		$join = implode("\n", $this->getJoins());
 		$where = "(".implode(") AND (", $this->getWhere()).")";
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
@@ -88,7 +87,6 @@ class RecordManagerReadForm
         $prefix = $this->getTablePrefix();
         $pWpDb = $this->getWpdb();
         $columns = implode(', ', $this->getColumns());
-        $join = implode("\n", $this->getJoins());
         $where = "(".implode(") AND (", $this->getWhere()).")";
         if (!empty($_GET["search"]))
         {
@@ -352,7 +350,6 @@ class RecordManagerReadForm
 			esc_sql($this->getIdColumnMain()),
 			$formId
 		);
-		error_log($formId);
 
 		return $pWpDb->get_row($sql, ARRAY_A) ?? [];
 	}

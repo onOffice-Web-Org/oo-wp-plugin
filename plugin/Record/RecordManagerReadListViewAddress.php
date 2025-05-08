@@ -53,7 +53,6 @@ class RecordManagerReadListViewAddress
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 		$columns = implode(', ', $this->getColumns());
-		$join = implode("\n", $this->getJoins());
 		$where = "(".implode(") AND (", $this->getWhere()).")";
 
 		$sql = $pWpDb->prepare(
@@ -85,7 +84,6 @@ class RecordManagerReadListViewAddress
         $prefix = $this->getTablePrefix();
         $pWpDb = $this->getWpdb();
         $columns = implode(', ', $this->getColumns());
-        $join = implode("\n", $this->getJoins());
         $where = "(".implode(") AND (", $this->getWhere()).")";
         if (!empty($_GET["search"]))
         {
