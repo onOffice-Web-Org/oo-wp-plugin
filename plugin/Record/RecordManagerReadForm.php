@@ -60,12 +60,16 @@ class RecordManagerReadForm
 		$columns = implode(', ', $this->getColumns());
 		$join = implode("\n", $this->getJoins());
 		$where = "(".implode(") AND (", $this->getWhere()).")";
-		$sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
-				FROM {$prefix}oo_plugin_forms
-				{$join}
-				WHERE {$where}
-				ORDER BY `form_id` ASC
-				LIMIT {$this->getOffset()}, {$this->getLimit()}";
+		$sql = $pWpDb->prepare(
+			"SELECT SQL_CALC_FOUND_ROWS {$columns}
+			FROM %i
+			WHERE {$where}
+			ORDER BY `form_id` ASC
+			LIMIT %d, %d",
+			$prefix."oo_plugin_forms",
+			$this->getOffset(),
+			$this->getLimit()
+		);
 		$this->setFoundRows($pWpDb->get_results($sql, OBJECT));
 		$this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
 
@@ -90,12 +94,16 @@ class RecordManagerReadForm
         {
             $where .= "AND (name LIKE '%".esc_sql($_GET['search'])."%' OR template LIKE '%".esc_sql($_GET['search'])."%' OR recipient LIKE '%".esc_sql($_GET['search'])."%' OR subject LIKE '%".esc_sql($_GET['search'])."%')";
         }
-        $sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
-				FROM {$prefix}oo_plugin_forms
-				{$join}
-				WHERE {$where}
-				ORDER BY `name` ASC
-				LIMIT {$this->getOffset()}, {$this->getLimit()}";
+		$sql = $pWpDb->prepare(
+			"SELECT SQL_CALC_FOUND_ROWS {$columns}
+			FROM %i
+			WHERE {$where}
+			ORDER BY `name` ASC
+			LIMIT %d, %d",
+			$prefix."oo_plugin_forms",
+			$this->getOffset(),
+			$this->getLimit()
+		);
         $this->setFoundRows($pWpDb->get_results($sql, OBJECT));
         $this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
 
@@ -113,8 +121,11 @@ class RecordManagerReadForm
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sql = "SELECT *
-				FROM {$prefix}oo_plugin_forms";
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %d",
+			$prefix."oo_plugin_forms"
+		);
 
 		$result = $pWpDb->get_results($sql, OBJECT);
 
@@ -138,9 +149,13 @@ class RecordManagerReadForm
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sql = "SELECT *
-				FROM {$prefix}oo_plugin_forms 
-				WHERE `form_type` = '".esc_sql($formType)."'";
+		$sql = $pWpDb->perpare(
+			"SELECT *
+			FROM %i
+			WHERE `form_type` = %s",
+			$prefix."oo_plugin_forms",
+			esc_sql($formType)
+		);
 
 		$result = $pWpDb->get_results($sql, OBJECT);
 
@@ -156,8 +171,13 @@ class RecordManagerReadForm
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sql = "SELECT COUNT(`form_id`) as count
-				FROM {$prefix}oo_plugin_forms WHERE `default_recipient` = 1";
+		$sql = $pWpDb->prepare(
+			"SELECT COUNT(`form_id`) as count
+			FROM %i
+			WHERE `default_recipient` = 1",
+			$prefix."oo_plugin_forms"
+		);
+
 
 		$rowCount = $pWpDb->get_var($sql);
 
@@ -178,9 +198,14 @@ class RecordManagerReadForm
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sql = "SELECT *
-				FROM {$prefix}oo_plugin_forms
-				WHERE `name` = '".esc_sql($formName)."'";
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE `name` = %s",
+			$prefix."oo_plugin_forms",
+			esc_sql($formName)
+		);
+
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 
@@ -206,17 +231,21 @@ class RecordManagerReadForm
 	 *
 	 */
 
-	public function readFieldconfigByFormId($formId)
+	public function readFieldconfigByFormId(int $formId)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlFields = "SELECT *
-			FROM {$prefix}oo_plugin_form_fieldconfig
-			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($formId)."
-			ORDER BY `order` ASC";
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE %i = %s",
+			$prefix."oo_plugin_form_fieldconfig",
+			esc_sql($this->getIdColumnMain()),
+			$formId
+		);
 
-		return $pWpDb->get_results($sqlFields, ARRAY_A);
+		return $pWpDb->get_results($sql, ARRAY_A);
 	}
 
 
@@ -227,16 +256,20 @@ class RecordManagerReadForm
 	 *
 	 */
 
-	public function getNameByFormId($formId)
+	public function getNameByFormId(int $formId)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlNames = "SELECT *
-				FROM {$prefix}oo_plugin_forms
-				WHERE `form_id` = ".esc_sql((int)$formId);
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE `form_id` = %d",
+			$prefix."oo_plugin_forms",
+			$formId
+		);
 
-		$result = $pWpDb->get_results($sqlNames, OBJECT);
+		$result = $pWpDb->get_results($sql, OBJECT);
 
 		return $result;
 	}
@@ -249,17 +282,20 @@ class RecordManagerReadForm
 	 *
 	 */
 
-	public function readFieldsByFormId($formId)
+	public function readFieldsByFormId(int $formId)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlFields = "SELECT *
-				FROM {$prefix}oo_plugin_form_fieldconfig
-				WHERE `form_id` = ".esc_sql((int)$formId)."
-				ORDER BY `order` ASC";
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE `form_id` = %d",
+			$prefix."oo_plugin_form_fieldconfig",
+			$formId
+		);
 
-		$result = $pWpDb->get_results($sqlFields, ARRAY_A);
+		$result = $pWpDb->get_results($sql, ARRAY_A);
 
 		return $result;
 	}
@@ -276,9 +312,13 @@ class RecordManagerReadForm
 		$pWpDb = $this->getWpdb();
 		$prefix = $this->getTablePrefix();
 
-		$sql = "SELECT `form_type`, COUNT(`form_id`) as count
-				FROM {$prefix}oo_plugin_forms
-				GROUP BY `form_type`";
+		$sql = $pWpDb->prepare(
+			"SELECT `form_type`, COUNT(`form_id`) as count
+			FROM %i
+			GROUP BY `form_type`",
+			$prefix."oo_plugin_forms"
+		);
+
 		$result = $pWpDb->get_results($sql, ARRAY_A);
 		$returnValues = array();
 
@@ -304,11 +344,17 @@ class RecordManagerReadForm
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlFields = "SELECT *
-			FROM {$prefix}oo_plugin_form_activityconfig
-			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($formId)."";
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE %i = %d",
+			$prefix."oo_plugin_form_activityconfig",
+			esc_sql($this->getIdColumnMain()),
+			$formId
+		);
+		error_log($formId);
 
-		return $pWpDb->get_row($sqlFields, ARRAY_A) ?? [];
+		return $pWpDb->get_row($sql, ARRAY_A) ?? [];
 	}
 
 	/**
@@ -322,9 +368,14 @@ class RecordManagerReadForm
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlFields = "SELECT *
-			FROM {$prefix}oo_plugin_form_taskconfig
-			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($formId)."";
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE %i = %d",
+			$prefix."oo_plugin_form_activityconfig",
+			esc_sql($this->getIdColumnMain()),
+			$formId
+		);
 
 		return $pWpDb->get_row($sqlFields, ARRAY_A) ?? [];
 	}

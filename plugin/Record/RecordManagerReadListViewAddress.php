@@ -55,12 +55,17 @@ class RecordManagerReadListViewAddress
 		$columns = implode(', ', $this->getColumns());
 		$join = implode("\n", $this->getJoins());
 		$where = "(".implode(") AND (", $this->getWhere()).")";
-		$sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
-				FROM {$prefix}oo_plugin_listviews_address
-				{$join}
-				WHERE {$where}
-				ORDER BY `listview_address_id` ASC
-				LIMIT {$this->getOffset()}, {$this->getLimit()}";
+
+		$sql = $pWpDb->prepare(
+			"SELECT SQL_CALC_FOUND_ROWS {$columns}
+			FROM %i
+			WHERE {$where}
+			ORDER BY `listview_address_id` ASC
+			LIMIT %d, %d",
+			$prefix."oo_plugin_listviews_address",
+			$this->getOffset(),
+			$this->getLimit()
+		);
 
 		$this->setFoundRows($pWpDb->get_results($sql, OBJECT));
 		$this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
@@ -86,12 +91,16 @@ class RecordManagerReadListViewAddress
         {
             $where .= "AND (name LIKE '%".esc_sql($_GET['search'])."%' OR template LIKE '%".esc_sql($_GET['search'])."%')";
         }
-        $sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
-				FROM {$prefix}oo_plugin_listviews_address
-				{$join}
-				WHERE {$where}
-				ORDER BY `name` ASC
-				LIMIT {$this->getOffset()}, {$this->getLimit()}";
+		$sql = $pWpDb->prepare(
+			"SELECT SQL_CALC_FOUND_ROWS {$columns}
+			FROM %i
+			WHERE {$where}
+			ORDER BY `name` ASC
+			LIMIT %d, %d",
+			$prefix."oo_plugin_listviews_address",
+			$this->getOffset(),
+			$this->getLimit()
+		);
         $this->setFoundRows($pWpDb->get_results($sql, OBJECT));
         $this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
 
@@ -112,9 +121,13 @@ class RecordManagerReadListViewAddress
 		$pWpDb = $this->getWpdb();
 		$mainTable = $this->getMainTable();
 
-		$sql = "SELECT *
-				FROM {$prefix}{$mainTable}
-				WHERE `name` = '".esc_sql($name)."'";
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE `name` = %s",
+			$prefix.$mainTable,
+			esc_sql($name)
+		);
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 
@@ -139,17 +152,22 @@ class RecordManagerReadListViewAddress
 	 *
 	 */
 
-	public function readFieldconfigByListviewId($listviewId)
+	public function readFieldconfigByListviewId(int $listviewId)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlFields = "SELECT *
-			FROM {$prefix}oo_plugin_address_fieldconfig
-			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($listviewId)."
-			ORDER BY `order` ASC";
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE %i = %d
+			ORDER BY `order` ASC",
+			$prefix."oo_plugin_address_fieldconfig",
+			esc_sql($this->getIdColumnMain()),
+			$listviewId
+		);
 
-		$result = $pWpDb->get_results($sqlFields, ARRAY_A);
+		$result = $pWpDb->get_results($sql, ARRAY_A);
 
 		return $result;
 	}

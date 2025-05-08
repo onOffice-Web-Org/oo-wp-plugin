@@ -131,9 +131,14 @@ abstract class RecordManagerRead
 		$pWpDb = $this->getWpdb();
 		$mainTable = $this->getMainTable();
 
-		$sql = "SELECT *
-				FROM `".esc_sql($prefix.$mainTable)."`
-				WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql((int)$recordId);
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE %i = %d",
+			$prefix.$mainTable,
+			$this->getIdColumnMain(),
+			$recordId,
+		);
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 		if ($result !== null) {
@@ -152,9 +157,14 @@ abstract class RecordManagerRead
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
-		$sql = "SELECT `contact_type`
-			FROM {$prefix}oo_plugin_contacttypes
-			WHERE `form_id` = ".esc_sql($formId);
+
+		$sql = $pWpDb->prepare(
+			"SELECT `contact_type`
+			FROM %i
+			WHERE `form_id` = %d",
+			$prefix."oo_plugin_contacttypes",
+			$formId
+		);
 
 		$contactTypes = $pWpDb->get_col($sql);
 

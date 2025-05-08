@@ -59,14 +59,19 @@ class RecordManagerReadListViewEstate
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 		$columns = implode(', ', $this->getColumns());
-		$join = implode("\n", $this->getJoins());
+		$join = implode("\n", $this->getJoins()); //<-depricated ??
 		$where = "(".implode(") AND (", $this->getWhere()).")";
-		$sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
-				FROM {$prefix}oo_plugin_listviews
-				{$join}
-				WHERE {$where}
-				ORDER BY `listview_id` ASC
-				LIMIT {$this->getOffset()}, {$this->getLimit()}";
+
+		$sql = $pWpDb->prepare(
+			"SELECT SQL_CALC_FOUND_ROWS {$columns}
+			FROM %i
+			WHERE {$where}
+			ORDER BY `listview_id` ASC
+			LIMIT %d, %d",
+			$prefix."oo_plugin_listviews",
+			$this->getOffset(),
+			$this->getLimit()
+		);
 		$this->setFoundRows($pWpDb->get_results($sql, OBJECT));
 		$this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
 
@@ -94,12 +99,16 @@ class RecordManagerReadListViewEstate
         $orderBy = ( ! empty($_GET['orderby'])) ? $_GET['orderby'] : 'name';
         $order = ( ! empty($_GET['order'])) ? $_GET['order'] : 'asc';
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
-				FROM {$prefix}oo_plugin_listviews
-				{$join}
-				WHERE {$where}
-				ORDER BY `{$orderBy}` {$order}
-				LIMIT {$this->getOffset()}, {$this->getLimit()}";
+		$sql = $pWpDb->prepare(
+			"SELECT SQL_CALC_FOUND_ROWS {$columns}
+			FROM %i
+			WHERE {$where}
+			ORDER BY `listview_id` ASC
+			LIMIT %d, %d",
+			$prefix."oo_plugin_listviews",
+			$this->getOffset(),
+			$this->getLimit()
+		);
 
         $this->setFoundRows($pWpDb->get_results($sql, OBJECT));
         $this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
@@ -120,9 +129,13 @@ class RecordManagerReadListViewEstate
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sql = "SELECT *
-				FROM {$prefix}oo_plugin_listviews
-				WHERE `listview_id` = ".(int)$listviewId;
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE `listview_id` = %d",
+			$prefix."oo_plugin_listviews",
+			$listviewId
+		);
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 
@@ -181,10 +194,13 @@ class RecordManagerReadListViewEstate
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sql = "SELECT *
-				FROM {$prefix}oo_plugin_listviews
-				WHERE `name` = '".esc_sql($listviewName)."'";
-
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE `name` = %s",
+			$prefix."oo_plugin_listviews",
+			esc_sql($listviewName)
+		);
 		if ($type !== null) {
 			$sql .= " AND `list_type` = '".esc_sql($type)."'";
 		}
@@ -219,16 +235,20 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	private function readPicturetypesByListviewId($listviewId)
+	private function readPicturetypesByListviewId(int $listviewId) : array
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlPictures = "SELECT `picturetype`
-				FROM {$prefix}oo_plugin_picturetypes
-				WHERE `listview_id` = ".esc_sql($listviewId);
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE `listview_id` = %d",
+			$prefix."oo_plugin_picturetypes",
+			esc_sql($listviewId)
+		);
 
-		$pictures = $pWpDb->get_col($sqlPictures);
+		$pictures = $pWpDb->get_col($sql);
 		$result = array();
 
 		if (is_array($pictures))
@@ -248,16 +268,20 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	private function readSortbyuservaluesNyListviewId(int $listviewId)
+	private function readSortbyuservaluesNyListviewId(int $listviewId) : array
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlSortbyuservalues = "SELECT `sortbyuservalue`
-				FROM {$prefix}oo_plugin_sortbyuservalues
-				WHERE `listview_id` = ".esc_sql($listviewId);
+		$sql = $pWpDb->prepare(
+			"SELECT `sortbyuservalue`
+			FROM %i
+			WHERE `listview_id` = %d",
+			$prefix."oo_plugin_sortbyuservalues",
+			esc_sql($listviewId)
+		);
 
-		$sortbyuservalue = $pWpDb->get_col($sqlSortbyuservalues);
+		$sortbyuservalue = $pWpDb->get_col($sql);
 		$result = array();
 
 		if (is_array($sortbyuservalue))
@@ -276,17 +300,21 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	private function readFieldconfigByListviewId($listviewId)
+	private function readFieldconfigByListviewId(int $listviewId) : array
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlFields = "SELECT *
-				FROM {$prefix}oo_plugin_fieldconfig
-				WHERE `listview_id` = ".esc_sql($listviewId)."
-				ORDER BY `order` ASC";
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE `listview_id` = %d
+			ORDER BY `order` ASC",
+			$prefix."oo_plugin_fieldconfig",
+			$listviewId
+		);
 
-		$fields = $pWpDb->get_results($sqlFields, ARRAY_A);
+		$fields = $pWpDb->get_results($sql, ARRAY_A);
 		$result = array();
 
 		if (is_array($fields))
@@ -305,17 +333,21 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	private function readContactDataByListviewId($listviewId)
+	private function readContactDataByListviewId(int $listviewId) : array
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlFields = "SELECT `fieldname`
-				FROM {$prefix}oo_plugin_listview_contactperson
-				WHERE `listview_id` = ".esc_sql($listviewId)."
-				ORDER BY `order` ASC";
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM %i
+			WHERE `listview_id` = %d
+			ORDER BY `order` ASC",
+			$prefix."oo_plugin_listview_contactperson",
+			$listviewId
+		);
 
-		$fields = $pWpDb->get_col($sqlFields);
+		$fields = $pWpDb->get_col($sql);
 		$result = array();
 
 		if (is_array($fields))
@@ -335,7 +367,7 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	public function getColumn($listviewId, $column)
+	public function getColumn(int $listviewId, $column) : array
 	{
 		$result = null;
 		$values = $this->getRowById($listviewId);
@@ -356,7 +388,7 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	public function getPictureTypesByListviewId($listviewId)
+	public function getPictureTypesByListviewId(int $listviewId): array
 	{
 		return $this->readPicturetypesByListviewId($listviewId);
 	}
@@ -382,7 +414,7 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	public function getFieldconfigByListviewId($listviewId)
+	public function getFieldconfigByListviewId(int $listviewId): array
 	{
 		return $this->readFieldconfigByListviewId($listviewId);
 	}
@@ -396,7 +428,7 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	public function getContactDataByListviewId($listviewId)
+	public function getContactDataByListviewId(int $listviewId): array
 	{
 		return $this->readContactDataByListviewId($listviewId);
 	}
@@ -409,12 +441,24 @@ class RecordManagerReadListViewEstate
 	 * @param $column
 	 */
 
-	public function updateColumnPageShortCode( $page, $listviewId, $tableName, $column )
+	public function updateColumnPageShortCode(string $page, int $listviewId, string $tableName, string $column )
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb  = $this->getWpdb();
-		$pWpDb->query("UPDATE {$prefix}".$tableName."
-				SET `page_shortcode` ='" .$page."' 
-				WHERE `".$column."` = ".esc_sql($listviewId));
+		// $pWpDb->query("UPDATE {$prefix}".$tableName."
+		// 		SET `page_shortcode` ='" .$page."' 
+		// 		WHERE `".$column."` = ".esc_sql(int $listviewId));
+
+		$sql = $pWpDb->prepare(
+			"UPDATE %i
+			SET `page_shortcode` = %s
+			WHERE %i = %d",
+			$prefix.$tableName,
+			$page,
+			$column,
+			$listviewId
+		);
+
+		$pWpDb->query($sql);
 	}
 }
