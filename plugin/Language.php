@@ -35,6 +35,7 @@ class Language
 		'de' => 'DEU',
 		'de_DE' => 'DEU',
 		'de_DE_formal' => 'DEU',
+		'de_AT' => 'AUT',
 		'de_CH' => 'CHE',
 		'de_CH_informal' => 'CHE',
 		'en' => 'ENG',

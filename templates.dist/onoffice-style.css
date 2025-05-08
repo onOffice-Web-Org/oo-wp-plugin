@@ -144,7 +144,7 @@
     padding: 2.5px 0;
 }
 
-.oo-detailslink a, .favorize {
+.oo-detailslink a, .favorize, .oo-unitslink a {
     display: block;
     text-align: center;
     color: #ffffff !important;
@@ -157,7 +157,7 @@
     line-height: 28px;
 }
 
-.oo-detailslink a:hover, .favorize:hover {
+.oo-detailslink a:hover, .favorize:hover, .oo-unitslink a:hover {
     opacity: 0.8;
     color: #ffffff !important;
     text-decoration: none !important;
@@ -222,7 +222,7 @@
     font-weight: 700;
 }
 
-.oo-detailsfreetext, .oo-detailsmap, .oo-area-butler {
+.oo-detailsfreetext, .oo-detailsmap, .oo-area-butler, .oo-detailspricecalculator, .oo-units {
     padding-bottom: 15px;
     padding-top: 15px;
     border-bottom: 2px solid #efefef;
@@ -277,6 +277,56 @@
 .oo-area-butler .oo-area-butler-iframe {
     height: 500px;
     width: 100%;
+}
+
+.oo-costs-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.oo-costs-container .oo-donut-chart {
+    width: 40%;
+}
+
+.oo-costs-container .oo-costs-overview {
+    width: 55%;
+}
+
+.oo-costs-container .oo-costs-overview > div {
+    margin-bottom: 5px;
+}
+
+.oo-costs-container .oo-costs-overview .oo-price-label,
+.oo-costs-container .oo-costs-overview .oo-costs-item {
+    display: flex;
+    align-items: center;
+}
+
+.oo-costs-container .oo-costs-overview .oo-price-label {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.oo-costs-container .oo-costs-overview .oo-total-costs-label {
+    margin-left: 20px;
+}
+
+.oo-costs-notice {
+    font-size: 14px;
+    padding-top: 1.5rem
+}
+
+.oo-costs-container .oo-costs-overview .color-indicator {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 5px;
+    flex-basis: 14px;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .oo-details-energy-certificate {
@@ -363,6 +413,28 @@
     z-index: 888;
 }
 
+.oo-donut-chart-color0 {
+    fill:#3F9DE4;
+    background-color:#3F9DE4;
+}
+
+.oo-donut-chart-color1 {
+    fill:#3ac411;
+    background-color:#3ac411;
+}
+.oo-donut-chart-color2 {
+    fill:#9C27B0;
+    background-color:#9C27B0;
+}
+.oo-donut-chart-color3 {
+    fill:#D81B60;
+    background-color:#D81B60;
+}
+.oo-donut-chart-color4 {
+    fill:#FEC800;
+    background-color:#FEC800;
+}
+
 #TB_overlay, #TB_window { 
     z-index: 1050 !important; 
 }
@@ -380,6 +452,23 @@
     .oo-details-sidebar {
         width: 50%;
     }
+
+    .oo-costs-container {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .oo-costs-container .oo-donut-chart {
+        width: 100%;
+    }
+
+    .oo-costs-container .oo-costs-overview {
+        width: 100%;
+    }
 }
 
 @media only screen and (max-width: 700px) {
@@ -391,5 +480,169 @@
 @media only screen and (max-width: 575px) {
     .oo-listobject, .oo-searchformfield, .oo-details-sidebar {
         width: 100%;
+    }
+}
+
+.oo-units__wrapper {
+    margin-bottom: 32px;
+    vertical-align: top;
+    caption-side: bottom;
+    border-collapse: collapse;
+    text-align: left;
+    margin-left: 1px;
+    width: 99%;
+}
+
+.oo-units__data.--empty {
+    display: none;
+}
+ 
+.oo-units-table {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+}
+  
+.oo-units__head {
+    display: none;
+}
+
+.oo-units__head .oo-units__data{
+    padding-bottom: 16px;
+
+}
+
+.oo-units__head .oo-units__data:not(:first-child) {
+    padding-left: 16px;
+}
+
+.oo-units__body {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.oo-units__body .oo-units__row {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s;
+    width: 100%;
+    border-top: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.oo-units__body .oo-units__data:not(.oo-unitslink):before {
+    content: attr(data-label);
+    min-width: 50%;
+    width: 50%;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.oo-units__data {
+    display: flex;
+    padding: 0;
+    gap: 16px;
+    border-bottom: 1px solid #efefef;
+    padding-bottom: 8px;
+} 
+  
+.oo-units__data.--empty {
+    display: none;
+}
+
+.oo-unitslink a {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.oo-units__data.oo-unitslink {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+@media (min-width: 768px) {
+    .oo-units__body {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1200px) {
+
+    .oo-units__wrapper {
+        margin-left: 0;
+    }
+
+    .oo-unitslink a {
+        background: transparent;
+        text-decoration: underline;
+        color: inherit !important;
+        text-align: left;
+        margin: 0;
+    }
+
+    .oo-unitslink a:hover {
+        opacity: 1;
+        color: inherit !important;
+    }
+
+    .oo-units__body .oo-units__data:not(.oo-unitslink):before {
+        content: none;
+    }
+
+    .oo-units__data.--empty {
+        display: table-cell;
+    }
+
+    .oo-units__head {
+        display: table-header-group;
+    }
+
+    .oo-units__head .oo-units__data{
+        min-width: 7.5rem;
+        text-transform: none;
+    }
+
+    .oo-units__body {
+        display: table-row-group;
+      }
+
+    .oo-units__body .oo-units__row{
+        display: table-row;
+        box-shadow: none;
+        border: none;
+    }
+
+    .oo-units__data {
+        text-align: left;
+        display: table-cell;
+        padding: 16px 16px 16px 0;
+    }
+
+    .oo-units__body  .oo-units__data {
+        border-bottom: 2px solid #efefef;}
+
+    .oo-units__body .oo-units__data:not(:first-child), .oo-units__data--empty {
+            padding-left: 16px;
+    }
+
+     .oo-units__head .oo-units__data:not(:first-child) {
+        padding-left: 16px;
+    }
+
+    .oo-units__data.--empty {
+      display: table-cell;
+    }  
+    
+    .oo-units__body .oo-units__data:before {
+        width: 40%;
+        content: none;
+    }
+
+    .oo-units__data.oo-unitslink {
+        padding-bottom: 16px;
     }
 }

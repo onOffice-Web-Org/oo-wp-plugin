@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 5.5
+Stable tag: 5.8
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,48 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 5.8 (2025-04-29) =
+
+**Changed**
+
+* Styling Unit lists on the property detail page
+* Title image, if marked as such, is always displayed as the first image of the image slider
+
+**Fixed**
+
+* Total price calculator can also be displayed when the percentage sign is not entered in the external commission in onOffice enterprise
+
+= 5.7 (2025-03-27) =
+
+**Changed**
+
+* Restriction of the form selection on the property detail page
+* Improved display of parking options (multiParkingLot) for properties
+
+**Fixed**
+
+* Missing fields of address
+* Missing austrian locale
+* Translation on property detail
+
+= 5.6 (2025-02-27) =
+
+**Added**
+
+* Total price calculator chart in property details
+* ImmoNr (objektnr_extern) variable to subject line in forms
+
+**Changed**
+
+* Display link fields as actual links
+* Naming of estateID to Datensatznr variable in subject line in forms
+
+**Fixed**
+
+* Special character encoding in parameters
+* Loading regions without id
+* Styling in backend settings
 
 = 5.5 (2025-01-31) =
 

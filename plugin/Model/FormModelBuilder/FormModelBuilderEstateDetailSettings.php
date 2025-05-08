@@ -52,6 +52,7 @@ use onOffice\WPlugin\WP\InstalledLanguageReader;
 use DI\DependencyException;
 use DI\NotFoundException;
 use DI\Container;
+use onOffice\WPlugin\Form;
 
 /**
  *
@@ -457,7 +458,7 @@ class FormModelBuilderEstateDetailSettings
 	protected function readNameShortCodeForm()
 	{
 		$recordManagerReadForm = new RecordManagerReadForm();
-		$allRecordsForm = $recordManagerReadForm->getAllRecords();
+		$allRecordsForm = $recordManagerReadForm->getAllRecordsByFormType(Form::TYPE_CONTACT);
 		$shortCodeForm = array();
 
 		foreach ($allRecordsForm as $value) {
@@ -631,6 +632,39 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelContactPerson->setHintHtml(__('The main contact person is the address data record of the broker type, which is stored in the first place in onOffice enterprise.', 'onoffice-for-wp-websites'));
 
 		return $pInputModelContactPerson;
+	}
+
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
+	public function createInputModelTotalCostsCalculator(): InputModelOption
+	{
+		$labelShowTotalCostsCalculator = __('Show total price calculator', 'onoffice-for-wp-websites');
+		$pInputModelShowTotalCostsCalculator = $this->_pInputModelDetailViewFactory->create
+		(InputModelOptionFactoryDetailView::INPUT_SHOW_TOTAL_COSTS_CALCULATOR, $labelShowTotalCostsCalculator);
+		$pInputModelShowTotalCostsCalculator->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModelShowTotalCostsCalculator->setValue($this->_pDataDetailView->getShowTotalCostsCalculator());
+		$pInputModelShowTotalCostsCalculator->setValuesAvailable(1);
+
+		$fields = ['kaufpreis', 'aussen_courtage', 'bundesland'];
+		$pFieldsCollection = $this->getFieldsCollection();
+		$result = [];
+		foreach ($fields as $field) {
+			if ($pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $field)) {
+				$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)->getLabel();
+			} else {
+				$result[$field] = $field;
+			}
+		}
+
+		$textHint = sprintf(esc_html__(
+			'The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs.', 'onoffice-for-wp-websites'), 
+			'<code>'.$result['kaufpreis'].'</code>', '<code>'.$result['aussen_courtage'].'</code>', '<code>'.$result['bundesland'].'</code>', '<br>'
+		);
+		$pInputModelShowTotalCostsCalculator->setHintHtml($textHint);
+
+		return $pInputModelShowTotalCostsCalculator;
 	}
 
 	/**
