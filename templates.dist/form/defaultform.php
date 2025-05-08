@@ -81,7 +81,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
 		$isHiddenField = $pForm->isHiddenField($input);
-		$label = $pForm->getFieldLabel($input).$addition.': ';
+		$label = $pForm->getFieldLabel($input).$addition;
 		echo !$isHiddenField ? '<label>'.$label . renderFormField($input, $pForm).'</label>' : renderFormField($input, $pForm);
 	}
 ?>
