@@ -56,7 +56,6 @@ if (!function_exists('renderFieldEstateSearch')) {
 		}
 
 		if ($properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN) {
-			echo '<br>';
 			echo '<fieldset>
 		<input type="radio" id="' . esc_attr($inputName) . '_u" name="' . esc_attr($inputName) . '" value="u"
 			' . ($selectedValue === null ? ' checked' : '') . '>
@@ -100,17 +99,20 @@ if (!function_exists('renderFieldEstateSearch')) {
 			FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']
 		) {
+			echo '<span class="oo-searchrange">';
+			echo '<label>';
 			esc_html_e('From: ', 'onoffice-for-wp-websites');
 			echo '<input name="' . esc_attr($inputName) . '__von" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"><br>';
+			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
+			echo '<label>';
 			esc_html_e('Up to: ', 'onoffice-for-wp-websites');
 			echo '<input name="' . esc_attr($inputName) . '__bis" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"><br>';
+			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label></span>';
 		} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="' . esc_attr($properties['length']) . '"' : '';
 			echo '<input name="' . esc_attr($inputName) . '" ' . $inputType;
-			echo 'value="' . esc_attr($selectedValue) . '"' . $lengthAttr . '><br>';
+			echo 'value="' . esc_attr($selectedValue) . '"' . $lengthAttr . '>';
 		}
 	}
 }
