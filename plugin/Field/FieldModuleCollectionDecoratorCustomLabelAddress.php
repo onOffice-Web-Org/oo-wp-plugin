@@ -75,7 +75,7 @@ class FieldModuleCollectionDecoratorCustomLabelAddress
 		foreach ($fieldsByFormIds as $fieldsByFormId) {
 			$lang = $this->_pContainer->get(Language::class);
 			$customLabelRead = $this->_pContainer->get(CustomLabelRead::class);
-			$query = $customLabelRead->getCustomLabelByFormIdAndFieldName(intval($results['listview_address_id']),
+			$query = $customLabelRead->readCustomLabelByFormIdAndFieldName(intval($results['listview_address_id']),
 				$fieldsByFormId['fieldname'], $lang->getLocale(), 
 				RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS);
 			if (empty($query[0]->value)) {

@@ -97,7 +97,7 @@ class TestClassFieldModuleCollectionDecoratorCustomLabelAddress
 				onOfficeSDK::MODULE_ADDRESS));
 			$this->_pWPDBMock->method('get_results')->will($this->returnValue($rows));
 			$this->_pCustomLabelRead = new CustomLabelRead($this->_pWPDBMock);
-			$this->_pCustomLabelRead->getCustomLabelByFormIdAndFieldName(1, $pFieldsCollectionByFormId['fieldname'],
+			$this->_pCustomLabelRead->readCustomLabelByFormIdAndFieldName(1, $pFieldsCollectionByFormId['fieldname'],
 				'de_DE','oo_plugin_fieldconfig_address_customs_labels','oo_plugin_fieldconfig_address_translated_labels');
 		}
 		$this->_pContainer->set(CustomLabelRead::class, $this->_pCustomLabelRead);
