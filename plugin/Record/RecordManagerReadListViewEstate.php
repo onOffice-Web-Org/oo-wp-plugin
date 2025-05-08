@@ -445,9 +445,6 @@ class RecordManagerReadListViewEstate
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb  = $this->getWpdb();
-		// $pWpDb->query("UPDATE {$prefix}".$tableName."
-		// 		SET `page_shortcode` ='" .$page."' 
-		// 		WHERE `".$column."` = ".esc_sql(int $listviewId));
 
 		$sql = $pWpDb->prepare(
 			"UPDATE %i
