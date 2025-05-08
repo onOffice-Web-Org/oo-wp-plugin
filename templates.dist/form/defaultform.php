@@ -23,13 +23,15 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 
 ?>
 
+
+<?php if ($pForm->getEstateContextLabel()) { ?>
 <h3>
 	<?php
    /** @var \onOffice\WPlugin\Form $pForm */
     echo $pForm->getEstateContextLabel();
     ?>
 </h3>
-
+<?php } ?>
 <form method="post" id="onoffice-form" class="oo-form oo-form-default">
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
@@ -67,9 +69,9 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$additionMessage   = $isRequiredMessage ? '*' : '';
 			$isHiddenField = $pForm->isHiddenField('message');
 			if (!$isHiddenField) {
-				echo $pForm->getFieldLabel( 'message' );
-				echo $additionMessage . ':<br>';
-				echo '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea><br>';
+				echo '<label>'.$pForm->getFieldLabel( 'message' );
+				echo $additionMessage;
+				echo '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea></label>';
 			} else {
 				echo '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
 			}
@@ -80,13 +82,11 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$addition = $isRequired ? '*' : '';
 		$isHiddenField = $pForm->isHiddenField($input);
 		$label = $pForm->getFieldLabel($input).$addition.': ';
-		echo !$isHiddenField ? $label . renderFormField($input, $pForm).'<br>' : renderFormField($input, $pForm);
+		echo !$isHiddenField ? '<label>'.$label . renderFormField($input, $pForm).'</label>' : renderFormField($input, $pForm);
 	}
 ?>
 
 <?php
-	echo '<br>';
-
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }
 ?>

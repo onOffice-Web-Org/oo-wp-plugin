@@ -50,8 +50,8 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		}
 		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
-		$line = $pForm->getFieldLabel($input).$addition.': ';
-		$line .= renderFormField($input, $pForm);
+		$line = '<label>'.$pForm->getFieldLabel($input).$addition;
+		$line .= renderFormField($input, $pForm).'</label>';
 
 		if ( $pForm->isMissingField( $input ) ) {
 			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
@@ -65,9 +65,9 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$additionMessage = $isRequiredMessage ? '*' : '';
 			$isHiddenField = $pForm->isHiddenField('message');
 			if (!$isHiddenField) {
-				$line = $pForm->getFieldLabel( 'message' );
-				$line .= $additionMessage . ':<br>';
-				$line .= '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea><br>';
+				$line = '<label>'.$pForm->getFieldLabel( 'message' );
+				$line .= $additionMessage;
+				$line .= '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea></label>';
 			} else {
 				$line = '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
 			}
@@ -87,11 +87,11 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 	echo '<h2>'.esc_html__('Your contact details', 'onoffice-for-wp-websites').'</h2>'
 		.'<p>';
-	echo implode('<br>', $addressValues);
+	echo implode('', $addressValues);
 	echo '</p>
 		<h2>'.esc_html__('Information about your property', 'onoffice-for-wp-websites').'</h2>
 		<p>';
-	echo implode('<br>', $estateValues);
+	echo implode('', $estateValues);
 	echo '</p>';
 	echo implode($hiddenValues);
 

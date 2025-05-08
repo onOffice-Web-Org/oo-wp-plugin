@@ -50,8 +50,8 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
-	$line = $pForm->getFieldLabel($input).$addition.': ';
-	$line .= renderFormField($input, $pForm);
+	$line = '<label>'.$pForm->getFieldLabel($input).$addition;
+	$line .= renderFormField($input, $pForm).'</label>';
 
 	if ( $pForm->isMissingField( $input ) ) {
 		$line .= '<span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
