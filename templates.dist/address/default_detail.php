@@ -46,7 +46,7 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
             echo '<img class="oo-responsive-image" ' .
                 'src="' . esc_url($imageUrl) . '" ' .
                 'alt="' . esc_html($imageAlt) . '" ' .
-                'loading="lazy"/>';
+                'loading="lazy">';
             echo '</picture>';
         }
     ?>

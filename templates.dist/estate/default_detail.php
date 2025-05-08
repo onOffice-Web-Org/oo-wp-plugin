@@ -134,7 +134,7 @@ $dimensions = [
                     echo '<img class="oo-responsive-image estate-status" ' .
                         'src="' . esc_url($pEstates->getEstatePictureUrl($id, isset($dimensions['1600']['w']) || isset($dimensions['1600']['h']) ? ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']] : null)) . '" ' .
                         'alt="' . esc_html($pEstates->getEstatePictureTitle($id) ?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
-                        'loading="lazy"/>';
+                        'loading="lazy">';
                     echo '</picture>';;
 					echo '</div>';
 				}
@@ -181,7 +181,7 @@ $dimensions = [
 			if (!empty($areaButlerUrl)) { ?>
 				<div class="oo-area-butler">
 					<h2><?php esc_html_e('AreaButler', 'onoffice-for-wp-websites'); ?></h2>
-					<iframe class="oo-area-butler-iframe" src="<?php echo esc_url($areaButlerUrl); ?>"></iframe>
+					<iframe class="oo-area-butler-iframe" title="AreaButler" src="<?php echo esc_url($areaButlerUrl); ?>"></iframe>
 				</div>
 			<?php } ?>
 
@@ -380,7 +380,7 @@ $dimensions = [
 					$town          = $contactData['Ort'];
 
 					if ($imageUrl) {
-						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" height="150px" alt="' . esc_html($imageAlt) . '"></div>';
+						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" alt="' . esc_html($imageAlt) . '"></div>';
 					}
 
 					// Output name, depending on available fields.

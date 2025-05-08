@@ -154,7 +154,7 @@ $dimensions = [
                     echo '<img class="oo-responsive-image estate-status" ' .
                         'src="' . esc_url($pEstatesClone->getEstatePictureUrl($id, isset($dimensions['1600']['w']) || isset($dimensions['1600']['h']) ? ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']] : null)) . '" ' .
                         'alt="' . esc_html($pEstatesClone->getEstatePictureTitle($id)?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
-                        'loading="lazy"/>';
+                        'loading="lazy">';
                     echo '</picture>';
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
