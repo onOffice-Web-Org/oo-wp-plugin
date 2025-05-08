@@ -87,14 +87,14 @@ abstract class RecordManagerRead
 
 	public function addColumn(string $column, string $alias = null)
 	{
-		$columnArray = array(esc_sql($column));
+		$column = isset($alias)
+		? "`" . esc_sql($column) . "` AS `" . esc_sql($alias) . "`"
+		: "`" . esc_sql($column) . "`";
 
-		if ($alias !== null)
+		if (!in_array($column, $this->_columns))
 		{
-			$columnArray []= esc_sql($alias);
+			$this->_columns []= $column;
 		}
-
-		$this->_columns []= "`".implode("` AS `", $columnArray)."`";
 	}
 
 
@@ -107,7 +107,12 @@ abstract class RecordManagerRead
 
 	public function addColumnConst(string $column, string $alias)
 	{
-		$this->_columns []= "'".esc_sql($column)."' AS `".esc_sql($alias)."`";
+		$column = "'" . esc_sql($column) . "' AS `" . esc_sql($alias) . "`";
+
+		if (!in_array($column, $this->_columns))
+		{
+			$this->_columns []= $column;
+		}
 	}
 
 
