@@ -30,15 +30,10 @@ function ooHandleBulkDelete(el = null){
 	});
 }
 
-function ooHandleCheckboxAllChange(evt) {
+function ooHandleCheckboxAllChange(evt, containerId = null) {
 	const masterCheckbox = evt.target;
-
-	// Find the grandparent element
-	const grandGrandparent = masterCheckbox.parentElement?.parentElement?.parentElement;
-	if (!grandGrandparent) return;
-
-	// Find all checkboxes within the grandparent (excluding the master checkbox itself)
-	const checkboxes = grandGrandparent.querySelectorAll('.oo-sortable-checkbox');
+	const container = containerId ? document.getElementById(containerId) : document
+	const checkboxes = container.querySelectorAll('.oo-sortable-checkbox');
 
 	checkboxes.forEach(cb => {
 		if (cb !== masterCheckbox) {
