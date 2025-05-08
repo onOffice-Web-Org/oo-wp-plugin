@@ -140,7 +140,7 @@ class RecordManagerReadListViewEstate
 		if ($result !== null)
 		{
 			$result[DataListView::PICTURES] = $this->getPictureTypesByListviewId($listviewId);
-			$result[DataListView::SORT_BY_USER_VALUES] = $this->getSortbauservaluesByListviewId($listviewId);
+			$result[DataListView::SORT_BY_USER_VALUES] = $this->getSortbyuservaluesByListviewId($listviewId);
 
 			$fieldRows = $this->getFieldconfigByListviewId($listviewId);
 			$fields = array_column($fieldRows, 'fieldname');
@@ -209,7 +209,7 @@ class RecordManagerReadListViewEstate
 		{
 			$id = $result['listview_id'];
 			$result[DataView\DataListView::PICTURES] = $this->getPictureTypesByListviewId($id);
-			$result[DataView\DataListView::SORT_BY_USER_VALUES] = $this->getSortbauservaluesByListviewId($id);
+			$result[DataView\DataListView::SORT_BY_USER_VALUES] = $this->getSortbyuservaluesByListviewId($id);
 
 			$fieldRows = $this->getFieldconfigByListviewId($id);
 			$fields = array_column($fieldRows, 'fieldname');
