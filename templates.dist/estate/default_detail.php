@@ -342,7 +342,7 @@ $dimensions = [
 				</div>
 			<?php } ?>
 			<?php if (!empty($pEstates->getEstateUnits())) : ?>
-					<?php echo $pEstates->getEstateUnits(); ?>
+				<?php echo $pEstates->getEstateUnits(); ?>
 			<?php endif; ?>
 		</div>
 		<div class="oo-details-sidebar">

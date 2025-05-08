@@ -152,11 +152,12 @@ $pEstatesClone->resetEstateIterator();
             </table>
         </div>
     </div>
-<?php } ?>
-<div>
-	<?php
+    <?php
 	if (get_option('onoffice-pagination-paginationbyonoffice')) {
+        echo "<div>";
 		wp_link_pages();
-	}
-	?>
-</div>
+        echo "</div>";
+	}    
+} ?>
+
+	
