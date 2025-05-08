@@ -14,7 +14,18 @@ function ooHandleBulkDelete(el = null){
 		const id = cb.value;
 		const deleteBtn = document.getElementById('oo-delete-button-' + id);
 		if (deleteBtn) {
-			deleteBtn.click(); // triggers existing delete logic
+			deleteBtn.click();
+		}
+		else {
+			const lv4Parent = cb.parentElement?.parentElement?.parentElement?.parentElement;
+			if(!lv4Parent){
+				return;
+			}
+			const deleteButtons =  lv4Parent.querySelectorAll('.item-delete-link.submitdelete');
+			if (!(deleteButtons instanceof NodeList) || deleteButtons.length !== 1) {
+				return;
+			}
+			deleteButtons[0].click();
 		}
 	});
 }
