@@ -24,10 +24,18 @@
 .oo-searchformfield input, .oo-searchformfield button, .oo-searchformfield .multiselect {
     width: 100%;
     margin: 0 !important;
+    line-height: 28px;
+    font-size: 16px;
+}
+span.oo-searchrange {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 2rem;
+    display: grid;
 }
 
 .oo-searchformfield input[type="checkbox"] {
-    width: auto;
+    width: 24px;
+    height: 24px;
     margin-right: 5px;
 }
 
@@ -50,6 +58,24 @@
     display: none;
 }
 
+
+.oo-form input:focus {
+    color: #3d7bb1;
+}
+
+.oo-form input[type='submit'] {
+    text-align: center;
+    color: #ffffff !important;
+    padding: 5px;
+    background-color: #3d7bb1;
+    transition: all 0.3s;
+    font-size: 16px;
+    line-height: 28px;
+    border: 1px solid #000;
+}
+.oo-form input[type='submit']:hover {
+    cursor: pointer;
+}
 /* estate map */
 .oo-estate-map {
     padding: 0 15px;
@@ -149,7 +175,7 @@
     text-align: center;
     color: #ffffff !important;
     padding: 5px;
-    background-color: #80acd3;
+    background-color: #3d7bb1;
     transition: all 0.3s;
     text-decoration: none;
     font-size: 16px;
@@ -157,8 +183,8 @@
     line-height: 28px;
 }
 
-.oo-detailslink a:hover, .favorize:hover, .oo-unitslink a:hover {
-    opacity: 0.8;
+.oo-detailslink a:hover, .favorize:hover, .oo-unitslink a:hover, .oo-details-btn:focus, .oo-form input[type='submit']:hover {
+    background: #174770;
     color: #ffffff !important;
     text-decoration: none !important;
 }
@@ -187,8 +213,18 @@
     margin-bottom: 25px;
 }
 
+button.slick-prev.slick-arrow:before {
+    content: url('data:image/svg+xml,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve"><path fill="none" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15,18l-6-6l6-6"/></svg>');
+}
+button.slick-next.slick-arrow:before {
+    content: url('data:image/svg+xml,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve"><path fill="none" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9,18l6-6L9,6"/></svg>');
+}
+
 .oo-detailsgallery .slick-arrow {
+    background: #3d7bb1;
     z-index: 999;
+    width: 32px;
+    height: 32px;
 }
 
 .oo-detailsgallery .slick-prev {
@@ -198,7 +234,9 @@
 .oo-detailsgallery .slick-next {
     right: 25px;
 }
-
+.slick-prev:hover, .slick-prev:focus, .slick-next:hover, .slick-next:focus {
+    background-color: #174770;
+}
 .oo-detailspicture, .oo-detailspicture.slick-slide {
     background-size: cover;
     background-position: center center;
@@ -251,6 +289,10 @@
     margin-bottom: 15px;
 }
 
+.oo-contact-info img {
+    height: 150px;
+
+}
 .oo-contact-info p {
     margin: 0;
 }

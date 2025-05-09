@@ -56,7 +56,6 @@ if (!function_exists('renderFieldEstateSearch')) {
 		}
 
 		if ($properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN) {
-			echo '<br>';
 			echo '<fieldset>
 		<input type="radio" id="' . esc_attr($inputName) . '_u" name="' . esc_attr($inputName) . '" value="u"
 			' . ($selectedValue === null ? ' checked' : '') . '>
@@ -92,7 +91,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 		} elseif ($inputName === 'regionaler_zusatz') {
 			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], false, $properties['permittedvalues'] ?? null);
 		} elseif ($inputName === 'country') {
-			echo '<select class="custom-single-select" size="1" name="' . esc_attr($inputName) . '">';
+			echo '<select class="custom-single-select" autocomplete="off" size="1" name="' . esc_attr($inputName) . '">';
 			printCountry($properties['permittedvalues'], $selectedValue);
 			echo '</select>';
 		} elseif (
@@ -100,17 +99,20 @@ if (!function_exists('renderFieldEstateSearch')) {
 			FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']
 		) {
+			echo '<span class="oo-searchrange">';
+			echo '<label>';
 			esc_html_e('From: ', 'onoffice-for-wp-websites');
 			echo '<input name="' . esc_attr($inputName) . '__von" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"><br>';
+			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
+			echo '<label>';
 			esc_html_e('Up to: ', 'onoffice-for-wp-websites');
 			echo '<input name="' . esc_attr($inputName) . '__bis" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"><br>';
+			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label></span>';
 		} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="' . esc_attr($properties['length']) . '"' : '';
 			echo '<input name="' . esc_attr($inputName) . '" ' . $inputType;
-			echo 'value="' . esc_attr($selectedValue) . '"' . $lengthAttr . '><br>';
+			echo 'value="' . esc_attr($selectedValue) . '"' . $lengthAttr . '>';
 		}
 	}
 }
@@ -119,6 +121,7 @@ if (!function_exists('renderFormField')) {
 	function renderFormField(string $fieldName, onOffice\WPlugin\Form $pForm, bool $searchCriteriaRange = true): string
 	{
 		$output = '';
+		$autocomplete = null;
 		$typeCurrentInput = $pForm->getFieldType($fieldName);
 		$isHiddenField = $pForm->isHiddenField($fieldName);
 
@@ -137,6 +140,53 @@ if (!function_exists('renderFormField')) {
 			return '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
 		}
 
+
+		switch ($fieldName) {
+			case "Titel":
+				$autocomplete = "honorific-prefix";
+				break;
+			case "Vorname":
+				$autocomplete = "given-name";
+				break;
+			case "Name":
+				$autocomplete = "family-name";
+				break;
+			case "Strasse":
+				$autocomplete = "street-address";
+				break;
+			case "Plz":
+				$autocomplete = "postal-code";
+				break;
+			case "Ort":
+				$autocomplete = "address-level2";
+				break;	
+			case "Zusatz1":
+				$autocomplete = "organization";
+				break;
+			case "Land":
+				$autocomplete = "country-name";
+				break;
+			case "Geburtsdatum":
+				$autocomplete = "bday";
+				break;
+			case "Homepage":
+				$autocomplete = "url";
+				break;
+			case "Telefon1":
+				$autocomplete = "tel";
+				break;
+			case "Email":
+				$autocomplete = "email";
+				break;
+			default:
+				$autocomplete = "off";
+		}
+		
+		if ($autocomplete !== null) {
+			$autocompleteAttribute = ' autocomplete="' . htmlspecialchars($autocomplete) . '"';
+		}
+
+		
 		$isRequired = $pForm->isRequiredField($fieldName);
 		$requiredAttribute = $isRequired ? 'required ' : '';
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
@@ -155,7 +205,7 @@ if (!function_exists('renderFormField')) {
 		}
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
-			$output .= '<select class="custom-single-select" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
+			$output .= '<select class="custom-single-select" autocomplete="off" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
 			/* translators: %s will be replaced with the translated field name. */
 			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 			foreach ($permittedValues as $key => $value) {
@@ -194,7 +244,7 @@ if (!function_exists('renderFormField')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '".' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$output = '<select class="custom-multiple-select form-control" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
+			$output = '<select class="custom-multiple-select form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
 			$output .= $htmlOptions;
 			$output .= '</select>';
 		} else {
@@ -252,7 +302,7 @@ if (!function_exists('renderFormField')) {
 					<label for="' . esc_attr($fieldName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
 					</fieldset>';
 			} else {
-				$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($fieldName) . '" ' . $value . '>';
+				$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($fieldName) . '" ' . $value . $autocompleteAttribute .'>';
 			}
 		}
 		return $output;
@@ -296,7 +346,7 @@ if (!function_exists('renderCityField')) {
 	function renderCityField(string $inputName, array $properties): string
 	{
 		$permittedValues = $properties['permittedvalues'];
-		$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_attr($inputName) . '[]" multiple="multiple">';
+		$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
 		foreach ($permittedValues as $value) {
 			$selected = null;
 			if (is_array($properties['value']) && in_array($value, $properties['value'])) {
