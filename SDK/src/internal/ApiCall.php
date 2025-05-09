@@ -392,7 +392,14 @@ class ApiCall
 						$val = array($val);
 					}
 					$lowerVal = array_map('mb_strtolower', $val);
-					if(!in_array(mb_strtolower($elVal ?? ''), $lowerVal)){
+
+					//Needed if fields (like fahrstuhl) are given as array
+					if(is_array($elVal)) {
+						if (empty($elVal) || count(array_intersect(array_map('strtolower', $elVal), $lowerVal)) === 0) {
+							unset($filteredArray[$index]);
+							break;
+						}
+					}elseif(!in_array(mb_strtolower($elVal ?? ''), $lowerVal)){
 						unset($filteredArray[$index]);
 						break;
 					}
