@@ -12,15 +12,23 @@ function ooHandleBulkDelete(container = null){
 	const element = container ?? document;
 	element.querySelectorAll(`.oo-sortable-checkbox:checked`).forEach(cb => {
 		const id = cb.value;
-		const deleteBtn = document.getElementById('oo-delete-button-' + id);
-		if (deleteBtn) {
-			deleteBtn.click();
+		const deleteBtns = document.querySelectorAll('.oo-delete-button-' + id)
+		if(!deleteBtns || deleteBtns.length > 2){
+			return
+		}
+		if(deleteBtns.length > 0){
+			deleteBtns.forEach(deleteBtn =>{
+				deleteBtn.click();
+			})
 		}
 		else {
-			//case of a newly added field that hasnt been saved yet, its enough to remove it from dom
+			//case of a newly added field that hasnt been saved yet
 			const li = document.getElementById('menu-item-'+id);
 			if(li){
-				li.remove();
+				const deleteBtns = li.querySelectorAll('.item-delete-link.submitdelete')
+				if(deleteBtns && deleteBtns.length === 1){
+					deleteBtns[0].click()
+				}
 			}
 		}
 	});
