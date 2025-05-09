@@ -360,7 +360,22 @@ class ApiCall
 				elseif (strtolower($op) === 'like')
 				{
 					$val = str_replace('%','',$val);
-					if(!array_key_exists($fieldName,$itemRaw["elements"]) || !str_contains($itemRaw["elements"][$fieldName], $val)){
+
+					if($fieldName === 'multiParkingLot') {
+						$parkingLots = $itemRaw['elements'][$fieldName] ?? [];
+
+						$hasValidParkingLot = array_filter($parkingLots, function ($lot) {
+							return !in_array(null, $lot, true)
+								&& !in_array(0, $lot, true)
+								&& !in_array(0.0, $lot, true)
+								&& !in_array('', $lot, true);
+						});
+
+						if (!$hasValidParkingLot) {
+							unset($filteredArray[$index]);
+							break;
+						}
+					} elseif(!array_key_exists($fieldName,$itemRaw["elements"]) || !str_contains($itemRaw["elements"][$fieldName], $val)){
 						unset($filteredArray[$index]);
 						break;
 					}
