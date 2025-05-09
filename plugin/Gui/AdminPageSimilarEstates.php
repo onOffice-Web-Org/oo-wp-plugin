@@ -158,7 +158,12 @@ class AdminPageSimilarEstates
 		$this->renderBulkActionControls();
 		echo '<div class="fieldsSortable postbox" id="'
 			. esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)) . '">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Real Estate Fields', 'onoffice-for-wp-websites') . '</span></h2>';
+		echo '<h2 class="hndle ui-sortable-handle">'
+				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
+					.'<input type="checkbox" class="oo-sortable-checkbox-master" onchange="ooHandleMasterCheckboxChange(event)"/>'
+				.'</span>'
+				.'<span>' . __('Real Estate Fields', 'onoffice-for-wp-websites') . '</span>'
+			.'</h2>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
