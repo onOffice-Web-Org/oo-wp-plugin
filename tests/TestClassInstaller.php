@@ -104,5 +104,9 @@ class TestClassInstaller
 		$this->assertFalse(get_option('onoffice-similar-estates-settings-view'));
 		$this->assertFalse(get_option('onoffice-is-encryptcredent'));
 		$this->assertFalse(get_option('onoffice-settings-default-email'));
+		$this->assertFalse(get_option('onoffice-apply-thousand-separator'));
+		$this->assertFalse(get_option('onoffice-settings-duration-cache'));
+		$this->assertFalse(get_option('onoffice-address-detail-view-showInfoUserUrl'));
+		$this->assertFalse(get_option('onoffice-default-address-view'));
 	}
 }
