@@ -26,7 +26,7 @@ function ooHandleBulkDelete(el = null){
 	});
 }
 
-function ooHandleCheckboxAllChange(evt, containerId = null) {
+function ooHandleMasterCheckboxChange(evt, containerId = null) {
 	const masterCheckbox = evt.target;
 	const container = containerId ? document.getElementById(containerId) : document
 	const checkboxes = container.querySelectorAll('.oo-sortable-checkbox');
@@ -34,7 +34,7 @@ function ooHandleCheckboxAllChange(evt, containerId = null) {
 	checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
 }
 
-function ooHandleCheckboxChange(evt) {
+function ooHandleChildCheckboxChange(evt) {
 	const checkbox = evt.target;
 
 	let containerOtherCheckboxes = checkbox.closest('#single-page-container');

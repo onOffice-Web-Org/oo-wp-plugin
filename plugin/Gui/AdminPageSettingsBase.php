@@ -598,8 +598,8 @@ abstract class AdminPageSettingsBase
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
 		wp_enqueue_script('oo-unsaved-changes-message');
-		wp_register_script('onoffice-bulk-delete', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-bulk-delete.min.js');
-		wp_enqueue_script('onoffice-bulk-delete');
+		wp_register_script('onoffice-bulk-actions-fields', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-bulk-actions-fields.min.js');
+		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 
 

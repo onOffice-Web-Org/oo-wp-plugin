@@ -364,8 +364,8 @@ class AdminPageSimilarEstates
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
 		wp_enqueue_script('oo-unsaved-changes-message');
-		wp_register_script('onoffice-bulk-delete', plugins_url('/dist/onoffice-bulk-delete.min.js', $pluginPath));
-		wp_enqueue_script('onoffice-bulk-delete');
+		wp_register_script('onoffice-bulk-actions-fields', plugins_url('/dist/onoffice-bulk-actions-fields.min.js', $pluginPath));
+		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 
 	/**

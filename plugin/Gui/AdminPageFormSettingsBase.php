@@ -857,7 +857,7 @@ abstract class AdminPageFormSettingsBase
 		echo '<div class="fieldsSortable postbox">';
 		echo '<h2 class="hndle ui-sortable-handle">'
 				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
-					.'<input type="checkbox" class="oo-sortable-checkbox-all" onchange="ooHandleCheckboxAllChange(event)"/>'
+					.'<input type="checkbox" class="oo-sortable-checkbox-all" onchange="ooHandleMasterCheckboxChange(event)"/>'
 				.'</span>'
 				.'<span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span>'
 			.'</h2>';

@@ -206,7 +206,7 @@ class AdminPageEstateDetail
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
 		echo '<h2 class="hndle ui-sortable-handle">'
 				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
-					.'<input type="checkbox" class="oo-sortable-checkbox-all" onchange="ooHandleCheckboxAllChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS))."'".')"/>'
+					.'<input type="checkbox" class="oo-sortable-checkbox-all" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS))."'".')"/>'
 				.'</span>'
 				.'<span>'.__('Contact Person Fields', 'onoffice-for-wp-websites').'</span>'
 			 .'</h2>';
@@ -227,7 +227,7 @@ class AdminPageEstateDetail
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
 		echo '<h2 class="hndle ui-sortable-handle">'
 				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
-					.'<input type="checkbox" class="oo-sortable-checkbox-all" onchange="ooHandleCheckboxAllChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE))."'".')"/>'
+					.'<input type="checkbox" class="oo-sortable-checkbox-all" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE))."'".')"/>'
 				.'</span>'
 			 .'<span>'.__('Real Estate Fields', 'onoffice-for-wp-websites').'</span></h2>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
@@ -501,8 +501,8 @@ class AdminPageEstateDetail
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
 		wp_enqueue_script('oo-unsaved-changes-message');
-		wp_register_script('onoffice-bulk-delete', plugins_url('/dist/onoffice-bulk-delete.min.js', $pluginPath));
-		wp_enqueue_script('onoffice-bulk-delete');
+		wp_register_script('onoffice-bulk-actions-fields', plugins_url('/dist/onoffice-bulk-actions-fields.min.js', $pluginPath));
+		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 
 	/**

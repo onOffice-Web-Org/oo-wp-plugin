@@ -181,7 +181,7 @@ class InputFieldComplexSortableDetailListRenderer
 			.'<div class="menu-item-bar">'
 				.'<div class="menu-item-handle ui-sortable-handle" style="display: flex; align-items: center; gap: 8px;">'
 					.'<span class="oo-sortable-checkbox-wrapper">'
-						.'<input type="checkbox" class="oo-sortable-checkbox" value="'.$key.'" onchange="ooHandleCheckboxChange(event)"/>'
+						.'<input type="checkbox" class="oo-sortable-checkbox" value="'.$key.'" onchange="ooHandleChildCheckboxChange(event)"/>'
 					.'</span>'
 					.'<span class="item-title oo-sortable-title" '.$deactivatedStyle.'>'
 						.esc_html($label)

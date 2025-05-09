@@ -171,7 +171,7 @@ class AdminPageAddressDetail
 		echo '<div class="fieldsSortable postbox">';
 		echo '<h2 class="hndle ui-sortable-handle">'
 				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
-					.'<input type="checkbox" class="oo-sortable-checkbox-all" onchange="ooHandleCheckboxAllChange(event)"/>'
+					.'<input type="checkbox" class="oo-sortable-checkbox-all" onchange="ooHandleMasterCheckboxChange(event)"/>'
 				.'</span>'
 				.'<span>' . __('Fields', 'onoffice-for-wp-websites') . '</span>'
 			.'</h2>';
@@ -364,8 +364,8 @@ class AdminPageAddressDetail
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
 		wp_enqueue_script('oo-unsaved-changes-message');
-		wp_register_script('onoffice-bulk-delete', plugins_url('/dist/onoffice-bulk-delete.min.js', $pluginPath));
-		wp_enqueue_script('onoffice-bulk-delete');
+		wp_register_script('onoffice-bulk-actions-fields', plugins_url('/dist/onoffice-bulk-actions-fields.min.js', $pluginPath));
+		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 
 	/**
