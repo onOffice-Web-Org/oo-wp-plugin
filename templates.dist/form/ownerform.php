@@ -67,7 +67,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			if (!$isHiddenField) {
 				$line = '<label>'.$pForm->getFieldLabel( 'message' );
 				$line .= $additionMessage;
-				$line .= '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea></label>';
+				$line .= '<textarea name="message" autocomplete="off">' . $pForm->getFieldValue('message') . '</textarea></label>';
 			} else {
 				$line = '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
 			}
