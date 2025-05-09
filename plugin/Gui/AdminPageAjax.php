@@ -229,7 +229,7 @@ abstract class AdminPageAjax
 		echo '<label for="'.$selector_id.'" class="screen-reader-text">Mehrfachaktion wählen</label>';
 		echo '<select id="'.$selector_id.'">';
 		echo '<option value="-1">Mehrfachaktionen</option>';
-		echo '<option value="bulk_delete">Löschen</option>';
+		echo '<option value="bulk_delete">'.__('Delete', 'onoffice-for-wp-websites').'</option>';
 		echo '</select>';
 		echo '<input type="button" id="oo-bulk-action-button" onClick="'.$clickCall.'" class="button action" value="Übernehmen">';
 		echo '</div>';
