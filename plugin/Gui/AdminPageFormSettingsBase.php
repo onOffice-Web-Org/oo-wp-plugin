@@ -25,6 +25,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderFromNamesForm;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -379,6 +380,10 @@ abstract class AdminPageFormSettingsBase
 			'remove_page' => __('Remove Page', 'onoffice-for-wp-websites'),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_SAME_NAME_MESSAGE => __('There was a problem saving the list. The Name field has been exist.', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_EMPTY_NAME_MESSAGE => __('There was a problem saving the list. The Name field must not be empty.', 'onoffice-for-wp-websites'),
+			self::VIEW_UNSAVED_CHANGE_SAME_NAME_MESSAGE => __('Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_UNSAVED_CHANGE_EMPTY_NAME_MESSAGE => __('The Name field must not be empty. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 		];
 	}
 
@@ -740,6 +745,11 @@ abstract class AdminPageFormSettingsBase
 
 	public function doExtraEnqueues()
 	{
+		$screenData = array(
+			'action' => AdminViewController::ACTION_NOTIFICATION_FORM,
+			'name' => 'oopluginforms-name',
+			'ajaxurl' => admin_url('admin-ajax.php')
+		);
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
 		wp_enqueue_script('onoffice-default-form-values-js');
@@ -754,6 +764,8 @@ abstract class AdminPageFormSettingsBase
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginforms-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
+		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);
+		wp_localize_script('oo-unsaved-changes-message', 'screen_data_unsaved_changes', $screenData);
 
 		if ($this->getType() !== Form::TYPE_APPLICANT_SEARCH) {
 			wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js');
