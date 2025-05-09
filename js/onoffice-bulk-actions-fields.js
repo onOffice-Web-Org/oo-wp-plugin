@@ -8,8 +8,8 @@ function ooHandleBulkAction(suffix = null, boxId = null){
 	}
 }
 
-function ooHandleBulkDelete(el = null){
-	const element = el ?? document;
+function ooHandleBulkDelete(container = null){
+	const element = container ?? document;
 	element.querySelectorAll(`.oo-sortable-checkbox:checked`).forEach(cb => {
 		const id = cb.value;
 		const deleteBtn = document.getElementById('oo-delete-button-' + id);
@@ -50,10 +50,9 @@ function ooHandleChildCheckboxChange(evt) {
 	if (!containerOtherCheckboxes || !containerMasterCheckbox) return;
 
 	const otherCheckboxes = containerOtherCheckboxes.querySelectorAll('.oo-sortable-checkbox');
-	const masterCheckbox = containerMasterCheckbox.querySelector('.oo-sortable-checkbox-all');
+	const masterCheckbox = containerMasterCheckbox.querySelector('.oo-sortable-checkbox-master');
 	let allCheckboxesChecked = true
 	otherCheckboxes.forEach(checkbox => {
-		console.log(checkbox.value)
 		if(!checkbox.checked && checkbox.value !== 'dummy_key'){
 			allCheckboxesChecked = false
 		}
