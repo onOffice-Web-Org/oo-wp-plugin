@@ -90,5 +90,25 @@ class TestClassInstaller
 		$this->assertFalse(get_option('onoffice-detail-view-showTitleUrl'));
 		$this->assertFalse(get_option('onoffice-click-button-close-action'));
 		$this->assertFalse(get_option('onoffice-settings-title-and-description'));
+		$this->assertFalse(get_option('onoffice-settings-honeypot'));
+		$this->assertFalse(get_option('onoffice-settings-opengraph'));
+		$this->assertFalse(get_option('onoffice-settings-twittercards'));
+		$this->assertFalse(get_option('onoffice-settings-captcha-secretkey'));
+		$this->assertFalse(get_option('onoffice-settings-captcha-sitekey'));
+		$this->assertFalse(get_option('onoffice-notice-cache-was-cleared'));
+		$this->assertFalse(get_option('onoffice-maps-mapprovider'));
+		$this->assertFalse(get_option('onoffice-pagination-paginationprovider'));
+		$this->assertFalse(get_option('onoffice-duplicate-check-warning'));
+		$this->assertFalse(get_option('onoffice-settings-google-bot-index-pdf-expose'));
+		$this->assertFalse(get_option('onoffice-settings-googlemaps-key'));
+		$this->assertFalse(get_option('onoffice-similar-estates-settings-view'));
+		$this->assertFalse(get_option('onoffice-is-encryptcredent'));
+		$this->assertFalse(get_option('onoffice-settings-default-email'));
+		$this->assertFalse(get_option('onoffice-apply-thousand-separator'));
+		$this->assertFalse(get_option('onoffice-settings-duration-cache'));
+		$this->assertFalse(get_option('onoffice-address-detail-view-showInfoUserUrl'));
+		$this->assertFalse(get_option('onoffice-default-address-view'));
+		$this->assertFalse(get_option('onoffice-settings-thousand-separator'));
+
 	}
 }
