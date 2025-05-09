@@ -129,16 +129,17 @@ $dimensions = [
 				}
 				?>
 			</div>
-			<div class="oo-detailstable">
-				<?php
-				$keyfacts = array_flip($pEstates->getHighlightedFields());
-				$estateFacts = iterator_to_array($currentEstate);
-				// keep order but float keyfacts to the top
-				$estateFacts = array_merge(
-					array_intersect_key($estateFacts, $keyfacts), // get only highlighted fields
-					array_diff_key($estateFacts, $keyfacts) // get only non highlighted
-				);
-				foreach ($estateFacts as $field => $value) {
+			<?php
+				$highlightKeys = array_flip($pEstates->getHighlightedFields());
+				$estateDetails = array_filter(iterator_to_array($currentEstate)); // filter empty values
+				$keyfacts = array_intersect_key($estateDetails, $highlightKeys); // get only highlighted fields
+				$estatefacts = array_diff_key($estateDetails, $highlightKeys); // get only non highlighteds
+				error_log(print_r($estatefacts, true));
+			?>
+			<?php if(!empty($keyfacts)) {
+				echo '<h2 class="oo-details-highlights-headline">' . __('Highlights', 'onoffice-for-wp-websites') . '</h2>' .
+					'<dl class="oo-details-highlights-table">';
+				foreach ($keyfacts as $field => $value) {
 					if ($pEstates->getShowEnergyCertificate() && in_array($field, $energyCertificateFields)) {
 						continue;
 					}
@@ -151,13 +152,35 @@ $dimensions = [
 					if (empty($value)) {
 						continue;
 					}
-					$class = 'oo-detailslisttd'. ($pEstates->isHighlightedField($field) ? ' --highlight' : '');
-					echo '<div class="'.$class.'">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
-						. '<div class="'.$class.'">'
+					echo '<div class="oo-details-highlight">';
+					echo '<dt class="oo-details-highlight__label">' . esc_html($pEstates->getFieldLabel($field)) . '</dt>';
+					echo '<dd class="oo-details-highlight__value">' . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)) . '</dd>';
+					echo '</div>';
+				} 
+				echo '</dl>';
+			} ?>
+			<?php if(!empty($estatefacts)) {
+				echo '<dl class="oo-detailstable">';
+				foreach ($estatefacts as $field => $value) {
+					if ($pEstates->getShowEnergyCertificate() && in_array($field, $energyCertificateFields)) {
+						continue;
+					}
+					if (is_numeric($value) && 0 == $value) {
+						continue;
+					}
+					if (in_array($field, $dontEcho)) {
+						continue;
+					}
+					if (empty($value)) {
+						continue;
+					}
+					echo '<dt class="oo-details-fact__label">' . esc_html($pEstates->getFieldLabel($field)) . '</dt>' . "\n"
+						. '<dd class="oo-details-fact__value">'
 						. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
-						. '</div>' . "\n";
-				} ?>
-			</div>
+						. '</dd>' . "\n";
+				} 
+				echo '</dl>';
+			} ?>
 
 			<?php if ($currentEstate["objektbeschreibung"] !== "") { ?>
 				<div class="oo-detailsfreetext">
