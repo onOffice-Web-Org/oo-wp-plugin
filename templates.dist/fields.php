@@ -91,7 +91,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 		} elseif ($inputName === 'regionaler_zusatz') {
 			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], false, $properties['permittedvalues'] ?? null);
 		} elseif ($inputName === 'country') {
-			echo '<select class="custom-single-select" size="1" name="' . esc_attr($inputName) . '">';
+			echo '<select class="custom-single-select" autocomplete="off" size="1" name="' . esc_attr($inputName) . '">';
 			printCountry($properties['permittedvalues'], $selectedValue);
 			echo '</select>';
 		} elseif (
@@ -346,7 +346,7 @@ if (!function_exists('renderCityField')) {
 	function renderCityField(string $inputName, array $properties): string
 	{
 		$permittedValues = $properties['permittedvalues'];
-		$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_attr($inputName) . '[]" multiple="multiple">';
+		$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
 		foreach ($permittedValues as $value) {
 			$selected = null;
 			if (is_array($properties['value']) && in_array($value, $properties['value'])) {
