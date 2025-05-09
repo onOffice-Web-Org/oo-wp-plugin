@@ -108,5 +108,7 @@ class TestClassInstaller
 		$this->assertFalse(get_option('onoffice-settings-duration-cache'));
 		$this->assertFalse(get_option('onoffice-address-detail-view-showInfoUserUrl'));
 		$this->assertFalse(get_option('onoffice-default-address-view'));
+		$this->assertFalse(get_option('onoffice-settings-thousand-separator'));
+
 	}
 }
