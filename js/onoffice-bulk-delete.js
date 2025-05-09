@@ -34,4 +34,21 @@ function ooHandleCheckboxAllChange(evt, containerId = null) {
 	checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
 }
 
+function ooHandleCheckboxChange(evt) {
+	const checkbox = evt.target;
+	const container = checkbox.closest('.fieldsSortable.postbox');
+
+	if (!container) return;
+
+	const otherCheckboxes = container.querySelectorAll('.oo-sortable-checkbox');
+	const masterCheckbox = container.querySelector('.oo-sortable-checkbox-all');
+	let allCheckboxesChecked = true
+	otherCheckboxes.forEach(checkbox => {
+		console.log(window.getComputedStyle(checkbox))
+		if(!checkbox.checked && checkbox.value !== 'dummy_key'){
+			allCheckboxesChecked = false
+		}
+	})
+	masterCheckbox.checked = allCheckboxesChecked
+}
 
