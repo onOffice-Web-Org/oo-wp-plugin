@@ -210,4 +210,28 @@ abstract class AdminPageAjax
 
 		return $result;
 	}
+
+	protected function renderBulkActionControls($suffix = null, $boxId = null){
+		$selector_id ='oo-bulk-action-selector';
+		$clickCall = 'ooHandleBulkAction()';
+		if($suffix){
+			$selector_id .= '-'.$suffix;
+			if($boxId){
+				$clickCall = "ooHandleBulkAction('".$suffix."','".$boxId."')";
+			}
+			else {
+				$clickCall = "ooHandleBulkAction('".$suffix."')";
+			}
+
+		}
+
+		echo '<div style="float:right; margin-bottom: 20px;">';
+		echo '<label for="'.$selector_id.'" class="screen-reader-text">Mehrfachaktion wählen</label>';
+		echo '<select id="'.$selector_id.'">';
+		echo '<option value="-1">Mehrfachaktionen</option>';
+		echo '<option value="bulk_delete">'.__('Delete', 'onoffice-for-wp-websites').'</option>';
+		echo '</select>';
+		echo '<input type="button" id="oo-bulk-action-button" onClick="'.$clickCall.'" class="button action" value="Übernehmen">';
+		echo '</div>';
+	}
 }
