@@ -36,15 +36,24 @@ function ooHandleCheckboxAllChange(evt, containerId = null) {
 
 function ooHandleCheckboxChange(evt) {
 	const checkbox = evt.target;
-	const container = checkbox.closest('.fieldsSortable.postbox');
 
-	if (!container) return;
+	let containerOtherCheckboxes = checkbox.closest('#single-page-container');
+	if(!containerOtherCheckboxes){
+		containerOtherCheckboxes = checkbox.closest('#multi-page-container');
+	}
+	if(!containerOtherCheckboxes){
+		containerOtherCheckboxes = checkbox.closest('.fieldsSortable.postbox');
+	}
 
-	const otherCheckboxes = container.querySelectorAll('.oo-sortable-checkbox');
-	const masterCheckbox = container.querySelector('.oo-sortable-checkbox-all');
+	const containerMasterCheckbox = checkbox.closest('.fieldsSortable.postbox');
+
+	if (!containerOtherCheckboxes || !containerMasterCheckbox) return;
+
+	const otherCheckboxes = containerOtherCheckboxes.querySelectorAll('.oo-sortable-checkbox');
+	const masterCheckbox = containerMasterCheckbox.querySelector('.oo-sortable-checkbox-all');
 	let allCheckboxesChecked = true
 	otherCheckboxes.forEach(checkbox => {
-		console.log(window.getComputedStyle(checkbox))
+		console.log(checkbox.value)
 		if(!checkbox.checked && checkbox.value !== 'dummy_key'){
 			allCheckboxesChecked = false
 		}
