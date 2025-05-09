@@ -1,4 +1,3 @@
-console.log('esgarsg')
 function ooHandleBulkAction(suffix = null, boxId = null){
 	const selectorId = suffix ? `oo-bulk-action-selector-${suffix}` : `oo-bulk-action-selector`
 	const action = document.getElementById(selectorId).value;
