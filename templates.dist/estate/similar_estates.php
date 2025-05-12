@@ -49,15 +49,14 @@ $dimensions = [
 ];
 ?>
 
-<style>
+<?php if (!empty($pEstates->estateIterator())) { ?>
+	<style>
 	.oo-details-btn:focus {
 		opacity: 0.8;
 		text-decoration: none !important;
 		background: #80acd3 !important;
 	}
-</style>
-
-<?php if (!empty($pEstates->estateIterator())) { ?>
+	</style>
     <div class="oo-similar">
 		<div class="oo-detailsheadline">
 			<h2><?php esc_html_e('More Estates like this', 'onoffice-for-wp-websites');?></h2>
