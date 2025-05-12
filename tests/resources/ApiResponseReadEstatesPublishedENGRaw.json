@@ -13,7 +13,8 @@
 			"courtage_frei",
 			"objekt_des_tages",
 			"vermarktungsart",
-			"preisAufAnfrage"
+			"preisAufAnfrage",
+			"virtualAddress"
 		],
 		"filter": {
 			"veroeffentlichen": [
@@ -85,6 +86,7 @@
 						"plz": "",
 						"land": "DEU",
 						"preisAufAnfrage": "1",
+						"virtualAddress": "",
 						"mainLangId": null
 					}
 				},
@@ -122,6 +124,7 @@
 						"plz": "52068",
 						"land": "DEU",
 						"preisAufAnfrage": "0",
+						"virtualAddress": "",
 						"mainLangId": null
 					}
 				},
@@ -159,6 +162,7 @@
 						"plz": "25992",
 						"land": "DEU",
 						"preisAufAnfrage": "1",
+						"virtualAddress": "1",
 						"mainLangId": null
 					}
 				},
@@ -196,6 +200,7 @@
 						"plz": "52076",
 						"land": "DEU",
 						"preisAufAnfrage": "1",
+						"virtualAddress": "",
 						"mainLangId": null
 					}
 				},
@@ -233,6 +238,7 @@
 						"plz": "",
 						"land": "",
 						"preisAufAnfrage": "0",
+						"virtualAddress": "",
 						"mainLangId": "1071"
 					}
 				}

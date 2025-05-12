@@ -27,33 +27,71 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /* @var $pEstates EstateList */
 return (function (EstateList $pEstatesClone) {
-	$pEstatesClone->resetEstateIterator();
-	$estateData = [];
+    $pEstatesClone->resetEstateIterator();
+    $estateData = [];
 
-	while ($currentEstateMap = $pEstatesClone->estateIterator
-        (EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
-		$virtualAddressSet = (bool)$currentEstateMap['virtualAddress'];
-		$position = [
-			'lat' => (float)$currentEstateMap['breitengrad'],
-			'lng' => (float)$currentEstateMap['laengengrad'],
-		];
-		$title = $currentEstateMap ['objekttitel'];
-		$visible = !$virtualAddressSet;
+    while ($currentEstateMap = $pEstatesClone->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
+        $estateId = $pEstatesClone->getCurrentEstateId();
+        $rawValues = $pEstatesClone->getRawValues();
+        $currentEstateRawValue = $rawValues->getValueRaw($estateId);
+        $virtualAddressSet = (bool)($currentEstateRawValue['elements']['virtualAddress'] ?? false);
+        $visible = !$virtualAddressSet;
 
-		if (.0 !== $position['lng'] && .0 !== $position['lat'] && $currentEstateMap['showGoogleMap']) {
+        $position = [
+            'lat' => (float)$currentEstateMap['breitengrad'],
+            'lng' => (float)$currentEstateMap['laengengrad'],
+        ];
+        $originalTitle = $currentEstateMap['objekttitel'];
+        $title = mb_strlen($originalTitle) > 60 ? preg_replace('/\s+\S*[\s\pZ\pC]*$/u', '', mb_substr($originalTitle, 0, 60)) . '...' : $originalTitle;
+        $street = $currentEstateMap['strasse'];
+        $number = $currentEstateMap['hausnummer'];
+        $zip = $currentEstateMap['plz'];
+        $city = $currentEstateMap['ort'];
+        $country = $currentEstateMap['land'];
+
+        $addressParts = [];
+        if (!empty($street) || !empty($number)) {
+            $addressParts[] = trim($street . ' ' . $number);
+        }
+        if (!empty($zip) || !empty($city)) {
+            $addressParts[] = trim($zip . ' ' . $city);
+        }
+        if (!empty($country)) {
+            $addressParts[] = $country;
+        }
+        $address = implode('<br>', $addressParts);
+
+        $estateLink = esc_url($pEstatesClone->getEstateLink());
+        $reference = filter_var($currentEstateRawValue['elements']['referenz'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $restrictedView = $pEstatesClone->getViewRestrict();
+        if ( $reference && $restrictedView ) {
+            $link = '';
+        } else {
+            $link = $estateLink;
+        }
+
+        $listViewId = $pEstatesClone->getListViewId();
+        $mapId = 'oo_gmap_' . $listViewId;
+        $showInfoWindow = false;
+        if ($listViewId === 'estate_detail') {
+            $showInfoWindow = true;
+        }
+
+        if (.0 !== $position['lng'] && .0 !== $position['lat'] && $currentEstateMap['showGoogleMap']) {
             $estateData[] = [
                 'position' => $position,
                 'title' => $title,
+                'address' => $address,
+                'link' => $link,
                 'visible' => $visible,
+                'showInfoWindow' => $showInfoWindow 
             ];
-		}
-	}
-
-	if ($estateData === []) {
-	    return;
+        }
     }
-	$listViewId = $pEstatesClone->getListViewId();
-	$mapId = 'oo_gmap_' . $listViewId;
+
+    if ($estateData === []) {
+        return;
+    }
     ?>
     <script type="text/javascript">
     (function() {
@@ -72,19 +110,43 @@ return (function (EstateList $pEstatesClone) {
                 }
             });
 
-            for (var i in estates) {
-                var estateConfig = estates[i];
-                var latLng = new google.maps.LatLng(estateConfig.position.lat, estateConfig.position.lng);
-                bounds.extend(latLng);
+            const infowindow = new google.maps.InfoWindow();
 
-                if (estateConfig.visible) {
+            for (var i in estates) {
+                var estate = estates[i];
+                var latLng = new google.maps.LatLng(estate.position.lat, estate.position.lng);
+                bounds.extend(latLng);
+                if (estate.visible) {
                     // no marker but extended map bounds
-                    new google.maps.Marker({
+                    const marker = new google.maps.Marker({
                         position: latLng,
                         icon: null,
                         map: map,
-                        title: estateConfig.title
+                        title: estate.title
                     });
+
+                    if (!estate.showInfoWindow) {
+                        const infoWindowHeader = document.createElement('p');
+                        infoWindowHeader.className = 'oo-infowindowtitle';
+                        infoWindowHeader.innerHTML = estate.title;
+
+                        const infoWindowContent = `
+                            <div class="oo-infowindow">
+                                ${estate.address ? `<p class="oo-infowindowaddress">${estate.address}</p>` : ''}
+                                ${estate.link ? `<div class="oo-detailslink"><a class="oo-details-btn" href="${estate.link}"><?php echo esc_html__('Show Details', 'onoffice-for-wp-websites'); ?></a></div>` : ''}
+                            </div>
+                        `;
+                        marker.addListener('click', () => {
+                            infowindow.setOptions({
+                                ariaLabel: estate.title,
+                                headerContent: infoWindowHeader,
+                                content: infoWindowContent,
+                                minWidth: 250,
+                                maxWidth: 350,
+                            });
+                            infowindow.open(map, marker);
+                        });
+                    }
                 }
             }
         };
