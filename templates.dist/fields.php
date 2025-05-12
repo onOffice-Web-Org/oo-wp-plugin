@@ -322,7 +322,7 @@ if (!function_exists('renderRegionalAddition')) {
 			$requiredAttribute = "required";
 		}
 
-		$output .= '<select name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';
+		$output .= '<select autocomplete="off" name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';
 		$pRegionController = new RegionController();
 
 		if ($permittedValues !== null) {
