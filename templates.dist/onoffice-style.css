@@ -21,6 +21,14 @@
     padding: 0;
 }
 
+.oo-form label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
 .oo-searchformfield input, .oo-searchformfield button, .oo-searchformfield .multiselect {
     width: 100%;
     margin: 0 !important;
@@ -234,9 +242,15 @@ button.slick-next.slick-arrow:before {
 .oo-detailsgallery .slick-next {
     right: 25px;
 }
-.slick-prev:hover, .slick-prev:focus, .slick-next:hover, .slick-next:focus {
+.oo-detailsgallery .slick-prev:hover, .oo-detailsgallery .slick-prev:focus, .oo-detailsgallery .slick-next:hover, .oo-detailsgallery .slick-next:focus {
     background-color: #174770;
 }
+
+ .oo-detailsgallery .slick-prev:focus, .oo-detailsgallery .slick-next:focus {
+    outline: 2px solid #174770;
+    outline-offset: 2px;
+}
+
 .oo-detailspicture, .oo-detailspicture.slick-slide {
     background-size: cover;
     background-position: center center;
