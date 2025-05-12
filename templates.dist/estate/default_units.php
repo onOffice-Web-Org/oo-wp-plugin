@@ -25,11 +25,6 @@
 
 /* @var $pEstates onOffice\WPlugin\EstateList */
 
-?>
-<h2><?php esc_html_e('Entities', 'onoffice-for-wp-websites');?></h2>
-
-<?php
-
 $dont_echo = ['vermarktungsstatus','objekttitel'];
 
 $pEstatesClone = clone $pEstates;
@@ -40,125 +35,129 @@ $pEstatesClone->resetEstateIterator();
     (bool) $pEstates->estateIterator() == true &&
     !empty($pEstates->estateIterator())
 ) { ?>
-    <div class="oo-units-table">
-        <table class="oo-units__wrapper">
-            <thead class="oo-units__head">
-                <tr class="oo-units__row">
-                    <?php
-                    $visible_columns = [];
-                    while (
-                        $current_property = $pEstatesClone->estateIterator()
+    <div class="oo-units">
+        <h2><?php esc_html_e('Entities', 'onoffice-for-wp-websites');?></h2>
+        <div class="oo-units-table">
+            <table class="oo-units__wrapper">
+                <thead class="oo-units__head">
+                    <tr class="oo-units__row">
+                        <?php
+                        $visible_columns = [];
+                        while (
+                            $current_property = $pEstatesClone->estateIterator()
 
-                    ) {
-                        if (!empty($current_property)) {
-                            foreach ($current_property as $field => $value) {
-                                if (in_array($field, $dont_echo)) {
-                                    continue;
-                                }
-                                if (
-                                    !(
-                                        (is_numeric($value) && 0 == $value) ||
-                                        $value == '0000-00-00' ||
-                                        $value == '0.00' ||
-                                        $value == 'Nein' ||
-                                        $value == 'No' ||
-                                        $value == 'Ne' ||
-                                        $value == '' ||
-                                        empty($value)
-                                    )
-                                ) {
-                                    $visible_columns [$field]= true;
+                        ) {
+                            if (!empty($current_property)) {
+                                foreach ($current_property as $field => $value) {
+                                    if (in_array($field, $dont_echo)) {
+                                        continue;
+                                    }
+                                    if (
+                                        !(
+                                            (is_numeric($value) && 0 == $value) ||
+                                            $value == '0000-00-00' ||
+                                            $value == '0.00' ||
+                                            $value == 'Nein' ||
+                                            $value == 'No' ||
+                                            $value == 'Ne' ||
+                                            $value == '' ||
+                                            empty($value)
+                                        )
+                                    ) {
+                                        $visible_columns [$field]= true;
+                                    }
                                 }
                             }
                         }
-                    }
 
+                        $pEstates->resetEstateIterator();
+                        $first_property = $pEstates->estateIterator();
+
+                        if ($first_property) {
+                            foreach ($first_property as $field => $value) {
+                                if (
+                                    in_array($field, $dont_echo) ||
+                                    !isset($visible_columns[$field])
+                                ) {
+                                    continue;
+                                }
+
+                                echo '<th class="oo-units__data">';
+                                echo $pEstates->getFieldLabel($field);
+                                echo '</th>';
+                            }
+                        }
+
+                        echo '<th class="oo-units__data">';
+                        echo esc_html__('Details', 'oo_theme');
+                        echo '</th>';
+                        ?>
+                    </tr>
+                </thead>
+                <tbody class="oo-units__body">
+                    <?php
                     $pEstates->resetEstateIterator();
-                    $first_property = $pEstates->estateIterator();
-
-                    if ($first_property) {
-                        foreach ($first_property as $field => $value) {
+                    while ($current_property = $pEstates->estateIterator()) {
+                        echo '<tr class="oo-units__row">';
+                        foreach ($current_property as $field => $value):
                             if (
                                 in_array($field, $dont_echo) ||
                                 !isset($visible_columns[$field])
-                            ) {
+                                ) {
                                 continue;
                             }
-
-                            echo '<th class="oo-units__data">';
-                            echo $pEstates->getFieldLabel($field);
-                            echo '</th>';
-                        }
-                    }
-
-                    echo '<th class="oo-units__data">';
-                    echo esc_html__('Details', 'oo_theme');
-                    echo '</th>';
-                    ?>
-                </tr>
-            </thead>
-            <tbody class="oo-units__body">
-                <?php
-                $pEstates->resetEstateIterator();
-                while ($current_property = $pEstates->estateIterator()) {
-                    echo '<tr class="oo-units__row">';
-                    foreach ($current_property as $field => $value):
-                        if (
-                            in_array($field, $dont_echo) ||
-                            !isset($visible_columns[$field])
+                        
+                            if (
+                                (is_numeric($value) && 0 == $value) ||
+                                $value == '0000-00-00' ||
+                                $value == '0.00' ||
+                                $value == 'Nein' ||
+                                $value == 'No' ||
+                                $value == 'Ne' ||
+                                $value == '' ||
+                                empty($value)
                             ) {
-                            continue;
-                        }
-
-                        if (
-                            (is_numeric($value) && 0 == $value) ||
-                            $value == '0000-00-00' ||
-                            $value == '0.00' ||
-                            $value == 'Nein' ||
-                            $value == 'No' ||
-                            $value == 'Ne' ||
-                            $value == '' ||
-                            empty($value)
-                        ) {
-                            $value = '-';
-                            $class = ' --empty';
-                        } else {
-                            $value = $value;
-                            $class = '';
-                        }
-
-                        echo '<td class="oo-units__data' .
-                            $class.
-                            '" data-label="' .
-                            $pEstates->getFieldLabel($field) .
+                                $value = '-';
+                                $class = ' --empty';
+                            } else {
+                                $value = $value;
+                                $class = '';
+                            }
+                        
+                            echo '<td class="oo-units__data' .
+                                $class.
+                                '" data-label="' .
+                                $pEstates->getFieldLabel($field) .
+                                '">';
+                            echo $value;
+                            echo '</td>';
+                        endforeach;
+                    
+                        echo '<td class="oo-units__data oo-unitslink" data-label="' .
+                            esc_html__('Details', 'oo_theme') .
                             '">';
-                        echo $value;
+                        if (!empty($pEstates->getEstateLink())) {
+                            echo '<a class="oo-units-btn" title="'.esc_html__('Zur Einheit', 'oo_theme').': '.$current_property['objekttitel'].'" href="' .
+                                esc_url($pEstates->getEstateLink()) .
+                                '">';
+                        }
+                        echo esc_html__('Zur Einheit', 'oo_theme');
+                        echo '</a>';
                         echo '</td>';
-                    endforeach;
-
-                    echo '<td class="oo-units__data oo-unitslink" data-label="' .
-                        esc_html__('Details', 'oo_theme') .
-                        '">';
-                    if (!empty($pEstates->getEstateLink())) {
-                        echo '<a class="oo-units-btn" title="'.esc_html__('Zur Einheit', 'oo_theme').': '.$current_property['objekttitel'].'" href="' .
-                            esc_url($pEstates->getEstateLink()) .
-                            '">';
+                    
+                        echo '</tr>';
                     }
-                    echo esc_html__('Zur Einheit', 'oo_theme');
-                    echo '</a>';
-                    echo '</td>';
-
-                    echo '</tr>';
-                }
-                ?>
-            </tbody>
-        </table>
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-<?php } ?>
-<div>
-	<?php
+    <?php
 	if (get_option('onoffice-pagination-paginationbyonoffice')) {
+        echo "<div>";
 		wp_link_pages();
-	}
-	?>
-</div>
+        echo "</div>";
+	}    
+} ?>
+
+	
