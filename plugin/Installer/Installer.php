@@ -96,6 +96,10 @@ class Installer
 		$pDbChanges = $pDI->get(DatabaseChangesInterface::class);
 		$pDbChanges->deinstall();
 
+		// Set autoload to 'no' to prevent the option from being automatically loaded on each page request
+		// This ensures the option can be properly deleted 
+		update_option('onoffice-notice-cache-was-cleared', true, 'no');
+
 		delete_option('onoffice-default-view');
 		delete_option('onoffice-favorization-enableFav');
 		delete_option('onoffice-favorization-favButtonLabelFav');
