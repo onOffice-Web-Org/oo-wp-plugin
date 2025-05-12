@@ -346,7 +346,7 @@ if (!function_exists('renderCityField')) {
 	function renderCityField(string $inputName, array $properties): string
 	{
 		$permittedValues = $properties['permittedvalues'];
-		$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
+		$htmlSelect = '<select class="custom-multiple-select form-control" autocomplete="off" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
 		foreach ($permittedValues as $value) {
 			$selected = null;
 			if (is_array($properties['value']) && in_array($value, $properties['value'])) {
