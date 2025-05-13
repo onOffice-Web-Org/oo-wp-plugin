@@ -77,18 +77,14 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 ?>
-	<p>
 	<h1><?php esc_html_e('Your contact details', 'onoffice-for-wp-websites'); ?></h1>
 		<div>
 			<?php echo implode('<br>', $addressValues); ?>
 		</div>
-	</p>
-	<p>
 	<h1><?php esc_html_e('Your search criteria', 'onoffice-for-wp-websites'); ?></h1>
 		<div>
 			<?php echo implode('<br>', $searchcriteriaValues) ?>
 		</div>
-	</p>
 	<?php echo implode($hiddenValues); ?>
 	<div>
 		<?php

@@ -119,7 +119,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	$umkreisFields = $pForm->getUmkreisFields();
 	$countResults = $pForm->getCountAbsolutResults();
 
-	echo '<p>';
 	echo '<br><span>'.esc_html(
 			sprintf(_n(
 				/* translators: %s will be replaced with a number. */
@@ -191,7 +190,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			echo '<span><i>'.implode(' ', array_values($umkreis)).'</i></span><br>';
 		}
 	}
-	echo '</p>';
 }
 
 ?>

@@ -58,8 +58,8 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
 		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
-		$line = $pForm->getFieldLabel($input).$addition.': ';
-		$line .= renderFormField($input, $pForm);
+		$line = '<label>'.$pForm->getFieldLabel($input).$addition;
+		$line .= renderFormField($input, $pForm).'</label>';
 		$pageNumber = $pForm->getPagePerForm($input);
 		if (!isset($addressValues[$pageNumber])) {
 			$addressValues[$pageNumber] = array();
