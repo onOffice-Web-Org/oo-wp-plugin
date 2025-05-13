@@ -57,8 +57,8 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 		}
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-			$line = renderFormField( 'gdprcheckbox', $pForm );
-			$line .= $pForm->getFieldLabel( 'gdprcheckbox' );
+			$line = '<label>'.renderFormField( 'gdprcheckbox', $pForm );
+			$line .= $pForm->getFieldLabel( 'gdprcheckbox' ).'</label>';
 		}
 		if ( in_array( $input, array( 'message' )) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );

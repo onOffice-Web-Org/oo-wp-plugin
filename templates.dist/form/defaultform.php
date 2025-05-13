@@ -60,8 +60,8 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			continue;
 		}
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-			echo renderFormField( 'gdprcheckbox', $pForm );
-			echo $pForm->getFieldLabel( 'gdprcheckbox' ) . '<br>';
+			echo '<label>'.renderFormField( 'gdprcheckbox', $pForm );
+			echo $pForm->getFieldLabel( 'gdprcheckbox' ) . '</label>';
 			continue;
 		}
 		if ( in_array( $input, array( 'message' ) ) ) {
