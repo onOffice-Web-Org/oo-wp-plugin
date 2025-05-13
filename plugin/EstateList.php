@@ -59,8 +59,8 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldParkingLot;
-use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 use onOffice\WPlugin\Field\CostsCalculator;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailViewAddress;
 
 class EstateList
 	implements EstateListBase
@@ -724,7 +724,11 @@ class EstateList
 				$allAddressIds = [$allAddressIds[0]];
 			}
 
-			$this->_pEnvironment->getAddressList()->loadAddressesById($allAddressIds, $fields);
+			$addressList = $this->_pEnvironment->getAddressList();
+
+			$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
+			$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
+			$addressList->loadAddressesById($allAddressIds, $fields);
 		}
 	}
 

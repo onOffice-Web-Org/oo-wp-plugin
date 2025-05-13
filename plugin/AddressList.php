@@ -183,17 +183,20 @@ implements AddressListBase
 	 */
 	public function loadAddressesById(array $addressIds, array $fields)
 	{
+		$filter = $this->getDefaultFilterBuilder()->buildFilter();
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		$parameters = [
 			'recordids' => $addressIds,
 			'data' => $fields,
 			'outputlanguage' => Language::getDefault(),
+			'filter' => $filter,
 			'formatoutput' => true,
 		];
 		$parametersRaw = [
 				'recordids' => $addressIds,
 				'data' => $this->_addressParametersForImageAlt,
 				'outputlanguage' => Language::getDefault(),
+				'filter' => $filter,
 				'formatoutput' => false,
 		];
 		$this->_pApiClientAction->setParameters($parameters);
@@ -694,7 +697,7 @@ implements AddressListBase
 	 * @return DefaultFilterBuilder
 	 * @throws UnknownViewException
 	 */
-	public function getDefaultFilterBuilder(): DefaultFilterBuilderListViewAddress
+	public function getDefaultFilterBuilder(): DefaultFilterBuilder
 		{ return $this->_pEnvironment->getDefaultFilterBuilder(); }
 
 	/** @param DefaultFilterBuilder $pDefaultFilterBuilder */
