@@ -452,12 +452,12 @@ $dimensions = [
 			</div>
 			
 				<?php if ($pEstates->getDocument() != '') : ?>
-					<div class="oo-asp oo-detailsexpose"></div>
+					<div class="oo-asp oo-detailsexpose">
 					<h2><?php esc_html_e('Documents', 'onoffice-for-wp-websites'); ?></h2>
 					<a href="<?php echo $pEstates->getDocument(); ?>">
 						<?php esc_html_e('PDF expose', 'onoffice-for-wp-websites'); ?>
 					</a>
-				</div>
+					</div>
 				<?php endif; ?>
 			
 
