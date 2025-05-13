@@ -268,13 +268,73 @@ class EstateList
 
 		$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
 
-		$pApiClientActionRawValues = clone $this->_pApiClientAction;
-		$pApiClientActionRawValues->setParameters($estateParametersRaw);
-		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
+		$result = $this->getEstateRecordsSortedWithHiddenPrice($estateParameters, $estateParametersRaw, $currentPage);
+		$this->_records = $result[0];
+		$this->_recordsRaw = $result[1];
+	}
 
-		$this->_records = $this->_pApiClientAction->getResultRecords();
-		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
-		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+	private function getEstateRecordsSortedWithHiddenPrice($estateParameters, $estateParametersRaw, $currentPage) {
+		if (!isset($estateParameters['filter'])) {
+			$estateParameters['filter'] = [];
+		}
+		$estateParameters['filter']['preisAufAnfrage'] = [[
+			'op' => '!=',
+			'val' => '1'
+		]];
+
+		if (!isset($estateParametersRaw['filter'])) {
+			$estateParametersRaw['filter'] = [];
+		}
+		$estateParametersRaw['filter']['preisAufAnfrage'] = [[
+			'op' => '!=',
+			'val' => '1'
+		]];
+
+		$pApiClientAction = clone $this->_pApiClientAction;
+		$pApiClientActionRaw = clone $this->_pApiClientAction;
+
+		$pApiClientAction->setParameters($estateParameters);
+		$pApiClientAction->addRequestToQueue();
+		$pApiClientActionRaw->setParameters($estateParametersRaw);
+		$pApiClientActionRaw->addRequestToQueue()->sendRequests();
+
+		$records = $pApiClientAction->getResultRecords();
+		$recordsRaw = $pApiClientActionRaw->getResultRecords();
+		$recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+
+		$totalCountPriceNotHidden = $pApiClientAction->getResultMeta()['cntabsolute'];
+		$itemsPerPage = $this->_pDataView->getRecordsPerPage();
+
+		if($itemsPerPage*$currentPage < $totalCountPriceNotHidden) {
+			return [$records, $recordsRaw];
+		}
+
+		$estateParameters['filter']['preisAufAnfrage'] = [[
+			'op' => '=',
+			'val' => '1'
+		]];
+		$estateParametersRaw['filter']['preisAufAnfrage'] = [[
+			'op' => '=',
+			'val' => '1'
+		]];
+
+		$priceHiddenOffset = max(0, $itemsPerPage * ($currentPage - 1) - $totalCountPriceNotHidden);
+		$priceHiddenNumberOfItems = min( $itemsPerPage * $currentPage - $totalCountPriceNotHidden, $itemsPerPage);
+		$estateParameters['listoffset'] = $priceHiddenOffset;
+		$estateParameters['listlimit'] = $priceHiddenNumberOfItems;
+		$estateParametersRaw['listoffset'] = $priceHiddenOffset;
+		$estateParametersRaw['listlimit'] = $priceHiddenNumberOfItems;
+
+		$pApiClientAction->setParameters($estateParameters);
+		$pApiClientAction->addRequestToQueue();
+		$pApiClientActionRaw->setParameters($estateParametersRaw);
+		$pApiClientActionRaw->addRequestToQueue()->sendRequests();
+
+		$recordsPriceHidden = $pApiClientAction->getResultRecords();
+		$recordsPriceHiddenRaw = $pApiClientActionRaw->getResultRecords();
+		$recordsPriceHiddenRaw = array_combine(array_column($recordsPriceHiddenRaw, 'id'), $recordsPriceHiddenRaw);
+
+		return [array_merge($records,$recordsPriceHidden), array_merge($recordsRaw,$recordsPriceHiddenRaw)];
 	}
 
 	/**
