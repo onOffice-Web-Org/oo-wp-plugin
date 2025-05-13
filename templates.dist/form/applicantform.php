@@ -50,6 +50,9 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
+	$searchcriteriaLine = '<fieldset><legend>'.$pForm->getFieldLabel($input).$addition.'</legend>';
+	$searchcriteriaLine .= renderFormField($input, $pForm).'</fieldset>';
+
 	$line = '<label>'.$pForm->getFieldLabel($input).$addition;
 	$line .= renderFormField($input, $pForm).'</label>';
 
@@ -66,7 +69,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ($table == 'searchcriteria') {
-		$searchcriteriaValues []= $line;
+		$searchcriteriaValues []= $searchcriteriaLine;
 	}
 
 	if ($table == '') {
@@ -79,11 +82,11 @@ if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 ?>
 	<h1><?php esc_html_e('Your contact details', 'onoffice-for-wp-websites'); ?></h1>
 		<div>
-			<?php echo implode('<br>', $addressValues); ?>
+			<?php echo implode('', $addressValues); ?>
 		</div>
 	<h1><?php esc_html_e('Your search criteria', 'onoffice-for-wp-websites'); ?></h1>
 		<div>
-			<?php echo implode('<br>', $searchcriteriaValues) ?>
+			<?php echo implode('', $searchcriteriaValues) ?>
 		</div>
 	<?php echo implode($hiddenValues); ?>
 	<div>

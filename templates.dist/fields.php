@@ -286,8 +286,8 @@ if (!function_exists('renderFormField')) {
 
 				foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
 					$value = 'value="' . esc_attr($pForm->getFieldValue($key, true)) . '"';
-					$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($key) . '" '
-						. $value . ' placeholder="' . esc_attr($rangeDescription) . '">';
+					$output .= '<label>' . esc_attr($rangeDescription) . '<input autocomplete="off" ' . $inputType . $requiredAttribute . ' name="' . esc_attr($key) . '" '
+						. $value . ' placeholder="' . esc_attr($rangeDescription) . '"></label>';
 				}
 			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
 				$output = '<fieldset>
