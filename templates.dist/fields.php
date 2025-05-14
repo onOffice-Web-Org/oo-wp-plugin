@@ -302,7 +302,7 @@ if (!function_exists('renderFormField')) {
 					<label for="' . esc_attr($fieldName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
 					</fieldset>';
 			} else {
-				$output .= '<label>' .$fieldLabel.  '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($fieldName) . '" ' . $value . $autocompleteAttribute .'></label>';
+				$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($fieldName) . '" ' . $value . $autocompleteAttribute .'>';
 			}
 		}
 		return $output;
