@@ -84,7 +84,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_html($inputName) . '[]" multiple="multiple">';
+			$htmlSelect = '<select class="custom-multiple-select form-control" autocomplete="off" name="' . esc_html($inputName) . '[]" multiple="multiple">';
 			$htmlSelect .= $htmlOptions;
 			$htmlSelect .= '</select>';
 			echo $htmlSelect;
@@ -111,7 +111,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 		} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="' . esc_attr($properties['length']) . '"' : '';
-			echo '<input name="' . esc_attr($inputName) . '" ' . $inputType;
+			echo '<input autocomplete="off" name="' . esc_attr($inputName) . '" ' . $inputType;
 			echo 'value="' . esc_attr($selectedValue) . '"' . $lengthAttr . '>';
 		}
 	}
@@ -205,7 +205,7 @@ if (!function_exists('renderFormField')) {
 		}
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
-			$output .= '<label>' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '<select class="custom-single-select" autocomplete="off" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
+			$output .= '<select class="custom-single-select" autocomplete="off" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
 			/* translators: %s will be replaced with the translated field name. */
 			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 			foreach ($permittedValues as $key => $value) {
@@ -217,7 +217,7 @@ if (!function_exists('renderFormField')) {
 				$output .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>'
 					. esc_html($value) . '</option>';
 			}
-			$output .= '</select></label>';
+			$output .= '</select>';
 		} elseif ($fieldName === 'regionaler_zusatz') {
 			if (!is_array($selectedValue)) {
 				$selectedValue = [];
