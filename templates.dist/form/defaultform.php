@@ -69,9 +69,9 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$additionMessage   = $isRequiredMessage ? '*' : '';
 			$isHiddenField = $pForm->isHiddenField('message');
 			if (!$isHiddenField) {
-				echo '<label>'.$pForm->getFieldLabel( 'message' );
-				echo $additionMessage;
-				echo '<textarea name="message" autocomplete="off">' . $pForm->getFieldValue('message') . '</textarea></label>';
+				echo '<label for="message'.$pForm->getFormId().'">'.$pForm->getFieldLabel( 'message' );
+				echo $additionMessage.'</label>';
+				echo '<textarea name="message" id="message'.$pForm->getFormId().'" autocomplete="off">' . $pForm->getFieldValue('message') . '</textarea>';
 			} else {
 				echo '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
 			}

@@ -34,11 +34,10 @@ if (count($visible) === 0) {
 <?php
 
 foreach ($visible as $inputName => $properties) :
-	echo '<p>';
-	echo esc_html($properties['label']).': ';
-	echo '<br>';
+	echo '<label>';
+	echo esc_html($properties['label']);
 	renderFieldEstateSearch($inputName, $properties);
-	echo '</p>';
+	echo '</label>';
 endforeach;
 ?>
 

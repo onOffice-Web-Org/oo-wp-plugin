@@ -69,7 +69,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 			if (in_array($values['type'], $selectTypes)) {
 				$permittedValues = $values['permittedvalues'];
 
-				echo '<label>'.esc_html($values['label']).'<select class="custom-single-select" size="1" name="'.$key.'">';
+				echo '<select class="custom-single-select" size="1" name="'.$key.'">';
 				echo '<option value="">'.esc_html('not specified').'</option>';
 
 				foreach ( $permittedValues as $countryCode => $countryName ) {
@@ -77,10 +77,10 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 						.esc_html($countryName).'</option>';
 				}
 
-				echo '</select></label>';
+				echo '</select>';
 			} else {
-				echo '<label>'.esc_html($values['label']).'<input type="text" name="'.esc_html($key).'" value="'
-					.esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'></label>';
+				echo '<input type="text" name="'.esc_html($key).'" value="'
+					.esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'>';
 			}
 		}
 
