@@ -30,6 +30,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Cache\CacheHandler;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\FormData;
@@ -37,7 +38,6 @@ use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Language;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 
 /**
  *
@@ -342,6 +342,10 @@ class FormAddressCreator
 		$pApiClientAction->setResourceId((string) $addressId);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
 		$result = $pApiClientAction->getResultRecords();
+		
+		if (empty($result)) {
+			return array();
+		}
 
 		return $result[0]['elements'];
 	}
@@ -409,6 +413,8 @@ class FormAddressCreator
 	 * @param DataFormConfiguration $pFormConfig
 	 * @param int $addressId
 	 * @param int|null $estateId
+	 *
+	 * @return void
 	 */
 	public function createAgentsLog(DataFormConfiguration $pFormConfig, int $addressId, int $estateId = null)
 	{
@@ -431,6 +437,42 @@ class FormAddressCreator
 
 		$pApiClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'agentslog');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+	}
+
+	/**
+	 * @param DataFormConfiguration $pFormConfig
+	 * @param int $addressId
+	 * @param int|null $estateId
+	 *
+	 * @return void
+	 */
+	public function createTask(DataFormConfiguration $pFormConfig, int $addressId, int $estateId = null)
+	{
+		if (empty($pFormConfig->getTaskType()) || empty($pFormConfig->getTaskStatus())) {
+			return;
+		}
+
+		$requestParams = [
+			'data' => [
+				'Prio' => $pFormConfig->getTaskPriority(),
+				'Verantwortung' => $pFormConfig->getTaskResponsibility(),
+				'Art' => $pFormConfig->getTaskType(),
+				'Status' => $pFormConfig->getTaskStatus(),
+				'Bearbeiter' => $pFormConfig->getTaskProcessor(),
+				'Betreff' => $pFormConfig->getTaskSubject(),
+				'Aufgabe' => $pFormConfig->getTaskDescription()
+			],
+			'relatedAddressId' => $addressId,
+		];
+
+		if (!empty($estateId)) {
+			$requestParams['relatedEstateId'] = $estateId;
+		}
+
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'task');
 		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
 	}

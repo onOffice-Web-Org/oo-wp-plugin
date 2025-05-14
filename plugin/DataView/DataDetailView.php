@@ -57,6 +57,24 @@ class DataDetailView
 	/** */
 	const FIELD_PRICE_ON_REQUEST = 'show_price_on_request';
 
+	/** */
+	const FIELD_CONTACT_PERSON = 'contact_person';
+
+	/** @var string */
+	const SHOW_ALL_CONTACT_PERSONS = '0';
+
+	/** @var int */
+	const SHOW_MAIN_CONTACT_PERSON = '1';
+
+	/** */
+	const FIELD_TOTAL_COSTS_CALCULATOR = 'show_total_costs_calculator';
+
+	/** */
+	const NOTARY_FEES = 1.5;
+
+	/** */
+	const LAND_REGISTER_ENTRY = 0.5;
+
 	/** @var string[] */
 	private $_fields = [
 		'objekttitel',
@@ -174,7 +192,15 @@ class DataDetailView
 	];
 
 	/** @var string[] */
-	private $_pictureTypes = [];
+	private $_pictureTypes = [
+		ImageTypes::TITLE,
+		ImageTypes::PHOTO,
+		ImageTypes::PHOTO_BIG,
+		ImageTypes::PANORAMA,
+		ImageTypes::GROUNDPLAN,
+		ImageTypes::LOCATION_MAP,
+		ImageTypes::ENERGY_PASS_RANGE,
+	];
 
 	/** @var string */
 	private $_template = '';
@@ -229,6 +255,12 @@ class DataDetailView
 		ImageTypes::PASSPORTPHOTO
 	];
 
+	/** @var bool */
+	private $_showTotalCostsCalculator = false;
+
+	/** @var bool */
+	private $_showEnergyCertificate = false;
+
     /** @var string[] */
     private $_priceFields = [
         'kaufpreis',
@@ -242,7 +274,31 @@ class DataDetailView
         'wochmietbto',
         'kaufpreis_pro_qm',
         'mietpreis_pro_qm',
+        'calculatedPrice'
     ];
+
+	/** @var string[] */
+	private $_propertyTransferTax = [
+		'Baden-Württemberg' => 5,
+		'Bayern' => 3.5,
+		'Berlin' => 6,
+		'Brandenburg' => 6.5,
+		'Bremen' => 5,
+		'Hamburg' => 5.5,
+		'Hessen' => 6,
+		'Mecklenburg-Vorpommern' => 6,
+		'Niedersachsen' => 5,
+		'Nordrhein-Westfalen' => 6.5,
+		'Rheinland-Pfalz' => 5,
+		'Saarland' => 6.5,
+		'Sachsen' => 5.5,
+		'Sachsen-Anhalt' => 5,
+		'Schleswig-Holstein' => 6.5,
+		'Thüringen' => 5
+	];
+
+	/** @var string */
+	private $_contactPerson = '0';
 
 	/**
 	 *
@@ -431,6 +487,13 @@ class DataDetailView
 	public function setShowPriceOnRequest(bool $priceOnRequest)
 	{ $this->_showPriceOnRequest = $priceOnRequest; }
 
+	/** @return bool */
+	public function getShowEnergyCertificate(): bool
+	{ return $this->_showEnergyCertificate; }
+
+	/** @param bool $showEnergyCertificate */
+	public function setShowEnergyCertificate(bool $showEnergyCertificate)
+	{ $this->_showEnergyCertificate = $showEnergyCertificate; }
 
     /**
      * @return array
@@ -441,10 +504,36 @@ class DataDetailView
     }
 
 	/** @return array */
+	public function getPropertyTransferTax(): array
+		{ return $this->_propertyTransferTax; }
+
+	/** @return bool */
+	public function getShowTotalCostsCalculator(): bool
+		{ return $this->_showTotalCostsCalculator; }
+
+	/** @param bool $costsCalculator */
+	public function setShowTotalCostsCalculator(bool $costsCalculator)
+		{ $this->_showTotalCostsCalculator = $costsCalculator; }
+
+	/** @return array */
 	public function getContactImageTypes(): array
 		{ return $this->_contactImageTypes; }
 
 	/** @param array $contactImageTypes */
 	public function setContactImageTypes(array $contactImageTypes)
 		{ $this->_contactImageTypes = $contactImageTypes; }
+
+	/** @param array $priceFields */
+	public function setListFieldsShowPriceOnRequest(array $priceFields)
+	{
+		$this->_priceFields = $priceFields;
+	}
+
+	/** @return string */
+	public function getContactPerson(): string
+		{ return $this->_contactPerson; }
+
+	/** @param string $contactPerson */
+	public function setContactPerson(string $contactPerson)
+		{ $this->_contactPerson = $contactPerson; }
 }

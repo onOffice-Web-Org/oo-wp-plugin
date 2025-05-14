@@ -59,6 +59,7 @@ class TestTemplateEstateDefaultDetail
 				'getShortCodeForm',
 				'getEstatePictureUrl',
 				'getEstatePictureTitle',
+				'getEstatePictureValues',
 				'getDocument',
 				'getCurrentEstateId',
 				'getSimilarEstates',
@@ -66,6 +67,10 @@ class TestTemplateEstateDefaultDetail
 				'getEstateLinks',
 				'getLinkEmbedPlayers',
 				'getDetailView',
+				'getTotalCostsData',
+				'getShowEnergyCertificate',
+				'getPermittedValues',
+				'getRawValues',
 			])
 			->setConstructorArgs([$pDataView])
 			->getMock();
@@ -88,9 +93,49 @@ class TestTemplateEstateDefaultDetail
 			'ausstatt_beschr' => 'teilweise mit einer alten Mauer aus Findlingen umgeben',
 			'sonstige_angaben' => 'Vereinbaren sie noch heute einen Besichtigungstermin',
 			'MPAreaButlerUrlWithAddress' => 'areabutler.de',
+			'energyClass' => 'A',
+			'baujahr' => 'testField',
 		];
 
+		$totalCostsData = [
+			'kaufpreis' => [
+				'raw' => 123456.56,
+				'default' => '123.456,56 €'
+			],
+			'bundesland' => [
+				'raw' => 4321,
+				'default' => '4.321 €'
+			],
+			'aussen_courtage' => [
+				'raw' => 22222,
+				'default' => '22.222 €'
+			],
+			'notary_fees' => [
+				'raw' => 1852,
+				'default' => '1.852 €'
+			],
+			'land_register_entry' => [
+				'raw' => 617,
+				'default' => '617 €'
+			],
+			'total_costs' => [
+				'raw' => 152468.56,
+				'default' => '152.468,56 €'
+			]
+		];
+
+		$estateDataRaw = [
+			52 => [
+				'id' => 52,
+				'type' => 'estate',
+				'elements' => [
+					'energieausweistyp' => 'Endenergiebedarf',
+					'energyClass' => 'A',
+				]
+			]
+		];
 		$pArrayContainerEstateDetail = new ArrayContainerEscape($estateData);
+		$pArrayContainerEstateDetailRaw = new ArrayContainerEscape($estateDataRaw);
 
 		$this->_pEstate->setEstateId(52);
 		$this->_pEstate->method('estateIterator')
@@ -99,6 +144,9 @@ class TestTemplateEstateDefaultDetail
 			->will($this->returnCallback(function(string $field): string {
 				return 'label-'.$field;
 			}));
+		$this->_pEstate->method('getTotalCostsData')->willReturn($totalCostsData);
+		$this->_pEstate->method('getRawValues')
+			->will($this->onConsecutiveCalls($pArrayContainerEstateDetailRaw, false));
 
 		$contactData = [
 			'Name' => 'Parker',
@@ -126,6 +174,13 @@ class TestTemplateEstateDefaultDetail
 			.'#038;datensatz=52&#038;filename=Titelbild_362.jpg');
 		$this->_pEstate->method('getEstatePictureTitle')->with(362)
 			->willReturn('Fotolia_3286409_Subscription_XL');
+		$this->_pEstate->method('getEstatePictureValues')->with(362)
+			->willReturn([
+				'id' => 362,
+				'url' => 'https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&filename=Titelbild_362.jpg',
+				'title' => 'Fotolia_3286409_Subscription_XL',
+				'type' => \onOffice\WPlugin\Types\ImageTypes::TITLE
+			]);
 		$this->_pEstate->method('getDocument')->willReturn('Document here');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
 		$this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
@@ -133,6 +188,8 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('getEstateLinks')->willReturn([$oguloLink]);
 		$this->_pEstate->method('getLinkEmbedPlayers')->willReturn([]);
 		$this->_pEstate->method('getDetailView')->willReturn('1');
+		$this->_pEstate->method('getShowEnergyCertificate')->willReturn(true);
+		$this->_pEstate->method('getPermittedValues')->willReturn(['A', 'B', 'C']);
 	}
 
 	/**

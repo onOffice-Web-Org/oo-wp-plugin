@@ -25,6 +25,7 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\__String;
@@ -118,7 +119,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(53, $dbversion);
+		$this->assertEquals(59, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -271,7 +272,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(53, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(59, DatabaseChanges::MAX_VERSION);
 	}
 
 
@@ -418,6 +419,65 @@ class TestClassDatabaseChanges
 		$pDataViewSimilarEstates = $pSimilarViewOptions->getDataViewSimilarEstates();
 
 		$this->assertEquals([ImageTypes::TITLE], $pDataViewSimilarEstates->getPictureTypes());
+
+		return $this->_createQueries;
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::updatePriceFieldsOptionForSimilarEstate
+	 */
+	public function testUpdatePriceFieldsOptionForSimilarEstate()
+	{
+		global $wpdb;
+		$dataViewSimilarEstates = new DataViewSimilarEstates();
+		$listFieldsShowPriceOnRequest = $dataViewSimilarEstates->getListFieldsShowPriceOnRequest();
+
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+
+		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataSimilarView();
+		$dataSimilarViewOptions->name = "onoffice-similar-estates-settings-view";
+		$dataSimilarViewOptions->getDataViewSimilarEstates()->setListFieldsShowPriceOnRequest($listFieldsShowPriceOnRequest);
+		update_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
+
+		$this->_pDbChanges->deinstall();
+		add_option('oo_plugin_db_version', '44');
+		add_filter('query', [$this, 'saveCreateQuery'], 1);
+		$this->_pDbChanges->install();
+		remove_filter('query', [$this, 'saveCreateQuery'], 1);
+
+		$pSimilarEstatesOptions = get_option('onoffice-similar-estates-settings-view');
+		$pDataViewSimilarEstates = $pSimilarEstatesOptions->getDataViewSimilarEstates();
+
+		$this->assertEquals($listFieldsShowPriceOnRequest, $pDataViewSimilarEstates->getListFieldsShowPriceOnRequest());
+
+		return $this->_createQueries;
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::updatePriceFieldsOptionDetailView
+	 */
+	public function testUpdatePriceFieldsOptionForDetailView()
+	{
+		global $wpdb;
+		$dataDetailView = new DataDetailView();
+		$listFieldsShowPriceOnRequest = $dataDetailView->getListFieldsShowPriceOnRequest();
+
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+
+		$dataDetailViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
+		$dataDetailViewOptions->name = "onoffice-default-view";
+		$dataDetailViewOptions->setListFieldsShowPriceOnRequest($listFieldsShowPriceOnRequest);
+		update_option('onoffice-default-view', $dataDetailViewOptions);
+
+		$this->_pDbChanges->deinstall();
+		add_option('oo_plugin_db_version', '44');
+		add_filter('query', [$this, 'saveCreateQuery'], 1);
+		$this->_pDbChanges->install();
+		remove_filter('query', [$this, 'saveCreateQuery'], 1);
+
+		$pDetailViewOptions = get_option('onoffice-default-view');
+
+		$this->assertEquals($listFieldsShowPriceOnRequest, $pDetailViewOptions->getListFieldsShowPriceOnRequest());
 
 		return $this->_createQueries;
 	}

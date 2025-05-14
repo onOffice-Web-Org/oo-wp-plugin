@@ -111,7 +111,13 @@ class AdminPageEstateDetail
 	const FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG = 'viewSearchFieldForFieldListsConfig';
 
 	/** */
+	const FORM_VIEW_TOTAL_COSTS_CALCULATOR = 'viewtotalcostscalculator';
+
+	/** */
 	const FORM_VIEW_CONTACT_IMAGE_TYPES = 'viewcontactimagetypes';
+
+	/** */
+	const FORM_VIEW_CONTACT_PERSON = 'viewcontactperson';
 
 	/**
 	 *
@@ -263,6 +269,11 @@ class AdminPageEstateDetail
 		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_ADDITIONAL_MEDIA);
 		$this->createMetaBoxByForm($pFormDocumentTypes, 'side');
 
+		$pFormTotalCostsCalculator = $this->getFormModelByGroupSlug(self::FORM_VIEW_TOTAL_COSTS_CALCULATOR);
+		$this->createMetaBoxByForm($pFormTotalCostsCalculator, 'normal');
+		$pFormContactPerson = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_PERSON);
+		$this->createMetaBoxByForm($pFormContactPerson, 'side');
+
 	}
 
 	/**
@@ -310,6 +321,7 @@ class AdminPageEstateDetail
 		$pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
 		$pInputShowStatus = $pFormModelBuilder->createInputModelShowStatus();
 		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
+		$pInputModelShowEnergyCertificate = $pFormModelBuilder->createInputModelShowEnergyCertificate();
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
@@ -318,6 +330,7 @@ class AdminPageEstateDetail
 		$pFormModelLayoutDesign->addInputModel( $pInputModelShortCodeForm );
 		$pFormModelLayoutDesign->addInputModel($pInputShowStatus);
 		$pFormModelLayoutDesign->addInputModel($pInputModelShowPriceOnRequest);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowEnergyCertificate);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
@@ -344,6 +357,14 @@ class AdminPageEstateDetail
 		$pFormModelAccessControl->addInputModel( $pInputModelAccessControl );
 		$this->addFormModel( $pFormModelAccessControl );
 
+		$pInputModelTotalCostsCalculator = $pFormModelBuilder->createInputModelTotalCostsCalculator();
+		$pFormModelTotalCostsCalculator = new FormModel();
+		$pFormModelTotalCostsCalculator->setPageSlug($this->getPageSlug());
+		$pFormModelTotalCostsCalculator->setGroupSlug(self::FORM_VIEW_TOTAL_COSTS_CALCULATOR);
+		$pFormModelTotalCostsCalculator->setLabel(__('Total costs calculator', 'onoffice-for-wp-websites'));
+		$pFormModelTotalCostsCalculator->addInputModel($pInputModelTotalCostsCalculator);
+		$this->addFormModel($pFormModelTotalCostsCalculator);
+
 		$pInputModelDocumentTypes = $pFormModelBuilder->createInputModelExpose();
 		$pInputModelMovieLinks = $pFormModelBuilder->createInputModelMovieLinks();
 		$pInputModelOguloLinks = $pFormModelBuilder->createInputModelOguloLinks();
@@ -359,6 +380,14 @@ class AdminPageEstateDetail
 		$pFormModelDocumentTypes->addInputModel($pInputModelObjectLinks);
 		$pFormModelDocumentTypes->addInputModel($pInputModelLinks);
 		$this->addFormModel($pFormModelDocumentTypes);
+
+		$pInputModelContactPerson = $pFormModelBuilder->createInputModelContactPerson();
+		$pFormModelContactPerson = new FormModel();
+		$pFormModelContactPerson->setPageSlug($this->getPageSlug());
+		$pFormModelContactPerson->setGroupSlug(self::FORM_VIEW_CONTACT_PERSON);
+		$pFormModelContactPerson->setLabel(__('Contact Person', 'onoffice-for-wp-websites'));
+		$pFormModelContactPerson->addInputModel($pInputModelContactPerson);
+		$this->addFormModel($pFormModelContactPerson);
 
 		$pFieldsCollection = $this->readAllFields();
 		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);

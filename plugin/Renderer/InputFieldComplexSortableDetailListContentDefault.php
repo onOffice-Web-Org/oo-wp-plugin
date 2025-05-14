@@ -31,6 +31,7 @@ use function __;
 use function esc_html;
 use function esc_html__;
 use const ONOFFICE_DI_CONFIG_PATH;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 
 /**
  *
@@ -42,13 +43,14 @@ class InputFieldComplexSortableDetailListContentDefault
 	 * @param string $key
 	 * @param bool $isDummy
 	 * @param string $type
-	 * @param array $extraInputModels
+	 * @param array $extraInputModels 
+	 * @param bool $isMutiplePage
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
 
 	public function render(string $key, bool $isDummy,
-		string $type = null, array $extraInputModels = [])
+		string $type = null, array $extraInputModels = [], bool $isMutiplePage = false)
 	{
 		$pFormModel = new FormModel();
 
@@ -70,6 +72,9 @@ class InputFieldComplexSortableDetailListContentDefault
 			if ($key !== 'Ort' && $pInputModel->getField() == 'convertInputTextToSelectForField' && !$isDummy) {
 				continue;
 			}
+			if (array_key_exists($key, FieldModuleCollectionDecoratorReadAddress::getNewAddressFields()) && !$isDummy && ($pInputModel->getField() === 'filterable' || $pInputModel->getField() === 'hidden')) {
+				continue;
+			}
 			$pInputModel->setIgnore($isDummy);
 			$callbackValue = $pInputModel->getValueCallback();
 
@@ -79,6 +84,10 @@ class InputFieldComplexSortableDetailListContentDefault
 
 			if ($isDummy) {
 				$pInputModel->setTable(AdminPageAjax::EXCLUDE_FIELD . $pInputModel->getTable());
+			} elseif ($isMutiplePage) {
+				if (strpos($pInputModel->getTable(), AdminPageAjax::EXCLUDE_FIELD) === 0) {
+					$pInputModel->setTable(substr($pInputModel->getTable(), strlen(AdminPageAjax::EXCLUDE_FIELD)));
+				}
 			}
 
 			$pFormModel->addInputModel($pInputModel);

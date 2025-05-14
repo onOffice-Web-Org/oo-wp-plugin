@@ -39,6 +39,8 @@ use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\EstateList;
 
 class TestClassContentFilterShortCodeEstateDetail
 	extends \WP_UnitTestCase
@@ -77,6 +79,8 @@ class TestClassContentFilterShortCodeEstateDetail
 				'getCurrentEstateId',
 				'getSimilarEstates',
 				'loadSingleEstate',
+				'getListViewId',
+				'getDataView',
 			])
 			->disableOriginalConstructor()
 			->getMock();
@@ -142,6 +146,7 @@ class TestClassContentFilterShortCodeEstateDetail
 		$this->_pEstate->method('getDocument')->willReturn('');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
 		$this->_pEstate->method('getSimilarEstates')->willReturn('');
+		$this->_pEstate->method('getListViewId')->willReturn('estate_detail');
 	}
 
 	public function testRender()

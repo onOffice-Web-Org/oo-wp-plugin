@@ -125,6 +125,32 @@ class RecordManagerReadForm
 		return $result;
 	}
 
+
+	/**
+	 * @param string $formType
+	 * 
+	 * @return object
+	 * @throws UnknownFormException
+	 */
+
+	public function getAllRecordsByFormType(string $formType)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT *
+				FROM {$prefix}oo_plugin_forms 
+				WHERE `form_type` = '".esc_sql($formType)."'";
+
+		$result = $pWpDb->get_results($sql, OBJECT);
+
+		if ($result === null) {
+			throw new UnknownFormException();
+		}
+
+		return $result;
+	}
+
 	public function getCountDefaultRecipientRecord()
 	{
 		$prefix = $this->getTablePrefix();
@@ -280,6 +306,48 @@ class RecordManagerReadForm
 
 		$sqlFields = "SELECT *
 			FROM {$prefix}oo_plugin_form_activityconfig
+			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($formId)."";
+
+		return $pWpDb->get_row($sqlFields, ARRAY_A) ?? [];
+	}
+
+	/**
+	 * @param string $name
+	 * @param string|null $id
+	 *
+	 * @return bool
+	 */
+	public function checkSameName(string $name, string $id = null): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT COUNT(*) AS count
+			FROM {$prefix}oo_plugin_forms
+			WHERE name = '" . esc_sql($name) . "'";
+
+		if (!is_null($id)) {
+			$sql .= " AND form_id != '" . esc_sql($id) . "'";
+		}
+
+		$result = $pWpDb->get_row($sql, ARRAY_A);
+
+		return $result['count'] == 0;
+	}
+
+	/**
+	 *
+	 * @param int $formId
+	 * @return array
+	 *
+	 */
+	public function readFormTaskConfigByFormId(int $formId): array
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlFields = "SELECT *
+			FROM {$prefix}oo_plugin_form_taskconfig
 			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($formId)."";
 
 		return $pWpDb->get_row($sqlFields, ARRAY_A) ?? [];

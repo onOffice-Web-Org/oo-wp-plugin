@@ -30,6 +30,7 @@ use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use TypeError;
 use WP_UnitTestCase;
+use onOffice\WPlugin\Types\ImageTypes;
 
 class TestClassDataDetailView
 	extends WP_UnitTestCase
@@ -78,6 +79,38 @@ class TestClassDataDetailView
 		'mobile',
 		'defaultemail',
 	];
+
+	/** */
+	const PROPERTY_TRANSFER_TAX = [
+		'Baden-Württemberg' => 5,
+		'Bayern' => 3.5,
+		'Berlin' => 6,
+		'Brandenburg' => 6.5,
+		'Bremen' => 5,
+		'Hamburg' => 5.5,
+		'Hessen' => 6,
+		'Mecklenburg-Vorpommern' => 6,
+		'Niedersachsen' => 5,
+		'Nordrhein-Westfalen' => 6.5,
+		'Rheinland-Pfalz' => 5,
+		'Saarland' => 6.5,
+		'Sachsen' => 5.5,
+		'Sachsen-Anhalt' => 5,
+		'Schleswig-Holstein' => 6.5,
+		'Thüringen' => 5
+	];
+
+	/** */
+	const DEFAULT_PICTURE_TYPES = [
+		ImageTypes::TITLE,
+		ImageTypes::PHOTO,
+		ImageTypes::PHOTO_BIG,
+		ImageTypes::PANORAMA,
+		ImageTypes::GROUNDPLAN,
+		ImageTypes::LOCATION_MAP,
+		ImageTypes::ENERGY_PASS_RANGE,
+	];
+
 	/**
 	 *
 	 */
@@ -91,7 +124,7 @@ class TestClassDataDetailView
 		$this->assertEquals(MovieLinkTypes::MOVIE_LINKS_PLAYER, $pDataDetailView->getMovieLinks());
 		$this->assertEquals('detail', $pDataDetailView->getName());
 		$this->assertEquals(0, $pDataDetailView->getPageId());
-		$this->assertEquals([], $pDataDetailView->getPictureTypes());
+		$this->assertEquals(self::DEFAULT_PICTURE_TYPES, $pDataDetailView->getPictureTypes());
 		$this->assertEquals(true, $pDataDetailView->hasDetailView());
 		$this->assertEquals('', $pDataDetailView->getTemplate());
 		$this->assertEquals('', $pDataDetailView->getShortCodeForm());
@@ -100,6 +133,7 @@ class TestClassDataDetailView
 		$this->assertEquals(LinksTypes::LINKS_EMBEDDED, $pDataDetailView->getOguloLinks());
 		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getObjectLinks());
 		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getLinks());
+		$this->assertEquals(self::PROPERTY_TRANSFER_TAX, $pDataDetailView->getPropertyTransferTax());
 	}
 
 	/**
@@ -133,6 +167,8 @@ class TestClassDataDetailView
 		$pDataDetailView->setShowPriceOnRequest(true);
 		$this->assertEquals(true, $pDataDetailView->getShowPriceOnRequest());
 		$this->assertTrue($pDataDetailView->getShowStatus());
+		$pDataDetailView->setShowTotalCostsCalculator(true);
+		$this->assertTrue($pDataDetailView->getShowTotalCostsCalculator());
 	}
 
 	/**

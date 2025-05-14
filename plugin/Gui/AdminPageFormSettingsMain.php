@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use UnexpectedValueException;
 
 /**
@@ -85,7 +86,7 @@ class AdminPageFormSettingsMain
 
 	private function initSubclassForAjax()
 	{
-		$type = filter_input(INPUT_POST, self::GET_PARAM_TYPE, FILTER_SANITIZE_STRING);
+		$type = filter_input(INPUT_POST, self::GET_PARAM_TYPE, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		$id = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT);
 		$this->initSubClass($type, $id);
 	}
@@ -97,7 +98,7 @@ class AdminPageFormSettingsMain
 
 	public function initSubClassForGet()
 	{
-		$type = filter_input(INPUT_GET, self::GET_PARAM_TYPE, FILTER_SANITIZE_STRING);
+		$type = filter_input(INPUT_GET, self::GET_PARAM_TYPE, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		$id = filter_input(INPUT_GET, self::PARAM_FORMID, FILTER_VALIDATE_INT);
 		$this->initSubClass($type, $id);
 	}
@@ -191,6 +192,21 @@ class AdminPageFormSettingsMain
 		return $result;
 	}
 
+	/**
+	 * @return void
+	 */
+	public function handleNotificationError()
+	{
+		$pRecordManagerRead = new RecordManagerReadForm();
+		$sameNameStatus = $pRecordManagerRead->checkSameName($_GET['name'], $_GET['id']);
+
+		$response = [
+			'success' => $sameNameStatus
+		];
+
+		echo json_encode($response);
+		wp_die();
+	}
 
 	/**
 	 *

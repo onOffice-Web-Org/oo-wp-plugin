@@ -116,6 +116,23 @@ class TestClassFormModelBuilderDBForm
 		$pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'fields', '', $parameters, null, $this->getResponseFieldCharacteristic());
 
+		$parametersGetFieldList = [
+			'labels' => true,
+			'showContent' => true,
+			'showTable' => true,
+			'fieldList' => ['benutzer'],
+			'language' => 'ENG',
+			'modules' => [onOfficeSDK::MODULE_ESTATE],
+			'realDataTypes' => true
+		];
+		$responseGetSupervisorFields = json_decode
+		(file_get_contents(__DIR__.'/resources/ApiResponseSupervisorFields.json'), true);
+		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
+			$parametersGetFieldList, null, $responseGetSupervisorFields);
+
+		$responseGetListSupervisors = json_decode(file_get_contents(__DIR__ . '/resources/ApiResponseListSupervisors.json'), true);
+		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '', [], null,
+			$responseGetListSupervisors);
 		$this->_pContainer->set(SDKWrapper::class, $pSDKWrapperMocker);
 		$this->_pInstance = new FormModelBuilderDBForm($this->_pContainer);
 	}
@@ -473,7 +490,8 @@ class TestClassFormModelBuilderDBForm
 			'Termin' => "Termin",
 			'AGB bestätigt' => "AGB bestätigt",
 			'Kaufpreisangebot' => "Kaufpreisangebot",
-			'Widerruf bestätigt' => "Widerruf bestätigt"
+			'Widerruf bestätigt' => "Widerruf bestätigt",
+			'Aufgabe' => 'Aufgabe'
 		];
 		$this->_pInstance->setFormType('contact');
 
@@ -545,6 +563,39 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelPerPageForm
+	 */
+	public function testGetInputModelPerPageForm()
+	{
+		$pInputModelPerPageForm = $this->_pInstance->getInputModelPerPageForm();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelPerPageForm);
+		$this->assertEquals($pInputModelPerPageForm->getHtmlType(), 'hidden');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelShowFormAsModal
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getFieldsCollection
+	 */
+	public function testCreateInputModelShowFormAsModal()
+	{
+		$pInputModelDB = $this->_pInstance->createInputModelShowFormAsModal();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelSubject
+	 */
+	public function testCreateInputModelSubject()
+	{
+		$pInputModelDB = $this->_pInstance->createInputModelSubject();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'emailSubject');
+	}
+
+	/**
 	 *
 	 */
 	private function getResponseFieldCharacteristic()
@@ -600,5 +651,153 @@ class TestClassFormModelBuilderDBForm
 		}';
 
 		return json_decode($responseStr, true);
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelEnableCreateTask
+	 */
+	public function testCreateInputModelEnableCreateTask()
+	{
+		$this->_pInstance->setFormType('contact');
+
+		$pInputModelDB = $this->_pInstance->createInputModelEnableCreateTask();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskStatus
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getTasksStatus
+	 */
+	public function testCreateInputModelTaskStatus()
+	{
+		$data = [
+			1 => 'Not started',
+			2 => 'In process',
+			3 => 'Completed',
+			4 => 'Deferred',
+			5 => 'Cancelled',
+			6 => 'Miscellaneous',
+			7 => 'Checked',
+			8 => 'Need clarification'
+		];
+		$this->_pInstance->setFormType('contact');
+		$pInputModelDB = $this->_pInstance->createInputModelTaskStatus();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($data, $pInputModelDB->getValuesAvailable());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskPriority
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getTasksPriority
+	 */
+	public function testCreateInputModelTaskPriority()
+	{
+		$data = [
+			1 => 'highest',
+			2 => 'high',
+			3 => 'standard',
+			4 => 'low',
+			5 => 'lowest'
+		];
+		$this->_pInstance->setFormType('contact');
+		$pInputModelDB = $this->_pInstance->createInputModelTaskPriority();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($data, $pInputModelDB->getValuesAvailable());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskSubject
+	 */
+	public function testCreateInputModelTaskSubject()
+	{
+		$this->_pInstance->setFormType('contact');
+		$pInputModelDB = $this->_pInstance->createInputModelTaskSubject();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskDescription
+	 */
+	public function testCreateInputModelTaskDescription()
+	{
+		$this->_pInstance->setFormType('contact');
+		$pInputModelDB = $this->_pInstance->createInputModelTaskDescription();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'textarea');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskType
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::fetchDataTypesOfActionAndCharacteristics
+	 */
+	public function testCreateInputModelTaskType()
+	{
+		$data = [
+			'' => 'Please choose',
+			217 => 'Objektaufnahme',
+			215 => 'Angebot erstellen'
+		];
+		$this->_pInstance->setFormType('contact');
+		$this->_pInstance->generate('test');
+		$pInputModelDB = $this->_pInstance->createInputModelTaskType();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($data, $pInputModelDB->getValuesAvailable());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskResponsibility
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getSupervisorData
+	 */
+	public function	testCreateInputModelTaskResponsibility()
+	{
+		$data = [
+			'' => 'Please choose',
+			'duong' => 'aa, aa',
+			'tester1' => 'Test first name',
+			'tester2' => 'Test last name',
+			'Test Username' => '(Test Username)'
+		];
+		$this->_pInstance->setFormType('contact');
+		$this->_pInstance->generate('test');
+		$pInputModelDB = $this->_pInstance->createInputModelTaskResponsibility();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($data, $pInputModelDB->getValuesAvailable());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+		$this->assertEquals($pInputModelDB->getLabel(), 'Responsibility');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelTaskProcessor
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getSupervisorData
+	 */
+	public function testCreateInputModelTaskProcessor()
+	{
+		$data = [
+			'' => 'Please choose',
+			'duong' => 'aa, aa',
+			'tester1' => 'Test first name',
+			'tester2' => 'Test last name',
+			'Test Username' => '(Test Username)'
+		];
+		$this->_pInstance->setFormType('contact');
+		$this->_pInstance->generate('test');
+		$pInputModelDB = $this->_pInstance->createInputModelTaskProcessor();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($data, $pInputModelDB->getValuesAvailable());
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+		$this->assertEquals($pInputModelDB->getLabel(), 'Processor');
 	}
 }

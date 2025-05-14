@@ -48,6 +48,10 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddressFactory;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use WP_UnitTestCase;
 use function json_decode;
+use onOffice\WPlugin\DataView\DataAddressDetailView;
+use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
+use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
+use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 
 /**
  *
@@ -73,11 +77,13 @@ class TestClassAddressList
 				'01234567890',
 				'01122334455',
 			],
+			'id' => 13
 		),
 		37 => array(
 			'Name' => 'Fleißig',
 			'KdNr' => 12,
 			'Vorname' => 'Heinrich',
+			'id' => 37
 		),
 	];
 
@@ -85,6 +91,9 @@ class TestClassAddressList
 	/** @var AddressList */
 	private $_pAddressList = null;
 
+
+	/** @var AddressListEnvironment */
+	private $_pEnvironment = null;
 
 	/**
 	 *
@@ -217,7 +226,7 @@ class TestClassAddressList
 			 ->getMock();
 		$pDataListViewAddressToAPIParameters = new DataListViewAddressToAPIParameters($pFactory);
 
-		$pMockConfig = $this->getMockBuilder(AddressListEnvironment::class)->getMock();
+		$pMockConfig = $this->getMockBuilder(AddressListEnvironmentDefault::class)->getMock();
 		$pMockConfig->method('getSDKWrapper')->will($this->returnValue($pSDKWrapper));
 		$pMockConfig->method('getViewFieldModifierHandler')
 			->will($this->returnValue($pMockViewFieldModifierHandler));
@@ -242,8 +251,9 @@ class TestClassAddressList
 			}));
 
 		$pMockConfig->method('getFieldsCollectionBuilderShort')->willReturn($pFieldsCollectionBuilderMock);
+		$this->_pEnvironment = $pMockConfig;
 
-		$this->_pAddressList = new AddressList(null, $pMockConfig);
+		$this->_pAddressList = new AddressList(null, $this->_pEnvironment);
 	}
 
 
@@ -257,7 +267,7 @@ class TestClassAddressList
 	private function runTestGetRows(bool $raw, string $containerClass)
 	{
 		$this->_pAddressList->loadAddressesById([13, 37], ['Name', 'KdNr', 'Vorname', 'phone']);
-		$records = $this->_pAddressList->getRows($raw);
+		$records = $this->_pAddressList->getRows(AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, $raw);
 		$expectationRecords = $this->_expectedRecords;
 
 		foreach ($expectationRecords as $recordId => $values) {
@@ -355,6 +365,39 @@ class TestClassAddressList
 			$this->_pAddressList->getFieldType('HerkunftKontakt'));
 	}
 
+	/**
+	 *
+	 */
+
+	public function testGetAddressLink()
+	{
+		add_option('onoffice-address-detail-view-showInfoUserUrl', true);
+		global $wp_filter;
+		$this->_pAddressList->loadAddresses();
+		$this->_pAddressList->getRows();
+		$pDataDetailView = new DataAddressDetailView();
+		$pDataDetailViewHandler = $this->getMockBuilder(DataAddressDetailViewHandler::class)
+			->disableOriginalConstructor()
+			->setMethods(['getAddressDetailView'])
+			->getMock();
+		$pDataDetailViewHandler->method('getAddressDetailView')->willReturn($pDataDetailView);
+		$this->_pEnvironment->method('getDataAddressDetailViewHandler')->willReturn($pDataDetailViewHandler);
+
+		$this->set_permalink_structure('/%postname%/');
+		$savePostBackup = $wp_filter['save_post'];
+
+		$wp_filter['save_post'] = new \WP_Hook;
+		$pWPPost = self::factory()->post->create_and_get([
+			'post_author' => 1,
+			'post_content' => '[oo_address view="detail"]',
+			'post_title' => 'Details',
+			'post_type' => 'page',
+		]);
+		$wp_filter['save_post'] = $savePostBackup;
+		$pDataDetailView->setPageId($pWPPost->ID);
+
+		$this->assertEquals('http://example.org/details/13-fred-firestone/', $this->_pAddressList->getAddressLink("13"));
+	}
 
 	/**
 	 *
@@ -514,6 +557,7 @@ class TestClassAddressList
 
 		return json_decode($responseStr, true);
 	}
+
 	/**
 	 *
 	 * @return string

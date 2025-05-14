@@ -36,6 +36,8 @@ use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Factory\EstateListFactory;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 
 /**
  *
@@ -131,7 +133,7 @@ abstract class FormPost
 		} elseif ($pFormData->getMissingFields() !== []) {
 			$pFormData->setStatus(self::MESSAGE_REQUIRED_FIELDS_MISSING);
 			return;
-		}
+		} 
 
 		try {
 			$this->analyseFormContentByPrefix($pFormData);
@@ -319,6 +321,63 @@ abstract class FormPost
 		return $requiredFields;
 	}
 
+	/**
+	 * @param string $subject
+	 * @param array $values
+	 * @param int|null $estateId
+	 * @param array $inputs
+	 * @return string
+	*/
+	public function generateCustomEmailSubject(string $subject, array $values, int $estateId = null, array $inputs): string
+	{
+		preg_match_all('/%%([^%]+)%%/', $subject, $matches);
+		$fields = $matches[1];
+
+		foreach ($fields as $field) {
+			$replacement = $values[$field] ?? '';
+			if ($field === 'estateid' && $estateId !== null) {
+				$replacement = $estateId;
+			} else if($field === 'immonr' && $estateId !== null) {
+				$estateListFactory = new EstateListFactory(new DataDetailViewHandler());
+				$pEstateDetail = $estateListFactory->createEstateDetail($estateId);
+				$pEstateDetail->loadEstates();
+				$replacement = $pEstateDetail->estateIterator()['objektnr_extern'] ?? '';
+			} else if (array_key_exists($field, $inputs)) {
+				$fieldObject = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
+				if ($fieldObject->getIsRangeField()) {
+					$replacement = trim(($values[$field . '__von'] ?? '') . ' - ' . ($values[$field . '__bis'] ?? ''), ' - ');
+				} elseif (is_array($replacement)) {
+					$replacement = implode(', ', $replacement);
+				}
+			}
+
+			$subject = str_replace("%%$field%%", $replacement, $subject);
+		}
+
+		return $subject;
+	}
+
+	/**
+	 * @param string $formType
+	 * @param bool $newsletterAccepted
+	 * @return string
+	 */
+	public function generateDefaultEmailSubject(string $formType, bool $newsletterAccepted): string
+	{
+		if ($newsletterAccepted) {
+			return __('New newsletter registration', 'onoffice-for-wp-websites');
+		}
+		switch ($formType) {
+			case Form::TYPE_OWNER:
+				return __('Message from the owner form of your website', 'onoffice-for-wp-websites');
+			case Form::TYPE_INTEREST:
+				return __('Message from the interest form on your website', 'onoffice-for-wp-websites');
+			case Form::TYPE_CONTACT:
+				return __('Message from the contact form of your website', 'onoffice-for-wp-websites');
+			default:
+				return '';
+		}
+	}
 
 	/**
 	 *

@@ -22,6 +22,7 @@
 use onOffice\WPlugin\AddressList;
 
 $addressName = array('Anrede', 'Titel', 'Vorname', 'Name');
+$supportTypeLinkFields = array('Homepage', 'facebook', 'instagram', 'linkedin', 'pinterest', 'tiktok', 'twitter', 'xing', 'youtube', 'bewertungslinkWebseite');
 /* @var $pAddressList AddressList */
 $currentAddressArr = $pAddressList->getRows();
 foreach ($currentAddressArr as $addressId => $escapedValues) {
@@ -52,14 +53,18 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
     <div class="oo-address-fieldlist">
         <?php
             foreach ($escapedValues as $field => $value) {
-                if (in_array($field, $addressName) || empty($value)) {
+                if (in_array($field, $addressName) || empty($value) || $field == 'id') {
                     continue;
                 }
                 echo '<div class="oo-address-field">';
                 echo '<div class="oo-address-field-label">' . esc_html($pAddressList->getFieldLabel($field)) . '</div>';
-                echo '<div class="oo-address-field-value">'
-                    . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
-                    . '</div>';
+                    echo '<div class="oo-address-field-value">';
+                    if (in_array($field, $supportTypeLinkFields)) {
+                        echo '<a href="' . esc_url($value) . '" target="_blank" rel="nofollow noopener" aria-label="Link to ' . esc_attr($pAddressList->getFieldLabel($field)) . '">' . esc_html($value) . '</a>';
+                    } else {
+                        echo is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value);
+                    }
+                    echo '</div>';
                 echo '</div>';
             }
             ?>

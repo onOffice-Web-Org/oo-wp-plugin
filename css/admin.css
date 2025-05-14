@@ -34,7 +34,7 @@
 	background: #fafafa;
 }
 
-body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
+#onoffice-ajax #poststuff .metabox-holder.columns-2 #postbox-container-1 {
 	width: 49%;
 	margin-right: 0;
 }
@@ -77,19 +77,23 @@ body #onoffice-ajax span.viewusage .italic {
 	width: 49%;
 }
 
+.sortableFieldsListForForm .menu-item-bar,
 #sortableFieldsList .menu-item-bar {
 	display: block;
 	margin: 0 12px;
 }
 
+.sortableFieldsListForForm .menu-item-bar > .menu-item-handle,
 #sortableFieldsList .menu-item-bar > .menu-item-handle {
 	max-width: 430px;
 }
 
+.sortableFieldsListForForm .menu-item-settings,
 #sortableFieldsList .menu-item-settings {
 	max-width: 440px;
 }
 
+.sortableFieldsListForForm .menu-item-settings .submitdelete,
 #sortableFieldsList .menu-item-settings .submitdelete {
 	text-align: right;
 	display:block;
@@ -100,6 +104,7 @@ body #onoffice-ajax span.viewusage .italic {
 	cursor: inherit;
 }
 
+.sortableFieldsListForForm .menu-item-settings,
 #sortableFieldsList .menu-item-settings {
 	display: block;
 	position: relative;
@@ -108,10 +113,12 @@ body #onoffice-ajax span.viewusage .italic {
 	clear: both;
 }
 
+.sortableFieldsListForForm .item-delete-link,
 #sortableFieldsList .item-delete-link {
 	padding-right: 10px;
 }
 
+.sortableFieldsListForForm .item-delete-link:hover,
 #sortableFieldsList .item-delete-link:hover {
 	cursor: pointer;
 }
@@ -126,10 +133,33 @@ body #onoffice-ajax span.viewusage .italic {
 	padding: 0;
 }
 
+.sortableFieldsListForForm .menu-item-settings-name,
 #sortableFieldsList .menu-item-settings-name {
 	font-style: italic;
 }
 
+.accordion-title {
+	display: flex;
+	justify-content: space-between;
+}
+
+.accordion-section .accordion-trigger {
+	background: inherit;
+	text-align: left;
+	border: 0;
+	cursor: pointer;
+	width: 100%;
+	padding: 0;
+}
+
+.accordion-section-title .dashicons {
+	color: #787c82;
+}
+
+.accordion-section-title .dashicons:hover {
+	color: #1d2327;
+
+}
 #listSettings p:empty {
 	display: none;
 }
@@ -164,22 +194,27 @@ body #onoffice-ajax span.viewusage .italic {
 	display: none;
 }
 
+div.fieldsSortable .sortableFieldsListForForm div.menu-item-settings p,
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p {
 	line-height: 1em;
 }
 
+div.fieldsSortable .sortableFieldsListForForm div.menu-item-settings p span.deleteButtonLang:before,
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:before {
 	vertical-align: middle;
 }
 
+div.fieldsSortable .sortableFieldsListForForm div.menu-item-settings p span.deleteButtonLang,
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang {
 	color: #737373;
 }
 
+div.fieldsSortable .sortableFieldsListForForm div.menu-item-settings p span.deleteButtonLang:before:hover,
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:before:hover {
 	color: #ce8483;
 }
 
+div.fieldsSortable .sortableFieldsListForForm div.menu-item-settings p span.deleteButtonLang:hover,
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:hover {
 	cursor: pointer;
 	color: #d43f3a;
@@ -413,6 +448,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	position: absolute;
 	box-sizing: border-box;
 	border: 1px solid #c3c4c7;
+	z-index: 1000;
 }
 
 .options-menu li a{
@@ -682,6 +718,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	margin-left: 5px;
 }
 
+.oo-poststuff .custom-input-field textarea[name=oopluginformtaskconfig-description],
 .oo-poststuff .custom-input-field textarea[name=oopluginformactivityconfig-remark] {
 	min-height: 100px;
 }
@@ -896,6 +933,14 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	}
 }
 
+.oo-poststuff .oo-vertical-radio {
+	margin-top: 13px;
+}
+
+.oo-poststuff .oo-vertical-radio .oo-information-text {
+	margin-bottom: 0;
+}
+
 .reCAPTCHA_badge .badge {
 	display: inline-block;
 	background-color: #9acd32;
@@ -920,4 +965,133 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	.oo-google-recaptcha-key > button > span {
 		margin-top: 10px;
 	}
+}
+
+.list-fields-for-each-page {
+	border: 1px solid #ccc;
+	margin: 10px;
+	padding: 10px;
+}
+
+.list-fields-for-each-page .filter-fields-list {
+	min-height: 20px;
+	width: 100%;
+}
+
+.list-fields-for-each-page .page-title {
+	margin-bottom: 10px;
+	font-weight: 600;
+	margin-left: 12px;
+}
+
+.list-fields-for-each-page .sortable-item:hover,
+.list-fields-for-each-page .ui-droppable-hover {
+	background-color: #f0f0f0;
+	cursor: move;
+}
+
+.list-fields-for-each-page .ui-sortable-helper {
+	background-color: #e0e0e0;
+	border: 1px solid #ccc;
+	opacity: 0.8;
+}
+
+.list-fields-for-each-page .ui-sortable-placeholder {
+	border: 1px dashed #ccc;
+	background: #f9f9f9;
+	height: 40px;
+}
+
+.list-fields-for-each-page .item-remove-page .item-remove-page-link {
+	cursor: pointer;
+	color: #b32d2e;
+	border: none;
+	margin-right: 12px;
+}
+
+.list-fields-for-each-page .item-remove-page {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.add-page-container {
+	display: flex;
+	justify-content: center;
+}
+
+.add-page-container .add-page-button {
+	padding: 5px 22px;
+	border-radius: 3px;
+	margin-left: 10px;
+	color: black !important;
+	border: 1px solid #2271B1;
+	color: #fff;
+	cursor: pointer;
+}
+
+.add-page-container .add-page-button:hover {
+	border: 1px solid #0f4775;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-email-subject-title {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 5px 5px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	min-height: 30px;
+	position: relative;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-insert-variable-button {
+	color: #646970;
+	border: 1px solid #646970;
+	background: #f6f7f7;
+	padding: 5px 10px;
+	border-radius: 4px;
+	cursor: pointer;
+	margin-bottom: 10px;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-insert-variable-button:hover {
+	background: #e0e0e0;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-email-subject-tag {
+	background-color: #e4e4e4;
+	border: 1px solid #aaa;
+	border-radius: 4px;
+	padding: 0px 4px;
+	margin: 3px;
+	display: inline-flex;
+	align-items: center;
+	cursor: default;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-email-subject-tag .oo-remove-tag {
+	cursor: pointer;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-email-subject-suggestions {
+	border: 1px solid #ccc;
+	background-color: #fff;
+	position: absolute;
+	z-index: 1000;
+	max-height: 150px;
+	overflow-y: auto;
+	display: none;
+	min-width: 220px;
+	box-shadow: rgba(32, 33, 36, 0.28) 0px 1px 6px;
+	border-bottom: 1px hidden rgb(255, 255, 255);
+	margin-top: -5px;
+	margin-left: 7px;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-suggestion-item {
+	padding: 5px;
+	cursor: pointer;
+}
+
+.oo-poststuff .oo-email-subject-container .oo-suggestion-item:hover {
+	background-color: #f0f0f0;
 }

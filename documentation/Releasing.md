@@ -37,13 +37,15 @@ Change version in `wp_enqueue_style('onoffice-admin-css', plugins_url('/css/admi
       - In the comment of the `readme.txt` as the `Stable tag`.
       - As the newest [changelog](#update-the-changelog) item in `readme.txt`.
       - In the comment of the `plugin.php` as the `Version`.
+      - Constant ONOFFICE_PLUGIN_VERSION
 3. Commit the new version with e.g. message "Update to version v3.2".
 4. To trigger the release, you create a new tag. This is easiest to do by creating a release on GitHub:
     1. Go to https://github.com/onOfficeGmbH/oo-wp-plugin/releases.
     2. In the top right, click on "Draft new release".
     3. For "Choose a tag" enter the new version and create a new tag.
-    4. To the right, click on "Auto-generate release notes".
-    5. In the description, remove all project and ticket numbers. These are usually at the beginning of the list items. For example, the entry `*  P#60599 Space for map is taken even when the map is not shown by @tung-le-esg in https://github.com/onOfficeGmbH/oo-wp-plugin/pull/154` should be edited to `* Space for map is taken even when the map is not shown by @tung-le-esg in https://github.com/onOfficeGmbH/oo-wp-plugin/pull/154`.
+    4. Keep "master" as target.
+    5. To the right, click on "Auto-generate release notes".
+    6. In the description, remove all project and ticket numbers. These are usually at the beginning of the list items. For example, the entry `*  P#60599 Space for map is taken even when the map is not shown by @tung-le-esg in https://github.com/onOfficeGmbH/oo-wp-plugin/pull/154` should be edited to `* Space for map is taken even when the map is not shown by @tung-le-esg in https://github.com/onOfficeGmbH/oo-wp-plugin/pull/154`.
 5. The workflow run will start automatically.
     - The deployment uses secrets from the "WordPress SVN" [environment](#environment) and needs to be approved.
 6. If something went wrong, you will need to reset the tag. In the following example, the tag is `v3.2`.

@@ -25,6 +25,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 use WP_UnitTestCase;
 use onOffice\WPlugin\Form;
 use onOffice\SDK\onOfficeSDK;
+use wpdb;
 /**
  *
  * @url http://www.onoffice.de
@@ -224,6 +225,31 @@ class TestClassRecordManagerReadForm
 	}
 
 	/**
+	 * 
+	 */
+	public function testCheckSameName()
+	{
+		$configOutput = ['count' => 0];
+
+		$pWPDB = $this->getMockBuilder(wpdb::class)
+			->disableOriginalConstructor(['testUser', 'testPassword', 'testDB', 'testHost'])
+			->setMethods(['get_row'])
+			->getMock();
+		$pWPDB->prefix = 'testPrefix';
+		$pWPDB->expects($this->once())
+			->method('get_row')
+			->willReturnOnConsecutiveCalls($configOutput);
+		$pRecordManagerReadForm = $this->getMockBuilder(RecordManagerReadForm::class)
+			->setMethods(['getWpdb'])
+			->getMock();
+
+		$pRecordManagerReadForm->method('getWpdb')->will($this->returnValue($pWPDB));
+		$pData = $pRecordManagerReadForm->checkSameName('testForm1');
+
+		$this->assertTrue($pData);
+	}
+
+	/**
 	 *
 	 */
 	public function testReadContactTypesByFormId()
@@ -236,6 +262,27 @@ class TestClassRecordManagerReadForm
 	}
 
 	/**
+	 * @param int $formId
+	 *
+	 * @return array
+	 */
+	private function getFormTaskConfigByFormId(int $formId): array
+	{
+		return [
+			'form_taskconfig_id ' => 1,
+			'form_id' => $formId,
+			'enable_create_task' => true,
+			'responsibility' => 'Tobias',
+			'processor' => 'Tobias',
+			'type' => 1,
+			'priority' => 1,
+			'subject' => 'Test subject',
+			'description' => 'Test description',
+			'status' => 1,
+		];
+	}
+
+	/**
 	 *
 	 */
 	public function testReadActivityConfigByFormId()
@@ -245,5 +292,17 @@ class TestClassRecordManagerReadForm
 		]));
 		$pActivityConfig = $this->_pRecordManagerReadForm->readActivityConfigByFormId(1);
 		$this->assertEquals(7, count($pActivityConfig));
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testReadFormTaskConfigByFormId()
+	{
+		$this->_pRecordManagerReadForm->method('readFormTaskConfigByFormId')->will($this->returnValueMap([
+			[1, $this->getFormTaskConfigByFormId(1)]
+		]));
+		$pActivityConfig = $this->_pRecordManagerReadForm->readFormTaskConfigByFormId(1);
+		$this->assertEquals(10, count($pActivityConfig));
 	}
 }

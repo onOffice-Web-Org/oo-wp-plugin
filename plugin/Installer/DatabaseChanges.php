@@ -28,6 +28,8 @@ use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use Exception;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\DataView\DataViewSimilarEstates;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\DataView\DataSimilarView;
@@ -37,11 +39,13 @@ use wpdb;
 use function dbDelta;
 use function esc_sql;
 use const ABSPATH;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\Form;
 
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 53;
+	const MAX_VERSION = 59;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -334,7 +338,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryAddressFieldConfig());
 			$dbversion = 49;
 		}
-	
+
 		if ($dbversion == 49) {
 			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
 			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
@@ -354,6 +358,37 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 52) {
 			$this->updateContactImageTypesForDetailPage();
 			$dbversion = 53;
+		}
+
+		if ($dbversion == 53) {
+			$this->updatePriceFieldsOptionForSimilarEstate();
+			$this->updatePriceFieldsOptionDetailView();
+			$dbversion = 54;
+		}
+
+		if ($dbversion == 54) {
+			dbDelta($this->getCreateQueryFormTaskConfig());
+			$dbversion = 55;
+		}
+
+		if ($dbversion == 55) {
+			dbDelta($this->getCreateQueryListViewsAddress());
+			$dbversion = 56;
+		}
+
+		if ($dbversion == 56) {
+			dbDelta($this->getCreateQueryForms());
+			$dbversion = 57;
+		}
+
+		if ($dbversion == 57) {
+			dbDelta($this->getCreateQueryFormFieldConfig());
+			$dbversion = 58;
+		}
+
+		if ($dbversion == 58) {
+			$this->migrationsDataShortCodeFormForDetailView();
+			$dbversion = 59;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -494,6 +529,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`default_recipient` tinyint(1) NOT NULL DEFAULT '0',
 			`contact_type` varchar(255) NULL DEFAULT NULL,
 			`page_shortcode` tinytext NOT NULL,
+			`show_form_as_modal` tinyint(1) NOT NULL DEFAULT '1',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -551,6 +587,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`markdown` tinyint(1) NOT NULL DEFAULT '0',
 			`hidden_field` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
+			`page_per_form` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_fieldconfig_id`)
 		) $charsetCollate;";
 
@@ -710,6 +747,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`showPhoto` tinyint(1) NOT NULL DEFAULT '0',
 			`bildWebseite` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
+			`show_map` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -992,6 +1030,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_address_customs_labels",
 			$prefix."oo_plugin_fieldconfig_address_translated_labels",
 			$prefix."oo_plugin_form_activityconfig",
+			$prefix."oo_plugin_form_taskconfig",
 		);
 
 		foreach ($tables as $table)	{
@@ -1247,6 +1286,21 @@ class DatabaseChanges implements DatabaseChangesInterface
 	}
 
 	/**
+	 * @return void
+	 */
+	private function migrationsDataShortCodeFormForDetailView()
+	{
+		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		if(!empty($pDataDetailViewOptions) && !empty($pDataDetailViewOptions->getShortCodeForm())){
+			$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadForm::class);
+			$allRecordsForm = $recordManagerReadForm->getRowByName($pDataDetailViewOptions->getShortCodeForm());
+			if ($allRecordsForm['form_type'] !== Form::TYPE_CONTACT) {
+				$this->_pWpOption->updateOption('onoffice-default-view', null);
+			}
+		}
+	}
+
+	/**
 	 * @return string
 	 */
 	private function getCreateQueryFieldConfigAddressCustomsLabels(): string
@@ -1308,6 +1362,31 @@ class DatabaseChanges implements DatabaseChangesInterface
 	}
 
 	/**
+	 * @return string
+	 */
+	private function getCreateQueryFormTaskConfig(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_form_taskconfig";
+		$sql = "CREATE TABLE $tableName (
+			`form_taskconfig_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` int(11) NOT NULL,
+			`enable_create_task` tinyint(1) NOT NULL DEFAULT '0',
+			`responsibility` VARCHAR(255) NOT NULL,
+			`processor` VARCHAR(255) NOT NULL,
+			`type` int(11) NOT NULL DEFAULT '0',
+			`priority` tinyint(1) NOT NULL DEFAULT '0',
+			`subject` VARCHAR(255) NOT NULL,
+			`description` text NOT NULL,
+			`status` tinyint(1) NOT NULL DEFAULT '0',
+			PRIMARY KEY (`form_taskconfig_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
 	 * @return void
 	 */
 
@@ -1316,6 +1395,32 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
 		if(!empty($pDataDetailViewOptions) && in_array('imageUrl', $pDataDetailViewOptions->getAddressFields())){
 			$pDataDetailViewOptions->setContactImageTypes([ImageTypes::PASSPORTPHOTO]);
+			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function updatePriceFieldsOptionForSimilarEstate()
+	{
+		$pDataSimilarViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
+		if (!empty($pDataSimilarViewOptions)) {
+			$pDataViewSimilarEstates = new DataViewSimilarEstates();
+			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setListFieldsShowPriceOnRequest($pDataViewSimilarEstates->getListFieldsShowPriceOnRequest());
+			$this->_pWpOption->updateOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function updatePriceFieldsOptionDetailView()
+	{
+		$pDataDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
+		if (!empty($pDataDetailViewOptions)) {
+			$pDataDataDetailView = new DataDetailView();
+			$pDataDetailViewOptions->setListFieldsShowPriceOnRequest($pDataDataDetailView->getListFieldsShowPriceOnRequest());
 			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
 		}
 	}

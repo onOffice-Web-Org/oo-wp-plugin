@@ -15,9 +15,17 @@ class FieldLoaderSupervisorValues implements FieldLoader
 	/** @var SDKWrapper */
 	private $_pSDKWrapper;
 
-	public function __construct(SDKWrapper $_pSDKWrapper)
+	/** @var bool */
+	private $_isReturnValueForUserNameElements;
+
+	/**
+	 * @param SDKWrapper $_pSDKWrapper
+	 * @param bool $isReturnValueForUserNameElements
+	 */
+	public function __construct(SDKWrapper $_pSDKWrapper, bool $isReturnValueForUserNameElements = false)
 	{
 		$this->_pSDKWrapper = $_pSDKWrapper;
+		$this->_isReturnValueForUserNameElements = $isReturnValueForUserNameElements;
 	}
 
 	/**
@@ -109,7 +117,11 @@ class FieldLoaderSupervisorValues implements FieldLoader
 				}
 			}
 
-			$fullNameSupervisor[$value['elements']['id']] = $fullName;
+			if ($this->_isReturnValueForUserNameElements) {
+				$fullNameSupervisor[$value['elements']['username']] = $fullName;
+			} else {
+				$fullNameSupervisor[$value['elements']['id']] = $fullName;
+			}
 		}
 
 		return $fullNameSupervisor;

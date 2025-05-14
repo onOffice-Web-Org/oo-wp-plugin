@@ -89,6 +89,9 @@ abstract class RecordManager
 	/** */
 	const TABLENAME_ACTIVITY_CONFIG_FORM = 'oo_plugin_form_activityconfig';
 
+	/** */
+	const TABLENAME_TASKCONFIG_FORMS = 'oo_plugin_form_taskconfig';
+
 	/**
 	 *
 	 * @deprecated get wpdb via DI

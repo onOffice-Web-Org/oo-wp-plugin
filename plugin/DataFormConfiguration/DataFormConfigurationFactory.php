@@ -183,6 +183,8 @@ class DataFormConfigurationFactory
 		if ($this->_type !== Form::TYPE_APPLICANT_SEARCH){
 			$rowActivityConfig = $this->_pRecordManagerRead->readActivityConfigByFormId($formId);
 			$this->configureActivity($pConfig, $rowActivityConfig);
+			$rowTaskConfig = $this->_pRecordManagerRead->readFormTaskConfigByFormId($formId);
+			$this->configureTask($pConfig, $rowTaskConfig);
 		}
 
 		foreach ($rowFields as $fieldRow) {
@@ -242,6 +244,10 @@ class DataFormConfigurationFactory
 		if (array_key_exists('hidden_field', $row) && $row['hidden_field'] == 1) {
 			$pFormConfiguration->addHiddenFields($fieldName);
 		}
+
+		if (array_key_exists('page_per_form', $row)) {
+			$pFormConfiguration->addPagePerForm($fieldName, $row['page_per_form']);
+		}
 	}
 
 
@@ -289,6 +295,27 @@ class DataFormConfigurationFactory
 		array_splice($result, $arrayPosition, 0, $geoPositionFields);
 
 		return $result;
+	}
+
+	/**
+	 * @param DataFormConfiguration\DataFormConfiguration $pFormConfiguration
+	 * @param array|null $row
+	 * @return void
+	 */
+	private function configureTask(DataFormConfiguration\DataFormConfiguration $pFormConfiguration, array $row = null)
+	{
+		if (empty($row)) {
+			return;
+		}
+
+		$pFormConfiguration->setEnableCreateTask((bool)$row['enable_create_task']);
+		$pFormConfiguration->setTaskResponsibility($row['responsibility']);
+		$pFormConfiguration->setTaskProcessor($row['processor']);
+		$pFormConfiguration->setTaskType($row['type']);
+		$pFormConfiguration->setTaskPriority($row['priority']);
+		$pFormConfiguration->setTaskSubject($row['subject']);
+		$pFormConfiguration->setTaskDescription($row['description']);
+		$pFormConfiguration->setTaskStatus($row['status']);
 	}
 
 
@@ -362,6 +389,7 @@ class DataFormConfigurationFactory
 		$pConfig->setCreateOwner((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
 		$pConfig->setContactTypeField($row['contact_type'] ?? []);
+		$pConfig->setShowFormAsModal((bool)$row['show_form_as_modal']);
 	}
 
 

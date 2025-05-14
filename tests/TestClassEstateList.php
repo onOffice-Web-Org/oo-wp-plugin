@@ -228,6 +228,7 @@ class TestClassEstateList
 
 	public function testGetFieldLabel()
 	{
+		$this->_pEstateList->loadEstates();
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldObjektArt = new Field('objektart', 'estate', 'testLabel');
 		$pFieldObjektArt->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
@@ -533,10 +534,10 @@ class TestClassEstateList
 		$this->_pEstateList->estateIterator();
 		$this->assertEquals([], $this->_pEstateList->getEstateContacts());
 		$this->_pEstateList->estateIterator();
-		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email'])],
+		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email', 'imageAlt' => ''])],
 			$this->_pEstateList->getEstateContacts());
 		$this->_pEstateList->estateIterator();
-		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email'])],
+		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email', 'imageAlt' => ''])],
 			$this->_pEstateList->getEstateContacts());
 	}
 
@@ -673,13 +674,14 @@ class TestClassEstateList
 		$pFieldObjektTyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldsCollection->addField($pFieldObjektArt);
 		$pFieldsCollection->addField($pFieldObjektTyp);
+		$this->_pEstateList->loadEstates();
 
 		$expectation = [
 			'objektart' => [
 				'name' => 'objektart',
 				'type' => 'singleselect',
 				'value' => 'haus',
-				'label' => '',
+				'label' => 'testLabel',
 				'default' => null,
 				'length' => null,
 				'permittedvalues' => [],
@@ -695,7 +697,7 @@ class TestClassEstateList
 				'name' => 'objekttyp',
 				'type' => 'singleselect',
 				'value' => 'reihenhaus',
-				'label' => '',
+				'label' => 'testLabel',
 				'default' => null,
 				'length' => null,
 				'permittedvalues' => [],
@@ -828,7 +830,8 @@ class TestClassEstateList
 				'getPageId',
 				'getViewRestrict',
 				'getShowPriceOnRequest',
-				'getListFieldsShowPriceOnRequest'
+				'getListFieldsShowPriceOnRequest',
+				'getContactPerson'
 			])
 			->getMock();
 		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
@@ -843,6 +846,7 @@ class TestClassEstateList
 		$pDataDetailView->method('getViewRestrict')->willReturn(true);
 		$pDataDetailView->method('getShowPriceOnRequest')->willReturn(true);
 		$pDataDetailView->method('getListFieldsShowPriceOnRequest')->willReturn(['kaufpreis', 'erbpacht']);
+		$pDataDetailView->method('getContactPerson')->willReturn('1');
 
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
 		                               ->disableOriginalConstructor()
@@ -901,6 +905,91 @@ class TestClassEstateList
 
 	/**
 	 *
+	 */
+	public function testGetShowTotalCostsCalculator()
+	{
+		$totalCostsData = [
+			'kaufpreis' => [
+				'raw' => 123456.56,
+				'default' => '123.456,56 €'
+			],
+			'bundesland' => [
+				'raw' => 4321,
+				'default' => '4.321 €'
+			],
+			'aussen_courtage' => [
+				'raw' => 22222,
+				'default' => '22.222 €'
+			],
+			'notary_fees' => [
+				'raw' => 1852,
+				'default' => '1.852 €'
+			],
+			'land_register_entry' => [
+				'raw' => 617,
+				'default' => '617 €'
+			],
+			'total_costs' => [
+				'raw' => 152468.56,
+				'default' => '152.468,56 €'
+			]
+		];
+
+		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
+			->setConstructorArgs([$this->_pContainer])
+			->setMethods(['getRecordsPerPage',
+				'getSortby',
+				'getSortorder',
+				'getFilterId',
+				'getFields',
+				'getPictureTypes',
+				'getAddressFields',
+				'getFilterableFields',
+				'getPageId',
+				'getViewRestrict',
+				'getShowPriceOnRequest',
+				'getListFieldsShowPriceOnRequest',
+				'getShowTotalCostsCalculator'
+			])
+			->getMock();
+		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
+		$pDataDetailView->method('getSortby')->willReturn('Id');
+		$pDataDetailView->method('getSortorder')->willReturn('ASC');
+		$pDataDetailView->method('getFilterId')->willReturn(12);
+		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'warmmiete', 'kaufpreis', 'erbpacht', 'nettokaltmiete', 'pacht', 'kaltmiete']);
+		$pDataDetailView->method('getPictureTypes')->willReturn(['Titelbild', 'Foto']);
+		$pDataDetailView->method('getAddressFields')->willReturn(['Vorname', 'Name']);
+		$pDataDetailView->method('getFilterableFields')->willReturn([GeoPosition::FIELD_GEO_POSITION]);
+		$pDataDetailView->method('getPageId')->willReturn(5);
+		$pDataDetailView->method('getViewRestrict')->willReturn(true);
+		$pDataDetailView->method('getShowPriceOnRequest')->willReturn(true);
+		$pDataDetailView->method('getListFieldsShowPriceOnRequest')->willReturn(['kaufpreis', 'erbpacht']);
+		$pDataDetailView->method('getShowTotalCostsCalculator')->willReturn(true);
+
+		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
+		                               ->disableOriginalConstructor()
+		                               ->setMethods(['getDetailView'])
+		                               ->getMock();
+		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
+		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
+
+		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
+		$this->_pEstateList->loadEstates();
+		$this->_pEstateList->estateIterator();
+		$this->assertEquals($totalCostsData, $this->_pEstateList->getTotalCostsData());
+	}
+
+	/**
+	 *
+	 */
+	public function testGetPermittedValues()
+	{
+		$this->_pEstateList->loadEstates();
+		$this->assertEquals(['A', 'B', 'C'], $this->_pEstateList->getPermittedValues('energyClass'));
+	}
+ 
+	/**
+	 *
 	 * @before
 	 *
 	 */
@@ -921,11 +1010,23 @@ class TestClassEstateList
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetIdsFromRelation.json'), true);
 		$responseGetEstatePictures = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetEstatePictures.json'), true);
+		$dataReadEstatesPublishedENGCostsCalculatorRaw = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesCostsCalculatorRaw.json'), true);
+		$responseReadEstatesCostsCalculatorRaw = $dataReadEstatesPublishedENGCostsCalculatorRaw['response'];
+		$parametersReadEstatesCostsCalculatorRaw = $dataReadEstatesPublishedENGCostsCalculatorRaw['parameters'];
+		$dataGetFieldCurrency = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseGetFieldsCurrency.json'), true);
+		$responseGetFieldCurrency = $dataGetFieldCurrency['response'];
+		$parametersGetFieldCurrency = $dataGetFieldCurrency['parameters'];
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstatesCostsCalculatorRaw, null, $responseReadEstatesCostsCalculatorRaw);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_GET, 'fields', '', $parametersGetFieldCurrency, null, $responseGetFieldCurrency);
 
 		unset($parametersReadEstate['georangesearch']);
 		$this->_pSDKWrapperMocker->addResponseByParameters
@@ -1108,9 +1209,13 @@ class TestClassEstateList
 			'objektnr_extern',
 			'plz',
 			'land',
+			'energyClass',
 		];
 		foreach ($fieldNames as $fieldName) {
 			$field = new Field($fieldName, 'estate', 'testLabel');
+			if ($fieldName === 'energyClass') {
+				$field->setPermittedvalues(['A', 'B', 'C']);
+			}
 			$fieldsCollection->addField($field);
 		}
 		return $fieldsCollection;

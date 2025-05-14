@@ -42,7 +42,6 @@ This project is licensed under both GNU AGPLv3 and GNU GPLv3:
  - the plugin itself is licensed under GNU AGPLv3. See LICENSE-agpl-3.0.txt.
  - config files and default templates are licensed under GNU GPLv3. See LICENSE-gpl.txt.
 
-
 ## Contact
 
 onOffice GmbH\
