@@ -231,6 +231,9 @@ class ApiCall
 					$sortA = strtotime($sortA);
 					$sortB = strtotime($sortB);
 				}
+				if($sortA == $sortB){
+					return 0;
+				}
 				if ($sortOrder === 'ASC') {
 					return ($sortA > $sortB) ? 1 : -1;
 				}
