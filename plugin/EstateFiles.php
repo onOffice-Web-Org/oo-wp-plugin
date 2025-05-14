@@ -105,6 +105,11 @@ class EstateFiles
 	 */
 	public function getFilesByEstateIds(array $estateIds, SDKWrapper $pSDKWrapper)
 	{
+
+		if (empty($estateIds)) {
+			return;
+		}
+		
 		$listRequestInQueue = [];
 		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'file');
 		$pAPIClientActionClone = null;
