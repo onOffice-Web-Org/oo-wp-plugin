@@ -40,7 +40,6 @@ use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
-use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddress;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
@@ -183,17 +182,20 @@ implements AddressListBase
 	 */
 	public function loadAddressesById(array $addressIds, array $fields)
 	{
+		$filter = $this->getDefaultFilterBuilder()->buildFilter();
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		$parameters = [
 			'recordids' => $addressIds,
 			'data' => $fields,
 			'outputlanguage' => Language::getDefault(),
+			'filter' => $filter,
 			'formatoutput' => true,
 		];
 		$parametersRaw = [
 				'recordids' => $addressIds,
 				'data' => $this->_addressParametersForImageAlt,
 				'outputlanguage' => Language::getDefault(),
+				'filter' => $filter,
 				'formatoutput' => false,
 		];
 		$this->_pApiClientAction->setParameters($parameters);
@@ -694,7 +696,7 @@ implements AddressListBase
 	 * @return DefaultFilterBuilder
 	 * @throws UnknownViewException
 	 */
-	public function getDefaultFilterBuilder(): DefaultFilterBuilderListViewAddress
+	public function getDefaultFilterBuilder(): DefaultFilterBuilder
 		{ return $this->_pEnvironment->getDefaultFilterBuilder(); }
 
 	/** @param DefaultFilterBuilder $pDefaultFilterBuilder */
