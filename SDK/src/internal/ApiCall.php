@@ -209,7 +209,7 @@ class ApiCall
 				preg_replace("/[^0-9]/", "", substr($num, $sep+1, strlen($num)))
 		);
 	}
-	private function sortRecords(array $cachedResponse, array $filter, string $sortby, string $sortorder)
+	private function sortRecords(array $cachedResponse, array $filter, $sortby, string $sortorder)
 	{
 		$newRecords = $cachedResponse["data"]["records"];
 		$fieldTypes = $cachedResponse["types"];
@@ -217,7 +217,7 @@ class ApiCall
 		$sortOrder = (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'ASC' : $sortorder;
 		if(isset($sortby))
 		{
-			usort($newRecords, function ($a, $b) use ($sortBy, $sortOrder, $fieldTypes) {
+			$compareRecords = function ($a, $b, $sortBy, $sortOrder, $fieldTypes) {
 				$sortA = in_array($sortBy, array_keys($a['elements'])) ? $a['elements'][$sortBy] : '';
 				$sortB = in_array($sortBy, array_keys($b['elements'])) ? $b['elements'][$sortBy] : '';
 				if((array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "integer")
@@ -237,7 +237,24 @@ class ApiCall
 				else {
 					return ($sortA > $sortB) ? -1 : 1;
 				}
-			});
+			};
+
+			if (is_string($sortBy)) {
+				usort($newRecords, function ($a, $b) use ($compareRecords, $sortBy, $sortOrder, $fieldTypes) {
+					return $compareRecords($a, $b, $sortBy, $sortOrder, $fieldTypes);
+				});
+			}
+			elseif (is_array($sortBy)) {
+				usort($newRecords, function ($a, $b) use ($compareRecords, $sortBy, $fieldTypes) {
+					foreach ($sortBy as $field => $order) {
+						$result = $compareRecords($a, $b, $field, $order, $fieldTypes);
+						if ($result !== 0) {
+							return $result;
+						}
+					}
+					return 0; // All fields equal
+				});
+			}
 		}
 		return $newRecords;
 	}
