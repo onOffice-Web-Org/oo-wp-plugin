@@ -658,6 +658,10 @@ class EstateList
 			}
 		}
 
+		if($requestParams['sortby'] === 'kaufpreis'){
+			$requestParams['sortby'] = ['preisAufAnfrage' => 'ASC', 'kaufpreis' => 'ASC'];
+		}
+
 		return $requestParams;
 	}
 
