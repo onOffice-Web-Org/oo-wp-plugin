@@ -84,6 +84,18 @@ span.oo-searchrange {
 .oo-form input[type='submit']:hover {
     cursor: pointer;
 }
+
+.oo-form .oo-input-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.oo-form .oo-input-wrapper label:nth-child(2){
+    margin-left: 20px;
+}
 /* estate map */
 .oo-estate-map {
     padding: 0 15px;
@@ -293,6 +305,10 @@ button.slick-next .slick-next-icon:before {
 
 .oo-aspname, .oo-video, .oo-detailsexpose {
     margin-bottom: 15px;
+}
+
+.player-title svg {
+    display: inline;
 }
 
 .oo-asplocation {
