@@ -79,7 +79,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
 <div id="onoffice-lead-<?php echo sanitize_title($pForm->getFormId()); ?>" <?php echo $showFormAsModal ? 'style="display:none;"' : ''; ?>>
 	<p>
-		<form name="leadgenerator" action="" method="post" id="leadgeneratorform-<?php echo sanitize_title($pForm->getFormId()); ?>">
+		<form name="leadgenerator" action="" method="post" id="leadgeneratorform-<?php echo sanitize_title($pForm->getFormId()); ?>"  class="oo-form">
 			<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
 			<input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
 			<div id="leadform-<?php echo sanitize_title($pForm->getFormId()); ?>">
@@ -105,7 +105,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
                             <span><?php echo sprintf('%s', $pageTitles[$pageNumber]); ?></span>
                         <?php endif; ?>
                         <p>
-                            <?php echo implode('<br>', $fields); ?>
+                            <?php echo implode('', $fields); ?>
                         </p>
                         <?php if ($pageNumber == $totalPages): ?>
                             <p>
