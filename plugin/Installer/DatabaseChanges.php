@@ -41,7 +41,6 @@ use function dbDelta;
 use function esc_sql;
 use const ABSPATH;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
-use onOffice\WPlugin\Form;
 
 class DatabaseChanges implements DatabaseChangesInterface
 {
