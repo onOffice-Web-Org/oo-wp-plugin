@@ -182,12 +182,12 @@ $dimensions = [
 					<div class="oo-detailslink">
 						<?php if ($referenz === "1") { ?>
 							<?php if (!$pEstatesClone->getViewRestrict()) { ?>
-								<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
+								<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), $estateId); ?>">
 									<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
 								</a>
 							<?php } ?>
 						<?php } else { ?>
-							<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
+							<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), $estateId); ?>">
                                 <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
                             </a>
                         <?php } ?>
