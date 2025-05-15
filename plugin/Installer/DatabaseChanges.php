@@ -45,7 +45,7 @@ use onOffice\WPlugin\Form;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 60;
+	const MAX_VERSION = 59;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -389,11 +389,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 58) {
 			$this->migrationsDataShortCodeFormForDetailView();
 			$dbversion = 59;
-		}
-		
-		if ($dbversion == 59) {
-			$this->updateValueGeoFieldsForForms();
-			$dbversion = 60;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
