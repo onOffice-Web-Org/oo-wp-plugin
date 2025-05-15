@@ -50,9 +50,10 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
+	$searchcriteriaLine = '';
 
 	if ( in_array( $input, array( 'kaufpreis','kaltmiete','wohnflaeche','anzahl_zimmer' ) ) ) {
-		$searchcriteriaLine = '<div class="oo-input-wrapper">';
+		$searchcriteriaLine .= '<div class="oo-input-wrapper">';
 		$searchcriteriaLine .= renderFormField($input, $pForm).'</div>';
 	}
 
