@@ -49,7 +49,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			continue;
 		}
 		$isRequired = $pForm->isRequiredField($input);
-		$addition = $isRequired ? '*' : '';
+		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 		$line = '<label>'.$pForm->getFieldLabel($input).$addition;
 		$line .= renderFormField($input, $pForm).'</label>';
 
@@ -62,12 +62,12 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		}
 		if ( in_array( $input, array( 'message' )) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
-			$additionMessage = $isRequiredMessage ? '*' : '';
+			$additionMessage = $isRequiredMessage ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 			$isHiddenField = $pForm->isHiddenField('message');
 			if (!$isHiddenField) {
-				$line = '<label for="textarea'.$pForm->getFormId().'">'.$pForm->getFieldLabel( 'message' );
-				$line .= $additionMessage.'</label>';
-				$line .= '<textarea id="textarea'.$pForm->getFormId().'" name="message" autocomplete="off">' . $pForm->getFieldValue('message') . '</textarea>';
+				$line = '<label>'.$pForm->getFieldLabel( 'message' );
+				$line .= $additionMessage;
+				$line .= '<textarea name="message" autocomplete="off">' . $pForm->getFieldValue('message') . '</textarea></label>';
 			} else {
 				$line = '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
 			}

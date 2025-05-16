@@ -49,7 +49,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		continue;
 	}
 	$isRequired = $pForm->isRequiredField( $input );
-	$addition = $isRequired ? '*' : '';
+	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 	$searchcriteriaLine = '';
 
 	if ( in_array( $input, array( 'kaufpreis','kaltmiete','wohnflaeche','anzahl_zimmer' ) ) ) {

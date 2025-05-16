@@ -279,6 +279,10 @@ if (!function_exists('renderFormField')) {
 				$inputType = 'type="text" class="apply-thousand-separator-format" ';
 			}
 
+			if ($fieldName == 'Email') {
+				$inputType = 'type="email"';
+			}
+
 			if (
 				$isRangeValue && $pForm->inRangeSearchcriteriaInfos($fieldName) &&
 				count($pForm->getSearchcriteriaRangeInfosForField($fieldName)) > 0

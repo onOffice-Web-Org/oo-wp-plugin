@@ -57,7 +57,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		}
 
 		$isRequired = $pForm->isRequiredField($input);
-		$addition = $isRequired ? '*' : '';
+		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 		$line = '<label>'.$pForm->getFieldLabel($input).$addition;
 		$line .= renderFormField($input, $pForm).'</label>';
 		$pageNumber = $pForm->getPagePerForm($input);
