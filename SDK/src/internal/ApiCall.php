@@ -212,14 +212,20 @@ class ApiCall
 	private function sortRecords(array $cachedResponse, array $filter, $sortby, string $sortorder)
 	{
 		$newRecords = $cachedResponse["data"]["records"];
+		$newRecordsRaw = $cachedResponse["raw"]["data"]["records"];
+		foreach ($newRecords as $index => &$record) {
+			$record['elementsRaw'] = isset($newRecordsRaw[$index]['elements']) ? $newRecordsRaw[$index]['elements'] : null;
+		}
 		$fieldTypes = $cachedResponse["types"];
 		$sortBy = (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'geo_distance' : $sortby;
 		$sortOrder = (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'ASC' : $sortorder;
 		if(isset($sortby))
 		{
 			$compareRecords = function ($a, $b, $sortBy, $sortOrder, $fieldTypes) {
-				$sortA = in_array($sortBy, array_keys($a['elements'])) ? $a['elements'][$sortBy] : '';
-				$sortB = in_array($sortBy, array_keys($b['elements'])) ? $b['elements'][$sortBy] : '';
+				$sortA = isset($a['elementsRaw'][$sortBy]) ? $a['elementsRaw'][$sortBy]
+					: (isset($a['elements'][$sortBy]) ? $a['elements'][$sortBy] : '');
+				$sortB = isset($b['elementsRaw'][$sortBy]) ? $b['elementsRaw'][$sortBy]
+					: (isset($b['elements'][$sortBy]) ? $b['elements'][$sortBy] : '');
 				if((array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "integer")
 					|| (array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "float"))
 				{
