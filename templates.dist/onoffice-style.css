@@ -1,3 +1,15 @@
+.oo-visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
 /* estate search */
 .oo-searchform {
     margin: 0 0 25px 0;
@@ -34,6 +46,7 @@
     margin: 0 !important;
     line-height: 28px;
     font-size: 16px;
+    outline: 1px solid rgba(0,0,0,0);
 }
 span.oo-searchrange {
     grid-template-columns: repeat(2, 1fr);
@@ -67,8 +80,9 @@ span.oo-searchrange {
 }
 
 
-.oo-form input:focus {
-    color: #3d7bb1;
+.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus {
+    outline: #3d7bb1 solid 2px;
+    border-color: #3d7bb1;
 }
 
 .oo-form input[type='submit'] {
@@ -190,6 +204,12 @@ span.oo-searchrange {
     padding: 2.5px 0;
 }
 
+.oo-detailslink {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .oo-detailslink a, .favorize, .oo-unitslink a {
     display: block;
     text-align: center;
@@ -203,15 +223,16 @@ span.oo-searchrange {
     line-height: 28px;
 }
 
-.oo-detailslink a:hover, .favorize:hover, .oo-unitslink a:hover, .oo-details-btn:focus, .oo-form input[type='submit']:hover {
+.oo-detailslink a:hover, button.favorize:hover, .oo-unitslink a:hover, .oo-form input[type='submit']:hover {
     background: #174770;
     color: #ffffff !important;
     text-decoration: none !important;
 }
 
-.favorize {
-    border: 1px solid #839fce;
-    cursor: pointer;
+button.favorize:focus, .oo-details-btn:focus {
+    background: #174770;
+    outline: 2px solid #174770;
+    outline-offset: 2px;
 }
 
 /* details */
@@ -301,6 +322,11 @@ button.slick-next:before {
     margin-bottom: 25px;
     padding-bottom: 15px;
     border-bottom: 2px solid #efefef;
+}
+
+.oo-video {
+    display: flex;
+    flex-direction: column;
 }
 
 .oo-aspname, .oo-video, .oo-detailsexpose {
