@@ -8,7 +8,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: GlotPress/4.0.1\n"
-"Language: de_CH\n"
+"Language: de_AT\n"
 "Project-Id-Version: Plugins - onOffice for WP-Websites - Stable (latest release)\n"
 
 #: templates.dist/estate/default_detail.php:329
@@ -431,7 +431,7 @@ msgstr "Cache"
 
 #: plugin/Gui/AdminPageApiSettings.php:615
 msgid "The Cache duration value determines the period of time after which the plugin cache of your page is refreshed. This value is set to 1 hour by default."
-msgstr "Der Wert für die Cache-Dauer bestimmt die Zeitspanne, nach der der Plugin-Cache Ihrer Seite aktualisiert wird. Dieser Wert ist standardmässig auf 1 Stunde eingestellt."
+msgstr "Der Wert für die Cache-Dauer bestimmt die Zeitspanne, nach der der Plugin-Cache Ihrer Seite aktualisiert wird. Dieser Wert ist standardmäßig auf 1 Stunde eingestellt."
 
 #: plugin/Gui/AdminPageApiSettings.php:612
 msgid "24 hours"
@@ -1160,7 +1160,7 @@ msgstr "Häufig verwendet"
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:132
 msgid "By default, no link is created to the estate when the plugin creates the address. If the contact form is on an detail page and you want to link the address and the requested estate, you can open the email in onOffice enterprise or use the %s."
-msgstr "Beim Anlegen einer Adresse wird standardmässig keine Verknüpfung zur Immobilie erstellt. Wenn das Kontaktformular auf einer Detailseite ist und die Adresse mit der angefragten Immobilie verknüpft werden soll, kannst du die E-Mail in onOffice enterprise öffnen oder den %s benutzen."
+msgstr "Beim Anlegen einer Adresse wird standardmäßig keine Verknüpfung zur Immobilie erstellt. Wenn das Kontaktformular auf einer Detailseite ist und die Adresse mit der angefragten Immobilie verknüpft werden soll, kannst du die E-Mail in onOffice enterprise öffnen oder den %s benutzen."
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:130
 msgid "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en"
@@ -1392,7 +1392,7 @@ msgstr "Panorama"
 
 #: plugin/Types/ImageTypes.php:65
 msgid "Photo (big)"
-msgstr "Foto (gross)"
+msgstr "Foto (groß)"
 
 #: plugin/Types/ImageTypes.php:64
 msgid "Photo"
@@ -2303,7 +2303,7 @@ msgstr "Umkreis"
 
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:244
 msgid "Street"
-msgstr "Strasse"
+msgstr "Straße"
 
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:243
 msgid "City"
