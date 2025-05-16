@@ -222,10 +222,17 @@ class ApiCall
 		if(isset($sortby))
 		{
 			$compareRecords = function ($a, $b, $sortBy, $sortOrder, $fieldTypes) {
-				$sortA = isset($a['elementsRaw'][$sortBy]) ? $a['elementsRaw'][$sortBy]
-					: (isset($a['elements'][$sortBy]) ? $a['elements'][$sortBy] : '');
-				$sortB = isset($b['elementsRaw'][$sortBy]) ? $b['elementsRaw'][$sortBy]
-					: (isset($b['elements'][$sortBy]) ? $b['elements'][$sortBy] : '');
+				if(in_array($fieldTypes[$sortBy], ['boolean', 'date', 'datetime', 'float', 'integer'])){
+					$sortA = isset($a['elementsRaw'][$sortBy]) ? $a['elementsRaw'][$sortBy]
+						: (isset($a['elements'][$sortBy]) ? $a['elements'][$sortBy] : '');
+					$sortB = isset($b['elementsRaw'][$sortBy]) ? $b['elementsRaw'][$sortBy]
+						: (isset($b['elements'][$sortBy]) ? $b['elements'][$sortBy] : '');
+				}
+				else{
+					$sortA = isset($a['elements'][$sortBy]) ? $a['elements'][$sortBy] : '';
+					$sortB = isset($b['elements'][$sortBy]) ? $b['elements'][$sortBy] : '';
+				}
+
 				if((array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "integer")
 					|| (array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "float"))
 				{
