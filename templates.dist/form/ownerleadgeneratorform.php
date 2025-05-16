@@ -33,15 +33,12 @@ $hiddenValues = array();
 $showFormAsModal = $pForm->getShowFormAsModal() || $pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS;
 
 if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
-	esc_html_e('The form was sent successfully.', 'onoffice-for-wp-websites');
-	echo '<br>';
+	echo '<p role="status">'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
 } else {
 	if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
-		esc_html_e('There was an error sending the form.', 'onoffice-for-wp-websites');
-		echo '<br>';
+		echo '<p role="status">'.esc_html__('ERROR!', 'onoffice-for-wp-websites').'</p>';
 	} elseif ($pForm->getFormStatus() === FormPost::MESSAGE_RECAPTCHA_SPAM) {
-		esc_html_e('The form wasn\'t sent because spam was detected.', 'onoffice-for-wp-websites');
-		echo '<br>';
+		echo '<p role="status">'.esc_html__('Spam detected!', 'onoffice-for-wp-websites').'</p>';
 	}
 
 	/* @var $pForm Form */
@@ -57,9 +54,9 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		}
 
 		$isRequired = $pForm->isRequiredField($input);
-		$addition = $isRequired ? '*' : '';
-		$line = $pForm->getFieldLabel($input).$addition.': ';
-		$line .= renderFormField($input, $pForm);
+		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
+		$line = '<label>'.$pForm->getFieldLabel($input).$addition;
+		$line .= renderFormField($input, $pForm).'</label>';
 		$pageNumber = $pForm->getPagePerForm($input);
 		if (!isset($addressValues[$pageNumber])) {
 			$addressValues[$pageNumber] = array();
@@ -79,7 +76,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
 <div id="onoffice-lead-<?php echo sanitize_title($pForm->getFormId()); ?>" <?php echo $showFormAsModal ? 'style="display:none;"' : ''; ?>>
 	<p>
-		<form name="leadgenerator" action="" method="post" id="leadgeneratorform-<?php echo sanitize_title($pForm->getFormId()); ?>">
+		<form name="leadgenerator" action="" method="post" id="leadgeneratorform-<?php echo sanitize_title($pForm->getFormId()); ?>"  class="oo-form">
 			<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
 			<input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
 			<div id="leadform-<?php echo sanitize_title($pForm->getFormId()); ?>">
@@ -105,7 +102,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
                             <span><?php echo sprintf('%s', $pageTitles[$pageNumber]); ?></span>
                         <?php endif; ?>
                         <p>
-                            <?php echo implode('<br>', $fields); ?>
+                            <?php echo implode('', $fields); ?>
                         </p>
                         <?php if ($pageNumber == $totalPages): ?>
                             <p>

@@ -69,7 +69,7 @@ require 'SearchFormAddress.php';
 						?>
 					</div>
 					<div class="oo-detailslink">
-						<a class="oo-details-btn" href="<?php echo esc_url($pAddressList->getAddressLink($addressId)) ?>">
+						<a class="oo-details-btn" href="<?php echo esc_url($pAddressList->getAddressLink($addressId)) ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Address No. %d', 'onoffice-for-wp-websites'), $addressId); ?>">
 								<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
 						</a>
 					</div>

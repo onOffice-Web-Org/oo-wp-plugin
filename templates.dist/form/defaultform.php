@@ -23,13 +23,15 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 
 ?>
 
+
+<?php if ($pForm->getEstateContextLabel()) { ?>
 <h3>
 	<?php
    /** @var \onOffice\WPlugin\Form $pForm */
     echo $pForm->getEstateContextLabel();
     ?>
 </h3>
-
+<?php } ?>
 <form method="post" id="onoffice-form" class="oo-form oo-form-default">
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
@@ -40,12 +42,12 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 	<?php
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo esc_html__('SUCCESS!', 'onoffice-for-wp-websites');
+	echo '<p role="status">'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
 } else {
 	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-		echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
+		echo '<p role="status">'.esc_html__('ERROR!', 'onoffice-for-wp-websites').'</p>';
 	} elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
-		echo esc_html__('Spam detected!', 'onoffice-for-wp-websites');
+		echo '<p role="status">'.esc_html__('Spam detected!', 'onoffice-for-wp-websites').'</p>';
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
@@ -58,18 +60,18 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			continue;
 		}
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-			echo renderFormField( 'gdprcheckbox', $pForm );
-			echo $pForm->getFieldLabel( 'gdprcheckbox' ) . '<br>';
+			echo '<label>'.renderFormField( 'gdprcheckbox', $pForm );
+			echo $pForm->getFieldLabel( 'gdprcheckbox' ) . '</label>';
 			continue;
 		}
 		if ( in_array( $input, array( 'message' ) ) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
-			$additionMessage   = $isRequiredMessage ? '*' : '';
+			$additionMessage   = $isRequiredMessage ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 			$isHiddenField = $pForm->isHiddenField('message');
 			if (!$isHiddenField) {
-				echo $pForm->getFieldLabel( 'message' );
-				echo $additionMessage . ':<br>';
-				echo '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea><br>';
+				echo '<label>'.$pForm->getFieldLabel( 'message' );
+				echo $additionMessage;
+				echo '<textarea name="message" autocomplete="off">' . $pForm->getFieldValue('message') . '</textarea></label>';
 			} else {
 				echo '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
 			}
@@ -77,16 +79,14 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		}
 
 		$isRequired = $pForm->isRequiredField( $input );
-		$addition = $isRequired ? '*' : '';
+		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 		$isHiddenField = $pForm->isHiddenField($input);
-		$label = $pForm->getFieldLabel($input).$addition.': ';
-		echo !$isHiddenField ? $label . renderFormField($input, $pForm).'<br>' : renderFormField($input, $pForm);
+		$label = $pForm->getFieldLabel($input).$addition;
+		echo !$isHiddenField ? '<label>'.$label . renderFormField($input, $pForm).'</label>' : renderFormField($input, $pForm);
 	}
 ?>
 
 <?php
-	echo '<br>';
-
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }
 ?>

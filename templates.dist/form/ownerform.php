@@ -34,12 +34,12 @@ $estateValues = array();
 $hiddenValues  = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo esc_html__('SUCCESS!', 'onoffice-for-wp-websites');
+	echo '<p role="status">'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
 } else {
 	if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-		echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
+		echo '<p role="status">'.esc_html__('ERROR!', 'onoffice-for-wp-websites').'</p>';
 	} elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
-		echo esc_html__('Spam detected!', 'onoffice-for-wp-websites');
+		echo '<p role="status">'.esc_html__('Spam detected!', 'onoffice-for-wp-websites').'</p>';
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
@@ -49,25 +49,25 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			continue;
 		}
 		$isRequired = $pForm->isRequiredField($input);
-		$addition = $isRequired ? '*' : '';
-		$line = $pForm->getFieldLabel($input).$addition.': ';
-		$line .= renderFormField($input, $pForm);
+		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
+		$line = '<label>'.$pForm->getFieldLabel($input).$addition;
+		$line .= renderFormField($input, $pForm).'</label>';
 
 		if ( $pForm->isMissingField( $input ) ) {
 			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 		}
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-			$line = renderFormField( 'gdprcheckbox', $pForm );
-			$line .= $pForm->getFieldLabel( 'gdprcheckbox' );
+			$line = '<label>'.renderFormField( 'gdprcheckbox', $pForm );
+			$line .= $pForm->getFieldLabel( 'gdprcheckbox' ).'</label>';
 		}
 		if ( in_array( $input, array( 'message' )) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
-			$additionMessage = $isRequiredMessage ? '*' : '';
+			$additionMessage = $isRequiredMessage ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 			$isHiddenField = $pForm->isHiddenField('message');
 			if (!$isHiddenField) {
-				$line = $pForm->getFieldLabel( 'message' );
-				$line .= $additionMessage . ':<br>';
-				$line .= '<textarea name="message">' . $pForm->getFieldValue('message') . '</textarea><br>';
+				$line = '<label>'.$pForm->getFieldLabel( 'message' );
+				$line .= $additionMessage;
+				$line .= '<textarea name="message" autocomplete="off">' . $pForm->getFieldValue('message') . '</textarea></label>';
 			} else {
 				$line = '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
 			}
@@ -87,11 +87,11 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 	echo '<h2>'.esc_html__('Your contact details', 'onoffice-for-wp-websites').'</h2>'
 		.'<p>';
-	echo implode('<br>', $addressValues);
+	echo implode('', $addressValues);
 	echo '</p>
 		<h2>'.esc_html__('Information about your property', 'onoffice-for-wp-websites').'</h2>
 		<p>';
-	echo implode('<br>', $estateValues);
+	echo implode('', $estateValues);
 	echo '</p>';
 	echo implode($hiddenValues);
 

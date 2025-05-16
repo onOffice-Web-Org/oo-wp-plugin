@@ -33,13 +33,13 @@ $searchcriteriaValues = array();
 $hiddenValues  = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo '<p>'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
+	echo '<p role="status">'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
 } elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-	echo '<p>'.esc_html__('ERROR!', 'onoffice-for-wp-websites').'</p>';
+	echo '<p role="status">'.esc_html__('ERROR!', 'onoffice-for-wp-websites').'</p>';
 } elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
-	echo '<p>'.esc_html__('Missing Fields!', 'onoffice-for-wp-websites').'</p>';
+	echo '<p role="status">'.esc_html__('Missing Fields!', 'onoffice-for-wp-websites').'</p>';
 } elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
-	echo '<p>'.esc_html__('Spam detected!', 'onoffice-for-wp-websites').'</p>';
+	echo '<p role="status">'.esc_html__('Spam detected!', 'onoffice-for-wp-websites').'</p>';
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */
@@ -49,24 +49,33 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		continue;
 	}
 	$isRequired = $pForm->isRequiredField( $input );
-	$addition = $isRequired ? '*' : '';
-	$line = $pForm->getFieldLabel($input).$addition.': ';
-	$line .= renderFormField($input, $pForm);
+	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
+	$searchcriteriaLine = '';
+
+	if ( in_array( $input, array( 'kaufpreis','kaltmiete','wohnflaeche','anzahl_zimmer' ) ) ) {
+		$searchcriteriaLine .= '<div class="oo-input-wrapper">';
+		$searchcriteriaLine .= renderFormField($input, $pForm).'</div>';
+	}
+
+	
+
+	$line = '<label>'.$pForm->getFieldLabel($input).$addition;
+	$line .= renderFormField($input, $pForm).'</label>';
 
 	if ( $pForm->isMissingField( $input ) ) {
 		$line .= '<span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 	}
 
 	if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-		$line             = renderFormField( 'gdprcheckbox', $pForm );
-		$line             .= $pForm->getFieldLabel( 'gdprcheckbox' );
+		$line             = '<label>'.renderFormField( 'gdprcheckbox', $pForm );
+		$line             .= $pForm->getFieldLabel( 'gdprcheckbox' ).'</label>';
 	}
 	if ($table == 'address') {
 		$addressValues []= $line;
 	}
 
 	if ($table == 'searchcriteria') {
-		$searchcriteriaValues []= $line;
+		$searchcriteriaValues []= $searchcriteriaLine;
 	}
 
 	if ($table == '') {
@@ -77,18 +86,14 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 ?>
-	<p>
-	<h1><?php esc_html_e('Your contact details', 'onoffice-for-wp-websites'); ?></h1>
+	<h2><?php esc_html_e('Your contact details', 'onoffice-for-wp-websites'); ?></h2>
 		<div>
-			<?php echo implode('<br>', $addressValues); ?>
+			<?php echo implode('', $addressValues); ?>
 		</div>
-	</p>
-	<p>
-	<h1><?php esc_html_e('Your search criteria', 'onoffice-for-wp-websites'); ?></h1>
+	<h2><?php esc_html_e('Your search criteria', 'onoffice-for-wp-websites'); ?></h2>
 		<div>
-			<?php echo implode('<br>', $searchcriteriaValues) ?>
+			<?php echo implode('', $searchcriteriaValues) ?>
 		</div>
-	</p>
 	<?php echo implode($hiddenValues); ?>
 	<div>
 		<?php
