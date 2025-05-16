@@ -188,7 +188,7 @@ if (!function_exists('renderFormField')) {
 
 		
 		$isRequired = $pForm->isRequiredField($fieldName);
-		$requiredAttribute = $isRequired ? 'required ' : '';
+		$requiredAttribute = $isRequired ? 'required aria-required="true"' : '';
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
@@ -197,7 +197,7 @@ if (!function_exists('renderFormField')) {
 
 		$requiredAttribute = "";
 		if ($isRequired) {
-			$requiredAttribute = "required";
+			$requiredAttribute = "required aria-required='true'";
 		}
 
 		if ($fieldName == 'range') {
@@ -323,7 +323,7 @@ if (!function_exists('renderRegionalAddition')) {
 
 		$requiredAttribute = "";
 		if ($isRequired) {
-			$requiredAttribute = "required";
+			$requiredAttribute = "required aria-required='true'";
 		}
 
 		$output .= '<label>' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '<select autocomplete="off" name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';

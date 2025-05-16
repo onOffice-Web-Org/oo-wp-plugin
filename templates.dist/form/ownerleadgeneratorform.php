@@ -33,15 +33,12 @@ $hiddenValues = array();
 $showFormAsModal = $pForm->getShowFormAsModal() || $pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS;
 
 if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
-	esc_html_e('The form was sent successfully.', 'onoffice-for-wp-websites');
-	echo '<br>';
+	echo '<p role="status">'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
 } else {
 	if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
-		esc_html_e('There was an error sending the form.', 'onoffice-for-wp-websites');
-		echo '<br>';
+		echo '<p role="status">'.esc_html__('ERROR!', 'onoffice-for-wp-websites').'</p>';
 	} elseif ($pForm->getFormStatus() === FormPost::MESSAGE_RECAPTCHA_SPAM) {
-		esc_html_e('The form wasn\'t sent because spam was detected.', 'onoffice-for-wp-websites');
-		echo '<br>';
+		echo '<p role="status">'.esc_html__('Spam detected!', 'onoffice-for-wp-websites').'</p>';
 	}
 
 	/* @var $pForm Form */

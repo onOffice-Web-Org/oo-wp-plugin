@@ -33,13 +33,13 @@ $searchcriteriaValues = array();
 $hiddenValues  = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo '<p>'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
+	echo '<p role="status">'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
 } elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-	echo '<p>'.esc_html__('ERROR!', 'onoffice-for-wp-websites').'</p>';
+	echo '<p role="status">'.esc_html__('ERROR!', 'onoffice-for-wp-websites').'</p>';
 } elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
-	echo '<p>'.esc_html__('Missing Fields!', 'onoffice-for-wp-websites').'</p>';
+	echo '<p role="status">'.esc_html__('Missing Fields!', 'onoffice-for-wp-websites').'</p>';
 } elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
-	echo '<p>'.esc_html__('Spam detected!', 'onoffice-for-wp-websites').'</p>';
+	echo '<p role="status">'.esc_html__('Spam detected!', 'onoffice-for-wp-websites').'</p>';
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */

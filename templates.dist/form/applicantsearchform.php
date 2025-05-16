@@ -38,9 +38,9 @@ $selectTypes = array(
 	);
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-	echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
+	echo '<p role="status">'.esc_html__('ERROR!', 'onoffice-for-wp-websites').'</p>';
 } elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
-	echo esc_html__('Spam detected!', 'onoffice-for-wp-websites');
+	echo '<p role="status">'.esc_html__('Spam detected!', 'onoffice-for-wp-websites').'</p>';
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */
@@ -54,7 +54,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	$isRequired = $pForm->isRequiredField( $input );
-	$addition = $isRequired ? '*' : '';
+	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 	$inputAddition = $isRequired ? ' required' : '';
 	//echo '<label>'.esc_html($pForm->getFieldLabel( $input )).$addition;
 
