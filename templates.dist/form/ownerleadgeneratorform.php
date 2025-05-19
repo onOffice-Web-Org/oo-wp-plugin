@@ -55,8 +55,8 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
 		$isRequired = $pForm->isRequiredField($input);
 		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
-		$line = '<label>'.$pForm->getFieldLabel($input).$addition;
-		$line .= renderFormField($input, $pForm).'</label>';
+		$line = '<label><span class="oo-label-text">'.$pForm->getFieldLabel($input).' '.$addition;
+		$line .= renderFormField($input, $pForm).'</span></label>';
 		$pageNumber = $pForm->getPagePerForm($input);
 		if (!isset($addressValues[$pageNumber])) {
 			$addressValues[$pageNumber] = array();
@@ -75,10 +75,26 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 </script>
 
 <div id="onoffice-lead-<?php echo sanitize_title($pForm->getFormId()); ?>" <?php echo $showFormAsModal ? 'style="display:none;"' : ''; ?>>
-	<p>
 		<form name="leadgenerator" action="" method="post" id="leadgeneratorform-<?php echo sanitize_title($pForm->getFormId()); ?>"  class="oo-form">
 			<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
 			<input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
+
+
+			<?php 
+			$firstRequired = false;
+			$hasRequiredFields = false;
+
+			foreach ($pForm->getInputFields() as $input => $table) {
+				if (
+					$pForm->isRequiredField($input)
+				) {
+					$hasRequiredFields = true;
+					break;
+				}
+			}
+			if ($hasRequiredFields) {
+				echo '<div class="oo-form-required" aria-hidden="true">' . esc_html__('* Required fields', 'onoffice-for-wp-websites') . '</div>';
+			} ?>
 			<div id="leadform-<?php echo sanitize_title($pForm->getFormId()); ?>">
 				<?php
 					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
@@ -127,7 +143,6 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				<?php endif; ?>
 			</div>
 		</form>
-	</p>
 </div>
 
 <?php

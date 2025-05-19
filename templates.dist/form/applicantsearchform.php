@@ -22,6 +22,10 @@ $pathComponents = [ONOFFICE_PLUGIN_DIR, 'templates.dist', 'fields.php'];
 require(implode(DIRECTORY_SEPARATOR, $pathComponents));
 
 ?>
+<div class="oo-form__required" aria-hidden="true"><?php esc_html_e(
+                '* Required fields',
+                'onoffice-for-wp-websites',
+            ); ?></div>
 <form method="post" id="onoffice-form" class="oo-form oo-form-applicantsearch" data-applicant-form-id="<?php echo esc_attr($pForm->getFormId()); ?>">
 
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
@@ -56,7 +60,6 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 	$inputAddition = $isRequired ? ' required' : '';
-	//echo '<label>'.esc_html($pForm->getFieldLabel( $input )).$addition;
 
 	$permittedValues = $pForm->getPermittedValues( $input, true );
 
@@ -89,7 +92,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ($input === 'regionaler_zusatz') {
-		echo '<label>'.esc_html($pForm->getFieldLabel( $input )).$addition.'<select class="custom-single-select" size="1" name="'.esc_html($input).'">';
+		echo '<label><span class="oo-label-text">'.esc_html($pForm->getFieldLabel( $input )).$addition.'<select class="custom-single-select" size="1" name="'.esc_html($input).'">';
 		$pRegionController = new \onOffice\WPlugin\Region\RegionController();
 		if ($permittedValues === null) {
 			$regions = $pRegionController->getRegions();
@@ -103,7 +106,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		}
 		echo '</select></label>';
 	} else {
-		echo '<label>'.esc_html($pForm->getFieldLabel( $input )).$addition.renderFormField($input, $pForm, false).'</label>';
+		echo '<label>'.esc_html($pForm->getFieldLabel( $input )).' '.$addition.renderFormField($input, $pForm, false).'</span></label>';
 	}
 }
 

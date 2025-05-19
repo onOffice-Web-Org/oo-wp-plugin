@@ -42,6 +42,21 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo '<p role="status">'.esc_html__('Spam detected!', 'onoffice-for-wp-websites').'</p>';
 }
 
+	$firstRequired = false;
+	$hasRequiredFields = false;
+
+	foreach ($pForm->getInputFields() as $input => $table) {
+		if (
+			$pForm->isRequiredField($input)
+		) {
+			$hasRequiredFields = true;
+			break;
+		}
+	}
+	if ($hasRequiredFields) {
+		echo '<div class="oo-form-required" aria-hidden="true">' . esc_html__('* Required fields', 'onoffice-for-wp-websites') . '</div>';
+	}
+
 /* @var $pForm \onOffice\WPlugin\Form */
 foreach ( $pForm->getInputFields() as $input => $table ) {
 	if ($pForm->isHiddenField($input)) {
@@ -57,18 +72,18 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		$searchcriteriaLine .= renderFormField($input, $pForm).'</div>';
 	}
 
-	
-
-	$line = '<label>'.$pForm->getFieldLabel($input).$addition;
-	$line .= renderFormField($input, $pForm).'</label>';
+	$isRequired = $pForm->isRequiredField($input);
+	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
+	$line = '<label>'.$pForm->getFieldLabel($input).' '.$addition;
+	$line .= renderFormField($input, $pForm).'</span></label>';
 
 	if ( $pForm->isMissingField( $input ) ) {
 		$line .= '<span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 	}
 
 	if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-		$line             = '<label>'.renderFormField( 'gdprcheckbox', $pForm );
-		$line             .= $pForm->getFieldLabel( 'gdprcheckbox' ).'</label>';
+		$line = '<label><span class="oo-label-text">'.renderFormField( 'gdprcheckbox', $pForm );
+		$line .= $pForm->getFieldLabel( 'gdprcheckbox' ) .' '. $addition.'</span></label>';
 	}
 	if ($table == 'address') {
 		$addressValues []= $line;
