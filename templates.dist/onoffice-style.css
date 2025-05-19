@@ -34,10 +34,6 @@
 }
 
 .oo-form label {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
     margin-bottom: 20px;
 }
 
@@ -80,7 +76,7 @@ span.oo-searchrange {
 }
 
 
-.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus {
+.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus, .oo-searchformfield input:focus {
     outline: #3d7bb1 solid 2px;
     border-color: #3d7bb1;
 }
