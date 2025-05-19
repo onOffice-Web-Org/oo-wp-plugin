@@ -207,7 +207,12 @@ add_action('admin_init', [$pAdminViewController, 'add_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 add_action('admin_init', [$pDetailViewPostSaveController, 'getAllPost']);
 add_action('plugins_loaded', function() {
-	load_plugin_textdomain('onoffice-for-wp-websites', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
+	$mo_file = ONOFFICE_PLUGIN_DIR . '/languages/onoffice-for-wp-websites-'.get_locale().'.mo';
+	if (file_exists($mo_file)) {
+		load_textdomain('onoffice-for-wp-websites', $mo_file);
+	} else {
+		load_plugin_textdomain('onoffice-for-wp-websites', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
+	}
 	// Check 'onoffice-personalized' Folder exists
 	$onofficePersonalizedFolderLanguages = plugin_dir_path(__DIR__) . 'onoffice-personalized/languages';
 	$onofficePersonalizedFolder = plugin_dir_path(__DIR__) . 'onoffice-personalized';
