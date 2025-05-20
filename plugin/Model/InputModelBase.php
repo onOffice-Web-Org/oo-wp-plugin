@@ -107,6 +107,9 @@ abstract class InputModelBase
 	/** @var bool */
 	private $_deactivate = false;
 
+	/** @var bool */
+	private $_field_inactive = false;
+
 	/** @var string */
 	private $_label = null;
 
@@ -222,9 +225,16 @@ abstract class InputModelBase
 	public function setDeactivate($deactivate)
 		{ $this->_deactivate = $deactivate; }
 
+	/** @param bool $fieldInactive */
+	public function setFieldInactive($fieldInactive)
+	{ $this->_field_inactive = $fieldInactive; }
+
 	/** @return bool */
 	public function isDeactivate()
 		{ return $this->_deactivate; }
+
+	public function isFieldInactive()
+	{ return $this->_field_inactive; }
 
 	/** @return array */
 	public function getValuesAvailable()

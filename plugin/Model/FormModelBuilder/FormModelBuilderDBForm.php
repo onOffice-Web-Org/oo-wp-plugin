@@ -463,13 +463,17 @@ class FormModelBuilderDBForm
         $field = $pInputModelFormContactType->getField();
         $pInputModelFormContactType->setHtmlType(InputModelOption::HTML_TYPE_SELECT_TWO);
         $availableContactType = $this->getDataContactType(onOfficeSDK::MODULE_ADDRESS);
-        $pInputModelFormContactType->setValuesAvailable($availableContactType);
-        $pInputModelFormContactType->setIsMulti(true);
-        $selectedValue = $this->getValue($field);
-        if (is_null($selectedValue)) {
-            $selectedValue = [];
-        }
-        $pInputModelFormContactType->setValue($selectedValue);
+        if($availableContactType === null){
+			$pInputModelFormContactType->setFieldInactive(true);
+		}else{
+			$pInputModelFormContactType->setValuesAvailable($availableContactType);
+			$pInputModelFormContactType->setIsMulti(true);
+			$selectedValue = $this->getValue($field);
+			if (is_null($selectedValue)) {
+				$selectedValue = [];
+			}
+			$pInputModelFormContactType->setValue($selectedValue);
+		}
 
         return $pInputModelFormContactType;
     }
@@ -482,6 +486,11 @@ class FormModelBuilderDBForm
                 ->buildFieldsCollection($pFieldLoader);
             $fields = $pFieldCollectionAddressEstate->getFieldsByModule($module);
             $result = [];
+
+			if(!isset($fields['ArtDaten'])) {
+				return null;
+			}
+
             if (!empty($fields['ArtDaten']->getPermittedvalues())) {
                 foreach ($fields['ArtDaten']->getPermittedvalues() as $field => $type) {
                     $result[$field] = !empty($type) ? $type: $field;

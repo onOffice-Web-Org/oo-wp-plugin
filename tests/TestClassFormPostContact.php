@@ -137,6 +137,10 @@ class TestClassFormPostContact
 				$FieldTelefon1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 				$pFieldsCollection->addField($FieldTelefon1);
 
+				$pFieldArtDaten = new Field('ArtDaten', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldArtDaten->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldArtDaten);
+
 				$pFieldAgbAkzeptiert = new Field('AGB_akzeptiert', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldAgbAkzeptiert->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
 				$pFieldsCollection->addField($pFieldAgbAkzeptiert);
