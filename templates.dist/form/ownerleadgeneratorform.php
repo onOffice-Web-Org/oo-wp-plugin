@@ -133,11 +133,11 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
                     </div>
                 <?php endforeach; ?>
 				<?php echo implode($hiddenValues); ?>
-				<span class="leadform-back" style="float:left; cursor:pointer;">
+				<span class="leadform-back" style="float:left; cursor:pointer;" role="button">
 					<?php echo esc_html__('Back', 'onoffice-for-wp-websites'); ?>
 				</span>
 				<?php if ($totalPages !== 1): ?>
-				<span class="leadform-forward" style="float:right; cursor:pointer;">
+				<span class="leadform-forward" style="float:right; cursor:pointer;" role="button">
 					<?php echo esc_html__('Next', 'onoffice-for-wp-websites'); ?>
 				</span>
 				<?php endif; ?>
@@ -152,7 +152,7 @@ if (in_array($pForm->getFormStatus(), [
 		FormPost::MESSAGE_ERROR,
 		FormPost::MESSAGE_REQUIRED_FIELDS_MISSING,
 	]) && $pForm->getShowFormAsModal()) {
-	echo '<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead-' . sanitize_title($pForm->getFormId()) . '" class="thickbox">';
+	echo '<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead-' . sanitize_title($pForm->getFormId()) . '" target="_top" class="thickbox">';
 	echo esc_html__('Open the Form', 'onoffice-for-wp-websites');
 	echo '</a>';
 }
