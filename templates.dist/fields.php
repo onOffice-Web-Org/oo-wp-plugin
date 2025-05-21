@@ -118,6 +118,13 @@ if (!function_exists('renderFieldEstateSearch')) {
 }
 
 if (!function_exists('renderFormField')) {
+
+	function renderErrorHtml(?string $errorMessage, bool $shouldDisplay): string {
+		if (!empty($errorMessage) && $shouldDisplay) {
+			return "<div class='error' aria-hidden='true' role='alert' aria-live='assertive' aria-atomic='true'><p>$errorMessage</p></div>";
+		}
+		return '';
+	}
 	function renderFormField(string $fieldName, onOffice\WPlugin\Form $pForm, bool $searchCriteriaRange = true): string
 	{
 		$output = '';
@@ -142,62 +149,39 @@ if (!function_exists('renderFormField')) {
 
 
 		switch ($fieldName) {
-			case "Titel":
-				$autocomplete = "honorific-prefix";
-				break;
-			case "Vorname":
-				$autocomplete = "given-name";
-				break;
-			case "Name":
-				$autocomplete = "family-name";
-				break;
-			case "Strasse":
-				$autocomplete = "street-address";
-				break;
-			case "Plz":
-				$autocomplete = "postal-code";
-				break;
-			case "Ort":
-				$autocomplete = "address-level2";
-				break;	
-			case "Zusatz1":
-				$autocomplete = "organization";
-				break;
-			case "Land":
-				$autocomplete = "country-name";
-				break;
-			case "Geburtsdatum":
-				$autocomplete = "bday";
-				break;
-			case "Homepage":
-				$autocomplete = "url";
-				break;
-			case "Telefon1":
-				$autocomplete = "tel";
-				break;
-			case "Email":
-				$autocomplete = "email";
-				break;
-			default:
-				$autocomplete = "off";
+			case "Titel": $autocomplete = "honorific-prefix"; break;
+			case "Vorname": $autocomplete = "given-name"; break;
+			case "Name": $autocomplete = "family-name"; break;
+			case "Strasse": $autocomplete = "street-address"; break;
+			case "Plz": $autocomplete = "postal-code"; break;
+			case "Ort": $autocomplete = "address-level2"; break;
+			case "Zusatz1": $autocomplete = "organization"; break;
+			case "Land": $autocomplete = "country-name"; break;
+			case "Geburtsdatum": $autocomplete = "bday"; break;
+			case "Homepage": $autocomplete = "url"; break;
+			case "Telefon1": $autocomplete = "tel"; break;
+			case "Email": $autocomplete = "email"; break;
+			default: $autocomplete = "off";
 		}
 		
 		if ($autocomplete !== null) {
 			$autocompleteAttribute = ' autocomplete="' . htmlspecialchars($autocomplete) . '"';
 		}
-
 		
 		$isRequired = $pForm->isRequiredField($fieldName);
-		$requiredAttribute = $isRequired ? 'required aria-required="true"' : '';
+		$requiredAttribute = $isRequired ? 'required aria-required="true" aria-invalid="false"' : '';
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
 		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
 		$isApplyThousandSeparatorField = $pForm->isApplyThousandSeparatorField($fieldName);
+		$errorMessageDisplay = false;
+		$errorHtml = '';
 
 		$requiredAttribute = "";
 		if ($isRequired) {
-			$requiredAttribute = "required aria-required='true'";
+			$requiredAttribute = "required aria-required='true' aria-invalid='false'";
+			$errorMessageDisplay = true;
 		}
 
 		if ($fieldName == 'range') {
@@ -205,8 +189,10 @@ if (!function_exists('renderFormField')) {
 		}
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
-			$output .= '<select class="custom-single-select" autocomplete="off" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
-			/* translators: %s will be replaced with the translated field name. */
+			$errorMessage = esc_html__('Bitte wählen Sie eine Option aus.', 'onoffice-for-wp-websites');
+			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
+
+			$output .= '<select class="custom-single-select" autocomplete="off" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . ' data-rule="text">';
 			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {
@@ -214,10 +200,10 @@ if (!function_exists('renderFormField')) {
 				} else {
 					$isSelected = $selectedValue == $key;
 				}
-				$output .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>'
-					. esc_html($value) . '</option>';
+				$output .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$output .= '</select>';
+			$output .= '</select>' . $errorHtml;
+		
 		} elseif ($fieldName === 'regionaler_zusatz') {
 			if (!is_array($selectedValue)) {
 				$selectedValue = [];
@@ -244,15 +230,21 @@ if (!function_exists('renderFormField')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '".' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$output = '<label>'.$fieldLabel.'<select class="custom-multiple-select form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
+			$errorMessage = esc_html__('Bitte wählen Sie mindestens eine Option aus.', 'onoffice-for-wp-websites');
+			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
+
+			$output = '<label>'.$fieldLabel.'<select class="custom-multiple-select form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . ' data-rule="text">';
 			$output .= $htmlOptions;
-			$output .= '</select></label>';
+			$output .= '</select></label>'.$errorHtml;
 		} else {
-			$inputType = 'type="text" ';
+			$inputType = 'type="text" data-rule="text"';
 			$value = 'value="' . esc_attr($pForm->getFieldValue($fieldName, true)) . '"';
+			$errorMessage = esc_html__('Bitte geben Sie einen Text ein.', 'onoffice-for-wp-websites');
 
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
-				$inputType = 'type="checkbox" ';
+				$inputType = 'type="checkbox" data-rule="checkbox"';
+				$errorMessage = esc_html__('Bitte stimmen Sie den Bedingungen zu.', 'onoffice-for-wp-websites');
+
 				$value = 'value="y" ' . ($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
 			} elseif (
 				$typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
@@ -268,7 +260,8 @@ if (!function_exists('renderFormField')) {
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATE ||
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_DATE
 			) {
-				$inputType = 'type="date" ';
+				$inputType = 'type="date"';
+				//$errorMessage = esc_html__('Bitte geben Sie ein gültiges Datum im Format TT.MM.JJJJ ein.', 'onoffice-for-wp-websites');
 			} elseif (
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATETIME
 			) {
@@ -276,11 +269,12 @@ if (!function_exists('renderFormField')) {
 			}
 
 			if ($isApplyThousandSeparatorField) {
-				$inputType = 'type="text" class="apply-thousand-separator-format" ';
+				$inputType = 'type="text" class="apply-thousand-separator-format" data-rule="text"';
 			}
 
 			if ($fieldName == 'Email') {
-				$inputType = 'type="email"';
+				$inputType = 'type="email" data-rule="email"';
+				$errorMessage = esc_html__('Bitte geben Sie eine gültige E-Mail-Adresse ein.', 'onoffice-for-wp-websites');
 			}
 
 			if (
@@ -306,7 +300,8 @@ if (!function_exists('renderFormField')) {
 					<label for="' . esc_attr($fieldName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
 					</fieldset>';
 			} else {
-				$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($fieldName) . '" ' . $value . $autocompleteAttribute .'>';
+				$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
+				$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($fieldName) . '" ' . $value . $autocompleteAttribute .'>'.$errorHtml;
 			}
 		}
 		return $output;
@@ -323,7 +318,7 @@ if (!function_exists('renderRegionalAddition')) {
 
 		$requiredAttribute = "";
 		if ($isRequired) {
-			$requiredAttribute = "required aria-required='true'";
+			$requiredAttribute = "required aria-required='true' aria-invalid='false'";
 		}
 
 		$output .= '<label>' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '<select autocomplete="off" name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';
