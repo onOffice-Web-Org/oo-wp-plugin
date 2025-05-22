@@ -20,9 +20,8 @@
 
 $pathComponents = [ONOFFICE_PLUGIN_DIR, 'templates.dist', 'fields.php'];
 require(implode(DIRECTORY_SEPARATOR, $pathComponents));
-
 ?>
-<form method="post" id="onoffice-form" class="oo-form oo-form-applicantsearch" data-applicant-form-id="<?php echo esc_attr($pForm->getFormId()); ?>">
+<form method="post" id="onoffice-form" class="oo-form oo-form-applicantsearch" data-applicant-form-id="<?php echo esc_attr($pForm->getFormId()); ?>" novalidate>
 
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
@@ -38,9 +37,9 @@ $selectTypes = array(
 	);
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-	echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
+	echo '<p role="status">'.esc_html__('An error has occurred. Please check your details.', 'onoffice-for-wp-websites').'</p>';
 } elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
-	echo esc_html__('Spam detected!', 'onoffice-for-wp-websites');
+	echo '<p role="status">'.esc_html__('Spam recognized!', 'onoffice-for-wp-websites').'</p>';
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */
@@ -54,19 +53,16 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	$isRequired = $pForm->isRequiredField( $input );
-	$addition = $isRequired ? '*' : '';
+	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 	$inputAddition = $isRequired ? ' required' : '';
-	echo esc_html($pForm->getFieldLabel( $input )).$addition.': <br>';
 
 	$permittedValues = $pForm->getPermittedValues( $input, true );
 
 	if ($input === 'Umkreis') {
-		echo '<br>'
-			.'<fieldset>'
+		echo '<fieldset>'
 			.'<legend>'.esc_html__('search within distance of:', 'onoffice-for-wp-websites').'</legend>';
 
 		foreach ($pForm->getUmkreisFields() as $key => $values) {
-			echo esc_html($values['label']).':<br>';
 
 			if (in_array($values['type'], $selectTypes)) {
 				$permittedValues = $values['permittedvalues'];
@@ -79,10 +75,10 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 						.esc_html($countryName).'</option>';
 				}
 
-				echo '</select><br>';
+				echo '</select>';
 			} else {
 				echo '<input type="text" name="'.esc_html($key).'" value="'
-					.esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'> <br>';
+					.esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'>';
 			}
 		}
 
@@ -91,7 +87,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ($input === 'regionaler_zusatz') {
-		echo '<select class="custom-single-select" size="1" name="'.esc_html($input).'">';
+		echo '<label><span class="oo-label-text">'.esc_html($pForm->getFieldLabel( $input )).$addition.'<select class="custom-single-select" size="1" name="'.esc_html($input).'">';
 		$pRegionController = new \onOffice\WPlugin\Region\RegionController();
 		if ($permittedValues === null) {
 			$regions = $pRegionController->getRegions();
@@ -103,12 +99,10 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 			/* @var $pRegion Region */
 			printRegion( $pRegion, [$selectedValue] );
 		}
-		echo '</select><br>';
+		echo '</select></label>';
 	} else {
-		echo renderFormField($input, $pForm, false);
+		echo '<label>'.esc_html($pForm->getFieldLabel( $input )).' '.$addition.renderFormField($input, $pForm, false).'</span></label>';
 	}
-
-	echo '<br>';
 }
 
 $pForm->setGenericSetting('submitButtonLabel', esc_html__('Search for Prospective Buyers', 'onoffice-for-wp-websites'));
@@ -123,7 +117,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	$umkreisFields = $pForm->getUmkreisFields();
 	$countResults = $pForm->getCountAbsolutResults();
 
-	echo '<p>';
 	echo '<br><span>'.esc_html(
 			sprintf(_n(
 				/* translators: %s will be replaced with a number. */
@@ -195,7 +188,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			echo '<span><i>'.implode(' ', array_values($umkreis)).'</i></span><br>';
 		}
 	}
-	echo '</p>';
 }
 
 ?>
