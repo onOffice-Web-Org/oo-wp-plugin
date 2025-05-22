@@ -43,7 +43,7 @@
     background-position: calc(100% - 0.5em) center;
 }
 
-.oo-form input[aria-invalid='true'][type="date"], .oo-form .displayerror input[type="date"]{
+.oo-form input[aria-invalid='true'][type="date"], .oo-form input[aria-invalid='true'][type="number"], .oo-form .displayerror input[type="date"], .oo-form .displayerror input[type="number"] {
     background-position: calc(97% - 0.5em) center;
 }
 
