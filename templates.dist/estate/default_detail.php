@@ -346,10 +346,9 @@ $dimensions = [
 					</div>
 				</div>
 			<?php } ?>
-
-			<div class="oo-units">
+			<?php if (!empty($pEstates->getEstateUnits())) : ?>
 				<?php echo $pEstates->getEstateUnits(); ?>
-			</div>
+			<?php endif; ?>
 		</div>
 		<div class="oo-details-sidebar">
 			<div class="oo-asp">
@@ -588,9 +587,10 @@ $dimensions = [
 			?>
 
 		</div>
-		<div class="oo-similar">
-			<?php echo $pEstates->getSimilarEstates(); ?>
-		</div>
+		<?php $similar = trim($pEstates->getSimilarEstates()); ?>
+		<?php if (!empty($similar)): ?>
+        	<?php echo $similar; ?>
+		<?php endif; ?>
 	<?php } ?>
 
 </div>
