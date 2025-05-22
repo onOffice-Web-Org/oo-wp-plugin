@@ -1,5 +1,5 @@
 const onOfficeLocalized = typeof onOffice_loc_settings !== 'undefined' ? onOffice_loc_settings : onOffice_unsaved_changes_message;
-const screenDataUnsavedChanges = screen_data_unsaved_changes ?? [];
+const screenDataUnsavedChanges = (typeof screen_data_unsaved_changes !== 'undefined' && screen_data_unsaved_changes) ?? [];
 jQuery(document).ready(function($){
 	let checkUnsavedChanges = false;
 	let checkNavigationTriggered = false;
@@ -39,19 +39,23 @@ jQuery(document).ready(function($){
 	}
 
 	function handleUnsavedChanges(e, href) {
-		if (!checkUnsavedChanges) {
-			return;
-		}
+		const $input = $(`[name="${screenDataUnsavedChanges.name}"]`);
 
-		e.preventDefault();
-		const title = $(`[name="${screenDataUnsavedChanges.name}"]`).val();
-		if (title.length == 0) {
-			showUnsavedChangesMessage(href, onOfficeLocalized.view_unsaved_change_empty_name_message);
+		// check if title input exists (e.g. property detail page has no title input
+		if ($input.length) {
+			e.preventDefault();
+			const title = $input.length ? ($input.val() ?? '').toString().trim() : '';
+			if (title.length === 0) {
+				showUnsavedChangesMessage(href, onOfficeLocalized.view_unsaved_change_empty_name_message);
+				return false;
+			}
+			processAjaxRequest(title, href);
 			return false;
 		}
-		processAjaxRequest(title, href);
 
-		return false;
+		if (checkUnsavedChanges) {
+			showUnsavedChangesMessage(href, onOfficeLocalized.view_unsaved_changes_message);
+		}
 	}
 
 	function processAjaxRequest(title, href) {
