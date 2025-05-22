@@ -96,6 +96,10 @@ class Installer
 		$pDbChanges = $pDI->get(DatabaseChangesInterface::class);
 		$pDbChanges->deinstall();
 
+		// Set autoload to 'no' to prevent the option from being automatically loaded on each page request
+		// This ensures the option can be properly deleted 
+		update_option('onoffice-notice-cache-was-cleared', true, 'no');
+
 		delete_option('onoffice-default-view');
 		delete_option('onoffice-favorization-enableFav');
 		delete_option('onoffice-favorization-favButtonLabelFav');
@@ -120,6 +124,11 @@ class Installer
 		delete_option('onoffice-settings-twittercards');
 		delete_option('onoffice-settings-duration-cache');
 		delete_option('onoffice-address-detail-view-showInfoUserUrl');
+		delete_option('onoffice-settings-captcha-secretkey');
+		delete_option('onoffice-notice-cache-was-cleared');
+		delete_option('onoffice-settings-thousand-separator');
+		delete_option('onoffice-default-address-view');
+		
 
 		self::flushRules();
 	}
