@@ -204,6 +204,5 @@ class AdminPageEstateUnitSettings
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
 		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);
-		wp_localize_script('oo-unsaved-changes-message', 'screen_data_unsaved_changes', $screenData);
 	}
 }

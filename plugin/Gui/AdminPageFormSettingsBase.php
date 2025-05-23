@@ -765,7 +765,6 @@ abstract class AdminPageFormSettingsBase
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
 		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);
-		wp_localize_script('oo-unsaved-changes-message', 'screen_data_unsaved_changes', $screenData);
 
 		if ($this->getType() !== Form::TYPE_APPLICANT_SEARCH) {
 			wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js');
