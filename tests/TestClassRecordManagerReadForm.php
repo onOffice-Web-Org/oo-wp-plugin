@@ -25,6 +25,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 use WP_UnitTestCase;
 use onOffice\WPlugin\Form;
 use onOffice\SDK\onOfficeSDK;
+use wpdb;
 /**
  *
  * @url http://www.onoffice.de
@@ -221,6 +222,31 @@ class TestClassRecordManagerReadForm
 		]));
 		$pFieldsForm = $this->_pRecordManagerReadForm->readFieldsByFormId(1);
 		$this->assertEquals(4, count($pFieldsForm));
+	}
+
+	/**
+	 * 
+	 */
+	public function testCheckSameName()
+	{
+		$configOutput = ['count' => 0];
+
+		$pWPDB = $this->getMockBuilder(wpdb::class)
+			->disableOriginalConstructor(['testUser', 'testPassword', 'testDB', 'testHost'])
+			->setMethods(['get_row'])
+			->getMock();
+		$pWPDB->prefix = 'testPrefix';
+		$pWPDB->expects($this->once())
+			->method('get_row')
+			->willReturnOnConsecutiveCalls($configOutput);
+		$pRecordManagerReadForm = $this->getMockBuilder(RecordManagerReadForm::class)
+			->setMethods(['getWpdb'])
+			->getMock();
+
+		$pRecordManagerReadForm->method('getWpdb')->will($this->returnValue($pWPDB));
+		$pData = $pRecordManagerReadForm->checkSameName('testForm1');
+
+		$this->assertTrue($pData);
 	}
 
 	/**
