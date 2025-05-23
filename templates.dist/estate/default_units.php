@@ -115,7 +115,10 @@ $pEstatesClone->resetEstateIterator();
                                 $value == 'No' ||
                                 $value == 'Ne' ||
                                 $value == '' ||
-                                empty($value)
+                                empty($value) ||
+								(isset($current_property['provisionsfrei']) &&
+								 strtolower(trim($current_property['provisionsfrei'])) === 'ja' &&
+								 in_array($field,['innen_courtage', 'aussen_courtage'],true))
                             ) {
                                 $value = '-';
                                 $class = ' --empty';
