@@ -172,7 +172,7 @@ class TestClassGeoPositionFieldHandler
 	private function getRecordManagerMock(): RecordManagerRead
 	{
 		$pRecordManager = $this->getMockBuilder(RecordManagerRead::class)
-			->setMethods(['getMainTable', 'getIdColumnMain', 'getRecords', 'getRowByName', 'addWhere'])
+			->setMethods(['getMainTable', 'getIdColumnMain', 'getRecords', 'getRowByName', 'addWhere', 'checkSameName'])
 			->getMock();
 		$pRecordManager->method('getMainTable')->willReturn('oo_plugin_listviews');
 		$pRecordManager->method('getIdColumnMain')->willReturn('listview_id');

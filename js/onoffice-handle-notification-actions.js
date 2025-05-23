@@ -1,3 +1,5 @@
+const onOfficeSaveNameMessage = (typeof onOffice_loc_settings !== 'undefined' && onOffice_loc_settings) ? onOffice_loc_settings : [];
+const screenDataHandleNotification = (typeof screen_data_handle_notification !== 'undefined' && screen_data_handle_notification) ? screen_data_handle_notification : [];
 jQuery(document).ready(function ($) {
 	$(document).on('click', '.duplicate-check-notify .notice-dismiss', function (event) {
 		event.preventDefault();
@@ -31,4 +33,52 @@ jQuery(document).ready(function ($) {
 			event.preventDefault();
 		}
 	});
+
+	$(document).on('click', '.oo-poststuff #send_form', function(event) {
+		const $input = $(`[name="${screenDataHandleNotification.name}"]`);
+		if ($input.length) {
+			event.preventDefault();
+			const title = ($input.val() ?? '').toString().trim();
+			validateTitleBeforeSaving(title);
+		}
+	});
+	function validateTitleBeforeSaving(title){
+		if (title.length === 0) {
+			showNotification(onOfficeSaveNameMessage.view_save_empty_name_message, true).insertAfter('.wp-header-end');
+			return false;
+		}
+		const urlParams = new URLSearchParams(window.location.search);
+		let pageId = urlParams.get('id');
+		const data = {
+			'action': screenDataHandleNotification.action,
+			'name': title,
+			'id': pageId
+		};
+
+		$.get(screenDataHandleNotification.ajaxurl, data, function(response) {
+			if (response.success) {
+				$('#onoffice-ajax').submit();
+			} else {
+				showNotification(onOfficeSaveNameMessage.view_save_same_name_message, true).insertAfter('.wp-header-end');
+			}
+		}, 'json');
+	}
+
+	function showNotification(message, checkSubmit) {
+		$('html, body').animate({ scrollTop: 0 }, 1000);
+		if (checkSubmit) {
+			$('.notice-error-name-message').remove();
+		}
+
+		return generateNotificationNameMessage(message);
+	}
+
+	function generateNotificationNameMessage(message) {
+		return $(`
+			<div class="notice notice-error is-dismissible notice-error-name-message">
+				<p>${message}</p>
+				<button type="button" class="notice-dismiss notice-save-view"></button>
+			</div>
+		`);
+	}
 });

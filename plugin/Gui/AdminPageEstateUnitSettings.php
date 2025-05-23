@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Model;
@@ -188,6 +189,12 @@ class AdminPageEstateUnitSettings
 
 	public function doExtraEnqueues()
 	{
+		$screenData = array(
+			'action' => AdminViewController::ACTION_NOTIFICATION_ESTATE,
+			'name' => 'oopluginlistviews-name',
+			'ajaxurl' => admin_url('admin-ajax.php')
+		);
+
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-copy-shortcode');
 		wp_enqueue_script('onoffice-custom-form-label-js');
@@ -196,5 +203,6 @@ class AdminPageEstateUnitSettings
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
+		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);
 	}
 }
