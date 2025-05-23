@@ -1,5 +1,5 @@
-const onOfficeSaveNameMessage = (typeof onOffice_loc_settings !== 'undefined' && onOffice_loc_settings) ?? [];
-const screenDataHandleNotification = (typeof screen_data_handle_notification !== 'undefined' && screen_data_handle_notification) ?? [];
+const onOfficeSaveNameMessage = (typeof onOffice_loc_settings !== 'undefined' && onOffice_loc_settings) ? onOffice_loc_settings : [];
+const screenDataHandleNotification = (typeof screen_data_handle_notification !== 'undefined' && screen_data_handle_notification) ? screen_data_handle_notification : [];
 jQuery(document).ready(function ($) {
 	$(document).on('click', '.duplicate-check-notify .notice-dismiss', function (event) {
 		event.preventDefault();

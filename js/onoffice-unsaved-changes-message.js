@@ -1,5 +1,5 @@
-const onOfficeLocalized = typeof onOffice_loc_settings !== 'undefined' ? onOffice_loc_settings : onOffice_unsaved_changes_message;
-const screenDataUnsavedChanges = (typeof screen_data_unsaved_changes !== 'undefined' && screen_data_unsaved_changes) ?? [];
+const onOfficeLocalized = (typeof onOffice_loc_settings !== 'undefined' && onOffice_loc_settings) ? onOffice_loc_settings : onOffice_unsaved_changes_message;
+const screenDataUnsavedChanges = (typeof screen_data_unsaved_changes !== 'undefined' && screen_data_unsaved_changes) ? screen_data_unsaved_changes : [];
 jQuery(document).ready(function($){
 	let checkUnsavedChanges = false;
 	let checkNavigationTriggered = false;
@@ -40,7 +40,7 @@ jQuery(document).ready(function($){
 
 	function handleUnsavedChanges(e, href) {
 		const $input = $(`[name="${screenDataUnsavedChanges.name}"]`);
-
+//TODO remove
 		// check if title input exists (e.g. property detail page has no title input
 		if ($input.length) {
 			e.preventDefault();
