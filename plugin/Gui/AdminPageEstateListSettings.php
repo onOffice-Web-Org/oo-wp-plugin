@@ -339,6 +339,5 @@ class AdminPageEstateListSettings
 		wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
 		wp_localize_script('onoffice-custom-select', 'custom_select2_translation', $translation);
 		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);
-		wp_localize_script('oo-unsaved-changes-message', 'screen_data_unsaved_changes', $screenData);
 	}
 }
