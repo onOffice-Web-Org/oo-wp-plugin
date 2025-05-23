@@ -95,6 +95,7 @@ class TestTemplateEstateDefaultDetail
 			'MPAreaButlerUrlWithAddress' => 'areabutler.de',
 			'energyClass' => 'A',
 			'baujahr' => 'testField',
+			'dreizeiler' => 'Tolle Immobilie in 3 Zeilen',
 		];
 
 		$totalCostsData = [
