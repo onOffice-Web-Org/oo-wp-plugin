@@ -28,7 +28,7 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
  *
  */
 
-$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
+$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress", "dreizeiler");
 $supportTypeLinkFields = array('Homepage', 'facebook', 'instagram', 'linkedin', 'pinterest', 'tiktok', 'twitter', 'xing', 'youtube', 'bewertungslinkWebseite');
 /** @var EstateDetail $pEstates */
 
@@ -165,13 +165,18 @@ $dimensions = [
 				} ?>
 			</div>
 
+			<?php if ($currentEstate["dreizeiler"] !== "") { ?>
+				<div class="oo-detailsfreetext">
+					<h2><?php echo esc_html($pEstates->getFieldLabel('dreizeiler')); ?></h2>
+					<?php echo nl2br($currentEstate["dreizeiler"]); ?>
+				</div>
+			<?php } ?>
 			<?php if ($currentEstate["objektbeschreibung"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('objektbeschreibung')); ?></h2>
 					<?php echo nl2br($currentEstate["objektbeschreibung"]); ?>
 				</div>
 			<?php } ?>
-
 			<?php if ($currentEstate["lage"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('lage')); ?></h2>
@@ -344,10 +349,9 @@ $dimensions = [
 					</div>
 				</div>
 			<?php } ?>
-
-			<div class="oo-units">
+			<?php if (!empty($pEstates->getEstateUnits())) : ?>
 				<?php echo $pEstates->getEstateUnits(); ?>
-			</div>
+			<?php endif; ?>
 		</div>
 		<div class="oo-details-sidebar">
 			<div class="oo-asp">
@@ -586,9 +590,10 @@ $dimensions = [
 			?>
 
 		</div>
-		<div class="oo-similar">
-			<?php echo $pEstates->getSimilarEstates(); ?>
-		</div>
+		<?php $similar = trim($pEstates->getSimilarEstates()); ?>
+		<?php if (!empty($similar)): ?>
+        	<?php echo $similar; ?>
+		<?php endif; ?>
 	<?php } ?>
 
 </div>
