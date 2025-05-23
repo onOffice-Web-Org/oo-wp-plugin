@@ -27,6 +27,19 @@ use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\WPlugin\API\APIAvailabilityChecker;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
+use onOffice\WPlugin\EstateList;
+use onOffice\WPlugin\AddressList;
+
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\DataView\DataListViewFactory;
+use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
+use onOffice\WPlugin\Factory\EstateListFactory;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
+use DI\Container;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 
 /**
@@ -41,6 +54,7 @@ class CacheHandler
 	/** @var APIAvailabilityChecker */
 	private $_pApiChecker = null;
 
+
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
@@ -51,6 +65,9 @@ class CacheHandler
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pApiChecker = $pApiChecker;
+		// $pDIContainerBuilder = new ContainerBuilder();
+		// $pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		// $this->_pContainer = $pDIContainerBuilder->build();
 	}
 
 
@@ -80,5 +97,17 @@ class CacheHandler
 				$pCache->cleanup();
 			}
 		}
+	}
+
+	/**
+	 * cleans Cache and create new Cache from all lists
+	 * (does not create cache for detail pages and similar objects)
+	 * @throws ApiClientException
+	 */
+
+	public function renew()
+	{
+		$this->clear();
+		$this->_pSDKWrapper->renewCache();
 	}
 }

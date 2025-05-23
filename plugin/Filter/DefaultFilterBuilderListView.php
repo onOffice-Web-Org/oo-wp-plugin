@@ -184,6 +184,13 @@ class DefaultFilterBuilderListView
 	/**
 	 * @return array
 	 */
+	public function getDefaultFilter(): array
+	{
+		return $this->_defaultFilter;
+	}
+	/**
+	 * @return array
+	 */
 	private function getFavoritesFilter(): array
 	{
 		$ids = Favorites::getAllFavorizedIds();
