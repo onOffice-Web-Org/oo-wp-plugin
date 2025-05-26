@@ -625,6 +625,10 @@ class EstateList
 
 		$fields = $this->_pDataView->getAddressFields();
 
+		if ($this->_pDataView instanceof DataListView) {
+			$fields = ['Name', 'Vorname', 'imageUrl'];
+		}
+
 		if ($this->_pDataView instanceof DataDetailView && !empty($this->_pDataView->getContactImageTypes())) {
 			if (in_array(ImageTypes::PASSPORTPHOTO, $this->_pDataView->getContactImageTypes()) && !in_array('imageUrl', $fields)){
 				$fields [] = 'imageUrl';

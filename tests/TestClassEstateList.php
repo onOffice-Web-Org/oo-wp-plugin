@@ -527,7 +527,7 @@ class TestClassEstateList
 		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
 			->setMethods(['__construct', 'getAddressById', 'loadAddressesById'])
 			->getMock();
-		$pAddressDataMock->expects($this->once())->method('loadAddressesById')->with([50, 52], ['Vorname', 'Name', "Email"]);
+		$pAddressDataMock->expects($this->once())->method('loadAddressesById')->with([50, 52], ['Name', 'Vorname', "imageUrl"]);
 		$pAddressDataMock->method('getAddressById')->willReturnMap($valueMap);
 		$this->_pEnvironment->method('getAddressList')->willReturn($pAddressDataMock);
 		$this->_pEstateList->loadEstates();
