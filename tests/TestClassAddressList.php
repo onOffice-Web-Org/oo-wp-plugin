@@ -202,7 +202,25 @@ class TestClassAddressList
 		 	'recordids' => [13, 37],
 			'data' => ['Name','KdNr','Vorname','phone'],
 			'outputlanguage' => Language::getDefault(),
+			'filter' => [],
 			'formatoutput' => true,
+		];
+		$parametersLoadedByIdRaw = [
+			'recordids' => [13, 37],
+			'data' => ['contactCategory',
+				'Vorname',
+				'Name',
+				'Zusatz1',
+				'branch',
+				'communityOfHeirs',
+				'communityOfOwners',
+				'umbrellaOrganization',
+				'association',
+				'institution',
+				'department'],
+			'outputlanguage' => Language::getDefault(),
+			'filter' => [],
+			'formatoutput' => false,
 		];
 		$responseRelation = $this->getResponseRelation();
 		$parametersRelation = [
@@ -268,6 +286,8 @@ class TestClassAddressList
 		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parametersRaw, null, $response);
 		$pSDKWrapper->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'address', '', $parametersLoadedById, null, $response);
+		$pSDKWrapper->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $parametersLoadedByIdRaw, null, $response);
 		$pSDKWrapper->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'address', '', $addressParametersWithoutFormat, null, $response);
 			$addressParametersWithoutFormat['data'][] = 'imageUrl';
