@@ -25,16 +25,19 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 5.6
+Version: 5.8
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
 Domain Path: /languages
 */
-
 defined( 'ABSPATH' ) or die();
 
+const ONOFFICE_PLUGIN_VERSION = '5.8';
+define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
+
 require __DIR__ . '/vendor/autoload.php';
+require plugin_dir_path( __FILE__ ) . 'oo-updater.php';
 
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
@@ -204,7 +207,12 @@ add_action('admin_init', [$pAdminViewController, 'add_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 add_action('admin_init', [$pDetailViewPostSaveController, 'getAllPost']);
 add_action('plugins_loaded', function() {
-	load_plugin_textdomain('onoffice-for-wp-websites', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
+	$mo_file = ONOFFICE_PLUGIN_DIR . '/languages/onoffice-for-wp-websites-'.get_locale().'.mo';
+	if (file_exists($mo_file)) {
+		load_textdomain('onoffice-for-wp-websites', $mo_file);
+	} else {
+		load_plugin_textdomain('onoffice-for-wp-websites', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
+	}
 	// Check 'onoffice-personalized' Folder exists
 	$onofficePersonalizedFolderLanguages = plugin_dir_path(__DIR__) . 'onoffice-personalized/languages';
 	$onofficePersonalizedFolder = plugin_dir_path(__DIR__) . 'onoffice-personalized';

@@ -17,7 +17,7 @@ Fotolia_3286409_Subscription_XL: https://image.onoffice.de/smart25/Objekte/index
     <div class="oo-map" id="oo_map_estate_detail" style="width: 100%; height: 100%;"></div>
     <script>
     (function() {
-        var estateMarkers = [{"latlng":{"lat":48.8582345,"lng":2.2944223},"options":{"title":""},"visible":true}];
+        var estateMarkers = [{"position":{"lat":48.8582345,"lng":2.2944223},"title":"","address":"","link":"http:\/\/example.org\/detail\/123649\/","visible":true,"showInfoWindow":true}];
         let mapId = oo_map_estate_detail;
         var map = L.map(mapId, {
             center: [50.8, 10.0],
@@ -29,8 +29,24 @@ Fotolia_3286409_Subscription_XL: https://image.onoffice.de/smart25/Objekte/index
 
         for (i in estateMarkers) {
             var estate = estateMarkers[i];
-            var marker = L.marker(estate.latlng, estate.options);
-            marker.bindPopup(estate.options.title);
+            var marker = L.marker(estate.position, estate.title);
+
+            if (!estate.showInfoWindow) {
+                const popupContent = `
+                    <div class="oo-infowindow">
+                        <p class="oo-infowindowtitle">${estate.title}</p>
+                        ${estate.address ? `<p class="oo-infowindowaddress">${estate.address}</p>` : ''}
+                        ${estate.link ? `<div class="oo-detailslink"><a class="oo-details-btn" href="${estate.link}">Show Details</a></div>` : ''}
+                    </div>
+                `;
+                var popup = L.popup({
+                    content: popupContent,
+                    minWidth: 250,
+                    maxWidth: 350,
+                });
+                marker.bindPopup(popup);
+            }
+
             group.addLayer(marker);
             if (estate.visible) {
                 marker.addTo(map);

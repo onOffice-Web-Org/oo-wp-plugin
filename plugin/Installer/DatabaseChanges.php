@@ -28,6 +28,7 @@ use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use Exception;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Template\TemplateCall;
@@ -40,12 +41,11 @@ use function dbDelta;
 use function esc_sql;
 use const ABSPATH;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
-use onOffice\WPlugin\Form;
 
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 59;
+	const MAX_VERSION = 60;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -175,6 +175,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->migrationsDataShortCodeFormForDetailView();
 			default:
 				$dbversion = 59;
+		}
+
+		if ($dbversion == 59) {
+			$this->updateValueGeoFieldsForForms();
+			$dbversion = 60;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1183,6 +1188,23 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$pDataDetailViewOptions->setContactImageTypes([ImageTypes::PASSPORTPHOTO]);
 			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
 		}
+	}
+
+	/**
+	 * @return void
+	 */
+
+	public function updateValueGeoFieldsForForms()
+	{
+		$prefix = $this->getPrefix();
+
+		$sql = "UPDATE {$prefix}oo_plugin_forms
+			SET country_active = 1, radius_active = CASE 
+			WHEN form_type = '" . Form::TYPE_INTEREST . "' THEN 1
+			ELSE radius_active END
+		WHERE form_type IN ('" . Form::TYPE_INTEREST . "', '" . Form::TYPE_APPLICANT_SEARCH . "')";
+
+		$this->_pWPDB->query($sql);
 	}
 
 	/**
