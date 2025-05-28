@@ -96,7 +96,7 @@ class TestClassFormPostInterest
 		$this->_pContainer->set(Logger::class, $this->getMockBuilder(Logger::class)->getMock());
 
 		$pSearchcriteriaFields = $this->getMockBuilder(SearchcriteriaFields::class)
-			->setMethods(['getFormFieldsWithRangeFields'])
+			->onlyMethods(['getFormFieldsWithRangeFields'])
 			->setConstructorArgs([new FieldsCollectionBuilderShort(new Container())])
 			->getMock();
 		$pSearchcriteriaFields->method('getFormFieldsWithRangeFields')->will($this->returnValue([
@@ -112,7 +112,7 @@ class TestClassFormPostInterest
 		]));
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend', 'addFieldSupervisorForSearchCriteria'])
+			->onlyMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend', 'addFieldSupervisorForSearchCriteria'])
 			->setConstructorArgs([new Container])
 			->getMock();
 

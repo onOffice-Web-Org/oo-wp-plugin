@@ -47,7 +47,7 @@ class TestTemplateEstateDefaultDetail
 		$pDataView = new DataDetailView();
 
 		$this->_pEstate = $this->getMockBuilder(EstateDetail::class)
-			->setMethods([
+			->onlyMethods([
 				'getEstateUnits',
 				'estateIterator',
 				'getFieldLabel',
@@ -66,7 +66,7 @@ class TestTemplateEstateDefaultDetail
 				'getViewRestrict',
 				'getEstateLinks',
 				'getLinkEmbedPlayers',
-				'getDetailView',
+				'getDataView',
 				'getTotalCostsData',
 				'getShowEnergyCertificate',
 				'getPermittedValues',
@@ -188,7 +188,7 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('getViewRestrict')->willReturn(true);
 		$this->_pEstate->method('getEstateLinks')->willReturn([$oguloLink]);
 		$this->_pEstate->method('getLinkEmbedPlayers')->willReturn([]);
-		$this->_pEstate->method('getDetailView')->willReturn('1');
+		$this->_pEstate->method('getDataView')->willReturn($pDataView);
 		$this->_pEstate->method('getShowEnergyCertificate')->willReturn(true);
 		$this->_pEstate->method('getPermittedValues')->willReturn(['A', 'B', 'C']);
 	}

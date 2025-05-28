@@ -91,7 +91,7 @@ class TestClassEstateIdRequestGuard
 			->getMock();
 		$pEstateDetail = $this->getMockBuilder(EstateDetail::class)
 			->setConstructorArgs([new DataDetailView()])
-			->setMethods(['loadEstates', 'estateIterator'])
+			->onlyMethods(['loadEstates', 'estateIterator'])
 			->getMock();
 		$pEstateDetail
 			->expects($this->once())->method('estateIterator')
@@ -132,7 +132,7 @@ class TestClassEstateIdRequestGuard
 			->getMock();
 		$pEstateDetail = $this->getMockBuilder(EstateDetail::class)
 			->setConstructorArgs([new DataDetailView()])
-			->setMethods(['loadEstates', 'estateIterator'])
+			->onlyMethods(['loadEstates', 'estateIterator'])
 			->getMock();
 		$pEstateDetail->expects($this->once())->method('estateIterator')
 			->will($this->returnValue($iterator));

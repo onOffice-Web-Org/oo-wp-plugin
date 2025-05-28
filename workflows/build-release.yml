@@ -22,10 +22,6 @@ on:
         type: boolean
         required: false
         default: true
-      pluginFolder:
-        description: "Needed for naming plugin folder while oo-wp-updates-release"
-        type: string
-        required: false
 
 jobs:
   build:
@@ -55,14 +51,11 @@ jobs:
 
       - name: Install development dependencies
         run: |
+          node webpack.config.js
           composer install
-          npm install terser
-
-      - name: Minify JavaScript files
-        run: node webpack.config.js
 
       - name: Build release
-        run: PREFIX="/tmp/release/${{ inputs.pluginFolder }}" make release
+        run: PREFIX=/tmp/release/ make release
 
       - name: Override version
         if: ${{ inputs.overrideVersion != '' }}
@@ -71,11 +64,7 @@ jobs:
       - name: Zip release
         run: |
           cd /tmp/release/
-          TARGET="${{ inputs.pluginFolder }}"
-          if [ -z "$TARGET" ]; then
-            TARGET="."
-          fi
-          zip -r ../release.zip "$TARGET"
+          zip -r ../release.zip .
 
       - name: Upload release as artifact
         uses: actions/upload-artifact@v4

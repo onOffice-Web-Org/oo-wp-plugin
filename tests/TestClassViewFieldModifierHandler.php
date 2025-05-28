@@ -151,7 +151,7 @@ class TestClassViewFieldModifierHandler
 	private function getPreconfiguredHandler(array $viewFields, string $modifier = ''): ViewFieldModifierHandler
 	{
 		$pFactory = $this->getMockBuilder(ViewFieldModifierFactory::class)
-			->setMethods(['getMapping'])
+			->onlyMethods(['getMapping'])
 			->setConstructorArgs([onOfficeSDK::MODULE_ESTATE])
 			->getMock();
 		$pFactory->expects($this->any())->method('getMapping')->will($this->returnValue([

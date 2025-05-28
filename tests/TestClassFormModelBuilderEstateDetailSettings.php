@@ -115,7 +115,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->_pContainer = $pContainerBuilder->build();
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend',  'addFieldsEstateGeoPosisionBackend'])
+				->onlyMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend',  'addFieldsEstateGeoPosisionBackend'])
 				->setConstructorArgs([$this->_pContainer])
 				->getMock();
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
@@ -170,7 +170,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue', 'readNameShortCodeForm'])
+			->onlyMethods(['getValue', 'readNameShortCodeForm'])
 			->getMock();
 		$pInstance->expects($this->exactly(1))
 			->method('readNameShortCodeForm')
@@ -195,7 +195,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 
@@ -217,7 +217,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
 		                  ->disableOriginalConstructor()
-		                  ->setMethods(['getValue'])
+		                  ->onlyMethods(['getValue'])
 		                  ->getMock();
 		$pInstance->generate('test');
 
@@ -239,7 +239,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 		$pInstance = $this->getMockBuilder( FormModelBuilderEstateDetailSettings::class )
 		                  ->disableOriginalConstructor()
-		                  ->setMethods( [ 'getValue' ] )
+		                  ->onlyMethods( [ 'getValue' ] )
 		                  ->getMock();
 		$pInstance->generate( 'test' );
 
@@ -261,7 +261,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 
@@ -327,7 +327,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue', 'readTemplatePaths'])
+			->onlyMethods(['getValue', 'readTemplatePaths'])
 			->getMock();
 		$pInstance->expects($this->exactly(1))
 			->method('readTemplatePaths');
@@ -345,7 +345,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['readExposes'])
+			->onlyMethods(['readExposes'])
 			->getMock();
 		$pInstance->generate('test');
 		$pInstance->method('readExposes')->willReturn([]);
@@ -361,15 +361,15 @@ class TestClassFormModelBuilderEstateDetailSettings
 	{
 		$pInstanceAddressFields = $this->getMockBuilder( DataDetailView::class )
 		                               ->disableOriginalConstructor()
-		                               ->setMethods( [ 'getAddressFields' ] )
+		                               ->onlyMethods( [ 'getAddressFields' ] )
 		                               ->getMock();
 		$pInstanceFields = $this->getMockBuilder( DataDetailView::class )
 		                               ->disableOriginalConstructor()
-		                               ->setMethods( [ 'getFields' ] )
+		                               ->onlyMethods( [ 'getFields' ] )
 		                               ->getMock();
 		$pInstance = $this->getMockBuilder( FormModelBuilderEstateDetailSettings::class )
 		                               ->disableOriginalConstructor()
-		                               ->setMethods( [ 'getValue' ] )
+		                               ->onlyMethods( [ 'getValue' ] )
 		                               ->getMock();
 		$pValues = array_merge( [ $pInstanceAddressFields, $pInstanceFields ], [] );
 		$pInstance->method( 'getValue' )->willReturn( $pValues );

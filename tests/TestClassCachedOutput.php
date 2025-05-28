@@ -28,7 +28,7 @@ class TestClassCachedOutput
 				['Expires: Mon, 07 Sep 2020 01:01:01 GMT', true, null]);
 
 		$pDateTimeImmutableFactory = $this->getMockBuilder(DateTimeImmutableFactory::class)
-			->setMethods(['create'])
+			->onlyMethods(['create'])
 			->getMock();
 
 		$pDateTimeImmutableFactory->method('create')->willReturn($pDateTimeImmutable);
@@ -61,7 +61,7 @@ class TestClassCachedOutput
 				['Expires: Mon, 07 Sep 2020 01:01:01 GMT', true, null]);
 
 		$pDateTimeImmutableFactory = $this->getMockBuilder(DateTimeImmutableFactory::class)
-			->setMethods(['create'])
+			->onlyMethods(['create'])
 			->getMock();
 		$pDateTimeImmutableFactory->method('create')->willReturn($pDateTimeImmutable);
 
