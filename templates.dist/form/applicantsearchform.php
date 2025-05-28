@@ -20,6 +20,7 @@
 
 $pathComponents = [ONOFFICE_PLUGIN_DIR, 'templates.dist', 'fields.php'];
 require(implode(DIRECTORY_SEPARATOR, $pathComponents));
+$displayError = false;
 ?>
 <form method="post" id="onoffice-form" class="oo-form oo-form-applicantsearch" data-applicant-form-id="<?php echo esc_attr($pForm->getFormId()); ?>" novalidate>
 
@@ -38,6 +39,9 @@ $selectTypes = array(
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
 	echo '<p role="status">'.esc_html__('An error has occurred. Please check your details.', 'onoffice-for-wp-websites').'</p>';
+} elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
+	echo '<p role="status">'.esc_html__('Not all mandatory fields have been filled out. Please check your entries.', 'onoffice-for-wp-websites').'</p>';
+	$displayError = true;
 } elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
 	echo '<p role="status">'.esc_html__('Spam recognized!', 'onoffice-for-wp-websites').'</p>';
 }
@@ -46,10 +50,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
 foreach ( $pForm->getInputFields() as $input => $table ) {
 	if ( in_array( $input, array('message', 'Id') ) ) {
 		continue;
-	}
-
-	if ( $pForm->isMissingField( $input ) ) {
-		echo '<span class="onoffice-pleasefill">'.esc_html__('Please fill in!', 'onoffice-for-wp-websites').'</span>';
 	}
 
 	$isRequired = $pForm->isRequiredField( $input );
@@ -87,7 +87,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ($input === 'regionaler_zusatz') {
-		echo '<label><span class="oo-label-text">'.esc_html($pForm->getFieldLabel( $input )).$addition.'<select class="custom-single-select" size="1" name="'.esc_html($input).'">';
+		echo '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.esc_html($pForm->getFieldLabel( $input )).$addition.'<select class="custom-single-select" size="1" name="'.esc_html($input).'">';
 		$pRegionController = new \onOffice\WPlugin\Region\RegionController();
 		if ($permittedValues === null) {
 			$regions = $pRegionController->getRegions();
