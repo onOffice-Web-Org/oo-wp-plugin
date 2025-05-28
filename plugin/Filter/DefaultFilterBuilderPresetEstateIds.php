@@ -67,6 +67,18 @@ class DefaultFilterBuilderPresetEstateIds
 		];
 	}
 
+			/**
+	 * @return array
+	 */
+	public function getDefaultFilter(): array
+	{
+		return [
+			'veroeffentlichen' => [
+				['op' => '=', 'val' => 1],
+			]
+		];
+	}
+
 	/** @return array */
 	public function getEstateIds(): array
 		{ return $this->_estateIds; }

@@ -200,7 +200,7 @@ class SDKWrapperMocker
 	 *
 	 */
 
-	public function sendRequests()
+	public function sendRequests(bool $saveToCache = true)
 	{
 		$this->_requestSent = true;
 
