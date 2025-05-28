@@ -1,0 +1,914 @@
+# Copyright (C) 2019 onOffice GmbH
+# This file is distributed under the same license as the onOffice direct plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: onOffice direct 2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
+"POT-Creation-Date: 2020-12-02T16:12:57+01:00\n"
+"PO-Revision-Date: 2020-12-02 18:08+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.3\n"
+"X-Domain: onoffice\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Plugin Name of the plugin
+#, fuzzy
+#| msgid "onOffice direct"
+msgid "onOffice for WP-Websites"
+msgstr "onOffice direct"
+
+#. Plugin URI of the plugin
+#, fuzzy
+#| msgid "https://en.onoffice.com/"
+msgid "https://wpplugindoc.onoffice.de"
+msgstr "https://en.onoffice.com/"
+
+#. Description of the plugin
+msgid ""
+"Your connection to onOffice: This plugin enables you to have quick access to "
+"estates and forms – no additional sync with the software is needed. Consult "
+"support@onoffice.de for source code."
+msgstr ""
+"Uw verbinding met onOffice: Met deze plugin heeft u snel toegang tot "
+"landgoederen en formulieren - er is geen extra synchronisatie met de "
+"software nodig. Raadpleeg support@onoffice.de voor de broncode."
+
+#. Author of the plugin
+msgid "onOffice GmbH"
+msgstr "onOffice GmbH"
+
+#. Author URI of the plugin
+msgid "https://en.onoffice.com/"
+msgstr "https://en.onoffice.com/"
+
+#: plugin/Translation/FormTranslation.php:55
+msgctxt "forms"
+msgid "All"
+msgid_plural "All"
+msgstr[0] "Alle"
+msgstr[1] "Alle"
+
+#: plugin/Translation/FormTranslation.php:59
+msgctxt "forms"
+msgid "Contact Form"
+msgid_plural "Contact Forms"
+msgstr[0] "Contactformulier"
+msgstr[1] "Contact Formulieren"
+
+#: plugin/Translation/FormTranslation.php:63
+msgctxt "forms"
+msgid "Interest Form"
+msgid_plural "Interest Forms"
+msgstr[0] "Rente vorm"
+msgstr[1] "Renteformulieren"
+
+#: plugin/Translation/FormTranslation.php:67
+msgctxt "forms"
+msgid "Owner Form"
+msgid_plural "Owner Forms"
+msgstr[0] "Eigenaarsformulier"
+msgstr[1] "Eigenaarsformulieren"
+
+#: plugin/Translation/FormTranslation.php:71
+msgctxt "forms"
+msgid "Applicant Search Form"
+msgid_plural "Applicant Search Forms"
+msgstr[0] "Zoekformulier voor aanvragers"
+msgstr[1] "Formulieren voor het zoeken naar aanvragers"
+
+#: plugin/Translation/ModuleTranslation.php:79
+#, fuzzy
+#| msgid "Addresses"
+msgctxt "modules"
+msgid "Address"
+msgid_plural "Addresses"
+msgstr[0] "Adressen"
+msgstr[1] "Adressen"
+
+#: plugin/Translation/ModuleTranslation.php:80
+#, fuzzy
+#| msgid "Estates"
+msgctxt "modules"
+msgid "Estate"
+msgid_plural "Estates"
+msgstr[0] "Landgoederen"
+msgstr[1] "Landgoederen"
+
+#: plugin/Translation/ModuleTranslation.php:81
+#, fuzzy
+#| msgid "Search Criteria"
+msgctxt "modules"
+msgid "Search Criteria"
+msgid_plural "Search Criteria"
+msgstr[0] "Zoekcriteria"
+msgstr[1] "Zoekcriteria"
+
+#: templates.dist/address/default.php:39
+msgid "Picture: "
+msgstr ""
+
+#: templates.dist/address/SearchFormAddress.php:45
+msgid "Send"
+msgstr "Verzenden"
+
+#: templates.dist/estate/default.php:38
+msgid "Overview of Estates"
+msgstr "Overzicht van Landgoederen"
+
+#. translators: %d will be replaced with a number.
+#: templates.dist/estate/default.php:42
+msgctxt "template"
+msgid "Found %d estates over all."
+msgstr "Ik heb overal %d landgoederen gevonden."
+
+#: templates.dist/estate/default.php:90
+#: templates.dist/estate/similar_estates.php:43
+msgid "Show Details"
+msgstr "Details tonen"
+
+#: templates.dist/estate/default.php:94 templates.dist/estate/default.php:110
+msgid "Add to "
+msgstr "Toevoegen aan "
+
+#: templates.dist/estate/default.php:116
+msgid "Remove from "
+msgstr "Verwijderen van "
+
+#: templates.dist/estate/default_detail.php:70
+msgid "Description"
+msgstr "Omschrijving"
+
+#: templates.dist/estate/default_detail.php:77
+msgid "Location"
+msgstr "Plaats"
+
+#: templates.dist/estate/default_detail.php:87
+msgid "Map"
+msgstr "Kaart"
+
+#: templates.dist/estate/default_detail.php:94
+msgid "Equipment"
+msgstr "Inrichting"
+
+#: templates.dist/estate/default_detail.php:101
+msgid "Other Information"
+msgstr "Extra informatie"
+
+#: templates.dist/estate/default_detail.php:112
+msgid "Contact person"
+msgstr "Contactpersoon"
+
+#: templates.dist/estate/default_detail.php:129
+msgid "Documents"
+msgstr "Documenten"
+
+#: templates.dist/estate/default_detail.php:131
+msgid "PDF expose"
+msgstr "PDF-blootstelling"
+
+#: templates.dist/estate/default_units.php:29
+msgid "Entities"
+msgstr "Entiteiten"
+
+#: templates.dist/estate/default_units.php:39
+msgid "Contact person of entity:"
+msgstr "Contactpersoon van de entiteit:"
+
+#: templates.dist/estate/default_units.php:43
+msgid "Phone:"
+msgstr "Telefoon:"
+
+#: templates.dist/estate/default_units.php:44
+msgid "Fax:"
+msgstr "Fax:"
+
+#: templates.dist/estate/default_units.php:46
+msgid "E-Mail:"
+msgstr "E-Mail:"
+
+#: templates.dist/estate/SearchForm.php:38
+msgid "Search"
+msgstr ""
+
+#: templates.dist/estate/similar_estates.php:4
+msgid "More Estates like this"
+msgstr "Meer Landgoederen zoals deze"
+
+#: templates.dist/fields.php:21
+msgid "Choose country"
+msgstr "Kies een land"
+
+#: templates.dist/fields.php:61
+msgid "Not Specified"
+msgstr "Niet gespecificeerd"
+
+#: templates.dist/fields.php:64
+msgid "Yes"
+msgstr "Ja"
+
+#: templates.dist/fields.php:67
+msgid "No"
+msgstr "Nee"
+
+#: templates.dist/fields.php:77 templates.dist/fields.php:157
+msgid "Edit values"
+msgstr "Waarden bewerken"
+
+#: templates.dist/fields.php:91
+msgid "From: "
+msgstr "Van: "
+
+#: templates.dist/fields.php:94
+msgid "Up to: "
+msgstr "Tot aan: "
+
+#. translators: %s will be replaced with the translated field name.
+#: templates.dist/fields.php:126 templates.dist/fields.php:205
+msgid "Choose %s"
+msgstr "Kies %s"
+
+#: templates.dist/form/applicantform.php:35
+#: templates.dist/form/defaultform.php:43 templates.dist/form/ownerform.php:36
+msgid "SUCCESS!"
+msgstr ""
+
+#: templates.dist/form/applicantform.php:37
+#: templates.dist/form/applicantsearchform.php:41
+#: templates.dist/form/defaultform.php:46 templates.dist/form/ownerform.php:39
+#: templates.dist/form/ownerleadgeneratorform.php:85
+msgid "ERROR!"
+msgstr ""
+
+#: templates.dist/form/applicantform.php:39
+msgid "Missing Fields!"
+msgstr ""
+
+#: templates.dist/form/applicantform.php:50
+#: templates.dist/form/ownerform.php:50
+msgid "Please fill in"
+msgstr ""
+
+#: templates.dist/form/applicantsearchform.php:51
+#: templates.dist/form/defaultform.php:54
+msgid "Please fill in!"
+msgstr ""
+
+#: templates.dist/form/applicantsearchform.php:64
+msgid "search within distance of:"
+msgstr ""
+
+#: templates.dist/form/applicantsearchform.php:112
+msgid "Search for Prospective Buyers"
+msgstr "Zoeken naar potentiële kopers"
+
+#. translators: %s will be replaced with a number.
+#: templates.dist/form/applicantsearchform.php:126
+msgid "%s Prospective Buyer"
+msgid_plural "%s Prospective Buyers"
+msgstr[0] "%s Potentiële Koper"
+msgstr[1] "%s Potentiële kopers"
+
+#. translators: %s will be replaced with a customer reference number.
+#: templates.dist/form/applicantsearchform.php:134
+msgid "Customer ref. number %s"
+msgstr "Ref. nummer van de klant %s"
+
+#: templates.dist/form/defaultform.php:48
+msgid "Spam detected!"
+msgstr ""
+
+#: templates.dist/form/defaultform.php:73 templates.dist/form/ownerform.php:66
+msgid "Message"
+msgstr "Bericht"
+
+#: templates.dist/form/ownerform.php:71
+#: templates.dist/form/ownerleadgeneratorform.php:90
+msgid "Your contact details"
+msgstr "Uw contactgegevens"
+
+#: templates.dist/form/ownerform.php:75
+#: templates.dist/form/ownerleadgeneratorform.php:97
+msgid "Information about your property"
+msgstr "Informatie over uw woning"
+
+#: templates.dist/form/ownerleadgeneratorform.php:34
+msgid "The form was sent successfully."
+msgstr "Het formulier is succesvol verzonden."
+
+#: templates.dist/form/ownerleadgeneratorform.php:38
+msgid "There was an error sending the form."
+msgstr "Er is een fout gemaakt bij het verzenden van het formulier."
+
+#: templates.dist/form/ownerleadgeneratorform.php:41
+msgid "The form wasn't sent because spam was detected."
+msgstr "Het formulier werd niet verzonden omdat er spam werd gedetecteerd."
+
+#. translators: %s will be replaced with a translated field name.
+#: templates.dist/form/ownerleadgeneratorform.php:50
+msgid "Please enter a value for %s."
+msgstr "Gelieve een waarde in te voeren voor %s."
+
+#: templates.dist/form/ownerleadgeneratorform.php:115
+msgid "Back"
+msgstr "Terug"
+
+#: templates.dist/form/ownerleadgeneratorform.php:118
+msgid "Next"
+msgstr "Volgende"
+
+#: templates.dist/form/ownerleadgeneratorform.php:133
+msgid "Open the Form"
+msgstr "Open het formulier"
+
+#~ msgid "Please configure your onOffice API credentials first!"
+#~ msgstr "Gelieve eerst uw onOffice API-gegevens te configureren!"
+
+#~ msgid "onOffice"
+#~ msgstr "onOffice"
+
+#~ msgid "Addresses"
+#~ msgstr "Adressen"
+
+#~ msgid "Estates"
+#~ msgstr "Landgoederen"
+
+#~ msgid "Forms"
+#~ msgstr "Vormen"
+
+#~ msgid "Modules"
+#~ msgstr "Modules"
+
+#~ msgid "Settings"
+#~ msgstr "Instellingen"
+
+#~ msgid "API token and secret"
+#~ msgstr "API-token en geheim"
+
+#~ msgid ""
+#~ "It looks like you did not enter any valid API credentials. Please "
+#~ "consider reviewing your %s."
+#~ msgstr ""
+#~ "Het lijkt erop dat u geen geldige API-gegevens hebt ingevoerd. Overweeg "
+#~ "alstublieft om uw %s."
+
+#~ msgid "%2$s (%3$s) in %4$s - %5$s"
+#~ msgstr "%2$s te %3$s in %4$s - %5$s"
+
+#~ msgid "lowest first"
+#~ msgstr "laagste eerst"
+
+#~ msgid "highest first"
+#~ msgstr "hoogste eerst"
+
+#~ msgid "ascending"
+#~ msgstr "oplopend"
+
+#~ msgid "descending"
+#~ msgstr "aflopend"
+
+#~ msgid "Geo Position"
+#~ msgstr "Geografische ligging"
+
+#~ msgid "Search Criteria"
+#~ msgstr "Zoekcriteria"
+
+#~ msgid "Form Special Fields"
+#~ msgstr "Vorm-specifieke velden"
+
+#~ msgid "Geo Range Search"
+#~ msgstr "Geo bereik zoeken"
+
+#~ msgid "Submit"
+#~ msgstr "Indienen"
+
+#~ msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
+#~ msgstr "Uw vraag over eigendom “%1$s” (%5$s)"
+
+#~ msgid "%s list view has been deleted."
+#~ msgid_plural "%s list views have been deleted."
+#~ msgstr[0] "%s lijstweergave is verwijderd."
+#~ msgstr[1] "%s lijstweergaven zijn verwijderd."
+
+#~ msgid "No list view was deleted."
+#~ msgstr "Er is geen lijstweergave verwijderd."
+
+#~ msgid "%s form has been deleted."
+#~ msgid_plural "%s forms have been deleted."
+#~ msgstr[0] "%s formulier is verwijderd."
+#~ msgstr[1] "%s formulieren zijn verwijderd."
+
+#~ msgid "No form was deleted."
+#~ msgstr "Er is geen formulier verwijderd."
+
+#~ msgid "Add New"
+#~ msgstr "Nieuw toevoegen"
+
+#~ msgid "Edit Address List"
+#~ msgstr "Adreslijst bewerken"
+
+#~ msgid "choose name"
+#~ msgstr "naam kiezen"
+
+#~ msgid "Layout & Design"
+#~ msgstr "Lay-out & ontwerp"
+
+#~ msgid "Filter & Records"
+#~ msgstr "Filter & dossiers"
+
+#~ msgid "Photo Types"
+#~ msgstr "Soorten foto's"
+
+#~ msgid "The address list was saved."
+#~ msgstr "De adreslijst is opgeslagen."
+
+#~ msgid ""
+#~ "There was a problem saving the list. Please make sure the name of the "
+#~ "list is unique."
+#~ msgstr ""
+#~ "Er was een probleem met het opslaan van de lijst. Zorg ervoor dat de naam "
+#~ "van de lijst uniek is."
+
+#~ msgid "login credentials"
+#~ msgstr "inloggegevens"
+
+#~ msgid ""
+#~ "It looks like you did not enter any valid API credentials. Please go back "
+#~ "and review your %s."
+#~ msgstr ""
+#~ "Het lijkt erop dat u geen geldige API-gegevens hebt ingevoerd. Ga "
+#~ "alsjeblieft terug en bekijk je %s."
+
+#~ msgid "API token"
+#~ msgstr "API-token"
+
+#~ msgid "API secret"
+#~ msgstr "API geheim"
+
+#~ msgid "API settings"
+#~ msgstr "API-instellingen"
+
+#~ msgid "Site Key"
+#~ msgstr "Sleutel van de site"
+
+#~ msgid "Secret Key"
+#~ msgstr "Geheime sleutel"
+
+#~ msgid "Google reCAPTCHA"
+#~ msgstr "Google reCAPTCHA"
+
+#~ msgid "Google Maps Key"
+#~ msgstr "Google Kaarten"
+
+#~ msgid "The keys are OK."
+#~ msgstr "De sleutels zijn in orde."
+
+#~ msgid "There was an error:"
+#~ msgstr "Er was een fout:"
+
+#~ msgid "The secret parameter is missing."
+#~ msgstr "De geheime parameter ontbreekt."
+
+#~ msgid "The secret parameter is invalid or malformed."
+#~ msgstr "De geheime parameter is ongeldig of misvormd."
+
+#~ msgid "The response parameter is missing."
+#~ msgstr "De antwoordparameter ontbreekt."
+
+#~ msgid "The response parameter is invalid or malformed."
+#~ msgstr "De responsparameter is ongeldig of misvormd."
+
+#~ msgid "The request is invalid or malformed."
+#~ msgstr "Het verzoek is ongeldig of misvormd."
+
+#~ msgid ""
+#~ "In order to use Google reCAPTCHA, you need to provide your keys. You're "
+#~ "free to enable it in the form settings for later use."
+#~ msgstr ""
+#~ "Om Google reCAPTCHA te kunnen gebruiken, moet u uw sleutels opgeven. Het "
+#~ "staat u vrij om dit in de formulierinstellingen in te schakelen voor "
+#~ "later gebruik."
+
+#~ msgid "The cache was cleaned."
+#~ msgstr "De cache is schoongemaakt."
+
+#~ msgid "List Views"
+#~ msgstr "Lijst met meningen"
+
+#~ msgid "Detail View"
+#~ msgstr "Detailweergave"
+
+#~ msgid "Unit Lists"
+#~ msgstr "Eenheid Lijsten"
+
+#~ msgid "Edit List View"
+#~ msgstr "Lijstweergave bewerken"
+
+#~ msgid "Detail view in use on page %s"
+#~ msgstr "Detailaanzicht in gebruik op pagina %s"
+
+#~ msgid "Edit Page"
+#~ msgstr "Pagina bewerken"
+
+#~ msgid ""
+#~ "Detail view is not in use yet. Insert this code on a page to get the "
+#~ "detail view there:"
+#~ msgstr ""
+#~ "Detailweergave is nog niet in gebruik. Voeg deze code in op een pagina om "
+#~ "daar de detailweergave te krijgen:"
+
+#~ msgid "Contact Person Fields"
+#~ msgstr "Ansprechpartner-Felder"
+
+#~ msgid "Real Estate Fields"
+#~ msgstr "Vastgoedgegevensvelden"
+
+#~ msgid "Additional Media"
+#~ msgstr "Extra media"
+
+#~ msgid "Similar Estates"
+#~ msgstr "Vergelijkbare Landgoederen"
+
+#~ msgid "The detail view has been saved."
+#~ msgstr "Het detailaanzicht is opgeslagen."
+
+#~ msgid "There was a problem saving the detail view."
+#~ msgstr "Er was een probleem met het bewaren van het detailaanzicht."
+
+#~ msgid "Are you sure you want to delete the selected items?"
+#~ msgstr "Weet u zeker dat u de geselecteerde items wilt verwijderen?"
+
+#~ msgid "Filters & Records"
+#~ msgstr "Filters & dossiers"
+
+#~ msgid "Downloadable Documents"
+#~ msgstr "Downloadbare documenten"
+
+#~ msgid "Geo Fields"
+#~ msgstr "Geo Velden"
+
+#~ msgid "The view has been saved."
+#~ msgstr "De weergave is opgeslagen."
+
+#~ msgid ""
+#~ "There was a problem saving the view. Please make sure the name of the "
+#~ "view is unique, even across all estate list types."
+#~ msgstr ""
+#~ "Er was een probleem om het uitzicht te redden. Zorg ervoor dat de naam "
+#~ "van het uitzicht uniek is, zelfs bij alle typen vastgoedlijsten."
+
+#~ msgid "Units Lists"
+#~ msgstr "Eenheden Lijsten"
+
+#~ msgid "Edit Units View"
+#~ msgstr "Eenheden weergeven"
+
+#~ msgid "Records"
+#~ msgstr "Verslagen"
+
+#~ msgid "Form Specific Options"
+#~ msgstr "Vorm-specifieke opties"
+
+#~ msgid "Edit Form"
+#~ msgstr "Formulier bewerken"
+
+#~ msgid "The Form was saved."
+#~ msgstr "Het formulier is opgeslagen."
+
+#~ msgid ""
+#~ "There was a problem saving the form. Please make sure the name of the "
+#~ "form is unique."
+#~ msgstr ""
+#~ "Er was een probleem met het opslaan van het formulier. Zorg ervoor dat de "
+#~ "naam van het formulier uniek is."
+
+#~ msgid "Module: %s"
+#~ msgstr "Module %s"
+
+#~ msgid "Edit Values"
+#~ msgstr "Waarden bewerken"
+
+#~ msgid "Add Language"
+#~ msgstr "Taal toevoegen"
+
+#~ msgid "Choose Language"
+#~ msgstr "Kies de taal"
+
+#~ msgid "Default Value: %s"
+#~ msgstr "Standaardwaarde: %s"
+
+#~ msgid "Default Value From:"
+#~ msgstr "Standaardwaarde van:"
+
+#~ msgid "Default Value Up To:"
+#~ msgstr "Standaardwaarde tot:"
+
+#~ msgid "Please provide an Email address!"
+#~ msgstr "Geef a.u.b. een e-mailadres op!"
+
+#~ msgid "Enable Watchlist"
+#~ msgstr "Watchlist inschakelen"
+
+#~ msgid "Expression used"
+#~ msgstr "Gebruikte expressie"
+
+#~ msgid "Watchlist"
+#~ msgstr "Kijklijst"
+
+#~ msgid "Favorise"
+#~ msgstr "Favoriet"
+
+#~ msgid "Map Provider"
+#~ msgstr "Kaartaanbieder"
+
+#~ msgid "OpenStreetMap"
+#~ msgstr "OpenStreetMap"
+
+#~ msgid "Google Maps"
+#~ msgstr "Google Kaarten"
+
+#~ msgid "Maps"
+#~ msgstr "Kaarten"
+
+#~ msgid "Fields"
+#~ msgstr "Velden contactpersoon"
+
+#~ msgid "Fields Configuration"
+#~ msgstr "Velden Configuratie"
+
+#~ msgid "Name of View"
+#~ msgstr "Naam van het uitzicht"
+
+#~ msgid "Shortcode"
+#~ msgstr "Verkorte code"
+
+#~ msgid "Filter"
+#~ msgstr "Filter"
+
+#~ msgid "Show Status"
+#~ msgstr "Toon status"
+
+#~ msgid "Type of List"
+#~ msgstr "Type lijst"
+
+#~ msgid "(Needs valid API credentials)"
+#~ msgstr "(Heeft geldige API-gegevens nodig)"
+
+#~ msgid "(Unknown Filter (ID: %s))"
+#~ msgstr "(Onbekende filter (ID: %s))"
+
+#~ msgid "Name of Form"
+#~ msgstr "Naam van het formulier"
+
+#~ msgid "Type of Form"
+#~ msgstr "Soort formulier"
+
+#~ msgid "View Name"
+#~ msgstr "Naam bekijken"
+
+#~ msgid "Sort by"
+#~ msgstr "Sorteer op"
+
+#~ msgid "Records per Page"
+#~ msgstr "Registratie per pagina"
+
+#~ msgid "Sort order"
+#~ msgstr "Sorteer volgorde"
+
+#~ msgid "Ascending"
+#~ msgstr "Oplopend"
+
+#~ msgid "Descending"
+#~ msgstr "Aflopend"
+
+#~ msgid "Template"
+#~ msgstr "Sjabloon"
+
+#~ msgid "List View"
+#~ msgstr "Lijstweergave"
+
+#~ msgid "Passport Photo"
+#~ msgstr "Pasfoto"
+
+#~ msgid "Filterable"
+#~ msgstr "Filtreerbaar"
+
+#~ msgid "Hidden"
+#~ msgstr "Verborgen"
+
+#~ msgid "Reduce values according to selected filter"
+#~ msgstr "Verminder de waarden volgens de gekozen filter"
+
+#~ msgid "Show Estate Status"
+#~ msgstr "Toon status van het landgoed"
+
+#~ msgid "Random Order"
+#~ msgstr "Willekeurige volgorde"
+
+#~ msgid "PDF-Expose"
+#~ msgstr "PDF-blootstelling"
+
+#~ msgid "Default"
+#~ msgstr "Standaard"
+
+#~ msgid "Reference Estates"
+#~ msgstr "Referentie Landgoederen"
+
+#~ msgid "Favorites List"
+#~ msgstr "Favorieten Lijst"
+
+#~ msgid "lowest First / highest First"
+#~ msgstr "laagste eerst / hoogste eerst"
+
+#~ msgid "ascending / descending"
+#~ msgstr "oplopend / aflopend"
+
+#~ msgid "Formulation of sorting directions"
+#~ msgstr "Formulering van de sorteerrichtingen"
+
+#~ msgid "Unit List"
+#~ msgstr "Eenheidslijst"
+
+#~ msgid "Form"
+#~ msgstr "Vorm"
+
+#~ msgid "Form Name"
+#~ msgstr "Naam van het formulier"
+
+#~ msgid "Type of Form: "
+#~ msgstr "Type formulier: "
+
+#~ msgid ", Embed Code: "
+#~ msgstr "Embed Code: "
+
+#~ msgid "Recipient's E-Mail Address"
+#~ msgstr "E-mailadres van de ontvanger"
+
+#~ msgid "john.doe@example.com"
+#~ msgstr "john.doe@example.com"
+
+#~ msgid "(won't work until set up globally)"
+#~ msgstr "(zal niet werken totdat het wereldwijd is opgezet)"
+
+#~ msgid "Requires Captcha %s"
+#~ msgstr "Vereist Captcha %s"
+
+#~ msgid "Result Limit"
+#~ msgstr "Resultatielimiet"
+
+#~ msgid "Required"
+#~ msgstr "Vereist"
+
+#~ msgid "Add language"
+#~ msgstr "Taal toevoegen"
+
+#~ msgid "Module"
+#~ msgstr "Module"
+
+#~ msgid "Show Similar Estates"
+#~ msgstr "Toon gelijkaardige landgoederen"
+
+#~ msgid "Movie Links"
+#~ msgstr "Filmlinks"
+
+#~ msgid "Disabled"
+#~ msgstr "Uitgeschakeld"
+
+#~ msgid "Link"
+#~ msgstr "Link"
+
+#~ msgid "Player"
+#~ msgstr "Speler"
+
+#~ msgid "Same Kind of Estate"
+#~ msgstr "Zelfde soort landgoed"
+
+#~ msgid "Same Marketing Method"
+#~ msgstr "Dezelfde marketingmethode"
+
+#~ msgid "Same Postal Code"
+#~ msgstr "Dezelfde postcode"
+
+#~ msgid "Radius"
+#~ msgstr "Straal"
+
+#~ msgid "Amount of Estates"
+#~ msgstr "Bedrag van de Landgoederen"
+
+#~ msgid "Set Estate Context as Heading"
+#~ msgstr "Stel Landgoedcontext in als rubriek"
+
+#~ msgid "Newsletter"
+#~ msgstr "Nieuwsbrief"
+
+#~ msgid "Check for Duplicates"
+#~ msgstr "Controleer op duplicaten"
+
+#~ msgid "Create Address"
+#~ msgstr "Adres aanmaken"
+
+#~ msgid "Subject (optional)"
+#~ msgstr "Onderwerp (facultatief)"
+
+#~ msgid "Default Value"
+#~ msgstr "Standaardwaarde"
+
+#~ msgid "Default Value for Radius"
+#~ msgstr "Standaardwaarde voor Radius"
+
+#~ msgid "Country"
+#~ msgstr "Land"
+
+#~ msgid "Postal Code"
+#~ msgstr "Postcode"
+
+#~ msgid "City"
+#~ msgstr "Stad"
+
+#~ msgid "Street"
+#~ msgstr "Straat"
+
+#~ msgid "unknown address list name"
+#~ msgstr "naam van de lijst met onbekende adressen"
+
+#~ msgid "Add to List >>"
+#~ msgstr "Toevoegen aan de lijst >>&gt"
+
+#~ msgid "Key of Field:"
+#~ msgstr "Sleutel van het veld:"
+
+#~ msgid "Delete"
+#~ msgstr "Verwijderen"
+
+#~ msgid "Disabled in onOffice"
+#~ msgstr "Uitgeschakeld in onOffice"
+
+#~ msgid "Edit"
+#~ msgstr "Bewerken"
+
+#~ msgid "(Remains unchanged)"
+#~ msgstr "(Blijft ongewijzigd)"
+
+#~ msgid "0 matches"
+#~ msgstr "0 resultaten"
+
+#~ msgid "Show exact match"
+#~ msgstr "Toon exact resultaat"
+
+#~ msgid "Show %s matches"
+#~ msgstr "Toon %s resultaten"
+
+#~ msgid "rented"
+#~ msgstr "gehuurd"
+
+#~ msgid "sold"
+#~ msgstr "verkocht"
+
+#~ msgid "Cover Photo"
+#~ msgstr "Dekkingsfoto"
+
+#~ msgid "Photo"
+#~ msgstr "Foto"
+
+#~ msgid "Location Map"
+#~ msgstr "Locatie kaart"
+
+#~ msgid "An error occured:"
+#~ msgstr "Er is een fout opgetreden:"
+
+#~ msgid "Estates view not found."
+#~ msgstr "Landgoederen bekijken niet gevonden."
+
+#~ msgid "Not specified"
+#~ msgstr "Niet gespecificeerd"
+
+#~ msgid "Available Options"
+#~ msgstr "Beschikbare opties"
+
+#~ msgid "Pages"
+#~ msgstr "Pagina's"
+
+#~ msgid "Activate"
+#~ msgstr "Activeren"
+
+#~ msgid "Mobile Phone: "
+#~ msgstr "Mobiele telefoon: "
+
+#~ msgid "Phone (business): "
+#~ msgstr "Telefoon (zakelijk): "
+
+#~ msgid "E-Mail (business): "
+#~ msgstr "E-mail (zakelijk): "
+
+#~ msgid "Contact form: "
+#~ msgstr "Contactformulier: "
+
+#~ msgid "(Form is not available)"
+#~ msgstr "(Formulier is niet beschikbaar)"
+
+#~ msgid "Phone (mobile): "
+#~ msgstr "Telefoon (mobiel): "
