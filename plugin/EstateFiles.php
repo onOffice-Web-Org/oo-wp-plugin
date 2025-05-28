@@ -43,11 +43,28 @@ use function esc_url;
 
 class EstateFiles
 {
+	/** */
+	const FILE_TYPES = [
+		ImageTypes::TITLE,
+		ImageTypes::PHOTO,
+		ImageTypes::PHOTO_BIG,
+		ImageTypes::GROUNDPLAN,
+		ImageTypes::LOCATION_MAP,
+		ImageTypes::PANORAMA,
+		LinksTypes::FILE_TYPE_LINK,
+		MovieLinkTypes::FILE_TYPE_MOVIE_LINK,
+		LinksTypes::FILE_TYPE_OGULO_LINK,
+		LinksTypes::EXPOSE,
+	];
+
 	/** @var array */
 	private $_estateFiles = array();
 
 	/** @var array */
 	private $_pictureCategories = array();
+
+	/** @var array */
+	private $_estateAllFiles = array();
 
 	/**
 	 * EstateFiles constructor.
@@ -81,6 +98,71 @@ class EstateFiles
 		}
 	}
 
+	/**
+	 * @param array $estateIds
+	 * @param SDKWrapper $pSDKWrapper
+	 * @return void
+	 */
+	public function getFilesByEstateIds(array $estateIds, SDKWrapper $pSDKWrapper)
+	{
+
+		if (empty($estateIds)) {
+			return;
+		}
+		
+		$listRequestInQueue = [];
+		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'file');
+		$pAPIClientActionClone = null;
+
+		foreach ($estateIds as $mainId => $estateId) {
+			$pAPIClientActionClone = clone $pAPIClientAction;
+			$pAPIClientActionClone->setParameters([
+				'estateid' => $mainId,
+				'showispublishedonhomepage' => true,
+				'listlimit' => 100
+			]);
+			$pAPIClientActionClone->setResourceId('estate');
+			$pAPIClientActionClone->addRequestToQueue();
+			$listRequestInQueue[$mainId] = $pAPIClientActionClone;
+		}
+		$pAPIClientActionClone->sendRequests();
+
+		$data = [];
+		foreach ($listRequestInQueue as $key => $value) {
+			if ($value->getResultStatus()) {
+				$data[$key] = $value->getResultRecords();
+			}
+		}
+
+		$this->collectEstateFilesForSingleRecord($data);
+	}
+
+	/**
+	 * @param array $responseArray
+	 * @return void
+	 */
+	private function collectEstateFilesForSingleRecord(array $responseArray)
+	{
+		foreach ($responseArray as $estateId => $value) {
+			foreach ($value as $fileEntry) {
+				$fileId = $fileEntry['id'];
+				$url = !empty($fileEntry['elements']['url']) ? $fileEntry['elements']['url'] : "";
+				$title = !empty($fileEntry['elements']['title']) ? $fileEntry['elements']['title'] : "";
+				$type = !empty($fileEntry['elements']['type']) ? $fileEntry['elements']['type'] : "";
+				$file = array(
+					'id' => $fileId,
+					'url' => !empty($url) ? $this->correctUrl($url) : '',
+					'title' => $title,
+					'type' => $type
+				);
+				if (!in_array($type, self::FILE_TYPES)) {
+					continue;
+				}
+
+				$this->_estateAllFiles[$estateId][$fileId] = $file;
+			}
+		}
+	}
 
 	/**
 	 *
@@ -298,5 +380,18 @@ class EstateFiles
 	public function getEstatePictureValues($imageId, $estateId)
 	{
 		return $this->_estateFiles[$estateId][$imageId] ?? [];
+	}
+
+
+	/**
+	 *
+	 * @param int $estateId
+	 * @return array
+	 *
+	 */
+
+	public function getEstateAllFilesById(int $estateId): array
+	{
+		return $this->_estateAllFiles[$estateId] ?? [];
 	}
 }
