@@ -1,0 +1,913 @@
+# Copyright (C) 2019 onOffice GmbH
+# This file is distributed under the same license as the onOffice direct plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: onOffice direct 2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
+"POT-Creation-Date: 2020-12-02T16:12:57+01:00\n"
+"PO-Revision-Date: 2020-12-02 18:08+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.3\n"
+"X-Domain: onoffice\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Plugin Name of the plugin
+#, fuzzy
+#| msgid "onOffice direct"
+msgid "onOffice for WP-Websites"
+msgstr "onOffice direct"
+
+#. Plugin URI of the plugin
+#, fuzzy
+#| msgid "https://en.onoffice.com/"
+msgid "https://wpplugindoc.onoffice.de"
+msgstr "https://en.onoffice.com/"
+
+#. Description of the plugin
+msgid ""
+"Your connection to onOffice: This plugin enables you to have quick access to "
+"estates and forms – no additional sync with the software is needed. Consult "
+"support@onoffice.de for source code."
+msgstr ""
+"Il tuo collegamento con onOffice: Questo plugin consente di accedere "
+"rapidamente alle proprietà e ai moduli - non è necessaria alcuna ulteriore "
+"sincronizzazione con il software. Consultare support@onoffice.de per il "
+"codice sorgente."
+
+#. Author of the plugin
+msgid "onOffice GmbH"
+msgstr "onOffice GmbH"
+
+#. Author URI of the plugin
+msgid "https://en.onoffice.com/"
+msgstr "https://en.onoffice.com/"
+
+#: plugin/Translation/FormTranslation.php:55
+msgctxt "forms"
+msgid "All"
+msgid_plural "All"
+msgstr[0] "Tutti"
+msgstr[1] "Tutti"
+
+#: plugin/Translation/FormTranslation.php:59
+msgctxt "forms"
+msgid "Contact Form"
+msgid_plural "Contact Forms"
+msgstr[0] "Modulo di contatto"
+msgstr[1] "Moduli di contatto"
+
+#: plugin/Translation/FormTranslation.php:63
+msgctxt "forms"
+msgid "Interest Form"
+msgid_plural "Interest Forms"
+msgstr[0] "Modulo di interesse"
+msgstr[1] "Moduli di interesse"
+
+#: plugin/Translation/FormTranslation.php:67
+msgctxt "forms"
+msgid "Owner Form"
+msgid_plural "Owner Forms"
+msgstr[0] "Modulo Proprietario"
+msgstr[1] "Moduli del proprietario"
+
+#: plugin/Translation/FormTranslation.php:71
+msgctxt "forms"
+msgid "Applicant Search Form"
+msgid_plural "Applicant Search Forms"
+msgstr[0] "Modulo di ricerca del richiedente"
+msgstr[1] "Moduli di ricerca del richiedente"
+
+#: plugin/Translation/ModuleTranslation.php:79
+msgctxt "modules"
+msgid "Address"
+msgid_plural "Addresses"
+msgstr[0] "Indirizzo"
+msgstr[1] "Indirizzi"
+
+#: plugin/Translation/ModuleTranslation.php:80
+#, fuzzy
+msgctxt "modules"
+msgid "Estate"
+msgid_plural "Estates"
+msgstr[0] "Proprietà"
+msgstr[1] "Tenuta"
+
+#: plugin/Translation/ModuleTranslation.php:81
+#, fuzzy
+#| msgid "Search Criteria"
+msgctxt "modules"
+msgid "Search Criteria"
+msgid_plural "Search Criteria"
+msgstr[0] "Criteri di ricerca"
+msgstr[1] "Criteri di ricerca"
+
+#: templates.dist/address/default.php:39
+msgid "Picture: "
+msgstr ""
+
+#: templates.dist/address/SearchFormAddress.php:45
+msgid "Send"
+msgstr "Inviare"
+
+#: templates.dist/estate/default.php:38
+msgid "Overview of Estates"
+msgstr "Panoramica degli immobili"
+
+#. translators: %d will be replaced with a number.
+#: templates.dist/estate/default.php:42
+msgctxt "template"
+msgid "Found %d estates over all."
+msgstr "Trovate %d proprietà in tutto il mondo."
+
+#: templates.dist/estate/default.php:90
+#: templates.dist/estate/similar_estates.php:43
+msgid "Show Details"
+msgstr "Mostra dettagli"
+
+#: templates.dist/estate/default.php:94 templates.dist/estate/default.php:110
+msgid "Add to "
+msgstr "Aggiungi a "
+
+#: templates.dist/estate/default.php:116
+msgid "Remove from "
+msgstr "Rimuovi da "
+
+#: templates.dist/estate/default_detail.php:70
+msgid "Description"
+msgstr "Descrizione"
+
+#: templates.dist/estate/default_detail.php:77
+msgid "Location"
+msgstr "Posizione"
+
+#: templates.dist/estate/default_detail.php:87
+msgid "Map"
+msgstr "Mappa"
+
+#: templates.dist/estate/default_detail.php:94
+msgid "Equipment"
+msgstr "Dotazione"
+
+#: templates.dist/estate/default_detail.php:101
+msgid "Other Information"
+msgstr "Ulteriori informazioni"
+
+#: templates.dist/estate/default_detail.php:112
+msgid "Contact person"
+msgstr "Persona di contatto"
+
+#: templates.dist/estate/default_detail.php:129
+msgid "Documents"
+msgstr "Documenti"
+
+#: templates.dist/estate/default_detail.php:131
+msgid "PDF expose"
+msgstr "Esposizione PDF"
+
+#: templates.dist/estate/default_units.php:29
+msgid "Entities"
+msgstr "Entità"
+
+#: templates.dist/estate/default_units.php:39
+msgid "Contact person of entity:"
+msgstr "Persona di contatto dell'entità:"
+
+#: templates.dist/estate/default_units.php:43
+msgid "Phone:"
+msgstr "Telefono:"
+
+#: templates.dist/estate/default_units.php:44
+msgid "Fax:"
+msgstr "Fax:"
+
+#: templates.dist/estate/default_units.php:46
+msgid "E-Mail:"
+msgstr "E-Mail:"
+
+#: templates.dist/estate/SearchForm.php:38
+msgid "Search"
+msgstr ""
+
+#: templates.dist/estate/similar_estates.php:4
+msgid "More Estates like this"
+msgstr "Altri immobili come questo"
+
+#: templates.dist/fields.php:21
+msgid "Choose country"
+msgstr "Scegliere il paese"
+
+#: templates.dist/fields.php:61
+msgid "Not Specified"
+msgstr "Non specificato"
+
+#: templates.dist/fields.php:64
+msgid "Yes"
+msgstr "Sì"
+
+#: templates.dist/fields.php:67
+msgid "No"
+msgstr "No"
+
+#: templates.dist/fields.php:77 templates.dist/fields.php:157
+msgid "Edit values"
+msgstr "Modifica valori"
+
+#: templates.dist/fields.php:91
+msgid "From: "
+msgstr "Da: "
+
+#: templates.dist/fields.php:94
+msgid "Up to: "
+msgstr "Fino a: "
+
+#. translators: %s will be replaced with the translated field name.
+#: templates.dist/fields.php:126 templates.dist/fields.php:205
+msgid "Choose %s"
+msgstr "Scegli %s"
+
+#: templates.dist/form/applicantform.php:35
+#: templates.dist/form/defaultform.php:43 templates.dist/form/ownerform.php:36
+msgid "SUCCESS!"
+msgstr ""
+
+#: templates.dist/form/applicantform.php:37
+#: templates.dist/form/applicantsearchform.php:41
+#: templates.dist/form/defaultform.php:46 templates.dist/form/ownerform.php:39
+#: templates.dist/form/ownerleadgeneratorform.php:85
+msgid "ERROR!"
+msgstr ""
+
+#: templates.dist/form/applicantform.php:39
+msgid "Missing Fields!"
+msgstr ""
+
+#: templates.dist/form/applicantform.php:50
+#: templates.dist/form/ownerform.php:50
+msgid "Please fill in"
+msgstr ""
+
+#: templates.dist/form/applicantsearchform.php:51
+#: templates.dist/form/defaultform.php:54
+msgid "Please fill in!"
+msgstr ""
+
+#: templates.dist/form/applicantsearchform.php:64
+msgid "search within distance of:"
+msgstr "ricerca a distanza di:"
+
+#: templates.dist/form/applicantsearchform.php:112
+msgid "Search for Prospective Buyers"
+msgstr "Ricerca di potenziali acquirenti"
+
+#. translators: %s will be replaced with a number.
+#: templates.dist/form/applicantsearchform.php:126
+msgid "%s Prospective Buyer"
+msgid_plural "%s Prospective Buyers"
+msgstr[0] "%s Futuro Acquirente"
+msgstr[1] "%s Futuri acquirenti"
+
+#. translators: %s will be replaced with a customer reference number.
+#: templates.dist/form/applicantsearchform.php:134
+msgid "Customer ref. number %s"
+msgstr "Numero di riferimento cliente %s"
+
+#: templates.dist/form/defaultform.php:48
+msgid "Spam detected!"
+msgstr ""
+
+#: templates.dist/form/defaultform.php:73 templates.dist/form/ownerform.php:66
+msgid "Message"
+msgstr "Messaggio"
+
+#: templates.dist/form/ownerform.php:71
+#: templates.dist/form/ownerleadgeneratorform.php:90
+msgid "Your contact details"
+msgstr "I vostri dati di contatto"
+
+#: templates.dist/form/ownerform.php:75
+#: templates.dist/form/ownerleadgeneratorform.php:97
+msgid "Information about your property"
+msgstr "Informazioni sulla vostra proprietà"
+
+#: templates.dist/form/ownerleadgeneratorform.php:34
+msgid "The form was sent successfully."
+msgstr "Il modulo è stato inviato con successo."
+
+#: templates.dist/form/ownerleadgeneratorform.php:38
+msgid "There was an error sending the form."
+msgstr "C'è stato un errore nell'invio del modulo."
+
+#: templates.dist/form/ownerleadgeneratorform.php:41
+msgid "The form wasn't sent because spam was detected."
+msgstr "Il modulo non è stato inviato perché lo spam è stato rilevato."
+
+#. translators: %s will be replaced with a translated field name.
+#: templates.dist/form/ownerleadgeneratorform.php:50
+msgid "Please enter a value for %s."
+msgstr "Inserire un valore per %s."
+
+#: templates.dist/form/ownerleadgeneratorform.php:115
+msgid "Back"
+msgstr "Indietro"
+
+#: templates.dist/form/ownerleadgeneratorform.php:118
+msgid "Next"
+msgstr "Prossimo"
+
+#: templates.dist/form/ownerleadgeneratorform.php:133
+msgid "Open the Form"
+msgstr "Aprire il modulo"
+
+#~ msgid "Please configure your onOffice API credentials first!"
+#~ msgstr "Per favore, configura prima le tue credenziali API onOffice!"
+
+#~ msgid "onOffice"
+#~ msgstr "onOffice"
+
+#~ msgid "Addresses"
+#~ msgstr "Indirizzi"
+
+#~ msgid "Estates"
+#~ msgstr "Tenute"
+
+#~ msgid "Forms"
+#~ msgstr "Moduli"
+
+#~ msgid "Modules"
+#~ msgstr "Moduli"
+
+#~ msgid "Settings"
+#~ msgstr "Impostazioni"
+
+#~ msgid "API token and secret"
+#~ msgstr "Gettone API e segreto"
+
+#~ msgid ""
+#~ "It looks like you did not enter any valid API credentials. Please "
+#~ "consider reviewing your %s."
+#~ msgstr ""
+#~ "Sembra che tu non abbia inserito nessuna credenziale API valida. Si prega "
+#~ "di prendere in considerazione la possibilità di rivedere il tuo %s."
+
+#~ msgid "%2$s (%3$s) in %4$s - %5$s"
+#~ msgstr "%2$s in %3$s a %4$s - %5$s"
+
+#~ msgid "lowest first"
+#~ msgstr "prima il più basso"
+
+#~ msgid "highest first"
+#~ msgstr "prima il più alto"
+
+#~ msgid "ascending"
+#~ msgstr "ascensionale"
+
+#~ msgid "descending"
+#~ msgstr "decrescente"
+
+#~ msgid "Geo Position"
+#~ msgstr "Posizione geografica"
+
+#~ msgid "Search Criteria"
+#~ msgstr "Criteri di ricerca"
+
+#~ msgid "Form Special Fields"
+#~ msgstr "Campi specifici del modulo"
+
+#~ msgid "Geo Range Search"
+#~ msgstr "Ricerca Geo Range"
+
+#~ msgid "Submit"
+#~ msgstr "Invia"
+
+#~ msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
+#~ msgstr "La vostra richiesta di informazioni sugli immobili “%1$s” (%5$s)"
+
+#~ msgid "%s list view has been deleted."
+#~ msgid_plural "%s list views have been deleted."
+#~ msgstr[0] "%s è stata eliminata la vista elenco."
+#~ msgstr[1] "%s sono state eliminate le visualizzazioni dell'elenco."
+
+#~ msgid "No list view was deleted."
+#~ msgstr "Nessuna vista elenco è stata cancellata."
+
+#~ msgid "%s form has been deleted."
+#~ msgid_plural "%s forms have been deleted."
+#~ msgstr[0] "%s è stato cancellato."
+#~ msgstr[1] "%s sono stati cancellati."
+
+#~ msgid "No form was deleted."
+#~ msgstr "Nessun modulo è stato cancellato."
+
+#~ msgid "Add New"
+#~ msgstr "Aggiungi nuovo"
+
+#~ msgid "Edit Address List"
+#~ msgstr "Modifica elenco indirizzi"
+
+#~ msgid "choose name"
+#~ msgstr "scegliere il nome"
+
+#~ msgid "Layout & Design"
+#~ msgstr "Layout & Design"
+
+#~ msgid "Filter & Records"
+#~ msgstr "Filtrare e registrare"
+
+#~ msgid "Photo Types"
+#~ msgstr "Tipi di foto"
+
+#~ msgid "The address list was saved."
+#~ msgstr "L'elenco degli indirizzi è stato salvato."
+
+#~ msgid ""
+#~ "There was a problem saving the list. Please make sure the name of the "
+#~ "list is unique."
+#~ msgstr ""
+#~ "C'è stato un problema nel salvare la lista. Assicurati che il nome della "
+#~ "lista sia univoco."
+
+#~ msgid "login credentials"
+#~ msgstr "credenziali di accesso"
+
+#~ msgid ""
+#~ "It looks like you did not enter any valid API credentials. Please go back "
+#~ "and review your %s."
+#~ msgstr ""
+#~ "Sembra che tu non abbia inserito nessuna credenziale API valida. Per "
+#~ "favore, torna indietro e rivedi il tuo %s."
+
+#~ msgid "API token"
+#~ msgstr "Gettone API"
+
+#~ msgid "API secret"
+#~ msgstr "Segreto API"
+
+#~ msgid "API settings"
+#~ msgstr "Impostazioni API"
+
+#~ msgid "Site Key"
+#~ msgstr "Chiave del sito"
+
+#~ msgid "Secret Key"
+#~ msgstr "Chiave segreta"
+
+#~ msgid "Google reCAPTCHA"
+#~ msgstr "Google reCAPTCHA"
+
+#, fuzzy
+#~| msgid "Google Maps"
+#~ msgid "Google Maps Key"
+#~ msgstr "Google Maps"
+
+#~ msgid "The keys are OK."
+#~ msgstr "I tasti sono OK."
+
+#~ msgid "There was an error:"
+#~ msgstr "C'è stato un errore:"
+
+#~ msgid "The secret parameter is missing."
+#~ msgstr "Manca il parametro segreto."
+
+#~ msgid "The secret parameter is invalid or malformed."
+#~ msgstr "Il parametro segreto non è valido o malformato."
+
+#~ msgid "The response parameter is missing."
+#~ msgstr "Manca il parametro response."
+
+#~ msgid "The response parameter is invalid or malformed."
+#~ msgstr "Il parametro di risposta non è valido o malformato."
+
+#~ msgid "The request is invalid or malformed."
+#~ msgstr "La richiesta non è valida o malformata."
+
+#~ msgid ""
+#~ "In order to use Google reCAPTCHA, you need to provide your keys. You're "
+#~ "free to enable it in the form settings for later use."
+#~ msgstr ""
+#~ "Per poter utilizzare Google reCAPTCHA, è necessario fornire le chiavi. "
+#~ "Sei libero di abilitarlo nelle impostazioni del modulo per un uso "
+#~ "successivo."
+
+#~ msgid "The cache was cleaned."
+#~ msgstr "La cache è stata pulita."
+
+#~ msgid "List Views"
+#~ msgstr "Elenco Viste"
+
+#~ msgid "Detail View"
+#~ msgstr "Vista di dettaglio"
+
+#~ msgid "Unit Lists"
+#~ msgstr "Elenchi di unità"
+
+#~ msgid "Edit List View"
+#~ msgstr "Modifica vista elenco"
+
+#~ msgid "Detail view in use on page %s"
+#~ msgstr "Vista dettagliata in uso a pagina %s"
+
+#~ msgid "Edit Page"
+#~ msgstr "Modifica pagina"
+
+#~ msgid ""
+#~ "Detail view is not in use yet. Insert this code on a page to get the "
+#~ "detail view there:"
+#~ msgstr ""
+#~ "La vista dettagliata non è ancora in uso. Inserisci questo codice su una "
+#~ "pagina per ottenere la vista di dettaglio:"
+
+#~ msgid "Contact Person Fields"
+#~ msgstr "Campi della persona di contatto"
+
+#~ msgid "Real Estate Fields"
+#~ msgstr "Campi dati immobiliari"
+
+#~ msgid "Additional Media"
+#~ msgstr "Supporti aggiuntivi"
+
+#~ msgid "Similar Estates"
+#~ msgstr "Immobili simili"
+
+#~ msgid "The detail view has been saved."
+#~ msgstr "La vista di dettaglio è stata salvata."
+
+#~ msgid "There was a problem saving the detail view."
+#~ msgstr "C'è stato un problema nel salvare la vista di dettaglio."
+
+#~ msgid "Are you sure you want to delete the selected items?"
+#~ msgstr "Sei sicuro di voler eliminare gli elementi selezionati?"
+
+#~ msgid "Filters & Records"
+#~ msgstr "Filtri e registri"
+
+#~ msgid "Downloadable Documents"
+#~ msgstr "Documenti scaricabili"
+
+#~ msgid "Geo Fields"
+#~ msgstr "Campi geografici"
+
+#~ msgid "The view has been saved."
+#~ msgstr "La vista è stata salvata."
+
+#~ msgid ""
+#~ "There was a problem saving the view. Please make sure the name of the "
+#~ "view is unique, even across all estate list types."
+#~ msgstr ""
+#~ "C'è stato un problema a salvare la vista. Assicurati che il nome della "
+#~ "vista sia unico, anche per tutti i tipi di liste immobiliari."
+
+#~ msgid "Units Lists"
+#~ msgstr "Elenchi unità"
+
+#~ msgid "Edit Units View"
+#~ msgstr "Modifica unità di misura"
+
+#~ msgid "Records"
+#~ msgstr "I record"
+
+#~ msgid "Form Specific Options"
+#~ msgstr "Opzioni specifiche del modulo"
+
+#~ msgid "Edit Form"
+#~ msgstr "Modifica modulo"
+
+#~ msgid "The Form was saved."
+#~ msgstr "Il modulo è stato salvato."
+
+#~ msgid ""
+#~ "There was a problem saving the form. Please make sure the name of the "
+#~ "form is unique."
+#~ msgstr ""
+#~ "C'è stato un problema a salvare il modulo. Si prega di assicurarsi che il "
+#~ "nome del modulo sia unico."
+
+#~ msgid "Module: %s"
+#~ msgstr "Modulo %s"
+
+#~ msgid "Edit Values"
+#~ msgstr "Modifica i valori"
+
+#~ msgid "Add Language"
+#~ msgstr "Aggiungi lingua"
+
+#~ msgid "Choose Language"
+#~ msgstr "Scegliere la lingua"
+
+#~ msgid "Default Value: %s"
+#~ msgstr "Valore predefinito: %s"
+
+#, fuzzy
+#~| msgid "Default Value for Radius"
+#~ msgid "Default Value From:"
+#~ msgstr "Valore predefinito per il raggio"
+
+#, fuzzy
+#~| msgid "Default Value for Radius"
+#~ msgid "Default Value Up To:"
+#~ msgstr "Valore predefinito per il raggio"
+
+#~ msgid "Please provide an Email address!"
+#~ msgstr "Si prega di fornire un indirizzo e-mail!"
+
+#~ msgid "Enable Watchlist"
+#~ msgstr "Abilita Lista di controllo"
+
+#~ msgid "Expression used"
+#~ msgstr "Espressione utilizzata"
+
+#~ msgid "Watchlist"
+#~ msgstr "Lista di controllo"
+
+#~ msgid "Favorise"
+#~ msgstr "Favorevole"
+
+#~ msgid "Map Provider"
+#~ msgstr "Fornitore di mappe"
+
+#~ msgid "OpenStreetMap"
+#~ msgstr "OpenStreetMap"
+
+#~ msgid "Google Maps"
+#~ msgstr "Google Maps"
+
+#~ msgid "Maps"
+#~ msgstr "Mappe"
+
+#~ msgid "Fields"
+#~ msgstr "I campi"
+
+#~ msgid "Fields Configuration"
+#~ msgstr "Configurazione dei campi"
+
+#~ msgid "Name of View"
+#~ msgstr "Nome della vista"
+
+#~ msgid "Shortcode"
+#~ msgstr "Codice di scelta rapida"
+
+#~ msgid "Filter"
+#~ msgstr "Filtro"
+
+#~ msgid "Show Status"
+#~ msgstr "Mostra stato"
+
+#~ msgid "Type of List"
+#~ msgstr "Tipo di lista"
+
+#~ msgid "(Needs valid API credentials)"
+#~ msgstr "(Richiede credenziali API valide)"
+
+#~ msgid "(Unknown Filter (ID: %s))"
+#~ msgstr "(Filtro sconosciuto (ID: %s))"
+
+#~ msgid "Name of Form"
+#~ msgstr "Nome del modulo"
+
+#~ msgid "Type of Form"
+#~ msgstr "Tipo di modulo"
+
+#~ msgid "View Name"
+#~ msgstr "Visualizza Nome"
+
+#~ msgid "Sort by"
+#~ msgstr "Ordina per"
+
+#~ msgid "Records per Page"
+#~ msgstr "Record per pagina"
+
+#~ msgid "Sort order"
+#~ msgstr "Ordinamento"
+
+#~ msgid "Ascending"
+#~ msgstr "Crescente"
+
+#~ msgid "Descending"
+#~ msgstr "Scendendo"
+
+#~ msgid "Template"
+#~ msgstr "Modello"
+
+#~ msgid "List View"
+#~ msgstr "Vista elenco"
+
+#~ msgid "Passport Photo"
+#~ msgstr "Foto del passaporto"
+
+#~ msgid "Filterable"
+#~ msgstr "Filtrabile"
+
+#~ msgid "Hidden"
+#~ msgstr "Nascosto"
+
+#~ msgid "Reduce values according to selected filter"
+#~ msgstr "Ridurre i valori in base al filtro selezionato"
+
+#~ msgid "Show Estate Status"
+#~ msgstr "Mostra lo stato della proprietà"
+
+#~ msgid "Random Order"
+#~ msgstr "Ordine casuale"
+
+#~ msgid "PDF-Expose"
+#~ msgstr "Esposizione PDF"
+
+#~ msgid "Default"
+#~ msgstr "Predefinito"
+
+#~ msgid "Reference Estates"
+#~ msgstr "Estates di riferimento"
+
+#~ msgid "Favorites List"
+#~ msgstr "Elenco dei preferiti"
+
+#~ msgid "lowest First / highest First"
+#~ msgstr "più basso primo / più alto primo"
+
+#~ msgid "ascending / descending"
+#~ msgstr "ascendente / discendente"
+
+#~ msgid "Unit List"
+#~ msgstr "Elenco unità"
+
+#~ msgid "Form"
+#~ msgstr "Forma"
+
+#~ msgid "Form Name"
+#~ msgstr "Nome del modulo"
+
+#~ msgid "Type of Form: "
+#~ msgstr "Tipo di modulo: "
+
+#~ msgid ", Embed Code: "
+#~ msgstr ", Incorporare il codice: "
+
+#~ msgid "Recipient's E-Mail Address"
+#~ msgstr "Indirizzo e-mail del destinatario"
+
+#~ msgid "john.doe@example.com"
+#~ msgstr "john.doe@example.com"
+
+#~ msgid "(won't work until set up globally)"
+#~ msgstr ""
+#~ "(non funzionerà fino a quando non sarà installato a livello globale)"
+
+#~ msgid "Requires Captcha %s"
+#~ msgstr "Richiede Captcha %s"
+
+#~ msgid "Result Limit"
+#~ msgstr "Risultato Limite di risultato"
+
+#~ msgid "Required"
+#~ msgstr "Richiesto"
+
+#~ msgid "Add language"
+#~ msgstr "Aggiungi lingua"
+
+#~ msgid "Module"
+#~ msgstr "Modulo"
+
+#~ msgid "Show Similar Estates"
+#~ msgstr "Mostra proprietà simili"
+
+#~ msgid "Movie Links"
+#~ msgstr "Link di film"
+
+#~ msgid "Disabled"
+#~ msgstr "Disabili"
+
+#~ msgid "Link"
+#~ msgstr "Collegamento"
+
+#~ msgid "Player"
+#~ msgstr "Giocatore"
+
+#~ msgid "Same Kind of Estate"
+#~ msgstr "Stesso tipo di proprietà"
+
+#~ msgid "Same Marketing Method"
+#~ msgstr "Stesso metodo di marketing"
+
+#~ msgid "Same Postal Code"
+#~ msgstr "Stesso codice postale"
+
+#~ msgid "Radius"
+#~ msgstr "Raggio"
+
+#~ msgid "Amount of Estates"
+#~ msgstr "Quantità di immobili"
+
+#~ msgid "Newsletter"
+#~ msgstr "Newsletter"
+
+#~ msgid "Check for Duplicates"
+#~ msgstr "Verificare la presenza di duplicati"
+
+#~ msgid "Create Address"
+#~ msgstr "Crea indirizzo"
+
+#~ msgid "Subject (optional)"
+#~ msgstr "Oggetto (facoltativo)"
+
+#~ msgid "Default Value"
+#~ msgstr "Valore predefinito"
+
+#~ msgid "Default Value for Radius"
+#~ msgstr "Valore predefinito per il raggio"
+
+#~ msgid "Country"
+#~ msgstr "Paese"
+
+#~ msgid "Postal Code"
+#~ msgstr "Codice postale"
+
+#~ msgid "City"
+#~ msgstr "Città"
+
+#~ msgid "Street"
+#~ msgstr "Via"
+
+#~ msgid "unknown address list name"
+#~ msgstr "nome della lista degli indirizzi sconosciuti"
+
+#~ msgid "Add to List >>"
+#~ msgstr "Aggiungi alla lista >>>&gt"
+
+#~ msgid "Key of Field:"
+#~ msgstr "La chiave di campo:"
+
+#~ msgid "Delete"
+#~ msgstr "Cancellare"
+
+#~ msgid "Disabled in onOffice"
+#~ msgstr "Disabili in onOffice"
+
+#~ msgid "Edit"
+#~ msgstr "Modifica"
+
+#~ msgid "(Remains unchanged)"
+#~ msgstr "(Rimane invariato)"
+
+#~ msgid "0 matches"
+#~ msgstr "0 partite"
+
+#~ msgid "Show exact match"
+#~ msgstr "Mostra la corrispondenza esatta"
+
+#~ msgid "Show %s matches"
+#~ msgstr "Mostra %s partite"
+
+#~ msgid "rented"
+#~ msgstr "noleggiata"
+
+#~ msgid "sold"
+#~ msgstr "venduto"
+
+#~ msgid "Cover Photo"
+#~ msgstr "Foto di copertina"
+
+#~ msgid "Photo"
+#~ msgstr "Foto"
+
+#~ msgid "Location Map"
+#~ msgstr "Mappa della posizione"
+
+#~ msgid "An error occured:"
+#~ msgstr "Si è verificato un errore:"
+
+#~ msgid "Estates view not found."
+#~ msgstr "Vista tenuta non trovata."
+
+#~ msgid "Not specified"
+#~ msgstr "Non specificato"
+
+#~ msgid "Available Options"
+#~ msgstr "Opzioni disponibili"
+
+#~ msgid "Pages"
+#~ msgstr "Pagine"
+
+#~ msgid "Activate"
+#~ msgstr "Attivare"
+
+#~ msgid "Mobile Phone: "
+#~ msgstr "Telefono cellulare: "
+
+#~ msgid "Phone (business): "
+#~ msgstr "Telefono (affari): "
+
+#~ msgid "E-Mail (business): "
+#~ msgstr "E-Mail (affari): "
+
+#~ msgid "Contact form: "
+#~ msgstr "Modulo di contatto: "
+
+#~ msgid "(Form is not available)"
+#~ msgstr "(Il modulo non è disponibile)"
+
+#~ msgid "Phone (mobile): "
+#~ msgstr "Telefono (cellulare): "
