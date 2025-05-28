@@ -97,6 +97,15 @@ class AdminViewController
 	/** @var AdminPageAddress */
 	private $_pAdminPageAddresses = null;
 
+	/** @var string */
+	const ACTION_NOTIFICATION_ESTATE = 'action_notification_estate';
+
+	/** @var string */
+	const ACTION_NOTIFICATION_ADDRESS = 'action_notification_address';
+
+	/** @var string */
+	const ACTION_NOTIFICATION_FORM = 'action_notification_form';
+
 	/**
 	 *
 	 */
@@ -132,6 +141,10 @@ class AdminViewController
 		if ($pSelectedSubPageForAddress instanceof AdminPageAjax) {
 			$this->_ajaxHooks['onoffice_page_'.$this->_pageSlug.'-addresses'] = $pSelectedSubPageForAddress;
 		}
+
+		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_ESTATE, [$this->_pAdminListViewSettings, 'handleNotificationError']);
+		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_ADDRESS, [$this->_pAdminListViewSettingsAddress, 'handleNotificationError']);
+		add_action('wp_ajax_' . self::ACTION_NOTIFICATION_FORM, [$this->_pAdminPageFormSettings, 'handleNotificationError']);
 
 	}
 
@@ -329,7 +342,7 @@ class AdminViewController
 	public function enqueue_css()
 	{
 		wp_enqueue_style('onoffice-admin-css',
-			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), 'v5.5');
+			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), 'v6.1');
 	}
 
 	public function role_styles()  {

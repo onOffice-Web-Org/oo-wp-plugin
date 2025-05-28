@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress;
@@ -50,6 +51,7 @@ use onOffice\WPlugin\Field\CustomLabel\Exception\CustomLabelDeleteException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
 
 /**
  *
@@ -116,8 +118,10 @@ class AdminPageAddressListSettings
 		$this->addFormModel($pFormModel);
 		$pBuilderShort = $pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollection = new FieldsCollection();
+		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
 		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS,$pFieldsCollection);
+		$pBuilderShort->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection);
+		$fieldNames = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS, $this->_pFormModelBuilderAddress, $fieldNames);
 		$this->addSortableFieldsList(array(onOfficeSDK::MODULE_ADDRESS), $this->_pFormModelBuilderAddress,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
@@ -403,7 +407,26 @@ class AdminPageAddressListSettings
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_SAME_NAME_MESSAGE => __('There was a problem saving the list. The Name field has been exist.', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_EMPTY_NAME_MESSAGE => __('There was a problem saving the list. The Name field must not be empty.', 'onoffice-for-wp-websites'),
+			self::VIEW_UNSAVED_CHANGE_SAME_NAME_MESSAGE => __('Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
+			self::VIEW_UNSAVED_CHANGE_EMPTY_NAME_MESSAGE => __('The Name field must not be empty. Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 		);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function handleNotificationError()
+	{
+		$pRecordManagerRead = new RecordManagerReadListViewAddress();
+		$sameNameStatus = $pRecordManagerRead->checkSameName($_GET['name'], $_GET['id']);
+		$response = [
+			'success' => $sameNameStatus
+		];
+
+		echo json_encode($response);
+		wp_die();
 	}
 
 
@@ -413,6 +436,11 @@ class AdminPageAddressListSettings
 
 	public function doExtraEnqueues()
 	{
+		$screenData = array(
+			'action' => AdminViewController::ACTION_NOTIFICATION_ADDRESS,
+			'name' => 'oopluginlistviewsaddress-name',
+			'ajaxurl' => admin_url('admin-ajax.php')
+		);
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviewsaddress-name']);
@@ -426,6 +454,7 @@ class AdminPageAddressListSettings
         wp_register_style('onoffice-multiselect', plugins_url('css/onoffice-multiselect.css', $pluginPath));
         wp_enqueue_script('onoffice-multiselect');
         wp_enqueue_style('onoffice-multiselect');
+		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);
 	}
 
 	/**

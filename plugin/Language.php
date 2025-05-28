@@ -35,6 +35,7 @@ class Language
 		'de' => 'DEU',
 		'de_DE' => 'DEU',
 		'de_DE_formal' => 'DEU',
+		'de_AT' => 'AUT',
 		'de_CH' => 'CHE',
 		'de_CH_informal' => 'CHE',
 		'en' => 'ENG',
@@ -83,6 +84,17 @@ class Language
 		$languageMapping = self::LOCALE_MAPPING;
 		$currentLocale = get_locale();
 		return $languageMapping[$currentLocale] ?? 'DEU';
+	}
+
+	/**
+	 * @return array
+	 */
+	static public function getAllWPMLLanguages(): array
+	{
+		$languageMapping = self::LOCALE_MAPPING;
+		$languages = apply_filters( 'wpml_active_languages', NULL, 'orderby=id&order=desc' );
+		$result = (is_array($languages)) ? array_map(fn($lg) => $languageMapping[$lg["default_locale"]] ?? null, $languages) : [Language::getDefault()];
+		return (count($result) == 0) ? [Language::getDefault()] : $result;
 	}
 
 	/**

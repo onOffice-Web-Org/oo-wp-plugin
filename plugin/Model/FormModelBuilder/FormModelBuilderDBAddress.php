@@ -42,6 +42,8 @@ use onOffice\WPlugin\WP\InstalledLanguageReader;
 use onOffice\WPlugin\Types\Field;
 use DI\DependencyException;
 use DI\NotFoundException;
+use DI\Container;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 /**
  *
@@ -56,9 +58,6 @@ class FormModelBuilderDBAddress
 	/** */
 	const DEFAULT_RECORDS_PER_PAGE = 20;
 
-	/** @var Fieldnames */
-	private $_pFieldnames = null;
-
 	/** @var string[] */
 	private static $_defaultFields = array(
 		'Anrede',
@@ -69,20 +68,26 @@ class FormModelBuilderDBAddress
 		'Telefon1',
 		'Telefax1',
 	);
+
+	/** @var Container */
+	private $_pContainer = null;
+
 	/**
 	 *
 	 */
 
-	public function __construct(Fieldnames $_pFieldnames = null)
+	public function __construct(Container $pContainer = null)
 	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainer ?? $pContainerBuilder->build();
+
 		$pInputModelDBFactoryConfig = new InputModelDBFactoryConfigAddress();
 		$pInputModelDBFactory = new InputModelDBFactory($pInputModelDBFactoryConfig);
 		$this->setInputModelDBFactory($pInputModelDBFactory);
-		$this->_pFieldnames = $_pFieldnames ?? new Fieldnames(new FieldsCollection());
 
 		$pFieldsCollection = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
-		$pFieldnames = $_pFieldnames ?? new Fieldnames($pFieldsCollection);
-		$pFieldnames->loadLanguage();
+		$pFieldnames = new Fieldnames($pFieldsCollection);
 		$this->setFieldnames($pFieldnames);
 	}
 
@@ -233,16 +238,36 @@ class FormModelBuilderDBAddress
 
 	public function createSortableFieldList($module, $htmlType)
 	{
-		$pSortableFieldsList = parent::createSortableFieldList($module, $htmlType);
-		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
-		$pInputModelIsHidden = $this->getInputModelIsHidden();
+		$pSortableFieldsList = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+		$pSortableFieldsList->setHtmlType($htmlType);
 
-		$pFieldsCollectionUsedFields = new FieldsCollection;
-		foreach ($pSortableFieldsList->getValuesAvailable() as $key => $pField) {
-			$field = Field::createByRow($key, $pField);
-			$pFieldsCollectionUsedFields->addField($field);
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = [];
+
+		if (is_array($module)) {
+			foreach ($module as $submodule) {
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule);
+				$fieldNames = array_merge($fieldNames, $newFields);
+			}
+		} else {
+			$fieldNames = $pFieldsCollection->getFieldsByModule($module);
 		}
 
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+
+		$pSortableFieldsList->setValuesAvailable($fieldNamesArray);
+		$fields = $this->getValue(DataListViewAddress::FIELDS) ?? [];
+		$pSortableFieldsList->setValue($fields);
+
+		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
+		$pInputModelIsHidden = $this->getInputModelIsHidden();
 		$pInputModelConvertInputTextToSelectField = $this->getInputModelConvertInputTextToSelectField();
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
@@ -330,6 +355,23 @@ class FormModelBuilderDBAddress
 	}
 
 	/**
+	 * @return FieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	protected function getFieldsCollection(): FieldsCollection
+	{
+		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollection = new FieldsCollection();
+
+		$pFieldsCollectionBuilder
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection);
+
+		return $pFieldsCollection;
+	}
+
+	/**
 	 *
 	 * @param $module
 	 * @param string $htmlType
@@ -339,8 +381,23 @@ class FormModelBuilderDBAddress
 
 	public function createSearchFieldForFieldLists($module, string $htmlType)
 	{
-		$this->setFieldnames($this->_pFieldnames);
-		$pInputModelFieldsConfig = parent::createSearchFieldForFieldLists($module, $htmlType);
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+
+		$pInputModelFieldsConfig->setValuesAvailable($this->groupByContent($fieldNamesArray));
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+		$pInputModelFieldsConfig->setValue($this->getValue(DataListViewAddress::FIELDS) ?? []);
 
 		return $pInputModelFieldsConfig;
 	}

@@ -53,6 +53,14 @@ class DefaultFilterBuilderListViewAddress
 	/** @var FieldsCollectionBuilderShort */
 	private $_pBuilderShort = null;
 
+	private $_geofilter = null;
+
+	private $_defaultFilter = [
+		'homepage_veroeffentlichen' => [
+			['op' => '=', 'val' => 1],
+		],
+	];
+
 
 	/**
 	 *
@@ -94,13 +102,12 @@ class DefaultFilterBuilderListViewAddress
 		$filterableInputs = $this->_pCompoundFieldsFilter->mergeFields($pFieldsCollection, $filterableFields);
 		$fieldFilter = $this->_pFilterBuilderInputVars->getPostFieldsFilter($filterableInputs);
 		$filter = $this->addAddressCityFilterWhenConvertTextToSelect($fieldFilter);
-		$defaultFilter = [
-			'homepage_veroeffentlichen' => [
-				['op' => '=', 'val' => 1],
-			],
-		];
 
-		return array_merge($defaultFilter, $filter);
+		$ret = array_merge($this->_defaultFilter, $filter);
+		if($this->_geofilter != null)
+			$ret = array_merge($ret, $this->_geofilter);
+
+		return $ret;
 	}
 
 	/**
@@ -129,5 +136,27 @@ class DefaultFilterBuilderListViewAddress
 		}
 
 		return $fieldFilter;
+	}
+	/**
+	 * @return array
+	 */
+	public function getDefaultFilter(): array
+	{
+		return $this->_defaultFilter;
+	}
+	/**
+	 * @return array
+	 */
+	public function getFilterGeoSearch(): array
+	{
+		return $this->_geofilter;
+	}
+	public function setFilterGeoSearch(object $geo)
+	{
+		$this->_geofilter = [
+			'geo' => [
+				['op' => 'geo', 'val' => $geo->km, 'min' => $geo->min ?? null, 'max' => $geo->max ?? null, 'country' => $geo->country ?? null]
+			]
+		];
 	}
 }

@@ -92,7 +92,7 @@ class TestClassDataListViewFactoryBase
 			->setMethods(['createListViewByRow'])
 			->getMock();
 		$this->_pMockRecordManagerRead = $this->getMockBuilder(RecordManagerRead::class)
-			->setMethods(['getRowByName', 'getRecords'])
+			->setMethods(['getRowByName', 'getRecords', 'checkSameName'])
 			->getMock();
 		$pNewRecordFinder = $this->_pMockRecordManagerRead;
 

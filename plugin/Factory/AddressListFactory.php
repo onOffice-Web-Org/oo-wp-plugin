@@ -26,6 +26,7 @@ use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\AddressDetail;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailViewAddress;
 
 class AddressListFactory
 {
@@ -58,9 +59,11 @@ class AddressListFactory
 
 	 public function createAddressDetail(int $addressId): AddressList
 	 {
-		$pDataDetailView = $this->_pDataAddressDetailViewHandler->getAddressDetailView();
-		 $pAddressList = new AddressDetail($pDataDetailView);
-		 $pAddressList->setAddressId($addressId);
-		 return $pAddressList;
+			$pDataDetailView = $this->_pDataAddressDetailViewHandler->getAddressDetailView();
+			$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
+			$pAddressList = new AddressDetail($pDataDetailView);
+			$pAddressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
+			$pAddressList->setAddressId($addressId);
+			return $pAddressList;
 	 }
 }
