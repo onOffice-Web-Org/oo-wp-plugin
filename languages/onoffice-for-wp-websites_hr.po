@@ -1,15 +1,13 @@
-# Translation of Plugins - onOffice for WP-Websites - Stable (latest release) in Croatian
-# This file is distributed under the same license as the Plugins - onOffice for WP-Websites - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-04-02 18:14:26+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
-"X-Generator: GlotPress/4.0.1\n"
+"X-Generator: POEditor.com\n"
+"X-Domain: onoffice-for-wp-websites\n"
+"Project-Id-Version: WP-OO-Plugin\n"
 "Language: hr\n"
-"Project-Id-Version: Plugins - onOffice for WP-Websites - Stable (latest release)\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: templates.dist/estate/default_detail.php:329
 msgid "A standard value of 1.5% and 0.5% is usually used to calculate notary and land registry costs."
@@ -646,22 +644,22 @@ msgid "Add honeypot to forms"
 msgstr "Dodaj honeypot obrascima"
 
 #: plugin/Controller/MainPage.php:63
-msgid ""
-"## Connect your website to onOffice enterprise\n"
+msgid "## Connect your website to onOffice enterprise\n"
 "\n"
 "You are ready to integrate all your real estate into your website and create forms that send data into onOffice enterprise.\n"
 "\n"
 "For help with setting up the plugin, read through our [setup tutorial](https://wp-plugin.onoffice.com/en/first-steps/).\n"
 "\n"
 "The [documentation website](https://wp-plugin.onoffice.com/en/) also offers detailed explanations of the features. If you encounter a problem, you can send us a message using the [support form](https://wp-plugin.onoffice.com/en/support/).\n"
-msgstr ""
-"## Spojite svoju web stranicu sa onOffice enterprise\n"
+""
+msgstr "## Spojite svoju web stranicu sa onOffice enterprise\n"
 "\n"
 "Spremni ste integrirati sve svoje nekretnine na svoju web stranicu i stvoriti obrasce koji šalju podatke prema onOffice enterpise.\n"
 "\n"
 "Za pomoć pri postavljanju plugin-a, pročitajte naš [vodič za postavljanje](https://wp-plugin.onoffice.com/en/first-steps/).\n"
 "\n"
 "Web stranica dokumentacije (https://wp-plugin.onoffice.com/en/) također nudi detaljna objašnjenja dodatnih značajki. Ako se suočite sa problemom, možete nam poslati poruku koristeći [obrazac podrške](https://wp-plugin.onoffice.com/en/support/).\n"
+""
 
 #: plugin/Controller/AdminViewController.php:172
 #: plugin/Controller/AdminViewController.php:173
@@ -826,11 +824,9 @@ msgid "This plugin will fill out the title and description with the information 
 msgstr "Ovaj plugin će ispuniti naslov i opis informacijama o nekretnini koja je prikazana. Ova opcija se preporučuje ako ne koristite neki SEO plugin."
 
 #: plugin/Gui/AdminPageApiSettings.php:295
-msgid ""
-"We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.\n"
+msgid "We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.\n"
 "\t\t\t\t\t\t\t\tWe recommend that you configure the onOffice plugin to not modify the title and description."
-msgstr ""
-"Detektirali smo aktivni SEO plugin: %s. Ta opcija može izazvati probleme sa SEO plugin-om.\n"
+msgstr "Detektirali smo aktivni SEO plugin: %s. Ta opcija može izazvati probleme sa SEO plugin-om.\n"
 "Preporučujemo da konfigurirate onOffice plugin, da ne izmjenjuje naslov i opis."
 
 #: plugin/Gui/AdminPageApiSettings.php:277
@@ -842,11 +838,9 @@ msgid "This plugin will not modify the title and description. This enables other
 msgstr "Plugin neće izmijeniti naslov i opis. To omogućuje drugim plugin-ovima da upravljaju tim oznakama."
 
 #: plugin/Controller/AdminViewController.php:506
-msgid ""
-"The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.\n"
+msgid "The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.\n"
 "\t\t\t\t\t\t\t\tWe recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin."
-msgstr ""
-"Plugin onOffice-a je detektirao aktivan SEO plugin: %s. Trenutno ste konfigurirali onOffice plugin da ispuni naslov i opis detaljne stranice, što može dovesti do konflikata sa SEO plugin-om.\n"
+msgstr "Plugin onOffice-a je detektirao aktivan SEO plugin: %s. Trenutno ste konfigurirali onOffice plugin da ispuni naslov i opis detaljne stranice, što može dovesti do konflikata sa SEO plugin-om.\n"
 "Preporučujemo Vam da odete na %s i konfigurirate onOffice plugin da ne izmjenjuje naslov i opis. To Vam omogućuje da upravljate naslovom i opisom pomoću Vašeg aktivnog SEO plugin-a."
 
 #: plugin/Controller/AdminViewController.php:495
@@ -1371,6 +1365,7 @@ msgstr "Polja nekretnine"
 msgid "Contact Person Fields"
 msgstr "Polja agenta za kontakt"
 
+#. translators: %s is the amount of results
 #: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:357
 msgid "Show %s matches"
 msgstr "Prikaži %s podudaranja"
@@ -1958,11 +1953,9 @@ msgstr "Da"
 #. translators: %s is the name of the list view.
 #: plugin/Gui/Table/AddressListTable.php:228
 #: plugin/Gui/Table/EstateListTable.php:281
-msgid ""
-"You are about to delete the listview '%s'\n"
+msgid "You are about to delete the listview '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
-msgstr ""
-"Jeste li sigurni da želite izbrisati prikaz popisa '%s'?\n"
+msgstr "Jeste li sigurni da želite izbrisati prikaz popisa '%s'?\n"
 " Kliknite 'Prekini' za prekid a 'OK' za brisanje."
 
 #: plugin/Gui/Table/WP/ListTable.php:80
@@ -1971,11 +1964,9 @@ msgstr "Nijedna stavka nije pronađena."
 
 #. translators: %s is the name of the form.
 #: plugin/Gui/Table/FormsTable.php:294
-msgid ""
-"You are about to delete the form '%s'\n"
+msgid "You are about to delete the form '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
-msgstr ""
-"Jeste li sigurni da želite izbrisati obrazac '%s'?\n"
+msgstr "Jeste li sigurni da želite izbrisati obrazac '%s'?\n"
 " Kliknite 'Prekini' za prekid a 'OK' za brisanje."
 
 #: plugin/Gui/Table/FormsTable.php:169
@@ -1988,11 +1979,9 @@ msgstr "Naziv od obrasca"
 
 #. translators: %s is the name of the unit view.
 #: plugin/Gui/Table/EstateUnitsTable.php:172
-msgid ""
-"You are about to delete the unit view '%s'\n"
+msgid "You are about to delete the unit view '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
-msgstr ""
-"Jeste li sigurni da želite izbrisati prikaz popisa '%s'?\n"
+msgstr "Jeste li sigurni da želite izbrisati prikaz popisa '%s'?\n"
 " Kliknite 'Prekini' za prekid a 'OK' za brisanje."
 
 #: plugin/Gui/Table/AddressListTable.php:138
@@ -2458,3 +2447,95 @@ msgstr "Vaše povezivanje s onOffice-om: Ovaj plugin omogućuje Vam brz pristup 
 #: plugin.php
 msgid "onOffice for WP-Websites"
 msgstr "onOffice za WP Web stranice"
+
+#. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
+#: plugin/Controller/EstateViewDocumentTitleBuilder.php:65
+msgid "%2$s (%3$s) in %4$s - %5$s"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:221
+msgid "Search engine"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:396
+msgid "Favorise"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateListSettings.php:157
+#: plugin/Gui/AdminPageEstateUnitSettings.php:110
+msgid "Downloadable Documents"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateListSettings.php:172
+msgid "At least the following fields must be active: country, radius and city or postcode."
+msgstr ""
+
+#: plugin/Gui/AdminPageFormSettingsContact.php:150
+#: plugin/Gui/AdminPageFormSettingsContact.php:161
+msgid "Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk."
+msgstr ""
+
+#: plugin/Gui/Table/EstateListTable.php:215
+msgid "Show Status"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:152
+msgid "Records per Page"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:233
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:203
+msgid "Filterable"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:224
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:453
+msgid "Reduce values according to selected filter"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:447
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
+msgid "PDF-Expose"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:470
+msgid "Reference Estates"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:140
+msgid "Allow detail view for reference estates"
+msgstr ""
+
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:76
+msgid "Check for Duplicates (override existing address if the email is the same)"
+msgstr ""
+
+#: templates.dist/address/default.php:39
+msgid "Picture: "
+msgstr ""
+
+#: templates.dist/estate/default.php:120
+#: templates.dist/estate/default.php:143
+msgid "Add to "
+msgstr ""
+
+#: templates.dist/estate/default.php:149
+msgid "Remove from "
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:77
+msgid "Description"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:84
+msgid "Location"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:101
+msgid "Equipment"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:108
+msgid "Other Information"
+msgstr ""
+
