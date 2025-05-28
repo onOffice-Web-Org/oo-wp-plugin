@@ -3,3 +3,4 @@ vendor/
 nbproject/
 build/
 node_modules/
+SDK/vendor

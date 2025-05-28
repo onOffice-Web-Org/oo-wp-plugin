@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 6.0 (2025-04-23) =
+
+**Changed**
+
+* Redesigned and significantly more performant caching system.
+
 = 5.8 (2025-04-29) =
 
 **Changed**
