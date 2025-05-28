@@ -251,6 +251,7 @@ class EstateList
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'] []= 'vermarktungsart';
 		$estateParametersRaw['data'] []= 'preisAufAnfrage';
+		$estateParametersRaw['data'] []= 'virtualAddress';
 
 		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
 			$estateParametersRaw['data'] []= 'waehrung';
@@ -623,6 +624,10 @@ class EstateList
 		}
 
 		$fields = $this->_pDataView->getAddressFields();
+
+		if ($this->_pDataView instanceof DataListView) {
+			$fields = ['Name', 'Vorname', 'imageUrl'];
+		}
 
 		if ($this->_pDataView instanceof DataDetailView && !empty($this->_pDataView->getContactImageTypes())) {
 			if (in_array(ImageTypes::PASSPORTPHOTO, $this->_pDataView->getContactImageTypes()) && !in_array('imageUrl', $fields)){

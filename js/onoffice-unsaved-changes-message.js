@@ -1,5 +1,4 @@
-const onOfficeLocalized = typeof onOffice_loc_settings !== 'undefined' ? onOffice_loc_settings : onOffice_unsaved_changes_message;
-const screenDataUnsavedChanges = screen_data_unsaved_changes ?? [];
+const onOfficeLocalized = (typeof onOffice_loc_settings !== 'undefined' && onOffice_loc_settings) ? onOffice_loc_settings : onOffice_unsaved_changes_message;
 jQuery(document).ready(function($){
 	let checkUnsavedChanges = false;
 	let checkNavigationTriggered = false;
@@ -39,36 +38,10 @@ jQuery(document).ready(function($){
 	}
 
 	function handleUnsavedChanges(e, href) {
-		if (!checkUnsavedChanges) {
-			return;
+		if (checkUnsavedChanges) {
+			e.preventDefault();
+			showUnsavedChangesMessage(href, onOfficeLocalized.view_unsaved_changes_message);
 		}
-
-		e.preventDefault();
-		const title = $(`[name="${screenDataUnsavedChanges.name}"]`).val();
-		if (title.length == 0) {
-			showUnsavedChangesMessage(href, onOfficeLocalized.view_unsaved_change_empty_name_message);
-			return false;
-		}
-		processAjaxRequest(title, href);
-
-		return false;
-	}
-
-	function processAjaxRequest(title, href) {
-		const urlParams = new URLSearchParams(window.location.search);
-		const pageId = urlParams.get('id');
-		const data = {
-			'action': screenDataUnsavedChanges.action,
-			'name': title,
-			'id': pageId
-		};
-
-		$.get(screenDataUnsavedChanges.ajaxurl, data, function(response) {
-			let message = response.success === false ?
-				onOfficeLocalized.view_unsaved_change_same_name_message
-				: onOfficeLocalized.view_unsaved_changes_message;
-			showUnsavedChangesMessage(href, message);
-		}, 'json');
 	}
 
 	$('#adminmenu a[href], #wpadminbar a[href], .oo-admin-tab').on('click', function(e) {

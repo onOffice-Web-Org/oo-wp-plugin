@@ -27,34 +27,72 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /* @var $pEstates EstateList */
 return (function(EstateList $pEstatesClone) {
-	$pEstatesClone->resetEstateIterator();
-	$estateData = [];
+    $pEstatesClone->resetEstateIterator();
+    $estateData = [];
 
-	while ($currentEstateMap = $pEstatesClone->estateIterator
-		(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
-		$virtualAddressSet = (bool)$currentEstateMap['virtualAddress'];
-		$position = [
-			'lat' => (float)$currentEstateMap['breitengrad'],
-			'lng' => (float)$currentEstateMap['laengengrad'],
-		];
-		$title = $currentEstateMap['objekttitel'];
-		$visible = !$virtualAddressSet;
+    while ($currentEstateMap = $pEstatesClone->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
+        $estateId = $pEstatesClone->getCurrentEstateId();
+        $rawValues = $pEstatesClone->getRawValues();
+        $currentEstateRawValue = $rawValues->getValueRaw($estateId);
+        $virtualAddressSet = (bool)($currentEstateRawValue['elements']['virtualAddress'] ?? false);
+        $visible = !$virtualAddressSet;
 
-		if (.0 !== $position['lng'] && .0 !== $position['lat'] && $currentEstateMap['showGoogleMap']) {
-			$estateData[] = [
-				'latlng' => $position,
-				'options' => ['title' => $title],
-				'visible' => $visible,
-			];
-		}
-	}
+        $position = [
+            'lat' => (float)$currentEstateMap['breitengrad'],
+            'lng' => (float)$currentEstateMap['laengengrad'],
+        ];
+        $originalTitle = $currentEstateMap['objekttitel'];
+        $title = mb_strlen($originalTitle) > 60 ? preg_replace('/\s+\S*[\s\pZ\pC]*$/u', '', mb_substr($originalTitle, 0, 60)) . '...' : $originalTitle;
+        $street = $currentEstateMap['strasse'];
+        $number = $currentEstateMap['hausnummer'];
+        $zip = $currentEstateMap['plz'];
+        $city = $currentEstateMap['ort'];
+        $country = $currentEstateMap['land'];
 
-	if ($estateData === []) {
-		return;
-	}
-	$listViewId = $pEstatesClone->getListViewId();
-	$mapId = 'oo_map_' . $listViewId;
-	?>
+        $addressParts = [];
+        if (!empty($street) || !empty($number)) {
+            $addressParts[] = trim($street . ' ' . $number);
+        }
+        if (!empty($zip) || !empty($city)) {
+            $addressParts[] = trim($zip . ' ' . $city);
+        }
+        if (!empty($country)) {
+            $addressParts[] = $country;
+        }
+        $address = implode('<br>', $addressParts);
+
+        $estateLink = esc_url($pEstatesClone->getEstateLink());
+        $reference = filter_var($currentEstateRawValue['elements']['referenz'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $restrictedView = $pEstatesClone->getViewRestrict();
+        if ( $reference && $restrictedView ) {
+            $link = '';
+        } else {
+            $link = $estateLink;
+        }
+
+        $listViewId = $pEstatesClone->getListViewId();
+        $mapId = 'oo_map_' . $listViewId;
+        $showInfoWindow = false;
+        if ($listViewId === 'estate_detail') {
+            $showInfoWindow = true;
+        }
+
+        if (.0 !== $position['lng'] && .0 !== $position['lat'] && $currentEstateMap['showGoogleMap']) {
+            $estateData[] = [
+                'position' => $position,
+                'title' => $title,
+                'address' => $address,
+                'link' => $link,
+                'visible' => $visible,
+                'showInfoWindow' => $showInfoWindow 
+            ];
+        }
+    }
+
+    if ($estateData === []) {
+        return;
+    }
+    ?>
     <div class="oo-map" id="<?php echo esc_attr($mapId) ?>" style="width: 100%; height: 100%;"></div>
     <script>
     (function() {
@@ -70,8 +108,24 @@ return (function(EstateList $pEstatesClone) {
 
         for (i in estateMarkers) {
             var estate = estateMarkers[i];
-            var marker = L.marker(estate.latlng, estate.options);
-            marker.bindPopup(estate.options.title);
+            var marker = L.marker(estate.position, estate.title);
+
+            if (!estate.showInfoWindow) {
+                const popupContent = `
+                    <div class="oo-infowindow">
+                        <p class="oo-infowindowtitle">${estate.title}</p>
+                        ${estate.address ? `<p class="oo-infowindowaddress">${estate.address}</p>` : ''}
+                        ${estate.link ? `<div class="oo-detailslink"><a class="oo-details-btn" href="${estate.link}"><?php echo esc_html__('Show Details', 'onoffice-for-wp-websites'); ?></a></div>` : ''}
+                    </div>
+                `;
+                var popup = L.popup({
+                    content: popupContent,
+                    minWidth: 250,
+                    maxWidth: 350,
+                });
+                marker.bindPopup(popup);
+            }
+
             group.addLayer(marker);
             if (estate.visible) {
                 marker.addTo(map);
