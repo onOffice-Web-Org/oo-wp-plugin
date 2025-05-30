@@ -48,12 +48,12 @@ require 'SearchFormAddress.php';
 				<?php
 				if (!empty($imageUrl)) {
 					$imageAlt = $pAddressList->generateImageAlt($addressId);
-					echo '<img src="' . esc_url($imageUrl) . '" class="oo-address-image" alt="' . esc_html($imageAlt) . '" loading="lazy">';
+					echo  '<img src="' . esc_url($imageUrl) . '" class="oo-address-image" alt="' . esc_html($imageAlt) . '" loading="lazy">';
 				}
 				?>
 				<div class="oo-listinfo">
 					<div class="oo-listinfotable oo-listinfotableview">
-						<?php
+						<?php echo "<span>ID: ".$addressId."</span>";
 						foreach ($escapedValues as $field => $value) {
 							if ($pAddressList->getFieldType($field) === FieldTypes::FIELD_TYPE_BLOB) {
 								continue;
