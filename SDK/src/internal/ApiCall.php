@@ -243,6 +243,11 @@ class ApiCall
 					$sortA = strtotime($sortA);
 					$sortB = strtotime($sortB);
 				}
+				if(array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "boolean")
+				{
+					$sortA = $sortA === "" ? "0" : $sortA;
+					$sortB = $sortB === "" ? "0" : $sortB;
+				}
 				if($sortA == $sortB){
 					return 0;
 				}
