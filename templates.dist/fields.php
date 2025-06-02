@@ -54,6 +54,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 		if (isset($properties['is-apply-thousand-separator'])) {
 			$inputType = 'type="text" class="apply-thousand-separator-format" data-step="1" ';
 		}
+		$requiredAttribute = $properties['required'] ? "required" : "";
 
 		if ($properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN) {
 			echo '<br>';
@@ -92,7 +93,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 		} elseif ($inputName === 'regionaler_zusatz') {
 			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], false, $properties['permittedvalues'] ?? null);
 		} elseif ($inputName === 'country') {
-			echo '<select class="custom-single-select" size="1" name="' . esc_attr($inputName) . '">';
+			echo '<select class="custom-single-select" size="1" name="' . esc_attr($inputName) . '" ' . esc_attr($requiredAttribute) . '>';
 			printCountry($properties['permittedvalues'], $selectedValue);
 			echo '</select>';
 		} elseif (
@@ -110,7 +111,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="' . esc_attr($properties['length']) . '"' : '';
 			echo '<input name="' . esc_attr($inputName) . '" ' . $inputType;
-			echo 'value="' . esc_attr($selectedValue) . '"' . $lengthAttr . '><br>';
+			echo 'value="' . esc_attr($selectedValue) . '"' . $lengthAttr . ' ' . esc_attr($requiredAttribute) . '><br>';
 		}
 	}
 }
