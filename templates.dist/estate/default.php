@@ -226,33 +226,35 @@ if (get_option('onoffice-pagination-paginationbyonoffice')) {
 	$current_instance_id = 'oo-listpagination-instance-' . $onoffice_instance_counter;
 
 	$listViewId = $pEstates->getListViewId();
-	$queryParams = $_GET;
 
-	// Remove pagination-related parameters from the query to prevent static pagination links
 	$paginationKeys = ['page_of_id_' . $listViewId, 'paged', 'page'];
-	foreach ($paginationKeys as $key) {
-		if (isset($queryParams[$key])) {
-			unset($queryParams[$key]);
-		}
-	}
-
-	// Prepare the query parameters for JavaScript
 	$cleanedParams = [];
-	foreach ($queryParams as $key => $value) {
+
+	foreach ($_GET as $key => $value) {
+		$sanitized_key = sanitize_key($key);
+		
+		// Skip pagination keys
+		// This prevents the pagination from being included in the query parameters
+		if (in_array($sanitized_key, $paginationKeys)) {
+			continue;
+		}
+		
 		if (is_array($value)) {
-			// Flatten the array parameters
 			foreach ($value as $k => $v) {
 				$cleanedParams[] = [
-					'key' => $key . '[' . $k . ']',
-					'value' => $v
+					'key' => $sanitized_key . '[' . sanitize_key($k) . ']',
+					'value' => sanitize_text_field($v)
 				];
 			}
 		} else {
-			$cleanedParams[] = ['key' => $key, 'value' => $value];
+			$cleanedParams[] = [
+				'key' => $sanitized_key, 
+				'value' => sanitize_text_field($value)
+			];
 		}
 	}
 
-?>
+	?>
 
 	<div id="<?php echo esc_attr($current_instance_id); ?>" class="oo-listpagination">
 		<?php
