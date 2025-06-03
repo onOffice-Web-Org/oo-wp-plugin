@@ -211,13 +211,85 @@ $dimensions = [
 		</div>
 	<?php endwhile; ?>
 </div>
-<div>
-	<?php
-	if (get_option('onoffice-pagination-paginationbyonoffice')) {
-		wp_link_pages();
+<?php
+if (get_option('onoffice-pagination-paginationbyonoffice')) {
+	
+	global $onoffice_instance_counter;
+
+	if (!isset($onoffice_instance_counter)) {
+		$onoffice_instance_counter = 0;
 	}
-	?>
-</div>
+
+	$onoffice_instance_counter++;
+
+	// Generate a unique instance ID for the pagination with a counter
+	$current_instance_id = 'oo-listpagination-instance-' . $onoffice_instance_counter;
+
+	$listViewId = $pEstates->getListViewId();
+	$queryParams = $_GET;
+
+	// Remove pagination-related parameters from the query to prevent static pagination links
+	$paginationKeys = ['page_of_id_' . $listViewId, 'paged', 'page'];
+	foreach ($paginationKeys as $key) {
+		if (isset($queryParams[$key])) {
+			unset($queryParams[$key]);
+		}
+	}
+
+	// Prepare the query parameters for JavaScript
+	$cleanedParams = [];
+	foreach ($queryParams as $key => $value) {
+		if (is_array($value)) {
+			// Flatten the array parameters
+			foreach ($value as $k => $v) {
+				$cleanedParams[] = [
+					'key' => $key . '[' . $k . ']',
+					'value' => $v
+				];
+			}
+		} else {
+			$cleanedParams[] = ['key' => $key, 'value' => $value];
+		}
+	}
+
+?>
+
+	<div id="<?php echo esc_attr($current_instance_id); ?>" class="oo-listpagination">
+		<?php
+		// Create pagination links
+		wp_link_pages();
+		?>
+		<script>
+			jQuery(document).ready(function($) {
+
+				var $currentPagination = $('#<?php echo esc_js($current_instance_id); ?>');
+
+				if ($currentPagination.length === 0) {
+					return; // Exit if the container isn't found
+				}
+
+				var queryParams = <?php echo json_encode($cleanedParams); ?>;
+
+				$currentPagination.find('.post-nav-links a').each(function() {
+					var link = $(this);
+					// Create a new URL object based on the link's href and the current origin
+					var url = new URL(link.attr('href'), window.location.origin);
+
+					queryParams.forEach(function(param) {
+						// Set or update the search parameter
+						url.searchParams.set(param.key, param.value);
+					});
+
+					// Update the link's href with the new URL and search parameters
+					link.attr('href', url.toString());
+				});
+			});
+		</script>
+	</div>
+<?php
+}
+?>
+
 <?php if (Favorites::isFavorizationEnabled()) { ?>
 <script>
 	jQuery(document).ready(function($) {
