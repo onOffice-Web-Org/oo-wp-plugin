@@ -986,10 +986,19 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	width: 100%;
 }
 
-.list-fields-for-each-page .page-title {
-	margin-bottom: 10px;
+.list-fields-for-each-page .multi-page {
+	margin: 0 12px 10px 12px;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+.list-fields-for-each-page .multi-page-counter {
 	font-weight: 600;
-	margin-left: 12px;
+}
+.list-fields-for-each-page .multi-page-title {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
 }
 
 .list-fields-for-each-page .sortable-item:hover,
