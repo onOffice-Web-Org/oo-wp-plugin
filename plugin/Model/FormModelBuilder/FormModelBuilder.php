@@ -66,7 +66,7 @@ abstract class FormModelBuilder
 	 *
 	 */
 
-	protected function getValue(string $key, $default = null)
+	public function getValue(string $key, $default = null)
 	{
 		if (isset($this->_values[$key])) {
 			return $this->_values[$key];
