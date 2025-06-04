@@ -419,4 +419,28 @@ class RecordManagerReadListViewEstate
 				SET `page_shortcode` ='" .$page."' 
 				WHERE `".$column."` = ".esc_sql($listviewId));
 	}
+
+	/**
+	 * @param string $name
+	 * @param string|null $id
+	 *
+	 * @return bool
+	 */
+	public function checkSameName(string $name, string $id = null): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT COUNT(*) AS count
+			FROM {$prefix}oo_plugin_listviews
+			WHERE name = '" . esc_sql($name) . "'";
+
+		if (!is_null($id)) {
+			$sql .= " AND listview_id != '" . esc_sql($id) . "'";
+		}
+
+		$result = $pWpDb->get_row($sql, ARRAY_A);
+
+		return $result['count'] == 0;
+	}
 }

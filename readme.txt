@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 5.6
+Stable tag: 6.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,59 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.1 (2025-05-28) = 
+
+**Added**
+
+* Info window on maps to property details
+* Language support for Italian
+* Language support for French
+
+**Changed**
+
+* Improve HTML structure of unit lists
+* Improve the Plugins consistency - Ensuring database cleanup on Plugin uninstallation 
+* Permanently Marked Required Fields and Correct Local Area Search in Applicant Forms
+
+**Fixed**
+
+* Bugs for new caching system
+* Persistence of the property list with missing or same name
+
+**Removed**
+
+* "Dreizeiler" field from datatable on estates view
+
+= 6.0 (2025-04-23) =
+
+**Changed**
+
+* Redesigned and significantly more performant caching system.
+
+= 5.8 (2025-04-29) =
+
+**Changed**
+
+* Styling Unit lists on the property detail page
+* Title image, if marked as such, is always displayed as the first image of the image slider
+
+**Fixed**
+
+* Total price calculator can also be displayed when the percentage sign is not entered in the external commission in onOffice enterprise
+
+= 5.7 (2025-03-27) =
+
+**Changed**
+
+* Restriction of the form selection on the property detail page
+* Improved display of parking options (multiParkingLot) for properties
+
+**Fixed**
+
+* Missing fields of address
+* Missing austrian locale
+* Translation on property detail
 
 = 5.6 (2025-02-27) =
 

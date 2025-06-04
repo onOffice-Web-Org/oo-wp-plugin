@@ -121,7 +121,7 @@ class FieldsCollection implements FieldModuleCollection
 				$pFieldCopy->setCategory($fallbackCategoryName);
 			}
 			foreach ( $newAddressFields as $key => $properties ) {
-				if ( $pFieldCopy->getName() === $key ) {
+				if ( $pFieldCopy->getName() === $key && $pFieldCopy->getLabel() === $properties['label'] ) {
 					$pFieldCopy->setLabel( $newAddressFieldsTranslatedLabel[ $properties['label'] ] );
 				}
 			}

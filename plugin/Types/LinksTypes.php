@@ -47,6 +47,9 @@ abstract class LinksTypes
 	const FILE_TYPE_OBJECT_LINK = 'Objekt-Link';
 	const FILE_TYPE_LINK = 'Link';
 
+	/** */
+	const EXPOSE = 'Expose';
+
 	/**
 	 *
 	 * @param string $type

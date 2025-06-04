@@ -527,7 +527,7 @@ class TestClassEstateList
 		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
 			->setMethods(['__construct', 'getAddressById', 'loadAddressesById'])
 			->getMock();
-		$pAddressDataMock->expects($this->once())->method('loadAddressesById')->with([50, 52], ['Vorname', 'Name', "Email"]);
+		$pAddressDataMock->expects($this->once())->method('loadAddressesById')->with([50, 52], ['Name', 'Vorname', "imageUrl"]);
 		$pAddressDataMock->method('getAddressById')->willReturnMap($valueMap);
 		$this->_pEnvironment->method('getAddressList')->willReturn($pAddressDataMock);
 		$this->_pEstateList->loadEstates();
@@ -1029,9 +1029,10 @@ class TestClassEstateList
 			(onOfficeSDK::ACTION_ID_GET, 'fields', '', $parametersGetFieldCurrency, null, $responseGetFieldCurrency);
 
 		unset($parametersReadEstate['georangesearch']);
+		unset($parametersReadEstateRaw['georangesearch']);
+
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
-		unset($parametersReadEstateRaw['georangesearch']);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
 
@@ -1047,6 +1048,20 @@ class TestClassEstateList
 			'categories' => ['Titelbild', "Foto"],
 			'language' => 'ENG'
 		], null, $responseGetEstatePictures);
+
+		$dataGetEstateFiles = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseGetEstatesFiles.json'), true);
+			
+		$estateIds = [15,1051,1082,1193,1071];
+		$parameters = [];
+		foreach ($estateIds as $estateId) {
+			$parameters['estateid'] = $estateId;
+			$parameters['showispublishedonhomepage'] = true;
+			$parameters['listlimit'] = 100;
+			$responseGetEstateFiles = $dataGetEstateFiles['response'];
+			$this->_pSDKWrapperMocker->addResponseByParameters
+				(onOfficeSDK::ACTION_ID_GET, 'file', 'estate', $parameters, null, $responseGetEstateFiles);
+		}
 
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -1083,7 +1098,7 @@ class TestClassEstateList
 				return $pFieldsCollectionBuilderShort;
 			});
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
-	
+
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
 		$this->_pEnvironment->method('getDefaultFilterBuilder')->willReturn($pDefaultFilterBuilder);
 		$this->_pEstateList = new EstateList($pDataListView, $this->_pEnvironment);

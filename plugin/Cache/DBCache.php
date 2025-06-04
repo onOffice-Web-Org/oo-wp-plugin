@@ -87,6 +87,10 @@ class DBCache
 	private function getParametersHashed( array $parameters )
 	{
 		$parametersSerialized = $this->getParametersSerialized( $parameters );
+		if(isset($parameters['parameters']['listname']))
+		{
+			$parametersSerialized = $parameters['parameters']['listname'].intval($parameters['parameters']['formatoutput']).$parameters['parameters']['outputlanguage'];
+		}
 		$parametersHashed = md5( $parametersSerialized );
 		return $parametersHashed;
 	}

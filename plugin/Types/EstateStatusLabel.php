@@ -43,9 +43,9 @@ class EstateStatusLabel
 
 	/** @var array */
 	private $_fieldsByPrio = [
+		'verkauft',
 		'referenz',
 		'reserviert',
-		'verkauft',
 		'exclusive',
 		'neu',
 		'top_angebot',
