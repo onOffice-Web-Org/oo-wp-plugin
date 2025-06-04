@@ -396,6 +396,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 60;
 		}
 
+		if ($dbversion == 60) {
+			// new column 'highlighted' in 'oo_plugin_fieldconfig'
+			dbDelta($this->addColumnsForHighlights());
+			$dbversion = 61;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -1303,6 +1309,21 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->_pWpOption->updateOption('onoffice-default-view', null);
 			}
 		}
+	}
+
+	/**
+	 * @return void
+	 */
+	private function addColumnsForHighlights(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_fieldconfig";
+		$sql = "CREATE TABLE $tableName (
+			`highlighted` tinyint(1) NOT NULL DEFAULT '0',
+		) $charsetCollate;";
+
+		return $sql;
 	}
 
 	/**

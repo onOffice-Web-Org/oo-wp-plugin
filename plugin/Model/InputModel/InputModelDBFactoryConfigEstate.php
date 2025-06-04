@@ -94,6 +94,10 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'hidden',
 		],
+		self::INPUT_FIELD_HIGHLIGHTED => [
+			self::KEY_TABLE => 'oo_plugin_fieldconfig',
+			self::KEY_FIELD => 'highlighted',
+		],
 		self::INPUT_FIELD_AVAILABLE_OPTIONS => [
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'availableOptions',

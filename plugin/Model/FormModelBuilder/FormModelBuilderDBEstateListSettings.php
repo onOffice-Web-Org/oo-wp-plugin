@@ -277,6 +277,25 @@ class FormModelBuilderDBEstateListSettings
 	 * @return InputModelDB
 	 *
 	 */
+	public function getInputModelisHighlight()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Feld besonders hervorheben', 'onoffice-for-wp-website');
+		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHTED;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelIsHighlight'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
 
 	public function getInputModelConvertInputTextToSelectCityField()
 	{
@@ -325,6 +344,20 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel->setValuesAvailable($key);
 	}
 
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 *
+	 */
+	public function callbackValueInputModelIsHighlight(InputModelBase $pInputModel, $key)
+	{
+		$valueFromConf = $this->getValue('highlighted');
+		$filterableFields = is_array($valueFromConf) ? $valueFromConf : array();
+		$value = in_array($key, $filterableFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
 
 	/**
 	 *
@@ -399,14 +432,11 @@ class FormModelBuilderDBEstateListSettings
 		$pSortableFieldsList->setValuesAvailable($fieldNamesArray);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
 		$pSortableFieldsList->setValue($fields);
-		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
-		$pInputModelIsHidden = $this->getInputModelIsHidden();
-		$pInputModelConvertInputTextToSelectCityField = $this->getInputModelConvertInputTextToSelectCityField();
-		$pInputModelIsAvailableOptions = $this->getInputModelAvailableOptions();
-		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
-		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
-		$pSortableFieldsList->addReferencedInputModel($pInputModelConvertInputTextToSelectCityField);
-		$pSortableFieldsList->addReferencedInputModel($pInputModelIsAvailableOptions);
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelIsFilterable());
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelIsHidden());
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelisHighlight());
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelConvertInputTextToSelectCityField());
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelAvailableOptions());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 

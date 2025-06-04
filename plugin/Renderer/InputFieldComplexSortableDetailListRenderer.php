@@ -169,6 +169,7 @@ class InputFieldComplexSortableDetailListRenderer
 		$deactivatedInOnOffice = null;
 		$dummyText = $isDummy ? 'data-onoffice-ignore="true"' : '';
 		$name = $isDummy ? AdminPageAjax::EXCLUDE_FIELD . $this->getName() : $this->getName();
+		$isHighlighted = in_array($key, $extraInputModels[0]->getValueCallback()[0]->getValue('highlighted') ?? []);
 
 		if ($label == null) {
 			$label = $inactiveFields[$key] ?? null;
@@ -181,6 +182,7 @@ class InputFieldComplexSortableDetailListRenderer
 			.'<div class="menu-item-bar">'
 				.'<div class="menu-item-handle ui-sortable-handle">'
 					.'<span class="item-title" '.$deactivatedStyle.'>'
+						.($isHighlighted ? '★ ' : '')
 						.esc_html($label)
 						.esc_html($deactivatedInOnOffice)
 					.'</span>'
