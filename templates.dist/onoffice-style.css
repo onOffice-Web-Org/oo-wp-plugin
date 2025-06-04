@@ -157,7 +157,8 @@
 }
 
 .oo-listtd.--highlight {
-	text-decoration: underline;
+    font-weight: bold;
+    color: #80acd3;
 }
 
 .oo-detailslink a, .favorize, .oo-unitslink a {

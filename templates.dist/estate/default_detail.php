@@ -145,7 +145,6 @@ $dimensions = [
 				$estateDetails = array_filter(iterator_to_array($currentEstate)); // filter empty values
 				$keyfacts = array_intersect_key($estateDetails, $highlightKeys); // get only highlighted fields
 				$estatefacts = array_diff_key($estateDetails, $highlightKeys); // get only non highlighteds
-				error_log(print_r($estatefacts, true));
 			?>
 			<?php if(!empty($keyfacts)) {
 				echo '<h2 class="oo-details-highlights-headline">' . __('Highlights', 'onoffice-for-wp-websites') . '</h2>' .
