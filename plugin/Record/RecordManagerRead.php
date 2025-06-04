@@ -77,6 +77,15 @@ abstract class RecordManagerRead
 
 	abstract public function getRowByName($name);
 
+	/**
+	 *
+	 * @param string $name
+	 * @param string $id
+	 * @return bool
+	 *
+	 */
+	abstract public function checkSameName(string $name, string $id): bool;
+
 
 	/**
 	 *

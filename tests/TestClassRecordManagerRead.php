@@ -53,7 +53,7 @@ class TestClassRecordManagerRead
 	public function prepare()
 	{
 		$this->_pSubject = $this->getMockBuilder(RecordManagerRead::class)
-			->setMethods(['getRecords', 'getRowByName'])
+			->setMethods(['getRecords', 'getRowByName', 'checkSameName'])
 			->getMock();
 	}
 

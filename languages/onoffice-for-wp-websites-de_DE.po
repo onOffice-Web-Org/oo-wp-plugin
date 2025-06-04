@@ -1,1730 +1,1682 @@
-# Copyright (C) 2020 onOffice GmbH
-# This file is distributed under the same license as the onOffice for WP-Websites plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice for WP-Websites 2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-06-30T15:22:04+07:00\n"
-"PO-Revision-Date: \n"
+"Project-Id-Version: WP-OO-Plugin\n"
+"Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-05-28T08:29:41+00:00\n"
+"PO-Revision-Date: 2025-05-28T08:29:41+00:00\n"
+"Language: de\n"
+"X-Generator: POEditor.com\n"
+"X-Domain: onoffice-for-wp-websites\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1\n"
 
-#. Plugin Name of the plugin
-msgid "onOffice for WP-Websites"
-msgstr "onOffice für WP-Websites"
+msgid "A standard value of 1.5% and 0.5% is usually used to calculate notary and land registry costs."
+msgstr "Für die Berechnung der Notar- und Grundbuchkosten wird in der Regel ein Standardwert von 1,5 % und 0,5 % verwendet."
+
+#. translators: 1: Count and name of parking lot
+msgid "%1$s"
+msgid_plural "%1$s"
+msgstr[0] "%1$s"
+msgstr[1] "%1$s"
+
+msgid "Land Register Entry"
+msgstr "Grundbucheintrag"
+
+msgid "Notary Fees"
+msgstr "Notargebühren"
+
+msgid "Broker commission"
+msgstr "Maklerprovision"
+
+msgid "Property transfer tax"
+msgstr "Grunderwerbsteuer"
+
+msgid "Overview of costs"
+msgstr "Übersicht der Kosten"
+
+msgid "Total costs"
+msgstr "Gesamtkosten"
+
+msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs."
+msgstr "Die Felder %1$s, %2$s und %3$s müssen in onOffice enterprise ausgefüllt werden, damit eine Ausgabe möglich ist. %4$s %4$s Für die Berechnung der Notar- und Grundbucheintragskosten wird üblicherweise ein Standardwert von 1,5%% bzw. 0,5%% verwendet."
+
+msgid "Show total price calculator"
+msgstr "Gesamtpreiskalkulator anzeigen"
+
+msgid "Total costs calculator"
+msgstr "Gesamtpreiskalkulator"
+
+msgid "Insert variable"
+msgstr "Variable einfügen"
+
+msgid "We recommend a maximum number of characters between 40 and 60 or up to 10 words."
+msgstr "Wir empfehlen eine maximale Anzahl von 40 bis 60 Zeichen oder bis zu 10 Wörtern."
+
+msgid "Message from the contact form of your website"
+msgstr "Nachricht vom Kontaktformular Ihrer Website"
+
+msgid "Message from the interest form on your website"
+msgstr "Nachricht vom Interessenformular auf Ihrer Website"
+
+msgid "Message from the owner form of your website"
+msgstr "Nachricht vom Eigentümerformular auf Ihrer Website"
+
+msgid "New newsletter registration"
+msgstr "Neue Newsletter-Anmeldung"
+
+msgid "Page "
+msgstr "Seite"
+
+msgid "Page %s"
+msgstr "Seite %s"
+
+msgid "Add Page"
+msgstr "Seite hinzufügen"
+
+msgid "Show form as modal"
+msgstr "Formular als Modal anzeigen"
+
+msgid "Remove Page"
+msgstr "Seite entfernen"
+
+msgid "Page"
+msgstr "Seite"
+
+msgid "%s list documentation"
+msgstr "%s Dokumentation der Liste"
+
+msgid "estate"
+msgstr "estate"
+
+msgid "Example address"
+msgstr "Beispiel-Adresse"
+
+msgid "https://wp-plugin.onoffice.com/"
+msgstr "https://wp-plugin.onoffice.com/"
+
+msgid "address"
+msgstr "Adresse"
+
+msgid "Show energy certificate with a scale"
+msgstr "Energieausweis mit Skala anzeigen"
+
+msgid "The main contact person is the address data record of the broker type, which is stored in the first place in onOffice enterprise."
+msgstr "Der Hauptansprechpartner ist der Adressdatensatz mit Typ Makler, der an erster Stelle in onOffice enterprise gespeichert ist."
+
+msgid "Only show main contact person"
+msgstr "Nur Hauptansprechpartner anzeigen"
+
+msgid "Show all contact persons"
+msgstr "Alle Ansprechpartner anzeigen"
+
+msgid "Show address map"
+msgstr "Adresskarte anzeigen"
+
+msgid "Need clarification"
+msgstr "Klärung erforderlich"
+
+msgid "Checked"
+msgstr "Ausgewählt"
+
+msgid "Miscellaneous"
+msgstr "Sonstiges"
+
+msgid "Cancelled"
+msgstr "Abgebrochen"
+
+msgid "Deferred"
+msgstr "Aufgeschoben"
+
+msgid "Completed"
+msgstr "Erledigt"
+
+msgid "In process"
+msgstr "In Bearbeitung"
+
+msgid "Not started"
+msgstr "Nicht gestartet"
+
+msgid "lowest"
+msgstr "Niedrigste"
+
+msgid "low"
+msgstr "Niedrig"
+
+msgid "high"
+msgstr "Hoch"
+
+msgid "highest"
+msgstr "Höchste"
+
+msgid "standard"
+msgstr "Normal"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Task description"
+msgstr "Aufgabenbeschreibung"
+
+msgid "Subject"
+msgstr "Betreff"
+
+msgid "Priority"
+msgstr "Priorität"
+
+msgid "Type"
+msgstr "Art"
+
+msgid "Processor"
+msgstr "Bearbeiter"
+
+msgid "Responsibility"
+msgstr "Verantwortung"
+
+msgid "Create tasks in onOffice enterprise"
+msgstr "Aufgaben in onOffice enterprise erstellen"
+
+msgid "Advisory Level"
+msgstr "Beratungsebene"
+
+msgid "G Cancellation"
+msgstr "G Absage"
+
+msgid "F Documentation ordered"
+msgstr "F Dokumentation bestellt"
+
+msgid "E Documentation received"
+msgstr "E Dokumentation erhalten"
+
+msgid "D Interested, but still reviewing"
+msgstr "D Interessiert, aber noch prüfend"
+
+msgid "C Intense communication"
+msgstr "C Im intensiven Gespräch"
+
+msgid "B Written rental / purchase commitment"
+msgstr "B Schriftliche Miet-/Kaufzusage"
+
+msgid "A Rental/purchase contract signed"
+msgstr "A Miet-/Kaufvertrag unterzeichnet"
+
+msgid "Origin Contact"
+msgstr "Herkunft Kontakt"
+
+msgid "Characteristic"
+msgstr "Merkmal"
+
+msgid "Callback"
+msgstr "Rückruf"
+
+msgid "Kind of action"
+msgstr "Aktionstyp"
+
+msgid "Type of action"
+msgstr "Aktionsart"
+
+msgid "Write activity"
+msgstr "Aktivität schreiben"
+
+msgid "Image website"
+msgstr "Bild Website"
+
+msgid "Tasks"
+msgstr "Aufgaben"
+
+msgid "Activities"
+msgstr "Aktivitäten"
+
+msgid "Contact Image"
+msgstr "Kontakt-Bild"
+
+msgid "If this checkbox is selected, the name and company of the address will be included in the URLs of the address detail views. The name and company will be placed after the record number, eg. <code>/1234-firstname-lastname-company</code>."
+msgstr "Wenn dieses Häkchen gesetzt ist, werden der Name und die Firma der Adresse in die URLs der Adressdetailansichten aufgenommen. Der Name und das Unternehmen werden nach der Datensatznummer eingefügt, z. B. <code>/1234-vorname-nachname-unternehmen</code>."
+
+msgid "Show Name and Company in the URL"
+msgstr "Name und Firma in der URL anzeigen"
+
+msgid "Sort direction"
+msgstr "Sortierrichtung"
+
+msgid "Sort criteria within same selection"
+msgstr "Sortierkriterien innerhalb derselben Auswahl"
+
+msgid "Sequence"
+msgstr "Reihenfolge"
+
+msgid "Marked properties"
+msgstr "Markierte Immobilien"
+
+msgid "Reference"
+msgstr "Referenz"
+
+msgid "Reserved"
+msgstr "Reserviert"
+
+msgid "Rented"
+msgstr "Vermietet"
+
+msgid "Sold"
+msgstr "Verkauft"
+
+msgid "No marker"
+msgstr "Ohne Markierung"
+
+msgid "Top offer"
+msgstr "Top Angebot"
+
+msgid "New"
+msgstr "Neu"
+
+msgid "Reference Estate"
+msgstr "Referenz Immobilienliste:"
+
+msgid "No Estate"
+msgstr "Keine Immobilie"
+
+msgid "Active Estate"
+msgstr "Aktive Immobilienliste:"
+
+msgid "Address Detail View"
+msgstr "Adress-Detailansicht"
+
+msgid "There was a problem saving the view. Please make sure the name of the view is unique, even across all address list types."
+msgstr "Es gab ein Problem beim Speichern der Ansicht. Bitte stellen Sie sicher, dass der Name der Ansicht eindeutig ist, auch über alle Adresslistentypen hinweg."
+
+msgid "There was a problem saving the address detail view."
+msgstr "Es gab ein Problem beim Speichern der Adress-Detailansicht."
+
+msgid "The address detail view has been saved."
+msgstr "Die Detailansicht der Adresse wurde gespeichert."
+
+msgid "Address Views"
+msgstr "Adresslistenansicht"
+
+msgid "Hidden Field"
+msgstr "Verstecktes Feld"
+
+msgid "Google ReCAPTCHA"
+msgstr "Google reCAPTCHA"
+
+msgid "Comma (ex: 123,456,789)"
+msgstr "Komma (z.B.: 123,456,789)"
+
+msgid "Dot (ex: 123.456.789)"
+msgstr "Punkt (z.B.: 123.456.789)"
+
+msgid "Please choose"
+msgstr "Bitte wählen"
+
+msgid "Thousand Separator Format"
+msgstr "Tausender-Trennzeichen-Format"
+
+msgid "Separator Format Settings"
+msgstr "Einstellungen für das Trennzeichenformat"
+
+msgid "Cache"
+msgstr "Cache"
+
+msgid "The Cache duration value determines the period of time after which the plugin cache of your page is refreshed. This value is set to 1 hour by default."
+msgstr "Der Wert für die Cache-Dauer bestimmt die Zeitspanne, nach der der Plugin-Cache Ihrer Seite aktualisiert wird. Dieser Wert ist standardmäßig auf 1 Stunde eingestellt."
+
+msgid "24 hours"
+msgstr "24 Stunden"
+
+msgid "12 hours"
+msgstr "12 Stunden"
+
+msgid "1 hour"
+msgstr "1 Stunde"
+
+msgid "Duration"
+msgstr "Dauer"
+
+msgid "6 hours"
+msgstr "6 Stunden"
+
+msgid "30 minutes"
+msgstr "30 Minuten"
+
+msgid "10 minutes"
+msgstr "10 Minuten"
+
+msgid "Image of property"
+msgstr "Bild der Immobilie"
+
+msgid "You can show up to 500 data records per page."
+msgstr "Sie können bis zu 500 Datensätze pro Seite anzeigen."
+
+msgid "Data records per page"
+msgstr "Datensätze pro Seite"
+
+msgid "Select an Option"
+msgstr "Wählen Sie eine Option"
+
+msgid "Select Some Options"
+msgstr "Wählen Sie einige Optionen"
+
+msgid "For information on how to use custom fields in your SEO plugin, please refer to its documentation."
+msgstr "Informationen über die Verwendung von benutzerdefinierten Feldern in Ihrem SEO-Plugin finden Sie in der zugehörigen Dokumentation."
+
+msgid "An example of integration with the Yoast SEO plugin would be:%1$s %2$s or%1$s %3$s or%1$s %4$s"
+msgstr "Ein Beispiel für die Integration mit dem Yoast SEO Plugin wäre: %1$s %2$s oder%1$s %3$s oder%1$s %4$s"
+
+msgid "These custom fields allow you to insert specific information, such as the property title and property number from onOffice enterprise. The corresponding field names can be found in the field list on the detail page. Please note that only fields that are active for the detail page, for example, can be output."
+msgstr "Mit diesen benutzerdefinierten Feldern können Sie spezifische Informationen einfügen, wie z. B. den Immobilientitel und die Immobiliennummer aus onOffice enterprise. Die entsprechenden Feldnamen finden Sie in der Feldliste auf der Detailseite. Bitte beachten Sie, dass nur Felder ausgegeben werden können, die z.B. für die Detailseite aktiv sind."
+
+msgid "With the help of an SEO plugin, it is possible to use individual fields to insert data directly from onOffice enterprise into the title and metadata of your website."
+msgstr "Mit Hilfe eines SEO-Plugins ist es möglich, individuelle Felder zu nutzen, um Daten direkt aus onOffice enterprise in den Titel und die Metadaten Ihrer Website einzufügen."
+
+msgid "Further information on custom fields"
+msgstr "Weitere Informationen zu benutzerdefinierten Feldern"
+
+msgid "Social MetaData"
+msgstr "Social Metadaten"
+
+msgid "We have detected an active SEO plugin: %s. This option can lead to conflicts with the SocialMedia Data settings. Therefore they are disabled."
+msgstr "Wir haben ein aktives SEO-Plugin entdeckt: %s. Diese Option kann zu Konflikten mit den SocialMedia Data- Settings führen. Daher sind sie deaktiviert."
+
+msgid "Enable Twitter Cards"
+msgstr "Twitter-Karten aktivieren"
+
+msgid "Enable Open Graph"
+msgstr "Open Graph aktivieren"
+
+msgid "Leave without saving"
+msgstr "Verlassen ohne zu speichern"
+
+msgid "Your changes have not been saved yet! Do you want to leave the page without saving?"
+msgstr "Ihre Änderungen wurden noch nicht gespeichert! Möchten Sie die Seite verlassen, ohne zu speichern?"
+
+msgid "AreaButler"
+msgstr "AreaButler"
+
+msgid "Delete Keys"
+msgstr "Schlüssel löschen"
+
+msgid "Display as selection list instead of text input"
+msgstr "Anzeige als Auswahlliste anstelle der Texteingabe"
+
+msgid "The duplicate check identifies existing duplicates of address data records and triggers an e-mail notification with information on manual duplicate management."
+msgstr "Die Dublettenprüfung identifiziert vorhandene Dubletten von Adressdatensätzen und löst eine E-Mail-Benachrichtigung mit Informationen zur manuellen Dublettenverwaltung aus."
+
+msgid "https://de.enterprisehilfe.onoffice.com/help_entries/dubletten/?lang=en"
+msgstr "https://de.enterprisehilfe.onoffice.com/help_entries/dubletten/"
+
+msgid "How to search and update duplicates in onOffice enterprise:"
+msgstr "Wie man Duplikate in onOffice enterprise sucht und aktualisiert:"
+
+msgid "Existing data record:"
+msgstr "Bestehender Datensatz:"
+
+msgid "Attention: Duplicate detected! This data is similar to existing data records. Please take a moment to check for duplicates and decide whether updates are required."
+msgstr "Achtung! Duplikat entdeckt! Diese Daten sind bestehenden Datensätzen ähnlich. Bitte nehmen Sie sich einen Moment Zeit, um nach Duplikaten zu prüfen und zu entscheiden, ob eine Aktualisierung erforderlich ist."
+
+msgid "Would you like to permanently delete the site key and the secret key?"
+msgstr "Möchten Sie den Site Key und den Secret Key dauerhaft löschen?"
+
+msgid "Search the field list for the desired fields."
+msgstr "Suchen Sie in der Feldliste nach den gewünschten Feldern."
+
+msgid "At least city or postcode are required."
+msgstr "Mindestens Ort oder Postleitzahl sind erforderlich."
+
+msgid "Field list search"
+msgstr "Feldlistensuche"
+
+msgid "Publish"
+msgstr "Veröffentlichen"
+
+msgid "Show price on request"
+msgstr "Preis auf Anfrage anzeigen"
+
+msgid "Show estate map"
+msgstr "Immobilienkarte anzeigen"
+
+msgid "Hide empty values from onOffice enterprise"
+msgstr "Leere Werte aus onOffice enterprise ausblenden"
+
+msgid "Show in search"
+msgstr "In der Suche anzeigen"
+
+msgid "There was a problem saving the form. The Name field cannot be empty."
+msgstr "Beim Speichern des Formulars ist ein Problem aufgetreten. Das Feld Name darf nicht leer sein."
+
+msgid "There was a problem saving the list. The Name field cannot be empty."
+msgstr "Es gab ein Problem beim Speichern der Liste. Das Feld Name darf nicht leer sein."
+
+msgid "There was a problem saving the address. The Name field cannot be empty."
+msgstr "Es gab ein Problem beim Speichern der Adresse. Das Feld Name darf nicht leer sein."
+
+msgid "Price on request"
+msgstr "Preis auf Anfrage"
+
+msgid "The cache was cleared successfully."
+msgstr "Der Cache von onOffice wurde erfolgreich geleert."
+
+msgid "A honeypot is an invisible field to trick spam bots. Note that when a bot is detected, it will pretend the form was sent successfully. We recommend to keep this active, but you can deactivate it if it causes any problems."
+msgstr "Ein Honeypot ist ein unsichtbares Feld, um Spam-Bots auszutricksen. Wird ein Bot erkannt, wird ein erfolgreiches Absenden des Formulars vorgegaukelt. Wir empfehlen, dieses Feld aktiv zu lassen, es kann aber bei Problemen deaktiviert werden."
+
+msgid "Add honeypot to forms"
+msgstr "Honeypot zu Formularen hinzufügen"
+
+msgid ""
+"## Connect your website to onOffice enterprise\n"
+"\n"
+"You are ready to integrate all your real estate into your website and create forms that send data into onOffice enterprise.\n"
+"\n"
+"For help with setting up the plugin, read through our [setup tutorial](https://wp-plugin.onoffice.com/en/first-steps/).\n"
+"\n"
+"The [documentation website](https://wp-plugin.onoffice.com/en/) also offers detailed explanations of the features. If you encounter a problem, you can send us a message using the [support form](https://wp-plugin.onoffice.com/en/support/).\n"
+""
+msgstr ""
+"## onOffice enterprise verbinden\n"
+"\n"
+"Die Immobilien können nun in diese Website integriert sowie Formulare angelegt werden, die Daten an onOffice enterprise senden.\n"
+"\n"
+"Hilfe zur Einrichtung des Plugins gibt es in unserer [Anleitung](https://wp-plugin.onoffice.com/de/erste-schritte/).\n"
+"\n"
+"Die [Dokumentationswebsite](https://wp-plugin.onoffice.com/de/) bietet auch detaillierte Erklärung der Funktionen. Bei Problemen sind wir über das [Supportformular](https://wp-plugin.onoffice.com/de/support/) erreichbar.\n"
+""
+
+msgid "Getting started"
+msgstr "Erste Schritte"
+
+#. translators: %s is the amount of other parking lots
+msgid "%s other parking lot"
+msgid_plural "%s other parking lots"
+msgstr[0] "%s Sonstiger"
+msgstr[1] "%s Sonstige"
+
+#. translators: %s is the amount of underground garages
+msgid "%s underground garage"
+msgid_plural "%s underground garages"
+msgstr[0] "%s Tiefgaragenstellplatz"
+msgstr[1] "%s Tiefgaragenstellplätze"
+
+#. translators: %s is the amount of multi story garages
+msgid "%s multi-story garage"
+msgid_plural "%s multi-story garages"
+msgstr[0] "%s Parkhausstellplatz"
+msgstr[1] "%s Parkhausstellplätze"
+
+#. translators: %s is the amount of garages
+msgid "%s garage"
+msgid_plural "%s garages"
+msgstr[0] "%s Garage"
+msgstr[1] "%s Garagen"
+
+#. translators: %s is the amount of parking spaces
+msgid "%s parking space"
+msgid_plural "%s parking spaces"
+msgstr[0] "%s Freiplatz"
+msgstr[1] "%s Freiplätze"
+
+#. translators: %s is the amount of duplexes
+msgid "%s duplex"
+msgid_plural "%s duplexes"
+msgstr[0] "%s Duplex"
+msgstr[1] "%s Duplex"
+
+#. translators: %s is the amount of carports
+msgid "%s carport"
+msgid_plural "%s carports"
+msgstr[0] "%s Carport"
+msgstr[1] "%s Carports"
+
+#. translators: %s is the marketing type of rent
+msgid " (rent)"
+msgstr " (Miete)"
+
+#. translators: %s is the marketing type of buy
+msgid " (purchase)"
+msgstr " (Kauf)"
+
+#. translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type
+msgid "%1$s, %2$s%3$s"
+msgid_plural "%1$s, %2$s %3$s"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Choose an estate filter from onOffice enterprise. %s"
+msgstr "Wählen Sie einen Immobilienfilter aus onOffice enterprise. %s"
+
+msgid "Learn more."
+msgstr "Mehr erfahren."
+
+msgid "https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en"
+msgstr "https://de.enterprisehilfe.onoffice.com/help_entries/immobilienfilter/"
+
+msgid "The plugin couldn't find any %s. Please make sure that you have published some %s, as described in the %s"
+msgstr "Das Plugin konnte keine Immobilien finden. Bitte stellen Sie sicher, dass Sie Immobilien für die Website veröffentlicht haben, wie in der %s beschrieben."
+
+msgid "https://wp-plugin.onoffice.com/en/first-steps/estate-lists/"
+msgstr "https://wp-plugin.onoffice.com/de/erste-schritte/immobilienlisten/"
+
+msgid "Label uses %s"
+msgstr "Beschriftung nutzt %s"
+
+msgid "https://wp-plugin.onoffice.com/en/advanced-features/markdown-labels"
+msgstr "https://wp-plugin.onoffice.com/de/erweiterte-funktionen/custom-field-labels/"
+
+msgid "Markdown"
+msgstr "Markdown"
+
+msgid "GDPR (Checkbox)"
+msgstr "DSGVO (Checkbox)"
+
+msgid "Since you are logged in, here is a link to a random %s so that you can preview the detail page: %s"
+msgstr "Weil Sie angemeldet sind, zeigen wir Ihnen einen Link zu einer zufälligen %s sodass Sie sich die Detailansicht anschauen können: %s"
+
+msgid "Example estate"
+msgstr "Beispielimmobilie"
+
+msgid "You have opened the detail page, but we do not know which %s to show you, because there is no %s ID in the URL. Please go to an %s list and open an %s from there."
+msgstr "Sie haben die Detailseite geöffnet, aber wir wissen nicht, welches %s wir Ihnen zeigen sollen, da die URL keine %s ID enthält. Bitte gehen Sie zu einer %s-Liste und öffnen Sie von dort aus ein %s."
+
+msgid "Applicant Search Form"
+msgstr "Interessentensuchformular"
+
+msgid "Owner Form"
+msgstr "Eigentümerformular"
+
+msgid "Interest Form"
+msgstr "Interessentenformular"
+
+msgid "SEO"
+msgstr "SEO"
+
+msgid "Do not modify"
+msgstr "Nicht verändern"
+
+msgid "Fill out"
+msgstr "Ausfüllen"
+
+msgid "Title and description"
+msgstr "Titel und Beschreibung"
+
+msgid "This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin."
+msgstr "Das Plugin wird den Titel und die Beschreibung mit Informationen der gezeigten Immobilie ausfüllen. Diese Option wird empfohlen, wenn Sie kein SEO-Plugin aktiv verwenden."
+
+msgid ""
+"We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.\n"
+"\t\t\t\t\t\t\t\tWe recommend that you configure the onOffice plugin to not modify the title and description."
+msgstr ""
+"Wir haben ein aktives SEO-Plugin erkannt: %s. Diese Einstellung kann zu Konflikten mit SEO-Plugins führen.\n"
+"\t\t\t\t\t\t\t\tWir empfehlen, dass Sie das onOffice-Plugin so einstellen, dass es die Titel und Beschreibungen nicht verändert."
+
+msgid "The title and description of the detail page are set using the %1$s and %2$s tags. They make it possible to show a summary of the page when you share a link."
+msgstr "Titel und Beschreibung der Detailseite werden mit den Tags %1$s und %2$s gesetzt. Sie ermöglichen die Anzeige einer Beschreibung der Seite, wenn ein Link dazu geteilt wird."
+
+msgid "This plugin will not modify the title and description. This enables other plugins to manage those tags."
+msgstr "Dieses Plugin wird Titel und Beschreibung nicht verändern, was anderen Plugins ermöglicht, diese zu verwalten."
+
+msgid ""
+"The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.\n"
+"\t\t\t\t\t\t\t\tWe recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin."
+msgstr ""
+"Das onOffice-Plugin hat ein aktives SEO-Plugin erkannt: %s. Aktuell ist das onOffice-Plugin so eingestellt, dass es den Titel und die Beschreibung der Detailseite ausfüllt, was zu Konflikten mit SEO-Plugins führen kann.\n"
+"\t\t\t\t\t\t\t\tWir empfehlen, dass Sie in die %s gehen und das onOffice-Plugin umstellen, sodass es Titel und Beschreibung nicht verändert. Dies erlaubt die Verwaltung der Titel und Beschreibungen mit dem aktiven SEO-Plugin."
+
+msgid "onOffice plugin settings"
+msgstr "onOffice-Plugin-Einstellungen"
+
+#. translators: %1$s is office server status page link, %2$s is support form page link
+msgid "Please check the %1$s to see if there are known problems. Otherwise, report the problem using the %2$s."
+msgstr "Bitte den %1$s prüfen, ob es bekannte Probleme gibt. Sonst bitte das Problem mit dem %2$s melden."
+
+msgid "https://wp-plugin.onoffice.com/en/support/"
+msgstr "https://wp-plugin.onoffice.com/de/support/"
+
+msgid "support form"
+msgstr "Supportformular"
+
+msgid "https://status.onoffice.de/"
+msgstr "https://status.onoffice.de/"
+
+msgid "onOffice server status"
+msgstr "onOffice Server-Status"
+
+msgid "The onOffice plugin has an unexpected problem when trying to reach the onOffice API."
+msgstr "Das onOffice-Plugin hatte ein unerwartetes Problem beim Aufruf der onOffice-API."
+
+msgid "Direct download for PDF exposé"
+msgstr "Direktdownload für PDF-Exposés"
+
+msgid "You can show up to 500 per page."
+msgstr "Sie können bis zu 500 pro Seite anzeigen."
+
+msgid "Estates per page"
+msgstr "Immobilien pro Seite"
+
+msgid "Clear onOffice cache"
+msgstr "onOffice-Cache leeren"
+
+msgid "Your search criteria"
+msgstr "Deine Suchkriterien"
+
+msgid "Remove from favorites"
+msgstr "Von Favoriten entfernen"
+
+msgid "Remove from watchlist"
+msgstr "Von Merkliste entfernen"
+
+msgid "Add to favorites"
+msgstr "Zu Favoriten hinzufügen"
+
+msgid "Add to watchlist"
+msgstr "Der Merkliste hinzufügen"
+
+msgid "Included"
+msgstr "Mitgeliefert"
+
+msgid "Personalized (Plugin)"
+msgstr "Individualisiert (Plugin)"
+
+msgid "Personalized (Theme)"
+msgstr "Individualisiert (Theme)"
+
+msgid "Restrict access to reference estates (404 Not Found)"
+msgstr "Zugang zu Referenzimmobilien beschränken (404 Nicht gefunden)"
+
+msgid "Show only reference estates (filter out all others)"
+msgstr "Nur Referenzimmobilien anzeigen (alle anderen ausblenden)"
+
+msgid "Show reference estates (alongside others)"
+msgstr "Referenzimmobilien anzeigen (mit anderen zusammen)"
+
+msgid "Hide reference estates"
+msgstr "Referenzimmobilien ausblenden"
+
+msgid "Reference estates will link to their detail page, because the access is %s."
+msgstr "Referenzimmobilien werden einen Link zu ihrer Detailseite haben, weil der Zugang %s ist."
+
+msgid "not restricted"
+msgstr "nicht eingeschränkt"
+
+msgid "Reference estates will not link to their detail page, because the access is %s."
+msgstr "Referenzimmobilien werden keinen Link zu ihrer Detailseite haben, weil der Zugang %s ist."
+
+msgid "restricted"
+msgstr "eingeschränkt"
+
+msgid "Favorites"
+msgstr "Favoriten"
+
+msgid ", shortcode: "
+msgstr ", Shortcode: "
+
+msgid "Type: "
+msgstr "Typ: "
+
+msgid "Shortcode: "
+msgstr "Shortcode: "
+
+msgid " is not yet used."
+msgstr " wird noch nicht verwendet."
+
+#. translators: %s will be replaced with a link to the appropriate page.
+msgid "  is used on %s"
+msgstr "  wird verwendet auf %s"
+
+msgid "Copy"
+msgstr "Kopieren"
+
+msgid "The shortcode "
+msgstr "Der Shortcode "
+
+msgid "API settings (encrypted)"
+msgstr "API Einstellungen (verschlüsselt)"
+
+msgid "Override email address"
+msgstr "E-Mail-Adresse überschreiben"
+
+msgid "Use default email address "
+msgstr "Standard-E-Mail-Adresse benutzen "
+
+msgid "Use default email address %s"
+msgstr "Standard-E-Mail-Adresse benutzen %s"
+
+msgid "%s (override)"
+msgstr "%s (überschrieben)"
+
+msgid "missing"
+msgstr "fehlt"
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "Default Email Address"
+msgstr "Standard-E-Mail-Adresse"
+
+msgid "Comment"
+msgstr "Kommentar"
+
+msgid "Image"
+msgstr "Bild"
+
+msgid "All e-mail addresses"
+msgstr "Alle E-Mail-Adressen"
+
+msgid "All mobile numbers"
+msgstr "Alle Handynummern"
+
+msgid "All fax numbers"
+msgstr "Alle Faxnummern"
+
+msgid "All non-mobile phone numbers"
+msgstr "Alle Nicht-Handynummern"
+
+msgid "Search Criteria Comment (external)"
+msgstr "Suchkriteriums-Kommentar (extern)"
+
+msgid "Special Fields"
+msgstr "Spezialfelder"
+
+#. translators: %s will be replaced with the translation of 'plugin settings'.
+msgid "The onOffice plugin is missing a default email address. You have forms that use the default email and they will currently not send emails. Please add a default email address in the %s to dismiss this warning."
+msgstr "Im onOffice-Plugin fehlt eine Standard-E-Mail-Adresse. Sie haben Formulare, die die Standard-E-Mail-Adresse benötigen. Die Formulare senden derzeit keine E-Mails. Bitte fügen Sie eine Standard-E-Mail-Adresse in den %s ein, um diese Warnung zu verwerfen."
+
+msgid "plugin settings"
+msgstr "Plugin-Einstellungen"
+
+msgid "Objects"
+msgstr "Objekte"
+
+msgid "360° tours"
+msgstr "360° Rundgänge"
+
+msgid "Videos"
+msgstr "Videos"
+
+msgid "Links"
+msgstr "Links"
+
+msgid "Object-Links"
+msgstr "Objekt-Links"
+
+msgid "Embedded"
+msgstr "Eingebettet"
+
+msgid "Ogulo-Links"
+msgstr "Ogulo-Links"
+
+msgid "Deactivated"
+msgstr "Deaktiviert"
+
+msgid "Random order"
+msgstr "Zufällige Reihenfolge"
+
+msgid "User selection"
+msgstr "Benutzerauswahl"
+
+msgid "Default sort"
+msgstr "Standardsortierung"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "Popular"
+msgstr "Häufig verwendet"
+
+msgid "By default, no link is created to the estate when the plugin creates the address. If the contact form is on an detail page and you want to link the address and the requested estate, you can open the email in onOffice enterprise or use the %s."
+msgstr "Beim Anlegen einer Adresse wird standardmäßig keine Verknüpfung zur Immobilie erstellt. Wenn das Kontaktformular auf einer Detailseite ist und die Adresse mit der angefragten Immobilie verknüpft werden soll, kannst du die E-Mail in onOffice enterprise öffnen oder den %s benutzen."
+
+msgid "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en"
+msgstr "https://de.enterprisehilfe.onoffice.com/category/zusatzmodule/anfragenmanager/"
+
+msgid "Request Manager"
+msgstr "Anfragenmanager"
+
+msgid "Sorting"
+msgstr "Sortierung"
+
+msgid "(in the folder \"%s\")"
+msgstr "(im Ordner \"%s\")"
+
+msgid "Search Forms"
+msgstr "Formulare durchsuchen"
+
+msgid "Search Estate Views"
+msgstr "Immobilienlisten durchsuchen"
+
+msgid "Search Addresses"
+msgstr "Adressen durchsuchen"
+
+msgid "Access Control"
+msgstr "Zugangskontrolle"
+
+msgid "Form type"
+msgstr "Formulartyp"
+
+msgid "Recipient e-mail address"
+msgstr "E-Mail-Adresse des Empfängers:"
+
+msgid "Form name"
+msgstr "Name des Formulars"
+
+msgid "List type"
+msgstr "Listentyp"
+
+msgid "Pages using the shortcode"
+msgstr "Seiten, die den Shortcode verwenden"
+
+msgid "Selected filter"
+msgstr "Ausgewählter Filter"
+
+msgid "List name"
+msgstr "Name der Liste"
+
+msgid "We have deactivated the plugin's duplicate check for all of your forms, because the duplicate check can unintentionally overwrite address records. This function will be removed in the future. The option has been deactivated for these forms: Contact, Interest, Owner"
+msgstr "Wir haben die Dublettenprüfung des Plugins für alle Formulare deaktiviert, da nicht allen Nutzern klar war, dass die Dublettenprüfung Adressdatensätze überschreiben kann. Diese Funktion wird in Zukunft entfernt. Die Dublettenprüfung wurde für folgende Formulare deaktiviert: Kontakt-, Interessenten-, Eigentümerformulare."
+
+msgid "Contact Type of New Address"
+msgstr "Kontaktart der neuen Adresse"
+
+msgid "Show reference estates"
+msgstr "Referenzen anzeigen"
+
+msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
+msgstr "Wenn dieses Häkchen gesetzt ist, wird der Titel der Immobilie Teil der URL der Detailseite. Der Titel wird hinter die Datensatznummer gestellt, z. B. <code>/1234-schoene-lage-mit-aussicht</code>. Es werden nicht mehr als die ersten fünf Wörter des Titels verwendet."
+
+msgid "If you allow indexing, your search engine ranking can be negatively affected and your brochures can be available from search engines even months after the corresponding estate is deleted."
+msgstr "Wenn du die Indizierung erlaubst, kann dies dein Suchmaschineneranking negativ beeinflussen. Die Exposés können auf Suchmaschinen auch noch Monate nach der Löschung der entsprechenden Immobilie verfügbar sein."
+
+msgid "Allow indexing of PDF brochures"
+msgstr "Indizierung von PDF-Exposés erlauben"
+
+msgid "Create Address and Property"
+msgstr "Anlegen von Adresse und Immobilie"
+
+msgid "Create Address and Search Profile"
+msgstr "Anlegen von Adresse und Suchprofil"
+
+msgid "Detail View URLs"
+msgstr "Detailansicht-URLs"
+
+msgid "Show title in URL"
+msgstr "Titel in URL anzeigen"
+
+msgid "Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email."
+msgstr "Wenn dieses Kontaktformular auf einer Immobiliendetailseite angezeigt wird und bei der Immobilie ein Ansprechpartner hinterlegt ist, wird die E-Mail automatisch an die Adresse des Ansprechpartners geschickt. Wenn dies nicht der Fall ist, erhält diese E-Mail-Adresse die Anfrage."
+
+msgid "Save changes and clear API cache"
+msgstr "Änderungen speichern und Website-Cache löschen"
+
+msgid "By onOffice-Plugin"
+msgstr "Vom onOffice-Plugin"
+
+msgid "By WP Theme"
+msgstr "Vom WordPress-Theme"
+
+msgid "Pagination"
+msgstr "Seitennummerierung"
+
+msgid "Custom Label"
+msgstr "Individuelle Beschriftung"
+
+msgid "Add custom label language"
+msgstr "Eine individuelle Beschriftung hinzufügen"
+
+msgid "Custom Label: %s"
+msgstr "Individuelle Beschriftung: %s"
+
+msgid "Duplicate"
+msgstr "Duplizieren"
+
+msgid "Contact Form"
+msgstr "Kontaktformular"
+
+msgid "No Contact Form"
+msgstr "Kein Kontaktformular"
+
+msgid "Select Contact Form"
+msgstr "Kontaktformular wählen"
+
+msgid "There was a problem saving the similar estates view."
+msgstr "Es ist ein Fehler beim Speichern der \"Ähnliche Immobilien\"-Ansicht aufgetreten."
+
+msgid "The similar estates view has been saved."
+msgstr "Die \"Ähnliche Immobilien\"-Ansicht wurde gespeichert."
+
+msgid "Similar Estates View"
+msgstr "\"Ähnliche Immobilien\"-Ansicht"
+
+msgid "Real Estate Fields"
+msgstr "Immobiliendaten"
+
+msgid "Contact Person Fields"
+msgstr "Ansprechpartnerdaten"
+
+msgid "Show %s matches"
+msgstr "%s Treffer anzeigen"
+
+msgid "Show exact match"
+msgstr "Einen Treffer anzeigen"
+
+msgid "0 matches"
+msgstr "0 Treffer"
+
+msgid "Energy-Pass Range"
+msgstr "Energiepass-Skala"
+
+msgid "Location Map"
+msgstr "Lageplan"
+
+msgid "Ground Plan"
+msgstr "Grundriss"
+
+msgid "Panorama"
+msgstr "Panorama"
+
+msgid "Photo (big)"
+msgstr "Foto (groß)"
+
+msgid "Photo"
+msgstr "Foto"
+
+msgid "Cover Photo"
+msgstr "Titelbild"
+
+msgid "Map"
+msgstr "Karte"
+
+msgid "Search"
+msgstr "Suche"
+
+msgid "Default Value Up To:"
+msgstr "Standardwert bis:"
+
+msgid "Default Value From:"
+msgstr "Standardwert von:"
+
+#. translators: %s is the name of a language
+msgid "Default Value: %s"
+msgstr "Standardwert: %s"
+
+msgid "Add Language"
+msgstr "Sprache hinzufügen"
+
+msgid "Edit Values"
+msgstr "Werte bearbeiten"
+
+msgid "Default Value"
+msgstr "Standardwert"
+
+msgid "Choose Language"
+msgstr "Sprache auswählen"
+
+msgid "Add language"
+msgstr "Sprache hinzufügen"
+
+msgid "Formulation of sorting directions"
+msgstr "Formulierung der Sortierrichtungen"
+
+msgid "ascending / descending"
+msgstr "aufsteigend / absteigend"
+
+msgid "lowest First / highest First"
+msgstr "niedrigste zuerst / höchste zuerst"
+
+msgid "Standard Sort"
+msgstr "Standardsortierung"
+
+msgid "descending"
+msgstr "absteigend"
+
+msgid "ascending"
+msgstr "aufsteigend"
+
+msgid "highest first"
+msgstr "höchste zuerst"
+
+msgid "lowest first"
+msgstr "niedrigste zuerst"
 
 #. Plugin URI of the plugin
 msgid "https://wpplugindoc.onoffice.de"
 msgstr "https://wpplugindoc.onoffice.de"
 
-#. Description of the plugin
-msgid ""
-"Your connection to onOffice: This plugin enables you to have quick access to "
-"estates and forms – no additional sync with the software is needed. Consult "
-"support@onoffice.de for source code."
-msgstr ""
-"Ihre Verbindung zu onOffice: Dieses Plugin erlaubt Ihnen einen schnellen "
-"Zugriff zu Immobilien und Formularen - es wird keine zusätzliche "
-"Synchronisation der Software gebraucht. Für mehr Informationen kontaktieren "
-"Sie support@onoffice.de."
+#. translators: %s will be replaced with the translated field name.
+msgid "Choose %s"
+msgstr "%s auswählen"
 
-#. Author of the plugin
-msgid "onOffice GmbH"
-msgstr "onOffice GmbH"
+msgid "Up to: "
+msgstr "Bis: "
 
-#. Author URI of the plugin
-msgid "https://en.onoffice.com/"
-msgstr "https://de.onoffice.com/"
+msgid "From: "
+msgstr "Von: "
 
-#: plugin/API/APIClientCredentialsException.php:48
-msgid "Please configure your onOffice API credentials first!"
-msgstr "Bitte konfigurieren Sie zuerst Ihren API-Zugang!"
+msgid "Choose country"
+msgstr "Land auswählen"
 
-#: plugin/Controller/AdminViewController.php:151
-#: plugin/Gui/AdminPageAddressList.php:84 plugin/Gui/AdminPageBase.php:89
-#: plugin/Gui/AdminPageEstateDetail.php:218
-#: plugin/Gui/AdminPageEstateList.php:76
-#: plugin/Gui/AdminPageEstateUnitList.php:72
-#: plugin/Gui/AdminPageFormList.php:196
-#: plugin/Gui/AdminPageSimilarEstates.php:153
-msgid "onOffice"
-msgstr "onOffice"
+msgid "Contact Person"
+msgstr "Ansprechpartner"
 
-#: plugin/Controller/AdminViewController.php:157
-#: plugin/Gui/AdminPageAddressList.php:61
-msgid "Addresses"
-msgstr "Adressen"
+msgid "Show Details"
+msgstr "Details anzeigen"
 
-#: plugin/Controller/AdminViewController.php:163
-#: plugin/Controller/AdminViewController.php:164
-msgid "Estates"
-msgstr "Immobilien"
+#. translators: %d will be replaced with a number.
+msgctxt "template"
+msgid "Found %d estates over all."
+msgstr "Insgesamt wurden %d Immobilien gefunden."
 
-#: plugin/Controller/AdminViewController.php:175
-#: plugin/Gui/AdminPageFormList.php:97
-msgid "Forms"
-msgstr "Formulare"
+msgid "Overview of Estates"
+msgstr "Immobilienübersicht"
 
-#: plugin/Controller/AdminViewController.php:207
-#: plugin/Controller/AdminViewController.php:208
-#: plugin/Controller/AdminViewController.php:375
-msgid "Settings"
-msgstr "Einstellungen"
+msgid "Entities"
+msgstr "Einheiten"
 
-#: plugin/Controller/AdminViewController.php:391
-msgid "API token and secret"
-msgstr "API-Token und Secret"
+msgid "Send"
+msgstr "Absenden"
 
-#. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:394
-msgid ""
-"It looks like you did not enter any valid API credentials. Please consider "
-"reviewing your %s."
-msgstr ""
-"Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte überprüfen Sie "
-"Ihr %s."
+msgid "PDF expose"
+msgstr "PDF-Exposé"
 
-#: plugin/Controller/AdminViewController.php:410
-msgid ""
-"We have deactivated the plugin's duplicate check for all of your forms, "
-"because the duplicate check can unintentionally overwrite address records. "
-"This function will be removed in the future. The option has been deactivated "
-"for these forms: Contact, Interest, Owner"
-msgstr ""
-"Wir haben die Dublettenprüfung des Plugins für alle Ihre Formulare "
-"deaktiviert, da die Dublettenprüfung ungewollt Adressdatensätze "
-"überschreiben kann. Diese Funktion wird in Zukunft entfernt. Die Option "
-"wurde für diese Formulare deaktiviert: Kontakt, Interesse, Inhaber"
+msgid "Documents"
+msgstr "Dokumente"
 
-#: plugin/Controller/AdminViewController.php:428
-#, fuzzy
-#| msgid "API settings"
-msgid "plugin settings"
-msgstr "API Einstellungen"
+msgid "Contact person"
+msgstr "Ansprechpartner"
 
-#. translators: %s will be replaced with the translation of 'plugin settings'.
-#: plugin/Controller/AdminViewController.php:431
-msgid ""
-"The onOffice plugin is missing a default email address. You have forms that "
-"use the default email and they will currently not send emails. Please add a "
-"default email address in the %s to dismiss this warning."
-msgstr ""
-"Dem onOffice-Plugin fehlt eine Standard-E-Mail-Adresse. Sie haben Formulare, "
-"die die Standard-E-Mail verwenden, und sie senden derzeit keine E-Mails. "
-"Bitte fügen Sie eine Standard-E-Mail-Adresse in die %s ein, um diese Warnung "
-"zu schließen."
+msgid "More Estates like this"
+msgstr "Weitere ähnliche Immobilien"
 
-#. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
-#: plugin/Controller/EstateViewDocumentTitleBuilder.php:65
-msgid "%2$s (%3$s) in %4$s - %5$s"
-msgstr "%2$s (%3$s) in %4$s - %5$s"
+msgid "Open the Form"
+msgstr "Formular öffnen"
 
-#: plugin/Controller/SortList/SortListTypes.php:56
-#: tests/TestClassSortListTypes.php:60
-msgid "lowest first"
-msgstr "niedrigste zuerst"
+msgid "Next"
+msgstr "Weiter"
 
-#: plugin/Controller/SortList/SortListTypes.php:57
-#: tests/TestClassSortListTypes.php:50 tests/TestClassSortListTypes.php:61
-msgid "highest first"
-msgstr "höchste zuerst"
+msgid "Back"
+msgstr "Zurück"
 
-#: plugin/Controller/SortList/SortListTypes.php:60
-#: tests/TestClassSortListTypes.php:49 tests/TestClassSortListTypes.php:64
-msgid "ascending"
-msgstr "aufsteigend"
+#. translators: %s will be replaced with a translated field name.
+msgid "Please enter a value for %s."
+msgstr "Bitte gib einen Wert für %s ein."
 
-#: plugin/Controller/SortList/SortListTypes.php:61
-#: tests/TestClassSortListTypes.php:65
-msgid "descending"
-msgstr "absteigend"
+msgid "The form wasn't sent because spam was detected."
+msgstr "Das Formular wurde nicht abgeschickt, da der Verdacht auf Spam besteht."
 
-#: plugin/Field/Collection/FieldCategoryToFieldConverterSearchCriteriaGeoBackend.php:81
-msgid "Geo Position"
-msgstr "Geo-Position"
+msgid "There was an error sending the form."
+msgstr "Beim Senden des Formulars ist ein Fehler aufgetreten."
 
-#: plugin/Field/Collection/FieldLoaderGeneric.php:100
-#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
-#: plugin/Field/Collection/FieldsCollectionToContentFieldLabelArrayConverter.php:48
-#: plugin/Field/FieldModuleCollectionDecoratorAbstract.php:156
-#: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:50
-#: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:60
-#: plugin/Field/FieldModuleCollectionDecoratorSearchcriteria.php:52
-#: plugin/Fieldnames.php:154 plugin/Fieldnames.php:238
-#: plugin/Gui/AdminPageFormSettingsBase.php:516
-msgid "Special Fields"
-msgstr "Spezifische Felder"
+msgid "The form was sent successfully."
+msgstr "Das Formular wurde erfolgreich abgeschickt."
 
-#: plugin/Field/Collection/FieldRowConverterSearchCriteria.php:68
-msgid "Search Criteria"
-msgstr "Suchkriterium"
+msgid "Spam detected!"
+msgstr "Spam erkannt!"
 
-#: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:49
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:74
-msgid "Newsletter"
-msgstr "Newsletter"
+msgid "Information about your property"
+msgstr "Angaben zu deinem Eigentum"
 
-#: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:59
-#: templates.dist/form/defaultform.php:73 templates.dist/form/ownerform.php:66
+msgid "Your contact details"
+msgstr "Deine Kontaktdaten"
+
 msgid "Message"
 msgstr "Nachricht"
 
-#: plugin/Field/FieldModuleCollectionDecoratorGeoPositionBackend.php:70
-msgid "Geo Range Search"
-msgstr "Umkreissuche"
+msgid "Please fill in"
+msgstr "Bitte ausfüllen"
 
-#: plugin/Field/FieldModuleCollectionDecoratorInternalAnnotations.php:49
-#, fuzzy
-#| msgid "Search Criteria"
-msgid "Search Criteria Comment (external)"
-msgstr "Suchkriterium"
+msgid "Missing Fields!"
+msgstr "Fehlende Felder!"
 
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:204
-msgid "All non-mobile phone numbers"
-msgstr "Alle Nicht-Handynummern"
+msgid "SUCCESS!"
+msgstr "ERFOLG!"
 
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:205
-msgid "All fax numbers"
-msgstr "Alle Faxnummern"
-
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:206
-msgid "All mobile numbers"
-msgstr "Alle Handynummern"
-
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:207
-msgid "All e-mail addresses"
-msgstr "Alle E-Mail-Adressen"
-
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:208
-msgid "Image"
-msgstr "Bild"
-
-#: plugin/Field/FieldModuleCollectionDecoratorSearchcriteria.php:51
-#, fuzzy
-#| msgid "Documents"
-msgid "Comment"
-msgstr "Dokumente"
-
-#: plugin/Form.php:98
-msgid "Submit"
-msgstr "Absenden"
-
-#. translators: %1$s is the estate title, %5$s is the estate ID
-#: plugin/Form.php:573
-msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
-msgstr "Ihre Anfrage zu der Immobilie „%1$s“ (%5$s)"
+#. translators: %s will be replaced with a customer reference number.
+msgid "Customer ref. number %s"
+msgstr "Kundennummer %s"
 
 #. translators: %s will be replaced with a number.
-#: plugin/Gui/AdminNoticeHandlerListViewDeletion.php:43
-msgid "%s list view has been deleted."
-msgid_plural "%s list views have been deleted."
-msgstr[0] "%s Listenansicht wurde gelöscht."
-msgstr[1] "%s Listenansichten wurden gelöscht."
+msgid "%s Prospective Buyer"
+msgid_plural "%s Prospective Buyers"
+msgstr[0] "%s potenzieller Käufer"
+msgstr[1] "%s potenzielle Käufer"
 
-#: plugin/Gui/AdminNoticeHandlerListViewDeletion.php:47
-msgid "No list view was deleted."
-msgstr "Es wurde keine Listenansicht gelöscht."
+msgid "Search for Prospective Buyers"
+msgstr "Suche nach potenziellen Käufern"
+
+msgid "search within distance of:"
+msgstr "Suche in der Nähe von:"
+
+msgid "Please fill in!"
+msgstr "Bitte ausfüllen!"
+
+msgid "ERROR!"
+msgstr "FEHLER!"
+
+msgid "Records"
+msgstr "Datensätze"
+
+msgid "Edit Units View"
+msgstr "Einheitenlisten bearbeiten"
+
+msgid "There was a problem saving the list. Please make sure the name of the list is unique."
+msgstr "Beim Speichern der Liste ist ein Fehler aufgetreten. Bitte vergewissere dich, dass der Name noch nicht vergeben ist."
+
+msgid "The address list was saved."
+msgstr "Die Adressliste wurde gespeichert."
+
+msgid "Filter & Records"
+msgstr "Filter & Datensätze"
+
+msgid "Edit Address List"
+msgstr "Adressliste bearbeiten"
+
+msgid "Fields Configuration"
+msgstr "Feldeinstellungen"
+
+msgid "Maps"
+msgstr "Karten"
+
+msgid "Google Maps"
+msgstr "Google Maps"
+
+msgid "OpenStreetMap"
+msgstr "OpenStreetMap"
+
+msgid "Map Provider"
+msgstr "Kartenanbieter"
+
+msgid "Watchlist"
+msgstr "Merkliste"
+
+msgid "Expression used"
+msgstr "Zu verwendender Ausdruck"
+
+msgid "Enable Watchlist"
+msgstr "Merkliste aktivieren"
+
+msgid "Units Lists"
+msgstr "Einheitenlisten"
+
+msgid "No form was deleted."
+msgstr "Formular wurde nicht gelöscht."
 
 #. translators: %s will be replaced with a number.
-#: plugin/Gui/AdminNoticeHandlerListViewDeletion.php:63
 msgid "%s form has been deleted."
 msgid_plural "%s forms have been deleted."
 msgstr[0] "%s Formular wurde gelöscht."
 msgstr[1] "%s Formulare wurden gelöscht."
 
-#: plugin/Gui/AdminNoticeHandlerListViewDeletion.php:67
-msgid "No form was deleted."
-msgstr "Formular wurde nicht gelöscht."
+msgid "No list view was deleted."
+msgstr "Es wurde keine Listenansicht gelöscht."
 
-#: plugin/Gui/AdminPageAddressList.php:64
-msgid "Search Addresses"
-msgstr "Adressen suchen"
+#. translators: %s will be replaced with a number.
+msgid "%s list view has been deleted."
+msgid_plural "%s list views have been deleted."
+msgstr[0] "%s Listenansicht wurde gelöscht."
+msgstr[1] "%s Listenansichten wurden gelöscht."
 
-#: plugin/Gui/AdminPageAddressList.php:93 plugin/Gui/AdminPageEstateList.php:88
-#: plugin/Gui/AdminPageEstateUnitList.php:84
-#: plugin/Gui/AdminPageFormList.php:214
-msgid "Add New"
-msgstr "Neu"
+msgid "Are you sure you want to delete the selected items?"
+msgstr "Möchtest du das ausgewählte Element wirklich löschen?"
 
-#: plugin/Gui/AdminPageAddressListSettings.php:66
-msgid "Edit Address List"
-msgstr "Adressliste bearbeiten"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:106
-#: plugin/Gui/AdminPageEstateListSettings.php:89
-#: plugin/Gui/AdminPageEstateUnitSettings.php:71
-#: plugin/Gui/AdminPageFormSettingsBase.php:398
-msgid "choose name"
-msgstr "Name auswählen"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:128
-#: plugin/Gui/AdminPageEstateDetail.php:294
-#: plugin/Gui/AdminPageEstateListSettings.php:140
-#: plugin/Gui/AdminPageEstateUnitSettings.php:94
-#: plugin/Gui/AdminPageFormSettingsBase.php:417
-msgid "Layout & Design"
-msgstr "Layout & Design"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:145
-msgid "Filter & Records"
-msgstr "Filter & Datensätze"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:165
-#: plugin/Gui/AdminPageEstateListSettings.php:126
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:611
-#, fuzzy
-#| msgid "Settings"
-msgid "Sorting"
-msgstr "Einstellungen"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:182
-#: plugin/Gui/AdminPageEstateDetail.php:304
-#: plugin/Gui/AdminPageEstateListSettings.php:149
-#: plugin/Gui/AdminPageEstateUnitSettings.php:102
-msgid "Photo Types"
-msgstr "Fotoarten"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:341
-msgid "The address list was saved."
-msgstr "Die Adressliste wurde gespeichert."
-
-#: plugin/Gui/AdminPageAddressListSettings.php:342
-msgid ""
-"There was a problem saving the list. Please make sure the name of the list "
-"is unique."
-msgstr ""
-"Beim Speichern der Liste ist ein Fehler aufgetreten. Bitte vergewissern Sie "
-"sich, dass der Name noch nicht vergeben ist."
-
-#: plugin/Gui/AdminPageAjax.php:79
-msgid "login credentials"
-msgstr "Zugangsdaten"
-
-#. translators: %s will be replaced with the link to the login credentials page.
-#: plugin/Gui/AdminPageAjax.php:82
-msgid ""
-"It looks like you did not enter any valid API credentials. Please go back "
-"and review your %s."
-msgstr ""
-"Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte gehen Sie zurück "
-"und prüfen Ihr %s."
-
-#: plugin/Gui/AdminPageApiSettings.php:79
-msgid "API token"
-msgstr "API-Token"
-
-#: plugin/Gui/AdminPageApiSettings.php:80
-msgid "API secret"
-msgstr "API-Secret"
-
-#: plugin/Gui/AdminPageApiSettings.php:124
-#, fuzzy
-#| msgid "API settings"
-msgid "API settings (encrypted)"
-msgstr "API Einstellungen"
-
-#: plugin/Gui/AdminPageApiSettings.php:126
-msgid "API settings"
-msgstr "API Einstellungen"
-
-#: plugin/Gui/AdminPageApiSettings.php:134
-#, fuzzy
-#| msgid "Fallback's E-Mail Address"
-msgid "Default Email Address"
-msgstr "Fallback-Adresse(optiona)"
-
-#: plugin/Gui/AdminPageApiSettings.php:145
-msgid "Email"
-msgstr "Email"
-
-#: plugin/Gui/AdminPageApiSettings.php:156
-msgid "Site Key"
-msgstr "Site Key"
-
-#: plugin/Gui/AdminPageApiSettings.php:157
-msgid "Secret Key"
-msgstr "Secret Key"
-
-#: plugin/Gui/AdminPageApiSettings.php:178
-msgid "Google reCAPTCHA"
-msgstr "Google reCAPTCHA"
-
-#: plugin/Gui/AdminPageApiSettings.php:193
-#: plugin/Gui/AdminPageApiSettings.php:203
-msgid "Google Maps Key"
-msgstr "Google Maps-Key"
-
-#: plugin/Gui/AdminPageApiSettings.php:210
-#, fuzzy
-#| msgid "Index PDF brochure"
-msgid "Allow indexing of PDF brochures"
-msgstr "Indexierung von PDF-Exposés erlauben"
-
-#: plugin/Gui/AdminPageApiSettings.php:216
-msgid ""
-"If you allow indexing, your search engine ranking can be negatively affected "
-"and your brochures can be available from search engines even months after "
-"the corresponding estate is deleted."
-msgstr ""
-"Wenn Sie die Indexierung von Exposés erlauben, kann dies Ihr Suchmaschinen-"
-"Ranking verschlechtern und es können Exposés auch nach dem Entfernen der "
-"Immobilie von der Website noch mehrere Monate lang in Suchmaschinen "
-"auffindbar sein"
-
-#: plugin/Gui/AdminPageApiSettings.php:221
-msgid "Search engine"
-msgstr "Search engine"
-
-#: plugin/Gui/AdminPageApiSettings.php:261
-msgid "The keys are OK."
-msgstr "Die Keys sind OK."
-
-#: plugin/Gui/AdminPageApiSettings.php:262
-msgid "There was an error:"
-msgstr "Ein Fehler ist aufgetreten:"
-
-#: plugin/Gui/AdminPageApiSettings.php:263
-msgid "The secret parameter is missing."
-msgstr "Der Secret-Parameter fehlt."
-
-#: plugin/Gui/AdminPageApiSettings.php:264
-msgid "The secret parameter is invalid or malformed."
-msgstr "Der Secret-Parameter ist nicht gültig."
-
-#: plugin/Gui/AdminPageApiSettings.php:265
-msgid "The response parameter is missing."
-msgstr "Der reponse-Parameter fehlt."
-
-#: plugin/Gui/AdminPageApiSettings.php:266
-msgid "The response parameter is invalid or malformed."
-msgstr "Der response-Parameter ist nicht gültig."
-
-#: plugin/Gui/AdminPageApiSettings.php:267
-msgid "The request is invalid or malformed."
-msgstr "Die Anfrage ist nicht gültig."
-
-#: plugin/Gui/AdminPageApiSettings.php:278
-msgid ""
-"In order to use Google reCAPTCHA, you need to provide your keys. You're free "
-"to enable it in the form settings for later use."
-msgstr ""
-"Um Google reCAPTCHA benutzen zu können, müssen Sie Ihre Keys hinterlegen. "
-"Sie können reCAPTCHA jedoch schon für die spätere Verwendung in den "
-"Formularen aktivieren."
-
-#: plugin/Gui/AdminPageApiSettings.php:304
-msgid "Save changes and clear API cache"
-msgstr "Änderungen speichern und API-Cache leeren"
-
-#: plugin/Gui/AdminPageApiSettings.php:316
-msgid "The cache was cleaned."
-msgstr "Der Cache wurde geleert."
-
-#: plugin/Gui/AdminPageApiSettings.php:330
-msgid "Map Provider"
-msgstr "Kartenanbieter"
-
-#: plugin/Gui/AdminPageApiSettings.php:337
-msgid "OpenStreetMap"
-msgstr "OpenStreetMap"
-
-#: plugin/Gui/AdminPageApiSettings.php:338
-msgid "Google Maps"
-msgstr "Google Maps"
-
-#: plugin/Gui/AdminPageApiSettings.php:345
-msgid "Maps"
-msgstr "Karten"
-
-#: plugin/Gui/AdminPageApiSettings.php:358
-msgid "Show title in URL"
-msgstr "Titel in URL anzeigen"
-
-#: plugin/Gui/AdminPageApiSettings.php:364
-msgid ""
-"If this checkbox is selected, the title of the property will be part of the "
-"URLs of the detail views. The title is placed after the record number, e.g. "
-"<code>/1234-nice-location-with-view</code>. No more than the first five "
-"words of the title are used."
-msgstr ""
-"Wenn dieses Kontrollkästchen aktiviert ist, wird der Titel der Eigenschaft "
-"Teil der URLs der Detailansichten. Der Titel wird nach der Datensatznummer "
-"platziert, z.B. <code>/1234-nice-location-with-view</code>. Es werden nicht "
-"mehr als die ersten fünf Wörter des Titels verwendet."
-
-#: plugin/Gui/AdminPageApiSettings.php:370
-msgid "Detail View URLs"
-msgstr "URLs der Detailansicht"
-
-#: plugin/Gui/AdminPageApiSettings.php:383
-msgid "Enable Watchlist"
-msgstr "Merkliste aktivieren"
-
-#: plugin/Gui/AdminPageApiSettings.php:384
-msgid "Expression used"
-msgstr "Zu verwendender Ausdruck"
-
-#: plugin/Gui/AdminPageApiSettings.php:395
-#: plugin/Gui/AdminPageApiSettings.php:404
-msgid "Watchlist"
-msgstr "Merkliste"
-
-#: plugin/Gui/AdminPageApiSettings.php:396
-msgid "Favorise"
-msgstr "Favorisieren"
-
-#: plugin/Gui/AdminPageApiSettings.php:415
-msgid "Pagination"
-msgstr "Paginierung"
-
-#: plugin/Gui/AdminPageApiSettings.php:422
-msgid "By WP Theme"
-msgstr "Nach WP-Thema"
-
-#: plugin/Gui/AdminPageApiSettings.php:423
-#, fuzzy
-#| msgid "onOffice"
-msgid "By onOffice-Plugin"
-msgstr "onOffice"
-
-#: plugin/Gui/AdminPageEstate.php:87 plugin/Gui/AdminPageEstateList.php:83
-msgid "List Views"
-msgstr "Listenansichten"
-
-#: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageEstateDetail.php:220
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:99
-msgid "Detail View"
-msgstr "Detailansicht"
-
-#: plugin/Gui/AdminPageEstate.php:89 plugin/Gui/AdminPageSimilarEstates.php:155
-#: plugin/Gui/AdminPageSimilarEstates.php:207
-msgid "Similar Estates"
-msgstr "Ähnliche Immobilien"
-
-#: plugin/Gui/AdminPageEstate.php:90
 msgid "Unit Lists"
 msgstr "Einheitenlisten"
 
-#: plugin/Gui/AdminPageEstateDetail.php:109
-#: plugin/Gui/AdminPageEstateDetail.php:441
-msgid "The detail view has been saved."
-msgstr "Die Detailansicht wurde gespeichert."
+msgid "List Views"
+msgstr "Listenansichten"
 
-#: plugin/Gui/AdminPageEstateDetail.php:114
-#: plugin/Gui/AdminPageEstateDetail.php:442
-msgid "There was a problem saving the detail view."
-msgstr "Es ist einen Fehler beim Speichern der Detailansicht aufgetreten."
+msgid "Add New"
+msgstr "Neu"
 
-#: plugin/Gui/AdminPageEstateDetail.php:140
-#: plugin/Gui/AdminPageEstateDetail.php:151
-#, fuzzy
-#| msgid "Shortcode"
-msgid "The shortcode "
-msgstr "Shortcode"
+msgid "There was a problem saving the form. Please make sure the name of the form is unique."
+msgstr "Es ist ein Fehler beim Speichern des Formulars aufgetreten. Bitte prüfe, ob der Formularname eindeutig ist."
 
-#: plugin/Gui/AdminPageEstateDetail.php:144
-#: plugin/Gui/AdminPageEstateDetail.php:155
-#: plugin/Gui/Table/AddressListTable.php:152
-#: plugin/Gui/Table/EstateListTable.php:231
-#: plugin/Gui/Table/EstateUnitsTable.php:188
-#: plugin/Gui/Table/FormsTable.php:207
-#: plugin/Renderer/InputFieldButtonRenderer.php:55
-msgid "Copy"
-msgstr ""
-
-#. translators: %s will be replaced with a link to the appropriate page.
-#: plugin/Gui/AdminPageEstateDetail.php:147
-msgid "  is used on %s"
-msgstr ""
-
-#: plugin/Gui/AdminPageEstateDetail.php:149
-msgid "Edit Page"
-msgstr "Seite bearbeiten"
-
-#: plugin/Gui/AdminPageEstateDetail.php:181
-msgid "Contact Person Fields"
-msgstr "Ansprechpartnerdaten"
-
-#: plugin/Gui/AdminPageEstateDetail.php:196
-#: plugin/Gui/AdminPageSimilarEstates.php:134
-msgid "Real Estate Fields"
-msgstr "Immobiliendaten"
-
-#: plugin/Gui/AdminPageEstateDetail.php:312
-msgid "Access Control"
-msgstr ""
-
-#: plugin/Gui/AdminPageEstateDetail.php:324
-msgid "Additional Media"
-msgstr "Zusätzliche Medien"
-
-#: plugin/Gui/AdminPageEstateList.php:57
-#: plugin/Gui/AdminPageEstateUnitList.php:52
-msgid "Search Estate Views"
-msgstr "Nachlassansichten durchsuchen"
-
-#: plugin/Gui/AdminPageEstateList.php:99 plugin/Gui/AdminPageFormList.php:149
-msgid "Are you sure you want to delete the selected items?"
-msgstr "Möchten Sie das ausgewählte Element wirklich löschen?"
-
-#: plugin/Gui/AdminPageEstateListSettings.php:70
-msgid "Edit List View"
-msgstr "Listenansicht bearbeiten"
-
-#: plugin/Gui/AdminPageEstateListSettings.php:107
-msgid "Filters & Records"
-msgstr "Filter & Datensätze"
-
-#: plugin/Gui/AdminPageEstateListSettings.php:157
-#: plugin/Gui/AdminPageEstateUnitSettings.php:110
-msgid "Downloadable Documents"
-msgstr "Dokumente zum Herunterladen"
-
-#: plugin/Gui/AdminPageEstateListSettings.php:166
-#: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:198
-msgid "Geo Fields"
-msgstr "Umkreisfelder"
-
-#: plugin/Gui/AdminPageEstateListSettings.php:172
-msgid ""
-"At least the following fields must be active: country, radius and city or "
-"postcode."
-msgstr ""
-"Mindestens folgende Felder müssen aktiv sein: Land, Radius und Ort  oder PLZ."
-
-#: plugin/Gui/AdminPageEstateListSettingsBase.php:159
-#: plugin/Gui/AdminPageSettingsBase.php:146
-msgid "The view has been saved."
-msgstr "Die Ansicht wurde gespeichert."
-
-#: plugin/Gui/AdminPageEstateListSettingsBase.php:160
-#: plugin/Gui/AdminPageSettingsBase.php:151
-msgid ""
-"There was a problem saving the view. Please make sure the name of the view "
-"is unique, even across all estate list types."
-msgstr ""
-"Beim Speichern der Ansicht ist ein Fehler aufgetreten. Bitte stellen Sie "
-"sicher, dass keine andere Ansicht mit diesem Namen existiert, auch wenn sie "
-"einen anderen Typen hat."
-
-#: plugin/Gui/AdminPageEstateUnitList.php:79
-msgid "Units Lists"
-msgstr "Einheitenlisten"
-
-#: plugin/Gui/AdminPageEstateUnitSettings.php:52
-msgid "Edit Units View"
-msgstr "Einheitenlisten bearbeiten"
-
-#: plugin/Gui/AdminPageEstateUnitSettings.php:86
-msgid "Records"
-msgstr "Datensätze"
-
-#: plugin/Gui/AdminPageFormList.php:101
-msgid "Search Forms"
-msgstr "Formulare durchsuchen"
-
-#: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:61
-#: plugin/Gui/AdminPageFormSettingsContact.php:112
-msgid "Form Specific Options"
-msgstr "Formularspezifische Optionen"
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:124
-msgid "Edit Form"
-msgstr "Formular bearbeiten"
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:272
-#: plugin/Gui/AdminPageFormSettingsBase.php:671
 msgid "The Form was saved."
 msgstr "Das Formular wurde gespeichert."
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:273
-#: plugin/Gui/AdminPageFormSettingsBase.php:676
-msgid ""
-"There was a problem saving the form. Please make sure the name of the form "
-"is unique."
-msgstr ""
-"Es ist einen Fehler beim Speichern des Formulars aufgetreten. Bitte prüfen "
-"Sie, ob der Formularname eindeutig ist."
+msgid "Edit Form"
+msgstr "Formular bearbeiten"
 
-#. translators: %s is a translated module name
-#: plugin/Gui/AdminPageFormSettingsBase.php:282
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:639
-msgid "Module: %s"
-msgstr "Modul: %s"
+msgid "Please provide an Email address!"
+msgstr "Bitte gib deine E-Mail-Adresse an!"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:283
-msgid "Edit Values"
-msgstr "Werte bearbeiten"
+msgid "Form Specific Options"
+msgstr "Formularspezifische Optionen"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:286
-msgid "Add Language"
-msgstr "Sprache hinzufügen"
+msgid "There was a problem saving the view. Please make sure the name of the view is unique, even across all estate list types."
+msgstr "Beim Speichern der Ansicht ist ein Fehler aufgetreten. Bitte stelle sicher, dass keine andere Ansicht mit diesem Namen existiert, auch wenn sie einen anderen Typen hat."
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:287
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:498
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:525
-msgid "Choose Language"
-msgstr "Sprache auswählen"
+msgid "The view has been saved."
+msgstr "Die Ansicht wurde gespeichert."
 
-#. translators: %s is the name of a language
-#: plugin/Gui/AdminPageFormSettingsBase.php:289
-msgid "Default Value: %s"
-msgstr "Standardwert: %s"
+msgid "Geo Fields"
+msgstr "Umkreisfelder"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:290
-msgid "Custom Label: %s"
-msgstr "Benutzerdefiniertes Etikett: %s"
+msgid "Filters & Records"
+msgstr "Filter & Datensätze"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:291
-msgid "Default Value From:"
-msgstr "Standardwert von:"
+msgid "choose name"
+msgstr "Name auswählen"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:292
-msgid "Default Value Up To:"
-msgstr "Standardwert bis:"
+msgid "The cache was cleaned."
+msgstr "Der Cache wurde geleert."
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:323
-#: plugin/Gui/Table/EstateListTable.php:174 templates.dist/fields.php:65
-msgid "No"
-msgstr "Nein"
+msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
+msgstr "Um Google reCAPTCHA benutzen zu können, musst du deine Keys hinterlegen. Du kannst reCAPTCHA jedoch schon für die spätere Verwendung in den Formularen aktivieren."
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:324
-#: plugin/Gui/Table/EstateListTable.php:174 templates.dist/fields.php:62
-msgid "Yes"
-msgstr "Ja"
+msgid "The request is invalid or malformed."
+msgstr "Die Anfrage ist nicht gültig."
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:718
-#: plugin/Gui/AdminPageSettingsBase.php:193
+msgid "The response parameter is invalid or malformed."
+msgstr "Der response-Parameter ist nicht gültig."
+
+msgid "The response parameter is missing."
+msgstr "Der reponse-Parameter fehlt."
+
+msgid "The secret parameter is invalid or malformed."
+msgstr "Der Secret-Parameter ist nicht gültig."
+
+msgid "The secret parameter is missing."
+msgstr "Der Secret-Parameter fehlt."
+
+msgid "There was an error:"
+msgstr "Ein Fehler ist aufgetreten:"
+
+msgid "The keys are OK."
+msgstr "Die Keys sind OK."
+
+msgid "Google Maps Key"
+msgstr "Google Maps-Key"
+
+msgid "Google reCAPTCHA"
+msgstr "Google reCAPTCHA"
+
+msgid "Secret Key"
+msgstr "Geheimer Schlüssel"
+
+msgid "Site Key"
+msgstr "Site Key"
+
+msgid "API settings"
+msgstr "API-Einstellungen"
+
+msgid "API secret"
+msgstr "API-Secret"
+
+msgid "API token"
+msgstr "API-Token"
+
+msgid "There was a problem saving the detail view."
+msgstr "Es ist einen Fehler beim Speichern der Detailansicht aufgetreten."
+
+msgid "The detail view has been saved."
+msgstr "Die Detailansicht wurde gespeichert."
+
+msgid "Similar Estates"
+msgstr "Ähnliche Immobilien"
+
+msgid "Additional Media"
+msgstr "Zusätzliche Medien"
+
+msgid "Photo Types"
+msgstr "Fotoarten"
+
+msgid "Layout & Design"
+msgstr "Layout & Design"
+
 msgid "Fields"
 msgstr "Felder"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:123
-msgid "Request Manager"
-msgstr "Anforderungsmanager"
+msgid "Edit Page"
+msgstr "Seite bearbeiten"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:124
-msgid ""
-"https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-"
-"manager/?lang=en"
-msgstr ""
-"https://de.enterprisehilfe.onoffice.com/category/zusatzmodule/"
-"anfragenmanager/"
-
-#: plugin/Gui/AdminPageFormSettingsContact.php:126
-#, fuzzy
-#| msgid ""
-#| "If the contact form is on an estate page, you can link the created "
-#| "address to that estate by opening the email you receive in onOffice "
-#| "enterprise or using the %s."
-msgid ""
-"By default, no link is created to the estate when the plugin creates the "
-"address. If the contact form is on an detail page and you want to link the "
-"address and the requested estate, you can open the email in onOffice "
-"enterprise or use the %s."
-msgstr ""
-"Wenn sich das Kontaktformular auf einer Nachlassseite befindet, können Sie "
-"die erstellte Adresse mit diesem Nachlass verknüpfen, indem Sie die "
-"erhaltene E-Mail in onOffice enterprise öffnen oder das verwenden %s."
-
-#: plugin/Gui/AdminPageFormSettingsContact.php:150
-#: plugin/Gui/AdminPageFormSettingsContact.php:161
-msgid ""
-"Be aware that when activated the duplicate check can overwrite address "
-"records. This function will be removed in the future. Use at your own risk."
-msgstr ""
-"Beachten Sie, dass bei aktivierter Dublettenprüfung Adressdatensätze "
-"überschrieben werden können. Diese Funktion wird in Zukunft entfernt. "
-"Benutzung auf eigene Gefahr."
-
-#: plugin/Gui/AdminPageFormSettingsInquiry.php:93
-msgid "Please provide an Email address!"
-msgstr "Bitte geben Sie eine E-Mail-Adresse an!"
-
-#: plugin/Gui/AdminPageSettingsBase.php:480
-msgid "Fields Configuration"
-msgstr "Feldeinstellungen"
-
-#: plugin/Gui/AdminPageSimilarEstates.php:91
-#: plugin/Gui/AdminPageSimilarEstates.php:324
-#, fuzzy
-#| msgid "The detail view has been saved."
-msgid "The similar estates view has been saved."
-msgstr "Die Detailansicht wurde gespeichert."
-
-#: plugin/Gui/AdminPageSimilarEstates.php:96
-#: plugin/Gui/AdminPageSimilarEstates.php:325
-#, fuzzy
-#| msgid "There was a problem saving the detail view."
-msgid "There was a problem saving the similar estates view."
-msgstr "Es ist einen Fehler beim Speichern der Detailansicht aufgetreten."
-
-#: plugin/Gui/Table/AddressListTable.php:118
-#: plugin/Gui/Table/EstateListTable.php:193
-msgid "(Needs valid API credentials)"
-msgstr "(Benötigt gültige API-Zugangsdaten)"
+msgid "Edit List View"
+msgstr "Listenansicht bearbeiten"
 
 #. translators: %s will be replaced with a number.
-#: plugin/Gui/Table/AddressListTable.php:121
-#: plugin/Gui/Table/EstateListTable.php:196
 msgid "(Unknown Filter (ID: %s))"
 msgstr "(Unbekannter Filter (ID: %s))"
 
-#: plugin/Gui/Table/AddressListTable.php:136
-#: plugin/Gui/Table/EstateListTable.php:213
-#: plugin/Gui/Table/EstateUnitsTable.php:65
-#: plugin/Gui/Table/EstateUnitsTable.php:117
-msgid "Name of View"
-msgstr "Name der Ansicht"
+msgid "(Needs valid API credentials)"
+msgstr "(Benötigt gültige API-Zugangsdaten)"
 
-#: plugin/Gui/Table/AddressListTable.php:137
-#: plugin/Gui/Table/EstateListTable.php:214
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:168
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:178
-msgid "Filter"
-msgstr "Filter"
+msgid "No"
+msgstr "Nein"
 
-#: plugin/Gui/Table/AddressListTable.php:138
-#: plugin/Gui/Table/AddressListTable.php:184
-#: plugin/Gui/Table/EstateListTable.php:137
-#: plugin/Gui/Table/EstateListTable.php:217
-#: plugin/Gui/Table/EstateUnitsTable.php:66
-#: plugin/Gui/Table/EstateUnitsTable.php:119
-#: plugin/Gui/Table/FormsTable.php:133 plugin/Gui/Table/FormsTable.php:159
-msgid "Shortcode"
-msgstr "Shortcode"
-
-#: plugin/Gui/Table/AddressListTable.php:181
-#: plugin/Gui/Table/EstateListTable.php:133
-msgid "List name"
-msgstr "Listennamen"
-
-#: plugin/Gui/Table/AddressListTable.php:182
-#: plugin/Gui/Table/EstateListTable.php:134
-msgid "Selected filter"
-msgstr "Ausgewählter Filter"
-
-#: plugin/Gui/Table/AddressListTable.php:183
-#: plugin/Gui/Table/EstateListTable.php:135 plugin/Gui/Table/FormsTable.php:131
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:339
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
-msgid "Template"
-msgstr "Template"
-
-#: plugin/Gui/Table/AddressListTable.php:185
-#: plugin/Gui/Table/EstateListTable.php:138 plugin/Gui/Table/FormsTable.php:134
-msgid "Pages using the shortcode"
-msgstr "Seiten, die den Shortcode verwenden"
-
-#: plugin/Gui/Table/AddressListTable.php:221
-#: plugin/Gui/Table/EstateListTable.php:274
-#: plugin/Gui/Table/EstateUnitsTable.php:166
-#: plugin/Gui/Table/FormsTable.php:269
-msgid "Duplicate"
-msgstr "Duplizieren"
+msgid "Yes"
+msgstr "Ja"
 
 #. translators: %s is the name of the list view.
-#: plugin/Gui/Table/AddressListTable.php:227
-#: plugin/Gui/Table/EstateListTable.php:280
 msgid ""
 "You are about to delete the listview '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr ""
-"Sie sind dabei, die Listenansicht '%s' zu löschen.\n"
-"Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
-
-#: plugin/Gui/Table/EstateListTable.php:136
-msgid "List type"
-msgstr "Listentyp"
-
-#: plugin/Gui/Table/EstateListTable.php:215
-msgid "Show Status"
-msgstr "Status anzeigen"
-
-#: plugin/Gui/Table/EstateListTable.php:216
-#: plugin/Gui/Table/EstateUnitsTable.php:118
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:342
-msgid "Type of List"
-msgstr "Listenart"
-
-#. translators: %s is the name of the unit view.
-#: plugin/Gui/Table/EstateUnitsTable.php:172
-msgid ""
-"You are about to delete the unit view '%s'\n"
-"  'Cancel' to stop, 'OK' to delete."
-msgstr ""
-"Sie sind dabei, die Einheitenliste '%s' zu löschen.\n"
-"Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
-
-#: plugin/Gui/Table/FormsTable.php:129
-msgid "Form name"
-msgstr "Formularname"
-
-#: plugin/Gui/Table/FormsTable.php:130
-msgid "Recipient e-mail address"
-msgstr "Empfänger E-Mail-Adresse"
-
-#: plugin/Gui/Table/FormsTable.php:132
-msgid "Form type"
-msgstr "Formulartyp"
-
-#: plugin/Gui/Table/FormsTable.php:157
-msgid "Name of Form"
-msgstr "Formularname"
-
-#: plugin/Gui/Table/FormsTable.php:158
-msgid "Type of Form"
-msgstr "Formularart"
+"Du bist dabei, die Listenansicht „%s“ zu löschen.\n"
+"Bitte wähle „Abbrechen“ zum Beenden oder „OK“ zum Bestätigen."
 
 #. translators: %s is the name of the form.
-#: plugin/Gui/Table/FormsTable.php:275
 msgid ""
 "You are about to delete the form '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr ""
-"Sie sind dabei, das Formular '%s' zu löschen.\n"
-"Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
+"Du bist dabei, das Formular „%s“ zu löschen.\n"
+"Bitte wähle „Abbrechen“ zum Beenden oder „OK“ zum Bestätigen."
 
-#: plugin/Gui/Table/WP/ListTable.php:167 plugin/Gui/Table/WP/ListTable.php:170
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:469
-msgid "Default"
-msgstr "Standard"
+msgid "Type of Form"
+msgstr "Formularart"
 
-#: plugin/Gui/Table/WP/ListTable.php:171
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:297
-msgid "missing"
-msgstr "fehlend"
-
-#: plugin/Gui/Table/WP/ListTable.php:175
-msgid "%s (override)"
-msgstr "%s (überschreiben)"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:83
-msgid "View Name"
-msgstr "Name der Ansicht"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:104
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:506
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:529
-msgid "Sort by"
-msgstr "Sortierkriterium"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:152
-msgid "Records per Page"
-msgstr "Datensätze pro Seite"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:170
-msgid "Sort order"
-msgstr "Sortierrichtung"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:175
-msgid "Ascending"
-msgstr "Aufsteigend"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:176
-msgid "Descending"
-msgstr "Absteigend"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:95
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:120
-#, fuzzy
-#| msgid "List Views"
-msgid "List View"
-msgstr "Listenansichten"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:132
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:142
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:124
-#, fuzzy
-#| msgid "Shortcode"
-msgid "Shortcode: "
-msgstr "Shortcode"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:191
-msgid "Passport Photo"
-msgstr "Passfoto"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:233
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:203
-msgid "Filterable"
-msgstr "Filterbar"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:254
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:245
-msgid "Hidden"
-msgstr "Unsichtbar"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:224
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:453
-msgid "Reduce values according to selected filter"
-msgstr "Werte durch gewählten Filter reduzieren"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:361
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:394
-msgid "Show Estate Status"
-msgstr "Immobilienstatus anzeigen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:380
-#, fuzzy
-#| msgid "Don't show reference estates"
-msgid "Show reference estates"
-msgstr "Referenzobjekte nicht anzeigen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:400
-msgid "Random Order"
-msgstr "Zufällige Reihenfolge"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:447
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
-msgid "PDF-Expose"
-msgstr "PDF-Exposé"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:470
-msgid "Reference Estates"
-msgstr "Referenzimmobilien"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:471
-msgid "Favorites List"
-msgstr "Favoritenliste"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:486
-msgid "Popular"
-msgstr ""
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:491
-#, fuzzy
-#| msgctxt "forms"
-#| msgid "All"
-#| msgid_plural "All"
-msgid "All"
-msgstr "Alle"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:553
-msgid "Standard Sort"
-msgstr "Standardsortierung"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:592
-msgid "lowest First / highest First"
-msgstr "niedrigste zuerst / höchste zuerst"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:593
-msgid "ascending / descending"
-msgstr "aufsteigend / absteigend"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:596
-msgid "Formulation of sorting directions"
-msgstr "Formulierung der Sortierrichtungen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:614
-#, fuzzy
-#| msgid "Default"
-msgid "Default sort"
-msgstr "Standard"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:615
-#, fuzzy
-#| msgid "Sort by User Selection"
-msgid "User selection"
-msgstr "Sortierung nach Benutzerauswahl"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:616
-#, fuzzy
-#| msgid "Random Order"
-msgid "Random order"
-msgstr "Zufällige Reihenfolge"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:90
-msgid "Unit List"
-msgstr "Einheitenliste"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:210
-msgid "Form"
-msgstr "Formular"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:222
-msgid "Form Name"
+msgid "Name of Form"
 msgstr "Formularname"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:241
-#, fuzzy
-#| msgid "Type of Form: "
-msgid "Type: "
-msgstr "Formularart: "
+#. translators: %s is the name of the unit view.
+msgid ""
+"You are about to delete the unit view '%s'\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Du bist dabei, die Einheitenliste „%s“ zu löschen.\n"
+"Bitte wählen Sie „Abbrechen“ zum Beenden oder „OK“ zum Bestätigen."
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:260
-#, fuzzy
-#| msgid "Shortcode"
-msgid ", shortcode: "
+msgid "Shortcode"
 msgstr "Shortcode"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:303
-#, fuzzy
-#| msgid "Recipient e-mail address"
-msgid "Use default email address %s"
-msgstr "Empfänger E-Mail-Adresse %s"
+msgid "Name of View"
+msgstr "Name der Ansicht"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:307
-msgid "Use default email address "
-msgstr "Empfänger E-Mail-Adresse "
+#. translators: %s will be replaced with the link to the login credentials page.
+msgid "It looks like you did not enter any valid API credentials. Please go back and review your %s."
+msgstr "Anscheinend sind deine API-Zugangsdaten nicht gültig. Bitte gehe zurück und prüfe deine %s."
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:320
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:338
-#, fuzzy
-#| msgid "Recipient e-mail address"
-msgid "Override email address"
-msgstr "Empfänger E-Mail-Adresse"
+msgid "login credentials"
+msgstr "Zugangsdaten"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:346
-msgid ""
-"Note that if the contact form is on an estate detail page and the estate has "
-"a contact person, the email will be sent to their email address. Otherwise "
-"this email address will receive the email."
-msgstr ""
+msgid "Geo Range Search"
+msgstr "Umkreissuche"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:360
-msgid "(won't work until set up globally)"
-msgstr "(funktioniert erst nach der Einrichtung)"
+msgid "Search Criteria"
+msgstr "Suchkriterium"
 
-#. translators: %s will be replaced with the translation of '(won't work until set up globally)', if captcha hasn't been set up appropriately yet, or blank otherwise.
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:366
-msgid "Requires Captcha %s"
-msgstr "Benötigt Captcha %s"
+msgid "Geo Position"
+msgstr "Geo-Position"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:379
-msgid "Result Limit"
-msgstr "Maximale Ergebnisanzahl"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:395
-msgid "Contact Type of New Address"
-msgstr "Kontaktart der neuen Adresse"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:436
-msgid "Required"
-msgstr "Pflichtangabe"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:493
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:507
-msgid "Add language"
-msgstr "Sprache hinzufügen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:520
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:530
-#, fuzzy
-#| msgid "Add language"
-msgid "Add custom label language"
-msgstr "Sprache hinzufügen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:611
-msgid "Module"
-msgstr "Modul"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:140
-#, fuzzy
-#| msgid "Don't show reference estates"
-msgid "Allow detail view for reference estates"
-msgstr "Referenzobjekte nicht anzeigen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
-msgid "Movie Links"
-msgstr "Film-Links"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:188
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:212
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:235
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:258
-msgid "Deactivated"
-msgstr "Deaktiviert"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:189
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:213
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:236
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:259
-msgid "Link"
-msgstr "Link"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:190
-msgid "Player"
-msgstr "Player"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:206
-msgid "Ogulo-Links"
-msgstr "Ogulo-Links"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:214
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:237
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:260
-msgid "Embedded"
-msgstr "Eingebettet"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:229
-msgid "Object-Links"
-msgstr "Objekt-Links"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:252
-#: templates.dist/estate/default_detail.php:325
-#, fuzzy
-#| msgid "Link"
-msgid "Links"
-msgstr "Link"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:375
-msgid "Select Contact Form"
-msgstr ""
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:379
-#, fuzzy
-#| msgid "Contact person"
-msgid "No Contact Form"
-msgstr "Ansprechpartner"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:83
-#, fuzzy
-#| msgid "Similar Estates"
-msgid "Similar Estates View"
-msgstr "Ähnliche Immobilien"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:98
-msgid "Show Similar Estates"
-msgstr "Zeige ähnliche Immobilien"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:250
-msgid "Same Kind of Estate"
-msgstr "Gleiche Immobilienart"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:272
-msgid "Same Marketing Method"
-msgstr "Gleiche Vermarktungsart"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:294
-msgid "Same Postal Code"
-msgstr "Gleiche Postleitzahl"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:316
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
-msgid "Radius"
-msgstr "Umkreis"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:338
-msgid "Amount of Estates"
-msgstr "Anzahl Immobilien"
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:72
-msgid "Set Estate Context as Heading"
-msgstr "Immobilienkontext als Überschrift („Ihre Anfrage zu …“)"
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:76
-#, fuzzy
-msgid ""
-"Check for Duplicates (override existing address if the email is the same)"
-msgstr "Dublettenprüfung"
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:78
-msgid "Check for Duplicates"
-msgstr "Dublettenprüfung"
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:80
-msgid "Create Address"
-msgstr "Adresse anlegen"
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:82
-#, fuzzy
-#| msgid "Create Address"
-msgid "Create Address and Search Profile"
-msgstr "Adresse anlegen"
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:84
-#, fuzzy
-#| msgid "Create Address"
-msgid "Create Address and Property"
-msgstr "Adresse anlegen"
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:86
-msgid "Subject (optional)"
-msgstr "Betreff (optional)"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderCustomLabel.php:67
-msgid "Custom Label"
-msgstr ""
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderDefaultValue.php:81
-msgid "Default Value"
-msgstr "Standardwert"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:135
-msgid "Default Value for Radius"
-msgstr "Standardwert für Umkreis"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:139
-#: templates.dist/fields.php:59
-msgid "Not Specified"
-msgstr "Keine Angabe"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:182
-msgid "Order"
-msgstr "Reihenfolge"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:241
-msgid "Country"
-msgstr "Land"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:242
-msgid "Postal Code"
-msgstr "Postleitzahl"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:243
-msgid "City"
-msgstr "Ort"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:244
-msgid "Street"
-msgstr "Straße"
-
-#: plugin/Record/RecordManagerReadListViewAddress.php:123
-msgid "unknown address list name"
-msgstr "Unbekannter Adresslistenname"
-
-#: plugin/Renderer/InputFieldCheckboxButtonRenderer.php:64
-msgid "Add to List >>"
-msgstr "Hinzufügen >>"
-
-#: plugin/Renderer/InputFieldComplexSortableDetailListContentDefault.php:80
-msgid "Key of Field:"
-msgstr "Feldname:"
-
-#: plugin/Renderer/InputFieldComplexSortableDetailListContentDefault.php:85
-msgid "Delete"
-msgstr "Löschen"
-
-#: plugin/Renderer/InputFieldComplexSortableDetailListRenderer.php:128
-#: plugin/Renderer/InputFieldComplexSortableListRenderer.php:76
-msgid "Disabled in onOffice"
-msgstr "In onOffice deaktiviert"
-
-#: plugin/Renderer/InputFieldComplexSortableDetailListRenderer.php:140
-msgid "Edit"
-msgstr "Bearbeiten"
-
-#: plugin/Renderer/InputFieldTemplateListRenderer.php:100
-msgid "(in the folder \"%s\")"
-msgstr ""
-
-#: plugin/Renderer/InputModelRenderer.php:190
-msgid "(Remains unchanged)"
-msgstr "(Bleibt unverändert)"
-
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:90
-msgid "0 matches"
-msgstr "0 Treffer"
-
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:91
-msgid "Show exact match"
-msgstr "Einen Treffer anzeigen"
-
-#. translators: %s is the amount of results
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:93
-msgid "Show %s matches"
-msgstr "%s Treffer anzeigen"
-
-#: plugin/Translation/FormTranslation.php:55
-msgctxt "forms"
-msgid "All"
-msgid_plural "All"
-msgstr[0] "Alle"
-msgstr[1] ""
-
-#: plugin/Translation/FormTranslation.php:59
-msgctxt "forms"
-msgid "Contact Form"
-msgid_plural "Contact Forms"
-msgstr[0] "Kontaktformular"
-msgstr[1] "Kontaktformulare"
-
-#: plugin/Translation/FormTranslation.php:63
-msgctxt "forms"
-msgid "Interest Form"
-msgid_plural "Interest Forms"
-msgstr[0] "Interessentenformular"
-msgstr[1] "Interessentenformulare"
-
-#: plugin/Translation/FormTranslation.php:67
-msgctxt "forms"
-msgid "Owner Form"
-msgid_plural "Owner Forms"
-msgstr[0] "Eigentümerformular"
-msgstr[1] "Eigentümerformulare"
-
-#: plugin/Translation/FormTranslation.php:71
-msgctxt "forms"
-msgid "Applicant Search Form"
-msgid_plural "Applicant Search Forms"
-msgstr[0] "Interessentensuchformular"
-msgstr[1] "Interessentensuchformulare"
-
-#: plugin/Translation/ModuleTranslation.php:79
-msgctxt "modules"
-msgid "Address"
-msgid_plural "Addresses"
-msgstr[0] "Adresse"
-msgstr[1] "Adressen"
-
-#: plugin/Translation/ModuleTranslation.php:80
-msgctxt "modules"
-msgid "Estate"
-msgid_plural "Estates"
-msgstr[0] "Immobilie"
-msgstr[1] "Immobilien"
-
-#: plugin/Translation/ModuleTranslation.php:81
 msgctxt "modules"
 msgid "Search Criteria"
 msgid_plural "Search Criteria"
 msgstr[0] "Suchkriterium"
 msgstr[1] "Suchkriterien"
 
-#: plugin/Types/EstateStatusLabel.php:104
-msgid "rented"
-msgstr "vermietet"
+msgctxt "modules"
+msgid "Estate"
+msgid_plural "Estates"
+msgstr[0] "Immobilie"
+msgstr[1] "Immobilien"
 
-#: plugin/Types/EstateStatusLabel.php:106
+msgctxt "modules"
+msgid "Address"
+msgid_plural "Addresses"
+msgstr[0] "Adresse"
+msgstr[1] "Adressen"
+
+msgctxt "forms"
+msgid "Applicant Search Form"
+msgid_plural "Applicant Search Forms"
+msgstr[0] "Interessentensuchformular"
+msgstr[1] "Interessentensuchformulare"
+
+msgctxt "forms"
+msgid "Owner Form"
+msgid_plural "Owner Forms"
+msgstr[0] "Eigentümerformular"
+msgstr[1] "Eigentümerformulare"
+
+msgctxt "forms"
+msgid "Interest Form"
+msgid_plural "Interest Forms"
+msgstr[0] "Interessentenformular"
+msgstr[1] "Interessentenformulare"
+
+msgctxt "forms"
+msgid "Contact Form"
+msgid_plural "Contact Forms"
+msgstr[0] "Kontaktformular"
+msgstr[1] "Kontaktformulare"
+
+msgctxt "forms"
+msgid "All"
+msgid_plural "All"
+msgstr[0] "Alle"
+msgstr[1] "Alle"
+
+msgid "unknown address list name"
+msgstr "Unbekannter Adresslistenname"
+
 msgid "sold"
 msgstr "verkauft"
 
-#: plugin/Types/ImageTypes.php:61
-msgid "Cover Photo"
-msgstr "Titelbild"
+msgid "rented"
+msgstr "vermietet"
 
-#: plugin/Types/ImageTypes.php:62
-msgid "Photo"
-msgstr "Foto"
+msgid "(Remains unchanged)"
+msgstr "(Bleibt unverändert)"
 
-#: plugin/Types/ImageTypes.php:63
-msgid "Photo (big)"
-msgstr "Foto (groß)"
+msgid "Edit"
+msgstr "Bearbeiten"
 
-#: plugin/Types/ImageTypes.php:64
-msgid "Panorama"
-msgstr "Panorama"
+msgid "Add to List >>"
+msgstr "Hinzufügen >>"
 
-#: plugin/Types/ImageTypes.php:65
-msgid "Ground Plan"
-msgstr "Grundriss"
+msgid "Delete"
+msgstr "Löschen"
 
-#: plugin/Types/ImageTypes.php:66
-msgid "Location Map"
-msgstr "Lageplan"
+msgid "Key of Field:"
+msgstr "Feldname:"
 
-#: plugin/Types/ImageTypes.php:67
-msgid "Energy-Pass Range"
-msgstr "Energiepass-Skala"
+msgid "Disabled in onOffice"
+msgstr "In onOffice deaktiviert"
 
-#: plugin/Utility/Logger.php:77
+msgid "Please configure your onOffice API credentials first!"
+msgstr "Bitte konfiguriere zuerst deinen API-Zugang!"
+
+msgid "Favorites List"
+msgstr "Favoritenliste"
+
+msgid "Reference estates"
+msgstr "Referenzimmobilien"
+
+msgid "Default"
+msgstr "Standard"
+
+msgid "Show Estate Status"
+msgstr "Immobilienstatus anzeigen"
+
+msgid "Type of List"
+msgstr "Listenart"
+
+msgid "Amount of Estates"
+msgstr "Anzahl Immobilien"
+
+msgid "Same Postal Code"
+msgstr "Gleiche Postleitzahl"
+
+msgid "Same Marketing Method"
+msgstr "Gleiche Vermarktungsart"
+
+msgid "Same Kind of Estate"
+msgstr "Gleiche Immobilienart"
+
+msgid "Player"
+msgstr "Player"
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Movie Links"
+msgstr "Film-Links"
+
+msgid "Show Similar Estates"
+msgstr "Zeige ähnliche Immobilien"
+
+msgid "Detail View"
+msgstr "Detailansicht"
+
+msgid "Template"
+msgstr "Template"
+
+msgid "Descending"
+msgstr "Absteigend"
+
+msgid "Ascending"
+msgstr "Aufsteigend"
+
+msgid "Sort order"
+msgstr "Sortierrichtung"
+
+msgid "Sort by"
+msgstr "Sortierkriterium"
+
+msgid "View Name"
+msgstr "Name der Ansicht"
+
+#. translators: %s is a translated module name
+msgid "Module: %s"
+msgstr "Modul: %s"
+
+msgid "Module"
+msgstr "Modul"
+
+msgid "Required"
+msgstr "Erforderlich"
+
+msgid "Result Limit"
+msgstr "Maximale Ergebnisanzahl"
+
+#. translators: %s will be replaced with the translation of '(won't work until set up globally)', if captcha hasn't been set up appropriately yet, or blank otherwise.
+msgid "Requires Captcha %s"
+msgstr "Benötigt Captcha %s"
+
+msgid "(won't work until set up globally)"
+msgstr "(funktioniert erst nach der Einrichtung)"
+
+msgid "Form Name"
+msgstr "Formularname"
+
+msgid "Form"
+msgstr "Formular"
+
+msgid "Hidden"
+msgstr "Unsichtbar"
+
+msgid "Passport Photo"
+msgstr "Passfoto"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "List View"
+msgstr "Listenansicht"
+
+msgid "Random Order"
+msgstr "Zufällige Reihenfolge"
+
+msgid "Unit List"
+msgstr "Einheitenliste"
+
+msgid "Radius"
+msgstr "Umkreis"
+
+msgid "Street"
+msgstr "Straße"
+
+msgid "City"
+msgstr "Ort"
+
+msgid "Postal Code"
+msgstr "Postleitzahl"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Order"
+msgstr "Reihenfolge"
+
+msgid "Not Specified"
+msgstr "Keine Angabe"
+
+msgid "Default Value for Radius"
+msgstr "Standardwert für Umkreis"
+
+msgid "Subject (optional)"
+msgstr "Betreff (optional)"
+
+msgid "Create Address"
+msgstr "Adresse anlegen"
+
+msgid "Check for Duplicates"
+msgstr "Dublettenprüfung"
+
+msgid "Newsletter"
+msgstr "Newsletter"
+
+msgid "Set Estate Context as Heading"
+msgstr "Immobilienkontext als Überschrift („Deine Anfrage zu …“)"
+
+#. translators: %s will be replaced with the translation of 'API token and secret'.
+msgid "It looks like you did not enter any valid API credentials. Please consider reviewing your %s."
+msgstr "Anscheinend sind deine API-Zugangsdaten nicht gültig. Bitte überprüfe dein %s."
+
+msgid "API token and secret"
+msgstr "API-Token und Secret"
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Forms"
+msgstr "Formulare"
+
+msgid "Estates"
+msgstr "Immobilien"
+
+msgid "Addresses"
+msgstr "Adressen"
+
+msgid "onOffice"
+msgstr "onOffice"
+
+#. translators: %1$s is the estate title, %5$s is the estate ID
+msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
+msgstr "Deine Anfrage zu der Immobilie „%1$s“ (%5$s)"
+
+msgid "Submit"
+msgstr "Absenden"
+
 msgid "An error occured:"
 msgstr "Ein Fehler ist aufgetreten:"
 
 #. translators: %s is the path of a page.
-#: plugin/WP/UnknownPageException.php:45
 msgid "Bad path \"%s\". The Page was not found."
 msgstr "Der Pfad „%s“ ist ungültig. Die Seite wurde nicht gefunden."
 
-#: templates.dist/address/default.php:39
-msgid "Picture: "
+#. Author URI of the plugin
+msgid "https://en.onoffice.com/"
+msgstr "https://de.onoffice.com/"
+
+#. Author of the plugin
+msgid "onOffice GmbH"
+msgstr "onOffice GmbH"
+
+#. Description of the plugin
+msgid "Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code."
+msgstr "Deine Verbindung zu onOffice: Dieses Plugin erlaubt dir einen schnellen Zugriff zu Immobilien und Formularen - es wird keine zusätzliche Synchronisation der Software gebraucht. Für mehr Informationen kontaktiere support@onoffice.de."
+
+#. Plugin Name of the plugin
+msgid "onOffice for WP-Websites"
+msgstr "onOffice für WP-Websites"
+
+msgid "There was a problem saving the list. The Name field has been exist."
 msgstr ""
 
-#: templates.dist/address/SearchFormAddress.php:45
-msgid "Send"
+msgid "There was a problem saving the list. The Name field must not be empty."
 msgstr ""
 
-#: templates.dist/estate/default.php:46
-#, fuzzy
-#| msgid "Same Kind of Estate"
-msgid "Overview of Estates"
-msgstr "Gleiche Immobilienart"
-
-#. translators: %d will be replaced with a number.
-#: templates.dist/estate/default.php:50
-msgctxt "template"
-msgid "Found %d estates over all."
+msgid "Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?"
 msgstr ""
 
-#: templates.dist/estate/default.php:110 templates.dist/estate/default.php:115
-#: templates.dist/estate/similar_estates.php:65
-#: templates.dist/estate/similar_estates.php:70
-#, fuzzy
-#| msgid "Show Status"
-msgid "Show Details"
-msgstr "Status anzeigen"
-
-#: templates.dist/estate/default.php:120 templates.dist/estate/default.php:143
-#, fuzzy
-#| msgid "Add to List >>"
-msgid "Add to "
-msgstr "Hinzufügen >>"
-
-#: templates.dist/estate/default.php:149
-msgid "Remove from "
+msgid "The Name field must not be empty. Do you want to leave the page without saving?"
 msgstr ""
-
-#: templates.dist/estate/default_detail.php:77
-#, fuzzy
-#| msgid "Geo Position"
-msgid "Description"
-msgstr "Geo-Position"
-
-#: templates.dist/estate/default_detail.php:84
-#, fuzzy
-#| msgid "Location Map"
-msgid "Location"
-msgstr "Lageplan"
-
-#: templates.dist/estate/default_detail.php:94
-#, fuzzy
-#| msgid "Maps"
-msgid "Map"
-msgstr "Karten"
-
-#: templates.dist/estate/default_detail.php:101
-msgid "Equipment"
-msgstr ""
-
-#: templates.dist/estate/default_detail.php:108
-msgid "Other Information"
-msgstr ""
-
-#: templates.dist/estate/default_detail.php:119
-#: tests/resources/templates/default_detail.php:42
-msgid "Contact person"
-msgstr "Ansprechpartner"
-
-#: templates.dist/estate/default_detail.php:215
-#: tests/resources/templates/default_detail.php:61
-msgid "Documents"
-msgstr "Dokumente"
-
-#: templates.dist/estate/default_detail.php:217
-#, fuzzy
-#| msgid "PDF-Expose"
-msgid "PDF expose"
-msgstr "PDF-Exposé"
-
-#: templates.dist/estate/default_detail.php:250
-msgid "Videos"
-msgstr ""
-
-#: templates.dist/estate/default_detail.php:275
-msgid "360° tours"
-msgstr ""
-
-#: templates.dist/estate/default_detail.php:300
-#, fuzzy
-#| msgid "Object-Links"
-msgid "Objects"
-msgstr "Objekt-Links"
-
-#: templates.dist/estate/default_units.php:29
-msgid "Entities"
-msgstr ""
-
-#: templates.dist/estate/SearchForm.php:38
-#, fuzzy
-#| msgid "Search Forms"
-msgid "Search"
-msgstr "Formulare durchsuchen"
-
-#: templates.dist/estate/similar_estates.php:12
-#, fuzzy
-#| msgid "Real Estate Fields"
-msgid "More Estates like this"
-msgstr "Immobiliendaten"
-
-#: templates.dist/fields.php:23
-#, fuzzy
-#| msgid "Country"
-msgid "Choose country"
-msgstr "Land"
-
-#: templates.dist/fields.php:97
-msgid "From: "
-msgstr ""
-
-#: templates.dist/fields.php:100
-msgid "Up to: "
-msgstr ""
-
-#. translators: %s will be replaced with the translated field name.
-#: templates.dist/fields.php:136 templates.dist/fields.php:235
-#, fuzzy
-#| msgid "choose name"
-msgid "Choose %s"
-msgstr "Name auswählen"
-
-#: templates.dist/form/applicantform.php:35
-#: templates.dist/form/defaultform.php:43 templates.dist/form/ownerform.php:36
-msgid "SUCCESS!"
-msgstr ""
-
-#: templates.dist/form/applicantform.php:37
-#: templates.dist/form/applicantsearchform.php:41
-#: templates.dist/form/defaultform.php:46 templates.dist/form/ownerform.php:39
-#: templates.dist/form/ownerleadgeneratorform.php:85
-msgid "ERROR!"
-msgstr ""
-
-#: templates.dist/form/applicantform.php:39
-msgid "Missing Fields!"
-msgstr ""
-
-#: templates.dist/form/applicantform.php:50
-#: templates.dist/form/ownerform.php:50
-msgid "Please fill in"
-msgstr ""
-
-#: templates.dist/form/applicantsearchform.php:51
-#: templates.dist/form/defaultform.php:54
-msgid "Please fill in!"
-msgstr ""
-
-#: templates.dist/form/applicantsearchform.php:64
-msgid "search within distance of:"
-msgstr ""
-
-#: templates.dist/form/applicantsearchform.php:112
-msgid "Search for Prospective Buyers"
-msgstr ""
-
-#. translators: %s will be replaced with a number.
-#: templates.dist/form/applicantsearchform.php:126
-msgid "%s Prospective Buyer"
-msgid_plural "%s Prospective Buyers"
-msgstr[0] ""
-msgstr[1] ""
-
-#. translators: %s will be replaced with a customer reference number.
-#: templates.dist/form/applicantsearchform.php:134
-#, fuzzy
-#| msgid "Custom Label: %s"
-msgid "Customer ref. number %s"
-msgstr "Benutzerdefiniertes Etikett: %s"
-
-#: templates.dist/form/defaultform.php:48
-msgid "Spam detected!"
-msgstr ""
-
-#: templates.dist/form/ownerform.php:71
-#: templates.dist/form/ownerleadgeneratorform.php:90
-msgid "Your contact details"
-msgstr ""
-
-#: templates.dist/form/ownerform.php:75
-#: templates.dist/form/ownerleadgeneratorform.php:97
-msgid "Information about your property"
-msgstr ""
-
-#: templates.dist/form/ownerleadgeneratorform.php:34
-#, fuzzy
-#| msgid "The Form was saved."
-msgid "The form was sent successfully."
-msgstr "Das Formular wurde gespeichert."
-
-#: templates.dist/form/ownerleadgeneratorform.php:38
-#, fuzzy
-#| msgid "There was an error:"
-msgid "There was an error sending the form."
-msgstr "Ein Fehler ist aufgetreten:"
-
-#: templates.dist/form/ownerleadgeneratorform.php:41
-msgid "The form wasn't sent because spam was detected."
-msgstr ""
-
-#. translators: %s will be replaced with a translated field name.
-#: templates.dist/form/ownerleadgeneratorform.php:50
-msgid "Please enter a value for %s."
-msgstr ""
-
-#: templates.dist/form/ownerleadgeneratorform.php:115
-msgid "Back"
-msgstr ""
-
-#: templates.dist/form/ownerleadgeneratorform.php:118
-msgid "Next"
-msgstr ""
-
-#: templates.dist/form/ownerleadgeneratorform.php:133
-#, fuzzy
-#| msgctxt "forms"
-#| msgid "Owner Form"
-#| msgid_plural "Owner Forms"
-msgid "Open the Form"
-msgstr "Eigentümerformular"
-
-#~ msgid "Default phone number"
-#~ msgstr "Standardtelefonnummer"
-
-#~ msgid "Default fax number"
-#~ msgstr "Standardmäßige Faxnummer"
-
-#~ msgid "Default e-mail address"
-#~ msgstr "Standard-E-Mail-Adresse"
-
-#~ msgid "Detail view in use on page %s"
-#~ msgstr "Detailansicht ist auf der Seite %s eingebunden"
-
-#~ msgid ""
-#~ "Detail view is not in use yet. Insert this code on a page to get the "
-#~ "detail view there:"
-#~ msgstr ""
-#~ "Die Detailansicht wird gerade nicht verwendet. Fügen Sie diesen Code auf "
-#~ "einer Seite ein, um die Detailansicht dort zu sehen:"
-
-#~ msgid ", Embed Code: "
-#~ msgstr ", Embed Code: "
-
-#, fuzzy
-#~| msgid "Recipient's E-Mail Address"
-#~ msgid "Override Recipient's E-Mail Address"
-#~ msgstr "E-Mail-Adresse des Empfängers"
-
-#~ msgid "john.doe@example.com"
-#~ msgstr "max.mustermann@beispiel.com"
-
-#~ msgid "Disabled"
-#~ msgstr "Deaktiviert"
-
-#, fuzzy
-#~| msgid "Contact person"
-#~ msgid "Contact Form"
-#~ msgstr "Kontaktformular"
-
-#~ msgid "Modules"
-#~ msgstr "Module"
-
-#, fuzzy
-#~| msgid ""
-#~| "You are about to delete the listview '%s'\n"
-#~| "  'Cancel' to stop, 'OK' to delete."
-#~ msgid ""
-#~ "You are about to duplicate the listview '%s'\n"
-#~ "  'Cancel' to stop, 'OK' to duplicate."
-#~ msgstr ""
-#~ "Sie sind dabei, die Listenansicht '%s' zu löschen.\n"
-#~ "Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
-
-#~ msgid ""
-#~ "The recipient email address is the email address of the contact person "
-#~ "that is stored in onOffice enterprise edition.\n"
-#~ "\t\t \tIf it is not set, the contact request is sent to the fallback "
-#~ "address."
-#~ msgstr ""
-#~ "Die Anfrage wird per E-Mail an den Ansprechpartner der Immobilie "
-#~ "verschickt.\n"
-#~ "\t\t \tSollte es zu Problemen beim Versand kommen, wird die hier "
-#~ "angegebene Adresse verwendet."
-
-#~ msgid "Don't show archived estates"
-#~ msgstr "Archivierte Objekte nicht anzeigen"

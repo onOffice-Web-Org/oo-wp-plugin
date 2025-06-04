@@ -1,5 +1,4 @@
-const onOfficeLocalized = typeof onOffice_loc_settings !== 'undefined' ? onOffice_loc_settings : onOffice_unsaved_changes_message;
-
+const onOfficeLocalized = (typeof onOffice_loc_settings !== 'undefined' && onOffice_loc_settings) ? onOffice_loc_settings : onOffice_unsaved_changes_message;
 jQuery(document).ready(function($){
 	let checkUnsavedChanges = false;
 	let checkNavigationTriggered = false;
@@ -21,25 +20,27 @@ jQuery(document).ready(function($){
 		});
 	}
 
-	function generateUnsavedChangesMessage(href) {
+	function generateUnsavedChangesMessage(href, message) {
 		return $(`
 			<div class='notice notice-error is-dismissible notice-unsaved-changes-message'>
-				<p>${onOfficeLocalized.view_unsaved_changes_message} 
+				<p>${message}
 				<a id='leaveWithoutSaving' href='${href}'>${onOfficeLocalized.view_leave_without_saving_text}</a></p>
 				<button type='button' class='notice-dismiss notice-save-view'></button>
 			</div>
 		`);
 	}
 
+	function showUnsavedChangesMessage(href, message) {
+		$('.notice-unsaved-changes-message').remove();
+		let messageHtml = generateUnsavedChangesMessage(href, message);
+		messageHtml.insertAfter('.wp-header-end');
+		$('html, body').animate({ scrollTop: 0 }, 1000);
+	}
+
 	function handleUnsavedChanges(e, href) {
 		if (checkUnsavedChanges) {
-			$('.notice-unsaved-changes-message').remove();
 			e.preventDefault();
-			let appendUnsavedChangesHtml = generateUnsavedChangesMessage(href);
-			appendUnsavedChangesHtml.insertAfter('.wp-header-end');
-			$('html, body').animate({ scrollTop: 0 }, 1000);
-
-			return false;
+			showUnsavedChangesMessage(href, onOfficeLocalized.view_unsaved_changes_message);
 		}
 	}
 
