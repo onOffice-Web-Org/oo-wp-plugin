@@ -342,7 +342,7 @@ class AdminViewController
 	public function enqueue_css()
 	{
 		wp_enqueue_style('onoffice-admin-css',
-			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), 'v5.6');
+			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), 'v6.1');
 	}
 
 	public function role_styles()  {

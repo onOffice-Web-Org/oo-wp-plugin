@@ -64,6 +64,7 @@ class InputModelDBFactoryConfigGeoFields
 	/** */
 	const MODULE_TO_TABLE = [
 		onOfficeSDK::MODULE_ESTATE => 'oo_plugin_listviews',
+		onOfficeSDK::MODULE_ADDRESS => 'oo_plugin_listviews_address',
 		onOfficeSDK::MODULE_SEARCHCRITERIA => 'oo_plugin_forms',
 	];
 

@@ -527,7 +527,7 @@ class TestClassEstateList
 		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
 			->setMethods(['__construct', 'getAddressById', 'loadAddressesById'])
 			->getMock();
-		$pAddressDataMock->expects($this->once())->method('loadAddressesById')->with([50, 52], ['Vorname', 'Name', "Email"]);
+		$pAddressDataMock->expects($this->once())->method('loadAddressesById')->with([50, 52], ['Name', 'Vorname', "imageUrl"]);
 		$pAddressDataMock->method('getAddressById')->willReturnMap($valueMap);
 		$this->_pEnvironment->method('getAddressList')->willReturn($pAddressDataMock);
 		$this->_pEstateList->loadEstates();
@@ -1029,9 +1029,10 @@ class TestClassEstateList
 			(onOfficeSDK::ACTION_ID_GET, 'fields', '', $parametersGetFieldCurrency, null, $responseGetFieldCurrency);
 
 		unset($parametersReadEstate['georangesearch']);
+		unset($parametersReadEstateRaw['georangesearch']);
+
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
-		unset($parametersReadEstateRaw['georangesearch']);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
 
@@ -1083,7 +1084,7 @@ class TestClassEstateList
 				return $pFieldsCollectionBuilderShort;
 			});
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
-	
+
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
 		$this->_pEnvironment->method('getDefaultFilterBuilder')->willReturn($pDefaultFilterBuilder);
 		$this->_pEstateList = new EstateList($pDataListView, $this->_pEnvironment);
