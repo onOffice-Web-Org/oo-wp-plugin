@@ -51,7 +51,7 @@ jQuery(document).ready(function ($) {
 
 		$node.attr('aria-invalid', !valid);
 		$error
-			.attr('aria-hidden', valid ? 'true' : 'false')  // 👈 wichtig
+			.attr('aria-hidden', valid ? 'true' : 'false')
 			[valid ? 'hide' : 'show']();
 	} 
 	  
