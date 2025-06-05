@@ -734,7 +734,7 @@ class EstateList
 
 			$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
 			$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
-			$addressList->loadAddressesById($allAddressIds, $fields);
+			$addressList->loadBrokerAddressesById($allAddressIds, $fields);
 		}
 	}
 
