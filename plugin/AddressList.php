@@ -47,6 +47,7 @@ use function esc_html;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\DataView\DataAddressDetailView;
 use onOffice\WPlugin\Controller\AddressDetailUrl;
+use onOffice\WPlugin\Filter\EstateFilterBuilderDetailViewAddress;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 
 /**
@@ -163,16 +164,28 @@ implements AddressListBase
 	 *
 	 */
 
-	public function __construct(DataViewAddress $pDataViewAddress = null, AddressListEnvironment $pEnvironment = null)
+	public function __construct(DataViewAddress $pDataViewAddress = new DataListViewAddress(0, 'default'), AddressListEnvironment $pEnvironment = new AddressListEnvironmentDefault())
 	{
-		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
-		$this->_pDataViewAddress = $pDataViewAddress ?? new DataListViewAddress(0, 'default');
+		$this->_pEnvironment = $pEnvironment;
+		$this->_pDataViewAddress = $pDataViewAddress;
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 		$this->_pApiClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
 		$this->_pLanguageSwitcher = new AddressDetailUrl();
 	}
 
+	/**
+	 * @param array $addressIds
+	 * @param array $fields
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws API\ApiClientException
+	 */
+	public function loadBrokerAddressesById(array $addressIds, array $fields)
+	{
+		$this->setDefaultFilterBuilder(new EstateFilterBuilderDetailViewAddress());
+		$this->loadAddressesById($addressIds, $fields);
+	}
 	/**
 	 * @param array $addressIds
 	 * @param array $fields
