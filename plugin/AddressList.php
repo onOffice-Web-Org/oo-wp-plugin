@@ -164,10 +164,10 @@ implements AddressListBase
 	 *
 	 */
 
-	public function __construct(DataViewAddress $pDataViewAddress = new DataListViewAddress(0, 'default'), AddressListEnvironment $pEnvironment = new AddressListEnvironmentDefault())
+	public function __construct(DataViewAddress $pDataViewAddress = null, AddressListEnvironment $pEnvironment = null)
 	{
-		$this->_pEnvironment = $pEnvironment;
-		$this->_pDataViewAddress = $pDataViewAddress;
+		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
+		$this->_pDataViewAddress = $pDataViewAddress ?? new DataListViewAddress(0, 'default');
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 		$this->_pApiClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
