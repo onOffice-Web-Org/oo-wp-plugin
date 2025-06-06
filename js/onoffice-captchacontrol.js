@@ -41,7 +41,27 @@ var CaptchaCallback = function () {
 	};
 })();
 
-jQuery(document).ready(function ($) {
+function waitForUC() {
+    return new Promise(resolve => {
+        if (window.uc?.whitelisted?.value instanceof Set) {
+            resolve(true); // UC already loaded
+        } else {
+            resolve(false);
+        }
+    });
+}
+
+function hasConsent(serviceIds = []) {
+    const raw = uc?.whitelisted?.value;
+    if (!(raw instanceof Set)) return false;
+
+    const allowed = Array.from(raw)
+        .flatMap(entry => entry.split('|').map(id => id.trim()));
+
+    return serviceIds.some(id => allowed.includes(id));
+}
+
+jQuery(async function ($) {
 	function addRecaptchaScript() {
 		if (!$("#recaptcha-script").length) {
 			$("<script>")
@@ -52,5 +72,17 @@ jQuery(document).ready(function ($) {
 				.appendTo("head");
 		}
 	}
-	$(`#onoffice-form :input, .oo-form :input`).on("focus select2:open", addRecaptchaScript);
+
+    const hasUC = await waitForUC();
+
+    if (hasUC) {
+        if (hasConsent(["Hko_qNsui-Q", "cfADcn3E3"])) {
+            addRecaptchaScript();
+        }
+    } else {
+        $(`#onoffice-form :input, .oo-form :input`).on(
+            "focus select2:open",
+            addRecaptchaScript
+        );
+    }
 });
