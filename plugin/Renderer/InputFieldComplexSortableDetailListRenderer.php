@@ -57,6 +57,9 @@ class InputFieldComplexSortableDetailListRenderer
 	/** @var string */
 	private $_template = '';
 
+	/** @var array */
+	private $_titlePerMultipage = [];
+
 	/**
 	 *
 	 * @param string $name
@@ -126,7 +129,9 @@ class InputFieldComplexSortableDetailListRenderer
 			echo '<div class="list-fields-for-each-page">';
 			echo '<div class="multi-page">';
 			echo '<span class="multi-page-counter">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</span>';
-			echo '<div class="multi-page-title"><label>' . esc_html__('Page title:', 'onoffice-for-wp-websites') . '</label><input class="onoffice-input" type="text" name="leadgeneratorMultiPageTitle'.$page.'"></div>';
+			//TODO: Fix showing just dummyData from database
+			echo '<div>' . $this->_titlePerMultipage[$page]['title'] ?? 'NICHTS' . '</div>';
+			echo '<div class="multi-page-title"><label>' . esc_html__('Page title:', 'onoffice-for-wp-websites') . '</label><input class="onoffice-input" type="text" name="oopluginformmultipagetitle-value'.$page.'"></div>';
 			/* Custom Label for different languages*/
 			echo '</div>';
 			echo '<ul class="filter-fields-list attachSortableFieldsList multi-page-list fieldsListPage-' . esc_attr($page) . ' sortableFieldsListForForm">';
@@ -245,4 +250,7 @@ class InputFieldComplexSortableDetailListRenderer
 	/** @param string $template */
 	public function setTemplate(string $template)
 		{ $this->_template = $template; }
+
+	public function setTitlePerMultipage(array $titlePerMultipage)
+		{ $this->_titlePerMultipage = $titlePerMultipage; }
 }

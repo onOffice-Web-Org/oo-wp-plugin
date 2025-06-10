@@ -142,6 +142,7 @@ class FormModelBuilderDBForm
 		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
 		$pInputModelFieldsConfig->setValue($fields);
 		$pInputModelFieldsConfig->setPerPageForm($this->getValue('fieldsPagePerForm'));
+		$pInputModelFieldsConfig->setTitlePerMultipageForm($this->getValue('titlePerMultiPage'));
 
 		$pModule = $this->getInputModelModule();
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
@@ -165,6 +166,11 @@ class FormModelBuilderDBForm
 		if($this->getFormType() === Form::TYPE_OWNER){
 			$pInputModelFieldsConfig->setIsMultiPage(true);
 			$pInputModelFieldsConfig->setTemplate($this->getValue('template'));
+
+			$pInputModelMultiPageTitle = $this->createInputModelMultiPageTitle();
+			$pInputModelMultiPageTitlePage = $this->createInputModelMultiPageTitlePage();
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitle);
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitlePage);
 		}
 
 		return $pInputModelFieldsConfig;
@@ -233,6 +239,7 @@ class FormModelBuilderDBForm
 		$values['fieldsMarkdown'] = array();
 		$values['fieldsHiddenField'] = array();
 		$values['fieldsPagePerForm'] = array();
+		$values['titlePerMultiPage'] = array();
 		$values['template'] = array();
 		$pFactory = new DataFormConfigurationFactory($this->_formType);
 
@@ -267,6 +274,7 @@ class FormModelBuilderDBForm
 		$values['taskSubject'] = $pDataFormConfiguration->getTaskSubject();
 		$values['taskDescription'] = $pDataFormConfiguration->getTaskDescription();
 		$values['taskStatus'] = $pDataFormConfiguration->getTaskStatus();
+		$values['titlePerMultiPage'] = $pDataFormConfiguration->getTitlePerMultipage();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -1165,6 +1173,46 @@ class FormModelBuilderDBForm
 		}
 
 		return $supervisors;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	private function createInputModelMultiPageTitle(): InputModelDB
+	{
+		$labelMultiPageTitle = __('Page title:', 'onoffice-for-wp-websites');
+
+		$pInputModelFormMultiPageTitle = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_VALUE, $labelMultiPageTitle);
+		$pInputModelFormMultiPageTitle->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
+		$pInputModelFormMultiPageTitle->setValue($this->getValue('titlePerMultiPage') ?? '');
+		$pInputModelFormMultiPageTitle->setValueCallback(function (InputModelDB $pInputModel) {
+			//TODO: needed?
+			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+			$pInputModel->setLabel(__('Add Title', 'onoffice-for-wp-websites'));
+		});
+
+		return $pInputModelFormMultiPageTitle;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	private function createInputModelMultiPageTitlePage(): InputModelDB
+	{
+		$label = __('Page for title', 'onoffice-for-wp-websites');
+
+		$pInputModel = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_PAGE, $label);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
+		$pInputModel->setValue($this->getValue('pagePerMultiPage') ?? '');
+		$pInputModel->setValueCallback(function (InputModelDB $pInputModel) {
+			//TODO: needed?
+			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+			$pInputModel->setLabel(__('Add Page', 'onoffice-for-wp-websites'));
+		});
+
+		return $pInputModel;
 	}
 
 	/**
