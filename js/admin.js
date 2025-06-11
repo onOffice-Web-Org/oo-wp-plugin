@@ -435,34 +435,6 @@ jQuery(document).ready(function($){
 		},
 		
 		updateSelectionGroup: function () {
-			// get page specific classes before DOM manipulation
-			const getTransferableClasses = ($element) =>
-				($element.attr('class') || '')
-					.split(/\s+/)
-					.filter(cls => /^page-\d+$/.test(cls))
-					.join(' ');
-		
-			// makes sure moved item survives
-			const rewrapOrphans = ($groupElement, id, actionFieldName, classes) => {
-				const $orphans = $groupElement.children('ul.nested-items').children('.item');
-				$orphans.each(function () {
-					const $it = $(this);
-					const $newGroup = $(`
-						<li class="menu-item-handle sortable-item selection-group selection-group-${id} ${classes}"
-							id="${id}" action-field-name="${actionFieldName}">
-							<ul class="nested-items"></ul>
-						</li>
-					`);
-					$newGroup.find('.nested-items').append($it);
-					$groupElement.before($newGroup);
-				});
-			};
-		
-			// drop items by restoring flat hierarchy, makes sure nested items survive
-			const restoreOriginalGroups = ($groupElement) => {
-				const $innerGroup = $groupElement.children('ul.nested-items').children('.selection-group');
-				$innerGroup.insertAfter($groupElement);
-			};
 		
 			$('.filter-fields-list').sortable('destroy');
 		
@@ -471,50 +443,65 @@ jQuery(document).ready(function($){
 				connectWith: '.filter-fields-list',
 				revert: 'invalid',
 		
+				helper: function (event, item) {
+					// If this item is part of the selection, drag a visual clone of all selected
+					const $selected = $('.selection-group.selected');
+					if ($selected.length && item.hasClass('selected')) {
+						const $helper = $('<li class="multi-drag-helper"/>');
+						$selected.clone().appendTo($helper);
+						return $helper;
+					}
+					return item.clone(); // single item drag fallback
+				},
+		
 				start: function (event, ui) {
-					ui.item.data('origParent', ui.item.parent());
 					ui.item.data('origIndex', ui.item.index());
-		
-					const $d = ui.item;
-					if (!$d.hasClass('selection-group')) return;
-		
-					const $all = $('.list-fields-for-each-page .selection-group');
-					const ids = $all.map((_, el) => $(el).attr('id')).get();
-					const i = ids.indexOf($d.attr('id'));
-					const before = ids.slice(0, i), after = ids.slice(i + 1);
-					let $lst = $d.children('ul.nested-items');
-					if (!$lst.length) $lst = $('<ul class="nested-items"></ul>').appendTo($d);
-		
-					[...before, ...after].forEach(id => {
-						const $e = $(`.selection-group#${id}`);
-						if ($e.length && $e[0] !== $d[0]) $lst.append($e);
+					ui.item.data('origParent', ui.item.parent());
+				
+					multiDragSelectedOrdered = [];
+				
+					const $selected = $('.selection-group.selected');
+					$selected.each(function () {
+						multiDragSelectedOrdered.push(this);
 					});
 				},
 		
+		
 				stop: function (event, ui) {
-					const $groupElement = ui.item;
 					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
 					const validDrop = droppedOver && droppedOver.closest('.list-fields-for-each-page');
 		
 					if (!validDrop) {
 						$(this).sortable('cancel');
-						console.log("No valid droppable area found!")
+						console.log("No valid droppable area found!");
 						return;
 					}
 		
-					if ($groupElement.hasClass('selection-group')) {
-						restoreOriginalGroups($groupElement);
+					const $droppedItem = ui.item;
+					const $allGroups = $('.selection-group');
+					const $selected = $('.selection-group').not($droppedItem);
 		
-						const id = $groupElement.attr('id');
-						const actionFieldName = $groupElement.attr('action-field-name');
-						const classes = getTransferableClasses($groupElement);
+					const droppedIndex = $allGroups.index($droppedItem);
 		
-						rewrapOrphans($groupElement, id, actionFieldName, classes);
-						$groupElement.remove();
-					}
+					const before = [];
+					const after = [];
 		
-					FormMultiPageManager.reorderPages();
-					FormMultiPageManager.updateSelectionGroup();
+					$selected.each(function () {
+						const idx = $allGroups.index(this);
+						if (idx < droppedIndex) {
+							before.push(this);
+						} else {
+							after.push(this);
+						}
+					});
+		
+					$(before.reverse()).each(function () {
+						$droppedItem.before(this);
+					});
+		
+					$(after).each(function () {
+						$droppedItem.after(this);
+					});
 				}
 			});
 		}
