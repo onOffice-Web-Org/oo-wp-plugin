@@ -1056,6 +1056,13 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	border: 1px solid #0f4775;
 }
 
+.add-page-container .add-page-button:disabled {
+	background-color: #ccc;
+  	color: #666;
+  	cursor: not-allowed;
+  	opacity: 0.7;
+}
+
 .oo-poststuff .oo-email-subject-container .oo-email-subject-title {
 	box-sizing: border-box;
 	width: 100%;

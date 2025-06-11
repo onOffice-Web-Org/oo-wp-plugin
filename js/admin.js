@@ -230,7 +230,6 @@ jQuery(document).ready(function($){
 			this.initializeSortable();
 			this.checkTemplate();
 			this.draggablePages();
-			FormMultiPageManager.updateSelectionGroup();
 		},
 
 		createNewPage: function(pageNumber) {
@@ -347,6 +346,11 @@ jQuery(document).ready(function($){
 			  });
 		},
 
+		toggleAddPageButton: function () {
+			const hasSelectedItems = $('.list-fields-for-each-page .item.selected').length > 0;
+			$('.add-page-button').prop('disabled', hasSelectedItems);
+		},
+
 		multiSelectItems: function () {
 			const $container = $('#multi-page-container');
 		
@@ -360,6 +364,7 @@ jQuery(document).ready(function($){
 				} else {
 					$item.removeClass('selected');
 				}
+				this.toggleAddPageButton();
 				this.multiSortable();
 			});
 		
@@ -369,6 +374,7 @@ jQuery(document).ready(function($){
 					$container.find('.list-fields-for-each-page .selected').removeClass('selected');
 					$container.find('.list-fields-for-each-page input[type="checkbox"]').prop('checked', false);
 					$('#postbox-select-all').prop('checked', false);
+					this.toggleAddPageButton();
 					this.multiSortable();
 				}
 			});
@@ -388,8 +394,8 @@ jQuery(document).ready(function($){
 						$item.removeClass('selected');
 					}
 				});
-			
-				this.multiSortable(); // Only once, at the end
+				this.toggleAddPageButton();
+				this.multiSortable();
 			});
 		},
 		
