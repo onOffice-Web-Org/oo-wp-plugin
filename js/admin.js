@@ -345,18 +345,17 @@ jQuery(document).ready(function($){
 				  }
 				});
 			  });
-			  
 		},
 
 		multiSelectItems: function () {
 			const $container = $('#multi-page-container');
-		
-			const getTransferableClasses = ($el) =>
-				($el.attr('class') || '')
+			// get data array before DOM manipulation
+			const getTransferableClasses = ($element) =>
+				($element.attr('class') || '')
 					.split(/\s+/)
 					.filter(cls => /^page-\d+$/.test(cls))
 					.join(' ');
-		
+			// wraps each selected item in a temporary selection-group
 			const wrapItemInGroup = ($item) => {
 				const itemId = $item.attr('id');
 				const actionFieldName = $item.attr('action-field-name');
@@ -376,6 +375,7 @@ jQuery(document).ready(function($){
 				$wrapper.find('.nested-items').append($item);
 			};
 		
+			// restores each selected item to original state
 			const unwrapItemFromGroup = ($item) => {
 				const $wrapper = $item.closest('.selection-group');
 				if ($wrapper.length) {
@@ -433,32 +433,35 @@ jQuery(document).ready(function($){
 				});
 			});
 		},
-
+		
 		updateSelectionGroup: function () {
-			const getTransferableClasses = ($el) =>
-				($el.attr('class') || '')
+			// get page specific classes before DOM manipulation
+			const getTransferableClasses = ($element) =>
+				($element.attr('class') || '')
 					.split(/\s+/)
 					.filter(cls => /^page-\d+$/.test(cls))
 					.join(' ');
 		
-			const rewrapOrphans = ($grp, id, af, txf) => {
-				const $orphans = $grp.children('ul.nested-items').children('.item');
+			// makes sure moved item survives
+			const rewrapOrphans = ($groupElement, id, actionFieldName, classes) => {
+				const $orphans = $groupElement.children('ul.nested-items').children('.item');
 				$orphans.each(function () {
 					const $it = $(this);
-					const $w = $(`
-						<li class="menu-item-handle sortable-item selection-group selection-group-${id} ${txf}"
-							id="${id}" action-field-name="${af}">
+					const $newGroup = $(`
+						<li class="menu-item-handle sortable-item selection-group selection-group-${id} ${classes}"
+							id="${id}" action-field-name="${actionFieldName}">
 							<ul class="nested-items"></ul>
 						</li>
 					`);
-					$w.find('.nested-items').append($it);
-					$grp.before($w);
+					$newGroup.find('.nested-items').append($it);
+					$groupElement.before($newGroup);
 				});
 			};
 		
-			const restoreOriginalGroups = ($grp) => {
-				const $others = $grp.children('ul.nested-items').children('.selection-group');
-				$others.insertAfter($grp);
+			// drop items by restoring flat hierarchy, makes sure nested items survive
+			const restoreOriginalGroups = ($groupElement) => {
+				const $innerGroup = $groupElement.children('ul.nested-items').children('.selection-group');
+				$innerGroup.insertAfter($groupElement);
 			};
 		
 			$('.filter-fields-list').sortable('destroy');
@@ -489,24 +492,25 @@ jQuery(document).ready(function($){
 				},
 		
 				stop: function (event, ui) {
-					const $grp = ui.item;
+					const $groupElement = ui.item;
 					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
-					const validDrop = droppedOver && droppedOver.closest('.fieldsSortable');
+					const validDrop = droppedOver && droppedOver.closest('.list-fields-for-each-page');
 		
 					if (!validDrop) {
 						$(this).sortable('cancel');
+						console.log("No valid droppable area found!")
 						return;
 					}
 		
-					if ($grp.hasClass('selection-group')) {
-						restoreOriginalGroups($grp);
+					if ($groupElement.hasClass('selection-group')) {
+						restoreOriginalGroups($groupElement);
 		
-						const id = $grp.attr('id');
-						const af = $grp.attr('action-field-name');
-						const txf = getTransferableClasses($grp);
+						const id = $groupElement.attr('id');
+						const actionFieldName = $groupElement.attr('action-field-name');
+						const classes = getTransferableClasses($groupElement);
 		
-						rewrapOrphans($grp, id, af, txf);
-						$grp.remove();
+						rewrapOrphans($groupElement, id, actionFieldName, classes);
+						$groupElement.remove();
 					}
 		
 					FormMultiPageManager.reorderPages();
