@@ -349,9 +349,9 @@ jQuery(document).ready(function($){
 
 		multiSelectItems: function () {
 			const $container = $('#multi-page-container');
-			
+		
 			// Handle checkbox selection
-			$container.on('change', '.list-fields-for-each-page input[type="checkbox"]', (event) => {
+			$container.off('change.multiSelect').on('change.multiSelect', '.list-fields-for-each-page input[type="checkbox"]', (event) => {
 				const $checkbox = $(event.target);
 				const $item = $checkbox.closest('.item');
 		
@@ -360,36 +360,40 @@ jQuery(document).ready(function($){
 				} else {
 					$item.removeClass('selected');
 				}
-		
-				this.updateSelectionGroup();
+				this.multiSortable();
 			});
 		
 			// Deselect when clicking outside
-			$(document).off('click.multiSelect').on('click.multiSelect', (event) => {
+			$(document).off('click.multiSelectDeselect').on('click.multiSelectDeselect', (event) => {
 				if (!$(event.target).closest('.fieldsSortable').length) {
-					$container.find('.list-fields-for-each-page .selected').each(function () {
-						$(this).removeClass('selected');
-					});
-					$container.find('input[type="checkbox"]').prop('checked', false);
-					this.updateSelectionGroup();
+					$container.find('.list-fields-for-each-page .selected').removeClass('selected');
+					$container.find('.list-fields-for-each-page input[type="checkbox"]').prop('checked', false);
+					$('#postbox-select-all').prop('checked', false);
+					this.multiSortable();
 				}
 			});
 		
 			// Select/deselect all
-			$('#postbox-select-all').on('change', (event) => {
+			$('#postbox-select-all').off('change.multiSelectAll').on('change.multiSelectAll', (event) => {
 				const isChecked = $(event.target).prop('checked');
 				const $checkboxes = $container.find('.list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
-		
+			
 				$checkboxes.each(function () {
 					const $cb = $(this);
-					if ($cb.prop('checked') !== isChecked) {
-						$cb.prop('checked', isChecked).trigger('change');
+					$cb.prop('checked', isChecked);
+					const $item = $cb.closest('.item');
+					if (isChecked) {
+						$item.addClass('selected');
+					} else {
+						$item.removeClass('selected');
 					}
 				});
+			
+				this.multiSortable(); // Only once, at the end
 			});
 		},
 		
-		updateSelectionGroup: function () {
+		multiSortable: function () {
 			const $list = $('.filter-fields-list');
 			$list.sortable('destroy');
 		
@@ -399,7 +403,6 @@ jQuery(document).ready(function($){
 				revert: 'invalid',
 		
 				helper: function (event, item) {
-					// Drag a clone of all selected when dragging a selected item
 					const $selected = $list.find('.selected');
 					if ($selected.length && item.hasClass('selected')) {
 						const $helper = $('<li class="multi-drag-helper"/>');
@@ -425,7 +428,6 @@ jQuery(document).ready(function($){
 		
 					if (!validDrop) {
 						$(this).sortable('cancel');
-						console.log("No valid droppable area found!");
 						return;
 					}
 		
@@ -433,7 +435,6 @@ jQuery(document).ready(function($){
 					const $allItems = $list.children('li');
 					const $selected = $allItems.filter('.selected').not($droppedItem);
 					const droppedIndex = $allItems.index($droppedItem);
-		
 					const before = [];
 					const after = [];
 		
@@ -457,7 +458,6 @@ jQuery(document).ready(function($){
 				}
 			});
 		}
-		
 	};
 
 	if ($('#multi-page-container').length) {
