@@ -351,6 +351,15 @@ jQuery(document).ready(function($){
 			$('.add-page-button').prop('disabled', hasSelectedItems);
 		},
 
+		updateSelectAllCheckbox: function () {
+			const $checkboxes = $('#multi-page-container .list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
+			const $selectAll = $('#postbox-select-all');
+			const total = $checkboxes.length;
+			const checked = $checkboxes.filter(':checked').length;
+		
+			$selectAll.prop('checked', total > 0 && checked === total);
+		},
+
 		multiSelectItems: function () {
 			const $container = $('#multi-page-container');
 		
@@ -365,6 +374,9 @@ jQuery(document).ready(function($){
 					$item.removeClass('selected');
 				}
 				this.toggleAddPageButton();
+				setTimeout(() => {
+					this.updateSelectAllCheckbox();
+				}, 0);
 				this.multiSortable();
 			});
 		
@@ -375,6 +387,7 @@ jQuery(document).ready(function($){
 					$container.find('.list-fields-for-each-page input[type="checkbox"]').prop('checked', false);
 					$('#postbox-select-all').prop('checked', false);
 					this.toggleAddPageButton();
+					this.updateSelectAllCheckbox();
 					this.multiSortable();
 				}
 			});
@@ -395,6 +408,7 @@ jQuery(document).ready(function($){
 					}
 				});
 				this.toggleAddPageButton();
+				this.updateSelectAllCheckbox();
 				this.multiSortable();
 			});
 		},
