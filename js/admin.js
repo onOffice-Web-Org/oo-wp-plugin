@@ -349,81 +349,36 @@ jQuery(document).ready(function($){
 
 		multiSelectItems: function () {
 			const $container = $('#multi-page-container');
-			// get data array before DOM manipulation
-			const getTransferableClasses = ($element) =>
-				($element.attr('class') || '')
-					.split(/\s+/)
-					.filter(cls => /^page-\d+$/.test(cls))
-					.join(' ');
-			// wraps each selected item in a temporary selection-group
-			const wrapItemInGroup = ($item) => {
-				const itemId = $item.attr('id');
-				const actionFieldName = $item.attr('action-field-name');
-				const transferableClasses = getTransferableClasses($item);
-		
-				const $wrapper = $(`
-					<li class="menu-item-handle sortable-item selection-group selection-group-${itemId} ${transferableClasses}"
-						id="${itemId}" action-field-name="${actionFieldName}">
-						<ul class="nested-items"></ul>
-					</li>
-				`);
-		
-				$item.removeAttr('id action-field-name')
-					.removeClass(`${transferableClasses} sortable-item`);
-		
-				$item.before($wrapper);
-				$wrapper.find('.nested-items').append($item);
-			};
-		
-			// restores each selected item to original state
-			const unwrapItemFromGroup = ($item) => {
-				const $wrapper = $item.closest('.selection-group');
-				if ($wrapper.length) {
-					const restoredId = $wrapper.attr('id');
-					const restoredActionField = $wrapper.attr('action-field-name');
-					const transferableClasses = getTransferableClasses($wrapper);
-		
-					$item.attr({ id: restoredId, 'action-field-name': restoredActionField })
-						.addClass(`${transferableClasses} sortable-item`)
-						.removeClass('selected');
-		
-					$wrapper.before($item);
-					$wrapper.remove();
-				} else {
-					$item.removeClass('selected');
-				}
-			};
-		
+			
+			// Handle checkbox selection
 			$container.on('change', '.list-fields-for-each-page input[type="checkbox"]', (event) => {
 				const $checkbox = $(event.target);
 				const $item = $checkbox.closest('.item');
 		
 				if ($checkbox.prop('checked')) {
 					$item.addClass('selected');
-					if (!$item.closest('.selection-group').length) {
-						wrapItemInGroup($item);
-					}
 				} else {
-					unwrapItemFromGroup($item);
+					$item.removeClass('selected');
 				}
 		
 				this.updateSelectionGroup();
 			});
 		
+			// Deselect when clicking outside
 			$(document).off('click.multiSelect').on('click.multiSelect', (event) => {
 				if (!$(event.target).closest('.fieldsSortable').length) {
-					$('.list-fields-for-each-page .selected').each(function () {
-						unwrapItemFromGroup($(this));
+					$container.find('.list-fields-for-each-page .selected').each(function () {
+						$(this).removeClass('selected');
 					});
-		
 					$container.find('input[type="checkbox"]').prop('checked', false);
 					this.updateSelectionGroup();
 				}
 			});
 		
+			// Select/deselect all
 			$('#postbox-select-all').on('change', (event) => {
 				const isChecked = $(event.target).prop('checked');
-				const $checkboxes = $('#multi-page-container .list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
+				const $checkboxes = $container.find('.list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
 		
 				$checkboxes.each(function () {
 					const $cb = $(this);
@@ -435,37 +390,34 @@ jQuery(document).ready(function($){
 		},
 		
 		updateSelectionGroup: function () {
+			const $list = $('.filter-fields-list');
+			$list.sortable('destroy');
 		
-			$('.filter-fields-list').sortable('destroy');
-		
-			$('.filter-fields-list').sortable({
+			$list.sortable({
 				axis: 'y',
 				connectWith: '.filter-fields-list',
 				revert: 'invalid',
 		
 				helper: function (event, item) {
-					// If this item is part of the selection, drag a visual clone of all selected
-					const $selected = $('.selection-group.selected');
+					// Drag a clone of all selected when dragging a selected item
+					const $selected = $list.find('.selected');
 					if ($selected.length && item.hasClass('selected')) {
 						const $helper = $('<li class="multi-drag-helper"/>');
 						$selected.clone().appendTo($helper);
 						return $helper;
 					}
-					return item.clone(); // single item drag fallback
+					return item.clone();
 				},
 		
 				start: function (event, ui) {
 					ui.item.data('origIndex', ui.item.index());
 					ui.item.data('origParent', ui.item.parent());
-				
+		
 					multiDragSelectedOrdered = [];
-				
-					const $selected = $('.selection-group.selected');
-					$selected.each(function () {
+					$list.find('.selected').each(function () {
 						multiDragSelectedOrdered.push(this);
 					});
 				},
-		
 		
 				stop: function (event, ui) {
 					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
@@ -478,16 +430,15 @@ jQuery(document).ready(function($){
 					}
 		
 					const $droppedItem = ui.item;
-					const $allGroups = $('.selection-group');
-					const $selected = $('.selection-group').not($droppedItem);
-		
-					const droppedIndex = $allGroups.index($droppedItem);
+					const $allItems = $list.children('li');
+					const $selected = $allItems.filter('.selected').not($droppedItem);
+					const droppedIndex = $allItems.index($droppedItem);
 		
 					const before = [];
 					const after = [];
 		
 					$selected.each(function () {
-						const idx = $allGroups.index(this);
+						const idx = $allItems.index(this);
 						if (idx < droppedIndex) {
 							before.push(this);
 						} else {
@@ -502,9 +453,11 @@ jQuery(document).ready(function($){
 					$(after).each(function () {
 						$droppedItem.after(this);
 					});
+					FormMultiPageManager.reorderPages();
 				}
 			});
 		}
+		
 	};
 
 	if ($('#multi-page-container').length) {
