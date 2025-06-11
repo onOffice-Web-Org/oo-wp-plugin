@@ -995,10 +995,12 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .list-fields-for-each-page .multi-page-counter {
 	font-weight: 600;
 }
-.list-fields-for-each-page .multi-page-title {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
+.list-fields-for-each-page .multi-page .custom-input-field {
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+.list-fields-for-each-page .multi-page input[name=oopluginformmultipagetitle-value] {
+	width: 100%;
 }
 
 .list-fields-for-each-page .sortable-item:hover,

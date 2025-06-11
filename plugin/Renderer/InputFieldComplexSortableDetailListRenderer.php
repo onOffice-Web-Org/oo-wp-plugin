@@ -58,7 +58,7 @@ class InputFieldComplexSortableDetailListRenderer
 	private $_template = '';
 
 	/** @var array */
-	private $_titlePerMultipage = [];
+	private $_titlesPerMultipage = [];
 
 	/**
 	 *
@@ -123,16 +123,21 @@ class InputFieldComplexSortableDetailListRenderer
 			$page = $this->_allFields[$properties]['page'] ?? 1;
 			$fieldsByPage[$page][$properties] = $this->_allFields[$properties];
 		}
-		$extraInputModels = $this->_extraInputModels;
+		$titleInputModels = [];
+		$extraInputModels = array_values(array_filter($this->_extraInputModels, function($pInputModel) use (&$titleInputModels) {
+			if ($pInputModel->getTable() === 'oo_plugin_form_multipage_title') {
+				$titleInputModels[] = $pInputModel;
+				return false;
+			}
+			return true;
+		}));
+
 		$page = 1;
 		foreach ($fieldsByPage as $fields) {
 			echo '<div class="list-fields-for-each-page">';
 			echo '<div class="multi-page">';
 			echo '<span class="multi-page-counter">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</span>';
-			//TODO: Fix showing just dummyData from database
-			echo '<div>' . $this->_titlePerMultipage[$page]['title'] ?? 'NICHTS' . '</div>';
-			echo '<div class="multi-page-title"><label>' . esc_html__('Page title:', 'onoffice-for-wp-websites') . '</label><input class="onoffice-input" type="text" name="oopluginformmultipagetitle-value'.$page.'"></div>';
-			/* Custom Label for different languages*/
+			$this->_pContentRenderer->renderTitleForMultiPage($titleInputModels, $this->getTitlePerPageAndLocale($page, ''));
 			echo '</div>';
 			echo '<ul class="filter-fields-list attachSortableFieldsList multi-page-list fieldsListPage-' . esc_attr($page) . ' sortableFieldsListForForm">';
 			$i = 1;
@@ -251,6 +256,21 @@ class InputFieldComplexSortableDetailListRenderer
 	public function setTemplate(string $template)
 		{ $this->_template = $template; }
 
-	public function setTitlePerMultipage(array $titlePerMultipage)
-		{ $this->_titlePerMultipage = $titlePerMultipage; }
+	/**
+	 * @param int $page
+	 * @param string $locale
+	 * @return array
+	 */
+	public function getTitlePerPageAndLocale(int $page, string $locale):array
+		{
+			foreach ($this->_titlesPerMultipage as $title) {
+				//TODO: add locale support
+				if (isset($title['page']) && (int) $title['page'] === $page) {
+					return $title;
+				}
+			}
+			return [];
+		}
+	public function setTitlesPerMultipage(array $titlesPerMultipage)
+		{ $this->_titlesPerMultipage = $titlesPerMultipage; }
 }

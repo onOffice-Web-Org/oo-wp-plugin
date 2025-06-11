@@ -171,11 +171,10 @@ class DataFormConfiguration
 		{ return $this->_titlePerMultipage; }
 
 	/**
-	 * @param string $title
-	 * @param int $page
+	 * @param array $titleData
 	 */
-	public function addTitlePerMultipagePage(int $page, string $title): void
-	{ $this->_titlePerMultipage [$page] = ['title'=>$title]; }
+	public function addTitlePerMultipagePage(array $titleData): void
+	{ $this->_titlePerMultipage[] = $titleData; }
 
 	/** @param string $formType */
 	public function setFormType(string $formType)

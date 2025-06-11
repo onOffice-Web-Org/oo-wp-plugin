@@ -187,7 +187,7 @@ class DataFormConfigurationFactory
 			$this->configureTask($pConfig, $rowTaskConfig);
 		}
 
-		if ($this->_type == Form::TYPE_OWNER) {
+		if ($this->_type === Form::TYPE_OWNER) {
 			$rowTitlePerMultipageConfig = $this->_pRecordManagerRead->readTitlePerMultipageByFormId($formId);
 			$this->configureTitlePerMultipageByRow($rowTitlePerMultipageConfig, $pConfig);
 		}
@@ -266,7 +266,7 @@ class DataFormConfigurationFactory
 	{
 		foreach ($row as $titleData) {
 			if (array_key_exists('value', $titleData) && array_key_exists('page', $titleData)) {
-				$pFormConfiguration->addTitlePerMultipagePage($titleData['page'], $titleData['value']);
+				$pFormConfiguration->addTitlePerMultipagePage($titleData);
 			}
 		}
 

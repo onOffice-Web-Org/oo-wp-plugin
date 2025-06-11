@@ -69,8 +69,7 @@ class InputFieldComplexSortableDetailListContentDefault
 			if ($key !== 'Ort' && $pInputModel->getField() == 'convertInputTextToSelectForField' && !$isDummy) {
 				continue;
 			}
-			// TODO: Will be rendered outside the field container
-			if ($pInputModel->getField() == 'multiPageTitleValue' || $pInputModel->getField() == 'multiPageTitlePage') {
+			if ($pInputModel->getTable() === 'oo_plugin_form_multipage_title') {
 				continue;
 			}
 			if (array_key_exists($key, FieldModuleCollectionDecoratorReadAddress::getNewAddressFields()) && !$isDummy && ($pInputModel->getField() === 'filterable' || $pInputModel->getField() === 'hidden')) {
@@ -105,5 +104,24 @@ class InputFieldComplexSortableDetailListContentDefault
 		$pInputModelRenderer->buildForAjax($pFormModel);
 
 		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice-for-wp-websites').'</a>';
+	}
+
+	public function renderTitleForMultiPage(array $titleInputModels, array $title):void {
+		$pFormModel = new FormModel();
+
+		foreach ($titleInputModels as $pInputModel) {
+			$callbackValue = $pInputModel->getValueCallback();
+
+			if ($callbackValue !== null) {
+				call_user_func($callbackValue, $pInputModel, $title);
+			}
+			$pFormModel->addInputModel($pInputModel);
+		}
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		/* @var $pInputModelRenderer InputModelRenderer */
+		$pInputModelRenderer = $pContainer->get(InputModelRenderer::class);
+		$pInputModelRenderer->buildForAjax($pFormModel);
 	}
 }

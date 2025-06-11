@@ -712,6 +712,26 @@ class FormModelBuilderDBForm
 	}
 
 	/**
+	 * @param InputModelBase $pInputModel
+	 * @param array $title with data for multipage titles
+	 */
+	public function callbackValueInputModelTitleValue(InputModelBase $pInputModel, array $title): void
+	{
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
+		$pInputModel->setLabel(__('Page title:', 'onoffice-for-wp-websites'));
+		$pInputModel->setValue($title['value']);
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param array $title with data for multipage titles
+	 */
+	public function callbackValueInputModelTitlePage(InputModelBase $pInputModel, array $title): void
+	{
+		$pInputModel->setValue($title['page']);
+	}
+
+	/**
 	 * @return InputModelDB
 	 */
 	public function getInputModelModule()
@@ -1185,12 +1205,8 @@ class FormModelBuilderDBForm
 		$pInputModelFormMultiPageTitle = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_VALUE, $labelMultiPageTitle);
 		$pInputModelFormMultiPageTitle->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
-		$pInputModelFormMultiPageTitle->setValue($this->getValue('titlePerMultiPage') ?? '');
-		$pInputModelFormMultiPageTitle->setValueCallback(function (InputModelDB $pInputModel) {
-			//TODO: needed?
-			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-			$pInputModel->setLabel(__('Add Title', 'onoffice-for-wp-websites'));
-		});
+		$pInputModelFormMultiPageTitle->setValue($this->getValue('titlePerMultiPage')['value'] ?? '');
+		$pInputModelFormMultiPageTitle->setValueCallback(array($this, 'callbackValueInputModelTitleValue'));
 
 		return $pInputModelFormMultiPageTitle;
 	}
@@ -1200,17 +1216,10 @@ class FormModelBuilderDBForm
 	 */
 	private function createInputModelMultiPageTitlePage(): InputModelDB
 	{
-		$label = __('Page for title', 'onoffice-for-wp-websites');
-
 		$pInputModel = $this->getInputModelDBFactory()->create
-		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_PAGE, $label);
-		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
-		$pInputModel->setValue($this->getValue('pagePerMultiPage') ?? '');
-		$pInputModel->setValueCallback(function (InputModelDB $pInputModel) {
-			//TODO: needed?
-			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-			$pInputModel->setLabel(__('Add Page', 'onoffice-for-wp-websites'));
-		});
+		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_PAGE, '');
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelTitlePage'));
 
 		return $pInputModel;
 	}
