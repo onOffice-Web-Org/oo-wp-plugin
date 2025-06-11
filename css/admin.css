@@ -994,14 +994,8 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	cursor: move;
 }
 
-.selection-group {
-	border: 2px dashed #2271B1;
-	background-color: rgba(0, 0, 255, 0.1);
-}
-
-.selection-group .item.selected {
-	margin: 0;
-	margin: 4px 0;
+.sortable-item.selected .menu-item-handle {
+	border-color: #2271B1;
 }
 
 .postbox-select-all {
