@@ -986,7 +986,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	width: 100%;
 }
 
-.list-fields-for-each-page .multi-page {
+.list-fields-for-each-page .multi-page-title {
 	margin: 0 12px 10px 12px;
 	display: flex;
 	flex-direction: column;
@@ -995,11 +995,11 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .list-fields-for-each-page .multi-page-counter {
 	font-weight: 600;
 }
-.list-fields-for-each-page .multi-page .custom-input-field {
+.list-fields-for-each-page .multi-page-title .custom-input-field {
 	flex-wrap: wrap;
 	justify-content: flex-start;
 }
-.list-fields-for-each-page .multi-page input[name=oopluginformmultipagetitle-value] {
+.list-fields-for-each-page .multi-page-title .custom-input-field input:first-of-type {
 	width: 100%;
 }
 

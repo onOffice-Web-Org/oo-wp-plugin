@@ -135,7 +135,7 @@ class InputFieldComplexSortableDetailListRenderer
 		$page = 1;
 		foreach ($fieldsByPage as $fields) {
 			echo '<div class="list-fields-for-each-page">';
-			echo '<div class="multi-page">';
+			echo '<div class="multi-page-title" data-page="'.$page.'">';
 			echo '<span class="multi-page-counter">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</span>';
 			$this->_pContentRenderer->renderTitleForMultiPage($titleInputModels, $this->getTitlePerPageAndLocale($page, ''));
 			echo '</div>';
