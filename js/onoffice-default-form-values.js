@@ -9,6 +9,14 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 onOffice.default_values_input_converter = function () {
     var predefinedValues = onOffice_loc_settings.defaultvalues || {};
 
+	document.querySelectorAll('.multi-page-title').forEach((group, index) => {
+		const titleInput = group.querySelector('input[name^=oopluginformmultipagetitle-value]');
+		//const langInput = group.querySelector('...');
+		const page = group.getAttribute('data-page');
+
+		titleInput.name = `oopluginformmultipagetitle[${page}][native]`;
+	})
+
     // plaintext
     document.querySelectorAll('select[name=language-language].onoffice-input').forEach(function (element) {
         element.backupLanguageSelection = {};

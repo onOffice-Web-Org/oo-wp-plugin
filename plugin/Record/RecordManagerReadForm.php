@@ -264,6 +264,20 @@ class RecordManagerReadForm
 		return $result;
 	}
 
+	public function readTitlePerMultipageByFormId($formId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlTitlePerPages = "SELECT *
+				FROM {$prefix}oo_plugin_form_multipage_title
+				WHERE `form_id` = ".esc_sql((int)$formId);
+
+		$result = $pWpDb->get_results($sqlTitlePerPages, ARRAY_A);
+
+		return $result;
+	}
+
 
 	/**
 	 *

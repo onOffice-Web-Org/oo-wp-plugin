@@ -164,6 +164,9 @@ abstract class InputModelBase
 	/** @var array */
 	private $_perPageForm = array();
 
+	/** @var array */
+	private $_titlePerMultipageForm = array();
+
 	/** @var bool */
 	private $_isMultiPage = false;
 
@@ -351,9 +354,17 @@ abstract class InputModelBase
 	public function getPerPageForm()
 		{ return $this->_perPageForm; }
 
+	/** @return array */
+	public function getTitlePerMultipageForm()
+		{ return $this->_titlePerMultipageForm; }
+
 	/** @param array $perPageForm */
 	public function setPerPageForm(array $perPageForm)
 		{ $this->_perPageForm = $perPageForm; }
+
+	/** @param array $perTitlePageForm */
+	public function setTitlePerMultipageForm(array $perTitleMultipageForm)
+		{ $this->_titlePerMultipageForm = $perTitleMultipageForm; }
 
 	/** @param bool $isMultiPage */
 	public function setIsMultiPage(bool $isMultiPage)

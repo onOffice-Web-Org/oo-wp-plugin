@@ -142,6 +142,7 @@ class FormModelBuilderDBForm
 		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
 		$pInputModelFieldsConfig->setValue($fields);
 		$pInputModelFieldsConfig->setPerPageForm($this->getValue('fieldsPagePerForm'));
+		$pInputModelFieldsConfig->setTitlePerMultipageForm($this->getValue('titlePerMultiPage'));
 
 		$pModule = $this->getInputModelModule();
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
@@ -165,6 +166,11 @@ class FormModelBuilderDBForm
 		if($this->getFormType() === Form::TYPE_OWNER){
 			$pInputModelFieldsConfig->setIsMultiPage(true);
 			$pInputModelFieldsConfig->setTemplate($this->getValue('template'));
+
+			$pInputModelMultiPageTitle = $this->createInputModelMultiPageTitle();
+			$pInputModelMultiPageTitlePage = $this->createInputModelMultiPageTitlePage();
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitle);
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitlePage);
 		}
 
 		return $pInputModelFieldsConfig;
@@ -233,6 +239,7 @@ class FormModelBuilderDBForm
 		$values['fieldsMarkdown'] = array();
 		$values['fieldsHiddenField'] = array();
 		$values['fieldsPagePerForm'] = array();
+		$values['titlePerMultiPage'] = array();
 		$values['template'] = array();
 		$pFactory = new DataFormConfigurationFactory($this->_formType);
 
@@ -267,6 +274,7 @@ class FormModelBuilderDBForm
 		$values['taskSubject'] = $pDataFormConfiguration->getTaskSubject();
 		$values['taskDescription'] = $pDataFormConfiguration->getTaskDescription();
 		$values['taskStatus'] = $pDataFormConfiguration->getTaskStatus();
+		$values['titlePerMultiPage'] = $pDataFormConfiguration->getTitlePerMultipage();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -701,6 +709,26 @@ class FormModelBuilderDBForm
 		$value = in_array($key, $fieldsMarkDown);
 		$pInputModel->setValue($value);
 		$pInputModel->setValuesAvailable($key);
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param array $title with data for multipage titles
+	 */
+	public function callbackValueInputModelTitleValue(InputModelBase $pInputModel, array $title): void
+	{
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
+		$pInputModel->setLabel(__('Page title:', 'onoffice-for-wp-websites'));
+		$pInputModel->setValue($title['value']);
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param array $title with data for multipage titles
+	 */
+	public function callbackValueInputModelTitlePage(InputModelBase $pInputModel, array $title): void
+	{
+		$pInputModel->setValue($title['page']);
 	}
 
 	/**
@@ -1165,6 +1193,35 @@ class FormModelBuilderDBForm
 		}
 
 		return $supervisors;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	private function createInputModelMultiPageTitle(): InputModelDB
+	{
+		$labelMultiPageTitle = __('Page title:', 'onoffice-for-wp-websites');
+
+		$pInputModelFormMultiPageTitle = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_VALUE, $labelMultiPageTitle);
+		$pInputModelFormMultiPageTitle->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
+		$pInputModelFormMultiPageTitle->setValue($this->getValue('titlePerMultiPage')['value'] ?? '');
+		$pInputModelFormMultiPageTitle->setValueCallback(array($this, 'callbackValueInputModelTitleValue'));
+
+		return $pInputModelFormMultiPageTitle;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	private function createInputModelMultiPageTitlePage(): InputModelDB
+	{
+		$pInputModel = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_PAGE, '');
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelTitlePage'));
+
+		return $pInputModel;
 	}
 
 	/**
