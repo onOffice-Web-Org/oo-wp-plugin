@@ -131,6 +131,7 @@ class FormModelBuilderDBEstateListSettings
 				'pictures' => [ImageTypes::TITLE],
 			));
 		}
+		error_log("2");
 
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('List View', 'onoffice-for-wp-websites'));

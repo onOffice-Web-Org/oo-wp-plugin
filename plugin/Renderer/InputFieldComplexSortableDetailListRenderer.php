@@ -169,7 +169,19 @@ class InputFieldComplexSortableDetailListRenderer
 		$deactivatedInOnOffice = null;
 		$dummyText = $isDummy ? 'data-onoffice-ignore="true"' : '';
 		$name = $isDummy ? AdminPageAjax::EXCLUDE_FIELD . $this->getName() : $this->getName();
-		$isHighlighted = in_array($key, $extraInputModels[0]->getValueCallback()[0]->getValue('highlighted') ?? []);
+		$isHighlighted = false;
+		if(gettype($extraInputModels[0]->getValueCallback()) == 'array') {
+			$formModelBuilder = $extraInputModels[0]->getValueCallback()[0];
+			if(str_contains(get_class($formModelBuilder), 'FormModelBuilderDBEstateListSettings')) {
+				$isHighlighted = in_array($key, $formModelBuilder->getValue('highlighted') ?? []);
+				// error_log(print_r($formModelBuilder, true));
+			}
+			else if(str_contains(get_class($formModelBuilder),'FormModelBuilderEstateDetailSettings')) {
+				// $isHighlighted = in_array($key, $formModelBuilder->_pDataDetailView->getHighlightedFields() ?? []);
+				// error_log(print_r($formModelBuilder, true));
+				// $isHighlighted = in_array($key, $formModelBuilder->getDataDetailView()->getHighlightedFields() ?? []);
+			}
+		}
 
 		if ($label == null) {
 			$label = $inactiveFields[$key] ?? null;

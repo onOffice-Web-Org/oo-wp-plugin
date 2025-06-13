@@ -398,6 +398,7 @@ class AdminPageEstateDetail
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS,
 			self::FORM_VIEW_CONTACT_DATA_FIELDS, $pFormModelBuilder, $fieldsAddress);
 		$this->addSearchFieldForFieldLists([onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE], $pFormModelBuilder);
+		error_log(print_r($pFormModelBuilder, true));
 	}
 
 	/**

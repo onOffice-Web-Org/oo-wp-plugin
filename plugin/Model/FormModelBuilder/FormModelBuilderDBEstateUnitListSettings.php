@@ -90,6 +90,7 @@ class FormModelBuilderDBEstateUnitListSettings
 				'pictures' => [ImageTypes::TITLE],
 			));
 		}
+		error_log("1");
 
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Unit List', 'onoffice-for-wp-websites'));
