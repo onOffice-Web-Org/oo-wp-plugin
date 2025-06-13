@@ -157,14 +157,14 @@ class TestClassRecordManagerReadListViewAddress
 
 		$pWPDB = $this->getMockBuilder(wpdb::class)
 			->disableOriginalConstructor(['testUser', 'testPassword', 'testDB', 'testHost'])
-			->setMethods(['get_row'])
+			->onlyMethods(['get_row'])
 			->getMock();
 		$pWPDB->prefix = 'testPrefix';
 		$pWPDB->expects($this->once())
 			->method('get_row')
 			->willReturnOnConsecutiveCalls($configOutput);
 		$pRecordManagerReadListViewAddress = $this->getMockBuilder(RecordManagerReadListViewAddress::class)
-			->setMethods(['getWpdb'])
+			->onlyMethods(['getWpdb'])
 			->getMock();
 
 		$pRecordManagerReadListViewAddress->method('getWpdb')->will($this->returnValue($pWPDB));

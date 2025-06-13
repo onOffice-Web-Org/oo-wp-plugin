@@ -50,7 +50,7 @@ class TestClassContentFilterShortCodeRegistrator
 	public function prepare()
 	{
 		$pBuilder = $this->getMockBuilder(ContentFilterShortCodeBuilder::class)
-			->setMethods(['buildAllContentFilterShortCodes'])
+			->onlyMethods(['buildAllContentFilterShortCodes'])
 			->setConstructorArgs([new Container])
 			->getMock();
 		$pBuilder->expects($this->once())

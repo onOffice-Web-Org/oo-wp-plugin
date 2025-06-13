@@ -83,7 +83,7 @@ class TestClassFormModelBuilderAddressDetailSettings
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend'])
+				->onlyMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend'])
 				->setConstructorArgs([$this->_pContainer])
 				->getMock();
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
@@ -186,7 +186,7 @@ class TestClassFormModelBuilderAddressDetailSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderAddressDetailSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 
@@ -202,7 +202,7 @@ class TestClassFormModelBuilderAddressDetailSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderAddressDetailSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue', 'readTemplatePaths'])
+			->onlyMethods(['getValue', 'readTemplatePaths'])
 			->getMock();
 		$pInstance->expects($this->exactly(1))
 			->method('readTemplatePaths');
@@ -231,7 +231,7 @@ class TestClassFormModelBuilderAddressDetailSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderAddressDetailSettings::class)
 		                  ->disableOriginalConstructor()
-		                  ->setMethods(['readAvailableLanguageNamesUsingNativeName'])
+		                  ->onlyMethods(['readAvailableLanguageNamesUsingNativeName'])
 		                  ->getMock();
 						  
 		$inputModel = $pInstance->getInputModelCustomLabelLanguageSwitch();

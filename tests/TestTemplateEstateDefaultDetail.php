@@ -47,7 +47,7 @@ class TestTemplateEstateDefaultDetail
 		$pDataView = new DataDetailView();
 
 		$this->_pEstate = $this->getMockBuilder(EstateDetail::class)
-			->setMethods([
+			->onlyMethods([
 				'getEstateUnits',
 				'estateIterator',
 				'getFieldLabel',
