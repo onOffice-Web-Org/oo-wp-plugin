@@ -183,7 +183,7 @@ class RecordManagerReadListViewAddress
 
 		$sql = $pWpDb->prepare(
 			"SELECT COUNT(*) AS count
-			FROM %d
+			FROM %i
 			WHERE name = %s",
 			$prefix."oo_plugin_forms",
 			$name
@@ -194,6 +194,7 @@ class RecordManagerReadListViewAddress
 		}
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
+
 		return $result['count'] == 0;
 	}
 }
