@@ -47,9 +47,6 @@ abstract class RecordManagerRead
 	private $_columns = [];
 
 	/** @var string[] */
-	private $_joins = [];
-
-	/** @var string[] */
 	private $_where = [1];
 
 	/** @var string */

@@ -124,7 +124,7 @@ class RecordManagerReadListViewAddress
 			FROM %i
 			WHERE `name` = %s",
 			$prefix.$mainTable,
-			esc_sql($name)
+			$name
 		);
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
@@ -161,7 +161,7 @@ class RecordManagerReadListViewAddress
 			WHERE %i = %d
 			ORDER BY `order` ASC",
 			$prefix."oo_plugin_address_fieldconfig",
-			esc_sql($this->getIdColumnMain()),
+			$this->getIdColumnMain(),
 			$listviewId
 		);
 
@@ -181,9 +181,13 @@ class RecordManagerReadListViewAddress
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sql = "SELECT COUNT(*) AS count
-			FROM {$prefix}oo_plugin_listviews_address
-			WHERE name = '" . esc_sql($name) . "'";
+		$sql = $pWpDb->prepare(
+			"SELECT COUNT(*) AS count
+			FROM %d
+			WHERE name = %s",
+			$prefix."oo_plugin_forms",
+			$name
+		);
 
 		if (!is_null($id)) {
 			$sql .= " AND listview_address_id != '" . esc_sql($id) . "'";

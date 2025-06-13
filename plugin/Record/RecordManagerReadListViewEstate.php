@@ -197,7 +197,7 @@ class RecordManagerReadListViewEstate
 			FROM %i
 			WHERE `name` = %s",
 			$prefix."oo_plugin_listviews",
-			esc_sql($listviewName)
+			$listviewName
 		);
 		if ($type !== null) {
 			$sql .= " AND `list_type` = '".esc_sql($type)."'";
@@ -239,11 +239,11 @@ class RecordManagerReadListViewEstate
 		$pWpDb = $this->getWpdb();
 
 		$sql = $pWpDb->prepare(
-			"SELECT *
+			"SELECT `picturetype`
 			FROM %i
 			WHERE `listview_id` = %d",
 			$prefix."oo_plugin_picturetypes",
-			esc_sql($listviewId)
+			$listviewId
 		);
 
 		$pictures = $pWpDb->get_col($sql);
@@ -276,7 +276,7 @@ class RecordManagerReadListViewEstate
 			FROM %i
 			WHERE `listview_id` = %d",
 			$prefix."oo_plugin_sortbyuservalues",
-			esc_sql($listviewId)
+			$listviewId
 		);
 
 		$sortbyuservalue = $pWpDb->get_col($sql);
@@ -337,7 +337,7 @@ class RecordManagerReadListViewEstate
 		$pWpDb = $this->getWpdb();
 
 		$sql = $pWpDb->prepare(
-			"SELECT *
+			"SELECT `fieldname`
 			FROM %i
 			WHERE `listview_id` = %d
 			ORDER BY `order` ASC",
@@ -415,9 +415,13 @@ class RecordManagerReadListViewEstate
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sql = "SELECT COUNT(*) AS count
-			FROM {$prefix}oo_plugin_listviews
-			WHERE name = '" . esc_sql($name) . "'";
+		$sql = $pWpDb->prepare(
+			"SELECT COUNT(*) AS count
+			FROM %d
+			WHERE name = %s",
+			$prefix."oo_plugin_forms",
+			$name
+		);
 
 		if (!is_null($id)) {
 			$sql .= " AND listview_id != '" . esc_sql($id) . "'";

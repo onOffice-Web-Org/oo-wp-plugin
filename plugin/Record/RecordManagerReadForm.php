@@ -121,7 +121,7 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %d",
+			FROM %i",
 			$prefix."oo_plugin_forms"
 		);
 
@@ -147,12 +147,12 @@ class RecordManagerReadForm
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sql = $pWpDb->perpare(
+		$sql = $pWpDb->prepare(
 			"SELECT *
 			FROM %i
 			WHERE `form_type` = %s",
 			$prefix."oo_plugin_forms",
-			esc_sql($formType)
+			$formType
 		);
 
 		$result = $pWpDb->get_results($sql, OBJECT);
@@ -201,7 +201,7 @@ class RecordManagerReadForm
 			FROM %i
 			WHERE `name` = %s",
 			$prefix."oo_plugin_forms",
-			esc_sql($formName)
+			$formName
 		);
 
 
@@ -237,9 +237,9 @@ class RecordManagerReadForm
 		$sql = $pWpDb->prepare(
 			"SELECT *
 			FROM %i
-			WHERE %i = %s",
+			WHERE %i = %i",
 			$prefix."oo_plugin_form_fieldconfig",
-			esc_sql($this->getIdColumnMain()),
+			$this->getIdColumnMain(),
 			$formId
 		);
 
@@ -365,9 +365,13 @@ class RecordManagerReadForm
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sql = "SELECT COUNT(*) AS count
-			FROM {$prefix}oo_plugin_forms
-			WHERE name = '" . esc_sql($name) . "'";
+		$sql = $pWpDb->prepare(
+			"SELECT COUNT(*) AS count
+			FROM %d
+			WHERE name = %s",
+			$prefix."oo_plugin_forms",
+			$name
+		);
 
 		if (!is_null($id)) {
 			$sql .= " AND form_id != '" . esc_sql($id) . "'";
@@ -393,11 +397,11 @@ class RecordManagerReadForm
 			"SELECT *
 			FROM %i
 			WHERE %i = %d",
-			$prefix."oo_plugin_form_activityconfig",
-			esc_sql($this->getIdColumnMain()),
+			$prefix."oo_plugin_form_taskconfig",
+			$this->getIdColumnMain(),
 			$formId
 		);
 
-		return $pWpDb->get_row($sqlFields, ARRAY_A) ?? [];
+		return $pWpDb->get_row($sql, ARRAY_A) ?? [];
 	}
 }
