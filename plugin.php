@@ -33,7 +33,7 @@ Domain Path: /languages
 */
 defined( 'ABSPATH' ) or die();
 
-const ONOFFICE_PLUGIN_VERSION = '6.1';
+const ONOFFICE_PLUGIN_VERSION = '6.2';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
 
 require __DIR__ . '/vendor/autoload.php';
