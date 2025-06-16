@@ -12,7 +12,7 @@
         "phpcompatibility/php-compatibility": "*",
 		"wp-cli/i18n-command": "*",
         "ext-xdebug": "*",
-        "yoast/phpunit-polyfills": "^3.1"
+        "yoast/phpunit-polyfills": "^4.0"
     },
     "prefer-stable" : true,
 	"autoload": {

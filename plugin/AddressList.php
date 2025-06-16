@@ -47,6 +47,7 @@ use function esc_html;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\DataView\DataAddressDetailView;
 use onOffice\WPlugin\Controller\AddressDetailUrl;
+use onOffice\WPlugin\Filter\EstateFilterBuilderDetailViewAddress;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 
 /**
@@ -173,6 +174,18 @@ implements AddressListBase
 		$this->_pLanguageSwitcher = new AddressDetailUrl();
 	}
 
+	/**
+	 * @param array $addressIds
+	 * @param array $fields
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws API\ApiClientException
+	 */
+	public function loadBrokerAddressesById(array $addressIds, array $fields)
+	{
+		$this->setDefaultFilterBuilder(new EstateFilterBuilderDetailViewAddress());
+		$this->loadAddressesById($addressIds, $fields);
+	}
 	/**
 	 * @param array $addressIds
 	 * @param array $fields
