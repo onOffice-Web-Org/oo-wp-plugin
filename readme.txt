@@ -76,6 +76,17 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 6.2 (2025-06-16) = 
+
+**Added**
+
+* Prepared media data for properties to display media information in the property detail page 
+
+**Fixed**
+
+* Load contact person on detail page if its broker and not public
+* Fixed the search parameter for location
+
 = 6.1 (2025-05-28) = 
 
 **Added**
