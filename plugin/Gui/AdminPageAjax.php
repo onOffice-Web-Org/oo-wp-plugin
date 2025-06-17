@@ -217,7 +217,7 @@ abstract class AdminPageAjax
 					}
 				}
 			}
-			if($index === 'oopluginformmultipagetitle-page') {
+			if($index === 'oopluginformmultipagetitle-page' || $index === 'oopluginformmultipagetitle-locale') {
 				continue;
 			}
 			if ( $index === 'defaultvalue-lang' || $index === 'customlabel-lang' || $index === 'oopluginfieldconfigformdefaultsvalues-value' ) {

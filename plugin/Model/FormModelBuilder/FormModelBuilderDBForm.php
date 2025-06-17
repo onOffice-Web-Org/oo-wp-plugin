@@ -169,8 +169,10 @@ class FormModelBuilderDBForm
 
 			$pInputModelMultiPageTitle = $this->createInputModelMultiPageTitle();
 			$pInputModelMultiPageTitlePage = $this->createInputModelMultiPageTitlePage();
+			$pInputModelMultiPageTitleLanguage = $this->createInputModelMultiPageTitleLanguageSwitch();
 			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitle);
 			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitlePage);
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitleLanguage);
 		}
 
 		return $pInputModelFieldsConfig;
@@ -592,10 +594,7 @@ class FormModelBuilderDBForm
 		$pInputModel->setTable('language');
 		$pInputModel->setField('language');
 
-		$pLanguageReader = new InstalledLanguageReader;
-		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
-			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
-		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
+		$pInputModel->setValuesAvailable($this->getAvailableLanguageSelectValues());
 		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $type = null) {
 			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
 			$pInputModel->setLabel('');
@@ -619,10 +618,7 @@ class FormModelBuilderDBForm
 		$pInputModel->setTable('language-custom-label');
 		$pInputModel->setField('language');
 
-		$pLanguageReader = new InstalledLanguageReader;
-		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
-			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
-		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
+		$pInputModel->setValuesAvailable($this->getAvailableLanguageSelectValues());
 		$pInputModel->setValueCallback(function (InputModelDB $pInputModel) {
 			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
@@ -1202,13 +1198,13 @@ class FormModelBuilderDBForm
 	{
 		$labelMultiPageTitle = __('Page title:', 'onoffice-for-wp-websites');
 
-		$pInputModelFormMultiPageTitle = $this->getInputModelDBFactory()->create
+		$pInputModel = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_VALUE, $labelMultiPageTitle);
-		$pInputModelFormMultiPageTitle->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
-		$pInputModelFormMultiPageTitle->setValue($this->getValue('titlePerMultiPage')['value'] ?? '');
-		$pInputModelFormMultiPageTitle->setValueCallback(array($this, 'callbackValueInputModelTitleValue'));
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
+		$pInputModel->setValue($this->getValue('titlePerMultiPage')['value'] ?? '');
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelTitleValue'));
 
-		return $pInputModelFormMultiPageTitle;
+		return $pInputModel;
 	}
 
 	/**
@@ -1222,6 +1218,33 @@ class FormModelBuilderDBForm
 		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelTitlePage'));
 
 		return $pInputModel;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	private function createInputModelMultiPageTitleLanguageSwitch(): InputModelDB
+	{
+		$labelMultiPageLanguageSwitch = __('Add Language', 'onoffice-for-wp-websites');
+
+		$pInputModel = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_LOCALE, $labelMultiPageLanguageSwitch);
+		$pInputModel->setValuesAvailable($this->getAvailableLanguageSelectValues());
+		$pInputModel->setValueCallback(function (InputModelDB $pInputModel) {
+			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
+		});
+		return $pInputModel;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getAvailableLanguageSelectValues():array{
+		$pLanguageReader = new InstalledLanguageReader;
+		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
+			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
+		return array_diff_key($languages, [get_locale() => []]);
 	}
 
 	/**

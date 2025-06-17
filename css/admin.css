@@ -996,6 +996,9 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	font-weight: 600;
 }
 .list-fields-for-each-page .multi-page-title .custom-input-field {
+	margin: 0;
+}
+.list-fields-for-each-page .multi-page-title .custom-input-field:first-of-type {
 	flex-wrap: wrap;
 	justify-content: flex-start;
 }

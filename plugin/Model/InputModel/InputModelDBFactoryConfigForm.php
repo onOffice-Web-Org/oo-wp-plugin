@@ -194,7 +194,7 @@ class InputModelDBFactoryConfigForm
 	/** */
 	const INPUT_FORM_MULTIPAGE_TITLE_VALUE = 'multiPageTitleValue';
 
-	const INPUT_FORM_MULTIPAGE_TITLE_LOCALE = 'locale';
+	const INPUT_FORM_MULTIPAGE_TITLE_LOCALE = 'multiPageTitleLocale';
 
 	const INPUT_FORM_MULTIPAGE_TITLE_PAGE = 'multiPageTitlePage';
 
