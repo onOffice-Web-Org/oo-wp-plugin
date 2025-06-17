@@ -50,13 +50,6 @@ $dimensions = [
 ?>
 
 <?php if (!empty($pEstates->estateIterator())) { ?>
-	<style>
-	.oo-details-btn:focus {
-		opacity: 0.8;
-		text-decoration: none !important;
-		background: #80acd3 !important;
-	}
-	</style>
     <div class="oo-similar">
 		<div class="oo-detailsheadline">
 			<h2><?php esc_html_e('More Estates like this', 'onoffice-for-wp-websites');?></h2>
@@ -101,7 +94,7 @@ $dimensions = [
 		                    echo '<img class="oo-responsive-image estate-status" ' .
 		                        'src="' . esc_url($pEstates->getEstatePictureUrl($id, isset($dimensions['1600']['w']) || isset($dimensions['1600']['h']) ? ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']] : null)) . '" ' .
 		                        'alt="' . esc_html($pEstates->getEstatePictureTitle($id) ?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
-		                        'loading="lazy"/>';
+		                        'loading="lazy">';
 		                    echo '</picture>';
 							if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 								echo '<span>'.esc_html($marketingStatus).'</span>';
@@ -129,12 +122,12 @@ $dimensions = [
 							<div class="oo-detailslink">
 								<?php if ($referenz === "1") { ?>
 									<?php if (!$pEstates->getViewRestrict()) { ?>
-										<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>">
+										<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), $estateId); ?>"></a>>
 											<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
 										</a>
 									<?php } ?>
 								<?php } else { ?>
-									<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>">
+									<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), $estateId); ?>"></a>>
 										<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
 									</a>
 								<?php } ?>
