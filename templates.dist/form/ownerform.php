@@ -64,9 +64,16 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$hiddenValues []= renderFormField($input, $pForm);
 			continue;
 		}
+		
+		switch ($input) {
+			case "ort": $fieldLabel = esc_html__('Ort der Immobilie', 'onoffice-for-wp-websites'); break;
+			case "plz": $fieldLabel = esc_html__('PLZ der Immobilie', 'onoffice-for-wp-websites'); break;
+			default: $fieldLabel = $pForm->getFieldLabel($input);
+		}
+
 		$isRequired = $pForm->isRequiredField($input);
 		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
-		$line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$pForm->getFieldLabel($input).' '.$addition;
+		$line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$fieldLabel.' '.$addition;
 		$line .= renderFormField($input, $pForm).'</span></label>';
 
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {

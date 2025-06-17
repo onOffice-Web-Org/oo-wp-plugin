@@ -131,7 +131,7 @@ if (!function_exists('renderFormField')) {
 		$autocomplete = null;
 		$typeCurrentInput = $pForm->getFieldType($fieldName);
 		$isHiddenField = $pForm->isHiddenField($fieldName);
-
+	
 		if ($isHiddenField) {
 			$name = esc_html($fieldName);
 			$value = $pForm->getFieldValue($fieldName, true);
@@ -146,7 +146,6 @@ if (!function_exists('renderFormField')) {
 
 			return '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
 		}
-
 
 		switch ($fieldName) {
 			case "Titel": $autocomplete = "honorific-prefix"; break;
@@ -163,7 +162,7 @@ if (!function_exists('renderFormField')) {
 			case "Email": $autocomplete = "email"; break;
 			default: $autocomplete = "off";
 		}
-		
+
 		if ($autocomplete !== null) {
 			$autocompleteAttribute = ' autocomplete="' . htmlspecialchars($autocomplete) . '"';
 		}
@@ -261,7 +260,6 @@ if (!function_exists('renderFormField')) {
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_DATE
 			) {
 				$inputType = 'type="date"';
-				//$errorMessage = esc_html__('Bitte geben Sie ein gültiges Datum im Format TT.MM.JJJJ ein.', 'onoffice-for-wp-websites');
 			} elseif (
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATETIME
 			) {
@@ -305,6 +303,7 @@ if (!function_exists('renderFormField')) {
 			}
 		}
 		return $output;
+		
 	}
 }
 
