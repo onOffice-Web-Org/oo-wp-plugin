@@ -106,6 +106,9 @@ class DataFormConfiguration
 	/** @var array */
 	private $_pagePerForm = [];
 
+	/** @var array */
+	private $_titlePerMultipage = [];
+
 	/** @var bool */
 	private $_enableCreateTask = false;
 
@@ -162,6 +165,16 @@ class DataFormConfiguration
 	/** @return array */
 	public function getPagePerForm(): array
 		{ return $this->_pagePerForm; }
+
+	/** @return array */
+	public function getTitlePerMultipage(): array
+		{ return $this->_titlePerMultipage; }
+
+	/**
+	 * @param array $titleData
+	 */
+	public function addTitlePerMultipagePage(array $titleData): void
+	{ $this->_titlePerMultipage[] = $titleData; }
 
 	/** @param string $formType */
 	public function setFormType(string $formType)

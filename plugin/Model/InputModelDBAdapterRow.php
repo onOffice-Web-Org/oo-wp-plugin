@@ -78,6 +78,10 @@ class InputModelDBAdapterRow
 			'form_activityconfig_id' => null,
 			'form_id' => ['oo_plugin_forms', 'form_id'],
 		],
+		'oo_plugin_form_multipage_title' => [
+			'form_multipage_title_id' => null,
+			'form_id' => ['oo_plugin_forms', 'form_id'],
+		],
 	];
 
 

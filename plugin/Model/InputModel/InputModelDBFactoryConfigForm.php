@@ -191,6 +191,13 @@ class InputModelDBFactoryConfigForm
 	/** */
 	const TASK_STATUS_NEED_CLARIFICATION = 8;
 
+	/** */
+	const INPUT_FORM_MULTIPAGE_TITLE_VALUE = 'multiPageTitleValue';
+
+	const INPUT_FORM_MULTIPAGE_TITLE_LOCALE = 'multiPageTitleLocale';
+
+	const INPUT_FORM_MULTIPAGE_TITLE_PAGE = 'multiPageTitlePage';
+
 	/** @var array */
 	private $_inputConfig = [
 		self::INPUT_FORM_NAME => [
@@ -361,6 +368,18 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_TASK_STATUS => [
 			self::KEY_TABLE => 'oo_plugin_form_taskconfig',
 			self::KEY_FIELD => 'status',
+		],
+		self::INPUT_FORM_MULTIPAGE_TITLE_VALUE => [
+			self::KEY_TABLE => 'oo_plugin_form_multipage_title',
+			self::KEY_FIELD => 'value',
+		],
+		self::INPUT_FORM_MULTIPAGE_TITLE_LOCALE => [
+			self::KEY_TABLE => 'oo_plugin_form_multipage_title',
+			self::KEY_FIELD => 'locale',
+		],
+		self::INPUT_FORM_MULTIPAGE_TITLE_PAGE => [
+			self::KEY_TABLE => 'oo_plugin_form_multipage_title',
+			self::KEY_FIELD => 'page',
 		],
 	];
 
