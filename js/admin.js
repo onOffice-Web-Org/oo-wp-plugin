@@ -415,6 +415,7 @@ jQuery(document).ready(function($){
 		
 		multiSortable: function () {
 			let multiDragSelectedOrdered = [];
+			let draggedOriginalItem = null;
 			let isMultiDrag = false;
 			const $list = $('.filter-fields-list');
 			$list.sortable('destroy');
@@ -423,63 +424,60 @@ jQuery(document).ready(function($){
 				axis: 'y',
 				connectWith: '.filter-fields-list',
 				revert: 'invalid',
-		
+			
 				helper: function (event, item) {
 					const $selected = $list.find('.selected');
-				
 					isMultiDrag = item.hasClass('selected') && $selected.length > 1;
-				
+			
 					if (isMultiDrag) {
 						multiDragSelectedOrdered = $selected.toArray();
+						draggedOriginalItem = item[0];
+			
 						const $helper = $('<li class="multi-drag-helper"/>');
 						$selected.clone().appendTo($helper);
 						return $helper;
 					} else {
 						multiDragSelectedOrdered = [item[0]];
+						draggedOriginalItem = item[0];
 						return item.clone();
 					}
 				},
-		
+			
 				start: function (event, ui) {
 					ui.item.data('origIndex', ui.item.index());
 					ui.item.data('origParent', ui.item.parent());
 				},
-		
+			
 				stop: function (event, ui) {
 					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
 					const validDrop = droppedOver && droppedOver.closest('.list-fields-for-each-page');
-				
+			
 					if (!validDrop) {
 						$(this).sortable('cancel');
 						return;
 					}
-				
+			
 					const $droppedItem = ui.item;
-					const $allItems = $list.children('li');
-					const droppedIndex = $allItems.index($droppedItem);
-				
+			
 					if (isMultiDrag) {
-						const $itemsToReorder = $(multiDragSelectedOrdered).filter((_, el) => el !== $droppedItem[0]);
-						const before = [];
-						const after = [];
-				
-						$itemsToReorder.each(function () {
-							const idx = $allItems.index(this);
-							if (idx < droppedIndex) {
-								before.push(this);
-							} else {
-								after.push(this);
-							}
-						});
-				
-						$(before.reverse()).each(function () {
-							$droppedItem.before(this);
-						});
-						$(after).each(function () {
-							$droppedItem.after(this);
-						});
+						const toMove = multiDragSelectedOrdered.filter(el => el !== draggedOriginalItem);
+						$(toMove).detach();
+			
+						const draggedIndexInSelection = multiDragSelectedOrdered.indexOf(draggedOriginalItem);
+						const before = multiDragSelectedOrdered.slice(0, draggedIndexInSelection);
+						const after = multiDragSelectedOrdered.slice(draggedIndexInSelection + 1);
+			
+						// Insert before
+						for (let i = before.length - 1; i >= 0; i--) {
+							$droppedItem.before(before[i]);
+						}
+			
+						// Insert after
+						for (let i = 0; i < after.length; i++) {
+							$droppedItem.after(after[i]);
+						}
 					}
-				
+			
 					FormMultiPageManager.reorderPages();
 				}
 			});
