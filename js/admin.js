@@ -414,6 +414,8 @@ jQuery(document).ready(function($){
 		},
 		
 		multiSortable: function () {
+			let multiDragSelectedOrdered = [];
+			let isMultiDrag = false;
 			const $list = $('.filter-fields-list');
 			$list.sortable('destroy');
 		
@@ -424,56 +426,60 @@ jQuery(document).ready(function($){
 		
 				helper: function (event, item) {
 					const $selected = $list.find('.selected');
-					if ($selected.length && item.hasClass('selected')) {
+				
+					isMultiDrag = item.hasClass('selected') && $selected.length > 1;
+				
+					if (isMultiDrag) {
+						multiDragSelectedOrdered = $selected.toArray();
 						const $helper = $('<li class="multi-drag-helper"/>');
 						$selected.clone().appendTo($helper);
 						return $helper;
+					} else {
+						multiDragSelectedOrdered = [item[0]];
+						return item.clone();
 					}
-					return item.clone();
 				},
 		
 				start: function (event, ui) {
 					ui.item.data('origIndex', ui.item.index());
 					ui.item.data('origParent', ui.item.parent());
-		
-					multiDragSelectedOrdered = [];
-					$list.find('.selected').each(function () {
-						multiDragSelectedOrdered.push(this);
-					});
 				},
 		
 				stop: function (event, ui) {
 					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
 					const validDrop = droppedOver && droppedOver.closest('.list-fields-for-each-page');
-		
+				
 					if (!validDrop) {
 						$(this).sortable('cancel');
 						return;
 					}
-		
+				
 					const $droppedItem = ui.item;
 					const $allItems = $list.children('li');
-					const $selected = $allItems.filter('.selected').not($droppedItem);
 					const droppedIndex = $allItems.index($droppedItem);
-					const before = [];
-					const after = [];
-		
-					$selected.each(function () {
-						const idx = $allItems.index(this);
-						if (idx < droppedIndex) {
-							before.push(this);
-						} else {
-							after.push(this);
-						}
-					});
-		
-					$(before.reverse()).each(function () {
-						$droppedItem.before(this);
-					});
-		
-					$(after).each(function () {
-						$droppedItem.after(this);
-					});
+				
+					if (isMultiDrag) {
+						const $itemsToReorder = $(multiDragSelectedOrdered).filter((_, el) => el !== $droppedItem[0]);
+						const before = [];
+						const after = [];
+				
+						$itemsToReorder.each(function () {
+							const idx = $allItems.index(this);
+							if (idx < droppedIndex) {
+								before.push(this);
+							} else {
+								after.push(this);
+							}
+						});
+				
+						$(before.reverse()).each(function () {
+							$droppedItem.before(this);
+						});
+						$(after).each(function () {
+							$droppedItem.after(this);
+						});
+					}
+				
 					FormMultiPageManager.reorderPages();
 				}
 			});
