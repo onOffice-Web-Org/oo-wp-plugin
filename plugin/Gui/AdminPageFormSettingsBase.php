@@ -864,9 +864,14 @@ abstract class AdminPageFormSettingsBase
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections( get_current_screen()->id, 'side', null );
 		echo '</div>';
+		$this->renderBulkActionControls();
 		echo '<div class="fieldsSortable postbox">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields',
-				'onoffice-for-wp-websites' ) . '</span></h2>';
+		echo '<h2 class="hndle ui-sortable-handle">'
+				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
+					.'<input type="checkbox" class="oo-sortable-checkbox-master" onchange="ooHandleMasterCheckboxChange(event)"/>'
+				.'</span>'
+				.'<span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span>'
+			.'</h2>';
 		$pInputModelRenderer->buildForAjax( $pFormViewSortableFields );
 		echo '</div>';
 		echo '<div class="clear"></div>';
