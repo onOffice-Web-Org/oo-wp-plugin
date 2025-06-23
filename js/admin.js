@@ -430,60 +430,53 @@ jQuery(document).ready(function($){
 				axis: 'y',
 				connectWith: '.filter-fields-list',
 				revert: 'invalid',
-			
 				helper: function (event, item) {
-					const $selected = $list.find('.selected');
+					const $selected = $('#multi-page-container .selected');
 					isMultiDrag = item.hasClass('selected') && $selected.length > 1;
-			
+		
 					if (isMultiDrag) {
 						multiDragSelectedOrdered = $selected.toArray();
 						draggedOriginalItem = item[0];
-			
-						const $helper = $('<li class="multi-drag-helper"/>');
-						$selected.clone().appendTo($helper);
-						return $helper;
+						return $('<li class="multi-drag-helper"/>').append($selected.clone());
 					} else {
 						multiDragSelectedOrdered = [item[0]];
 						draggedOriginalItem = item[0];
 						return item.clone();
 					}
 				},
-			
 				start: function (event, ui) {
 					ui.item.data('origIndex', ui.item.index());
 					ui.item.data('origParent', ui.item.parent());
 				},
-			
 				stop: function (event, ui) {
 					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
 					const validDrop = droppedOver && droppedOver.closest('.list-fields-for-each-page');
-			
+		
 					if (!validDrop) {
 						$(this).sortable('cancel');
 						return;
 					}
-			
+		
 					const $droppedItem = ui.item;
-			
+					
 					if (isMultiDrag) {
-						const toMove = multiDragSelectedOrdered.filter(el => el !== draggedOriginalItem);
-						$(toMove).detach();
-			
-						const draggedIndexInSelection = multiDragSelectedOrdered.indexOf(draggedOriginalItem);
-						const before = multiDragSelectedOrdered.slice(0, draggedIndexInSelection);
-						const after = multiDragSelectedOrdered.slice(draggedIndexInSelection + 1);
-			
-						// Insert before
-						for (let i = before.length - 1; i >= 0; i--) {
-							$droppedItem.before(before[i]);
-						}
-			
-						// Insert after
-						for (let i = 0; i < after.length; i++) {
-							$droppedItem.after(after[i]);
+						const targetList = $droppedItem.closest('.filter-fields-list');
+						const dropIndex = $droppedItem.index();
+		
+						$droppedItem.detach();
+						multiDragSelectedOrdered.forEach(item => {
+							$(item).detach();
+						});
+		
+						if (targetList.children().length === 0) {
+							targetList.append(multiDragSelectedOrdered);
+						} else if (dropIndex >= targetList.children().length) {
+							targetList.append(multiDragSelectedOrdered);
+						} else {
+							targetList.children().eq(dropIndex).before(multiDragSelectedOrdered);
 						}
 					}
-			
+		
 					FormMultiPageManager.reorderPages();
 				}
 			});
