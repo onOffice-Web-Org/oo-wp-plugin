@@ -146,6 +146,9 @@ jQuery(document).ready(function($){
 				placeholder: "ui-sortable-placeholder",
 				stop: function(event, ui) {
 					FormMultiPageManager.reorderPages();
+				},
+				update: function(event, ui) {
+					FormMultiPageManager.reorderPages();
 				}
 			}).disableSelection();
 		},
@@ -319,6 +322,9 @@ jQuery(document).ready(function($){
 					},
 					stop: function(e, ui) {
 						$('.list-fields-for-each-page').css('transition', '');
+					},
+					update: function(e, ui) {
+						FormMultiPageManager.reorderPages();
 					}
 				});
 			} else {
