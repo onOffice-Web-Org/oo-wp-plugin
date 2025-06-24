@@ -619,7 +619,7 @@ msgstr "Open het formulier"
 #~ msgid "Watchlist"
 #~ msgstr "Kijklijst"
 
-#~ msgid "Favorise"
+#~ msgid "Favour"
 #~ msgstr "Favoriet"
 
 #~ msgid "Map Provider"

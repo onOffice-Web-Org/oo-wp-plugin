@@ -622,7 +622,7 @@ msgstr "Abrir el formulario"
 #~ msgid "Watchlist"
 #~ msgstr "Lista de observación"
 
-#~ msgid "Favorise"
+#~ msgid "Favour"
 #~ msgstr "Favorecer"
 
 #~ msgid "Map Provider"
