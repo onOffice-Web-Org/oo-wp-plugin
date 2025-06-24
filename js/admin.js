@@ -306,22 +306,56 @@ jQuery(document).ready(function($){
 		draggablePages: function () {
 			if ($('#multi-page-container .list-fields-for-each-page').length > 1) {
 				$('#multi-page-container .list-fields-for-each-page').css("cursor", "move");
+				
 				$('#multi-page-container').sortable({
 					items: '.list-fields-for-each-page',
 					placeholder: 'sortable-placeholder',
-					tolerance: 'intersect',
+					tolerance: 'pointer',
 					cursor: 'move',
 					cursorAt: { top: 5, left: 5 },
-					delay: 80,
+					delay: 40,
 					opacity: 0.8,
 					axis: 'y',
 					forcePlaceholderSize: true,
 					start: function(e, ui) {
 						ui.placeholder.height(ui.item.height());
 						$('.list-fields-for-each-page').css('transition', 'all 0.08s');
+						
+						const $pages = $('.list-fields-for-each-page');
+						const childLists = $pages.map(function() {
+							return $(this).find('.filter-fields-list')[0];
+						}).get();
+						
+						$(document).on('mousemove.draggablePages', function(e) {
+							const x = e.clientX;
+							const y = e.clientY;
+							
+							$pages.each(function(index) {
+								const $page = $(this);
+								const pageRect = this.getBoundingClientRect();
+								const childRect = childLists[index].getBoundingClientRect();
+								
+								const inPage = (
+									x >= pageRect.left && 
+									x <= pageRect.right &&
+									y >= pageRect.top && 
+									y <= pageRect.bottom
+								);
+								
+								const inChild = (
+									x >= childRect.left && 
+									x <= childRect.right &&
+									y >= childRect.top && 
+									y <= childRect.bottom
+								);
+								
+								$page.toggleClass('hover-active', inPage && !inChild);
+							});
+						});
 					},
 					stop: function(e, ui) {
 						$('.list-fields-for-each-page').css('transition', '');
+						$(document).off('mousemove.draggablePages');
 					},
 					update: function(e, ui) {
 						FormMultiPageManager.reorderPages();
@@ -332,24 +366,9 @@ jQuery(document).ready(function($){
 					$('#multi-page-container').sortable('destroy');
 					$('#multi-page-container .list-fields-for-each-page').css("cursor", "default");
 				}
+				
+				$(document).off('mousemove.draggablePages');
 			}
-
-			$(document).on('mousemove', function (e) {
-				$('.list-fields-for-each-page').each(function () {
-				  const parent = this;
-				  const $parent = $(parent);
-				  const child = $parent.find('.filter-fields-list')[0];
-			  
-				  const isOverParent = parent === document.elementFromPoint(e.clientX, e.clientY) || $.contains(parent, document.elementFromPoint(e.clientX, e.clientY));
-				  const isOverChild = child && (child === document.elementFromPoint(e.clientX, e.clientY) || $.contains(child, document.elementFromPoint(e.clientX, e.clientY)));
-			  
-				  if (isOverParent && !isOverChild) {
-					$parent.addClass('hover-active');
-				  } else {
-					$parent.removeClass('hover-active');
-				  }
-				});
-			  });
 		},
 
 		toggleAddPageButton: function () {
@@ -369,7 +388,6 @@ jQuery(document).ready(function($){
 		multiSelectItems: function () {
 			const $container = $('#multi-page-container');
 		
-			// Handle checkbox selection
 			$container.off('change.multiSelect').on('change.multiSelect', '.list-fields-for-each-page input[type="checkbox"]', (event) => {
 				const $checkbox = $(event.target);
 				const $item = $checkbox.closest('.item');
@@ -386,7 +404,6 @@ jQuery(document).ready(function($){
 				this.multiSortable();
 			});
 		
-			// Deselect when clicking outside
 			$(document).off('click.multiSelectDeselect').on('click.multiSelectDeselect', (event) => {
 				if (!$(event.target).closest('.fieldsSortable').length) {
 					$container.find('.list-fields-for-each-page .selected').removeClass('selected');
@@ -398,7 +415,6 @@ jQuery(document).ready(function($){
 				}
 			});
 		
-			// Select/deselect all
 			$('#postbox-select-all').off('change.multiSelectAll').on('change.multiSelectAll', (event) => {
 				const isChecked = $(event.target).prop('checked');
 				const $checkboxes = $container.find('.list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
