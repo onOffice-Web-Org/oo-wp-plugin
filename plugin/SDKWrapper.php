@@ -320,8 +320,9 @@ class SDKWrapper
 		$pRecordRead->addColumn('name', 'shortcode');
 		$pRecordRead->addColumn('page_shortcode');
 		$pRecordRead->addWhere("`list_type` IN('default', 'reference', 'favorites')");
-		if($listName != null)
-		$pRecordRead->addWhere("`name` = '".esc_sql($listName)."'");
+		if($listName != null) {
+			$pRecordRead->addWhere("`name` = '".esc_sql($listName)."'");
+		}
 
 		return $pRecordRead->getRecordsSortedAlphabetically();
 	}
@@ -337,8 +338,9 @@ class SDKWrapper
 		$pRecordRead->addColumn('template');
 		$pRecordRead->addColumn('name', 'shortcode');
 		$pRecordRead->addColumn('page_shortcode');
-		if($listName != null)
-		$pRecordRead->addWhere("`name` = '".esc_sql($listName)."'");
+		if($listName != null) {
+			$pRecordRead->addWhere("`name` = '".esc_sql($listName)."'");
+		}
 
 		return $pRecordRead->getRecordsSortedAlphabetically();
 	}
