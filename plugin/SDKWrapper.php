@@ -307,41 +307,41 @@ class SDKWrapper
 		return $fieldsByModule;
 	}
 
-	 private function getEstateLists(string $listName = null) : array
-	 {
-		 $pRecordRead = new RecordManagerReadListViewEstate();
-		 $pRecordRead->setLimit(100);
-		 $pRecordRead->setOffset(0);
-		 $pRecordRead->addColumn('listview_id', 'ID');
-		 $pRecordRead->addColumn('name');
-		 $pRecordRead->addColumn('filterId');
-		 $pRecordRead->addColumn('template');
-		 $pRecordRead->addColumn('list_type');
-		 $pRecordRead->addColumn('name', 'shortcode');
-		 $pRecordRead->addColumn('page_shortcode');
-		 $pRecordRead->addWhere("`list_type` IN('default', 'reference', 'favorites')");
-		 if($listName != null)
-		 	$pRecordRead->addWhere("`name` = '".esc_sql($listName)."'");
+	private function getEstateLists(string $listName = null) : array
+	{
+		$pRecordRead = new RecordManagerReadListViewEstate();
+		$pRecordRead->setLimit(100);
+		$pRecordRead->setOffset(0);
+		$pRecordRead->addColumn('listview_id', 'ID');
+		$pRecordRead->addColumn('name');
+		$pRecordRead->addColumn('filterId');
+		$pRecordRead->addColumn('template');
+		$pRecordRead->addColumn('list_type');
+		$pRecordRead->addColumn('name', 'shortcode');
+		$pRecordRead->addColumn('page_shortcode');
+		$pRecordRead->addWhere("`list_type` IN('default', 'reference', 'favorites')");
+		if($listName != null)
+		$pRecordRead->addWhere("`name` = '".esc_sql($listName)."'");
 
-		 return $pRecordRead->getRecordsSortedAlphabetically();
-	 }
+		return $pRecordRead->getRecordsSortedAlphabetically();
+	}
 
-	 private function getAddressLists(string $listName = null) : array
-	 {
-		 $pRecordRead = new RecordManagerReadListViewAddress();
-		 $pRecordRead->setLimit(100);
-		 $pRecordRead->setOffset(0);
-		 $pRecordRead->addColumn('listview_address_id', 'ID');
-		 $pRecordRead->addColumn('name');
-		 $pRecordRead->addColumn('filterId');
-		 $pRecordRead->addColumn('template');
-		 $pRecordRead->addColumn('name', 'shortcode');
-		 $pRecordRead->addColumn('page_shortcode');
-		 if($listName != null)
-		 	$pRecordRead->addWhere("`name` = '".esc_sql($listName)."'");
+	private function getAddressLists(string $listName = null) : array
+	{
+		$pRecordRead = new RecordManagerReadListViewAddress();
+		$pRecordRead->setLimit(100);
+		$pRecordRead->setOffset(0);
+		$pRecordRead->addColumn('listview_address_id', 'ID');
+		$pRecordRead->addColumn('name');
+		$pRecordRead->addColumn('filterId');
+		$pRecordRead->addColumn('template');
+		$pRecordRead->addColumn('name', 'shortcode');
+		$pRecordRead->addColumn('page_shortcode');
+		if($listName != null)
+		$pRecordRead->addWhere("`name` = '".esc_sql($listName)."'");
 
-		 return $pRecordRead->getRecordsSortedAlphabetically();
-	 }
+		return $pRecordRead->getRecordsSortedAlphabetically();
+	}
 
 
 	/**
