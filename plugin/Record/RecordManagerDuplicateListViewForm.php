@@ -83,7 +83,14 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 
 			$originalName = $listViewRoot['name'];
 			$newName = "{$originalName} - Copy";
-			$selectLikeOriginalName = "SELECT `name`, `form_id` FROM {$this->_pWPDB->_escape($tableListViews)} WHERE name LIKE '{$this->_pWPDB->_escape($originalName)}%' ORDER BY form_id DESC";
+			$selectLikeOriginalName = $this->_pWPDB->prepare(
+				"SELECT `name`, `form_id`
+				FROM %d
+				WHERE name LIKE %i
+				ORDER BY form_id DESC",
+				$tableListViews,
+				$originalName
+			);
 			$listViewsRows = $this->_pWPDB->get_row($selectLikeOriginalName);
 			$id = $listViewsRows->form_id;
 
@@ -118,7 +125,14 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 				//duplicate data related oo_plugin_fieldconfig table
 				$tableFieldConfig = $prefix . self::TABLENAME_FIELDCONFIG_FORMS;
 				foreach ($listViewRoot['fields'] as $field) {
-					$selectFieldConfigByIdAndFieldName = "SELECT * FROM {$this->_pWPDB->_escape($tableFieldConfig)} WHERE form_id='{$this->_pWPDB->_escape($id)}' AND fieldname ='{$this->_pWPDB->_escape($field)}'";
+					$selectFieldConfigByIdAndFieldName = $this->_pWPDB->prepare(
+						"SELECT * FROM %i
+						WHERE form_id = %d
+						AND fieldname = %s",
+						$tableFieldConfig,
+						$id,
+						$field
+					);
 					$fieldConfigRows = $this->_pWPDB->get_results($selectFieldConfigByIdAndFieldName, 'ARRAY_A');
 					$this->duplicateDataRelated( $duplicateListViewId, $fieldConfigRows,
 						$tableFieldConfig, 'form_id', 'form_fieldconfig_id' );
@@ -127,7 +141,12 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 				//duplicate data related oo_plugin_fieldconfig_form_defaults table
 				$formDefaultsFieldConfigTable = $prefix . self::TABLENAME_FIELDCONFIG_FORM_DEFAULTS;
 				$formDefaultsFieldConfigValueTable = $prefix . self::TABLENAME_FIELDCONFIG_FORM_DEFAULTS_VALUES;
-				$selectFormDefaultsById = "SELECT * FROM {$this->_pWPDB->_escape($formDefaultsFieldConfigTable)} WHERE form_id='{$this->_pWPDB->_escape($id)}'";
+				$selectFormDefaultsById = $this->_pWPDB->prepare(
+					"SELECT * FROM %i
+					WHERE form_id = %d",
+					$formDefaultsFieldConfigTable,
+					$id
+				);
 				$formDefaultsRows = $this->_pWPDB->get_results($selectFormDefaultsById);
 				if (!empty($formDefaultsRows) && (count($formDefaultsRows) !== 0)) {
 					foreach ($formDefaultsRows as $formDefaultsRow) {
@@ -147,7 +166,12 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 				//duplicate data related oo_plugin_fieldconfig_form_customs_labels table
 				$tableFieldFormCustomLabel = $prefix . self::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS;
 				$tableFieldFormTranslatedLabel = $prefix . self::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS;
-				$selectFieldFormCustomLabelById = "SELECT * FROM {$this->_pWPDB->_escape($tableFieldFormCustomLabel)} WHERE form_id='{$this->_pWPDB->_escape($id)}'";
+				$selectFieldFormCustomLabelById = $this->_pWPDB->prepare(
+					"SELECT * FROM %i
+					WHERE form_id = %d",
+					$tableFieldFormCustomLabel,
+					$id
+				);
 				$fieldFormCustomLabelRows = $this->_pWPDB->get_results($selectFieldFormCustomLabelById);
 				if (!empty($fieldFormCustomLabelRows) && (count($fieldFormCustomLabelRows) !== 0)) {
 					foreach ($fieldFormCustomLabelRows as $fieldFormCustomLabelRow) {
@@ -158,6 +182,12 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 
 						$newCustomLabelId = $this->_pWPDB->insert_id;
 						$selectFormDefaultValueById = "SELECT * FROM {$this->_pWPDB->_escape($tableFieldFormTranslatedLabel)} WHERE input_id ='{$this->_pWPDB->_escape($fieldFormCustomLabelRow->customs_labels_id)}'";
+						$selectFormDefaultValueById = $this->_pWPDB->prepare(
+							"SELECT * FROM %i
+							WHERE input_id = %s",
+							$tableFieldFormTranslatedLabel,
+							$fieldFormCustomLabelRow->customs_labels_id
+						);
 						$formTranslatedLabelRows = $this->_pWPDB->get_results($selectFormDefaultValueById, 'ARRAY_A');
 						$this->duplicateDataRelated( $newCustomLabelId, $formTranslatedLabelRows,
 							$tableFieldFormTranslatedLabel, 'input_id', 'translated_label_id' );

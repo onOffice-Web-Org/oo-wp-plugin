@@ -185,7 +185,7 @@ class RecordManagerReadListViewAddress
 			"SELECT COUNT(*) AS count
 			FROM %i
 			WHERE name = %s",
-			$prefix."oo_plugin_forms",
+			$prefix."oo_plugin_listviews_address",
 			$name
 		);
 
