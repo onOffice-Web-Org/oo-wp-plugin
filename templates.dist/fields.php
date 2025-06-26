@@ -147,14 +147,22 @@ if (!function_exists('renderFormField')) {
 			return '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
 		}
 
+
 		switch ($fieldName) {
+			case 'Briefanrede':
+			case 'Anrede':
+				$autocomplete = "honorific-prefix"; break;
 			case "Titel": $autocomplete = "honorific-prefix"; break;
 			case "Vorname": $autocomplete = "given-name"; break;
 			case "Name": $autocomplete = "family-name"; break;
 			case "Strasse": $autocomplete = "street-address"; break;
-			case "Plz": $autocomplete = "postal-code"; break;
+			case "Plz":
+			case 'plz': $autocomplete = "postal-code"; break;
 			case "Ort": $autocomplete = "address-level2"; break;
 			case "Zusatz1": $autocomplete = "organization"; break;
+			case 'jobTitle':
+			case 'jobPosition':
+				$autocomplete ="organization-title"; break;
 			case "Land": $autocomplete = "country-name"; break;
 			case "Geburtsdatum": $autocomplete = "bday"; break;
 			case "Homepage": $autocomplete = "url"; break;
@@ -162,13 +170,12 @@ if (!function_exists('renderFormField')) {
 			case "Email": $autocomplete = "email"; break;
 			default: $autocomplete = "off";
 		}
-
+		
 		if ($autocomplete !== null) {
 			$autocompleteAttribute = ' autocomplete="' . htmlspecialchars($autocomplete) . '"';
 		}
 		
 		$isRequired = $pForm->isRequiredField($fieldName);
-		$requiredAttribute = $isRequired ? 'required aria-required="true" aria-invalid="false"' : '';
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
@@ -176,15 +183,22 @@ if (!function_exists('renderFormField')) {
 		$isApplyThousandSeparatorField = $pForm->isApplyThousandSeparatorField($fieldName);
 		$errorMessageDisplay = false;
 		$errorHtml = '';
+		$ariaLabel = '';
 
 		$requiredAttribute = "";
 		if ($isRequired) {
 			$requiredAttribute = "required aria-required='true' aria-invalid='false'";
+			$requiredAttributeSelect = "required";
 			$errorMessageDisplay = true;
 		}
 
 		if ($fieldName == 'range') {
 			$typeCurrentInput = onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER;
+		}
+				
+		switch ($fieldName) {
+			case "plz": $ariaLabel = 'aria-label="' . esc_html__('Postleitzahl der Immobilie', 'onoffice-for-wp-websites') . '"'; break;
+			case "Plz": $ariaLabel = 'aria-label="' . esc_html__('Postleitzahl', 'onoffice-for-wp-websites') . '"'; break;
 		}
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
