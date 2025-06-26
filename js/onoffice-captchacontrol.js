@@ -52,5 +52,5 @@ jQuery(document).ready(function ($) {
 				.appendTo("head");
 		}
 	}
-	$(`#onoffice-form :input, .oo-form :input`).on("focus select2:open", addRecaptchaScript);
+	$(`[id^="onoffice-form"] :input, .oo-form :input`).on("focus select2:open", addRecaptchaScript);
 });
