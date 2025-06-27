@@ -209,17 +209,29 @@ class ApiCall
 				preg_replace("/[^0-9]/", "", substr($num, $sep+1, strlen($num)))
 		);
 	}
-	private function sortRecords(array $cachedResponse, array $filter, string $sortby, string $sortorder)
+	private function sortRecords(array $cachedResponse, array $filter, $sortby, string $sortorder)
 	{
 		$newRecords = $cachedResponse["data"]["records"];
+		$newRecordsRaw = $cachedResponse["raw"]["data"]["records"];
+		foreach ($newRecords as $index => &$record) {
+			$record['elementsRaw'] = isset($newRecordsRaw[$index]['elements']) ? $newRecordsRaw[$index]['elements'] : null;
+		}
 		$fieldTypes = $cachedResponse["types"];
 		$sortBy = (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'geo_distance' : $sortby;
 		$sortOrder = (array_key_exists('geo', $filter) && array_key_exists('loc', $filter['geo'][0])) ? 'ASC' : $sortorder;
 		if(isset($sortby))
 		{
-			usort($newRecords, function ($a, $b) use ($sortBy, $sortOrder, $fieldTypes) {
-				$sortA = in_array($sortBy, array_keys($a['elements'])) ? $a['elements'][$sortBy] : '';
-				$sortB = in_array($sortBy, array_keys($b['elements'])) ? $b['elements'][$sortBy] : '';
+			$compareRecords = function ($a, $b, $sortBy, $sortOrder, $fieldTypes) {
+				if(in_array($fieldTypes[$sortBy], ['boolean', 'date', 'datetime', 'float', 'integer'])){
+					$sortA = isset($a['elementsRaw'][$sortBy]) ? $a['elementsRaw'][$sortBy]
+						: (isset($a['elements'][$sortBy]) ? $a['elements'][$sortBy] : '');
+					$sortB = isset($b['elementsRaw'][$sortBy]) ? $b['elementsRaw'][$sortBy]
+						: (isset($b['elements'][$sortBy]) ? $b['elements'][$sortBy] : '');
+				}
+				else{
+					$sortA = isset($a['elements'][$sortBy]) ? $a['elements'][$sortBy] : '';
+					$sortB = isset($b['elements'][$sortBy]) ? $b['elements'][$sortBy] : '';
+				}
 				if((array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "integer")
 					|| (array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "float"))
 				{
@@ -231,13 +243,37 @@ class ApiCall
 					$sortA = strtotime($sortA);
 					$sortB = strtotime($sortB);
 				}
+				if(array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "boolean")
+				{
+					$sortA = $sortA === "" ? "0" : $sortA;
+					$sortB = $sortB === "" ? "0" : $sortB;
+				}
+				if($sortA == $sortB){
+					return 0;
+				}
 				if ($sortOrder === 'ASC') {
 					return ($sortA > $sortB) ? 1 : -1;
 				}
 				else {
 					return ($sortA > $sortB) ? -1 : 1;
 				}
-			});
+			};
+			if (is_string($sortBy)) {
+				usort($newRecords, function ($a, $b) use ($compareRecords, $sortBy, $sortOrder, $fieldTypes) {
+					return $compareRecords($a, $b, $sortBy, $sortOrder, $fieldTypes);
+				});
+			}
+			elseif (is_array($sortBy)) {
+				usort($newRecords, function ($a, $b) use ($compareRecords, $sortBy, $fieldTypes) {
+					foreach ($sortBy as $field => $order) {
+						$result = $compareRecords($a, $b, $field, $order, $fieldTypes);
+						if ($result !== 0) {
+							return $result;
+						}
+					}
+					return 0; // All fields equal
+				});
+			}
 		}
 		return $newRecords;
 	}
