@@ -63,11 +63,10 @@ class RecordManagerReadListViewEstate
 
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
-			FROM %i
+			FROM `{$prefix}oo_plugin_listviews`
 			WHERE {$where}
 			ORDER BY `listview_id` ASC
 			LIMIT %d, %d",
-			$prefix."oo_plugin_listviews",
 			$this->getOffset(),
 			$this->getLimit()
 		);
@@ -99,11 +98,10 @@ class RecordManagerReadListViewEstate
 
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
-			FROM %i
+			FROM `{$prefix}oo_plugin_listviews`
 			WHERE {$where}
 			ORDER BY `listview_id` ASC
 			LIMIT %d, %d",
-			$prefix."oo_plugin_listviews",
 			$this->getOffset(),
 			$this->getLimit()
 		);
@@ -129,9 +127,8 @@ class RecordManagerReadListViewEstate
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
+			FROM `{$prefix}oo_plugin_listviews`
 			WHERE `listview_id` = %d",
-			$prefix."oo_plugin_listviews",
 			$listviewId
 		);
 
@@ -194,9 +191,8 @@ class RecordManagerReadListViewEstate
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
+			FROM `{$prefix}oo_plugin_listviews`
 			WHERE `name` = %s",
-			$prefix."oo_plugin_listviews",
 			$listviewName
 		);
 		if ($type !== null) {
@@ -240,9 +236,8 @@ class RecordManagerReadListViewEstate
 
 		$sql = $pWpDb->prepare(
 			"SELECT `picturetype`
-			FROM %i
+			FROM `{$prefix}oo_plugin_picturetypes`
 			WHERE `listview_id` = %d",
-			$prefix."oo_plugin_picturetypes",
 			$listviewId
 		);
 
@@ -273,9 +268,8 @@ class RecordManagerReadListViewEstate
 
 		$sql = $pWpDb->prepare(
 			"SELECT `sortbyuservalue`
-			FROM %i
+			FROM `{$prefix}oo_plugin_sortbyuservalues`
 			WHERE `listview_id` = %d",
-			$prefix."oo_plugin_sortbyuservalues",
 			$listviewId
 		);
 
@@ -305,10 +299,9 @@ class RecordManagerReadListViewEstate
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
+			FROM `{$prefix}oo_plugin_fieldconfig`
 			WHERE `listview_id` = %d
 			ORDER BY `order` ASC",
-			$prefix."oo_plugin_fieldconfig",
 			$listviewId
 		);
 
@@ -338,10 +331,9 @@ class RecordManagerReadListViewEstate
 
 		$sql = $pWpDb->prepare(
 			"SELECT `fieldname`
-			FROM %i
+			FROM `{$prefix}oo_plugin_listview_contactperson`
 			WHERE `listview_id` = %d
 			ORDER BY `order` ASC",
-			$prefix."oo_plugin_listview_contactperson",
 			$listviewId
 		);
 
@@ -392,12 +384,10 @@ class RecordManagerReadListViewEstate
 		$pWpDb  = $this->getWpdb();
 
 		$sql = $pWpDb->prepare(
-			"UPDATE %i
+			"UPDATE `{$prefix}{$tableName}`
 			SET `page_shortcode` = %s
-			WHERE %i = %d",
-			$prefix.$tableName,
+			WHERE `{$column}` = %d",
 			$page,
-			$column,
 			$listviewId
 		);
 
@@ -417,9 +407,8 @@ class RecordManagerReadListViewEstate
 
 		$sql = $pWpDb->prepare(
 			"SELECT COUNT(*) AS count
-			FROM %i
+			FROM `{$prefix}oo_plugin_listviews`
 			WHERE name = %s",
-			$prefix."oo_plugin_listviews",
 			$name
 		);
 

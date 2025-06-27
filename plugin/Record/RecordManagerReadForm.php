@@ -302,9 +302,8 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT `form_type`, COUNT(`form_id`) as count
-			FROM %i
-			GROUP BY `form_type`",
-			$prefix."oo_plugin_forms"
+			FROM `{$prefix}{oo_plugin_forms}`
+			GROUP BY `form_type`"
 		);
 
 		$result = $pWpDb->get_results($sql, ARRAY_A);
@@ -334,10 +333,8 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
-			WHERE %i = %d",
-			$prefix."oo_plugin_form_activityconfig",
-			esc_sql($this->getIdColumnMain()),
+			FROM `{$prefix}oo_plugin_form_activityconfig`
+			WHERE `{$this->getIdColumnMain()}` = %d",
 			$formId
 		);
 
@@ -357,9 +354,8 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT COUNT(*) AS count
-			FROM %i
+			FROM `{$prefix}oo_plugin_forms`
 			WHERE name = %s",
-			$prefix."oo_plugin_forms",
 			$name
 		);
 
@@ -384,10 +380,8 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
-			WHERE %i = %d",
-			$prefix."oo_plugin_form_taskconfig",
-			$this->getIdColumnMain(),
+			FROM `{$prefix}oo_plugin_form_taskconfig`
+			WHERE `{$this->getIdColumnMain()}` = %d",
 			$formId
 		);
 

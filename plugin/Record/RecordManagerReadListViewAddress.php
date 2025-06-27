@@ -57,11 +57,10 @@ class RecordManagerReadListViewAddress
 
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
-			FROM %i
+			FROM `{$prefix}oo_plugin_listviews_address`
 			WHERE {$where}
 			ORDER BY `listview_address_id` ASC
 			LIMIT %d, %d",
-			$prefix."oo_plugin_listviews_address",
 			$this->getOffset(),
 			$this->getLimit()
 		);
@@ -91,11 +90,10 @@ class RecordManagerReadListViewAddress
         }
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
-			FROM %i
+			FROM `{$prefix}oo_plugin_listviews_address`
 			WHERE {$where}
 			ORDER BY `name` ASC
 			LIMIT %d, %d",
-			$prefix."oo_plugin_listviews_address",
 			$this->getOffset(),
 			$this->getLimit()
 		);
@@ -121,9 +119,8 @@ class RecordManagerReadListViewAddress
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
+			FROM `{$prefix}{$mainTable}`
 			WHERE `name` = %s",
-			$prefix.$mainTable,
 			$name
 		);
 
@@ -157,11 +154,9 @@ class RecordManagerReadListViewAddress
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
-			WHERE %i = %d
+			FROM `{$prefix}oo_plugin_address_fieldconfig`
+			WHERE `{$this->getIdColumnMain()}` = %d
 			ORDER BY `order` ASC",
-			$prefix."oo_plugin_address_fieldconfig",
-			$this->getIdColumnMain(),
 			$listviewId
 		);
 
@@ -183,9 +178,8 @@ class RecordManagerReadListViewAddress
 
 		$sql = $pWpDb->prepare(
 			"SELECT COUNT(*) AS count
-			FROM %i
+			FROM `{$prefix}oo_plugin_listviews_address`
 			WHERE name = %s",
-			$prefix."oo_plugin_listviews_address",
 			$name
 		);
 
