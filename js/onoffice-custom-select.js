@@ -87,7 +87,7 @@ jQuery(document).ready(function ($) {
 		return allValid && $form[0].checkValidity();
 	}
 
-    $(document).on('focusout', '[aria-invalid]', function () {
+    $(document).on('blur', '[aria-invalid]', function () {
       validate(this);
     });
 
@@ -102,10 +102,10 @@ jQuery(document).ready(function ($) {
       const $form = $(this);
       const isValidForm = validateForm($form);
 
-      if (!isValidForm) {
-        e.preventDefault();
-        e.stopPropagation();
-      } 
+	  if (!isValidForm) {
+		e.preventDefault();
+		e.stopPropagation();
+	  }
 	  if (isValidForm) {
 		$form.find('[type="submit"]').prop('disabled', false);
 	  }
