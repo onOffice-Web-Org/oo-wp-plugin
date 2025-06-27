@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 6.3 (2025-06-27) =
+
+**Fixed**
+
+* reCAPTCHA for forms
+
 = 6.2 (2025-06-16) = 
 
 **Added**
