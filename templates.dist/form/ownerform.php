@@ -80,7 +80,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
 
-			$line = '<label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.' '.$addition.'</span></label>';
+			$line = '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$fieldLabel.' '.$addition.'</span></label>';
 			$line .= renderFormField($input, $pForm).'</div>';
 
 		} else {
