@@ -4,9 +4,28 @@ jQuery(document).ready(function ($) {
 	const $multiSelectAdminSorting = $('#viewrecordssorting .oo-custom-select2.oo-custom-select2--multiple');
 	const $singleSelectAdminSorting = $("#viewrecordssorting .oo-custom-select2.oo-custom-select2--single");
 
-	$('.custom-multiple-select, .custom-single-select').select2({
+	/*$('.custom-multiple-select, .custom-single-select').select2({
 		width: '100%'
-	});
+	});*/
+
+	document.querySelectorAll(".custom-single-select-tom").forEach(function(select) {
+		if (typeof TomSelect !== 'undefined') {
+
+
+			let settings = {};
+			new TomSelect(select,settings);
+		} 
+		
+		
+		else if (typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
+		  $(select).select2();
+		}
+	})
+
+
+
+
+
 
 	if ($adminSelect.length > 0) {
 		$adminSelect.select2({
@@ -72,6 +91,13 @@ jQuery(document).ready(function ($) {
       validate(this);
     });
 
+	
+	$(document).on('input change', '.oo-form [aria-invalid]', function () {
+		const $form = $(this).closest('form');
+		const formValid = validateForm($form);
+		$form.find('[type="submit"]').prop('disabled', !formValid);
+	  });
+
     $(document).on('submit', '.oo-form', function (e) {
       const $form = $(this);
       const isValidForm = validateForm($form);
@@ -80,6 +106,9 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
         e.stopPropagation();
       } 
+	  if (isValidForm) {
+		$form.find('[type="submit"]').prop('disabled', false);
+	  }
       $form.addClass('oo-validated');
     });
   });

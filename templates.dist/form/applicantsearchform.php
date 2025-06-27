@@ -101,7 +101,15 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		}
 		echo '</select></label>';
 	} else {
-		echo '<label>'.esc_html($pForm->getFieldLabel( $input )).' '.$addition.renderFormField($input, $pForm, false).'</span></label>';
+
+		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
+			echo '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>' . renderFormField($input, $pForm).'</div>';
+		} else {
+			echo '<label>'.esc_html($pForm->getFieldLabel( $input )).' '.$addition.renderFormField($input, $pForm, false).'</span></label>';
+		}
+
+
+
 	}
 }
 
