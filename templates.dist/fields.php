@@ -56,7 +56,6 @@ if (!function_exists('renderFieldEstateSearch')) {
 		}
 
 		if ($properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN) {
-			echo '<br>';
 			echo '<fieldset>
 		<input type="radio" id="' . esc_attr($inputName) . '_u" name="' . esc_attr($inputName) . '" value="u"
 			' . ($selectedValue === null ? ' checked' : '') . '>
@@ -85,14 +84,14 @@ if (!function_exists('renderFieldEstateSearch')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_html($inputName) . '[]" multiple="multiple">';
+			$htmlSelect = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select form-control" autocomplete="off" name="' . esc_html($inputName) . '[]" multiple="multiple">';
 			$htmlSelect .= $htmlOptions;
 			$htmlSelect .= '</select>';
 			echo $htmlSelect;
 		} elseif ($inputName === 'regionaler_zusatz') {
 			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], false, $properties['permittedvalues'] ?? null);
 		} elseif ($inputName === 'country') {
-			echo '<select class="custom-single-select" size="1" name="' . esc_attr($inputName) . '">';
+			echo '<select aria-hidden="true" tabindex="-1" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_attr($inputName) . '">';
 			printCountry($properties['permittedvalues'], $selectedValue);
 			echo '</select>';
 		} elseif (
@@ -100,28 +99,39 @@ if (!function_exists('renderFieldEstateSearch')) {
 			FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']
 		) {
+			echo '<span class="oo-searchrange">';
+			echo '<label>';
 			esc_html_e('From: ', 'onoffice-for-wp-websites');
 			echo '<input name="' . esc_attr($inputName) . '__von" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"><br>';
+			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
+			echo '<label>';
 			esc_html_e('Up to: ', 'onoffice-for-wp-websites');
 			echo '<input name="' . esc_attr($inputName) . '__bis" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"><br>';
+			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label></span>';
 		} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="' . esc_attr($properties['length']) . '"' : '';
-			echo '<input name="' . esc_attr($inputName) . '" ' . $inputType;
-			echo 'value="' . esc_attr($selectedValue) . '"' . $lengthAttr . '><br>';
+			echo '<input autocomplete="off" name="' . esc_attr($inputName) . '" ' . $inputType;
+			echo 'value="' . esc_attr($selectedValue) . '"' . $lengthAttr . '>';
 		}
 	}
 }
 
 if (!function_exists('renderFormField')) {
+
+	function renderErrorHtml(?string $errorMessage, bool $shouldDisplay): string {
+		if (!empty($errorMessage) && $shouldDisplay) {
+			return "<div class='error' aria-hidden='true' role='alert' aria-live='assertive' aria-atomic='true'><p>$errorMessage</p></div>";
+		}
+		return '';
+	}
 	function renderFormField(string $fieldName, onOffice\WPlugin\Form $pForm, bool $searchCriteriaRange = true): string
 	{
 		$output = '';
+		$autocomplete = null;
 		$typeCurrentInput = $pForm->getFieldType($fieldName);
 		$isHiddenField = $pForm->isHiddenField($fieldName);
-
+	
 		if ($isHiddenField) {
 			$name = esc_html($fieldName);
 			$value = $pForm->getFieldValue($fieldName, true);
@@ -137,26 +147,65 @@ if (!function_exists('renderFormField')) {
 			return '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
 		}
 
+
+		switch ($fieldName) {
+			case 'Briefanrede':
+			case 'Anrede':
+				$autocomplete = "honorific-prefix"; break;
+			case "Titel": $autocomplete = "honorific-prefix"; break;
+			case "Vorname": $autocomplete = "given-name"; break;
+			case "Name": $autocomplete = "family-name"; break;
+			case "Strasse": $autocomplete = "street-address"; break;
+			case "Plz":
+			case 'plz': $autocomplete = "postal-code"; break;
+			case "Ort": $autocomplete = "address-level2"; break;
+			case "Zusatz1": $autocomplete = "organization"; break;
+			case 'jobTitle':
+			case 'jobPosition':
+				$autocomplete ="organization-title"; break;
+			case "Land": $autocomplete = "country-name"; break;
+			case "Geburtsdatum": $autocomplete = "bday"; break;
+			case "Homepage": $autocomplete = "url"; break;
+			case "Telefon1": $autocomplete = "tel"; break;
+			case "Email": $autocomplete = "email"; break;
+			default: $autocomplete = "off";
+		}
+		
+		if ($autocomplete !== null) {
+			$autocompleteAttribute = ' autocomplete="' . htmlspecialchars($autocomplete) . '"';
+		}
+		
 		$isRequired = $pForm->isRequiredField($fieldName);
-		$requiredAttribute = $isRequired ? 'required ' : '';
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
 		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
 		$isApplyThousandSeparatorField = $pForm->isApplyThousandSeparatorField($fieldName);
+		$errorMessageDisplay = false;
+		$errorHtml = '';
+		$ariaLabel = '';
 
 		$requiredAttribute = "";
 		if ($isRequired) {
-			$requiredAttribute = "required";
+			$requiredAttribute = "required aria-required='true' aria-invalid='false'";
+			$requiredAttributeSelect = "required";
+			$errorMessageDisplay = true;
 		}
 
 		if ($fieldName == 'range') {
 			$typeCurrentInput = onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER;
 		}
+				
+		switch ($fieldName) {
+			case "plz": $ariaLabel = 'aria-label="' . esc_html__('Postleitzahl der Immobilie', 'onoffice-for-wp-websites') . '"'; break;
+			case "Plz": $ariaLabel = 'aria-label="' . esc_html__('Postleitzahl', 'onoffice-for-wp-websites') . '"'; break;
+		}
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
-			$output .= '<select class="custom-single-select" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
-			/* translators: %s will be replaced with the translated field name. */
+			$errorMessage = esc_html__('Bitte wählen Sie eine Option aus.', 'onoffice-for-wp-websites');
+			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
+
+			$output .= '<select data-rule="text" data-placeholder="' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '" id="'.$fieldName.'" aria-hidden="true" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . ' data-rule="text">';
 			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {
@@ -164,10 +213,10 @@ if (!function_exists('renderFormField')) {
 				} else {
 					$isSelected = $selectedValue == $key;
 				}
-				$output .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>'
-					. esc_html($value) . '</option>';
+				$output .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$output .= '</select>';
+			$output .= '</select>' . $errorHtml;
+		
 		} elseif ($fieldName === 'regionaler_zusatz') {
 			if (!is_array($selectedValue)) {
 				$selectedValue = [];
@@ -194,15 +243,21 @@ if (!function_exists('renderFormField')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '".' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$output = '<select class="custom-multiple-select form-control" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
+			$errorMessage = esc_html__('Bitte wählen Sie mindestens eine Option aus.', 'onoffice-for-wp-websites');
+			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
+
+			$output = '<label>'.$fieldLabel.'<select aria-hidden="true" tabindex="-1" class="custom-multiple-select form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . ' data-rule="text">';
 			$output .= $htmlOptions;
-			$output .= '</select>';
+			$output .= '</select></label>'.$errorHtml;
 		} else {
-			$inputType = 'type="text" ';
+			$inputType = 'type="text" data-rule="text"';
 			$value = 'value="' . esc_attr($pForm->getFieldValue($fieldName, true)) . '"';
+			$errorMessage = esc_html__('Bitte geben Sie einen Text ein.', 'onoffice-for-wp-websites');
 
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
-				$inputType = 'type="checkbox" ';
+				$inputType = 'type="checkbox" data-rule="checkbox"';
+				$errorMessage = esc_html__('Bitte stimmen Sie den Bedingungen zu.', 'onoffice-for-wp-websites');
+
 				$value = 'value="y" ' . ($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
 			} elseif (
 				$typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
@@ -218,7 +273,7 @@ if (!function_exists('renderFormField')) {
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATE ||
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_DATE
 			) {
-				$inputType = 'type="date" ';
+				$inputType = 'type="date"';
 			} elseif (
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATETIME
 			) {
@@ -226,7 +281,12 @@ if (!function_exists('renderFormField')) {
 			}
 
 			if ($isApplyThousandSeparatorField) {
-				$inputType = 'type="text" class="apply-thousand-separator-format" ';
+				$inputType = 'type="text" class="apply-thousand-separator-format" data-rule="text"';
+			}
+
+			if ($fieldName == 'Email') {
+				$inputType = 'type="email" data-rule="email"';
+				$errorMessage = esc_html__('Bitte geben Sie eine gültige E-Mail-Adresse ein.', 'onoffice-for-wp-websites');
 			}
 
 			if (
@@ -236,8 +296,8 @@ if (!function_exists('renderFormField')) {
 
 				foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
 					$value = 'value="' . esc_attr($pForm->getFieldValue($key, true)) . '"';
-					$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($key) . '" '
-						. $value . ' placeholder="' . esc_attr($rangeDescription) . '">';
+					$output .= '<label>' . esc_attr($rangeDescription) . '<input autocomplete="off" ' . $inputType . $requiredAttribute . ' name="' . esc_attr($key) . '" '
+						. $value . ' placeholder="' . esc_attr($rangeDescription) . '"></label>';
 				}
 			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
 				$output = '<fieldset>
@@ -252,10 +312,12 @@ if (!function_exists('renderFormField')) {
 					<label for="' . esc_attr($fieldName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
 					</fieldset>';
 			} else {
-				$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($fieldName) . '" ' . $value . '>';
+				$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
+				$output .= '<input ' . $inputType . $requiredAttribute . ' name="' . esc_attr($fieldName) . '" ' . $value . $autocompleteAttribute .'>'.$errorHtml;
 			}
 		}
 		return $output;
+		
 	}
 }
 
@@ -269,10 +331,10 @@ if (!function_exists('renderRegionalAddition')) {
 
 		$requiredAttribute = "";
 		if ($isRequired) {
-			$requiredAttribute = "required";
+			$requiredAttribute = "required aria-required='true' aria-invalid='false'";
 		}
 
-		$output .= '<select name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';
+		$output .= '<label>' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '<select aria-hidden="true" tabindex="-1" autocomplete="off" name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';
 		$pRegionController = new RegionController();
 
 		if ($permittedValues !== null) {
@@ -287,7 +349,7 @@ if (!function_exists('renderRegionalAddition')) {
 			printRegion($pRegion, $selectedValue ?? []);
 		}
 		$output .= ob_get_clean();
-		$output .= '</select>';
+		$output .= '</select></label>';
 		return $output;
 	}
 }
@@ -296,7 +358,7 @@ if (!function_exists('renderCityField')) {
 	function renderCityField(string $inputName, array $properties): string
 	{
 		$permittedValues = $properties['permittedvalues'];
-		$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_attr($inputName) . '[]" multiple="multiple">';
+		$htmlSelect = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select form-control" autocomplete="off" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
 		foreach ($permittedValues as $value) {
 			$selected = null;
 			if (is_array($properties['value']) && in_array($value, $properties['value'])) {
