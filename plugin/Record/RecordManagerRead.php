@@ -47,9 +47,6 @@ abstract class RecordManagerRead
 	private $_columns = [];
 
 	/** @var string[] */
-	private $_joins = [];
-
-	/** @var string[] */
 	private $_where = [1];
 
 	/** @var string */
@@ -96,14 +93,14 @@ abstract class RecordManagerRead
 
 	public function addColumn(string $column, string $alias = null)
 	{
-		$columnArray = array(esc_sql($column));
+		$column = isset($alias)
+		? "`" . esc_sql($column) . "` AS `" . esc_sql($alias) . "`"
+		: "`" . esc_sql($column) . "`";
 
-		if ($alias !== null)
+		if (!in_array($column, $this->_columns))
 		{
-			$columnArray []= esc_sql($alias);
+			$this->_columns []= $column;
 		}
-
-		$this->_columns []= "`".implode("` AS `", $columnArray)."`";
 	}
 
 
@@ -116,7 +113,12 @@ abstract class RecordManagerRead
 
 	public function addColumnConst(string $column, string $alias)
 	{
-		$this->_columns []= "'".esc_sql($column)."' AS `".esc_sql($alias)."`";
+		$column = "'" . esc_sql($column) . "' AS `" . esc_sql($alias) . "`";
+
+		if (!in_array($column, $this->_columns))
+		{
+			$this->_columns []= $column;
+		}
 	}
 
 
@@ -135,9 +137,12 @@ abstract class RecordManagerRead
 		$pWpDb = $this->getWpdb();
 		$mainTable = $this->getMainTable();
 
-		$sql = "SELECT *
-				FROM `".esc_sql($prefix.$mainTable)."`
-				WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql((int)$recordId);
+		$sql = $pWpDb->prepare(
+			"SELECT *
+			FROM `{$prefix}{$mainTable}`
+			WHERE `{$this->getIdColumnMain()}` = %d",
+			$recordId
+		);
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 		if ($result !== null) {
@@ -156,9 +161,13 @@ abstract class RecordManagerRead
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
-		$sql = "SELECT `contact_type`
-			FROM {$prefix}oo_plugin_contacttypes
-			WHERE `form_id` = ".esc_sql($formId);
+
+		$sql = $pWpDb->prepare(
+			"SELECT `contact_type`
+			FROM `{$prefix}oo_plugin_contacttypes`
+			WHERE `form_id` = %d",
+			$formId
+		);
 
 		$contactTypes = $pWpDb->get_col($sql);
 
@@ -182,10 +191,6 @@ abstract class RecordManagerRead
 	public function setLimit(int $limit)
 		{ $this->_limit = $limit; }
 
-	/** @param string $fullJoinStatement */
-	public function addJoin(string $fullJoinStatement)
-		{ $this->_joins []= $fullJoinStatement; }
-
 	/** @param string $where */
 	public function addWhere(string $where)
 		{ $this->_where []= $where; }
@@ -201,10 +206,6 @@ abstract class RecordManagerRead
 	/** @return string [] */
 	public function getColumns(): array
 		{ return $this->_columns;}
-
-	/** @return string [] */
-	public function getJoins(): array
-		{ return $this->_joins;}
 
 	/** @return int */
 	public function getOffset(): int

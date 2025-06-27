@@ -80,7 +80,14 @@ class RecordManagerDuplicateListViewAddress extends RecordManager
 
 			$originalName = $listViewRoot['name'];
 			$newName = "{$originalName} - Copy";
-			$selectLikeOriginalName = "SELECT `name`, `listview_address_id` FROM {$this->_pWPDB->_escape($tableListViews)} WHERE name LIKE '{$this->_pWPDB->_escape($originalName)}%' ORDER BY listview_address_id DESC";
+			$selectLikeOriginalName = $this->_pWPDB->prepare(
+				"SELECT `name`, `listview_address_id`
+				FROM `{$tableListViews}`
+				WHERE name LIKE %s
+				ORDER BY listview_address_id DESC",
+				$this->_pWPDB->esc_like($originalName) . '%'
+			);
+
 			$listViewsRows = $this->_pWPDB->get_row($selectLikeOriginalName);
 			$id = $listViewsRows->listview_address_id;
 			if (!empty($listViewsRows->name) && $listViewsRows->name !== $originalName) {
@@ -114,7 +121,13 @@ class RecordManagerDuplicateListViewAddress extends RecordManager
 				//duplicate data related oo_plugin_fieldconfig table
 				$tableFieldConfig = $prefix . self::TABLENAME_FIELDCONFIG_ADDRESS;
 				foreach ($listViewRoot['fields'] as $field) {
-					$selectFieldConfigByIdAndFieldName = "SELECT * FROM {$this->_pWPDB->_escape($tableFieldConfig)} WHERE listview_address_id='{$this->_pWPDB->_escape($id)}' AND fieldname ='{$this->_pWPDB->_escape($field)}'";
+					$selectFieldConfigByIdAndFieldName = $this->_pWPDB->prepare(
+						"SELECT * FROM `{$tableFieldConfig}`
+						WHERE listview_address_id = %d
+						AND fieldname = %s",
+						$id,
+						$field
+					);
 					$fieldConfigRows = $this->_pWPDB->get_results($selectFieldConfigByIdAndFieldName);
 
 					if (!empty($fieldConfigRows) && (count($fieldConfigRows) !== 0)) {

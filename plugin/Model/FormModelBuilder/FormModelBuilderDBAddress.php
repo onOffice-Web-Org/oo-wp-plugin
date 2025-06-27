@@ -107,7 +107,7 @@ class FormModelBuilderDBAddress
 		{
 			$pRecordReadManager = new RecordManagerReadListViewAddress();
 			$values = $pRecordReadManager->getRowById($listViewId);
-			$resultByField = $pRecordReadManager->readFieldconfigByListviewId($listViewId);
+			$resultByField = $pRecordReadManager->getFieldconfigByListviewId($listViewId);
 			$values['fields'] = array_column($resultByField, 'fieldname');
 			$values['filterable'] = $this->arrayColumnTrue($resultByField, 'filterable');
 			$values['hidden'] = $this->arrayColumnTrue($resultByField, 'hidden');
