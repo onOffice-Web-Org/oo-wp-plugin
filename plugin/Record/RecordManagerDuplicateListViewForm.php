@@ -85,10 +85,9 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 			$newName = "{$originalName} - Copy";
 			$selectLikeOriginalName = $this->_pWPDB->prepare(
 				"SELECT `name`, `form_id`
-				FROM %d
-				WHERE name LIKE %i
+				FROM `{$tableListViews}`
+				WHERE name LIKE %s
 				ORDER BY form_id DESC",
-				$tableListViews,
 				$originalName
 			);
 			$listViewsRows = $this->_pWPDB->get_row($selectLikeOriginalName);
@@ -126,10 +125,9 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 				$tableFieldConfig = $prefix . self::TABLENAME_FIELDCONFIG_FORMS;
 				foreach ($listViewRoot['fields'] as $field) {
 					$selectFieldConfigByIdAndFieldName = $this->_pWPDB->prepare(
-						"SELECT * FROM %i
+						"SELECT * FROM `{$tableFieldConfig}`
 						WHERE form_id = %d
 						AND fieldname = %s",
-						$tableFieldConfig,
 						$id,
 						$field
 					);
@@ -142,9 +140,8 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 				$formDefaultsFieldConfigTable = $prefix . self::TABLENAME_FIELDCONFIG_FORM_DEFAULTS;
 				$formDefaultsFieldConfigValueTable = $prefix . self::TABLENAME_FIELDCONFIG_FORM_DEFAULTS_VALUES;
 				$selectFormDefaultsById = $this->_pWPDB->prepare(
-					"SELECT * FROM %i
+					"SELECT * FROM `{$formDefaultsFieldConfigTable}`
 					WHERE form_id = %d",
-					$formDefaultsFieldConfigTable,
 					$id
 				);
 				$formDefaultsRows = $this->_pWPDB->get_results($selectFormDefaultsById);
@@ -167,9 +164,8 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 				$tableFieldFormCustomLabel = $prefix . self::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS;
 				$tableFieldFormTranslatedLabel = $prefix . self::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS;
 				$selectFieldFormCustomLabelById = $this->_pWPDB->prepare(
-					"SELECT * FROM %i
+					"SELECT * FROM `{$tableFieldFormCustomLabel}`
 					WHERE form_id = %d",
-					$tableFieldFormCustomLabel,
 					$id
 				);
 				$fieldFormCustomLabelRows = $this->_pWPDB->get_results($selectFieldFormCustomLabelById);
@@ -183,9 +179,8 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 						$newCustomLabelId = $this->_pWPDB->insert_id;
 						$selectFormDefaultValueById = "SELECT * FROM {$this->_pWPDB->_escape($tableFieldFormTranslatedLabel)} WHERE input_id ='{$this->_pWPDB->_escape($fieldFormCustomLabelRow->customs_labels_id)}'";
 						$selectFormDefaultValueById = $this->_pWPDB->prepare(
-							"SELECT * FROM %i
+							"SELECT * FROM `{$tableFieldFormTranslatedLabel}`
 							WHERE input_id = %s",
-							$tableFieldFormTranslatedLabel,
 							$fieldFormCustomLabelRow->customs_labels_id
 						);
 						$formTranslatedLabelRows = $this->_pWPDB->get_results($selectFormDefaultValueById, 'ARRAY_A');

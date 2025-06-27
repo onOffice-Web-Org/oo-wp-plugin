@@ -61,11 +61,10 @@ class RecordManagerReadForm
 		$where = "(".implode(") AND (", $this->getWhere()).")";
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
-			FROM %i
+			FROM `{$prefix}oo_plugin_forms`
 			WHERE {$where}
 			ORDER BY `form_id` ASC
 			LIMIT %d, %d",
-			$prefix."oo_plugin_forms",
 			$this->getOffset(),
 			$this->getLimit()
 		);
@@ -94,11 +93,10 @@ class RecordManagerReadForm
         }
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
-			FROM %i
+				FROM `{$prefix}oo_plugin_forms`
 			WHERE {$where}
 			ORDER BY `name` ASC
 			LIMIT %d, %d",
-			$prefix."oo_plugin_forms",
 			$this->getOffset(),
 			$this->getLimit()
 		);
@@ -121,8 +119,7 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i",
-			$prefix."oo_plugin_forms"
+			FROM `{$prefix}oo_plugin_forms`"
 		);
 
 		$result = $pWpDb->get_results($sql, OBJECT);
@@ -137,7 +134,7 @@ class RecordManagerReadForm
 
 	/**
 	 * @param string $formType
-	 * 
+	 *
 	 * @return object
 	 * @throws UnknownFormException
 	 */
@@ -149,9 +146,8 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
+			FROM `{$prefix}oo_plugin_forms`
 			WHERE `form_type` = %s",
-			$prefix."oo_plugin_forms",
 			$formType
 		);
 
@@ -171,9 +167,8 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT COUNT(`form_id`) as count
-			FROM %i
-			WHERE `default_recipient` = 1",
-			$prefix."oo_plugin_forms"
+			FROM `{$prefix}oo_plugin_forms`
+			WHERE `default_recipient` = 1"
 		);
 
 
@@ -198,9 +193,8 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
+			FROM `{$prefix}oo_plugin_forms`
 			WHERE `name` = %s",
-			$prefix."oo_plugin_forms",
 			$formName
 		);
 
@@ -236,10 +230,8 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
-			WHERE %i = %i",
-			$prefix."oo_plugin_form_fieldconfig",
-			$this->getIdColumnMain(),
+			FROM `{$prefix}oo_plugin_form_fieldconfig`
+			WHERE {$this->getIdColumnMain()} = %d",
 			$formId
 		);
 
@@ -261,9 +253,8 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
+			FROM `{$prefix}oo_plugin_forms`
 			WHERE `form_id` = %d",
-			$prefix."oo_plugin_forms",
 			$formId
 		);
 
@@ -287,9 +278,8 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
+			FROM `{$prefix}oo_plugin_form_fieldconfig`
 			WHERE `form_id` = %d",
-			$prefix."oo_plugin_form_fieldconfig",
 			$formId
 		);
 

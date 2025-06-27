@@ -82,10 +82,9 @@ class RecordManagerDuplicateListViewAddress extends RecordManager
 			$newName = "{$originalName} - Copy";
 			$selectLikeOriginalName = $this->_pWPDB->prepare(
 				"SELECT `name`, `listview_address_id`
-				FROM %id
+				FROM `{$tableListViews}`
 				WHERE name LIKE %s
 				ORDER BY listview_address_id DESC",
-				$tableListViews,
 				$this->_pWPDB->esc_like($originalName) . '%'
 			);
 
@@ -123,10 +122,9 @@ class RecordManagerDuplicateListViewAddress extends RecordManager
 				$tableFieldConfig = $prefix . self::TABLENAME_FIELDCONFIG_ADDRESS;
 				foreach ($listViewRoot['fields'] as $field) {
 					$selectFieldConfigByIdAndFieldName = $this->_pWPDB->prepare(
-						"SELECT * FROM %i
+						"SELECT * FROM `{$tableFieldConfig}`
 						WHERE listview_address_id = %d
 						AND fieldname = %s",
-						$tableFieldConfig,
 						$id,
 						$field
 					);

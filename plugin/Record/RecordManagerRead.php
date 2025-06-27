@@ -139,11 +139,9 @@ abstract class RecordManagerRead
 
 		$sql = $pWpDb->prepare(
 			"SELECT *
-			FROM %i
-			WHERE %i = %d",
-			$prefix.$mainTable,
-			$this->getIdColumnMain(),
-			$recordId,
+			FROM `{$prefix}{$mainTable}`
+			WHERE `{$this->getIdColumnMain()}` = %d",
+			$recordId
 		);
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
@@ -166,9 +164,8 @@ abstract class RecordManagerRead
 
 		$sql = $pWpDb->prepare(
 			"SELECT `contact_type`
-			FROM %i
+			FROM `{$prefix}oo_plugin_contacttypes`
 			WHERE `form_id` = %d",
-			$prefix."oo_plugin_contacttypes",
 			$formId
 		);
 
