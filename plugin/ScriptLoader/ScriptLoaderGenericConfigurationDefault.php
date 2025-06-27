@@ -85,10 +85,16 @@ class ScriptLoaderGenericConfigurationDefault
 				->setLoadInFooter(true)
                 ->setLoadBeforeRenderingTemplate(true)
 				->setLoadAsynchronous($defer),
+			(new IncludeFileModel($script, 'tom-select', plugins_url('/third_party/tom-select/tom-select.complete.min.js', $pluginPath)))
+				->setLoadInFooter(true)
+                ->setLoadBeforeRenderingTemplate(true)
+				->setLoadAsynchronous($defer),
             (new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true),
             (new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true),
             (new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true),
-            (new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true)
+            (new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true),
+			(new IncludeFileModel($style, 'tom-select', plugins_url('/third_party/tom-select/tom-select.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true)
+
 		];
 		$values []= (new IncludeFileModel($style, 'onoffice_style', $this->getStyleUriByVersion()))->setLoadBeforeRenderingTemplate(true);
 		$values = array_merge($values, $this->registerScriptAndStyles($pluginPath, $script, $style, $async, $defer));
