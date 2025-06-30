@@ -2203,7 +2203,7 @@ msgid "Search engine"
 msgstr "Motore di ricerca"
 
 #: plugin/Gui/AdminPageApiSettings.php:396
-msgid "Favorise"
+msgid "Favour"
 msgstr "Preferito"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:157

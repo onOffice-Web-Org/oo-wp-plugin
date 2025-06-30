@@ -623,7 +623,7 @@ msgstr "Aprire il modulo"
 #~ msgid "Watchlist"
 #~ msgstr "Lista di controllo"
 
-#~ msgid "Favorise"
+#~ msgid "Favour"
 #~ msgstr "Favorevole"
 
 #~ msgid "Map Provider"
