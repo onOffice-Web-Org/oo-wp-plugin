@@ -105,6 +105,14 @@ jQuery(document).ready(function ($) {
 	  if (!isValidForm) {
 		e.preventDefault();
 		e.stopPropagation();
+
+		const firstInvalid = $form.find('[aria-invalid="true"]').first()[0];
+		if (firstInvalid) {
+			firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			firstInvalid.focus({ preventScroll: true });
+		}
+
+
 	  }
 	  if (isValidForm) {
 		$form.find('[type="submit"]').prop('disabled', false);
