@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 6.1
+Stable tag: 6.3
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,23 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.3 (2025-06-27) =
+
+**Fixed**
+
+* reCAPTCHA for forms
+
+= 6.2 (2025-06-16) = 
+
+**Added**
+
+* Prepared media data for properties to display media information in the property detail page 
+
+**Fixed**
+
+* Load contact person on detail page if its broker and not public
+* Fixed the search parameter for location
 
 = 6.1 (2025-05-28) = 
 
