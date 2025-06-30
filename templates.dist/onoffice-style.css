@@ -114,7 +114,7 @@ span.oo-searchrange {
 }
 
 
-.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus, .oo-searchformfield input:focus {
+.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus, .oo-searchformfield input:focus, .ts-wrapper.focus, .ts-wrapper:focus-visible, .ts-wrapper.single.focus, .ts-wrapper.single:focus-visible, .ts-wrapper.multi.focus, .ts-wrapper.multi:focus-visible {
     outline: #3d7bb1 solid 2px;
     border-color: #3d7bb1;
 }
@@ -256,7 +256,7 @@ span.oo-searchrange {
     gap: 10px;
 }
 
-.oo-detailslink a, .favorize, .oo-unitslink a {
+.oo-detailslink a, .favorize, .oo-unitslink a, .oo-leadformlink {
     display: block;
     text-align: center;
     color: #ffffff !important;
@@ -269,13 +269,13 @@ span.oo-searchrange {
     line-height: 28px;
 }
 
-.oo-detailslink a:hover, button.favorize:hover, .oo-unitslink a:hover, .oo-form input[type='submit']:hover {
+.oo-detailslink a:hover, button.favorize:hover, .oo-unitslink a:hover, .oo-form input[type='submit']:hover, .oo-leadformlink:hover {
     background: #174770;
     color: #ffffff !important;
     text-decoration: none !important;
 }
 
-button.favorize:focus, .oo-details-btn:focus {
+button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus {
     background: #174770;
     outline: 2px solid #174770;
     outline-offset: 2px;

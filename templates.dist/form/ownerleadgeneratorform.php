@@ -58,10 +58,12 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
 		$isRequired = $pForm->isRequiredField($input);
 		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
+		$isHiddenField = $pForm->isHiddenField($input);
+		$label = $pForm->getFieldLabel($input).' '.$addition;
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
 
-			$line = '<div class="oo-single-select"><label for="'.$input.'-ts-control">><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$pForm->getFieldLabel($input).' '.$addition.'</span></label>';
+			$line = '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$pForm->getFieldLabel($input).' '.$addition.'</span></label>';
 			$line .=  renderFormField($input, $pForm).'</div>';	
 
 		} else {
@@ -91,7 +93,6 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		<form name="leadgenerator" action="" method="post" id="leadgeneratorform-<?php echo sanitize_title($pForm->getFormId()); ?>"  class="oo-form" novalidate>
 			<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
 			<input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
-
 
 			<?php 
 			$firstRequired = false;
@@ -126,22 +127,17 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
                 foreach ($addressValues as $pageNumber => $fields): ?>
                     <div class="lead-lightbox lead-page-<?php echo $pageNumber; ?>">
-
                         <?php if($totalPages > 1): ?>
                             <span><?php echo sprintf('%s', $pageTitles[$pageNumber]); ?></span>
                         <?php endif; ?>
-                        <p>
                             <?php echo implode('', $fields); ?>
-                        </p>
                         <?php if ($pageNumber == $totalPages): ?>
-                            <p>
                             <div style="float:right">
                                 <?php
                                 $pForm->setGenericSetting('formId', 'leadgeneratorform-' . sanitize_title($pForm->getFormId()));
                                 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
                                 ?>
                             </div>
-                            </p>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
@@ -165,7 +161,7 @@ if (in_array($pForm->getFormStatus(), [
 		FormPost::MESSAGE_ERROR,
 		FormPost::MESSAGE_REQUIRED_FIELDS_MISSING,
 	]) && $pForm->getShowFormAsModal()) {
-	echo '<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead-' . sanitize_title($pForm->getFormId()) . '" target="_top" class="thickbox">';
+	echo '<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead-' . sanitize_title($pForm->getFormId()) . '" target="_top" class="thickbox oo-leadformlink">';
 	echo esc_html__('Open the Form', 'onoffice-for-wp-websites');
 	echo '</a>';
 }
