@@ -44,30 +44,44 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		echo '<p role="status">'.esc_html__('Spam recognized!', 'onoffice-for-wp-websites').'</p>';
 	}
 
+
+
+
 	/* @var $pForm Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		if ($pForm->isHiddenField($input)) {
 			$hiddenValues []= renderFormField($input, $pForm);
 			continue;
 		}
+
+		
+	
 		if ( $pForm->isMissingField( $input )  &&
 			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 			/* translators: %s will be replaced with a translated field name. */
 			echo sprintf(__('Please enter a value for %s.', 'onoffice-for-wp-websites'), esc_html($pForm->getFieldLabel( $input ))).'<br>';
 		}
 
+		switch ($input) {
+			case "ort": $fieldLabel = esc_html__('Ort der Immobilie', 'onoffice-for-wp-websites'); break;
+			case "plz": $fieldLabel = esc_html__('PLZ der Immobilie', 'onoffice-for-wp-websites'); break;
+			case "strasse": $fieldLabel = esc_html__('Straße der Immobilie', 'onoffice-for-wp-websites'); break;
+			case "hausnummer": $fieldLabel = esc_html__('Hausnummer der Immobilie', 'onoffice-for-wp-websites'); break;
+			default: $fieldLabel = $pForm->getFieldLabel($input);
+		}
+
 		$isRequired = $pForm->isRequiredField($input);
 		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 		$isHiddenField = $pForm->isHiddenField($input);
-		$label = $pForm->getFieldLabel($input).' '.$addition;
+		$label = $fieldLabel.' '.$addition;
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
 
-			$line = '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$pForm->getFieldLabel($input).' '.$addition.'</span></label>';
+			$line = '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>';
 			$line .=  renderFormField($input, $pForm).'</div>';	
 
 		} else {
-			$line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$pForm->getFieldLabel($input).' '.$addition;
+			$line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label;
 			$line .= renderFormField($input, $pForm).'</span></label>';		
 		}
 
@@ -106,6 +120,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 					break;
 				}
 			}
+
 			if ($hasRequiredFields) {
 				echo '<div class="oo-form-required" aria-hidden="true">' . esc_html__('* Mandatory fields', 'onoffice-for-wp-websites') . '</div>';
 			} ?>

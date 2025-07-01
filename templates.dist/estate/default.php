@@ -257,7 +257,11 @@ if (get_option('onoffice-pagination-paginationbyonoffice')) {
 	<div id="<?php echo esc_attr($current_instance_id); ?>" class="oo-listpagination">
 		<?php
 		// Create pagination links
-		wp_link_pages();
+		$args = array (
+			'before'       => '<nav class="oo-post-nav-links">',
+			'after'        => '<nav>',
+		);
+		wp_link_pages($args );
 		?>
 		<script>
 			jQuery(document).ready(function($) {
@@ -270,7 +274,7 @@ if (get_option('onoffice-pagination-paginationbyonoffice')) {
 
 				var queryParams = <?php echo json_encode($cleanedParams); ?>;
 
-				$currentPagination.find('.post-nav-links a').each(function() {
+				$currentPagination.find('.oo-post-nav-links a').each(function() {
 					var link = $(this);
 					// Create a new URL object based on the link's href and the current origin
 					var url = new URL(link.attr('href'), window.location.origin);

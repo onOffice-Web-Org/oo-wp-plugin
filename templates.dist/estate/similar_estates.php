@@ -122,12 +122,12 @@ $dimensions = [
 							<div class="oo-detailslink">
 								<?php if ($referenz === "1") { ?>
 									<?php if (!$pEstates->getViewRestrict()) { ?>
-										<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), $estateId); ?>"></a>>
+										<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), $estateId); ?>">
 											<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
 										</a>
 									<?php } ?>
 								<?php } else { ?>
-									<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), $estateId); ?>"></a>>
+									<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), $estateId); ?>">
 										<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
 									</a>
 								<?php } ?>
