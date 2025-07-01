@@ -454,9 +454,6 @@ msgstr "Hubo un problema al guardar el contacto. El campo “Nombre” no puede 
 msgid "Price on request"
 msgstr "Precio a petición"
 
-msgid "The cache was cleared successfully."
-msgstr "La caché se ha vaciado correctamente"
-
 msgid "A honeypot is an invisible field to trick spam bots. Note that when a bot is detected, it will pretend the form was sent successfully. We recommend to keep this active, but you can deactivate it if it causes any problems."
 msgstr "Un señuelo es un campo invisible para engañar a los bots de Spam. Ten en cuenta que cuando se detecta un bot, fingirá que el formulario se ha enviado correctamente. Recomendamos mantenerlo activo, pero puedes desactivarlo si causa algún problema."
 
@@ -902,9 +899,6 @@ msgstr "Mostrar el título en la URL"
 
 msgid "Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email."
 msgstr "Ten en cuenta que si el formulario de contacto se encuentra en una página de detalles del inmueble y este tiene una persona de contacto, el correo electrónico se enviará a la dirección de correo electrónico de la persona de contacto. De lo contrario, esta dirección de correo electrónico recibirá el mensaje."
-
-msgid "Save changes and clear API cache"
-msgstr "Guardar los cambios y vaciar la caché de la API"
 
 msgid "By onOffice-Plugin"
 msgstr "Desde el plugin de onOffice"
@@ -1678,4 +1672,10 @@ msgid "Please make sure that no other view with this name exists, even if it has
 msgstr ""
 
 msgid "The Name field must not be empty. Do you want to leave the page without saving?"
+msgstr ""
+
+msgid "Cache is being cleared in the background. This may take a few minutes."
+msgstr ""
+
+msgid "Save changes"
 msgstr ""
