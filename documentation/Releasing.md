@@ -28,12 +28,10 @@ Change version in `wp_enqueue_style('onoffice-admin-css', plugins_url('/css/admi
 
 1. Ensure you have prepared the release:
     - Tested it.
-    - Translated it. (This requires a development release so that the translations show up.)
-    - Documented the changes.
+    - Translations are up-to-date
     - [Updated the changelog](#update-the-changelog).
 2. Update the version number in `readme.txt` and `plugin.php`.
-    - To check if e.g. version `3.2` is configured correctly, you can run the [Deno](https://deno.land/) script `deno run --allow-read ./scripts/check-version-in-config-files.ts 3.2`. It will guide you through all the places that need to be updated.
-    - Otherwise, the version needs to be set in the following places:
+    - The version needs to be set in the following places:
       - In the comment of the `readme.txt` as the `Stable tag`.
       - As the newest [changelog](#update-the-changelog) item in `readme.txt`.
       - In the comment of the `plugin.php` as the `Version`.
