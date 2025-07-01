@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 6.3.1 (2025-07-01) =
+
+**Fixed**
+
+* reCAPTCHA for forms (missing minified JS)
+
 = 6.3 (2025-06-27) =
 
 **Fixed**
