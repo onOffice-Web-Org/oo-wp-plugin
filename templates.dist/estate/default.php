@@ -212,8 +212,12 @@ $dimensions = [
 <div>
 	<?php
 	if (get_option('onoffice-pagination-paginationbyonoffice')) {
-		wp_link_pages();
+		$args = array(
+			'before' => '<nav class="oo-post-nav-links" aria-label="'.esc_html__('Page numbering of properties', 'onoffice-for-wp-websites').'" >' . __( 'Pages:' ),
+			'after' => '</nav>'		);
+		wp_link_pages($args);
 	}
+	
 	?>
 </div>
 <?php if (Favorites::isFavorizationEnabled()) { ?>
