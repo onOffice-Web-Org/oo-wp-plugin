@@ -1049,6 +1049,20 @@ class TestClassEstateList
 			'language' => 'ENG'
 		], null, $responseGetEstatePictures);
 
+		$dataGetEstateFiles = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseGetEstatesFiles.json'), true);
+			
+		$estateIds = [15,1051,1082,1193,1071];
+		$parameters = [];
+		foreach ($estateIds as $estateId) {
+			$parameters['estateid'] = $estateId;
+			$parameters['showispublishedonhomepage'] = true;
+			$parameters['listlimit'] = 100;
+			$responseGetEstateFiles = $dataGetEstateFiles['response'];
+			$this->_pSDKWrapperMocker->addResponseByParameters
+				(onOfficeSDK::ACTION_ID_GET, 'file', 'estate', $parameters, null, $responseGetEstateFiles);
+		}
+
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
