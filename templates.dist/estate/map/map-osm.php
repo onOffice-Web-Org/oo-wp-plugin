@@ -118,8 +118,6 @@ return (function(EstateList $pEstatesClone) {
             var id = estate.id;
             const ariaLabel = translations.ariaLabelTemplate.replace('%s', estate.id);
             
-            console.log( id);
-
             if (!estate.showInfoWindow) {
                 const popupContent = `
                     <div class="oo-infowindow">

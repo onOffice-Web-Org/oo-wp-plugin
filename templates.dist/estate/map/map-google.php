@@ -84,7 +84,8 @@ return (function (EstateList $pEstatesClone) {
                 'address' => $address,
                 'link' => $link,
                 'visible' => $visible,
-                'showInfoWindow' => $showInfoWindow 
+                'showInfoWindow' => $showInfoWindow,
+                'id' => $estateId
             ];
         }
     }
@@ -116,6 +117,9 @@ return (function (EstateList $pEstatesClone) {
                 var estate = estates[i];
                 var latLng = new google.maps.LatLng(estate.position.lat, estate.position.lng);
                 bounds.extend(latLng);
+                const translations = {
+                ariaLabelTemplate: "<?php echo esc_js(esc_html_x('Show Details for Real Estate No. %s', 'onoffice-for-wp-websites')); ?>"
+                 };
                 if (estate.visible) {
                     // no marker but extended map bounds
                     const marker = new google.maps.Marker({
@@ -125,6 +129,8 @@ return (function (EstateList $pEstatesClone) {
                         title: estate.title
                     });
 
+                    const ariaLabel = translations.ariaLabelTemplate.replace('%s', estate.id);
+
                     if (!estate.showInfoWindow) {
                         const infoWindowHeader = document.createElement('p');
                         infoWindowHeader.className = 'oo-infowindowtitle';
@@ -133,7 +139,7 @@ return (function (EstateList $pEstatesClone) {
                         const infoWindowContent = `
                             <div class="oo-infowindow">
                                 ${estate.address ? `<p class="oo-infowindowaddress">${estate.address}</p>` : ''}
-                                ${estate.link ? `<div class="oo-detailslink"><a class="oo-details-btn" href="${estate.link}"><?php echo esc_html__('Show Details', 'onoffice-for-wp-websites'); ?></a></div>` : ''}
+                                ${estate.link ? `<div class="oo-detailslink"><a class="oo-details-btn" aria-label="${ariaLabel}" href="${estate.link}"><?php echo esc_html__('Show Details', 'onoffice-for-wp-websites'); ?></a></div>` : ''}
                             </div>
                         `;
                         marker.addListener('click', () => {
@@ -154,6 +160,7 @@ return (function (EstateList $pEstatesClone) {
         google.maps.event.addDomListener(window, "load", gmapInit);
     })();
     </script>
-    <div class="oo-gmap" id="<?php echo esc_attr($mapId) ?>" style="width: 100%; height: 100%;"></div>
+    <div class="oo-gmap" role="region" id="<?php echo esc_attr($mapId) ?>" style="width: 100%; height: 100%;" aria-label="<?php echo esc_html__(
+    'Map with properties','onoffice-for-wp-websites'); ?>"></div>
 <?php
 });

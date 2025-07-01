@@ -279,7 +279,7 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus {
     background: #174770;
 }
 
-.leaflet-container a.leaflet-popup-close-button:focus, .leaflet-bar a:hover, .leaflet-bar a:focus {
+.leaflet-container a.leaflet-popup-close-button:focus, .leaflet-bar a:hover, .leaflet-bar a:focus, .gm-style div:focus,  .gm-style button:focus {
     outline: 2px solid #174770;
 }
 
