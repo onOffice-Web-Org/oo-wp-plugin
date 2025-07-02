@@ -146,7 +146,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 				//duplicate data related oo_plugin_picturetypes table
 				$tablePictureTypes = $prefix . self::TABLENAME_PICTURETYPES;
 				$selectPictureTypesById = $this->_pWPDB->prepare(
-					"SELECT * FROM `{$tableFieldConfig}`
+					"SELECT * FROM `{$tablePictureTypes}`
 					WHERE listview_id = %d",
 					$id
 				);
@@ -163,7 +163,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 				//duplicate data related oo_plugin_sortbyuservalues table
 				$tableSortByUserValues = $prefix . self::TABLENAME_SORTBYUSERVALUES;
 				$selectSortByUserValuesById = $this->_pWPDB->prepare(
-					"SELECT * FROM `{$tableFieldConfig}`
+					"SELECT * FROM `{$tableSortByUserValues}`
 					WHERE listview_id = %d",
 					$id
 				);
