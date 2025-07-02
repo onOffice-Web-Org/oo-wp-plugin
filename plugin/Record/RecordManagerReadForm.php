@@ -93,7 +93,7 @@ class RecordManagerReadForm
         }
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
-				FROM `{$prefix}oo_plugin_forms`
+			FROM `{$prefix}oo_plugin_forms`
 			WHERE {$where}
 			ORDER BY `name` ASC
 			LIMIT %d, %d",
