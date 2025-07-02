@@ -116,8 +116,10 @@ class TestClassScriptLoaderOsm
 	{
 		$this->_pSubject->register();
 		$this->_pSubject->enqueue();
-		$this->assertEquals(['leaflet-script'], $this->_pWPScriptStyle->getEnqueuedScripts());
-		$this->assertEquals(['leaflet-script-a11y'], $this->_pWPScriptStyle->getEnqueuedScripts());
+		$this->assertEquals(
+			['leaflet-script', 'leaflet-script-a11y'], 
+			$this->_pWPScriptStyle->getEnqueuedScripts()
+		);
 		$this->assertEquals(['leaflet-style'], $this->_pWPScriptStyle->getEnqueuedStyles());
 	}
 }
