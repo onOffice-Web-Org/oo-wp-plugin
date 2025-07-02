@@ -101,8 +101,6 @@ class FormPostOwner
 
 		$recipient = $pDataFormConfiguration->getRecipientByUserSelection();
 
-		error_log('Recipient: ' . $recipient);
-
 		$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
 
@@ -111,11 +109,7 @@ class FormPostOwner
 			$subject = $this->generateCustomEmailSubject($pDataFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pDataFormConfiguration->getInputs());
 		}
 
-		error_log("Subject: " . $subject);
-
 		$estateData = $this->getEstateData();
-
-		error_log('FormPostOwner::analyseFormContentByPrefix: ' . $pDataFormConfiguration->getFormName() . ' - ' . $pFormData->getFormNo());
 		
 		try {
 			if ( $pDataFormConfiguration->getCreateOwner() ) {

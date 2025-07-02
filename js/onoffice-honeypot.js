@@ -7,8 +7,6 @@ jQuery(document).ready(function ($) {
         const formElements = [];
         const forms = document.querySelectorAll(".oo-form, [id^='onoffice-form']");
 
-        console.log(forms);
-
         forms.forEach(form => {
             const dataAttr = form.getAttribute('data-applicant-form-id');
             if (dataAttr === null) {
@@ -20,7 +18,6 @@ jQuery(document).ready(function ($) {
     }
 
     function addHoneypotToForms(formElements) {
-        console.log(formElements);
         formElements.forEach((formElement) => {
             const messageTextarea = $(formElement).find('textarea[name="message"]');
             const messageInput = $(formElement).find('input[name="message"]');
