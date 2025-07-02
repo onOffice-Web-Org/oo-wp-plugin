@@ -84,7 +84,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$htmlSelect = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select form-control" autocomplete="off" name="' . esc_html($inputName) . '[]" multiple="multiple">';
+			$htmlSelect = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($inputName) . '[]" multiple="multiple">';
 			$htmlSelect .= $htmlOptions;
 			$htmlSelect .= '</select>';
 			echo $htmlSelect;
