@@ -120,9 +120,13 @@ abstract class FormPost
 	public function initialCheck(DataFormConfiguration $pConfig, int $formNo)
 	{
 		$this->updatePostHoneypot();
+		error_log('FormPost::initialCheck: ' . $pConfig->getFormName() . ' - ' . $formNo);
 		$pFormData = $this->buildFormData($pConfig, $formNo);
+		error_log("Build Form Data: " . $pFormData->getDataFormConfiguration()->getFormName() . ' - ' . $pFormData->getFormNo());
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
+
+		error_log('Get Post Message: ' . $this->_pFormPostConfiguration->getPostMessage());
 
 		if ($this->_pFormPostConfiguration->getPostMessage() !== "") {
 			$pFormData->setStatus(self::MESSAGE_SUCCESS);
