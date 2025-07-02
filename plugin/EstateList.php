@@ -496,13 +496,22 @@ class EstateList
 	 * @return array
 	 * @throws UnknownViewException
 	 */
-	public function getEstateListParametersForCache (string $lang, bool $formatOutput)
+	public function getEstateListParametersForCache (?string $lang = null, bool $formatOutput)
 	{
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
 
+		$lang = $lang ?? Language::getDefault();
+
 		$filter = $this->getDefaultFilterBuilder()->getDefaultFilter();
 		$fields = $pFieldModifierHandler->getAllAPIFields();
+
+		if($formatOutput === false) {
+			$fields = array_merge(
+				$fields,
+				$this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio()
+			);
+		}
 
 		$requestParams = [
 			'listname' => $this->_pDataView->getName(),
