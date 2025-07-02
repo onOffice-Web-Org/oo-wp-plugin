@@ -44,6 +44,11 @@ class TestClassScriptLoaderOsm
 			'ver' => false,
 			'inFooter' => false,
 		],
+		'leaflet-script-a11y' => [
+			'deps' => [],
+			'ver' => false,
+			'inFooter' => false,
+		],
 	];
 
 
