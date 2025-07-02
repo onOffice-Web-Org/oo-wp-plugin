@@ -96,6 +96,7 @@ class TestClassScriptLoaderMap
 		$this->_pSubject->register();
 		$this->_pSubject->enqueue();
 		$this->assertSame(['leaflet-script'], $pWPScriptStyle->getEnqueuedScripts());
+		$this->assertSame(['leaflet-script-a11y'], $pWPScriptStyle->getEnqueuedScripts());
 		$this->assertSame(['leaflet-style'], $pWPScriptStyle->getEnqueuedStyles());
 	}
 }
