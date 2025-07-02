@@ -231,7 +231,8 @@ class RecordManagerReadForm
 		$sql = $pWpDb->prepare(
 			"SELECT *
 			FROM `{$prefix}oo_plugin_form_fieldconfig`
-			WHERE {$this->getIdColumnMain()} = %d",
+			WHERE {$this->getIdColumnMain()} = %d
+			ORDER BY `order` ASC",
 			$formId
 		);
 
@@ -279,7 +280,8 @@ class RecordManagerReadForm
 		$sql = $pWpDb->prepare(
 			"SELECT *
 			FROM `{$prefix}oo_plugin_form_fieldconfig`
-			WHERE `form_id` = %d",
+			WHERE `form_id` = %d
+			ORDER BY `order` ASC",
 			$formId
 		);
 
