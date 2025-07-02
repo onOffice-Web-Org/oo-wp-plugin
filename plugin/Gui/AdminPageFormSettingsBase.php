@@ -236,6 +236,10 @@ abstract class AdminPageFormSettingsBase
 			if (array_key_exists(RecordManager::TABLENAME_TASKCONFIG_FORMS, $row)) {
 				$result = $result && $pRecordManagerUpdateForm->updateTasksConfigByRow($row[RecordManager::TABLENAME_TASKCONFIG_FORMS]);
 			}
+
+			if (array_key_exists(RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS, $row)) {
+				$result = $result && $pRecordManagerUpdateForm->updateMultiPageTitleByRow($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS]);
+			}
 		} else {
 			$action = RecordManagerFactory::ACTION_INSERT;
 			// insert
@@ -964,7 +968,7 @@ abstract class AdminPageFormSettingsBase
 			}
 			$values->$fieldName[$key] = $data[$value];
 		}
-	
+
 		return $values;
 	}
 

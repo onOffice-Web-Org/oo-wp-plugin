@@ -9,6 +9,38 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 onOffice.default_values_input_converter = function () {
     var predefinedValues = onOffice_loc_settings.defaultvalues || {};
 
+	document.querySelectorAll('.multi-page-title').forEach((group, index) => {
+		const titleInput = group.querySelector('input[name^=oopluginformmultipagetitle-value]');
+		//const langInput = group.querySelector('...');
+		const page = group.getAttribute('data-page');
+		const localeSelect = group.querySelector('select[name=oopluginformmultipagetitle-locale].onoffice-input');
+		titleInput.name = `oopluginformmultipagetitle[${page}][native]`;
+
+		//Add new page title input for localization
+		localeSelect.addEventListener('change', function () {
+			const selectedLocale = this.value;
+			const selectedLocaleText = this.options[localeSelect.selectedIndex].text;
+			const parent = localeSelect.closest('.wp-clearfix.custom-input-field');
+			const identifier = `oopluginformmultipagetitle[${page}][${selectedLocale}]`;
+
+			let existingInput = group.querySelector(`input[name="${identifier}"]`);
+			if (!existingInput) {
+				const paragraph = document.createElement('p');
+				const label = document.createElement('label');
+				const input = document.createElement('input');
+				label.htmlFor = identifier;
+				label.textContent = onOffice_loc_settings.label_custom_label.replace('%s', selectedLocaleText);
+				paragraph.classList.add('wp-clearfix', 'custom-input-field');
+				input.id = identifier;
+				input.type = 'text';
+				input.name = identifier;
+				paragraph.appendChild(label);
+				paragraph.appendChild(input);
+				parent.insertAdjacentElement('afterend', paragraph);
+			}
+		});
+	})
+
     // plaintext
     document.querySelectorAll('select[name=language-language].onoffice-input').forEach(function (element) {
         element.backupLanguageSelection = {};
