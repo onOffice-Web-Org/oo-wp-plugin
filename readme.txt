@@ -76,6 +76,15 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 6.3.2 (2025-07-02) =
+
+**Fixed**
+
+* Fixed submission for honeypot forms
+* Allow nullable default language for Plugin Cache Function
+* Fixed missing Status Properties for estate list and detail page
+* Fixed sendContactForm for AddressDetail Page
+
 = 6.3.1 (2025-07-01) =
 
 **Fixed**
