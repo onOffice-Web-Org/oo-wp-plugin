@@ -32,7 +32,6 @@ require 'SearchForm.php';
 
 // Listing ID for pagination query parameter
 $list_id = $pEstates->getDataView()->getId();
-echo $list_id;
 
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress", "dreizeiler");
 

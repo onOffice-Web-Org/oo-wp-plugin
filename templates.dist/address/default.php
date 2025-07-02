@@ -21,7 +21,10 @@
 
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Pagination\ListPagination;
 
+// Listing ID for pagination query parameter
+$list_id = $pEstates->getDataView()->getId();
 // display search form
 require 'SearchFormAddress.php';
 
@@ -81,7 +84,21 @@ require 'SearchFormAddress.php';
 <div>
 	<?php
 	if (get_option('onoffice-pagination-paginationbyonoffice')) {
-		wp_link_pages();
+		?>
+		<div class="oo-listpagination">
+			<?php
+		
+			$ListPagination = new ListPagination([
+				'class' => 'oo-post-nav-links',
+				'type' => 'address',
+				'anchor' => 'oo-listheadline',
+				'list_id' => $list_id
+			]);
+			
+			echo $ListPagination->render();
+			?>
+		</div>
+	<?php
 	}
 	?>
 </div>
