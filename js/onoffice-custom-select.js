@@ -4,28 +4,14 @@ jQuery(document).ready(function ($) {
 	const $multiSelectAdminSorting = $('#viewrecordssorting .oo-custom-select2.oo-custom-select2--multiple');
 	const $singleSelectAdminSorting = $("#viewrecordssorting .oo-custom-select2.oo-custom-select2--single");
 
-	/*$('.custom-multiple-select, .custom-single-select').select2({
-		width: '100%'
-	});*/
-
-	document.querySelectorAll(".custom-single-select-tom").forEach(function(select) {
+	document.querySelectorAll(".custom-single-select-tom, .custom-multiple-select-tom").forEach(function(select) {
 		if (typeof TomSelect !== 'undefined') {
-
-
-			let settings = {};
-			new TomSelect(select,settings);
+			new TomSelect(select, { 'hidePlaceholder':true});
 		} 
-		
-		
 		else if (typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
-		  $(select).select2();
+		  $(select).select2({width: '100%'});
 		}
 	})
-
-
-
-
-
 
 	if ($adminSelect.length > 0) {
 		$adminSelect.select2({
@@ -47,7 +33,6 @@ jQuery(document).ready(function ($) {
 		});
 	}
 });
-
 
   $(function () {
     const rules = {
