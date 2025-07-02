@@ -24,9 +24,15 @@
  */
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Pagination\ListPagination;
+
 // display search form
 require 'SearchForm.php';
 /* @var $pEstates onOffice\WPlugin\EstateList */
+
+// Listing ID for pagination query parameter
+$list_id = $pEstates->getDataView()->getId();
+echo $list_id;
 
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress", "dreizeiler");
 
@@ -92,7 +98,7 @@ $dimensions = [
 <div class="oo-estate-map">
     <?php require('map/map.php'); ?>
 </div>
-<div class="oo-listheadline">
+<div class="oo-listheadline" id="oo-listheadline">
 	<h1><?php esc_html_e('Overview of Estates', 'onoffice-for-wp-websites'); ?></h1>
 	<p>
 		
@@ -211,84 +217,19 @@ $dimensions = [
 </div>
 <?php
 if (get_option('onoffice-pagination-paginationbyonoffice')) {
-	
-	global $onoffice_instance_counter;
-
-	if (!isset($onoffice_instance_counter)) {
-		$onoffice_instance_counter = 0;
-	}
-
-	$onoffice_instance_counter++;
-
-	// Generate a unique instance ID for the pagination with a counter
-	$current_instance_id = 'oo-listpagination-instance-' . $onoffice_instance_counter;
-
-	$listViewId = $pEstates->getListViewId();
-
-	$paginationKeys = ['page_of_id_' . $listViewId, 'paged', 'page'];
-	$cleanedParams = [];
-
-	foreach ($_GET as $key => $value) {
-		$sanitized_key = sanitize_key($key);
-		
-		// Skip pagination keys
-		// This prevents the pagination from being included in the query parameters
-		if (in_array($sanitized_key, $paginationKeys)) {
-			continue;
-		}
-		
-		if (is_array($value)) {
-			foreach ($value as $k => $v) {
-				$cleanedParams[] = [
-					'key' => $sanitized_key . '[' . sanitize_key($k) . ']',
-					'value' => sanitize_text_field($v)
-				];
-			}
-		} else {
-			$cleanedParams[] = [
-				'key' => $sanitized_key, 
-				'value' => sanitize_text_field($value)
-			];
-		}
-	}
-
 	?>
-
-	<div id="<?php echo esc_attr($current_instance_id); ?>" class="oo-listpagination">
+	<div class="oo-listpagination">
 		<?php
-		// Create pagination links
-		$args = array (
-			'before'       => '<nav class="oo-post-nav-links">',
-			'after'        => '<nav>',
-		);
-		wp_link_pages($args );
+	
+		$ListPagination = new ListPagination([
+			'class' => 'oo-post-nav-links',
+			'type' => 'property',
+			'anchor' => 'oo-listheadline',
+			'list_id' => $list_id
+		]);
+		
+		echo $ListPagination->render();
 		?>
-		<script>
-			jQuery(document).ready(function($) {
-
-				var $currentPagination = $('#<?php echo esc_js($current_instance_id); ?>');
-
-				if ($currentPagination.length === 0) {
-					return; // Exit if the container isn't found
-				}
-
-				var queryParams = <?php echo json_encode($cleanedParams); ?>;
-
-				$currentPagination.find('.oo-post-nav-links a').each(function() {
-					var link = $(this);
-					// Create a new URL object based on the link's href and the current origin
-					var url = new URL(link.attr('href'), window.location.origin);
-
-					queryParams.forEach(function(param) {
-						// Set or update the search parameter
-						url.searchParams.set(param.key, param.value);
-					});
-
-					// Update the link's href with the new URL and search parameters
-					link.attr('href', url.toString());
-				});
-			});
-		</script>
 	</div>
 <?php
 }
