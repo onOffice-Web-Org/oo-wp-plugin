@@ -103,14 +103,12 @@ class FormPostOwner
 
 		$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
-
 		$subject = $this->generateDefaultEmailSubject($pFormData->getFormtype(), $this->_pFormPostOwnerConfiguration->getNewsletterAccepted());
 		if (!empty($pDataFormConfiguration->getSubject())) {
 			$subject = $this->generateCustomEmailSubject($pDataFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pDataFormConfiguration->getInputs());
 		}
-
-		$estateData = $this->getEstateData();
 		
+		$estateData = $this->getEstateData();
 		try {
 			if ( $pDataFormConfiguration->getCreateOwner() ) {
 				$checkDuplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
