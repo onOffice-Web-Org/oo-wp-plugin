@@ -27,9 +27,9 @@ Fotolia_3286409_Subscription_XL: https://image.onoffice.de/smart25/Objekte/index
         L.tileLayer('https://tiles.onoffice.de/tiles/{z}/{x}/{y}.png').addTo(map);
 
         var group = new L.featureGroup();
-        const translations = {\n
-                  ariaLabelTemplate: "Show Details for Real Estate No. %s"\n
-              };
+        const translations = {
+                  ariaLabelTemplate: "Show Details for Real Estate No. %s"
+            };
 
         for (i in estateMarkers) {
             var estate = estateMarkers[i];

@@ -97,7 +97,7 @@ $dimensions = [
 <div class="oo-estate-map">
     <?php require('map/map.php'); ?>
 </div>
-<div class="oo-listheadline" id="oo-listheadline">
+<div class="oo-listheadline" id="oo-listheadline-<?php echo $list_id;?>">
 	<h1><?php esc_html_e('Overview of Estates', 'onoffice-for-wp-websites'); ?></h1>
 	<p>
 		
@@ -223,7 +223,7 @@ if (get_option('onoffice-pagination-paginationbyonoffice')) {
 		$ListPagination = new ListPagination([
 			'class' => 'oo-post-nav-links',
 			'type' => 'property',
-			'anchor' => 'oo-listheadline',
+			'anchor' => 'oo-listheadline-'.$list_id ,
 			'list_id' => $list_id
 		]);
 		
