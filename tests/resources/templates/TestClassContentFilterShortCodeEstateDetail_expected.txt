@@ -36,7 +36,7 @@ Fotolia_3286409_Subscription_XL: https://image.onoffice.de/smart25/Objekte/index
                     <div class="oo-infowindow">
                         <p class="oo-infowindowtitle">${estate.title}</p>
                         ${estate.address ? `<p class="oo-infowindowaddress">${estate.address}</p>` : ''}
-                        ${estate.link ? `<div class="oo-detailslink"><a class="oo-details-btn" href="${estate.link}">Show Details</a></div>` : ''}
+                        ${estate.link ? `<div class="oo-detailslink"><a class="oo-details-btn" href="${estate.link}" aria-label="${ariaLabel}">Show Details</a></div>` : ''}
                     </div>
                 `;
                 var popup = L.popup({
