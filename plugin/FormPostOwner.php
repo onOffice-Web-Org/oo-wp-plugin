@@ -107,8 +107,8 @@ class FormPostOwner
 		if (!empty($pDataFormConfiguration->getSubject())) {
 			$subject = $this->generateCustomEmailSubject($pDataFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pDataFormConfiguration->getInputs());
 		}
-		
 		$estateData = $this->getEstateData();
+		
 		try {
 			if ( $pDataFormConfiguration->getCreateOwner() ) {
 				$checkDuplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
