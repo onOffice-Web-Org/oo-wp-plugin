@@ -95,9 +95,9 @@ class TestClassScriptLoaderMap
 		$pWPScriptStyle = $this->_pContainer->get(WPScriptStyleBase::class);
 		$this->_pSubject->register();
 		$this->_pSubject->enqueue();
-		$this->assertEquals(
+		$this->assertSame(
 			['leaflet-script', 'leaflet-script-a11y'], 
-			$this->_pWPScriptStyle->getEnqueuedScripts()
+			$pWPScriptStyle->getEnqueuedScripts()
 		);
 		$this->assertSame(['leaflet-style'], $pWPScriptStyle->getEnqueuedStyles());
 	}
