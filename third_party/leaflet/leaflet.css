@@ -659,13 +659,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
 		print-color-adjust: exact;
 		}
 	}
+
 .marker-cluster-small {
-	background-color: rgba(181, 226, 140, 0.6);
+	background-color: rgba(42, 53, 246, 0.6);
 	}
 .marker-cluster-small div {
-	background-color: rgba(110, 204, 57, 0.6);
+	background-color: rgba(42, 53, 246, 0.6);
 	}
-
 .marker-cluster-medium {
 	background-color: rgba(241, 211, 87, 0.6);
 	}
@@ -684,7 +684,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	background-color: rgb(181, 226, 140);
 	}
 .leaflet-oldie .marker-cluster-small div {
-	background-color: rgb(110, 204, 57);
+	background-color: rgb(42, 53, 246);
 	}
 
 .leaflet-oldie .marker-cluster-medium {
@@ -715,6 +715,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	}
 .marker-cluster span {
 	line-height: 30px;
+	color: #fff;
 }
 
 .leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
