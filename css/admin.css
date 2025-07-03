@@ -568,12 +568,20 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 }
 
 .oo-poststuff .custom-input-field input[name=oopluginlistviews-countryactive]:checked::before,
-.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive]:checked::before {
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive]:checked::before,
+.oo-poststuff .custom-input-field input[name=oopluginforms-countryactive]:checked::before,
+.oo-poststuff .custom-input-field input[name=oopluginforms-radiusactive]:checked::before {
 	filter: brightness(0) saturate(100%) invert(35%) sepia(4%) saturate(967%) hue-rotate(170deg) brightness(91%) contrast(94%);
 }
 
 .oo-poststuff .custom-input-field input[name=oopluginlistviews-countryactive],
-.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive] {
+.oo-poststuff .custom-input-field input[name=oopluginlistviews-radiusactive],
+.oo-poststuff .custom-input-field input[name=oopluginforms-countryactive],
+.oo-poststuff .custom-input-field input[name=oopluginforms-radiusactive],
+.oo-poststuff .custom-input-field:has(input[name="oopluginlistviews-countryactive"]) > label,
+.oo-poststuff .custom-input-field:has(input[name="oopluginlistviews-radiusactive"]) > label,
+.oo-poststuff .custom-input-field:has(input[name="oopluginforms-countryactive"]) > label,
+.oo-poststuff .custom-input-field:has(input[name="oopluginforms-radiusactive"]) > label {
 	pointer-events: none;
 }
 
@@ -994,19 +1002,6 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	cursor: move;
 }
 
-.sortable-item.selected .menu-item-handle {
-	border-color: #2271B1;
-}
-
-.postbox-select-all {
-	display: flex;
-	gap: 8px;
-	align-items: end;
-	padding: 12px 8px;
-	font-weight: 600;
-	cursor: pointer;
-}
-  
 .list-fields-for-each-page .ui-sortable-helper {
 	background-color: #e0e0e0;
 	border: 1px solid #ccc;
@@ -1031,6 +1026,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	justify-content: flex-end;
 }
 
+
 .list-fields-for-each-page.hover-active {
 	background-color: #fafafa;
 	transition: 0.3s;
@@ -1054,6 +1050,19 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 
 .add-page-container .add-page-button:hover {
 	border: 1px solid #0f4775;
+}
+
+.sortable-item.selected .menu-item-handle {
+	border-color: #2271B1;
+}
+
+.postbox-select-all {
+	display: flex;
+	gap: 8px;
+	align-items: end;
+	padding: 12px 8px;
+	font-weight: 600;
+	cursor: pointer;
 }
 
 .add-page-container .add-page-button:disabled {
