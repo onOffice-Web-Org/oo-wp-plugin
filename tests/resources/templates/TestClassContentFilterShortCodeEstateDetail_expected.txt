@@ -16,22 +16,24 @@ label-sonstige_angaben: Vereinbaren Sie noch heute einen Besichtigungstermin
 Fotolia_3286409_Subscription_XL: https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg
     <div class="oo-map" role="region" id="oo_map_estate_detail" style="width: 100%; height: 100%;" aria-label="Map with properties"></div>
     <script>
-    (function() {
-        var estateMarkers = [{"position":{"lat":48.8582345,"lng":2.2944223},"title":"","address":"","link":"http:\/\/example.org\/detail\/123649\/","visible":true,"showInfoWindow":true,"id":52}];
-        let mapId = oo_map_estate_detail;
+(function() {
+    var estateMarkers = [{"position":{"lat":48.8582345,"lng":2.2944223},"title":"","address":"","link":"http:\/\/example.org\/detail\/123649\/","visible":true,"showInfoWindow":true,"id":52}];
+    let mapId = oo_map_estate_detail;
 
-        var map = L.map(mapId, {
-            a11yPlugin: true,
-            center: [50.8, 10.0],
-            zoom: 5
-        });
+    var map = L.map(mapId, {
+        a11yPlugin: true,
+        center: [50.8, 10.0],
+        zoom: 5
+    });
 
     L.tileLayer('https://tiles.onoffice.de/tiles/{z}/{x}/{y}.png').addTo(map);
+
     var markers = L.markerClusterGroup();
 
     const translations = {
         ariaLabelTemplate: "Show Details for Real Estate No. %s"
-        }
+    }
+
     for (let i in estateMarkers) {
         var estate = estateMarkers[i];
         var marker = L.marker(estate.position, { title: estate.title });
