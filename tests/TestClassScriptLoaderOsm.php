@@ -109,7 +109,7 @@ class TestClassScriptLoaderOsm
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredScripts['leaflet-script-a11y']['src']);
 		$this->assertStringEndsWith(getcwd().'/third_party/leaflet/leaflet-a11y.js', $registeredScripts['leaflet-script-a11y']['src']);
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredScripts['leaflet-script-cluster']['src']);
-		$this->assertStringEndsWith(getcwd().'/third_party/leaflet/leaflet-a11y.js', $registeredScripts['leaflet-script-cluster']['src']);
+		$this->assertStringEndsWith(getcwd().'/third_party/leaflet/leaflet-cluster.min.js', $registeredScripts['leaflet-script-cluster']['src']);
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredStyles['leaflet-style']['src']);
 		$this->assertStringEndsWith(getcwd().'/third_party/leaflet/leaflet.css', $registeredStyles['leaflet-style']['src']);
 	}
