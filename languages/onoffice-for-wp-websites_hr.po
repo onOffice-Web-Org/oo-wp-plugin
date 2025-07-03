@@ -2300,3 +2300,11 @@ msgstr ""
 msgid "The Name field must not be empty. Do you want to leave the page without saving?"
 msgstr ""
 
+#: 
+msgid "Cache is being cleared in the background. This may take a few minutes."
+msgstr ""
+
+#: 
+msgid "Save changes"
+msgstr ""
+
