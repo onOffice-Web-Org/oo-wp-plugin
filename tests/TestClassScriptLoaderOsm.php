@@ -49,6 +49,11 @@ class TestClassScriptLoaderOsm
 			'ver' => false,
 			'inFooter' => false,
 		],
+		'leaflet-script-cluster' => [
+			'deps' => [],
+			'ver' => false,
+			'inFooter' => false,
+		],
 	];
 
 
@@ -103,6 +108,8 @@ class TestClassScriptLoaderOsm
 		$this->assertStringEndsWith(getcwd().'/third_party/leaflet/leaflet.js', $registeredScripts['leaflet-script']['src']);
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredScripts['leaflet-script-a11y']['src']);
 		$this->assertStringEndsWith(getcwd().'/third_party/leaflet/leaflet-a11y.js', $registeredScripts['leaflet-script-a11y']['src']);
+		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredScripts['leaflet-script-cluster']['src']);
+		$this->assertStringEndsWith(getcwd().'/third_party/leaflet/leaflet-a11y.js', $registeredScripts['leaflet-script-cluster']['src']);
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredStyles['leaflet-style']['src']);
 		$this->assertStringEndsWith(getcwd().'/third_party/leaflet/leaflet.css', $registeredStyles['leaflet-style']['src']);
 	}
@@ -117,7 +124,7 @@ class TestClassScriptLoaderOsm
 		$this->_pSubject->register();
 		$this->_pSubject->enqueue();
 		$this->assertEquals(
-			['leaflet-script', 'leaflet-script-a11y'], 
+			['leaflet-script', 'leaflet-script-a11y', 'leaflet-script-cluster'], 
 			$this->_pWPScriptStyle->getEnqueuedScripts()
 		);
 		$this->assertEquals(['leaflet-style'], $this->_pWPScriptStyle->getEnqueuedStyles());

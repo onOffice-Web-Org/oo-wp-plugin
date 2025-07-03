@@ -112,7 +112,7 @@ return (function (EstateList $pEstatesClone) {
             });
 
             const infowindow = new google.maps.InfoWindow();
-            const markers = []; // <- Array für Marker
+            const markers = [];
 
             for (var i in estates) {
                 var estate = estates[i];
@@ -131,7 +131,7 @@ return (function (EstateList $pEstatesClone) {
                         title: estate.title
                     });
 
-                    markers.push(marker); // <- Marker ins Array für Clusterer
+                    markers.push(marker);
 
                     const ariaLabel = translations.ariaLabelTemplate.replace('%s', estate.id);
 
@@ -160,7 +160,6 @@ return (function (EstateList $pEstatesClone) {
                 }
             }
 
-            // MarkerClusterer initialisieren
             const markerCluster = new markerClusterer.MarkerClusterer({ 
                 map: map,
                 markers: markers 
