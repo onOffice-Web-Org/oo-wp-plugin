@@ -844,7 +844,67 @@ button.slick-next:before {
     width: auto;
 }
 
+
 .ts-dropdown .option.selected {
     font-weight: bold;
 }
+.ts-dropdown .option {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+}
 
+.ts-wrapper .ts-control::after, .ts-wrapper.single .ts-control::after, .ts-wrapper.multi .ts-control::after {
+    content: "";
+    position: absolute;
+    right: .5rem;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 14px;
+    height: 100%;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    mask-repeat: no-repeat;
+    mask-size: 1.25rem;
+    mask-position: center;
+}
+
+.ts-wrapper .ts-item-remove:before, .ts-wrapper.single .ts-item-remove:before, .ts-wrapper.multi .ts-item-remove:before {
+    content: "";
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+ 
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E");
+    mask-repeat: no-repeat;
+    mask-size: 1.25rem;
+    mask-position: center;
+
+}
+
+.ts-wrapper.plugin-remove_button .item .remove {
+    text-decoration: none;
+    vertical-align: middle;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.ts-wrapper.multi.has-items .ts-control {
+    overflow: hidden;
+    display: inline-block;
+    height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}

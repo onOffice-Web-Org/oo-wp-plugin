@@ -6,7 +6,42 @@ jQuery(document).ready(function ($) {
 
 	document.querySelectorAll(".custom-single-select-tom, .custom-multiple-select-tom").forEach(function(select) {
 		if (typeof TomSelect !== 'undefined') {
-			new TomSelect(select, { 'hidePlaceholder':true});
+			new TomSelect(select, { 'hidePlaceholder':true,
+		
+			sortField: {
+				field: "text",
+				direction: "asc"
+			  },
+			  plugins: {
+				remove_button:{
+					title:'Remove this item',
+				},
+				'checkbox_options': {
+					'checkedClassNames':   ['ts-checked'],
+					'uncheckedClassNames': ['ts-unchecked'],
+				}
+				},	
+				onItemAdd:function(){
+					this.setTextboxValue('');
+					this.refreshOptions();
+				},
+				create: true,
+				hidePlaceholder: true,
+				render:{
+					option:function(data,escape){
+						return '<div class="d-flex"><span>' + escape(data.text)  + '</span></div>';
+					},
+					item:function(data,escape){
+						if (this.items.length >= 2){
+							return '<div title="' + escape(data.text) + '">...</div>';
+						} else {
+							return '<div>' + escape(data.text) + '</div>';
+						}			
+			  }
+				}
+			
+		
+		});
 		} 
 		else if (typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
 		  $(select).select2({width: '100%'});
