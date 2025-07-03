@@ -879,7 +879,6 @@ button.slick-next:before {
     display: inline-block;
     width: 1.25rem;
     height: 1.25rem;
- 
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E");
     mask-repeat: no-repeat;
     mask-size: 1.25rem;
@@ -907,4 +906,9 @@ button.slick-next:before {
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
+}
+
+.plugin-checkbox_options:not(.rtl) .option input {
+    width: 24px;
+    height: 24px;
 }

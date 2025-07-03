@@ -37,7 +37,7 @@ jQuery(document).ready(function ($) {
 						} else {
 							return '<div>' + escape(data.text) + '</div>';
 						}			
-			  }
+			  		}
 				}
 			
 		
