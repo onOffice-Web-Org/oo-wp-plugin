@@ -197,12 +197,12 @@ if (!function_exists('renderFormField')) {
 		}
 				
 		switch ($fieldName) {
-			case "plz": $ariaLabel = 'aria-label="' . esc_html__('Postleitzahl der Immobilie', 'onoffice-for-wp-websites') . '"'; break;
-			case "Plz": $ariaLabel = 'aria-label="' . esc_html__('Postleitzahl', 'onoffice-for-wp-websites') . '"'; break;
+			case "plz": $ariaLabel = 'aria-label="' . esc_html__('Postal code of the property', 'onoffice-for-wp-websites') . '"'; break;
+			case "Plz": $ariaLabel = 'aria-label="' . esc_html__('Postal code', 'onoffice-for-wp-websites') . '"'; break;
 		}
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
-			$errorMessage = esc_html__('Bitte wählen Sie eine Option aus.', 'onoffice-for-wp-websites');
+			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 
 			$output .= '<select data-rule="text" data-placeholder="' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '" id="'.$fieldName.'" aria-hidden="true" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . ' data-rule="text">';
@@ -243,7 +243,7 @@ if (!function_exists('renderFormField')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '".' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$errorMessage = esc_html__('Bitte wählen Sie mindestens eine Option aus.', 'onoffice-for-wp-websites');
+			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 
 			$output = '<label>'.$fieldLabel.'<select aria-hidden="true" tabindex="-1" class="custom-multiple-select form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . ' data-rule="text">';
@@ -252,11 +252,11 @@ if (!function_exists('renderFormField')) {
 		} else {
 			$inputType = 'type="text" data-rule="text"';
 			$value = 'value="' . esc_attr($pForm->getFieldValue($fieldName, true)) . '"';
-			$errorMessage = esc_html__('Bitte geben Sie einen Text ein.', 'onoffice-for-wp-websites');
+			$errorMessage = esc_html__('Please enter a text.', 'onoffice-for-wp-websites');
 
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" data-rule="checkbox"';
-				$errorMessage = esc_html__('Bitte stimmen Sie den Bedingungen zu.', 'onoffice-for-wp-websites');
+				$errorMessage = esc_html__('Please agree to the terms and conditions.', 'onoffice-for-wp-websites');
 
 				$value = 'value="y" ' . ($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
 			} elseif (
@@ -286,7 +286,7 @@ if (!function_exists('renderFormField')) {
 
 			if ($fieldName == 'Email') {
 				$inputType = 'type="email" data-rule="email"';
-				$errorMessage = esc_html__('Bitte geben Sie eine gültige E-Mail-Adresse ein.', 'onoffice-for-wp-websites');
+				$errorMessage = esc_html__('Please enter a valid e-mail address.', 'onoffice-for-wp-websites');
 			}
 
 			if (
