@@ -55,7 +55,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 	$inputAddition = $isRequired ? ' required' : '';
-	$label = $pForm->getFieldLabel($input).' '.$addition;
+	$label = $pForm->getFieldLabel($input);
 	
 	$permittedValues = $pForm->getPermittedValues( $input, true );
 

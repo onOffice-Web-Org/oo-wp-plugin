@@ -28,7 +28,7 @@ Fotolia_3286409_Subscription_XL: https://image.onoffice.de/smart25/Objekte/index
 
         var group = new L.featureGroup();
         const translations = {
-                  ariaLabelTemplate: "Show Details for Real Estate No. %s"
+                ariaLabelTemplate: "Show Details for Real Estate No. %s"
             };
 
         for (i in estateMarkers) {
@@ -36,7 +36,7 @@ Fotolia_3286409_Subscription_XL: https://image.onoffice.de/smart25/Objekte/index
             var marker = L.marker(estate.position, estate.title);
             var id = estate.id;
             const ariaLabel = translations.ariaLabelTemplate.replace('%s', estate.id);
-
+            
             if (!estate.showInfoWindow) {
                 const popupContent = `
                     <div class="oo-infowindow">

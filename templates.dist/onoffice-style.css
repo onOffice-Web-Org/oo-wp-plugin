@@ -839,50 +839,12 @@ button.slick-next:before {
     margin-top: 20px;
   }
 
-  .ts-wrapper .ts-control>.ts-control-inner input, .ts-wrapper.single .ts-control>.ts-control-inner input, .ts-wrapper.multi .ts-control>.ts-control-inner input {
-    border: none;
-    max-width: 100%;
-    height: 100%;
-    vertical-align: middle;
-    min-width: 100%;
-    color: var(--oo-color-text);
-    background: var(--oo-color-mix-bg-text-10);
-    font-weight: 300;
-    font-size: 1rem;
-}
 
 .ts-wrapper.has-items .ts-control input, .ts-wrapper.single.has-items .ts-control input, .ts-wrapper.multi.has-items .ts-control input {
-    min-width: 3.5rem;
+    width: auto;
 }
 
-.ts-wrapper .ts-items, .ts-wrapper.single .ts-items, .ts-wrapper.multi .ts-items {
-    display: inline-block;
-    max-width: calc(100% - 3.5rem);
-    height: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: middle;
-    line-height: 24px;
+.ts-dropdown .option.selected {
+    font-weight: bold;
 }
 
-.ts-wrapper .ts-control>.ts-control-inner, .ts-wrapper.single .ts-control>.ts-control-inner, .ts-wrapper.multi .ts-control>.ts-control-inner {
-    position: relative;
-    display: inline-block;
-    height: 100%;
-    width: 100%;
-    background: unset;
-    white-space: nowrap;
-    padding: unset;
-    margin: unset;
-    border: unset;
-    border-radius: 0;
-}
-.ts-wrapper.multi .ts-control>div {
-    cursor: pointer;
-    margin: 0 3px 3px 0;
-    padding: 2px 6px;
-    background: #f2f2f2;
-    color: #303030;
-    border: 0 solid #d0d0d0;
-}

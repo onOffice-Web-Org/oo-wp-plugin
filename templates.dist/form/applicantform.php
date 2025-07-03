@@ -75,7 +75,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		$searchcriteriaLine .= renderFormField($input, $pForm).'</div>';
 	}
 	$isHiddenField = $pForm->isHiddenField($input);
-	$label = $pForm->getFieldLabel($input).' '.$addition;
+	$label = $pForm->getFieldLabel($input);
 
 	if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
 		$line =	 !$isHiddenField ? '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);

@@ -29,7 +29,7 @@ if (count($visible) === 0) {
 			<?php
 			foreach ($visible as $inputName => $properties) :
 				echo '<div class="oo-searchformfield">';
-				echo '<label>'.esc_html($properties['label']);
+				echo '<label or="' . $inputName . '-ts-control">'.esc_html($properties['label']);
 				renderFieldEstateSearch($inputName, $properties).'</label>';
 				echo '</div>';
 			endforeach;
