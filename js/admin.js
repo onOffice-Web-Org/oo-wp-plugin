@@ -320,6 +320,7 @@ jQuery(document).ready(function($){
 					start: function(e, ui) {
 						ui.placeholder.height(ui.item.height());
 						$('.list-fields-for-each-page').css('transition', 'all 0.08s');
+						ui.item.addClass('page-dragging');
 						
 						const $pages = $('.list-fields-for-each-page');
 						const childLists = $pages.map(function() {
@@ -349,13 +350,16 @@ jQuery(document).ready(function($){
 									y <= childRect.bottom
 								);
 								
-								$page.toggleClass('hover-active', inPage && !inChild);
+								if (!$page.is(ui.item)) {
+									$page.toggleClass('page-dragging', inPage && !inChild);
+								}
 							});
 						});
 					},
 					stop: function(e, ui) {
 						$('.list-fields-for-each-page').css('transition', '');
 						$(document).off('mousemove.draggablePages');
+						$('.list-fields-for-each-page').removeClass('page-dragging');
 					},
 					update: function(e, ui) {
 						FormMultiPageManager.reorderPages();
