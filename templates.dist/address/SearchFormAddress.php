@@ -28,19 +28,23 @@ if (count($visible) === 0) {
 }
 
 ?>
-
+<div class="oo-searchform">
 <form method="get">
-
+<div class="oo-searchformfieldwrap">
 <?php
-
 foreach ($visible as $inputName => $properties) :
+	echo '<div class="oo-searchformfield">';
 	echo '<label>';
 	echo esc_html($properties['label']);
 	renderFieldEstateSearch($inputName, $properties);
 	echo '</label>';
+	echo '</div>';
 endforeach;
 ?>
-
-	<input type="submit" value="<?php echo esc_attr__('Send', 'onoffice-for-wp-websites'); ?>">
+	<div class="oo-searchformfield">
+		<input type="submit" value="<?php echo esc_attr__('Send', 'onoffice-for-wp-websites'); ?>">
+	</div>
+	</div>
 </form>
+
 <br>
