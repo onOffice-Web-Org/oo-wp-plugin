@@ -32,7 +32,7 @@ Fotolia_3286409_Subscription_XL: https://image.onoffice.de/smart25/Objekte/index
 
     const translations = {
         ariaLabelTemplate: "Show Details for Real Estate No. %s"
-    }
+    };
 
     for (let i in estateMarkers) {
         var estate = estateMarkers[i];
