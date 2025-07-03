@@ -112,22 +112,26 @@ return (function (EstateList $pEstatesClone) {
             });
 
             const infowindow = new google.maps.InfoWindow();
+            const markers = []; // <- Array für Marker
 
             for (var i in estates) {
                 var estate = estates[i];
                 var latLng = new google.maps.LatLng(estate.position.lat, estate.position.lng);
                 bounds.extend(latLng);
+
                 const translations = {
-                ariaLabelTemplate: "<?php echo esc_js(esc_html_x('Show Details for Real Estate No. %s', 'onoffice-for-wp-websites')); ?>"
-                 };
+                    ariaLabelTemplate: "<?php echo esc_js(esc_html_x('Show Details for Real Estate No. %s', 'onoffice-for-wp-websites')); ?>"
+                };
+
                 if (estate.visible) {
-                    // no marker but extended map bounds
                     const marker = new google.maps.Marker({
                         position: latLng,
                         icon: null,
                         map: map,
                         title: estate.title
                     });
+
+                    markers.push(marker); // <- Marker ins Array für Clusterer
 
                     const ariaLabel = translations.ariaLabelTemplate.replace('%s', estate.id);
 
@@ -155,6 +159,12 @@ return (function (EstateList $pEstatesClone) {
                     }
                 }
             }
+
+            // MarkerClusterer initialisieren
+            const markerCluster = new markerClusterer.MarkerClusterer({ 
+                map: map,
+                markers: markers 
+            });
         };
 
         google.maps.event.addDomListener(window, "load", gmapInit);
