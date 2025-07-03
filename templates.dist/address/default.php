@@ -23,8 +23,6 @@ use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Pagination\ListPagination;
 
-// Listing ID for pagination query parameter
-$list_id = $pEstates->getDataView()->getId();
 // display search form
 require 'SearchFormAddress.php';
 
@@ -56,7 +54,7 @@ require 'SearchFormAddress.php';
 				?>
 				<div class="oo-listinfo">
 					<div class="oo-listinfotable oo-listinfotableview">
-						<?php echo "<span>ID: ".$addressId."</span>";
+						<?php
 						foreach ($escapedValues as $field => $value) {
 							if ($pAddressList->getFieldType($field) === FieldTypes::FIELD_TYPE_BLOB) {
 								continue;
@@ -92,7 +90,6 @@ require 'SearchFormAddress.php';
 				'class' => 'oo-post-nav-links',
 				'type' => 'address',
 				'anchor' => 'oo-listheadline',
-				'list_id' => $list_id
 			]);
 			
 			echo $ListPagination->render();
