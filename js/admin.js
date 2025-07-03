@@ -760,5 +760,4 @@ jQuery(document).ready(function($){
 	var templateSelector = $(templateSelectorStr).first();
 	templateSelector.on('change', refreshTemplateMouseOver);
 	refreshTemplateMouseOver();
-})
-(jQuery);
+})(jQuery);
