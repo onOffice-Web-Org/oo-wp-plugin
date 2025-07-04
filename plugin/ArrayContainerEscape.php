@@ -99,6 +99,9 @@ class ArrayContainerEscape extends ArrayContainer {
 	 */
 
 	public function getValue( $key, $escaping = null ) {
+		if ($key === null || $key == 0) {
+			return '';
+		}
 		if (null === $escaping) {
 			$escaping = $this->_escaping;
 		}
