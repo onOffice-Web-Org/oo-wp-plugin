@@ -42,11 +42,49 @@ jQuery(document).ready(function ($) {
 			
 		
 		});
+
+
+
+
+		const dropdown_options = document.querySelectorAll('.ts-dropdown .option');
+
+		console.log(dropdown_options);
+		console.log('1');
+	
+		dropdown_options.forEach(function(drop_option) {
+			const option_id = drop_option.getAttribute('data-value');
+	
+			console.log(option_id);
+			const option = document.querySelector(`option[value='${option_id}']`);
+	
+			const level = option.getAttribute('data-level');
+	
+			const input = option.find('input');
+	
+	
+			console.log(input);
+	
+			console.log("Level: " + level);
+	
+	
+	
+	
+	
+	
+		});
+
+
+
+
+
 		} 
 		else if (typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
 		  $(select).select2({width: '100%'});
 		}
+
+
 	})
+
 
 	if ($adminSelect.length > 0) {
 		$adminSelect.select2({
