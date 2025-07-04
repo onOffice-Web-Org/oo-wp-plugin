@@ -583,11 +583,11 @@ class TestClassEstateList
 		$pDataListView = new DataListView(1, 'defaultUnits');
 		$pEstateUnitsMock = $this->getMockBuilder(EstateUnits::class)
 			->onlyMethods([
-				'getEstateUnitsByName',
 				'loadByMainEstates',
 				'getSubEstateCount',
 				'generateHtmlOutput',
 			])
+			->addMethods(['getEstateUnitsByName'])
 			->setConstructorArgs([$pDataListView])
 			->getMock();
 		$pEstateUnitsMock
@@ -819,19 +819,22 @@ class TestClassEstateList
 
 		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
 			->setConstructorArgs([$this->_pContainer])
-			->onlyMethods(['getRecordsPerPage',
-				'getSortby',
-				'getSortorder',
-				'getFilterId',
+			->onlyMethods([
 				'getFields',
 				'getPictureTypes',
 				'getAddressFields',
-				'getFilterableFields',
 				'getPageId',
 				'getViewRestrict',
 				'getShowPriceOnRequest',
 				'getListFieldsShowPriceOnRequest',
 				'getContactPerson'
+			])
+			->addMethods([
+				'getRecordsPerPage',
+				'getSortby',
+				'getSortorder',
+				'getFilterId',
+				'getFilterableFields',
 			])
 			->getMock();
 		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
@@ -937,19 +940,22 @@ class TestClassEstateList
 
 		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
 			->setConstructorArgs([$this->_pContainer])
-			->onlyMethods(['getRecordsPerPage',
-				'getSortby',
-				'getSortorder',
-				'getFilterId',
+			->onlyMethods([
 				'getFields',
 				'getPictureTypes',
 				'getAddressFields',
-				'getFilterableFields',
 				'getPageId',
 				'getViewRestrict',
 				'getShowPriceOnRequest',
 				'getListFieldsShowPriceOnRequest',
 				'getShowTotalCostsCalculator'
+			])
+			->addMethods([
+				'getRecordsPerPage',
+				'getSortby',
+				'getSortorder',
+				'getFilterId',
+				'getFilterableFields',
 			])
 			->getMock();
 		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
@@ -1125,9 +1131,8 @@ class TestClassEstateList
 		]);
 		$redirectIfOldUrl = $this->getMockBuilder(Redirector::class)
 			->disableOriginalConstructor()
-			->onlyMethods(['redirectDetailView'])
+			->onlyMethods([])
 			->getMock();
-		$redirectIfOldUrl->method('redirectDetailView')->willReturn(true);
 
 		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
 			($pEstateStatusLabel);

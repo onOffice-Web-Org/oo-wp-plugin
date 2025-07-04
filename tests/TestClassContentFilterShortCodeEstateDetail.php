@@ -258,7 +258,8 @@ class TestClassContentFilterShortCodeEstateDetail
 
 		$pEstateDetailFactory = $this->getMockBuilder( ContentFilterShortCodeEstateDetail::class )
 		                             ->disableOriginalConstructor()
-		                             ->onlyMethods( [ 'getRandomEstateDetail', 'getEstateLink', 'is_user_logged_in' ] )
+		                             ->onlyMethods(['getRandomEstateDetail', 'getEstateLink',])
+		                             ->addMethods(['is_user_logged_in'])
 		                             ->getMock();
 
 		$pEstateDetailFactory->method( 'getRandomEstateDetail' )->willReturn( $this->getDataEstateDetail() );
