@@ -529,7 +529,8 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 		                  ->disableOriginalConstructor()
-		                  ->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', "readFilters", 'getHintHtml'])
+		                  ->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', "readFilters"])
+		                  ->addMethods(['getHintHtml'])
 		                  ->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -592,7 +593,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 		                  ->disableOriginalConstructor()
-		                  ->onlyMethods(['readAvailableLanguageNamesUsingNativeName'])
+		                  ->addMethods(['readAvailableLanguageNamesUsingNativeName'])
 		                  ->getMock();
 						  
 		$inputModel = $pInstance->getInputModelCustomLabelLanguageSwitch();

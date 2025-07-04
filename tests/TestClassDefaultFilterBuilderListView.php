@@ -89,14 +89,14 @@ class TestClassDefaultFilterBuilderListView
 			->method('getFilterBuilderInputVariables')
 			->will($this->returnValue($this->getMockBuilder(FilterBuilderInputVariables::class)
 				->setConstructorArgs([onOfficeSDK::MODULE_ESTATE, true, $this->_pInputVariableReaderConfig])
-				->onlyMethods()
+				->onlyMethods([])
 				->getMock()));
 		$pEnvironment
 			->method('getInputVariableReader')
 			->will($this->returnValue(
 				$this->getMockBuilder(InputVariableReader::class)
 					->setConstructorArgs([onOfficeSDK::MODULE_ESTATE, $this->_pInputVariableReaderConfig])
-					->onlyMethods()
+					->onlyMethods([])
 					->getMock()));
 		$pRegionControllerMock = $this->getMockBuilder(RegionController::class)
 			->onlyMethods(['fetchRegions', 'getSubRegionsByParentRegion'])
