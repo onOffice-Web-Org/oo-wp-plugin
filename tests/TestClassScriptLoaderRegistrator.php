@@ -54,7 +54,7 @@ class TestClassScriptLoaderRegistrator
 	{
 		$pBuilder = $this->getMockBuilder(ScriptLoaderBuilder::class)
 			->disableOriginalConstructor()
-			->setMethods(['build'])
+			->onlyMethods(['build'])
 			->getMock();
 		$pBuilder->expects($this->once())->method('build')->will($this->returnCallback(function(): Generator {
 			$this->_pScriptLoader = $this->getMockBuilder(ScriptLoader::class)->getMock();

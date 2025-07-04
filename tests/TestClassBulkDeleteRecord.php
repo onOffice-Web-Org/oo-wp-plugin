@@ -58,7 +58,7 @@ class TestClassBulkDeleteRecord
 			->disableOriginalConstructor()
 			->getMock();
 		$this->_pUserCapabilities = $this->getMockBuilder(UserCapabilities::class)
-			->setMethods(['checkIfCurrentUserCan'])
+			->onlyMethods(['checkIfCurrentUserCan'])
 			->getMock();
 
 		$this->_pSubject = new BulkDeleteRecord($this->_pUserCapabilities);

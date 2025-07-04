@@ -76,7 +76,7 @@ class TestClassFieldModuleCollectionDecoratorCustomLabel
 		];
 		$this->_pWPDBMock = $this->getMockBuilder(\wpdb::class)
 			->disableOriginalConstructor()
-			->setMethods(['get_results'])
+			->onlyMethods(['get_results'])
 			->getMock();
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);

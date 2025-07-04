@@ -91,7 +91,7 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		$this->_pDataAddressDetailViewHandler->saveAddressDetailView($this->_pDataAddressDetailView);
 
 		$this->_pWPPageWrapper = $this->getMockBuilder( WPPageWrapper::class )
-		                              ->setMethods( [ 'getPageUriByPageId' ] )
+		                              ->onlyMethods( [ 'getPageUriByPageId' ] )
 		                              ->getMock();
 
 		$pSubject = new RewriteRuleBuilder( $this->_pDataDetailViewHandler,

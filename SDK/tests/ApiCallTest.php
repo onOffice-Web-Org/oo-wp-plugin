@@ -30,7 +30,7 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 
 		$httpFetch = $this->getMockBuilder(HttpFetch::class)
 			->disableOriginalConstructor()
-			->setMethods(['send'])
+			->onlyMethods(['send'])
 			->getMock();
 
 		$id = $apiCall->callByRawData(
@@ -71,7 +71,7 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 
 		$httpFetch = $this->getMockBuilder(HttpFetch::class)
 			->disableOriginalConstructor()
-			->setMethods(['send'])
+			->onlyMethods(['send'])
 			->getMock();
 
 
@@ -94,7 +94,7 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 
 		$httpFetch = $this->getMockBuilder(HttpFetch::class)
 			->disableOriginalConstructor()
-			->setMethods(['send'])
+			->onlyMethods(['send'])
 			->getMock();
 
 		$apiCall->callByRawData(

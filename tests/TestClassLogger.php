@@ -61,7 +61,7 @@ class TestClassLogger
 		$this->_pEnvironment->expects($this->once())->method('log')->with($this->anything());
 
 		$pUserCapabilities = $this->getMockBuilder(UserCapabilities::class)
-			->setMethods(['getCapabilityForRule'])
+			->onlyMethods(['getCapabilityForRule'])
 			->getMock();
 		$pUserCapabilities
 			->method('getCapabilityForRule')
