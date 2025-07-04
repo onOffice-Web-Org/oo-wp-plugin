@@ -246,7 +246,7 @@ class FormPostContact
 
 			$defaultFields = ['defaultemail' => 'Email'];
 			$addressList = $this->_pAddressDetailFactory->create($pAddressDataView);
-			$addressList->loadAddressesById([$addressId], $defaultFields);
+			$addressList->loadBrokerAddressesById([$addressId], $defaultFields);
 			$requestParams['recipient'] = $addressList->getCurrentAddress()[$addressId]['Email'];
 		}
 
