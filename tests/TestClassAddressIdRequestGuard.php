@@ -122,7 +122,7 @@ class TestClassAddressIdRequestGuard
 		$data = $iterator[$addressId];
 
 		$url = 'https://www.onoffice.de/detail/';
-		$title = $data ? '-' . $data['Vorname'] .  '-' . $data['Name'] .  '-' . $data['Zusatz1'] : '';
+		$title = !empty($data) ? '-' . $data['Vorname'] .  '-' . $data['Name'] .  '-' . $data['Zusatz1'] : '';
 		$oldUrl = 'https://www.onoffice.de/detail/' . $addressId . $title . '/';
 		$expectedUrl = 'https://www.onoffice.de/detail/' . $addressId . $title . '/';
 
