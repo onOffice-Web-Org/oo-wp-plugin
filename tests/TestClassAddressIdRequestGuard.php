@@ -122,7 +122,7 @@ class TestClassAddressIdRequestGuard
 		$data = $iterator[$addressId];
 
 		$url = 'https://www.onoffice.de/detail/';
-		$title = !empty($data) ? '-' . $data['Vorname'] .  '-' . $data['Name'] .  '-' . $data['Zusatz1'] : '';
+		$title = $data ? '-' . $data['Vorname'] .  '-' . $data['Name'] .  '-' . $data['Zusatz1'] : '';
 		$oldUrl = 'https://www.onoffice.de/detail/' . $addressId . $title . '/';
 		$expectedUrl = 'https://www.onoffice.de/detail/' . $addressId . $title . '/';
 
@@ -131,7 +131,7 @@ class TestClassAddressIdRequestGuard
 			->getMock();
 		$pAddressDetail = $this->getMockBuilder(AddressDetail::class)
 			->setConstructorArgs([new DataAddressDetailView()])
-			->onlyMethods(['loadSingleAddress', 'getRows'])
+			->setMethods(['loadSingleAddress', 'getRows'])
 			->getMock();
 		$pAddressDetail->expects($this->once())->method('getRows')
 			->will($this->returnValue($iterator));
