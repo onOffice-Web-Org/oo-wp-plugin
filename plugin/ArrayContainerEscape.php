@@ -99,15 +99,16 @@ class ArrayContainerEscape extends ArrayContainer {
 	 */
 
 	public function getValue( $key, $escaping = null ) {
-		if ($key === null || $key == 0) {
-			return '';
-		}
 		if (null === $escaping) {
 			$escaping = $this->_escaping;
 		}
 
 		$callback = Escape::getCallbackByEscaping( $escaping );
 		$value = parent::getValue($key);
+
+		if($value === null) {
+			return;
+		}
 
 		if (is_array($value)) {
 			return array_map($callback, $value);
