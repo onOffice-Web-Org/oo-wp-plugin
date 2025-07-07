@@ -920,7 +920,7 @@ msgstr ""
 
 #: 
 msgid "Direct download for PDF exposé"
-msgstr ""
+msgstr "Téléchargement direct de la fiche PDF"
 
 #: 
 msgid "You can show up to 500 per page."
@@ -928,7 +928,7 @@ msgstr ""
 
 #: 
 msgid "Estates per page"
-msgstr ""
+msgstr "Biens immobiliers par page"
 
 #: 
 msgid "Clear onOffice cache"
@@ -983,7 +983,7 @@ msgstr ""
 
 #: 
 msgid "Hide reference estates"
-msgstr ""
+msgstr "Masquer les biens de référence"
 
 #: 
 msgid "Reference estates will link to their detail page, because the access is %s."
@@ -1004,7 +1004,7 @@ msgstr ""
 
 #: 
 msgid "Favorites"
-msgstr ""
+msgstr "Favoris"
 
 #: 
 msgid ", shortcode: "
@@ -1063,7 +1063,7 @@ msgstr "manquant\n"
 
 #: 
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: 
 msgid "Default Email Address"
@@ -1121,7 +1121,7 @@ msgstr ""
 
 #: 
 msgid "360° tours"
-msgstr ""
+msgstr "Visites virtuelles 360°"
 
 #: 
 msgid "Videos"
@@ -1139,7 +1139,7 @@ msgstr "Liens de l’objet\n"
 
 #: 
 msgid "Embedded"
-msgstr ""
+msgstr "Intégré"
 
 #: 
 msgid "Ogulo-Links"
@@ -1165,7 +1165,7 @@ msgstr "Tri par défaut\n"
 
 #: 
 msgid "All"
-msgstr ""
+msgstr "Tous"
 
 #: 
 msgid "Popular"
@@ -1211,7 +1211,7 @@ msgstr "Contrôle d’accès\n"
 
 #: 
 msgid "Form type"
-msgstr ""
+msgstr " Type de formulaire"
 
 #: 
 msgid "Recipient e-mail address"
@@ -1219,7 +1219,7 @@ msgstr ""
 
 #: 
 msgid "Form name"
-msgstr ""
+msgstr "Nom du formulaire"
 
 #: 
 msgid "List type"
@@ -1277,7 +1277,7 @@ msgstr "Créer une adresse et un profil de recherche\n"
 
 #: 
 msgid "Detail View URLs"
-msgstr ""
+msgstr "URLs de la vue détaillée"
 
 #: 
 msgid "Show title in URL"
@@ -1322,7 +1322,7 @@ msgstr "Étiquette personnalisée : %s"
 
 #: 
 msgid "Duplicate"
-msgstr ""
+msgstr "Doublon"
 
 #: 
 msgid "Contact Form"
@@ -1370,11 +1370,11 @@ msgstr ""
 
 #: 
 msgid "0 matches"
-msgstr ""
+msgstr "0 correspondance"
 
 #: 
 msgid "Energy-Pass Range"
-msgstr ""
+msgstr "Plage du DPE"
 
 #: 
 msgid "Location Map"
@@ -1383,7 +1383,7 @@ msgstr "Carte de localisation\n"
 
 #: 
 msgid "Ground Plan"
-msgstr ""
+msgstr "Plan d’étage"
 
 #: 
 msgid "Panorama"
@@ -1432,7 +1432,7 @@ msgstr "Ajouter une langue\n"
 
 #: 
 msgid "Edit Values"
-msgstr ""
+msgstr "Modifier les valeurs"
 
 #: 
 msgid "Default Value"
@@ -1451,7 +1451,7 @@ msgstr "Ajouter une langue\n"
 
 #: 
 msgid "Formulation of sorting directions"
-msgstr ""
+msgstr "Formulation des critères de tri "
 
 #: 
 msgid "ascending / descending"
@@ -1469,7 +1469,7 @@ msgstr ""
 
 #: 
 msgid "descending"
-msgstr ""
+msgstr "décroissant"
 
 #: 
 msgid "ascending"
@@ -1477,7 +1477,7 @@ msgstr "croissant"
 
 #: 
 msgid "highest first"
-msgstr ""
+msgstr " du plus élevé au plus bas"
 
 #: 
 msgid "lowest first"
@@ -1501,7 +1501,7 @@ msgstr ""
 
 #: 
 msgid "From: "
-msgstr ""
+msgstr "De :"
 
 #: 
 msgid "Choose country"
@@ -1529,7 +1529,7 @@ msgstr ""
 
 #: 
 msgid "Entities"
-msgstr ""
+msgstr "Entités"
 
 #: 
 msgid "Send"
@@ -1541,7 +1541,7 @@ msgstr ""
 
 #: 
 msgid "Documents"
-msgstr ""
+msgstr "Documents"
 
 #: 
 msgid "Contact person"
@@ -1641,7 +1641,7 @@ msgstr ""
 
 #: 
 msgid "ERROR!"
-msgstr ""
+msgstr "ERREUR !"
 
 #: 
 msgid "Records"
@@ -1649,7 +1649,7 @@ msgstr ""
 
 #: 
 msgid "Edit Units View"
-msgstr ""
+msgstr "Modifier la vue des unités"
 
 #: 
 msgid "There was a problem saving the list. Please make sure the name of the list is unique."
@@ -1661,15 +1661,15 @@ msgstr ""
 
 #: 
 msgid "Filter & Records"
-msgstr ""
+msgstr "Filtre & Enregistrements"
 
 #: 
 msgid "Edit Address List"
-msgstr ""
+msgstr "Modifier la liste d’adresses"
 
 #: 
 msgid "Fields Configuration"
-msgstr ""
+msgstr "Configuration des champs"
 
 #: 
 msgid "Maps"
@@ -1677,7 +1677,7 @@ msgstr "Cartes"
 
 #: 
 msgid "Google Maps"
-msgstr ""
+msgstr "Google Maps"
 
 #: 
 msgid "OpenStreetMap"
@@ -1694,11 +1694,11 @@ msgstr ""
 
 #: 
 msgid "Expression used"
-msgstr ""
+msgstr "Expression utilisée"
 
 #: 
 msgid "Enable Watchlist"
-msgstr ""
+msgstr "Activer la liste de suivi "
 
 #: 
 msgid "Units Lists"
@@ -1759,7 +1759,7 @@ msgstr ""
 
 #: 
 msgid "Edit Form"
-msgstr ""
+msgstr "Modifier le formulaire"
 
 #: 
 msgid "Please provide an Email address!"
@@ -1767,7 +1767,7 @@ msgstr ""
 
 #: 
 msgid "Form Specific Options"
-msgstr ""
+msgstr "Options spécifiques au formulaire"
 
 #: 
 msgid "There was a problem saving the view. Please make sure the name of the view is unique, even across all estate list types."
@@ -1779,11 +1779,11 @@ msgstr ""
 
 #: 
 msgid "Geo Fields"
-msgstr ""
+msgstr "Champs géographique"
 
 #: 
 msgid "Filters & Records"
-msgstr ""
+msgstr "Filtres & Enregistrements"
 
 #: 
 msgid "choose name"
@@ -1828,11 +1828,11 @@ msgstr ""
 
 #: 
 msgid "Google Maps Key"
-msgstr ""
+msgstr "Clé Google Maps"
 
 #: 
 msgid "Google reCAPTCHA"
-msgstr ""
+msgstr " Google reCAPTCHA"
 
 #: 
 msgid "Secret Key"
@@ -1884,15 +1884,15 @@ msgstr "Mise en page & design\n"
 
 #: 
 msgid "Fields"
-msgstr ""
+msgstr "Champs"
 
 #: 
 msgid "Edit Page"
-msgstr ""
+msgstr "Modifier la page"
 
 #: 
 msgid "Edit List View"
-msgstr ""
+msgstr "Modifier la vue en liste"
 
 #. translators: %s will be replaced with a number.
 #: 
@@ -1965,7 +1965,7 @@ msgstr "Identifiants de connexion\n"
 
 #: 
 msgid "Geo Range Search"
-msgstr ""
+msgstr "Recherche par zone géographique"
 
 #: 
 msgid "Search Criteria"
@@ -1973,7 +1973,7 @@ msgstr ""
 
 #: 
 msgid "Geo Position"
-msgstr ""
+msgstr "Position géographique"
 
 #: 
 msgctxt "modules"
@@ -1987,7 +1987,7 @@ msgstr[2] ""
 msgctxt "modules"
 msgid "Estate"
 msgid_plural "Estates"
-msgstr[0] ""
+msgstr[0] "Bien immobilier "
 msgstr[1] ""
 msgstr[2] ""
 
@@ -1995,7 +1995,8 @@ msgstr[2] ""
 msgctxt "modules"
 msgid "Address"
 msgid_plural "Addresses"
-msgstr[0] ""
+msgstr[0] "Adresse\n"
+"Pluriel : Adresses"
 msgstr[1] ""
 msgstr[2] ""
 
@@ -2041,7 +2042,8 @@ msgstr[2] ""
 msgctxt "forms"
 msgid "All"
 msgid_plural "All"
-msgstr[0] ""
+msgstr[0] "Tous\n"
+"Pluriel : Tous"
 msgstr[1] ""
 msgstr[2] ""
 
@@ -2063,7 +2065,7 @@ msgstr ""
 
 #: 
 msgid "Edit"
-msgstr ""
+msgstr "Modifier"
 
 #: 
 msgid "Add to List >>"
@@ -2072,7 +2074,9 @@ msgstr "Ajouter à la liste >>\n"
 
 #: 
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer\n"
+"\n"
+""
 
 #: 
 msgid "Key of Field:"
@@ -2081,7 +2085,7 @@ msgstr "Clé du champ :\n"
 
 #: 
 msgid "Disabled in onOffice"
-msgstr ""
+msgstr "Désactivé dans onOffice"
 
 #: 
 msgid "Please configure your onOffice API credentials first!"
@@ -2089,7 +2093,7 @@ msgstr ""
 
 #: 
 msgid "Favorites List"
-msgstr ""
+msgstr "Liste de favoris"
 
 #: 
 msgid "Reference estates"
@@ -2144,7 +2148,7 @@ msgstr ""
 
 #: 
 msgid "Detail View"
-msgstr ""
+msgstr "Vue détaillée"
 
 #: 
 msgid "Template"
@@ -2152,7 +2156,7 @@ msgstr ""
 
 #: 
 msgid "Descending"
-msgstr ""
+msgstr "Décroissant"
 
 #: 
 msgid "Ascending"
@@ -2201,15 +2205,15 @@ msgstr ""
 
 #: 
 msgid "Form Name"
-msgstr ""
+msgstr "Nom du formulaire"
 
 #: 
 msgid "Form"
-msgstr ""
+msgstr "Formulaire"
 
 #: 
 msgid "Hidden"
-msgstr ""
+msgstr "Masqué"
 
 #: 
 msgid "Passport Photo"
@@ -2217,7 +2221,7 @@ msgstr ""
 
 #: 
 msgid "Filter"
-msgstr ""
+msgstr "Filtre"
 
 #: 
 msgid "List View"
@@ -2306,15 +2310,15 @@ msgstr ""
 
 #: 
 msgid "Forms"
-msgstr ""
+msgstr "Formulaires"
 
 #: 
 msgid "Estates"
-msgstr ""
+msgstr "Biens immobiliers"
 
 #: 
 msgid "Addresses"
-msgstr ""
+msgstr "Adresses"
 
 #: 
 msgid "onOffice"
@@ -2371,12 +2375,12 @@ msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:396
 msgid "Favorise"
-msgstr ""
+msgstr "Favoriser "
 
 #: plugin/Gui/AdminPageEstateListSettings.php:157
 #: plugin/Gui/AdminPageEstateUnitSettings.php:110
 msgid "Downloadable Documents"
-msgstr ""
+msgstr "Documents téléchargeables"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:172
 msgid "At least the following fields must be active: country, radius and city or postcode."
@@ -2400,7 +2404,7 @@ msgstr ""
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:233
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:203
 msgid "Filterable"
-msgstr ""
+msgstr "Filtrable"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:224
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:453
@@ -2441,7 +2445,7 @@ msgstr ""
 
 #: templates.dist/estate/default_detail.php:77
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: templates.dist/estate/default_detail.php:84
 msgid "Location"
@@ -2450,7 +2454,7 @@ msgstr "Emplacement\n"
 
 #: templates.dist/estate/default_detail.php:101
 msgid "Equipment"
-msgstr ""
+msgstr "Équipement"
 
 #: templates.dist/estate/default_detail.php:108
 msgid "Other Information"
@@ -2474,7 +2478,7 @@ msgstr ""
 
 #: 
 msgid "Cache is being cleared in the background. This may take a few minutes."
-msgstr ""
+msgstr "Le cache est en cours de vidage en arrière-plan. Cela peut prendre quelques minutes."
 
 #: 
 msgid "Save changes"
