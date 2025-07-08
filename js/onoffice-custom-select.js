@@ -4,51 +4,49 @@ jQuery(document).ready(function ($) {
 	const $multiSelectAdminSorting = $('#viewrecordssorting .oo-custom-select2.oo-custom-select2--multiple');
 	const $singleSelectAdminSorting = $("#viewrecordssorting .oo-custom-select2.oo-custom-select2--single");
 
-	document.querySelectorAll(".custom-single-select-tom, .custom-multiple-select-tom").forEach(function(select) {
-		if (typeof TomSelect !== 'undefined' && !onoffice_custom_select.check_personalized) {
-			new TomSelect(select, { 'hidePlaceholder':true,
-		
-			sortField: {
-				field: "text",
-				direction: "asc"
-			  },
-			  plugins: {
-				remove_button:{
-					title:'Remove this item',
+	document.querySelectorAll(".custom-single-select, .custom-multiple-select").forEach(function (select) {
+		if (typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
+			$(select).select2({ width: '100%' });
+		}
+	});
+
+	document.querySelectorAll(".custom-single-select-tom, .custom-multiple-select-tom").forEach(function (select) {
+		if (typeof TomSelect !== 'undefined') {
+			new TomSelect(select, {
+				hidePlaceholder: true,
+				sortField: {
+					field: "text",
+					direction: "asc"
 				},
-				'checkbox_options': {
-					'checkedClassNames':   ['ts-checked'],
-					'uncheckedClassNames': ['ts-unchecked'],
-				}
-				},	
-				onItemAdd:function(){
+				plugins: {
+					remove_button: {
+						title: 'Remove this item',
+					},
+					checkbox_options: {
+						checkedClassNames: ['ts-checked'],
+						uncheckedClassNames: ['ts-unchecked'],
+					}
+				},
+				onItemAdd: function () {
 					this.setTextboxValue('');
 					this.refreshOptions();
 				},
 				create: true,
-				hidePlaceholder: true,
-				render:{
-					option:function(data,escape){
-						return '<div class="d-flex"><span>' + escape(data.text)  + '</span></div>';
+				render: {
+					option: function (data, escape) {
+						return '<div class="d-flex"><span>' + escape(data.text) + '</span></div>';
 					},
-					item:function(data,escape){
-						if (this.items.length >= 2){
+					item: function (data, escape) {
+						if (this.items.length >= 2) {
 							return '<div title="' + escape(data.text) + '">...</div>';
 						} else {
 							return '<div>' + escape(data.text) + '</div>';
-						}			
-			  		}
+						}
+					}
 				}
-			
-		
-		});
-		} 
-		else if (typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
-		  $(select).select2({width: '100%'});
+			});
 		}
-
-
-	})
+	});
 
 
 	if ($adminSelect.length > 0) {
