@@ -260,6 +260,16 @@ abstract class FormModelBuilder
 
 
 	/**
+	 * @param string $key
+	 * @return bool
+	 */
+	public function isHightlightedField(string $key): bool
+	{
+		return in_array($key, $this->getValue('highlighted') ?? []);
+	}
+
+
+	/**
 	 *
 	 * @param string $category
 	 * @param array $fieldNames

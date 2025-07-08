@@ -744,4 +744,13 @@ class FormModelBuilderEstateDetailSettings
 
 		return $pInputModelContactImageTypes;
 	}
+
+	/**
+	 * @param string $key
+	 * @return bool
+	 */
+	public function isHightlightedField(string $key): bool
+	{
+		return in_array($key, $this->_pDataDetailView->getHighlightedFields() ?? []);
+	}
 }
