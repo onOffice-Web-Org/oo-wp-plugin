@@ -153,7 +153,6 @@
 			if (markerEl) {
 			  this._localizeMarker(markerEl);
 			}
-			console.debug('a11y.layeradd', layerIdx, isInteractive, markerEl, ev);
 			layerIdx++;
 		  });
 		}
