@@ -5,26 +5,14 @@ use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\Types\FieldTypes;
 
 if (!function_exists('printRegion')) {
-	function printRegion(\onOffice\WPlugin\Region\Region $pRegion, $selected = array(), $level = 0)
+	function printRegion(onOffice\WPlugin\Region\Region $pRegion, $selected = array(), $level = 0)
 	{
 		$prefix = str_repeat('-', $level);
-	
-		if ($level <= 1) {
-			// Level 0 und 1: optgroup
-			echo '<optgroup label="' . esc_html($pRegion->getName()) . '" data-level="' . $level . '">';
-		} else {
-			// Ab Level 2: nur Option
-			$selectStr = (in_array($pRegion->getId(), $selected, false) ? ' selected' : '');
-			echo '<option value="' . esc_html($pRegion->getId()) . '" ' . $selectStr . ' data-level="' . $level . '">'
-				. $prefix . ' ' . esc_html($pRegion->getName()) . '</option>';
-		}
-	
+		$selectStr = (in_array($pRegion->getId(), $selected, false) ? ' selected' : '');
+		echo '<option value="' . esc_html($pRegion->getId()) . '" ' . $selectStr . '>'
+			. $prefix . ' ' . esc_html($pRegion->getName()) . '</option>';
 		foreach ($pRegion->getChildren() as $pRegionChild) {
 			printRegion($pRegionChild, $selected, $level + 1);
-		}
-	
-		if ($level <= 1) {
-			echo '</optgroup>';
 		}
 	}
 }
@@ -346,7 +334,7 @@ if (!function_exists('renderRegionalAddition')) {
 			$requiredAttribute = "required aria-required='true' aria-invalid='false'";
 		}
 
-		$output .= '<label>' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '<select class="custom-single-select-tom" aria-hidden="true" tabindex="-1" autocomplete="off" name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';
+		$output .= '<select class="custom-single-select-tom oo-regions" aria-hidden="true" tabindex="-1" autocomplete="off" name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';
 		$pRegionController = new RegionController();
 
 		if ($permittedValues !== null) {
@@ -361,7 +349,7 @@ if (!function_exists('renderRegionalAddition')) {
 			printRegion($pRegion, $selectedValue ?? []);
 		}
 		$output .= ob_get_clean();
-		$output .= '</select></label>';
+		$output .= '</select>';
 		return $output;
 	}
 }

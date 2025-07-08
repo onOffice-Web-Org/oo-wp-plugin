@@ -165,6 +165,7 @@ span.oo-searchrange {
 
 .oo-detailsmap .oo-map, .oo-estate-map .oo-map, .oo-detailsmap .oo-gmap, .oo-estate-map .oo-gmap {
     height: 350px !important;
+    z-index: 0;
 }
 
 .oo-estate-map .oo-map .leaflet-top, .oo-estate-map .oo-map .leaflet-bottom {
@@ -909,6 +910,6 @@ button.slick-next:before {
 }
 
 .plugin-checkbox_options:not(.rtl) .option input {
-    width: 24px;
-    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
 }
