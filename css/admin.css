@@ -1034,7 +1034,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 
 /* Disable hover effect if hovering over .sortable-item.item */
 .list-fields-for-each-page:hover:has(.sortable-item.item:hover) {
-	outline-color: transparent;
+	outline-color: #ccc;
     background-color: transparent;
 }
 
