@@ -174,6 +174,11 @@ $dimensions = [
 							if ( empty($value) ) {
 								continue;
 							}
+							if($value == 'Nein' ||
+								$value == 'No' ||
+								$value == 'Ne'){
+								continue;
+							}
 							if (
 								isset($currentEstate['provisionsfrei']) &&
 								strtolower(trim($currentEstate['provisionsfrei'])) === 'ja' &&
