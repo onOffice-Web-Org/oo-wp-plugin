@@ -5,7 +5,7 @@ jQuery(document).ready(function ($) {
 	const $singleSelectAdminSorting = $("#viewrecordssorting .oo-custom-select2.oo-custom-select2--single");
 
 	document.querySelectorAll(".custom-single-select-tom, .custom-multiple-select-tom").forEach(function(select) {
-		if (typeof TomSelect !== 'undefined') {
+		if (typeof TomSelect !== 'undefined' && !onoffice_custom_select.check_personalized) {
 			new TomSelect(select, { 'hidePlaceholder':true,
 		
 			sortField: {
@@ -42,41 +42,6 @@ jQuery(document).ready(function ($) {
 			
 		
 		});
-
-
-
-
-		const dropdown_options = document.querySelectorAll('.ts-dropdown .option');
-
-		console.log(dropdown_options);
-		console.log('1');
-	
-		dropdown_options.forEach(function(drop_option) {
-			const option_id = drop_option.getAttribute('data-value');
-	
-			console.log(option_id);
-			const option = document.querySelector(`option[value='${option_id}']`);
-	
-			const level = option.getAttribute('data-level');
-	
-			const input = option.find('input');
-	
-	
-			console.log(input);
-	
-			console.log("Level: " + level);
-	
-	
-	
-	
-	
-	
-		});
-
-
-
-
-
 		} 
 		else if (typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
 		  $(select).select2({width: '100%'});

@@ -355,6 +355,19 @@ class ScriptLoaderGenericConfigurationDefault
 	 */
 	public function localizeScript(string $scriptIdentifier)
 	{
+
+
+		$path_plugin = plugin_dir_path(__DIR__) . 'onoffice-personalized';
+		$path_theme  = get_stylesheet_directory() . '/onoffice-theme';
+
+		$file_plugin = $path_plugin . '/templates/fields.php';
+		$file_theme  = $path_theme . '/templates/fields.php';
+
+		// Prüfen, ob einer der Ordner existiert UND dort eine fields.php liegt
+		$check_personalized =
+			(is_dir($path_plugin) && is_file($file_plugin)) || 
+			(is_dir($path_theme) && is_file($file_theme));
+
 		switch ($scriptIdentifier) {
 			case 'onoffice-form-preview':
 				wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
@@ -370,7 +383,13 @@ class ScriptLoaderGenericConfigurationDefault
 					'thousand_separator_format' => get_option('onoffice-settings-thousand-separator')
 				]);
 				break;
-		}
+		
+			case 'onoffice-custom-select':
+					wp_localize_script('onoffice-custom-select', 'onoffice_custom_select', [
+						'check_personalized' => $check_personalized
+					]);
+					break;
+				}
 	}
 
     /**
