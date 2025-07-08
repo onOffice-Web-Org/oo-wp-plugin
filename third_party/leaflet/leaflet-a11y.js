@@ -84,8 +84,6 @@
   
 		  this._fixMapContainer();
 		  this._managePopupFocus();
-  
-		  console.debug('a11y.initialize:', this.mapElem, this.map);
 		}
   
 		/** Translate default controls - Zoom in/out, Attribution.
@@ -119,9 +117,7 @@
 		  this.map.on('popupopen', (ev) => {
 			ev.popup._closeButton.title = L._('Popup schließen'); // src/layer/Popup.js#L102
 			ev.popup._closeButton.setAttribute('aria-label', L._('Popup schließen'));
-  
-			console.debug('a11y.popupopen:', ev);
-		  });
+  		  });
 		}
   
 		/**
@@ -182,8 +178,6 @@
 			  SOURCE._icon.focus();
 			  SOURCE._icon.ariaExpanded = 'false';
 			}
-  
-			console.debug('a11y.popupclose (F):', SOURCE, ev);
 		  });
 		}
   
@@ -205,8 +199,6 @@
 	   */
 	  L.Map.addInitHook(function () {
 		const MAP = this;
-		console.debug('L.Map.addInitHook:', MAP);
-  
 		if (MAP.options.accessibilityPlugin || MAP.options.a11yPlugin) {
 		  MAP.a11y = new AccessibilityPlugin(MAP);
   
