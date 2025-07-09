@@ -174,14 +174,12 @@ $dimensions = [
 							if ( empty($value) ) {
 								continue;
 							}
-							if($value == 'Nein' ||
-								$value == 'No' ||
-								$value == 'Ne'){
+							// skip negative boolean fields
+							if (is_string($value) && $value !== '' && !is_numeric($value) && $rawValues->getValueRaw($estateId)['elements'][$field] === "0"){
 								continue;
 							}
 							if (
-								isset($currentEstate['provisionsfrei']) &&
-								strtolower(trim($currentEstate['provisionsfrei'])) === 'ja' &&
+								$rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] === "1" &&
 								in_array($field,['innen_courtage', 'aussen_courtage'],true)
 							) {
 								continue;
