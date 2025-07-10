@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs: 
       ref:
-        description: "The ref to check out. When not given, we use actions/checkout@v2's default behavior."
+        description: "The ref to check out. When not given, we use actions/checkout@v4's default behavior."
         type: string
         required: false
         default: ''
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout from GIT
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
           submodules: recursive
@@ -54,7 +54,12 @@ jobs:
           extensions: mbstring, mysqli, intl, curl
 
       - name: Install development dependencies
-        run: composer install
+        run: |
+          composer install
+          npm install terser
+
+      - name: Minify JavaScript files
+        run: node webpack.config.js
 
       - name: Build release
         run: PREFIX="/tmp/release/${{ inputs.pluginFolder }}" make release
