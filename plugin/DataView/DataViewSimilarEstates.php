@@ -36,6 +36,9 @@ class DataViewSimilarEstates
 	/** */
 	const FIELDS = 'fields';
 
+	/** */
+	const HIGHLIGHTED = 'highlighted';
+
 	/** @var string[] */
 	private $_fields = [
 		'Id',
@@ -99,6 +102,9 @@ class DataViewSimilarEstates
 
 	/** @var array */
 	private $_customLabel = [];
+
+	/** @var string[] */
+	private $_highlighted = [];
 
 	/** @var string[] */
 	private $_pictureTypes = [
@@ -178,9 +184,16 @@ class DataViewSimilarEstates
 	public function getExpose(): string
 		{ return ''; }
 
+	public function getHighlightedFields(): array
+		{ return $this->_highlighted; }
+
 	/** @return array */
 	public function getFields(): array
 	{ return $this->_fields;}
+
+	/** @param array $keyfacts */
+	public function setHighlightedFields(array $highlighted)
+		{ $this->_highlighted = $highlighted; }
 
 	/** @param array $fields */
 	public function setFields(array $fields)

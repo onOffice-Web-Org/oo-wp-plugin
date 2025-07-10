@@ -66,7 +66,7 @@ abstract class FormModelBuilder
 	 *
 	 */
 
-	protected function getValue(string $key, $default = null)
+	public function getValue(string $key, $default = null)
 	{
 		if (isset($this->_values[$key])) {
 			return $this->_values[$key];
@@ -256,6 +256,16 @@ abstract class FormModelBuilder
 		} catch (APIClientCredentialsException $pException) {
 			return [];
 		}
+	}
+
+
+	/**
+	 * @param string $key
+	 * @return bool
+	 */
+	public function isHightlightedField(string $key): bool
+	{
+		return in_array($key, $this->getValue('highlighted') ?? []);
 	}
 
 

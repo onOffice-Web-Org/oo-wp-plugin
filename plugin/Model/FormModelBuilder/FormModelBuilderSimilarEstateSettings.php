@@ -37,6 +37,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactorySimilarView;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -219,6 +220,9 @@ class FormModelBuilderSimilarEstateSettings
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesArray);
 		$pInputModelFieldsConfig->setValue($fields);
+		if($module == onOfficeSDK::MODULE_ESTATE) {
+			$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelIsHighlight());
+		}
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 		return $pInputModelFieldsConfig;
@@ -447,6 +451,38 @@ class FormModelBuilderSimilarEstateSettings
 	}
 
 	/**
+	 * @return InputModelDB
+	 */
+	public function getInputModelIsHighlight(): InputModelDB
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create(
+			InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHTED,
+			__('Feld besonders hervorheben', 'onoffice-for-wp-website'),
+			true
+		);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelIsHighlight'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 */
+	public function callbackValueInputModelIsHighlight(InputModelBase $pInputModel, $key)
+	{
+		$valueFromConf = $this->_pDataSimilarView->getHighlightedFields();
+		$filterableFields = is_array($valueFromConf) ? $valueFromConf : array();
+		$value = in_array($key, $filterableFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+	/**
 	 *
 	 * @return InputModelOption
 	 *
@@ -592,5 +628,14 @@ class FormModelBuilderSimilarEstateSettings
 			DataListView::SHOW_REFERENCE_ESTATE => __('Show reference estates (alongside others)', 'onoffice-for-wp-websites'),
 			DataListView::SHOW_ONLY_REFERENCE_ESTATE => __('Show only reference estates (filter out all others)', 'onoffice-for-wp-websites'),
 		];
+	}
+
+	/**
+	 * @param string $key
+	 * @return bool
+	 */
+	public function isHightlightedField(string $key): bool
+	{
+		return in_array($key, $this->_pDataSimilarView->getHighlightedFields() ?? []);
 	}
 }
