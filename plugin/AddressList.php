@@ -280,7 +280,7 @@ implements AddressListBase
 	 * @return array
 	 * @throws UnknownViewException
 	 */
-	public function getAddressListParametersForCache(bool $formatOutput, string $lang)
+	public function getAddressListParametersForCache(bool $formatOutput, ?string $lang = null)
 	{
 		$pFieldModifierHandler = $this->generateRecordModifier();
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->getDefaultFilter();
