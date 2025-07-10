@@ -156,7 +156,7 @@ $dimensions = [
 						continue;
 					}
 					if (
-						$rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] === "1" &&
+						($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
 						in_array($field,['innen_courtage', 'aussen_courtage'],true)
 					) {
 						continue;
