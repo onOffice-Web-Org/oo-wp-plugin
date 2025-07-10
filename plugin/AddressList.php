@@ -285,6 +285,8 @@ implements AddressListBase
 		$pFieldModifierHandler = $this->generateRecordModifier();
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->getDefaultFilter();
 
+		$lang = $lang ?? Language::getDefault();
+
 		$fields = $pFieldModifierHandler->getAllAPIFields();
 		$fields[] = $this->_pDataViewAddress->getSortby();
 
