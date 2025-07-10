@@ -118,7 +118,6 @@ class FormModelBuilderDBAddress
 			}
 			$this->setValues($values);
 		}
-		error_log("3");
 
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('List View', 'onoffice-for-wp-websites'));

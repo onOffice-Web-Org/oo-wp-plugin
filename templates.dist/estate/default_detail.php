@@ -617,11 +617,12 @@ $dimensions = [
 			?>
 
 		</div>
-		<?php $similar = trim($pEstates->getSimilarEstates()); ?>
-		<?php if (!empty($similar)): ?>
-        	<?php echo $similar; ?>
-		<?php endif; ?>
-	<?php } ?>
+		<?php
+		$similar = trim($pEstates->getSimilarEstates());
+		if (!empty($similar)) {
+			echo $similar;
+		}
+	} ?>
 
 </div>
 

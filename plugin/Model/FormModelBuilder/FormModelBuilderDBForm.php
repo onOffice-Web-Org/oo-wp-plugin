@@ -268,7 +268,6 @@ class FormModelBuilderDBForm
 		$values['taskDescription'] = $pDataFormConfiguration->getTaskDescription();
 		$values['taskStatus'] = $pDataFormConfiguration->getTaskStatus();
 
-		error_log("4");
 		$this->setValues($values);
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Form', 'onoffice-for-wp-websites'));
