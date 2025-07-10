@@ -39,6 +39,8 @@ if (!function_exists('renderFieldEstateSearch')) {
 			FieldTypes::FIELD_TYPE_MULTISELECT,
 		);
 
+		$fieldLabel = $properties['label'];
+
 		$selectedValue = $properties['value'];
 		$inputType = 'type="text" ';
 		if (in_array($properties['type'], [onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT, onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER])) {
@@ -84,14 +86,14 @@ if (!function_exists('renderFieldEstateSearch')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$htmlSelect = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($inputName) . '[]" multiple="multiple">';
+			$htmlSelect = '<select id="' . esc_html($inputName) . '" aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($inputName) . '[]" multiple="multiple">';
 			$htmlSelect .= $htmlOptions;
 			$htmlSelect .= '</select>';
 			echo $htmlSelect;
 		} elseif ($inputName === 'regionaler_zusatz') {
 			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], false, $properties['permittedvalues'] ?? null);
 		} elseif ($inputName === 'country') {
-			echo '<select aria-hidden="true" tabindex="-1" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_attr($inputName) . '">';
+			echo '<select id="' . esc_html($inputName) . '" aria-hidden="true" tabindex="-1" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_attr($inputName) . '">';
 			printCountry($properties['permittedvalues'], $selectedValue);
 			echo '</select>';
 		} elseif (
@@ -99,15 +101,16 @@ if (!function_exists('renderFieldEstateSearch')) {
 			FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']
 		) {
-			echo '<span class="oo-searchrange">';
-			echo '<label>';
+			echo '<fieldset class="oo-searchrange">';
+			echo '<legend>'.$fieldLabel.'</legend>';
+			echo '<label for="' . esc_attr($inputName) . '__von">';
 			esc_html_e('From: ', 'onoffice-for-wp-websites');
-			echo '<input name="' . esc_attr($inputName) . '__von" ' . $inputType;
+			echo '<input id="' . esc_attr($inputName) . '__von" name="' . esc_attr($inputName) . '__von" ' . $inputType;
 			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
-			echo '<label>';
+			echo '<label for="' . esc_attr($inputName) . '__bis">';
 			esc_html_e('Up to: ', 'onoffice-for-wp-websites');
-			echo '<input name="' . esc_attr($inputName) . '__bis" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label></span>';
+			echo '<input id="' . esc_attr($inputName) . '__bis" name="' . esc_attr($inputName) . '__bis" ' . $inputType;
+			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label></fieldset>';
 		} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="' . esc_attr($properties['length']) . '"' : '';
@@ -246,9 +249,9 @@ if (!function_exists('renderFormField')) {
 			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 
-			$output = '<label>'.$fieldLabel.'<select aria-hidden="true" tabindex="-1" class="custom-multiple-select form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . ' data-rule="text">';
+			$output = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . ' data-rule="text">';
 			$output .= $htmlOptions;
-			$output .= '</select></label>'.$errorHtml;
+			$output .= '</select>'.$errorHtml;
 		} else {
 			$inputType = 'type="text" data-rule="text"';
 			$value = 'value="' . esc_attr($pForm->getFieldValue($fieldName, true)) . '"';
@@ -256,8 +259,16 @@ if (!function_exists('renderFormField')) {
 
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" data-rule="checkbox"';
-				$errorMessage = esc_html__('Please agree to the terms and conditions.', 'onoffice-for-wp-websites');
 
+				if (($fieldName == 'gdprcheckbox') || ($fieldName == 'AGB_akzeptiert'))
+				{
+					$errorMessage = esc_html__('Please agree to the terms and conditions.', 'onoffice-for-wp-websites');
+				}
+				else 
+				{
+					$errorMessage = esc_html__('Please select this option.', 'onoffice-for-wp-websites');
+				}
+			
 				$value = 'value="y" ' . ($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
 			} elseif (
 				$typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
@@ -358,7 +369,7 @@ if (!function_exists('renderCityField')) {
 	function renderCityField(string $inputName, array $properties): string
 	{
 		$permittedValues = $properties['permittedvalues'];
-		$htmlSelect = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select form-control" autocomplete="off" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
+		$htmlSelect = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
 		foreach ($permittedValues as $value) {
 			$selected = null;
 			if (is_array($properties['value']) && in_array($value, $properties['value'])) {
