@@ -33,11 +33,11 @@
     padding: 0;
 }
 
-.oo-form label, .oo-single-select {
+.oo-form label, .oo-single-select, .oo-multi-select {
     margin-bottom: 20px;
 }
 
-.oo-single-select label {
+.oo-single-select label, .oo-multi-select label {
     margin: 0;
 }
 
@@ -92,6 +92,9 @@ span.oo-searchrange {
     width: 24px;
     height: 24px;
     margin-right: 5px;
+}
+.oo-searchformfield input[type="radio"] {
+    width: auto;
 }
 
 .oo-searchformfield .multiselect {
