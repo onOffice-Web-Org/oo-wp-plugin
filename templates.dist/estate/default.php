@@ -175,7 +175,7 @@ $dimensions = [
 								continue;
 							}
 							// skip negative boolean fields
-							if (is_string($value) && $value !== '' && !is_numeric($value) && $rawValues->getValueRaw($estateId)['elements'][$field] === "0"){
+							if (is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0"){
 								continue;
 							}
 							if (
