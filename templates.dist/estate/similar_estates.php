@@ -114,7 +114,7 @@ $dimensions = [
 							</div>
 							<div class="oo-listinfotable">
 								<?php
-								$keyfacts = array_flip($pEstatesClone->getHighlightedFields());
+								$keyfacts = array_flip($pEstates->getHighlightedFields());
 								$estateFacts = iterator_to_array($currentEstate);
 								// keep order but float keyfacts to the top
 								$estateFacts = array_merge(
@@ -132,7 +132,7 @@ $dimensions = [
 										continue;
 									}
 									$class = 'oo-listtd'. ($pEstates->isHighlightedField($field) ? ' --highlight' : '');
-									echo '<div class="'.$class.'">'.esc_html($pEstatesClone->getFieldLabel( $field )).'</div>'.
+									echo '<div class="'.$class.'">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'.
 										'<div class="'.$class.'">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 								} ?>
 							</div>

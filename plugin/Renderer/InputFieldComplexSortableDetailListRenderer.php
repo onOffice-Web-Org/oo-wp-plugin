@@ -172,11 +172,13 @@ class InputFieldComplexSortableDetailListRenderer
 		$isHighlighted = false;
 		if(gettype($extraInputModels[0]->getValueCallback()) == 'array') {
 			$formModelBuilder = $extraInputModels[0]->getValueCallback()[0];
-			if(str_contains(get_class($formModelBuilder), 'FormModelBuilderDBEstateListSettings')) {				
+			if(str_contains(get_class($formModelBuilder), 'FormModelBuilderDBEstateListSettings')) {
 				$isHighlighted = $formModelBuilder->isHightlightedField($key);
-
 			}
-			else if(str_contains(get_class($formModelBuilder),'FormModelBuilderEstateDetailSettings')) {
+			else if(
+				str_contains(get_class($formModelBuilder),'FormModelBuilderEstateDetailSettings') ||
+				str_contains(get_class($formModelBuilder),'FormModelBuilderSimilarEstateSettings')
+			) {
 				$isHighlighted = $formModelBuilder->isHightlightedField($key);
 			}
 		}
