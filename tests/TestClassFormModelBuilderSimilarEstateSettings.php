@@ -87,7 +87,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$this->_pContainer = $pContainerBuilder->build();
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend',  'addFieldsEstateGeoPosisionBackend'])
+				->onlyMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend',  'addFieldsEstateGeoPosisionBackend'])
 				->setConstructorArgs([$this->_pContainer])
 				->getMock();
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
@@ -132,7 +132,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
@@ -155,7 +155,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
@@ -180,7 +180,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
@@ -227,7 +227,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
@@ -251,7 +251,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
@@ -274,7 +274,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
@@ -297,7 +297,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
@@ -313,11 +313,11 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	{
 		$pInstanceFields = $this->getMockBuilder( DataDetailView::class )
 		                        ->disableOriginalConstructor()
-		                        ->setMethods( [ 'getFields' ] )
+		                        ->onlyMethods( [ 'getFields' ] )
 		                        ->getMock();
 		$pInstance = $this->getMockBuilder( FormModelBuilderSimilarEstateSettings::class )
 		                        ->disableOriginalConstructor()
-		                        ->setMethods( [ 'getValue' ] )
+		                        ->onlyMethods( [ 'getValue' ] )
 		                        ->getMock();
 		$pInstance->method( 'getValue' )->willReturn( $pInstanceFields );
 		$pInstance->method( 'getValue' )->willReturn( '' );
@@ -341,7 +341,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
@@ -365,7 +365,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->onlyMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
 
@@ -410,7 +410,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 				->disableOriginalConstructor()
-				->setMethods(['getInputModelDBFactory', 'readFilters'])
+				->onlyMethods(['readFilters'])
 				->getMock();
 		$pInstance->method('readFilters')->willReturn(['a']);
 		$pInstance->generate('test');

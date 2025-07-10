@@ -73,12 +73,12 @@ class TestClassGeoSearchBuilderFromInputVars
 		$pDataView = new DataListView(13, 'test');
 
 		$this->_pGeoPositionFieldHandler = $this->getMockBuilder(GeoPositionFieldHandler::class)
-			->setMethods(['readValues', 'getActiveFields', 'getActiveFieldsWithValue', 'getRadiusValue'])
+			->onlyMethods(['readValues', 'getActiveFields', 'getActiveFieldsWithValue', 'getRadiusValue'])
 			->getMock();
 
 		$this->_pAPIClientActionMock = $this->getMockBuilder(APIClientActionGeneric::class)
 			->setConstructorArgs([new SDKWrapperMocker(), '', ''])
-			->setMethods(['getResultRecords', 'withActionIdAndResourceType', 'addRequestToQueue'])
+			->onlyMethods(['getResultRecords', 'withActionIdAndResourceType', 'addRequestToQueue'])
 			->getMock();
 
 		$this->_pGeoSearchBuilderFromInputVars = new GeoSearchBuilderFromInputVars
