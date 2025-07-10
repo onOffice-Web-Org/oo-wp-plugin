@@ -253,6 +253,7 @@ class EstateList
 		$estateParametersRaw['data'][] = 'vermarktungsart';
 		$estateParametersRaw['data'][] = 'preisAufAnfrage';
 		$estateParametersRaw['data'][] = 'virtualAddress';
+		$estateParametersRaw['data'][] = 'provisionsfrei';
 
 		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
 			$estateParametersRaw['data'] []= 'waehrung';
