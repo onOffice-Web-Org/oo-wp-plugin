@@ -17,8 +17,11 @@
 
 .oo-searchformfieldwrap {
     display: flex;
-    align-items: end;
+    align-items: flex-start;
     flex-wrap: wrap;
+    flex-direction: row;
+    align-content: flex-start;
+    justify-content: flex-start;
 }
 
 .oo-searchformfield {
