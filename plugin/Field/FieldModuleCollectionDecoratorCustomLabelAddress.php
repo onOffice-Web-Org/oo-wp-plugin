@@ -70,7 +70,7 @@ class FieldModuleCollectionDecoratorCustomLabelAddress
 			return;
 		}
 
-		$fieldsByFormIds = $recordManagerReadAddress->readFieldconfigByListviewId(intval($results['listview_address_id']));
+		$fieldsByFormIds = $recordManagerReadAddress->getFieldconfigByListviewId(intval($results['listview_address_id']));
 
 		foreach ($fieldsByFormIds as $fieldsByFormId) {
 			$lang = $this->_pContainer->get(Language::class);

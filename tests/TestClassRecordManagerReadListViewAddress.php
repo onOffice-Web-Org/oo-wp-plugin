@@ -139,12 +139,12 @@ class TestClassRecordManagerReadListViewAddress
 		$this->assertEquals(9, count($pRowAddress));
 	}
 
-	public function testReadFieldconfigByListviewId()
+	public function testGetFieldconfigByListviewId()
 	{
-		$this->_pRecordManagerReadListViewAddress->method('readFieldconfigByListviewId')->will($this->returnValueMap([
+		$this->_pRecordManagerReadListViewAddress->method('getFieldconfigByListviewId')->will($this->returnValueMap([
 			[1, $this->getBasicFieldsArray(1)]
 		]));
-		$pFieldsAddress = $this->_pRecordManagerReadListViewAddress->readFieldconfigByListviewId(1);
+		$pFieldsAddress = $this->_pRecordManagerReadListViewAddress->getFieldconfigByListviewId(1);
 		$this->assertEquals(4, count($pFieldsAddress));
 	}
 
@@ -157,9 +157,11 @@ class TestClassRecordManagerReadListViewAddress
 
 		$pWPDB = $this->getMockBuilder(wpdb::class)
 			->disableOriginalConstructor(['testUser', 'testPassword', 'testDB', 'testHost'])
-			->onlyMethods(['get_row'])
+			->onlyMethods(['prepare', 'get_row'])
 			->getMock();
 		$pWPDB->prefix = 'testPrefix';
+		$pWPDB->method('prepare')
+			->will($this->returnArgument(0));
 		$pWPDB->expects($this->once())
 			->method('get_row')
 			->willReturnOnConsecutiveCalls($configOutput);

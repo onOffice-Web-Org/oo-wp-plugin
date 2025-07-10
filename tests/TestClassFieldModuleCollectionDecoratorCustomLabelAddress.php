@@ -82,14 +82,14 @@ class TestClassFieldModuleCollectionDecoratorCustomLabelAddress
 
 		$this->_pRecordManagerReadListViewAddress = $this->getMockBuilder(RecordManagerReadListViewAddress::class)
 			->getMock();
-		$this->_pRecordManagerReadListViewAddress->method('readFieldconfigByListviewId')->will($this->returnValueMap([
+		$this->_pRecordManagerReadListViewAddress->method('getFieldconfigByListviewId')->will($this->returnValueMap([
 			[1, $this->getBasicFieldsArray(1)]
 		]));
 		$this->_pRecordManagerReadListViewAddress->method('getRowByName')->will($this->returnValue(
 			$this->getBaseRow(1)
 		));
 		$this->_pContainer->set(RecordManagerReadListViewAddress::class, $this->_pRecordManagerReadListViewAddress);
-		$pFieldsCollectionByFormIds = $this->_pContainer->get(RecordManagerReadListViewAddress::class)->readFieldconfigByListviewId(1);
+		$pFieldsCollectionByFormIds = $this->_pContainer->get(RecordManagerReadListViewAddress::class)->getFieldconfigByListviewId(1);
 
 		$this->_pFieldModuleCollection = new FieldsCollection();
 		foreach ($pFieldsCollectionByFormIds as $pFieldsCollectionByFormId) {
