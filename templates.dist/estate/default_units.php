@@ -112,15 +112,11 @@ $rawValues = $pEstates->getRawValues();
                                 (is_numeric($value) && 0 == $value) ||
                                 $value == '0000-00-00' ||
                                 $value == '0.00' ||
-                                $value == 'Nein' ||
-                                $value == 'No' ||
-                                $value == 'Ne' ||
                                 $value == '' ||
                                 empty($value) ||
-								(
-									($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
-									in_array($field,['innen_courtage', 'aussen_courtage'],true)
-								)
+								(is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0") // skip negative boolean fields
+								(($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
+									in_array($field,['innen_courtage', 'aussen_courtage'],true))
                             ) {
                                 $value = '-';
                                 $class = ' --empty';
