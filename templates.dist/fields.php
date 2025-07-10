@@ -86,14 +86,14 @@ if (!function_exists('renderFieldEstateSearch')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$htmlSelect = '<label for="' . esc_html($inputName) . '-ts-control">'.$fieldLabel.'</label><select id="' . esc_html($inputName) . '" aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($inputName) . '[]" multiple="multiple">';
+			$htmlSelect = '<label for="' . esc_html($inputName) . '-ts-control">'.$fieldLabel.'</label><select id="' . esc_html($inputName) . '" aria-hidden="true" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($inputName) . '[]" multiple="multiple">';
 			$htmlSelect .= $htmlOptions;
 			$htmlSelect .= '</select>';
 			echo $htmlSelect;
 		} elseif ($inputName === 'regionaler_zusatz') {
 			echo '<label for="' . esc_html($inputName) . '[]-ts-control">'.$fieldLabel.'</label>'.renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], false, $properties['permittedvalues'] ?? null);
 		} elseif ($inputName === 'country') {
-			echo '<label for="' . esc_html($inputName) . '-ts-control">'.$fieldLabel.'</label><select id="' . esc_html($inputName) . '" aria-hidden="true" tabindex="-1" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_attr($inputName) . '">';
+			echo '<label for="' . esc_html($inputName) . '-ts-control">'.$fieldLabel.'</label><select id="' . esc_html($inputName) . '" aria-hidden="true" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_attr($inputName) . '">';
 			printCountry($properties['permittedvalues'], $selectedValue);
 			echo '</select>';
 		} elseif (
@@ -369,7 +369,7 @@ if (!function_exists('renderCityField')) {
 	function renderCityField(string $inputName, array $properties): string
 	{
 		$permittedValues = $properties['permittedvalues'];
-		$htmlSelect = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
+		$htmlSelect = '<select aria-hidden="true" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
 		foreach ($permittedValues as $value) {
 			$selected = null;
 			if (is_array($properties['value']) && in_array($value, $properties['value'])) {
