@@ -528,6 +528,7 @@ class EstateList
 		$requestParams['data'][] = $pListView->getSortby();
 		$requestParams['data'] = array_merge($requestParams['data'], $pListView->getSortByUserValues());
 		$requestParams['data'][] = 'preisAufAnfrage';
+		$requestParams['data'][] = 'provisionsfrei';
 		$requestParams['data'][] = 'referenz';
 		$requestParams['sortby'] = $pListView->getSortby();
 		$requestParams['sortorder'] = $pListView->getSortorder();
