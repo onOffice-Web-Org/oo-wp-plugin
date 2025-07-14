@@ -28,6 +28,7 @@ use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Field\FieldnamesEnvironment;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
+use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
@@ -379,6 +380,41 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 		$this->assertInstanceOf(InputModelOption::class, $pInputModelDB);
 		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
+	}
+
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::getInputModelIsHighlight
+	 */
+	public function testGetInputModelIsHighlight()
+	{
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
+		$pFormModelBuilderDBEstateDetailSettings->generate('test');
+
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->getInputModelIsHighlight();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+		$this->assertEquals([$pFormModelBuilderDBEstateDetailSettings, 'callbackValueInputModelIsHighlight'], $pInputModelDB->getValueCallback());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::callbackValueInputModelIsHighlight
+	 */
+	public function testCallbackValueInputModelIsHighlight()
+	{
+		$key = 'field_key';
+		$pFormModelBuilderDBEstateDetailSettings = $this->_pFormModelBuilderEstateDetailSettings;
+		$pFormModelBuilderDBEstateDetailSettings->generate('test');
+
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->getInputModelIsHighlight();
+		$pInputModelDB = new InputModelDB('testInput', 'testLabel');
+		$pInputModelDB->setValue('bonjour');
+		$pInputModelDB->setValuesAvailable('field_key');
+
+		$pFormModelBuilderDBEstateDetailSettings->callbackValueInputModelIsHighlight($pInputModelDB, $key);
+
+		$this->assertFalse($pInputModelDB->getValue());
+		$this->assertEquals($key, $pInputModelDB->getValuesAvailable());
 	}
 
 	/**

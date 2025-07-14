@@ -120,6 +120,7 @@ class TestClassDataDetailView
 
 		$this->assertEquals(self::DEFAULT_FIELDS_ADDRESS, $pDataDetailView->getAddressFields());
 		$this->assertEquals(self::DEFAULT_FIELDS_ESTATE, $pDataDetailView->getFields());
+		$this->assertEquals([], $pDataDetailView->getHighlightedFields());
 		$this->assertEquals('', $pDataDetailView->getExpose());
 		$this->assertEquals(MovieLinkTypes::MOVIE_LINKS_PLAYER, $pDataDetailView->getMovieLinks());
 		$this->assertEquals('detail', $pDataDetailView->getName());
@@ -148,6 +149,8 @@ class TestClassDataDetailView
 			$pDataDetailView->getAddressFields());
 		$pDataDetailView->setFields(['testfield1', 'testfield2']);
 		$this->assertEquals(['testfield1', 'testfield2'], $pDataDetailView->getFields());
+		$pDataDetailView->setHighlightedFields(['testfield1', 'testfield2']);
+		$this->assertEquals(['testfield1', 'testfield2'], $pDataDetailView->getHighlightedFields());
 		$pDataDetailView->setExpose('testexpose1');
 		$this->assertEquals('testexpose1', $pDataDetailView->getExpose());
 		$pDataDetailView->setMovieLinks(MovieLinkTypes::MOVIE_LINKS_PLAYER);
