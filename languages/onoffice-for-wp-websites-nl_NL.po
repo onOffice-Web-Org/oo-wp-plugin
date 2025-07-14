@@ -6,164 +6,115 @@ msgstr ""
 "X-Generator: POEditor.com\n"
 "X-Domain: onoffice-for-wp-websites\n"
 "Project-Id-Version: WP-OO-Plugin\n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: 
 msgid "A standard value of 1.5% and 0.5% is usually used to calculate notary and land registry costs."
-msgstr "Une valeur standard de 1,5 % et 0,5 % est généralement utilisée pour le calcul des frais de notaire et d’inscription au registre foncier.\n"
-"\n"
-""
+msgstr "Voor de berekening van de notaris- en kadasterkosten wordt doorgaans een standaardwaarde van 1,5% en 0,5% gebruikt."
 
 #. translators: 1: Count and name of parking lot
 #: 
 msgid "%1$s"
 msgid_plural "%1$s"
-msgstr[0] "%1$s\n"
-"Pluriel : %1$s\n"
-""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%1$s"
+msgstr[1] "%1$s"
 
 #: 
 msgid "Land Register Entry"
-msgstr "Inscription au registre foncier\n"
-"\n"
-""
+msgstr "Kadastrale inschrijving"
 
 #: 
 msgid "Notary Fees"
-msgstr "Frais de notaire\n"
-"\n"
-""
+msgstr "Notariskosten"
 
 #: 
 msgid "Broker commission"
-msgstr "Commission d’agence\n"
-"\n"
-""
+msgstr "Makelaarscourtage"
 
 #: 
 msgid "Property transfer tax"
-msgstr "Droits de mutation\n"
-"\n"
-""
+msgstr "Overdrachtsbelasting"
 
 #: 
 msgid "Overview of costs"
-msgstr "Aperçu des coûts\n"
-"\n"
-""
+msgstr "Kostenoverzicht"
 
 #: 
 msgid "Total costs"
-msgstr "Coûts totaux\n"
-"\n"
-""
+msgstr "Totale kosten"
 
 #: 
 msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs."
-msgstr "Les champs %1$s, %2$s et %3$s doivent être remplis dans onOffice enterprise pour que l’affichage soit possible. %4$s %4$s Une valeur standard de 1,5 % et 0,5 % est généralement utilisée pour le calcul des frais de notaire et d’inscription au registre foncier."
+msgstr "De velden %1$s, %2$s en %3$s moeten in onOffice enterprise worden ingevuld om uitvoer mogelijk te maken. %4$s %4$s Voor de berekening van de notaris- en kadastrale inschrijvingskosten wordt doorgaans een standaardwaarde van respectievelijk 1,5%% en 0,5%% gebruikt."
 
 #: 
 msgid "Show total price calculator"
-msgstr "Afficher le calculateur de coût total\n"
-"\n"
-""
+msgstr "Totaalprijs calculator weergeven"
 
 #: 
 msgid "Total costs calculator"
-msgstr "Calculateur de coût total\n"
-"\n"
-""
+msgstr "Totaalkostencalculator"
 
 #: 
 msgid "Insert variable"
-msgstr "Insérer une variable\n"
-"\n"
-""
+msgstr "Variabele invoegen"
 
 #: 
 msgid "We recommend a maximum number of characters between 40 and 60 or up to 10 words."
-msgstr "Nous recommandons un maximum de 40 à 60 caractères ou jusqu’à 10 mots.\n"
-"\n"
-""
+msgstr "Wij adviseren een maximaal aantal tekens tussen 40 en 60 of maximaal 10 woorden."
 
 #: 
 msgid "Message from the contact form of your website"
-msgstr "Message du formulaire de contact de votre site web\n"
-"\n"
-""
+msgstr "Bericht van het contactformulier van uw website"
 
 #: 
 msgid "Message from the interest form on your website"
-msgstr "Message du formulaire d’intérêt de votre site web\n"
-"\n"
-""
+msgstr "Bericht van het interesseformulier op uw website"
 
 #: 
 msgid "Message from the owner form of your website"
-msgstr "Message du formulaire propriétaire de votre site web\n"
-"\n"
-""
+msgstr "Bericht van het eigenaarsformulier van uw website"
 
 #: 
 msgid "New newsletter registration"
-msgstr "Nouvelle inscription à la newsletter\n"
-"\n"
-""
+msgstr "Nieuwe nieuwsbriefregistratie"
 
 #: 
 msgid "Page "
-msgstr "Page\n"
-"\n"
-""
+msgstr "Pagina "
 
 #: 
 msgid "Page %s"
-msgstr "Page %s\n"
-"\n"
-""
+msgstr "Pagina %s"
 
 #: 
 msgid "Add Page"
-msgstr "Ajouter une page\n"
-"\n"
-"\n"
-"\n"
-"\n"
-"\n"
-"\n"
-""
+msgstr "Pagina toevoegen"
 
 #: 
 msgid "Show form as modal"
-msgstr "Afficher le formulaire en tant que fenêtre modale\n"
-"\n"
-""
+msgstr "Formulier als modaal venster weergeven"
 
 #: 
 msgid "Remove Page"
-msgstr "Supprimer la page\n"
-"\n"
-""
+msgstr "Pagina verwijderen"
 
 #: 
 msgid "Page"
-msgstr "Page"
+msgstr "Pagina"
 
 #: 
 msgid "%s list documentation"
-msgstr "Documentation de la liste %s"
+msgstr "%s lijstdocumentatie"
 
 #: 
 msgid "estate"
-msgstr "bien immobilier\n"
-""
+msgstr "object"
 
 #: 
 msgid "Example address"
-msgstr "Adresse d’exemple"
+msgstr "Voorbeeldadres"
 
 #: 
 msgid "https://wp-plugin.onoffice.com/"
@@ -171,110 +122,95 @@ msgstr "https://wp-plugin.onoffice.com/"
 
 #: 
 msgid "address"
-msgstr "adresse"
+msgstr "adres"
 
 #: 
 msgid "Show energy certificate with a scale"
-msgstr "Afficher le certificat énergétique avec une échelle\n"
-"\n"
-""
+msgstr "Energiecertificaat met schaal weergeven"
 
 #: 
 msgid "The main contact person is the address data record of the broker type, which is stored in the first place in onOffice enterprise."
-msgstr "Le contact principal est la fiche d’adresse de type agent immobilier qui est enregistrée en premier dans onOffice enterprise."
+msgstr "De hoofdcontactpersoon is het adresgegevensrecord van het makelaartype, dat op de eerste plaats in onOffice enterprise is opgeslagen."
 
 #: 
 msgid "Only show main contact person"
-msgstr "Afficher uniquement le contact principal\n"
-"\n"
-""
+msgstr "Alleen hoofdcontactpersoon weergeven"
 
 #: 
 msgid "Show all contact persons"
-msgstr "Afficher tous les contacts\n"
-"\n"
-""
+msgstr "Alle contactpersonen weergeven"
 
 #: 
 msgid "Show address map"
-msgstr "Afficher la carte de l’adresse\n"
-"\n"
-""
+msgstr "Adreskaart weergeven"
 
 #: 
 msgid "Need clarification"
-msgstr "Nécessite une clarification\n"
-"\n"
-""
+msgstr "Nadere toelichting nodig"
 
 #: 
 msgid "Checked"
-msgstr "Vérifié"
+msgstr "Geselecteerd"
 
 #: 
 msgid "Miscellaneous"
-msgstr "Divers\n"
-"\n"
-""
+msgstr "Overig"
 
 #: 
 msgid "Cancelled"
-msgstr "Annulé\n"
-"\n"
-""
+msgstr "Geannuleerd"
 
 #: 
 msgid "Deferred"
-msgstr "Reporté"
+msgstr "Uitgesteld"
 
 #: 
 msgid "Completed"
-msgstr "Terminé"
+msgstr "Voltooid"
 
 #: 
 msgid "In process"
-msgstr "En cours"
+msgstr "In behandeling"
 
 #: 
 msgid "Not started"
-msgstr "Pas commencé"
+msgstr "Niet gestart"
 
 #: 
 msgid "lowest"
-msgstr "Très basse"
+msgstr "laagste"
 
 #: 
 msgid "low"
-msgstr "Basse"
+msgstr "laag"
 
 #: 
 msgid "high"
-msgstr "Élevée"
+msgstr "hoog"
 
 #: 
 msgid "highest"
-msgstr "Très élevée\n"
-""
+msgstr "hoogste"
 
 #: 
 msgid "standard"
-msgstr "Standard"
+msgstr "standaard"
 
 #: 
 msgid "Status"
-msgstr "Statut"
+msgstr "Status"
 
 #: 
 msgid "Task description"
-msgstr "Description de la tâche"
+msgstr "Taakomschrijving"
 
 #: 
 msgid "Subject"
-msgstr "Sujet"
+msgstr "Onderwerp"
 
 #: 
 msgid "Priority"
-msgstr "Priorité"
+msgstr "Prioriteit"
 
 #: 
 msgid "Type"
@@ -282,317 +218,299 @@ msgstr "Type"
 
 #: 
 msgid "Processor"
-msgstr "Agent en charge"
+msgstr "Verwerker"
 
 #: 
 msgid "Responsibility"
-msgstr "Responsabilité"
+msgstr "Verantwoordelijkheid"
 
 #: 
 msgid "Create tasks in onOffice enterprise"
-msgstr "Créer des tâches dans onOffice enterprise"
+msgstr "Taken aanmaken in onOffice enterprise"
 
 #: 
 msgid "Advisory Level"
-msgstr "Niveau de conseil"
+msgstr "Adviesniveau"
 
 #: 
 msgid "G Cancellation"
-msgstr "G Annulation"
+msgstr "G Annulering"
 
 #: 
 msgid "F Documentation ordered"
-msgstr "F Documentation commandée"
+msgstr "F Documentatie besteld"
 
 #: 
 msgid "E Documentation received"
-msgstr "E Documentation reçue"
+msgstr "E Documentatie ontvangen"
 
 #: 
 msgid "D Interested, but still reviewing"
-msgstr "D Intéressé, en cours d'examen"
+msgstr "D Geïnteresseerd, maar nog in beraad"
 
 #: 
 msgid "C Intense communication"
-msgstr "C Communication intense"
+msgstr "C Intensieve communicatie"
 
 #: 
 msgid "B Written rental / purchase commitment"
-msgstr "B Engagement écrit de location / d'achat"
+msgstr "B Schriftelijke huur-/koopovereenkomst"
 
 #: 
 msgid "A Rental/purchase contract signed"
-msgstr "A Contrat de location/achat signé"
+msgstr "A Huur-/koopcontract getekend"
 
 #: 
 msgid "Origin Contact"
-msgstr "Contact d'origine"
+msgstr "Herkomst contact"
 
 #: 
 msgid "Characteristic"
-msgstr "Caractéristique"
+msgstr "Kenmerk"
 
 #: 
 msgid "Callback"
-msgstr "Rappel"
+msgstr "Terugbelverzoek"
 
 #: 
 msgid "Kind of action"
-msgstr "Genre d'action"
+msgstr "Soort actie"
 
 #: 
 msgid "Type of action"
-msgstr "Type d'action"
+msgstr "Type actie"
 
 #: 
 msgid "Write activity"
-msgstr "Écrire activité"
+msgstr "Activiteit schrijven"
 
 #: 
 msgid "Image website"
-msgstr "Site web d'image"
+msgstr "Afbeelding website"
 
 #: 
 msgid "Tasks"
-msgstr "Tâches"
+msgstr "Taken"
 
 #: 
 msgid "Activities"
-msgstr "Activités"
+msgstr "Activiteiten"
 
 #: 
 msgid "Contact Image"
-msgstr "Image du contact"
+msgstr "Contactafbeelding"
 
 #: 
 msgid "If this checkbox is selected, the name and company of the address will be included in the URLs of the address detail views. The name and company will be placed after the record number, eg. <code>/1234-firstname-lastname-company</code>."
-msgstr "Si cette case est cochée, le nom et la société de l'adresse seront inclus dans les URL des vues détaillées de l'adresse. Le nom et la société seront placés après le numéro d'enregistrement, par exemple :\n"
-"<code>/1234-prenom-nom-societe</code>"
+msgstr "Als dit vakje is aangevinkt, worden de naam en het bedrijf van het adres opgenomen in de URL's van de adresdetailweergaven. De naam en het bedrijf worden na het recordnummer geplaatst, bijv. <code>/1234-voornaam-achternaam-bedrijf</code>."
 
 #: 
 msgid "Show Name and Company in the URL"
-msgstr "Afficher le nom et la société dans l’URL"
+msgstr "Naam en bedrijf in de URL weergeven"
 
 #: 
 msgid "Sort direction"
-msgstr "Direction de tri"
+msgstr "Sorteerrichting"
 
 #: 
 msgid "Sort criteria within same selection"
-msgstr "Critères de tri dans la même sélection"
+msgstr "Sorteercriteria binnen dezelfde selectie"
 
 #: 
 msgid "Sequence"
-msgstr "Séquence"
+msgstr "Volgorde"
 
 #: 
 msgid "Marked properties"
-msgstr "Biens marqués"
+msgstr "Gemarkeerde objecten"
 
 #: 
 msgid "Reference"
-msgstr "Référence"
+msgstr "Referentie"
 
 #: 
 msgid "Reserved"
-msgstr "Réservé"
+msgstr "Gereserveerd"
 
 #: 
 msgid "Rented"
-msgstr "Loué"
+msgstr "Verhuurd"
 
 #: 
 msgid "Sold"
-msgstr "Vendu"
+msgstr "Verkocht"
 
 #: 
 msgid "No marker"
-msgstr "Aucun marqueur"
+msgstr "Geen markering"
 
 #: 
 msgid "Top offer"
-msgstr "Meilleure offre"
+msgstr "Topaanbieding"
 
 #: 
 msgid "New"
-msgstr "Nouveau"
+msgstr "Nieuw"
 
 #: 
 msgid "Reference Estate"
-msgstr "Bien de référence"
+msgstr "Referentie objectenlijst:"
 
 #: 
 msgid "No Estate"
-msgstr "Aucun bien"
+msgstr "Geen object"
 
 #: 
 msgid "Active Estate"
-msgstr " Bien actif"
+msgstr "Actieve objectenlijst:"
 
 #: 
 msgid "Address Detail View"
-msgstr "Vue détaillée de l'adresse"
+msgstr "Adres detailweergave"
 
 #: 
 msgid "There was a problem saving the view. Please make sure the name of the view is unique, even across all address list types."
-msgstr "Problème d’enregistrement de la vue. Veuillez vous assurer que le nom est unique, même entre tous les types de listes d’adresses."
+msgstr "Er is een probleem opgetreden bij het opslaan van de weergave. Zorg ervoor dat de naam van de weergave uniek is, ook voor alle adreslijsttypen."
 
 #: 
 msgid "There was a problem saving the address detail view."
-msgstr "Problème lors de l'enregistrement de la vue détaillée de l'adresse."
+msgstr "Er is een probleem opgetreden bij het opslaan van de adresdetailweergave."
 
 #: 
 msgid "The address detail view has been saved."
-msgstr "La vue détaillée de l'adresse a été enregistrée."
+msgstr "De detailweergave van het adres is opgeslagen."
 
 #: 
 msgid "Address Views"
-msgstr "Vues d'adresse"
+msgstr "Adreslijstweergave"
 
 #: 
 msgid "Hidden Field"
-msgstr "Champ masqué"
+msgstr "Verborgen veld"
 
 #: 
 msgid "Google ReCAPTCHA"
-msgstr "Google ReCAPTCHA"
+msgstr "Google reCAPTCHA"
 
 #: 
 msgid "Comma (ex: 123,456,789)"
-msgstr "Virgule (ex : 123,456,789)"
+msgstr "Komma (bijv.: 123.456.789)"
 
 #: 
 msgid "Dot (ex: 123.456.789)"
-msgstr "Point (ex : 123.456.789"
+msgstr "Punt (bijv.: 123.456.789)"
 
 #: 
 msgid "Please choose"
-msgstr "Veuillez choisir"
+msgstr "Gelieve te kiezen"
 
 #: 
 msgid "Thousand Separator Format"
-msgstr "Format du séparateur de milliers"
+msgstr "Duizendtal scheidingsteken formaat"
 
 #: 
 msgid "Separator Format Settings"
-msgstr "Paramètres du format de séparateur"
+msgstr "Instellingen scheidingsteken formaat"
 
 #: 
 msgid "Cache"
-msgstr " Cache"
+msgstr "Cache"
 
 #: 
 msgid "The Cache duration value determines the period of time after which the plugin cache of your page is refreshed. This value is set to 1 hour by default."
-msgstr "Si cette case est cochée, le nom et la société de l'adresse seront inclus dans les URL des vues détaillées de l'adresse. Le nom et la société seront placés après le numéro d'enregistrement, par exemple :\n"
-"<code>/1234-prenom-nom-societe</code>"
+msgstr "De waarde voor de cacheduur bepaalt de tijdsperiode waarna de plugincache van uw pagina wordt vernieuwd. Deze waarde is standaard ingesteld op 1 uur."
 
 #: 
 msgid "24 hours"
-msgstr "24 heures"
+msgstr "24 uur"
 
 #: 
 msgid "12 hours"
-msgstr "12 heures"
+msgstr "12 uur"
 
 #: 
 msgid "1 hour"
-msgstr "1 heure"
+msgstr "1 uur"
 
 #: 
 msgid "Duration"
-msgstr " Durée"
+msgstr "Duur"
 
 #: 
 msgid "6 hours"
-msgstr "6 heures"
+msgstr "6 uur"
 
 #: 
 msgid "30 minutes"
-msgstr "30 minutes"
+msgstr "30 minuten"
 
 #: 
 msgid "10 minutes"
-msgstr "10 minutes"
+msgstr "10 minuten"
 
 #: 
 msgid "Image of property"
-msgstr "Image du bien"
+msgstr "Afbeelding van object"
 
 #: 
 msgid "You can show up to 500 data records per page."
-msgstr "Vous pouvez afficher jusqu'à 500 enregistrements par page.\n"
-""
+msgstr "U kunt maximaal 500 gegevensrecords per pagina weergeven."
 
 #: 
 msgid "Data records per page"
-msgstr "Enregistrements par page"
+msgstr "Gegevensrecords per pagina"
 
 #: 
 msgid "Select an Option"
-msgstr "Sélectionner une option"
+msgstr "Selecteer een optie"
 
 #: 
 msgid "Select Some Options"
-msgstr "Sélectionner plusieurs options"
+msgstr "Selecteer enkele opties"
 
 #: 
 msgid "For information on how to use custom fields in your SEO plugin, please refer to its documentation."
-msgstr "Pour savoir comment utiliser les champs personnalisés dans votre plugin SEO, veuillez consulter sa documentation.\n"
-""
+msgstr "Voor informatie over het gebruik van aangepaste velden in uw SEO-plugin, raadpleeg de documentatie ervan."
 
 #: 
 msgid "An example of integration with the Yoast SEO plugin would be:%1$s %2$s or%1$s %3$s or%1$s %4$s"
-msgstr "Un exemple d’intégration avec le plugin Yoast SEO serait : %1\\$s %2\\$s ou %1\\$s %3\\$s ou %1\\$s %4\\$s\n"
-""
+msgstr "Een voorbeeld van integratie met de Yoast SEO-plugin zou zijn: %1$s %2$s of%1$s %3$s of%1$s %4$s"
 
 #: 
 msgid "These custom fields allow you to insert specific information, such as the property title and property number from onOffice enterprise. The corresponding field names can be found in the field list on the detail page. Please note that only fields that are active for the detail page, for example, can be output."
-msgstr "Ces champs personnalisés permettent d’insérer des informations spécifiques, telles que le titre du bien et le numéro du bien depuis onOffice enterprise. Les noms de champs correspondants se trouvent dans la liste des champs sur la page de détail. Veuillez noter que seuls les champs actifs pour la page de détail, par exemple, peuvent être affichés.\n"
-""
+msgstr "Met deze aangepaste velden kunt u specifieke informatie invoegen, zoals de objecttitel en het objectnummer uit onOffice enterprise. De overeenkomstige veldnamen vindt u in de veldenlijst op de detailpagina. Houd er rekening mee dat alleen velden die bijvoorbeeld actief zijn voor de detailpagina kunnen worden uitgevoerd."
 
 #: 
 msgid "With the help of an SEO plugin, it is possible to use individual fields to insert data directly from onOffice enterprise into the title and metadata of your website."
-msgstr "Avec l’aide d’un plugin SEO, il est possible d’utiliser des champs individuels pour insérer directement des données depuis onOffice enterprise dans le titre et les métadonnées de votre site web."
+msgstr "Met behulp van een SEO-plugin is het mogelijk om individuele velden te gebruiken om gegevens rechtstreeks vanuit onOffice enterprise in de titel en metadata van uw website in te voegen."
 
 #: 
 msgid "Further information on custom fields"
-msgstr "Informations supplémentaires sur les champs personnalisés\n"
-"\n"
-""
+msgstr "Meer informatie over aangepaste velden"
 
 #: 
 msgid "Social MetaData"
-msgstr "Métadonnées sociales\n"
-"\n"
-""
+msgstr "Sociale metadata"
 
 #: 
 msgid "We have detected an active SEO plugin: %s. This option can lead to conflicts with the SocialMedia Data settings. Therefore they are disabled."
-msgstr "Nous avons détecté un plugin SEO actif : %s. Cette option peut entraîner des conflits avec les paramètres des données des réseaux sociaux. Elles sont donc désactivées."
+msgstr "We hebben een actieve SEO-plugin gedetecteerd: %s. Deze optie kan leiden tot conflicten met de SocialMedia Data-instellingen. Daarom zijn ze uitgeschakeld."
 
 #: 
 msgid "Enable Twitter Cards"
-msgstr "Activer les cartes Twitter\n"
-"\n"
-""
+msgstr "Twitter Cards inschakelen"
 
 #: 
 msgid "Enable Open Graph"
-msgstr "Activer Open Graph\n"
-"\n"
-""
+msgstr "Open Graph inschakelen"
 
 #: 
 msgid "Leave without saving"
-msgstr "Quitter sans enregistrer\n"
-"\n"
-""
+msgstr "Verlaten zonder opslaan"
 
 #: 
 msgid "Your changes have not been saved yet! Do you want to leave the page without saving?"
-msgstr "Vos modifications n’ont pas encore été enregistrées ! Voulez-vous quitter la page sans enregistrer ?\n"
-"\n"
-""
+msgstr "Uw wijzigingen zijn nog niet opgeslagen! Wilt u de pagina verlaten zonder op te slaan?"
 
 #: 
 msgid "AreaButler"
@@ -600,106 +518,95 @@ msgstr "AreaButler"
 
 #: 
 msgid "Delete Keys"
-msgstr "Supprimer les clés\n"
-"\n"
-""
+msgstr "Sleutels verwijderen"
 
 #: 
 msgid "Display as selection list instead of text input"
-msgstr "Afficher comme liste de sélection au lieu d’un champ de saisie de texte\n"
-"\n"
-""
+msgstr "Weergeven als keuzelijst in plaats van tekstinvoer"
 
 #: 
 msgid "The duplicate check identifies existing duplicates of address data records and triggers an e-mail notification with information on manual duplicate management."
-msgstr "Le contrôle des doublons identifie les doublons existants dans les enregistrements d’adresses et déclenche une notification par e-mail contenant des informations sur la gestion manuelle des doublons.\n"
-"\n"
-""
+msgstr "De dubbelcontrole identificeert bestaande duplicaten van adresgegevensrecords en activeert een e-mailmelding met informatie over handmatig dubbelbeheer."
 
 #: 
 msgid "https://de.enterprisehilfe.onoffice.com/help_entries/dubletten/?lang=en"
-msgstr ""
+msgstr "https://de.enterprisehilfe.onoffice.com/help_entries/dubletten/"
 
 #: 
 msgid "How to search and update duplicates in onOffice enterprise:"
-msgstr "Comment rechercher et mettre à jour des doublons dans onOffice enterprise :\n"
-"\n"
-""
+msgstr "Hoe u duplicaten zoekt en bijwerkt in onOffice enterprise:"
 
 #: 
 msgid "Existing data record:"
-msgstr "Enregistrement de données existant :\n"
-"\n"
-""
+msgstr "Bestaand gegevensrecord:"
 
 #: 
 msgid "Attention: Duplicate detected! This data is similar to existing data records. Please take a moment to check for duplicates and decide whether updates are required."
-msgstr "Attention : doublon détecté ! Ces données sont similaires à des enregistrements existants. Veuillez vérifier s’il s’agit de doublons et décider si une mise à jour est nécessaire."
+msgstr "Let op: Duplicaat gedetecteerd! Deze gegevens lijken op bestaande gegevensrecords. Neem even de tijd om op duplicaten te controleren en te beslissen of updates nodig zijn."
 
 #: 
 msgid "Would you like to permanently delete the site key and the secret key?"
-msgstr "Souhaitez-vous supprimer définitivement la clé de site et la clé secrète"
+msgstr "Wilt u de site key en de secret key permanent verwijderen?"
 
 #: 
 msgid "Search the field list for the desired fields."
-msgstr "Recherchez les champs souhaités dans la liste des champs."
+msgstr "Zoek in de veldenlijst naar de gewenste velden."
 
 #: 
 msgid "At least city or postcode are required."
-msgstr "Au moins la ville ou le code postal est requis."
+msgstr "Minimaal stad of postcode zijn vereist."
 
 #: 
 msgid "Field list search"
-msgstr "Recherche dans la liste des champs"
+msgstr "Veldlijst zoeken"
 
 #: 
 msgid "Publish"
-msgstr "Publier"
+msgstr "Publiceren"
 
 #: 
 msgid "Show price on request"
-msgstr "Afficher le prix sur demande\n"
-""
+msgstr "Prijs op aanvraag weergeven"
 
 #: 
 msgid "Show estate map"
-msgstr "Afficher la carte du bien"
+msgstr "Objectkaart weergeven"
 
 #: 
 msgid "Hide empty values from onOffice enterprise"
-msgstr "Masquer les valeurs vides de onOffice enterprise"
+msgstr "Lege waarden uit onOffice enterprise verbergen"
 
 #: 
 msgid "Show in search"
-msgstr "Afficher dans la recherche"
+msgstr "Tonen in zoekopdracht"
 
 #: 
 msgid "There was a problem saving the form. The Name field cannot be empty."
-msgstr "Un problème est survenu lors de l’enregistrement du formulaire. Le champ Nom ne peut pas être vide."
+msgstr "Er is een probleem opgetreden bij het opslaan van het formulier. Het veld Naam mag niet leeg zijn."
 
 #: 
 msgid "There was a problem saving the list. The Name field cannot be empty."
-msgstr "Un problème est survenu lors de l’enregistrement de la liste. Le champ Nom ne peut pas être vide."
+msgstr "Er is een probleem opgetreden bij het opslaan van de lijst. Het veld Naam mag niet leeg zijn."
 
 #: 
 msgid "There was a problem saving the address. The Name field cannot be empty."
-msgstr "Un problème est survenu lors de l’enregistrement de l’adresse. Le champ Nom ne peut pas être vide."
+msgstr "Er is een probleem opgetreden bij het opslaan van het adres. Het veld Naam mag niet leeg zijn."
 
 #: 
 msgid "Price on request"
-msgstr "Prix sur demande"
+msgstr "Prijs op aanvraag"
 
 #: 
 msgid "The cache was cleared successfully."
-msgstr "Le cache a été vidé avec succès"
+msgstr "De cache van onOffice is succesvol geleegd."
 
 #: 
 msgid "A honeypot is an invisible field to trick spam bots. Note that when a bot is detected, it will pretend the form was sent successfully. We recommend to keep this active, but you can deactivate it if it causes any problems."
-msgstr "Un honeypot est un champ invisible destiné à piéger les robots spammeurs. Notez que lorsqu’un bot est détecté, il simulera un envoi réussi du formulaire. Nous vous recommandons de laisser cette fonction activée, mais vous pouvez la désactiver si elle pose des problèmes."
+msgstr "Een honeypot is een onzichtbaar veld om spambots te misleiden. Let op: wanneer een bot wordt gedetecteerd, zal het doen alsof het formulier succesvol is verzonden. Wij raden aan dit actief te houden, maar u kunt het deactiveren als het problemen veroorzaakt."
 
 #: 
 msgid "Add honeypot to forms"
-msgstr "Ajouter un honeypot aux formulaires"
+msgstr "Honeypot toevoegen aan formulieren"
 
 #: 
 msgid "## Connect your website to onOffice enterprise\n"
@@ -710,113 +617,111 @@ msgid "## Connect your website to onOffice enterprise\n"
 "\n"
 "The [documentation website](https://wp-plugin.onoffice.com/en/) also offers detailed explanations of the features. If you encounter a problem, you can send us a message using the [support form](https://wp-plugin.onoffice.com/en/support/).\n"
 ""
-msgstr ""
+msgstr "## Uw website verbinden met onOffice enterprise\n"
+"\n"
+"U bent klaar om al uw vastgoed in uw website te integreren en formulieren te maken die gegevens naar onOffice enterprise sturen.\n"
+"\n"
+"Voor hulp bij het instellen van de plugin, lees onze [installatiehandleiding](https://wp-plugin.onoffice.com/nl/eerste-stappen/).\n"
+"\n"
+"De [documentatiewebsite](https://wp-plugin.onoffice.com/nl/) biedt ook gedetailleerde uitleg over de functies. Als u een probleem tegenkomt, kunt u ons een bericht sturen via het [supportformulier](https://wp-plugin.onoffice.com/nl/support/)."
 
 #: 
 msgid "Getting started"
-msgstr "Commencer"
+msgstr "Aan de slag"
 
 #. translators: %s is the amount of other parking lots
 #: 
 msgid "%s other parking lot"
 msgid_plural "%s other parking lots"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s andere parkeerplaats"
+msgstr[1] "%s andere parkeerplaatsen"
 
 #. translators: %s is the amount of underground garages
 #: 
 msgid "%s underground garage"
 msgid_plural "%s underground garages"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s ondergrondse garage"
+msgstr[1] "%s ondergrondse garages"
 
 #. translators: %s is the amount of multi story garages
 #: 
 msgid "%s multi-story garage"
 msgid_plural "%s multi-story garages"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s parkeergarageplaats"
+msgstr[1] "%s parkeergarageplaatsen"
 
 #. translators: %s is the amount of garages
 #: 
 msgid "%s garage"
 msgid_plural "%s garages"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s garage"
+msgstr[1] "%s garages"
 
 #. translators: %s is the amount of parking spaces
 #: 
 msgid "%s parking space"
 msgid_plural "%s parking spaces"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s parkeerplaats"
+msgstr[1] "%s parkeerplaatsen"
 
 #. translators: %s is the amount of duplexes
 #: 
 msgid "%s duplex"
 msgid_plural "%s duplexes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s duplex"
+msgstr[1] "%s duplexen"
 
 #. translators: %s is the amount of carports
 #: 
 msgid "%s carport"
 msgid_plural "%s carports"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s carport"
+msgstr[1] "%s carports"
 
 #. translators: %s is the marketing type of rent
 #: 
 msgid " (rent)"
-msgstr ""
+msgstr " (huur)"
 
 #. translators: %s is the marketing type of buy
 #: 
 msgid " (purchase)"
-msgstr ""
+msgstr " (koop)"
 
 #. translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type
 #: 
 msgid "%1$s, %2$s%3$s"
 msgid_plural "%1$s, %2$s %3$s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%1$s, %2$s%3$s"
+msgstr[1] "%1$s, %2$s%3$s"
 
 #: 
 msgid "Choose an estate filter from onOffice enterprise. %s"
-msgstr "Choisissez un filtre immobilier depuis onOffice enterprise. %s"
+msgstr "Kies een objectfilter uit onOffice enterprise. %s"
 
 #: 
 msgid "Learn more."
-msgstr "En savoir plus."
+msgstr "Meer informatie."
 
 #: 
 msgid "https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en"
-msgstr ""
+msgstr "https://de.enterprisehilfe.onoffice.com/help_entries/immobilienfilter/"
 
 #: 
 msgid "The plugin couldn't find any %s. Please make sure that you have published some %s, as described in the %s"
-msgstr ""
+msgstr "De plugin kon geen %s vinden. Zorg ervoor dat u enkele %s heeft gepubliceerd, zoals beschreven in de %s"
 
 #: 
 msgid "https://wp-plugin.onoffice.com/en/first-steps/estate-lists/"
-msgstr ""
+msgstr "https://wp-plugin.onoffice.com/nl/eerste-stappen/objectlijsten/"
 
 #: 
 msgid "Label uses %s"
-msgstr ""
+msgstr "Label gebruikt %s"
 
 #: 
 msgid "https://wp-plugin.onoffice.com/en/advanced-features/markdown-labels"
-msgstr ""
+msgstr "https://wp-plugin.onoffice.com/nl/geavanceerde-functies/markdown-labels"
 
 #: 
 msgid "Markdown"
@@ -824,31 +729,31 @@ msgstr "Markdown"
 
 #: 
 msgid "GDPR (Checkbox)"
-msgstr "RGPD (case à cocher)"
+msgstr "AVG (Selectievakje)"
 
 #: 
 msgid "Since you are logged in, here is a link to a random %s so that you can preview the detail page: %s"
-msgstr "Puisque vous êtes connecté, voici un lien vers un %s aléatoire..."
+msgstr "Aangezien u bent ingelogd, is hier een link naar een willekeurig %s, zodat u de detailpagina kunt bekijken: %s"
 
 #: 
 msgid "Example estate"
-msgstr "Exemple de bien"
+msgstr "Voorbeeld object"
 
 #: 
 msgid "You have opened the detail page, but we do not know which %s to show you, because there is no %s ID in the URL. Please go to an %s list and open an %s from there."
-msgstr "Vous avez ouvert la page de détail, mais nous ne savons pas quel %s afficher..."
+msgstr "U heeft de detailpagina geopend, maar we weten niet welke %s we u moeten tonen, omdat er geen %s ID in de URL staat. Ga naar een %s-lijst en open daar een %s."
 
 #: 
 msgid "Applicant Search Form"
-msgstr "Formulaire de recherche de candidats"
+msgstr "Formulier Zoekende Kandidaat"
 
 #: 
 msgid "Owner Form"
-msgstr "Formulaire du propriétaire"
+msgstr "Eigenaarsformulier"
 
 #: 
 msgid "Interest Form"
-msgstr " Formulaire d’intérêt"
+msgstr "Interesseformulier"
 
 #: 
 msgid "SEO"
@@ -856,210 +761,206 @@ msgstr "SEO"
 
 #: 
 msgid "Do not modify"
-msgstr "Ne pas modifier"
+msgstr "Niet wijzigen"
 
 #: 
 msgid "Fill out"
-msgstr "Remplir"
+msgstr "Invullen"
 
 #: 
 msgid "Title and description"
-msgstr "Titre et description"
+msgstr "Titel en beschrijving"
 
 #: 
 msgid "This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin."
-msgstr ""
+msgstr "Deze plugin vult de titel en beschrijving aan met de informatie van het getoonde object. Deze optie wordt aanbevolen als u geen SEO-plugin gebruikt."
 
 #: 
 msgid "We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.\n"
 "\t\t\t\t\t\t\t\tWe recommend that you configure the onOffice plugin to not modify the title and description."
-msgstr ""
+msgstr "We hebben een actieve SEO-plugin gedetecteerd: %s. Deze optie kan leiden tot conflicten met de SEO-plugin.\n"
+"\t\t\t\t\t\t\t\tWij adviseren u de onOffice-plugin zo te configureren dat deze de titel en beschrijving niet wijzigt."
 
 #: 
 msgid "The title and description of the detail page are set using the %1$s and %2$s tags. They make it possible to show a summary of the page when you share a link."
-msgstr ""
+msgstr "De titel en beschrijving van de detailpagina worden ingesteld met behulp van de %1$s en %2$s tags. Ze maken het mogelijk om een samenvatting van de pagina te tonen wanneer u een link deelt."
 
 #: 
 msgid "This plugin will not modify the title and description. This enables other plugins to manage those tags."
-msgstr ""
+msgstr "Deze plugin zal de titel en beschrijving niet wijzigen. Hierdoor kunnen andere plugins deze tags beheren."
 
 #: 
 msgid "The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.\n"
 "\t\t\t\t\t\t\t\tWe recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin."
-msgstr ""
+msgstr "De onOffice-plugin heeft een actieve SEO-plugin gedetecteerd: %s. U heeft de onOffice-plugin momenteel zo geconfigureerd dat deze de titel en beschrijving van de detailpagina invult, wat kan leiden tot conflicten met de SEO-plugin.\n"
+"\t\t\t\t\t\t\t\tWij adviseren u naar de %s te gaan en de onOffice-plugin zo te configureren dat deze de titel en beschrijving niet wijzigt. Hierdoor kunt u de titel en beschrijving beheren met uw actieve SEO-plugin."
 
 #: 
 msgid "onOffice plugin settings"
-msgstr ""
+msgstr "onOffice plugin instellingen"
 
 #. translators: %1$s is office server status page link, %2$s is support form
 #. page link
 #: 
 msgid "Please check the %1$s to see if there are known problems. Otherwise, report the problem using the %2$s."
-msgstr ""
+msgstr "Controleer de %1$s om te zien of er bekende problemen zijn. Meld het probleem anders via het %2$s."
 
 #: 
 msgid "https://wp-plugin.onoffice.com/en/support/"
-msgstr ""
+msgstr "https://wp-plugin.onoffice.com/nl/support/"
 
 #: 
 msgid "support form"
-msgstr ""
+msgstr "supportformulier"
 
 #: 
 msgid "https://status.onoffice.de/"
-msgstr ""
+msgstr "https://status.onoffice.de/"
 
 #: 
 msgid "onOffice server status"
-msgstr ""
+msgstr "onOffice serverstatus"
 
 #: 
 msgid "The onOffice plugin has an unexpected problem when trying to reach the onOffice API."
-msgstr ""
+msgstr "De onOffice plugin heeft een onverwacht probleem bij het bereiken van de onOffice API."
 
 #: 
 msgid "Direct download for PDF exposé"
-msgstr "Téléchargement direct de la fiche PDF"
+msgstr "Directe download voor PDF-exposé"
 
 #: 
 msgid "You can show up to 500 per page."
-msgstr ""
+msgstr "U kunt maximaal 500 per pagina weergeven."
 
 #: 
 msgid "Estates per page"
-msgstr "Biens immobiliers par page"
+msgstr "Objecten per pagina"
 
 #: 
 msgid "Clear onOffice cache"
-msgstr "Vider le cache onOffice\n"
-""
+msgstr "onOffice cache legen"
 
 #: 
 msgid "Your search criteria"
-msgstr ""
+msgstr "Uw zoekcriteria"
 
 #: 
 msgid "Remove from favorites"
-msgstr ""
+msgstr "Verwijderen uit favorieten"
 
 #: 
 msgid "Remove from watchlist"
-msgstr ""
+msgstr "Verwijderen van volglijst"
 
 #: 
 msgid "Add to favorites"
-msgstr "Ajouter aux favoris\n"
-""
+msgstr "Toevoegen aan favorieten"
 
 #: 
 msgid "Add to watchlist"
-msgstr "Ajouter à la liste de surveillance\n"
-""
+msgstr "Toevoegen aan volglijst"
 
 #: 
 msgid "Included"
-msgstr "Inclus"
+msgstr "Inbegrepen"
 
 #: 
 msgid "Personalized (Plugin)"
-msgstr ""
+msgstr "Gepersonaliseerd (Plugin)"
 
 #: 
 msgid "Personalized (Theme)"
-msgstr ""
+msgstr "Gepersonaliseerd (Thema)"
 
 #: 
 msgid "Restrict access to reference estates (404 Not Found)"
-msgstr ""
+msgstr "Toegang tot referentie objecten beperken (404 Niet gevonden)"
 
 #: 
 msgid "Show only reference estates (filter out all others)"
-msgstr ""
+msgstr "Alleen referentie objecten weergeven (alle andere uitfilteren)"
 
 #: 
 msgid "Show reference estates (alongside others)"
-msgstr ""
+msgstr "Referentie objecten weergeven (naast andere)"
 
 #: 
 msgid "Hide reference estates"
-msgstr "Masquer les biens de référence"
+msgstr "Referentie objecten verbergen"
 
 #: 
 msgid "Reference estates will link to their detail page, because the access is %s."
-msgstr ""
+msgstr "Referentie objecten linken naar hun detailpagina, omdat de toegang %s is."
 
 #: 
 msgid "not restricted"
-msgstr "non restreint\n"
-""
+msgstr "niet beperkt"
 
 #: 
 msgid "Reference estates will not link to their detail page, because the access is %s."
-msgstr ""
+msgstr "Referentie objecten linken niet naar hun detailpagina, omdat de toegang %s is."
 
 #: 
 msgid "restricted"
-msgstr ""
+msgstr "beperkt"
 
 #: 
 msgid "Favorites"
-msgstr "Favoris"
+msgstr "Favorieten"
 
 #: 
 msgid ", shortcode: "
-msgstr ""
+msgstr ", shortcode: "
 
 #: 
 msgid "Type: "
-msgstr ""
+msgstr "Type: "
 
 #: 
 msgid "Shortcode: "
-msgstr ""
+msgstr "Shortcode: "
 
 #: 
 msgid " is not yet used."
-msgstr ""
+msgstr " wordt nog niet gebruikt."
 
 #. translators: %s will be replaced with a link to the appropriate page.
 #: 
 msgid "  is used on %s"
-msgstr ""
+msgstr "  wordt gebruikt op %s"
 
 #: 
 msgid "Copy"
-msgstr "Copier"
+msgstr "Kopiëren"
 
 #: 
 msgid "The shortcode "
-msgstr ""
+msgstr "De shortcode "
 
 #: 
 msgid "API settings (encrypted)"
-msgstr "Paramètres API (chiffrés)\n"
-""
+msgstr "API-instellingen (versleuteld)"
 
 #: 
 msgid "Override email address"
-msgstr ""
+msgstr "E-mailadres overschrijven"
 
 #: 
 msgid "Use default email address "
-msgstr ""
+msgstr "Gebruik standaard e-mailadres "
 
 #: 
 msgid "Use default email address %s"
-msgstr ""
+msgstr "Gebruik standaard e-mailadres %s"
 
 #: 
 msgid "%s (override)"
-msgstr ""
+msgstr "%s (overschreven)"
 
 #: 
 msgid "missing"
-msgstr "manquant\n"
-""
+msgstr "ontbreekt"
 
 #: 
 msgid "Email"
@@ -1067,613 +968,567 @@ msgstr "E-mail"
 
 #: 
 msgid "Default Email Address"
-msgstr "Adresse e-mail par défaut\n"
-""
+msgstr "Standaard e-mailadres"
 
 #: 
 msgid "Comment"
-msgstr "Commentaire\n"
-""
+msgstr "Opmerking"
 
 #: 
 msgid "Image"
-msgstr "Image"
+msgstr "Afbeelding"
 
 #: 
 msgid "All e-mail addresses"
-msgstr "Toutes les adresses e-mail\n"
-""
+msgstr "Alle e-mailadressen"
 
 #: 
 msgid "All mobile numbers"
-msgstr "Tous les numéros de portable\n"
-""
+msgstr "Alle mobiele nummers"
 
 #: 
 msgid "All fax numbers"
-msgstr "Tous les numéros de fax\n"
-""
+msgstr "Alle faxnummers"
 
 #: 
 msgid "All non-mobile phone numbers"
-msgstr "Tous les numéros de téléphone fixes"
+msgstr "Alle niet-mobiele telefoonnummers"
 
 #: 
 msgid "Search Criteria Comment (external)"
-msgstr "Commentaire sur les critères de recherche (externe)"
+msgstr "Zoekcriteria opmerking (extern)"
 
 #: 
 msgid "Special Fields"
-msgstr "Champs spéciaux"
+msgstr "Speciale velden"
 
 #. translators: %s will be replaced with the translation of 'plugin settings'.
 #: 
 msgid "The onOffice plugin is missing a default email address. You have forms that use the default email and they will currently not send emails. Please add a default email address in the %s to dismiss this warning."
-msgstr ""
+msgstr "De onOffice plugin mist een standaard e-mailadres. U heeft formulieren die het standaard e-mailadres gebruiken en deze zullen momenteel geen e-mails verzenden. Voeg een standaard e-mailadres toe in de %s om deze waarschuwing te negeren."
 
 #: 
 msgid "plugin settings"
-msgstr ""
+msgstr "plugin instellingen"
 
 #: 
 msgid "Objects"
-msgstr ""
+msgstr "Objecten"
 
 #: 
 msgid "360° tours"
-msgstr "Visites virtuelles 360°"
+msgstr "360° rondleidingen"
 
 #: 
 msgid "Videos"
-msgstr ""
+msgstr "Video's"
 
 #: 
 msgid "Links"
-msgstr "Liens\n"
-""
+msgstr "Links"
 
 #: 
 msgid "Object-Links"
-msgstr "Liens de l’objet\n"
-""
+msgstr "Objectlinks"
 
 #: 
 msgid "Embedded"
-msgstr "Intégré"
+msgstr "Ingebed"
 
 #: 
 msgid "Ogulo-Links"
-msgstr ""
+msgstr "Ogulo-links"
 
 #: 
 msgid "Deactivated"
-msgstr "Désactivé\n"
-""
+msgstr "Gedeactiveerd"
 
 #: 
 msgid "Random order"
-msgstr ""
+msgstr "Willekeurige volgorde"
 
 #: 
 msgid "User selection"
-msgstr ""
+msgstr "Gebruikersselectie"
 
 #: 
 msgid "Default sort"
-msgstr "Tri par défaut\n"
-""
+msgstr "Standaardsortering"
 
 #: 
 msgid "All"
-msgstr "Tous"
+msgstr "Alle"
 
 #: 
 msgid "Popular"
-msgstr ""
+msgstr "Populair"
 
 #: 
 msgid "By default, no link is created to the estate when the plugin creates the address. If the contact form is on an detail page and you want to link the address and the requested estate, you can open the email in onOffice enterprise or use the %s."
-msgstr "Par défaut, aucun lien n’est créé vers le bien lorsque le plugin crée l’adresse. Si le formulaire est sur une page de détail et que vous souhaitez relier l’adresse au bien demandé, vous pouvez ouvrir l’e-mail dans onOffice enterprise ou utiliser le %s.\n"
-""
+msgstr "Standaard wordt er geen link naar het object gemaakt wanneer de plugin het adres aanmaakt. Als het contactformulier op een detailpagina staat en u het adres en het aangevraagde object wilt koppelen, kunt u de e-mail in onOffice enterprise openen of de %s gebruiken."
 
 #: 
 msgid "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en"
-msgstr ""
+msgstr "https://de.enterprisehilfe.onoffice.com/category/zusatzmodule/anfragenmanager/"
 
 #: 
 msgid "Request Manager"
-msgstr ""
+msgstr "Aanvragenbeheerder"
 
 #: 
 msgid "Sorting"
-msgstr ""
+msgstr "Sortering"
 
 #: 
 msgid "(in the folder \"%s\")"
-msgstr ""
+msgstr "(in de map \"%s\")"
 
 #: 
 msgid "Search Forms"
-msgstr ""
+msgstr "Formulieren zoeken"
 
 #: 
 msgid "Search Estate Views"
-msgstr ""
+msgstr "Objectlijsten zoeken"
 
 #: 
 msgid "Search Addresses"
-msgstr ""
+msgstr "Adressen zoeken"
 
 #: 
 msgid "Access Control"
-msgstr "Contrôle d’accès\n"
-""
+msgstr "Toegangscontrole"
 
 #: 
 msgid "Form type"
-msgstr " Type de formulaire"
+msgstr "Formuliertype"
 
 #: 
 msgid "Recipient e-mail address"
-msgstr ""
+msgstr "E-mailadres van de ontvanger:"
 
 #: 
 msgid "Form name"
-msgstr "Nom du formulaire"
+msgstr "Naam van het formulier"
 
 #: 
 msgid "List type"
-msgstr "Type de liste\n"
-""
+msgstr "Lijsttype"
 
 #: 
 msgid "Pages using the shortcode"
-msgstr ""
+msgstr "Pagina's die de shortcode gebruiken"
 
 #: 
 msgid "Selected filter"
-msgstr ""
+msgstr "Geselecteerd filter"
 
 #: 
 msgid "List name"
-msgstr "Nom de la liste\n"
-""
+msgstr "Naam van de lijst"
 
 #: 
 msgid "We have deactivated the plugin's duplicate check for all of your forms, because the duplicate check can unintentionally overwrite address records. This function will be removed in the future. The option has been deactivated for these forms: Contact, Interest, Owner"
-msgstr ""
+msgstr "We hebben de dubbelcontrole van de plugin voor al uw formulieren gedeactiveerd, omdat de dubbelcontrole onbedoeld adresrecords kan overschrijven. Deze functie zal in de toekomst worden verwijderd. De optie is gedeactiveerd voor deze formulieren: Contact, Interesse, Eigenaar."
 
 #: 
 msgid "Contact Type of New Address"
-msgstr "Type de contact pour la nouvelle adresse\n"
-""
+msgstr "Contacttype van nieuw adres"
 
 #: 
 msgid "Show reference estates"
-msgstr ""
+msgstr "Referentie objecten weergeven"
 
 #: 
 msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
-msgstr ""
+msgstr "Als dit vakje is aangevinkt, maakt de titel van het object deel uit van de URL's van de detailweergaven. De titel wordt na het recordnummer geplaatst, bijv. <code>/1234-mooie-locatie-met-uitzicht</code>. Er worden niet meer dan de eerste vijf woorden van de titel gebruikt."
 
 #: 
 msgid "If you allow indexing, your search engine ranking can be negatively affected and your brochures can be available from search engines even months after the corresponding estate is deleted."
-msgstr "Si vous autorisez l’indexation, cela peut nuire à votre référencement, et vos brochures peuvent rester accessibles via les moteurs de recherche même après la suppression du bien."
+msgstr "Als u indexering toestaat, kan dit een negatieve invloed hebben op uw zoekmachineranking en kunnen uw brochures maanden na het verwijderen van het bijbehorende object nog steeds beschikbaar zijn via zoekmachines."
 
 #: 
 msgid "Allow indexing of PDF brochures"
-msgstr "Autoriser l’indexation des brochures PDF\n"
-""
+msgstr "Indexering van PDF-brochures toestaan"
 
 #: 
 msgid "Create Address and Property"
-msgstr "Créer une adresse et un bien\n"
-""
+msgstr "Adres en object aanmaken"
 
 #: 
 msgid "Create Address and Search Profile"
-msgstr "Créer une adresse et un profil de recherche\n"
-""
+msgstr "Adres en zoekprofiel aanmaken"
 
 #: 
 msgid "Detail View URLs"
-msgstr "URLs de la vue détaillée"
+msgstr "Detailweergave URL's"
 
 #: 
 msgid "Show title in URL"
-msgstr ""
+msgstr "Titel in URL weergeven"
 
 #: 
 msgid "Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email."
-msgstr "Si le formulaire est placé sur une page de détail et que le bien a une personne de contact, l’e-mail lui sera envoyé. Sinon, ce sera cette adresse e-mail qui le recevra.\n"
-""
+msgstr "Let op: als het contactformulier op een objectdetailpagina staat en het object een contactpersoon heeft, wordt de e-mail naar diens e-mailadres verzonden. Anders ontvangt dit e-mailadres de e-mail."
 
 #: 
 msgid "Save changes and clear API cache"
-msgstr ""
+msgstr "Wijzigingen opslaan en API-cache wissen"
 
 #: 
 msgid "By onOffice-Plugin"
-msgstr "Par le plugin onOffice\n"
-""
+msgstr "Door onOffice-Plugin"
 
 #: 
 msgid "By WP Theme"
-msgstr "Par le thème WP\n"
-""
+msgstr "Door WP Thema"
 
 #: 
 msgid "Pagination"
-msgstr ""
+msgstr "Paginering"
 
 #: 
 msgid "Custom Label"
-msgstr "Étiquette personnalisée\n"
-""
+msgstr "Aangepast label"
 
 #: 
 msgid "Add custom label language"
-msgstr "Ajouter une langue personnalisée pour les étiquettes\n"
-""
+msgstr "Aangepaste labeltaal toevoegen"
 
 #: 
 msgid "Custom Label: %s"
-msgstr "Étiquette personnalisée : %s"
+msgstr "Aangepast label: %s"
 
 #: 
 msgid "Duplicate"
-msgstr "Doublon"
+msgstr "Dupliceren"
 
 #: 
 msgid "Contact Form"
-msgstr "Formulaire de contact\n"
-""
+msgstr "Contactformulier"
 
 #: 
 msgid "No Contact Form"
-msgstr "Aucun formulaire de contact\n"
-""
+msgstr "Geen contactformulier"
 
 #: 
 msgid "Select Contact Form"
-msgstr ""
+msgstr "Contactformulier selecteren"
 
 #: 
 msgid "There was a problem saving the similar estates view."
-msgstr ""
+msgstr "Er is een probleem opgetreden bij het opslaan van de weergave 'vergelijkbare objecten'."
 
 #: 
 msgid "The similar estates view has been saved."
-msgstr ""
+msgstr "De weergave 'vergelijkbare objecten' is opgeslagen."
 
 #: 
 msgid "Similar Estates View"
-msgstr ""
+msgstr "Weergave \"Vergelijkbare Objecten\""
 
 #: 
 msgid "Real Estate Fields"
-msgstr ""
+msgstr "Objectvelden"
 
 #: 
 msgid "Contact Person Fields"
-msgstr "Champs de la personne de contact\n"
-""
+msgstr "Contactpersoonvelden"
 
 #. translators: %s is the amount of results
 #: 
 msgid "Show %s matches"
-msgstr ""
+msgstr "Toon %s overeenkomsten"
 
 #: 
 msgid "Show exact match"
-msgstr ""
+msgstr "Toon exacte overeenkomst"
 
 #: 
 msgid "0 matches"
-msgstr "0 correspondance"
+msgstr "0 overeenkomsten"
 
 #: 
 msgid "Energy-Pass Range"
-msgstr "Plage du DPE"
+msgstr "Energiepasbereik"
 
 #: 
 msgid "Location Map"
-msgstr "Carte de localisation\n"
-""
+msgstr "Locatiekaart"
 
 #: 
 msgid "Ground Plan"
-msgstr "Plan d’étage"
+msgstr "Plattegrond"
 
 #: 
 msgid "Panorama"
-msgstr ""
+msgstr "Panorama"
 
 #: 
 msgid "Photo (big)"
-msgstr ""
+msgstr "Foto (groot)"
 
 #: 
 msgid "Photo"
-msgstr ""
+msgstr "Foto"
 
 #: 
 msgid "Cover Photo"
-msgstr "Photo de couverture\n"
-""
+msgstr "Omslagfoto"
 
 #: 
 msgid "Map"
-msgstr "Carte"
+msgstr "Kaart"
 
 #: 
 msgid "Search"
-msgstr ""
+msgstr "Zoeken"
 
 #: 
 msgid "Default Value Up To:"
-msgstr "Valeur maximale par défaut :\n"
-""
+msgstr "Standaardwaarde tot:"
 
 #: 
 msgid "Default Value From:"
-msgstr "Valeur minimale par défaut :\n"
-""
+msgstr "Standaardwaarde vanaf:"
 
 #. translators: %s is the name of a language
 #: 
 msgid "Default Value: %s"
-msgstr "Valeur par défaut : %s"
+msgstr "Standaardwaarde: %s"
 
 #: 
 msgid "Add Language"
-msgstr "Ajouter une langue\n"
-""
+msgstr "Taal toevoegen"
 
 #: 
 msgid "Edit Values"
-msgstr "Modifier les valeurs"
+msgstr "Waarden bewerken"
 
 #: 
 msgid "Default Value"
-msgstr "Valeur par défaut\n"
-""
+msgstr "Standaardwaarde"
 
 #: 
 msgid "Choose Language"
-msgstr "Choisir une langue\n"
-""
+msgstr "Taal kiezen"
 
 #: 
 msgid "Add language"
-msgstr "Ajouter une langue\n"
-""
+msgstr "Taal toevoegen"
 
 #: 
 msgid "Formulation of sorting directions"
-msgstr "Formulation des critères de tri "
+msgstr "Formulering van sorteerrichtingen"
 
 #: 
 msgid "ascending / descending"
-msgstr "croissant / décroissant\n"
-""
+msgstr "oplopend / aflopend"
 
 #: 
 msgid "lowest First / highest First"
-msgstr "du plus bas au plus élevé / du plus élevé au plus bas\n"
-""
+msgstr "laagste eerst / hoogste eerst"
 
 #: 
 msgid "Standard Sort"
-msgstr ""
+msgstr "Standaard sortering"
 
 #: 
 msgid "descending"
-msgstr "décroissant"
+msgstr "aflopend"
 
 #: 
 msgid "ascending"
-msgstr "croissant"
+msgstr "oplopend"
 
 #: 
 msgid "highest first"
-msgstr " du plus élevé au plus bas"
+msgstr "hoogste eerst"
 
 #: 
 msgid "lowest first"
-msgstr "ordre croissant\n"
-""
+msgstr "laagste eerst"
 
 #. Plugin URI of the plugin
 #: 
 msgid "https://wpplugindoc.onoffice.de"
-msgstr ""
+msgstr "https://wpplugindoc.onoffice.de"
 
 #. translators: %s will be replaced with the translated field name.
 #: 
 msgid "Choose %s"
-msgstr "Choisir %s\n"
-""
+msgstr "Kies %s"
 
 #: 
 msgid "Up to: "
-msgstr ""
+msgstr "Tot: "
 
 #: 
 msgid "From: "
-msgstr "De :"
+msgstr "Vanaf: "
 
 #: 
 msgid "Choose country"
-msgstr "Choisir un pays\n"
-""
+msgstr "Land kiezen"
 
 #: 
 msgid "Contact Person"
-msgstr "Personne de contact\n"
-""
+msgstr "Contactpersoon"
 
 #: 
 msgid "Show Details"
-msgstr ""
+msgstr "Details weergeven"
 
 #. translators: %d will be replaced with a number.
 #: 
 msgctxt "template"
 msgid "Found %d estates over all."
-msgstr ""
+msgstr "In totaal %d objecten gevonden."
 
 #: 
 msgid "Overview of Estates"
-msgstr ""
+msgstr "Overzicht van Objecten"
 
 #: 
 msgid "Entities"
-msgstr "Entités"
+msgstr "Eenheden"
 
 #: 
 msgid "Send"
-msgstr ""
+msgstr "Verzenden"
 
 #: 
 msgid "PDF expose"
-msgstr ""
+msgstr "PDF exposé"
 
 #: 
 msgid "Documents"
-msgstr "Documents"
+msgstr "Documenten"
 
 #: 
 msgid "Contact person"
-msgstr "Personne de contact\n"
-""
+msgstr "Contactpersoon"
 
 #: 
 msgid "More Estates like this"
-msgstr "D'autres biens similaires\n"
-""
+msgstr "Meer vergelijkbare objecten"
 
 #: 
 msgid "Open the Form"
-msgstr ""
+msgstr "Formulier openen"
 
 #: 
 msgid "Next"
-msgstr "Suivant"
+msgstr "Volgende"
 
 #: 
 msgid "Back"
-msgstr "Retour\n"
-""
+msgstr "Terug"
 
 #. translators: %s will be replaced with a translated field name.
 #: 
 msgid "Please enter a value for %s."
-msgstr ""
+msgstr "Vul een waarde in voor %s."
 
 #: 
 msgid "The form wasn't sent because spam was detected."
-msgstr ""
+msgstr "Het formulier is niet verzonden omdat er spam is gedetecteerd."
 
 #: 
 msgid "There was an error sending the form."
-msgstr ""
+msgstr "Er is een fout opgetreden bij het verzenden van het formulier."
 
 #: 
 msgid "The form was sent successfully."
-msgstr ""
+msgstr "Het formulier is succesvol verzonden."
 
 #: 
 msgid "Spam detected!"
-msgstr ""
+msgstr "Spam gedetecteerd!"
 
 #: 
 msgid "Information about your property"
-msgstr "Informations sur votre bien\n"
-""
+msgstr "Informatie over uw eigendom"
 
 #: 
 msgid "Your contact details"
-msgstr ""
+msgstr "Uw contactgegevens"
 
 #: 
 msgid "Message"
-msgstr "Message"
+msgstr "Bericht"
 
 #: 
 msgid "Please fill in"
-msgstr ""
+msgstr "Vul alstublieft in"
 
 #: 
 msgid "Missing Fields!"
-msgstr "Champs manquants !\n"
-""
+msgstr "Ontbrekende velden!"
 
 #: 
 msgid "SUCCESS!"
-msgstr ""
+msgstr "SUCCES!"
 
 #. translators: %s will be replaced with a customer reference number.
 #: 
 msgid "Customer ref. number %s"
-msgstr "Réf. client %s\n"
-""
+msgstr "Klantreferentienummer %s"
 
 #. translators: %s will be replaced with a number.
 #: 
 msgid "%s Prospective Buyer"
 msgid_plural "%s Prospective Buyers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s potentiële koper"
+msgstr[1] "%s potentiële kopers"
 
 #: 
 msgid "Search for Prospective Buyers"
-msgstr ""
+msgstr "Zoek naar potentiële kopers"
 
 #: 
 msgid "search within distance of:"
-msgstr ""
+msgstr "zoeken binnen afstand van:"
 
 #: 
 msgid "Please fill in!"
-msgstr ""
+msgstr "Vul alstublieft in!"
 
 #: 
 msgid "ERROR!"
-msgstr "ERREUR !"
+msgstr "FOUT!"
 
 #: 
 msgid "Records"
-msgstr ""
+msgstr "Records"
 
 #: 
 msgid "Edit Units View"
-msgstr "Modifier la vue des unités"
+msgstr "Eenhedenlijst bewerken"
 
 #: 
 msgid "There was a problem saving the list. Please make sure the name of the list is unique."
-msgstr ""
+msgstr "Er is een probleem opgetreden bij het opslaan van de lijst. Zorg ervoor dat de naam van de lijst uniek is."
 
 #: 
 msgid "The address list was saved."
-msgstr ""
+msgstr "De adreslijst is opgeslagen."
 
 #: 
 msgid "Filter & Records"
-msgstr "Filtre & Enregistrements"
+msgstr "Filter & Records"
 
 #: 
 msgid "Edit Address List"
-msgstr "Modifier la liste d’adresses"
+msgstr "Adreslijst bewerken"
 
 #: 
 msgid "Fields Configuration"
-msgstr "Configuration des champs"
+msgstr "Veldinstellingen"
 
 #: 
 msgid "Maps"
-msgstr "Cartes"
+msgstr "Kaarten"
 
 #: 
 msgid "Google Maps"
@@ -1681,504 +1536,466 @@ msgstr "Google Maps"
 
 #: 
 msgid "OpenStreetMap"
-msgstr ""
+msgstr "OpenStreetMap"
 
 #: 
 msgid "Map Provider"
-msgstr "Fournisseur de cartes\n"
-""
+msgstr "Kaartprovider"
 
 #: 
 msgid "Watchlist"
-msgstr ""
+msgstr "Volglijst"
 
 #: 
 msgid "Expression used"
-msgstr "Expression utilisée"
+msgstr "Gebruikte uitdrukking"
 
 #: 
 msgid "Enable Watchlist"
-msgstr "Activer la liste de suivi "
+msgstr "Volglijst inschakelen"
 
 #: 
 msgid "Units Lists"
-msgstr ""
+msgstr "Eenhedenlijsten"
 
 #: 
 msgid "No form was deleted."
-msgstr "Aucun formulaire n’a été supprimé.\n"
-""
+msgstr "Geen formulier is verwijderd."
 
 #. translators: %s will be replaced with a number.
 #: 
 msgid "%s form has been deleted."
 msgid_plural "%s forms have been deleted."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s formulier is verwijderd."
+msgstr[1] "%s formulieren zijn verwijderd."
 
 #: 
 msgid "No list view was deleted."
-msgstr "Aucune vue en liste n’a été supprimée.\n"
-""
+msgstr "Geen lijstweergave is verwijderd."
 
 #. translators: %s will be replaced with a number.
 #: 
 msgid "%s list view has been deleted."
 msgid_plural "%s list views have been deleted."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s lijstweergave is verwijderd."
+msgstr[1] "%s lijstweergaven zijn verwijderd."
 
 #: 
 msgid "Are you sure you want to delete the selected items?"
-msgstr "Êtes-vous sûr de vouloir supprimer les éléments sélectionnés ?\n"
-""
+msgstr "Weet u zeker dat u de geselecteerde items wilt verwijderen?"
 
 #: 
 msgid "Unit Lists"
-msgstr ""
+msgstr "Eenhedenlijsten"
 
 #: 
 msgid "List Views"
-msgstr "Vues en liste\n"
-""
+msgstr "Lijstweergaven"
 
 #: 
 msgid "Add New"
-msgstr "Ajouter nouveau\n"
-""
+msgstr "Nieuw toevoegen"
 
 #: 
 msgid "There was a problem saving the form. Please make sure the name of the form is unique."
-msgstr ""
+msgstr "Er is een probleem opgetreden bij het opslaan van het formulier. Zorg ervoor dat de naam van het formulier uniek is."
 
 #: 
 msgid "The Form was saved."
-msgstr ""
+msgstr "Het formulier is opgeslagen."
 
 #: 
 msgid "Edit Form"
-msgstr "Modifier le formulaire"
+msgstr "Formulier bewerken"
 
 #: 
 msgid "Please provide an Email address!"
-msgstr ""
+msgstr "Geef een e-mailadres op!"
 
 #: 
 msgid "Form Specific Options"
-msgstr "Options spécifiques au formulaire"
+msgstr "Formulierspecifieke opties"
 
 #: 
 msgid "There was a problem saving the view. Please make sure the name of the view is unique, even across all estate list types."
-msgstr ""
+msgstr "Er is een probleem opgetreden bij het opslaan van de weergave. Zorg ervoor dat de naam van de weergave uniek is, ook voor alle typen objectenlijsten."
 
 #: 
 msgid "The view has been saved."
-msgstr ""
+msgstr "De weergave is opgeslagen."
 
 #: 
 msgid "Geo Fields"
-msgstr "Champs géographique"
+msgstr "Geo-velden"
 
 #: 
 msgid "Filters & Records"
-msgstr "Filtres & Enregistrements"
+msgstr "Filters & Records"
 
 #: 
 msgid "choose name"
-msgstr "Choisir un nom\n"
-""
+msgstr "naam kiezen"
 
 #: 
 msgid "The cache was cleaned."
-msgstr ""
+msgstr "De cache is geleegd."
 
 #: 
 msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
-msgstr "Pour utiliser Google reCAPTCHA, vous devez fournir vos clés. Vous pouvez l’activer dans les paramètres du formulaire pour une utilisation ultérieure."
+msgstr "Om Google reCAPTCHA te kunnen gebruiken, moet u uw sleutels opgeven. U bent vrij om het in de formulierinstellingen in te schakelen voor later gebruik."
 
 #: 
 msgid "The request is invalid or malformed."
-msgstr ""
+msgstr "De aanvraag is ongeldig of onjuist geformuleerd."
 
 #: 
 msgid "The response parameter is invalid or malformed."
-msgstr ""
+msgstr "De response-parameter is ongeldig of onjuist geformuleerd."
 
 #: 
 msgid "The response parameter is missing."
-msgstr ""
+msgstr "De response-parameter ontbreekt."
 
 #: 
 msgid "The secret parameter is invalid or malformed."
-msgstr ""
+msgstr "De secret-parameter is ongeldig of onjuist geformuleerd."
 
 #: 
 msgid "The secret parameter is missing."
-msgstr ""
+msgstr "De secret-parameter ontbreekt."
 
 #: 
 msgid "There was an error:"
-msgstr ""
+msgstr "Er is een fout opgetreden:"
 
 #: 
 msgid "The keys are OK."
-msgstr ""
+msgstr "De sleutels zijn in orde."
 
 #: 
 msgid "Google Maps Key"
-msgstr "Clé Google Maps"
+msgstr "Google Maps Sleutel"
 
 #: 
 msgid "Google reCAPTCHA"
-msgstr " Google reCAPTCHA"
+msgstr "Google reCAPTCHA"
 
 #: 
 msgid "Secret Key"
-msgstr ""
+msgstr "Geheime Sleutel"
 
 #: 
 msgid "Site Key"
-msgstr ""
+msgstr "Site Sleutel"
 
 #: 
 msgid "API settings"
-msgstr "Paramètres API\n"
-""
+msgstr "API-instellingen"
 
 #: 
 msgid "API secret"
-msgstr "Clé secrète API\n"
-""
+msgstr "API-geheim"
 
 #: 
 msgid "API token"
-msgstr "Jeton API\n"
-""
+msgstr "API-token"
 
 #: 
 msgid "There was a problem saving the detail view."
-msgstr ""
+msgstr "Er is een probleem opgetreden bij het opslaan van de detailweergave."
 
 #: 
 msgid "The detail view has been saved."
-msgstr ""
+msgstr "De detailweergave is opgeslagen."
 
 #: 
 msgid "Similar Estates"
-msgstr ""
+msgstr "Vergelijkbare objecten"
 
 #: 
 msgid "Additional Media"
-msgstr "Médias supplémentaires "
+msgstr "Aanvullende media"
 
 #: 
 msgid "Photo Types"
-msgstr ""
+msgstr "Fototypen"
 
 #: 
 msgid "Layout & Design"
-msgstr "Mise en page & design\n"
-""
+msgstr "Lay-out & Ontwerp"
 
 #: 
 msgid "Fields"
-msgstr "Champs"
+msgstr "Velden"
 
 #: 
 msgid "Edit Page"
-msgstr "Modifier la page"
+msgstr "Pagina bewerken"
 
 #: 
 msgid "Edit List View"
-msgstr "Modifier la vue en liste"
+msgstr "Lijstweergave bewerken"
 
 #. translators: %s will be replaced with a number.
 #: 
 msgid "(Unknown Filter (ID: %s))"
-msgstr ""
+msgstr "(Onbekend filter (ID: %s))"
 
 #: 
 msgid "(Needs valid API credentials)"
-msgstr ""
+msgstr "(Vereist geldige API-referenties)"
 
 #: 
 msgid "No"
-msgstr "Non"
+msgstr "Nee"
 
 #: 
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #. translators: %s is the name of the list view.
 #: 
 msgid "You are about to delete the listview '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
-msgstr ""
+msgstr "U staat op het punt de lijstweergave '%s' te verwijderen.\n"
+"  'Annuleren' om te stoppen, 'OK' om te verwijderen."
 
 #: plugin/Gui/Table/WP/ListTable.php:80
 msgid "No items found."
-msgstr "Aucun élément trouvé.\n"
-""
+msgstr "Geen items gevonden."
 
 #. translators: %s is the name of the form.
 #: 
 msgid "You are about to delete the form '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
-msgstr ""
+msgstr "U staat op het punt het formulier '%s' te verwijderen.\n"
+"  'Annuleren' om te stoppen, 'OK' om te verwijderen."
 
 #: 
 msgid "Type of Form"
-msgstr ""
+msgstr "Type formulier"
 
 #: 
 msgid "Name of Form"
-msgstr "Nom du formulaire\n"
-""
+msgstr "Naam van formulier"
 
 #. translators: %s is the name of the unit view.
 #: 
 msgid "You are about to delete the unit view '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
-msgstr ""
+msgstr "U staat op het punt de eenheidsweergave '%s' te verwijderen.\n"
+"  'Annuleren' om te stoppen, 'OK' om te verwijderen."
 
 #: 
 msgid "Shortcode"
-msgstr ""
+msgstr "Shortcode"
 
 #: 
 msgid "Name of View"
-msgstr "Nom de la vue\n"
-""
+msgstr "Naam van weergave"
 
 #. translators: %s will be replaced with the link to the login credentials
 #. page.
 #: 
 msgid "It looks like you did not enter any valid API credentials. Please go back and review your %s."
-msgstr ""
+msgstr "Het lijkt erop dat u geen geldige API-referenties heeft ingevoerd. Ga terug en controleer uw %s."
 
 #: 
 msgid "login credentials"
-msgstr "Identifiants de connexion\n"
-""
+msgstr "inloggegevens"
 
 #: 
 msgid "Geo Range Search"
-msgstr "Recherche par zone géographique"
+msgstr "Geobereik zoeken"
 
 #: 
 msgid "Search Criteria"
-msgstr ""
+msgstr "Zoekcriteria"
 
 #: 
 msgid "Geo Position"
-msgstr "Position géographique"
+msgstr "Geopositie"
 
 #: 
 msgctxt "modules"
 msgid "Search Criteria"
 msgid_plural "Search Criteria"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Zoekcriterium"
+msgstr[1] "Zoekcriteria"
 
 #: 
 msgctxt "modules"
 msgid "Estate"
 msgid_plural "Estates"
-msgstr[0] "Bien immobilier "
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Object"
+msgstr[1] "Objecten"
 
 #: 
 msgctxt "modules"
 msgid "Address"
 msgid_plural "Addresses"
-msgstr[0] "Adresse\n"
-"Pluriel : Adresses"
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Adres"
+msgstr[1] "Adressen"
 
 #: 
 msgctxt "forms"
 msgid "Applicant Search Form"
 msgid_plural "Applicant Search Forms"
-msgstr[0] "Formulaire de recherche de candidats \n"
-"Pluriel : Formulaires de recherche de candidats\n"
-""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Formulier Zoekende Kandidaat"
+msgstr[1] "Formulieren Zoekende Kandidaten"
 
 #: 
 msgctxt "forms"
 msgid "Owner Form"
 msgid_plural "Owner Forms"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Eigenaarsformulier"
+msgstr[1] "Eigenaarsformulieren"
 
 #: 
 msgctxt "forms"
 msgid "Interest Form"
 msgid_plural "Interest Forms"
-msgstr[0] "Formulaire d’intérêt \n"
-"Pluriel : Formulaires d’intérêt\n"
-"\n"
-""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Interesseformulier"
+msgstr[1] "Interesseformulieren"
 
 #: 
 msgctxt "forms"
 msgid "Contact Form"
 msgid_plural "Contact Forms"
-msgstr[0] "Pluriel : Formulaires de contact\n"
-""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Contactformulier"
+msgstr[1] "Contactformulieren"
 
 #: 
 msgctxt "forms"
 msgid "All"
 msgid_plural "All"
-msgstr[0] "Tous\n"
-"Pluriel : Tous"
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Alle"
+msgstr[1] "Alle"
 
 #: 
 msgid "unknown address list name"
-msgstr ""
+msgstr "onbekende naam adreslijst"
 
 #: 
 msgid "sold"
-msgstr ""
+msgstr "verkocht"
 
 #: 
 msgid "rented"
-msgstr ""
+msgstr "verhuurd"
 
 #: 
 msgid "(Remains unchanged)"
-msgstr ""
+msgstr "(Blijft ongewijzigd)"
 
 #: 
 msgid "Edit"
-msgstr "Modifier"
+msgstr "Bewerken"
 
 #: 
 msgid "Add to List >>"
-msgstr "Ajouter à la liste >>\n"
-""
+msgstr "Toevoegen aan lijst >>"
 
 #: 
 msgid "Delete"
-msgstr "Supprimer\n"
-"\n"
-""
+msgstr "Verwijderen"
 
 #: 
 msgid "Key of Field:"
-msgstr "Clé du champ :\n"
-" "
+msgstr "Sleutel van veld:"
 
 #: 
 msgid "Disabled in onOffice"
-msgstr "Désactivé dans onOffice"
+msgstr "Uitgeschakeld in onOffice"
 
 #: 
 msgid "Please configure your onOffice API credentials first!"
-msgstr ""
+msgstr "Configureer eerst uw onOffice API-referenties!"
 
 #: 
 msgid "Favorites List"
-msgstr "Liste de favoris"
+msgstr "Favorietenlijst"
 
 #: 
 msgid "Reference estates"
-msgstr ""
+msgstr "Referentie objecten"
 
 #: 
 msgid "Default"
-msgstr "Par défaut\n"
-""
+msgstr "Standaard"
 
 #: 
 msgid "Show Estate Status"
-msgstr ""
+msgstr "Objectstatus weergeven"
 
 #: 
 msgid "Type of List"
-msgstr ""
+msgstr "Type lijst"
 
 #: 
 msgid "Amount of Estates"
-msgstr "Nombre de biens immobiliers\n"
-""
+msgstr "Aantal objecten"
 
 #: 
 msgid "Same Postal Code"
-msgstr ""
+msgstr "Zelfde postcode"
 
 #: 
 msgid "Same Marketing Method"
-msgstr ""
+msgstr "Zelfde marketingmethode"
 
 #: 
 msgid "Same Kind of Estate"
-msgstr ""
+msgstr "Zelfde soort object"
 
 #: 
 msgid "Player"
-msgstr ""
+msgstr "Speler"
 
 #: 
 msgid "Link"
-msgstr "Lien"
+msgstr "Link"
 
 #: 
 msgid "Movie Links"
-msgstr "Liens vidéos\n"
-""
+msgstr "Filmlinks"
 
 #: 
 msgid "Show Similar Estates"
-msgstr ""
+msgstr "Vergelijkbare objecten weergeven"
 
 #: 
 msgid "Detail View"
-msgstr "Vue détaillée"
+msgstr "Detailweergave"
 
 #: 
 msgid "Template"
-msgstr ""
+msgstr "Sjabloon"
 
 #: 
 msgid "Descending"
-msgstr "Décroissant"
+msgstr "Aflopend"
 
 #: 
 msgid "Ascending"
-msgstr "Croissant"
+msgstr "Oplopend"
 
 #: 
 msgid "Sort order"
-msgstr ""
+msgstr "Sorteervolgorde"
 
 #: 
 msgid "Sort by"
-msgstr ""
+msgstr "Sorteren op"
 
 #: 
 msgid "View Name"
-msgstr ""
+msgstr "Naam van weergave"
 
 #. translators: %s is a translated module name
 #: 
 msgid "Module: %s"
-msgstr "Module : %s\n"
-""
+msgstr "Module: %s"
 
 #: 
 msgid "Module"
@@ -2186,301 +2003,286 @@ msgstr "Module"
 
 #: 
 msgid "Required"
-msgstr ""
+msgstr "Verplicht"
 
 #: 
 msgid "Result Limit"
-msgstr ""
+msgstr "Maximum aantal resultaten"
 
 #. translators: %s will be replaced with the translation of '(won't work until
 #. set up globally)', if captcha hasn't been set up appropriately yet, or blank
 #. otherwise.
 #: 
 msgid "Requires Captcha %s"
-msgstr ""
+msgstr "Vereist Captcha %s"
 
 #: 
 msgid "(won't work until set up globally)"
-msgstr ""
+msgstr "(werkt pas na globale instelling)"
 
 #: 
 msgid "Form Name"
-msgstr "Nom du formulaire"
+msgstr "Formuliernaam"
 
 #: 
 msgid "Form"
-msgstr "Formulaire"
+msgstr "Formulier"
 
 #: 
 msgid "Hidden"
-msgstr "Masqué"
+msgstr "Verborgen"
 
 #: 
 msgid "Passport Photo"
-msgstr ""
+msgstr "Pasfoto"
 
 #: 
 msgid "Filter"
-msgstr "Filtre"
+msgstr "Filter"
 
 #: 
 msgid "List View"
-msgstr "Vue en liste\n"
-""
+msgstr "Lijstweergave"
 
 #: 
 msgid "Random Order"
-msgstr ""
+msgstr "Willekeurige volgorde"
 
 #: 
 msgid "Unit List"
-msgstr ""
+msgstr "Eenhedenlijst"
 
 #: 
 msgid "Radius"
-msgstr ""
+msgstr "Straal"
 
 #: 
 msgid "Street"
-msgstr ""
+msgstr "Straat"
 
 #: 
 msgid "City"
-msgstr "Ville\n"
-""
+msgstr "Plaats"
 
 #: 
 msgid "Postal Code"
-msgstr ""
+msgstr "Postcode"
 
 #: 
 msgid "Country"
-msgstr "Pays"
+msgstr "Land"
 
 #: 
 msgid "Order"
-msgstr ""
+msgstr "Volgorde"
 
 #: 
 msgid "Not Specified"
-msgstr "Non spécifié\n"
-""
+msgstr "Niet gespecificeerd"
 
 #: 
 msgid "Default Value for Radius"
-msgstr "Valeur par défaut pour le rayon\n"
-""
+msgstr "Standaardwaarde voor straal"
 
 #: 
 msgid "Subject (optional)"
-msgstr ""
+msgstr "Onderwerp (optioneel)"
 
 #: 
 msgid "Create Address"
-msgstr "Créer une adresse\n"
-""
+msgstr "Adres aanmaken"
 
 #: 
 msgid "Check for Duplicates"
-msgstr "Vérifier les doublons\n"
-""
+msgstr "Controleren op duplicaten"
 
 #: 
 msgid "Newsletter"
-msgstr "Bulletin d'information\n"
-""
+msgstr "Nieuwsbrief"
 
 #: 
 msgid "Set Estate Context as Heading"
-msgstr ""
+msgstr "Objectcontext als kop ("Uw aanvraag voor ...")"
 
 #. translators: %s will be replaced with the translation of 'API token and
 #. secret'.
 #: 
 msgid "It looks like you did not enter any valid API credentials. Please consider reviewing your %s."
-msgstr "Il semble que vous n’ayez pas saisi d’identifiants API valides. Veuillez vérifier vos %s."
+msgstr "Het lijkt erop dat u geen geldige API-referenties heeft ingevoerd. Overweeg alstublieft uw %s te controleren."
 
 #: 
 msgid "API token and secret"
-msgstr "Jeton et clé secrète API"
+msgstr "API-token en -geheim"
 
 #: 
 msgid "Settings"
-msgstr ""
+msgstr "Instellingen"
 
 #: 
 msgid "Forms"
-msgstr "Formulaires"
+msgstr "Formulieren"
 
 #: 
 msgid "Estates"
-msgstr "Biens immobiliers"
+msgstr "Objecten"
 
 #: 
 msgid "Addresses"
-msgstr "Adresses"
+msgstr "Adressen"
 
 #: 
 msgid "onOffice"
-msgstr ""
+msgstr "onOffice"
 
 #. translators: %1$s is the estate title, %5$s is the estate ID
 #: 
 msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
-msgstr ""
+msgstr "Uw aanvraag over vastgoed \"%1$s\" (%5$s)"
 
 #: 
 msgid "Submit"
-msgstr ""
+msgstr "Verzenden"
 
 #: 
 msgid "An error occured:"
-msgstr "Une erreur est survenue :\n"
-""
+msgstr "Er is een fout opgetreden:"
 
 #. translators: %s is the path of a page.
 #: 
 msgid "Bad path \"%s\". The Page was not found."
-msgstr "Chemin incorrect « %s ». La page est introuvable.\n"
-""
+msgstr "Onjuist pad \"%s\". De pagina is niet gevonden."
 
 #. Author URI of the plugin
 #: 
 msgid "https://en.onoffice.com/"
-msgstr ""
+msgstr "https://nl.onoffice.com/"
 
 #. Author of the plugin
 #: 
 msgid "onOffice GmbH"
-msgstr ""
+msgstr "onOffice GmbH"
 
 #. Description of the plugin
 #: 
 msgid "Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code."
-msgstr ""
+msgstr "Uw verbinding met onOffice: Deze plugin geeft u snel toegang tot objecten en formulieren - geen extra synchronisatie met de software is nodig. Raadpleeg support@onoffice.de voor broncode."
 
 #. Plugin Name of the plugin
 #: 
 msgid "onOffice for WP-Websites"
-msgstr ""
+msgstr "onOffice voor WP-Websites"
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
 #: plugin/Controller/EstateViewDocumentTitleBuilder.php:65
 msgid "%2$s (%3$s) in %4$s - %5$s"
-msgstr ""
+msgstr "%2$s (%3$s) in %4$s - %5$s"
 
 #: plugin/Gui/AdminPageApiSettings.php:221
 msgid "Search engine"
-msgstr ""
+msgstr "Zoekmachine"
 
 #: plugin/Gui/AdminPageApiSettings.php:396
 msgid "Favorise"
-msgstr "Favoriser "
+msgstr "Favoriet maken"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:157
 #: plugin/Gui/AdminPageEstateUnitSettings.php:110
 msgid "Downloadable Documents"
-msgstr "Documents téléchargeables"
+msgstr "Downloadbare documenten"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:172
 msgid "At least the following fields must be active: country, radius and city or postcode."
-msgstr "Au minimum, les champs suivants doivent être actifs : pays, rayon et ville ou code postal.\n"
-""
+msgstr "Minimaal de volgende velden moeten actief zijn: land, straal en stad of postcode."
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:150
 #: plugin/Gui/AdminPageFormSettingsContact.php:161
 msgid "Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk."
-msgstr "Attention : lorsque cette option est activée, le contrôle des doublons peut écraser les adresses existantes. Cette fonction sera supprimée à l’avenir. Utilisez-la à vos risques et périls.\n"
-""
+msgstr "Wees ervan bewust dat bij activering de dubbelcontrole adresrecords kan overschrijven. Deze functie zal in de toekomst worden verwijderd. Gebruik op eigen risico."
 
 #: plugin/Gui/Table/EstateListTable.php:215
 msgid "Show Status"
-msgstr ""
+msgstr "Status weergeven"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:152
 msgid "Records per Page"
-msgstr ""
+msgstr "Records per pagina"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:233
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:203
 msgid "Filterable"
-msgstr "Filtrable"
+msgstr "Filterbaar"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:224
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:453
 msgid "Reduce values according to selected filter"
-msgstr ""
+msgstr "Waarden verminderen volgens geselecteerd filter"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:447
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
 msgid "PDF-Expose"
-msgstr ""
+msgstr "PDF-exposé"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:470
 msgid "Reference Estates"
-msgstr ""
+msgstr "Referentie objecten"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:140
 msgid "Allow detail view for reference estates"
-msgstr "Autoriser la vue détaillée pour les biens de référence\n"
-""
+msgstr "Detailweergave voor referentie objecten toestaan"
 
 #: plugin/Model/InputModel/InputModelConfigurationFormContact.php:76
 msgid "Check for Duplicates (override existing address if the email is the same)"
-msgstr "Vérifier les doublons (remplacer l’adresse existante si l’e-mail est identique)\n"
-""
+msgstr "Controleren op duplicaten (overschrijven bestaand adres als e-mail hetzelfde is)"
 
 #: templates.dist/address/default.php:39
 msgid "Picture: "
-msgstr ""
+msgstr "Afbeelding: "
 
 #: templates.dist/estate/default.php:120
 #: templates.dist/estate/default.php:143
 msgid "Add to "
-msgstr "Ajouter à"
+msgstr "Toevoegen aan "
 
 #: templates.dist/estate/default.php:149
 msgid "Remove from "
-msgstr ""
+msgstr "Verwijderen uit "
 
 #: templates.dist/estate/default_detail.php:77
 msgid "Description"
-msgstr "Description"
+msgstr "Beschrijving"
 
 #: templates.dist/estate/default_detail.php:84
 msgid "Location"
-msgstr "Emplacement\n"
-""
+msgstr "Locatie"
 
 #: templates.dist/estate/default_detail.php:101
 msgid "Equipment"
-msgstr "Équipement"
+msgstr "Voorzieningen"
 
 #: templates.dist/estate/default_detail.php:108
 msgid "Other Information"
-msgstr ""
+msgstr "Overige informatie"
 
 #: 
 msgid "There was a problem saving the list. The Name field has been exist."
-msgstr ""
+msgstr "Er is een probleem opgetreden bij het opslaan van de lijst. De naam van het veld bestaat al."
 
 #: 
 msgid "There was a problem saving the list. The Name field must not be empty."
-msgstr ""
+msgstr "Er is een probleem opgetreden bij het opslaan van de lijst. Het veld Naam mag niet leeg zijn."
 
 #: 
 msgid "Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?"
-msgstr ""
+msgstr "Zorg ervoor dat er geen andere weergave met deze naam bestaat, zelfs niet als deze een ander type heeft. Wilt u de pagina verlaten zonder op te slaan?"
 
 #: 
 msgid "The Name field must not be empty. Do you want to leave the page without saving?"
-msgstr ""
+msgstr "Het veld Naam mag niet leeg zijn. Wilt u de pagina verlaten zonder op te slaan?"
 
 #: 
 msgid "Cache is being cleared in the background. This may take a few minutes."
-msgstr "Le cache est en cours de vidage en arrière-plan. Cela peut prendre quelques minutes."
+msgstr "Cache wordt op de achtergrond geleegd. Dit kan enkele minuten duren."
 
 #: 
 msgid "Save changes"
-msgstr ""
-
+msgstr "Wijzigingen opslaan"
