@@ -400,9 +400,13 @@ class FormAddressCreator
 		$addressFields = $pFormData->getDataFormConfiguration()->getInputs();
 
 		foreach ($addressFields as $fieldName => $module) {
-			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $fieldName);
-			if ($pField->getModule() === onOfficeSDK::MODULE_ADDRESS) {
-				$addressData[$fieldName] = $module;
+			try {
+				$pField = $pFieldsCollection->getFieldByModuleAndName($module, $fieldName);
+				if ($pField->getModule() === onOfficeSDK::MODULE_ADDRESS) {
+					$addressData[$fieldName] = $module;
+				}
+			} catch (UnknownFieldException $e) {
+				continue; // Skip the field if is not found e.g., not active in enterprise
 			}
 		}
 
