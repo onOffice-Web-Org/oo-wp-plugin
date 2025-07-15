@@ -2286,17 +2286,25 @@ msgstr "Ulteriori informazioni"
 
 #: 
 msgid "There was a problem saving the list. The Name field has been exist."
-msgstr ""
+msgstr "C'è stato un problema nel salvare la lista. Il campo Nome esiste già."
 
 #: 
 msgid "There was a problem saving the list. The Name field must not be empty."
-msgstr ""
+msgstr "C'è stato un problema nel salvare la lista. Il campo Nome non può essere vuoto."
 
 #: 
 msgid "Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?"
-msgstr ""
+msgstr "Assicurati che non esista un'altra vista con questo nome, anche se di tipo diverso. Vuoi lasciare la pagina senza salvare?"
 
 #: 
 msgid "The Name field must not be empty. Do you want to leave the page without saving?"
-msgstr ""
+msgstr "Il campo Nome non può essere vuoto. Vuoi lasciare la pagina senza salvare?"
+
+#: 
+msgid "Cache is being cleared in the background. This may take a few minutes."
+msgstr "La cache viene cancellata in background. L’operazione potrebbe richiedere alcuni minuti."
+
+#: 
+msgid "Save changes"
+msgstr "Salva modifiche"
 
