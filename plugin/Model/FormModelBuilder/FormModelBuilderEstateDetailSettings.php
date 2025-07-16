@@ -640,7 +640,9 @@ class FormModelBuilderEstateDetailSettings
 	 */
 	public function createInputModelTotalCostsCalculator(): InputModelOption
 	{
-		$labelShowTotalCostsCalculator = __('Show total price calculator', 'onoffice-for-wp-websites');
+		$asterisk = '<span style="color: red;">*</span>';
+		$labelShowTotalCostsCalculator = __('Show total price calculator', 'onoffice-for-wp-websites').$asterisk;
+
 		$pInputModelShowTotalCostsCalculator = $this->_pInputModelDetailViewFactory->create
 		(InputModelOptionFactoryDetailView::INPUT_SHOW_TOTAL_COSTS_CALCULATOR, $labelShowTotalCostsCalculator);
 		$pInputModelShowTotalCostsCalculator->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
@@ -659,9 +661,14 @@ class FormModelBuilderEstateDetailSettings
 		}
 
 		$textHint = sprintf(esc_html__(
-			'The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs.', 'onoffice-for-wp-websites'), 
+			'The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs. %4$s %4$s', 'onoffice-for-wp-websites'), 
 			'<code>'.$result['kaufpreis'].'</code>', '<code>'.$result['aussen_courtage'].'</code>', '<code>'.$result['bundesland'].'</code>', '<br>'
 		);
+		$textHint .= $asterisk.
+			esc_html__(
+				'The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications.',
+				'onoffice-for-wp-websites');
+		
 		$pInputModelShowTotalCostsCalculator->setHintHtml($textHint);
 
 		return $pInputModelShowTotalCostsCalculator;
