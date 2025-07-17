@@ -2102,7 +2102,7 @@ msgstr "Nieuwsbrief"
 
 #: 
 msgid "Set Estate Context as Heading"
-msgstr "Objectcontext als kop ("Uw aanvraag voor ...")"
+msgstr "Objectcontext als kop (\"Uw aanvraag voor ...\")"
 
 #. translators: %s will be replaced with the translation of 'API token and
 #. secret'.
@@ -2286,3 +2286,4 @@ msgstr "Cache wordt op de achtergrond geleegd. Dit kan enkele minuten duren."
 #: 
 msgid "Save changes"
 msgstr "Wijzigingen opslaan"
+
