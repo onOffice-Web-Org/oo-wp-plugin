@@ -88,9 +88,9 @@ class TestClassDatabaseChanges
 		$this->_pWpOption = new WPOptionWrapperTest();
 		$this->_pWpOption->addOption('onoffice-default-view', $dataDetailView);
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+		$this->_pDbChanges->deinstall();
 
 		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
-		$dataSimilarViewOptions->name = "onoffice-default-view";
 		$dataSimilarViewOptions->setDataDetailViewActive(true);
 
 		$dataViewSimilarEstates = $dataSimilarViewOptions->getDataViewSimilarEstates();
@@ -347,7 +347,6 @@ class TestClassDatabaseChanges
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
 
 		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataSimilarView();
-		$dataSimilarViewOptions->name = "onoffice-default-view";
 		$dataSimilarViewOptions->setFields($data);
 		add_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
 
@@ -378,7 +377,6 @@ class TestClassDatabaseChanges
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
 
 		$dataDetailViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
-		$dataDetailViewOptions->name = "onoffice-default-view";
 		$dataDetailViewOptions->setFields($data);
 		update_option('onoffice-default-view', $dataDetailViewOptions);
 
@@ -406,7 +404,6 @@ class TestClassDatabaseChanges
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
 
 		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataSimilarView();
-		$dataSimilarViewOptions->name = "onoffice-default-view";
 		add_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
 
 		$this->_pDbChanges->deinstall();
@@ -435,7 +432,6 @@ class TestClassDatabaseChanges
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
 
 		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataSimilarView();
-		$dataSimilarViewOptions->name = "onoffice-similar-estates-settings-view";
 		$dataSimilarViewOptions->getDataViewSimilarEstates()->setListFieldsShowPriceOnRequest($listFieldsShowPriceOnRequest);
 		update_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
 
@@ -465,7 +461,6 @@ class TestClassDatabaseChanges
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
 
 		$dataDetailViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
-		$dataDetailViewOptions->name = "onoffice-default-view";
 		$dataDetailViewOptions->setListFieldsShowPriceOnRequest($listFieldsShowPriceOnRequest);
 		update_option('onoffice-default-view', $dataDetailViewOptions);
 

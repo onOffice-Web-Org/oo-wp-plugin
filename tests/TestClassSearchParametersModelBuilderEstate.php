@@ -52,7 +52,7 @@ class TestClassSearchParametersModelBuilderEstate
 		$this->_pContainer = $pContainerBuilder->build();
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->disableOriginalConstructor()
-			->setMethods(['addFieldsAddressEstate'])
+			->onlyMethods(['addFieldsAddressEstate'])
 			->getMock();
 		$pFieldsCollectionBuilderShort
 			->method('addFieldsAddressEstate')
