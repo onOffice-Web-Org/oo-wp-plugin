@@ -76,6 +76,20 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 6.3.3 (2025-07-17) =
+
+**Added**
+
+* Language support for Dutch
+
+**Changed**
+
+* 'Commission-free', internal commission, and external commission are now displayed in relation to each other
+
+**Fixed**
+
+* SQL Injection Vulnerabilities
+
 = 6.3.2 (2025-07-02) =
 
 **Fixed**
