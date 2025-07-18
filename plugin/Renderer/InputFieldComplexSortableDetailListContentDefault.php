@@ -56,12 +56,9 @@ class InputFieldComplexSortableDetailListContentDefault
 
 		foreach ($extraInputModels as $pInputModel) {
 			if (!in_array($type, [FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]) &&
-				$pInputModel->getField() == 'availableOptions')
-			{
+				$pInputModel->getField() == 'availableOptions') {
 				continue;
 			}
-
-
 			if (($key === 'DSGVOStatus' || $key === 'AGB_akzeptiert' || $key === 'gdprcheckbox') && $pInputModel->getField() === 'hidden_field') {
 				continue;
 			}
@@ -70,6 +67,9 @@ class InputFieldComplexSortableDetailListContentDefault
 				continue;
 			}
 			if ($key !== 'Ort' && $pInputModel->getField() == 'convertInputTextToSelectForField' && !$isDummy) {
+				continue;
+			}
+			if ($pInputModel->getTable() === 'oo_plugin_form_multipage_title') {
 				continue;
 			}
 			if (array_key_exists($key, FieldModuleCollectionDecoratorReadAddress::getNewAddressFields()) && !$isDummy && ($pInputModel->getField() === 'filterable' || $pInputModel->getField() === 'hidden')) {
@@ -104,5 +104,34 @@ class InputFieldComplexSortableDetailListContentDefault
 		$pInputModelRenderer->buildForAjax($pFormModel);
 
 		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice-for-wp-websites').'</a>';
+	}
+
+	public function renderTitlesForMultiPage(array $titleInputModels, array $titles):void {
+		$pFormModel = new FormModel();
+
+		foreach ($titleInputModels as $pInputModel) {
+			if ($pInputModel->getField() === 'value') {
+				foreach ($titles as $title) {
+					$localizedTitleInputModel = clone $pInputModel;
+					$callbackValue = $localizedTitleInputModel->getValueCallback();
+					if ($callbackValue !== null) {
+						call_user_func($callbackValue, $localizedTitleInputModel, $title);
+					}
+					$pFormModel->addInputModel($localizedTitleInputModel);
+				}
+			} else {
+				$callbackValue = $pInputModel->getValueCallback();
+				if ($callbackValue !== null) {
+					call_user_func($callbackValue, $pInputModel, $titles);
+				}
+				$pFormModel->addInputModel($pInputModel);
+			}
+		}
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		/* @var $pInputModelRenderer InputModelRenderer */
+		$pInputModelRenderer = $pContainer->get(InputModelRenderer::class);
+		$pInputModelRenderer->buildForAjax($pFormModel);
 	}
 }

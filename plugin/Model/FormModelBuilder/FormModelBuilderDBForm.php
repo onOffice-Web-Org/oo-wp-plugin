@@ -142,6 +142,7 @@ class FormModelBuilderDBForm
 		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
 		$pInputModelFieldsConfig->setValue($fields);
 		$pInputModelFieldsConfig->setPerPageForm($this->getValue('fieldsPagePerForm'));
+		$pInputModelFieldsConfig->setTitlePerMultipageForm($this->getValue('titlePerMultiPage'));
 
 		$pModule = $this->getInputModelModule();
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
@@ -165,6 +166,13 @@ class FormModelBuilderDBForm
 		if($this->getFormType() === Form::TYPE_OWNER){
 			$pInputModelFieldsConfig->setIsMultiPage(true);
 			$pInputModelFieldsConfig->setTemplate($this->getValue('template'));
+
+			$pInputModelMultiPageTitle = $this->createInputModelMultiPageTitle();
+			$pInputModelMultiPageTitlePage = $this->createInputModelMultiPageTitlePage();
+			$pInputModelMultiPageTitleLanguage = $this->createInputModelMultiPageTitleLanguageSwitch();
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitle);
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitlePage);
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitleLanguage);
 		}
 
 		return $pInputModelFieldsConfig;
@@ -233,6 +241,7 @@ class FormModelBuilderDBForm
 		$values['fieldsMarkdown'] = array();
 		$values['fieldsHiddenField'] = array();
 		$values['fieldsPagePerForm'] = array();
+		$values['titlePerMultiPage'] = array();
 		$values['template'] = array();
 		$pFactory = new DataFormConfigurationFactory($this->_formType);
 
@@ -267,6 +276,7 @@ class FormModelBuilderDBForm
 		$values['taskSubject'] = $pDataFormConfiguration->getTaskSubject();
 		$values['taskDescription'] = $pDataFormConfiguration->getTaskDescription();
 		$values['taskStatus'] = $pDataFormConfiguration->getTaskStatus();
+		$values['titlePerMultiPage'] = $pDataFormConfiguration->getTitlePerMultipage();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -584,10 +594,7 @@ class FormModelBuilderDBForm
 		$pInputModel->setTable('language');
 		$pInputModel->setField('language');
 
-		$pLanguageReader = new InstalledLanguageReader;
-		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
-			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
-		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
+		$pInputModel->setValuesAvailable($this->getAvailableLanguageSelectValues());
 		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $type = null) {
 			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
 			$pInputModel->setLabel('');
@@ -611,10 +618,7 @@ class FormModelBuilderDBForm
 		$pInputModel->setTable('language-custom-label');
 		$pInputModel->setField('language');
 
-		$pLanguageReader = new InstalledLanguageReader;
-		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
-			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
-		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
+		$pInputModel->setValuesAvailable($this->getAvailableLanguageSelectValues());
 		$pInputModel->setValueCallback(function (InputModelDB $pInputModel) {
 			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
@@ -701,6 +705,27 @@ class FormModelBuilderDBForm
 		$value = in_array($key, $fieldsMarkDown);
 		$pInputModel->setValue($value);
 		$pInputModel->setValuesAvailable($key);
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param array $title with data for multipage titles
+	 */
+	public function callbackValueInputModelTitleValue(InputModelBase $pInputModel, array $title): void
+	{
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
+		$pInputModel->setLabel(__('Page title:', 'onoffice-for-wp-websites'));
+		$pInputModel->setValue($title['value']);
+		$pInputModel->setSpecialDivId($title['locale']);
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param array $title with data for multipage titles
+	 */
+	public function callbackValueInputModelTitlePage(InputModelBase $pInputModel, array $title): void
+	{
+		$pInputModel->setValue($title['page']);
 	}
 
 	/**
@@ -1165,6 +1190,62 @@ class FormModelBuilderDBForm
 		}
 
 		return $supervisors;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	private function createInputModelMultiPageTitle(): InputModelDB
+	{
+		$labelMultiPageTitle = __('Page title:', 'onoffice-for-wp-websites');
+
+		$pInputModel = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_VALUE, $labelMultiPageTitle);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
+		$pInputModel->setValue($this->getValue('titlePerMultiPage')['value'] ?? '');
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelTitleValue'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	private function createInputModelMultiPageTitlePage(): InputModelDB
+	{
+		$pInputModel = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_PAGE, '');
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelTitlePage'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	private function createInputModelMultiPageTitleLanguageSwitch(): InputModelDB
+	{
+		$labelMultiPageLanguageSwitch = __('Add Language', 'onoffice-for-wp-websites');
+
+		$pInputModel = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_LOCALE, $labelMultiPageLanguageSwitch);
+		$pInputModel->setValuesAvailable($this->getAvailableLanguageSelectValues());
+		$pInputModel->setValueCallback(function (InputModelDB $pInputModel) {
+			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
+		});
+		return $pInputModel;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getAvailableLanguageSelectValues():array{
+		$pLanguageReader = new InstalledLanguageReader;
+		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
+			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
+		return array_diff_key($languages, [get_locale() => []]);
 	}
 
 	/**

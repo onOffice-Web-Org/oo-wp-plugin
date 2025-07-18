@@ -57,6 +57,9 @@ class InputFieldComplexSortableDetailListRenderer
 	/** @var string */
 	private $_template = '';
 
+	/** @var array */
+	private $_titlesPerMultipage = [];
+
 	/**
 	 *
 	 * @param string $name
@@ -120,11 +123,22 @@ class InputFieldComplexSortableDetailListRenderer
 			$page = $this->_allFields[$properties]['page'] ?? 1;
 			$fieldsByPage[$page][$properties] = $this->_allFields[$properties];
 		}
-		$extraInputModels = $this->_extraInputModels;
+		$titleInputModels = [];
+		$extraInputModels = array_values(array_filter($this->_extraInputModels, function($pInputModel) use (&$titleInputModels) {
+			if ($pInputModel->getTable() === 'oo_plugin_form_multipage_title') {
+				$titleInputModels[] = $pInputModel;
+				return false;
+			}
+			return true;
+		}));
+
 		$page = 1;
 		foreach ($fieldsByPage as $fields) {
 			echo '<div class="list-fields-for-each-page">';
-			echo '<span class="page-title">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</span>';
+			echo '<div class="multi-page-title" data-page="'.$page.'">';
+			echo '<span class="multi-page-counter">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</span>';
+			$this->_pContentRenderer->renderTitlesForMultiPage($titleInputModels, $this->getLocalizedTitlesPerPage($page));
+			echo '</div>';
 			echo '<ul class="filter-fields-list attachSortableFieldsList multi-page-list fieldsListPage-' . esc_attr($page) . ' sortableFieldsListForForm">';
 			$i = 1;
 
@@ -241,4 +255,22 @@ class InputFieldComplexSortableDetailListRenderer
 	/** @param string $template */
 	public function setTemplate(string $template)
 		{ $this->_template = $template; }
+
+	/**
+	 * @param int $page
+	 * @param string $locale
+	 * @return array
+	 */
+	public function getLocalizedTitlesPerPage(int $page):array
+		{
+			$titles = [];
+			foreach ($this->_titlesPerMultipage as $title) {
+				if (isset($title['page']) && (int) $title['page'] === $page) {
+					$titles[] = $title;
+				}
+			}
+			return $titles;
+		}
+	public function setTitlesPerMultipage(array $titlesPerMultipage)
+		{ $this->_titlesPerMultipage = $titlesPerMultipage; }
 }
