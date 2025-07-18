@@ -208,6 +208,9 @@ class InputModelRenderer
 				if ( $pInputModel->isDeactivate() ) {
 					$pInstance->addAdditionalAttribute( 'disabled', true );
 				}
+				if ($pInputModel->getSpecialDivId() != null) {
+					$pInstance->addAdditionalAttribute('data-localized', $pInputModel->getSpecialDivId());
+				}
 
 				break;
 			case InputModelOption::HTML_TYPE_HIDDEN:

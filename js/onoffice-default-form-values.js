@@ -10,24 +10,43 @@ onOffice.default_values_input_converter = function () {
     var predefinedValues = onOffice_loc_settings.defaultvalues || {};
 
 	document.querySelectorAll('.multi-page-title').forEach((group, index) => {
-		const titleInput = group.querySelector('input[name^=oopluginformmultipagetitle-value]');
-		//const langInput = group.querySelector('...');
+		const titleInputs = group.querySelectorAll('input[name^=oopluginformmultipagetitle-value]');
 		const page = group.getAttribute('data-page');
 		const localeSelect = group.querySelector('select[name=oopluginformmultipagetitle-locale].onoffice-input');
-		titleInput.name = `oopluginformmultipagetitle[${page}][native]`;
+		titleInputs.forEach((titleInput) => {
+			const lang = titleInput.getAttribute('data-localized');
+			titleInput.name = `oopluginformmultipagetitle[${page}][${lang}]`;
+			if (lang !== 'native') {
+				const selectOption = Array.from(localeSelect.options).find(opt => opt.value === lang);
+				const label = document.querySelector(`label[for="${titleInput.id}"]`);
+				let selectedLocaleText = '';
+				if (selectOption) {
+					selectOption.hidden = true;
+					selectOption.style.display = 'none';
+					selectOption.disabled = true;
+					selectedLocaleText = selectOption.text;
+				}
+				label.textContent = onOffice_loc_settings.label_custom_label.replace('%s', selectedLocaleText);
+			}
+		});
 
 		//Add new page title input for localization
 		localeSelect.addEventListener('change', function () {
 			const selectedLocale = this.value;
-			const selectedLocaleText = this.options[localeSelect.selectedIndex].text;
+			const selectedOption = this.options[localeSelect.selectedIndex];
+			const selectedLocaleText = selectedOption.text;
 			const parent = localeSelect.closest('.wp-clearfix.custom-input-field');
 			const identifier = `oopluginformmultipagetitle[${page}][${selectedLocale}]`;
 
 			let existingInput = group.querySelector(`input[name="${identifier}"]`);
 			if (!existingInput) {
+				selectedOption.hidden = true;
+				selectedOption.style.display = 'none';
+				selectedOption.disabled = true;
 				const paragraph = document.createElement('p');
 				const label = document.createElement('label');
 				const input = document.createElement('input');
+				const deleteButton = document.createElement('button');
 				label.htmlFor = identifier;
 				label.textContent = onOffice_loc_settings.label_custom_label.replace('%s', selectedLocaleText);
 				paragraph.classList.add('wp-clearfix', 'custom-input-field');
@@ -36,6 +55,7 @@ onOffice.default_values_input_converter = function () {
 				input.name = identifier;
 				paragraph.appendChild(label);
 				paragraph.appendChild(input);
+				//paragraph.appendChild(deleteButton);
 				parent.insertAdjacentElement('afterend', paragraph);
 			}
 		});

@@ -106,16 +106,26 @@ class InputFieldComplexSortableDetailListContentDefault
 		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice-for-wp-websites').'</a>';
 	}
 
-	public function renderTitleForMultiPage(array $titleInputModels, array $title):void {
+	public function renderTitlesForMultiPage(array $titleInputModels, array $titles):void {
 		$pFormModel = new FormModel();
 
 		foreach ($titleInputModels as $pInputModel) {
-			$callbackValue = $pInputModel->getValueCallback();
-
-			if ($callbackValue !== null) {
-				call_user_func($callbackValue, $pInputModel, $title);
+			if ($pInputModel->getField() === 'value') {
+				foreach ($titles as $title) {
+					$localizedTitleInputModel = clone $pInputModel;
+					$callbackValue = $localizedTitleInputModel->getValueCallback();
+					if ($callbackValue !== null) {
+						call_user_func($callbackValue, $localizedTitleInputModel, $title);
+					}
+					$pFormModel->addInputModel($localizedTitleInputModel);
+				}
+			} else {
+				$callbackValue = $pInputModel->getValueCallback();
+				if ($callbackValue !== null) {
+					call_user_func($callbackValue, $pInputModel, $titles);
+				}
+				$pFormModel->addInputModel($pInputModel);
 			}
-			$pFormModel->addInputModel($pInputModel);
 		}
 		$pDIContainerBuilder = new ContainerBuilder();
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);

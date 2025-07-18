@@ -716,6 +716,7 @@ class FormModelBuilderDBForm
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
 		$pInputModel->setLabel(__('Page title:', 'onoffice-for-wp-websites'));
 		$pInputModel->setValue($title['value']);
+		$pInputModel->setSpecialDivId($title['locale']);
 	}
 
 	/**

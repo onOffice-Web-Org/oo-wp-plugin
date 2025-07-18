@@ -137,7 +137,7 @@ class InputFieldComplexSortableDetailListRenderer
 			echo '<div class="list-fields-for-each-page">';
 			echo '<div class="multi-page-title" data-page="'.$page.'">';
 			echo '<span class="multi-page-counter">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</span>';
-			$this->_pContentRenderer->renderTitleForMultiPage($titleInputModels, $this->getTitlePerPageAndLocale($page, ''));
+			$this->_pContentRenderer->renderTitlesForMultiPage($titleInputModels, $this->getLocalizedTitlesPerPage($page));
 			echo '</div>';
 			echo '<ul class="filter-fields-list attachSortableFieldsList multi-page-list fieldsListPage-' . esc_attr($page) . ' sortableFieldsListForForm">';
 			$i = 1;
@@ -261,15 +261,15 @@ class InputFieldComplexSortableDetailListRenderer
 	 * @param string $locale
 	 * @return array
 	 */
-	public function getTitlePerPageAndLocale(int $page, string $locale):array
+	public function getLocalizedTitlesPerPage(int $page):array
 		{
+			$titles = [];
 			foreach ($this->_titlesPerMultipage as $title) {
-				//TODO: add locale support
 				if (isset($title['page']) && (int) $title['page'] === $page) {
-					return $title;
+					$titles[] = $title;
 				}
 			}
-			return [];
+			return $titles;
 		}
 	public function setTitlesPerMultipage(array $titlesPerMultipage)
 		{ $this->_titlesPerMultipage = $titlesPerMultipage; }
