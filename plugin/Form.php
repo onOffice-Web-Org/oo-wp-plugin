@@ -134,6 +134,7 @@ class Form
 			$this->_pFormData = new FormData($pFormConfig, $this->_formNo);
 			$this->_pFormData->setRequiredFields($this->getRequiredFields());
 			$this->_pFormData->setFormtype($pFormConfig->getFormType());
+			$this->_pFormData->setPageTitles($pFormConfig->getTitlePerMultipage());
 			$this->_pFormData->setFormSent(false);
 			$this->_pFormData->setValues
 				(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues());
@@ -720,4 +721,50 @@ class Form
 	/** @return bool */
 	public function getShowFormAsModal(): bool
 		{ return $this->_pFormData->getDataFormConfiguration()->getShowFormAsModal(); }
+
+	/** @return array */
+	public function getPageTitlesByCurrentLanguage()
+	{
+		$pageTitles = $this->_pFormData->getPageTitles();
+		$currentLocale = get_locale();
+		$uniquePages = array_unique(array_column($pageTitles, 'page'));
+		sort($uniquePages);
+
+		$result = [];
+
+		foreach ($uniquePages as $pageNumber) {
+			$currentLocaleTitles = array_filter($pageTitles, function($title) use ($pageNumber, $currentLocale) {
+				return $title['page'] == $pageNumber &&
+					$title['locale'] === $currentLocale &&
+					!empty($title['value']);
+			});
+
+			if (!empty($currentLocaleTitles)) {
+				$result[] = reset($currentLocaleTitles);
+				continue;
+			}
+
+			$nativeTitles = array_filter($pageTitles, function($title) use ($pageNumber) {
+				return $title['page'] == $pageNumber &&
+					$title['locale'] === 'native' &&
+					!empty($title['value']);
+			});
+
+			if (!empty($nativeTitles)) {
+				$result[] = reset($nativeTitles);
+				continue;
+			}
+
+			// Fallback
+			$result[] = [
+				'page' => $pageNumber,
+				'value' => sprintf(__('Page %d', 'onoffice-for-wp-websites'), $pageNumber),
+				'locale' => $currentLocale
+			];
+		}
+
+		return $result;
+	}
+
+
 }
