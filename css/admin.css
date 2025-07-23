@@ -997,6 +997,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 }
 .list-fields-for-each-page .multi-page-title .custom-input-field {
 	margin: 0;
+	align-items: center;
 }
 .list-fields-for-each-page .multi-page-title .custom-input-field:first-of-type {
 	flex-wrap: wrap;
@@ -1004,6 +1005,12 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 }
 .list-fields-for-each-page .multi-page-title .custom-input-field input:first-of-type {
 	width: 100%;
+}
+.list-fields-for-each-page .multi-page-title-delete {
+	width: 20px;
+	padding: 0;
+	background: transparent;
+	border: none;
 }
 
 .list-fields-for-each-page .sortable-item:hover,

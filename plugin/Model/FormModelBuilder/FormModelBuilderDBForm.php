@@ -714,7 +714,12 @@ class FormModelBuilderDBForm
 	public function callbackValueInputModelTitleValue(InputModelBase $pInputModel, array $title): void
 	{
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
-		$pInputModel->setLabel(__('Page title:', 'onoffice-for-wp-websites'));
+		if($title['locale'] === 'native') {
+			$pInputModel->setLabel(__('Page title:', 'onoffice-for-wp-websites'));
+		} else {
+			$languages = $this->getAvailableLanguageSelectValues();
+			$pInputModel->setLabel(sprintf(__('Page title: %s', 'onoffice-for-wp-websites'), $languages[$title['locale']]));
+		}
 		$pInputModel->setValue($title['value']);
 		$pInputModel->setSpecialDivId($title['locale']);
 	}

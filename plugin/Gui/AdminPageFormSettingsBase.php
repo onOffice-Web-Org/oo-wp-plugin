@@ -777,6 +777,10 @@ abstract class AdminPageFormSettingsBase
 			wp_register_script('onoffice-custom-email-subject', plugins_url('/dist/onoffice-custom-email-subject.min.js', $pluginPath));
 			wp_enqueue_script('onoffice-custom-email-subject');
 		}
+		if ($this->getType() === Form::TYPE_OWNER) {
+			wp_register_script('onoffice-admin-leadform', plugins_url('/dist/onoffice-admin-leadform.min.js', $pluginPath));
+			wp_enqueue_script('onoffice-admin-leadform');
+		}
 	}
 
 
