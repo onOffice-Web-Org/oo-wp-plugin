@@ -155,6 +155,16 @@ $dimensions = [
 					if (empty($value)) {
 						continue;
 					}
+					// skip negative boolean fields
+					if (is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0"){
+						continue;
+					}
+					if (
+						($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
+						in_array($field,['innen_courtage', 'aussen_courtage'],true)
+					) {
+						continue;
+					}
 					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
 						. '<div class="oo-detailslisttd">'
 						. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
