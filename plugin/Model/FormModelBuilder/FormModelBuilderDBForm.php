@@ -721,7 +721,7 @@ class FormModelBuilderDBForm
 			$pInputModel->setLabel(sprintf(__('Page title: %s', 'onoffice-for-wp-websites'), $languages[$title['locale']]));
 		}
 		$pInputModel->setValue($title['value']);
-		$pInputModel->setSpecialDivId($title['locale']);
+		$pInputModel->setLanguage($title['locale']);
 	}
 
 	/**

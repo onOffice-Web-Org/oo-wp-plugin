@@ -5,16 +5,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		const localeSelect = group.querySelector('select[name=oopluginformmultipagetitle-locale].onoffice-input');
 		titleInputs.forEach((titleInput) => {
 			const parent = titleInput.closest('.wp-clearfix.custom-input-field');
-			const lang = titleInput.getAttribute('data-localized');
-			const selectOption = Array.from(localeSelect.options).find(opt => opt.value === lang);
+			const langCode = titleInput.getAttribute('data-localized');
+			const selectOption = Array.from(localeSelect.options).find(opt => opt.value === langCode);
 
-			if (lang !== 'native') {
-				parent.appendChild(createDeleteButton(page, lang, parent, selectOption));
-			}
-			titleInput.name = `oopluginformmultipagetitle[${page}][${lang}]`;
-			if (lang !== 'native') {
+			if (langCode !== 'native') {
+				parent.appendChild(createDeleteButton(page, langCode, parent, selectOption));
 				removeLanguageFromSelect(selectOption);
 			}
+			titleInput.name = `oopluginformmultipagetitle[${page}][${langCode}]`;
 		});
 
 		//Add new page title input for localization
@@ -31,10 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				const paragraph = document.createElement('p');
 				paragraph.classList.add('wp-clearfix', 'custom-input-field');
 				paragraph.appendChild(createLabel(identifier, page, selectedLocaleText));
-				paragraph.appendChild(createInput(identifier));
+				paragraph.appendChild(createInput(identifier, selectedLocale));
 				paragraph.appendChild(createDeleteButton(page, selectedLocale, paragraph, selectedOption));
 				parent.insertAdjacentElement('beforebegin', paragraph);
 			}
+			localeSelect.value = '';
 		});
 	});
 	function removeLanguageFromSelect(selectOption) {
@@ -64,22 +63,26 @@ document.addEventListener('DOMContentLoaded', function () {
 		label.htmlFor = identifier;
 		return label;
 	}
-	function createInput(identifier) {
+	function createInput(identifier, langCode) {
 		const input = document.createElement('input');
+		const langShort = langCode.split('_')[0]; //e.g. "es_ES" → "es"
 		input.id = identifier;
 		input.type = 'text';
 		input.name = identifier;
+		input.setAttribute('lang', langShort);
 		return input;
 	}
-	function createDeleteButton(page, lang, parent, selectOption) {
+	function createDeleteButton(page, langCode, parent, selectOption) {
 		const deleteButton = document.createElement('button');
-		deleteButton.id = 'deletePageTitle' + `[${page}][${lang}]`;
+		deleteButton.id = 'deletePageTitle' + `[${page}][${langCode}]`;
 		deleteButton.className = 'dashicons dashicons-dismiss multi-page-title-delete';
+		deleteButton.type = 'button';
+		deleteButton.setAttribute('aria-label', oOAdminLeadFormI18n.removeTitleForLanguage.replace('%s', langCode));
 
 		deleteButton.addEventListener('click', function (e) {
 			if (parent) {
 				parent.remove();
-				addLanguageToSelect(lang, selectOption);
+				addLanguageToSelect(langCode, selectOption);
 			}
 		});
 		return deleteButton;

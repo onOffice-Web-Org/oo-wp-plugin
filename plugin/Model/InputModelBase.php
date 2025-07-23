@@ -173,6 +173,9 @@ abstract class InputModelBase
 	/** @var string */
 	private $_template = '';
 
+	/** @var string */
+	private $_language = '';
+
 	/**
 	 *
 	 * @return string
@@ -381,4 +384,12 @@ abstract class InputModelBase
 	/** @return string */
 	public function getTemplate()
 		{ return $this->_template; }
+
+	/** @param string $language */
+	public function setLanguage($language)
+	{ $this->_language = $language; }
+
+	/** @return string */
+	public function getLanguage()
+	{ return $this->_language; }
 }

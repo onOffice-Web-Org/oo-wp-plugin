@@ -779,6 +779,9 @@ abstract class AdminPageFormSettingsBase
 		}
 		if ($this->getType() === Form::TYPE_OWNER) {
 			wp_register_script('onoffice-admin-leadform', plugins_url('/dist/onoffice-admin-leadform.min.js', $pluginPath));
+			wp_localize_script('onoffice-admin-leadform', 'oOAdminLeadFormI18n', [
+				'removeTitleForLanguage' => sprintf(__('Remove title for language %s', 'onoffice-for-wp-websites'), '%s'),
+			]);
 			wp_enqueue_script('onoffice-admin-leadform');
 		}
 	}

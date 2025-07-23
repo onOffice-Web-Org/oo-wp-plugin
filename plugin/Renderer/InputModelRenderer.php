@@ -208,8 +208,10 @@ class InputModelRenderer
 				if ( $pInputModel->isDeactivate() ) {
 					$pInstance->addAdditionalAttribute( 'disabled', true );
 				}
-				if ($pInputModel->getSpecialDivId() != null) {
-					$pInstance->addAdditionalAttribute('data-localized', $pInputModel->getSpecialDivId());
+				if (!empty($pInputModel->getLanguage())) {
+					$langCode = $pInputModel->getLanguage();
+					$pInstance->addAdditionalAttribute('data-localized', $langCode);
+					$pInstance->addAdditionalAttribute('lang', explode('_', $langCode)[0]); //e.g. "es_ES" → "es"
 				}
 
 				break;
