@@ -80,7 +80,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Added**
 
-* Ability to reorder entire pages via drag & drop in multi-page forms and layouts, allowing for easier reorganization of content
+* Ability to reorder entire pages via drag & drop in multi-page forms, allowing for easier reorganization of content
 
 = 6.3.3 (2025-07-17) =
 
