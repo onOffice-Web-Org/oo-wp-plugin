@@ -89,7 +89,7 @@ class TestClassAddressIdRequestGuard
 			->getMock();
 		$pAddressDetail = $this->getMockBuilder(AddressDetail::class)
 			->setConstructorArgs([new DataAddressDetailView()])
-			->setMethods(['loadSingleAddress', 'getRows'])
+			->onlyMethods(['loadSingleAddress', 'getRows'])
 			->getMock();
 		$pAddressDetail
 			->expects($this->once())->method('getRows')
@@ -131,7 +131,7 @@ class TestClassAddressIdRequestGuard
 			->getMock();
 		$pAddressDetail = $this->getMockBuilder(AddressDetail::class)
 			->setConstructorArgs([new DataAddressDetailView()])
-			->setMethods(['loadSingleAddress', 'getRows'])
+			->onlyMethods(['loadSingleAddress', 'getRows'])
 			->getMock();
 		$pAddressDetail->expects($this->once())->method('getRows')
 			->will($this->returnValue($iterator));

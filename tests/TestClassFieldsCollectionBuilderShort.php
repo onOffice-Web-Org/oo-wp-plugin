@@ -102,7 +102,7 @@ class TestClassFieldsCollectionBuilderShort
 		$pContainer = $pContainerBuilder->build();
 		$pFieldLoaderGeneric = $this->getMockBuilder(FieldLoaderGeneric::class)
 			->disableOriginalConstructor()
-			->setMethods(['load'])
+			->onlyMethods(['load'])
 			->getMock();
 		$pFieldLoaderGeneric->method('load')->will($this->returnCallback(function(): Generator {
 			yield from $this->_exampleRowsByModule['address'] + $this->_exampleRowsByModule['estate'];
@@ -110,7 +110,7 @@ class TestClassFieldsCollectionBuilderShort
 
 		$pFieldLoaderSearchCriteria = $this->getMockBuilder(FieldLoaderSearchCriteria::class)
 			->disableOriginalConstructor()
-			->setMethods(['load'])
+			->onlyMethods(['load'])
 			->getMock();
 		$pFieldLoaderSearchCriteria->method('load')->will($this->returnCallback(function(): Generator {
 			yield from $this->_exampleRowsByModule['searchcriteria'];

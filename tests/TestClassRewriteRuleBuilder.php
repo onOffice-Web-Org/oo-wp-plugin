@@ -96,7 +96,7 @@ class TestClassRewriteRuleBuilder
 
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
 			->disableOriginalConstructor()
-			->setMethods(['getDetailView'])
+			->onlyMethods(['getDetailView'])
 			->getMock();
 
 		$pDataDetailView = new DataDetailView;
@@ -107,7 +107,7 @@ class TestClassRewriteRuleBuilder
 			->willReturn($pDataDetailView);
 
 		$pWPPageWrapper = $this->getMockBuilder(WPPageWrapper::class)
-			->setMethods(['getPageUriByPageId'])
+			->onlyMethods(['getPageUriByPageId'])
 			->getMock();
 		$pWPPageWrapper->method('getPageUriByPageId')
 			->with(13)
@@ -149,7 +149,7 @@ class TestClassRewriteRuleBuilder
 
 		$pDataAddressDetailViewHandler = $this->getMockBuilder(DataAddressDetailViewHandler::class)
 			->disableOriginalConstructor()
-			->setMethods(['getAddressDetailView'])
+			->onlyMethods(['getAddressDetailView'])
 			->getMock();
 
 		$pDataAddressDetailView = new DataAddressDetailView;
@@ -160,7 +160,7 @@ class TestClassRewriteRuleBuilder
 			->willReturn($pDataAddressDetailView);
 
 		$pWPPageWrapper = $this->getMockBuilder(WPPageWrapper::class)
-			->setMethods(['getPageUriByPageId'])
+			->onlyMethods(['getPageUriByPageId'])
 			->getMock();
 		$pWPPageWrapper->method('getPageUriByPageId')
 			->with(13)

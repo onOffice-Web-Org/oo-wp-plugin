@@ -89,10 +89,10 @@ class TestClassDataListViewFactoryBase
 	public function prepare()
 	{
 		$pMockDataListViewFactoryBase = $this->getMockBuilder(DataListViewFactoryBase::class)
-			->setMethods(['createListViewByRow'])
+			->onlyMethods(['createListViewByRow'])
 			->getMock();
 		$this->_pMockRecordManagerRead = $this->getMockBuilder(RecordManagerRead::class)
-			->setMethods(['getRowByName', 'getRecords', 'checkSameName'])
+			->onlyMethods(['getRowByName', 'getRecords', 'checkSameName'])
 			->getMock();
 		$pNewRecordFinder = $this->_pMockRecordManagerRead;
 

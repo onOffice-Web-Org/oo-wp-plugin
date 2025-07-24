@@ -199,7 +199,7 @@ class TestClassAdminViewController
 	{
 		$adminPageEstateMock = $this->getMockBuilder(AdminPageEstate::class)
 			->disableOriginalConstructor()
-			->setMethods(['getSelectedAdminPage'])
+			->onlyMethods(['getSelectedAdminPage'])
 			->getMock();
 		$pageAjax = new AdminPageEstateDetail('page-detail');
 		$adminPageEstateMock->method('getSelectedAdminPage')->willReturn($pageAjax);
@@ -212,13 +212,13 @@ class TestClassAdminViewController
 	{
 		$fieldNamesMock = $this->getMockBuilder(Fieldnames::class)
 			->disableOriginalConstructor()
-			->setMethods(['loadApiEstateCategories'])
+			->onlyMethods(['loadApiEstateCategories'])
 			->getMock();
 		$fieldNamesMock->method('loadApiEstateCategories')->willReturn(true);
 
 		$pAdminViewController = $this->getMockBuilder(AdminViewController::class)
 			->disableOriginalConstructor()
-			->setMethods(['getField'])
+			->onlyMethods(['getField'])
 			->getMock();
 		$pAdminViewController->method('getField')->willReturn($fieldNamesMock);
 		$this->assertNull($pAdminViewController->displayAPIError());
@@ -233,13 +233,13 @@ class TestClassAdminViewController
 		$exception = $pContainer->get(APIClientCredentialsException::class);
 		$fieldNamesMock = $this->getMockBuilder(Fieldnames::class)
 			->disableOriginalConstructor()
-			->setMethods(['loadApiEstateCategories'])
+			->onlyMethods(['loadApiEstateCategories'])
 			->getMock();
 		$fieldNamesMock->method('loadApiEstateCategories')->will($this->throwException($exception));
 
 		$pAdminViewController = $this->getMockBuilder(AdminViewController::class)
 			->disableOriginalConstructor()
-			->setMethods(['getField'])
+			->onlyMethods(['getField'])
 			->getMock();
 		$pAdminViewController->method('getField')->willReturn($fieldNamesMock);
 		$pAdminViewController->displayAPIError();
@@ -272,7 +272,7 @@ class TestClassAdminViewController
 
 		$pAdminViewController = $this->getMockBuilder(AdminViewController::class)
 			->disableOriginalConstructor()
-			->setMethods(['getRecordManagerReadForm'])
+			->onlyMethods(['getRecordManagerReadForm'])
 			->getMock();
 
 		$pAdminViewController->method('getRecordManagerReadForm')
@@ -324,13 +324,13 @@ We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?p
 		$exception = $pContainer->get(APIEmptyResultException::class);
 		$fieldNamesMock = $this->getMockBuilder(Fieldnames::class)
 			->disableOriginalConstructor()
-			->setMethods(['loadApiEstateCategories'])
+			->onlyMethods(['loadApiEstateCategories'])
 			->getMock();
 		$fieldNamesMock->method('loadApiEstateCategories')->will($this->throwException($exception));
 
 		$pAdminViewController = $this->getMockBuilder(AdminViewController::class)
 			->disableOriginalConstructor()
-			->setMethods(['getField'])
+			->onlyMethods(['getField'])
 			->getMock();
 		$pAdminViewController->method('getField')->willReturn($fieldNamesMock);
 		$pAdminViewController->displayAPIError();

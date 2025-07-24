@@ -106,6 +106,10 @@ class ArrayContainerEscape extends ArrayContainer {
 		$callback = Escape::getCallbackByEscaping( $escaping );
 		$value = parent::getValue($key);
 
+		if($value === null) {
+			return;
+		}
+
 		if (is_array($value)) {
 			return array_map($callback, $value);
 		}
