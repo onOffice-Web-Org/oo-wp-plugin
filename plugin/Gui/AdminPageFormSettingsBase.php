@@ -876,8 +876,12 @@ abstract class AdminPageFormSettingsBase
 		do_accordion_sections( get_current_screen()->id, 'side', null );
 		echo '</div>';
 		echo '<div class="fieldsSortable postbox">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields',
-				'onoffice-for-wp-websites' ) . '</span></h2>';
+		echo '<div class="postbox-header">
+        <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen
+			<input type="checkbox" id="postbox-select-all" name="postbox-select-all"/>
+			</label>
+      	</div>';
 		$pInputModelRenderer->buildForAjax( $pFormViewSortableFields );
 		echo '</div>';
 		echo '<div class="clear"></div>';
