@@ -189,7 +189,9 @@ class DataFormConfigurationFactory
 
 		if ($this->_type === Form::TYPE_OWNER) {
 			$rowTitlePerMultipageConfig = $this->_pRecordManagerRead->readTitlePerMultipageByFormId($formId);
-			$this->configureTitlePerMultipageByRow($rowTitlePerMultipageConfig, $pConfig);
+			if (!empty($rowTitlePerMultipageConfig)) {
+				$this->configureTitlePerMultipageByRow($rowTitlePerMultipageConfig, $pConfig);
+			}
 		}
 
 		foreach ($rowFields as $fieldRow) {

@@ -134,7 +134,6 @@ class Form
 			$this->_pFormData = new FormData($pFormConfig, $this->_formNo);
 			$this->_pFormData->setRequiredFields($this->getRequiredFields());
 			$this->_pFormData->setFormtype($pFormConfig->getFormType());
-			$this->_pFormData->setPageTitles($pFormConfig->getTitlePerMultipage());
 			$this->_pFormData->setFormSent(false);
 			$this->_pFormData->setValues
 				(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues());
@@ -725,7 +724,7 @@ class Form
 	/** @return array */
 	public function getPageTitlesByCurrentLanguage()
 	{
-		$pageTitles = $this->_pFormData->getPageTitles();
+		$pageTitles = $this->getDataFormConfiguration()->getTitlePerMultipage();
 		$currentLocale = get_locale();
 		$uniquePages = array_unique(array_column($pageTitles, 'page'));
 		sort($uniquePages);

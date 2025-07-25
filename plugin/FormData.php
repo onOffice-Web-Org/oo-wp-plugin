@@ -73,10 +73,6 @@ class FormData
 	/** @var DataFormConfiguration */
 	private $_pDataFormConfiguration = null;
 
-	/** @var array */
-	private $_pageTitles = [];
-
-
 	/**
 	 *
 	 * @param DataFormConfiguration $pDataFormConfiguration
@@ -295,12 +291,4 @@ class FormData
 	/** @return int */
 	public function getFormNo()
 		{ return $this->_formNo; }
-
-	/** @param array $pageTitles */
-	public function setPageTitles(array $pageTitles): void
-	{ $this->_pageTitles = $pageTitles; }
-
-	/** @return array */
-	public function getPageTitles(): array
-	{ return $this->_pageTitles; }
 }
