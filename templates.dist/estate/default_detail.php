@@ -214,7 +214,17 @@ $dimensions = [
 				$energyClass = $rawValues->getValueRaw($estateId)['elements']['energyClass'] ?? '';
 				$energyClassPermittedValues = $pEstates->getPermittedValues('energyClass');
 				$energyCertificateType = $rawValues->getValueRaw($estateId)['elements']['energieausweistyp'] ?? '';
-				$energyCertificateLabels = ["<30", "50", "75", "100", "130", "160", "200", "250", ">250"];
+				$energyCertificateLabels = [
+					"<30",         // A+
+					"30 - 50",     // A
+					"50 - 75",     // B
+					"75 - 100",    // C
+					"100 - 130",   // D
+					"130 - 160",   // E
+					"160 - 200",   // F
+					"200 - 250",   // G
+					">250"         // H
+				];
 				?>
 				<div class="oo-details-energy-certificate">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
@@ -223,12 +233,17 @@ $dimensions = [
 						<div class="energy-certificate-container">
 							<div class="segmented-bar">
 								<?php
+								$i = 0;
 								foreach ($energyClassPermittedValues as $key => $label) {
-									$labelIndex = array_keys($energyClassPermittedValues)[$key];
-									echo '<div class="energy-certificate-label"><span>' . $labels[$labelIndex] . '</span></div>';
-									echo '<div class="segment' . ($selectedEnergyClass == $label ? ' selected' : '') . '"><span>' . $label . '</span></div>';
+									echo '<div class="segment' . ($selectedEnergyClass === $key ? ' selected' : '') . '">';
+									echo '<span>' . esc_html( $label) . '</span>';
+									echo '</div>';
+					
+									echo '<div class="energy-certificate-label">';
+									echo '<span>' . esc_html($labels[$i]) . '</span>';
+									echo '</div>';
+									$i++;
 								}
-								echo '<div class="energy-certificate-label"><span>'.end($labels).'</span></div>';
 								?>
 							</div>
 						</div>
