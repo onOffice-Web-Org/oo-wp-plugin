@@ -214,7 +214,6 @@ $dimensions = [
 				$energyClass = $rawValues->getValueRaw($estateId)['elements']['energyClass'] ?? '';
 				$energyClassPermittedValues = $pEstates->getPermittedValues('energyClass');
 				$energyCertificateType = $rawValues->getValueRaw($estateId)['elements']['energieausweistyp'] ?? '';
-				// 							A+      A    B     C      D       E     F       G     H
 				$energyCertificateLabels = ["<30", "50", "75", "100", "130", "160", "200", "250", ">250"];
 				?>
 				<div class="oo-details-energy-certificate">
