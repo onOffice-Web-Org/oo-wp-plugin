@@ -91,6 +91,7 @@ class TestClassDataDetailViewHandler
 
 		$this->assertEquals($pDataDetailview->getTemplate(), '');
 		$this->assertEquals($pDataDetailview->getFields(), []);
+		$this->assertEquals($pDataDetailview->getHighlightedFields(), []);
 		$this->assertEquals($pDataDetailview->getPictureTypes(), []);
 		$this->assertEquals($pDataDetailview->getExpose(), '');
 		$this->assertEquals($pDataDetailview->getAddressFields(), []);
