@@ -49,6 +49,9 @@ class DataDetailView
 	const FIELDS = 'fields';
 
 	/** */
+	const HIGHLIGHTED = 'highlighted';
+
+	/** */
 	const ADDRESSFIELDS = 'addressfields';
 
 	/** */
@@ -104,6 +107,9 @@ class DataDetailView
 		'aussen_courtage',
 		'kaution',
 	];
+
+	/** @var string[] */
+	private $_highlighted = [];
 
 	/** @var string[] */
 	private $_addressFields = [
@@ -324,6 +330,9 @@ class DataDetailView
 	public function getFields(): array
 		{ return $this->_fields; }
 
+	public function getHighlightedFields(): array
+		{ return $this->_highlighted; }
+
 	/** @return array */
 	public function getPictureTypes(): array
 		{ return $this->_pictureTypes; }
@@ -367,6 +376,10 @@ class DataDetailView
 	/** @param array $fields */
 	public function setFields(array $fields)
 		{ $this->_fields = $fields; }
+
+	/** @param array $keyfacts */
+	public function setHighlightedFields(array $highlighted)
+		{ $this->_highlighted = $highlighted; }
 
 	/** @param array $pictureTypes */
 	public function setPictureTypes(array $pictureTypes)

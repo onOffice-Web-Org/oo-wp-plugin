@@ -156,6 +156,11 @@
     padding: 2.5px 0;
 }
 
+.oo-listtd.--highlight {
+    font-weight: bold;
+    color: #80acd3;
+}
+
 .oo-detailslink a, .favorize, .oo-unitslink a {
     display: block;
     text-align: center;
@@ -188,6 +193,7 @@
 .oo-detailview {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .oo-details-main {
@@ -196,7 +202,7 @@
 }
 
 .oo-detailsgallery {
-    margin-bottom: 25px;
+    margin-bottom: 24px;
 }
 
 .oo-detailsgallery .slick-arrow {
@@ -218,20 +224,58 @@
     height: 400px;
 }
 
+.oo-details-highlight {
+    width: calc((100% - 3 * 8px) / 4);
+}
+
+.oo-details-highlights-headline {
+	font-size: 22px;
+    margin-bottom: 16px;
+    font-weight:700;
+}
+
+.oo-details-highlights-table {
+	display: flex;
+	flex-wrap: wrap;
+    gap:8px;
+    border-bottom: 2px solid #efefef;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+}
+
+.oo-details-highlight__label {
+    list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.oo-details-highlight__value {
+    font-weight:700;
+    list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
 .oo-detailstable {
     display: flex;
     flex-wrap: wrap;
 }
 
-.oo-detailslisttd {
+.oo-details-fact__label {
+    list-style: none;
+    font-weight:700;
     width: 25%;
     padding: 5px 0;
+	margin: 0;
     border-bottom: 2px solid #efefef;
 }
 
-.oo-detailslisttd:nth-child(odd),
-.oo-field-label {
-    font-weight: 700;
+.oo-details-fact__value {
+    list-style: none;
+    width: 25%;
+    padding: 5px 0;
+	margin: 0;
+    border-bottom: 2px solid #efefef;
 }
 
 .oo-detailsfreetext, .oo-detailsmap, .oo-area-butler, .oo-detailspricecalculator, .oo-units {

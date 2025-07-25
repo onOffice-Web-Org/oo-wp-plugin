@@ -98,6 +98,9 @@ class DataListView
 	private $_hiddenFields = [];
 
 	/** @var string[] */
+	private $_highlightedFields = [];
+
+	/** @var string[] */
 	private $_pictureTypes = [];
 
 	/** @var string[] */
@@ -332,6 +335,14 @@ class DataListView
 	/** @param array $hiddenFields */
 	public function setHiddenFields(array $hiddenFields)
 		{ $this->_hiddenFields = $hiddenFields; }
+
+	/** @return array */
+	public function getHighlightedFields(): array
+		{ return $this->_highlightedFields; }
+
+	/** @param array $highlightedFields */
+	public function setHighlightedFields(array $highlightedFields)
+		{ $this->_highlightedFields = $highlightedFields; }
 
 	/** @return string */
 	public function getModule(): string
