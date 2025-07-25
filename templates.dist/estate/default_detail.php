@@ -241,7 +241,8 @@ $dimensions = [
 					<?php echo $mapContent; ?>
 				</div>
 			<?php } ?>
-			<?php if ($pEstates->getShowEnergyCertificate()) {
+			<?php 
+			if ($pEstates->getShowEnergyCertificate()) {
 				$energyClass = $rawValues->getValueRaw($estateId)['elements']['energyClass'] ?? '';
 				$energyClassPermittedValues = $pEstates->getPermittedValues('energyClass');
 				$energyCertificateType = $rawValues->getValueRaw($estateId)['elements']['energieausweistyp'] ?? '';
@@ -260,7 +261,8 @@ $dimensions = [
 				<div class="oo-details-energy-certificate">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
 					<?php
-					function renderEnergyCertificate(array $energyClassPermittedValues, string $selectedEnergyClass, array $labels) { ?>
+					function renderEnergyCertificate(array $energyClassPermittedValues, string $selectedEnergyClass, array $labels) 
+					{ ?>
 						<div class="energy-certificate-container">
 							<div class="segmented-bar">
 								<?php
@@ -269,7 +271,7 @@ $dimensions = [
 									echo '<div class="segment' . ($selectedEnergyClass === $key ? ' selected' : '') . '">';
 									echo '<span>' . esc_html( $label) . '</span>';
 									echo '</div>';
-					
+								
 									echo '<div class="energy-certificate-label">';
 									echo '<span>' . esc_html($labels[$i]) . '</span>';
 									echo '</div>';
