@@ -97,7 +97,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
                     <div class="lead-lightbox lead-page-<?php echo $pageNumber; ?>">
 
                         <?php if($totalPages > 1): ?>
-                            <span><?php echo esc_html($pageTitles[$pageNumber-1]['value'] ?? sprintf(__('Page %d', 'onoffice-for-wp-websites'), $pageNumber)); ?></span>
+                            <span><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></span>
                         <?php endif; ?>
                         <p>
                             <?php echo implode('<br>', $fields); ?>

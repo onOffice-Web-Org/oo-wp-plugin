@@ -196,7 +196,7 @@ class TestClassForm
 	private function getTitlePerMultipageEnglishPage1(): array
 	{
 		return [
-			'form_multipage_title_id' => 1,
+			'form_multipage_title_id' => 2,
 			'form_id' => 14,
 			'locale' => 'en_EN',
 			'value' => 'Your contact details',
@@ -210,7 +210,7 @@ class TestClassForm
 	private function getTitlePerMultipageNativePage2(): array
 	{
 		return [
-			'form_multipage_title_id' => 1,
+			'form_multipage_title_id' => 3,
 			'form_id' => 14,
 			'locale' => 'native',
 			'value' => 'Ihre Immobilie',
@@ -224,7 +224,7 @@ class TestClassForm
 	private function getTitlePerMultipageNativePage3(): array
 	{
 		return [
-			'form_multipage_title_id' => 1,
+			'form_multipage_title_id' => 4,
 			'form_id' => 14,
 			'locale' => 'native',
 			'value' => '',
@@ -238,7 +238,7 @@ class TestClassForm
 	private function getTitlePerMultipageEnglishPage3(): array
 	{
 		return [
-			'form_multipage_title_id' => 1,
+			'form_multipage_title_id' => 5,
 			'form_id' => 14,
 			'locale' => 'en_EN',
 			'value' => '',

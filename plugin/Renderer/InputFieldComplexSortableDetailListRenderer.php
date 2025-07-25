@@ -275,6 +275,14 @@ class InputFieldComplexSortableDetailListRenderer
 					$titles[] = $title;
 				}
 			}
+			//Fallback for new leadgenerator forms
+			if (empty($titles)) {
+				$titles[] = [
+					'page' => 1,
+					'locale' => 'native',
+					'value' => ''
+				];
+			}
 			return $titles;
 		}
 	public function setTitlesPerMultipage(array $titlesPerMultipage)
