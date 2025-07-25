@@ -8,7 +8,6 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
 onOffice.default_values_input_converter = function () {
     var predefinedValues = onOffice_loc_settings.defaultvalues || {};
-
     // plaintext
     document.querySelectorAll('select[name=language-language].onoffice-input').forEach(function (element) {
         element.backupLanguageSelection = {};

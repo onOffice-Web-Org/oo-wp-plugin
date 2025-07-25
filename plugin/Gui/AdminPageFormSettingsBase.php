@@ -236,6 +236,10 @@ abstract class AdminPageFormSettingsBase
 			if (array_key_exists(RecordManager::TABLENAME_TASKCONFIG_FORMS, $row)) {
 				$result = $result && $pRecordManagerUpdateForm->updateTasksConfigByRow($row[RecordManager::TABLENAME_TASKCONFIG_FORMS]);
 			}
+
+			if (array_key_exists(RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS, $row)) {
+				$result = $result && $pRecordManagerUpdateForm->updateMultiPageTitleByRow($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS]);
+			}
 		} else {
 			$action = RecordManagerFactory::ACTION_INSERT;
 			// insert
@@ -773,6 +777,13 @@ abstract class AdminPageFormSettingsBase
 			wp_register_script('onoffice-custom-email-subject', plugins_url('/dist/onoffice-custom-email-subject.min.js', $pluginPath));
 			wp_enqueue_script('onoffice-custom-email-subject');
 		}
+		if ($this->getType() === Form::TYPE_OWNER) {
+			wp_register_script('onoffice-admin-leadform', plugins_url('/dist/onoffice-admin-leadform.min.js', $pluginPath));
+			wp_localize_script('onoffice-admin-leadform', 'oOAdminLeadFormI18n', [
+				'removeTitleForLanguage' => sprintf(__('Remove title for language %s', 'onoffice-for-wp-websites'), '%s'),
+			]);
+			wp_enqueue_script('onoffice-admin-leadform');
+		}
 	}
 
 
@@ -968,7 +979,7 @@ abstract class AdminPageFormSettingsBase
 			}
 			$values->$fieldName[$key] = $data[$value];
 		}
-	
+
 		return $values;
 	}
 
