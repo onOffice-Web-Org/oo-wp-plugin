@@ -497,7 +497,7 @@ class EstateList
 	 * @return array
 	 * @throws UnknownViewException
 	 */
-	public function getEstateListParametersForCache (?string $lang = null, bool $formatOutput)
+	public function getEstateListParametersForCache (bool $formatOutput, ?string $lang = null)
 	{
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
