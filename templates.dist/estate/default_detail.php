@@ -241,50 +241,28 @@ $dimensions = [
 					<?php echo $mapContent; ?>
 				</div>
 			<?php } ?>
-			<?php 
-			if ($pEstates->getShowEnergyCertificate()) {
+			<?php if ($pEstates->getShowEnergyCertificate()) {
 				$energyClass = $rawValues->getValueRaw($estateId)['elements']['energyClass'] ?? '';
 				$energyClassPermittedValues = $pEstates->getPermittedValues('energyClass');
-				$energyCertificateType = $rawValues->getValueRaw($estateId)['elements']['energieausweistyp'] ?? '';
-				$energyCertificateLabels = [
-					"<30",         // A+
-					"30 - 50",     // A
-					"50 - 75",     // B
-					"75 - 100",    // C
-					"100 - 130",   // D
-					"130 - 160",   // E
-					"160 - 200",   // F
-					"200 - 250",   // G
-					">250"         // H
-				];
-				?>
+				$energyCertificateValueLabels = ["0", "25", "50", "75", "100", "125", "150", "175", "200", ">200"];
+			?>
 				<div class="oo-details-energy-certificate">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
-					<?php
-					function renderEnergyCertificate(array $energyClassPermittedValues, string $selectedEnergyClass, array $labels) 
-					{ ?>
+
+					<?php if (!empty($energyClassPermittedValues) && !empty($energyClass)) : ?>
 						<div class="energy-certificate-container">
 							<div class="segmented-bar">
-								<?php
-								$i = 0;
-								foreach ($energyClassPermittedValues as $key => $label) {
-									echo '<div class="segment' . ($selectedEnergyClass === $key ? ' selected' : '') . '">';
-									echo '<span>' . esc_html( $label) . '</span>';
-									echo '</div>';
-								
-									echo '<div class="energy-certificate-label">';
-									echo '<span>' . esc_html($labels[$i]) . '</span>';
-									echo '</div>';
-									$i++;
-								}
-								?>
+								<?php foreach ($energyClassPermittedValues as $key => $label): ?>
+									<div class="energy-certificate-label"><span><?php echo $energyCertificateValueLabels[$key] ?? ''; ?></span></div>
+									<div class="segment<?php echo ($energyClass === $label ? ' selected' : ''); ?>">
+										<span><?php echo esc_html($label); ?></span>
+									</div>
+								<?php endforeach; ?>
+								<div class="energy-certificate-label"><span><?php echo end($energyCertificateValueLabels); ?></span></div>
 							</div>
 						</div>
-					<?php }
-					if (!empty($energyClassPermittedValues) && !empty($energyClass)) {
-						renderEnergyCertificate($energyClassPermittedValues, $energyClass, $energyCertificateLabels);
-					}
-					?>
+					<?php endif; ?>
+
 					<div class="oo-detailstable">
 						<?php
 						$fields = [
@@ -294,13 +272,9 @@ $dimensions = [
 							'energyClass',
 							'energietraeger'
 						];
-
-
+					
 						foreach ($fields as $field) {
-							if (empty($currentEstate[$field])) {
-								continue;
-							}
-
+							if (empty($currentEstate[$field])) continue;
 							echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
 								. '<div class="oo-detailslisttd">'
 								. (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field]))
@@ -310,6 +284,7 @@ $dimensions = [
 					</div>
 				</div>
 			<?php } ?>
+
 
 			<?php if ($currentEstate["ausstatt_beschr"] !== "") { ?>
 				<div class="oo-detailsfreetext">
