@@ -206,7 +206,13 @@
 }
 
 .oo-detailsgallery .slick-arrow {
-    z-index: 999;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    text-shadow: -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff, 1px 1px 0 #ffffff;
 }
 
 .oo-detailsgallery .slick-prev {
