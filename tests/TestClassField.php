@@ -110,7 +110,7 @@ class TestClassField
 			],
 			'compoundFields' => ['Anrede-Titel' => ['Anrede', 'Titel']],
 			'tablename' => '',
-			testGetAsArray
+			'dependencies' => []
 		];
 		$this->assertEquals($expectation, $pField->getAsRow());
 
@@ -169,7 +169,7 @@ class TestClassField
 			],
 			'compoundFields' => ['Anrede-Titel' => ['Anrede', 'Titel']],
 			'tablename' => '',
-			'dependencies' => []
+			'dependencies' => [],
 		];
 		$pField = Field::createByRow('testField1Name', $row);
 		$this->assertEquals($row, $pField->getAsRow());
