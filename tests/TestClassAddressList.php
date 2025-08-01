@@ -546,7 +546,8 @@ class TestClassAddressList
 				'compoundFields' => Array (),
 				'labelOnlyValues' => Array (),
 				'name' => 'KdNr',
-				'tablename' => ''
+				'tablename' => '',
+				'dependencies' => Array ()
 			],
 			'Vorname' => [
 				'type' => 'varchar',
@@ -562,7 +563,8 @@ class TestClassAddressList
 				'compoundFields' => Array (),
 				'labelOnlyValues' => Array (),
 				'name' => 'Vorname',
-				'tablename' => ''
+				'tablename' => '',
+				'dependencies' => Array ()
 			],
 			'Name' => [
 				'type' => 'varchar',
@@ -578,7 +580,8 @@ class TestClassAddressList
 				'compoundFields' => Array (),
 				'labelOnlyValues' => Array (),
 				'name' => 'Name',
-				'tablename' => ''
+				'tablename' => '',
+				'dependencies' => Array ()
 			]
 		];
 
