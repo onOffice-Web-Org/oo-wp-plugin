@@ -2302,9 +2302,9 @@ msgstr "El campo Nombre no debe estar vacío. ¿Quieres salir de la página sin 
 
 #: 
 msgid "Cache is being cleared in the background. This may take a few minutes."
-msgstr ""
+msgstr "La memoria caché se está limpiando en segundo plano. Esto puede tardar unos minutos."
 
 #: 
 msgid "Save changes"
-msgstr ""
+msgstr "Guardar cambios"
 

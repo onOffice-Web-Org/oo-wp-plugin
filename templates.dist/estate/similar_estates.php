@@ -113,7 +113,15 @@ $dimensions = [
 								<?php echo $currentEstate["objekttitel"]; ?>
 							</div>
 							<div class="oo-listinfotable">
-								<?php foreach ( $currentEstate as $field => $value ) {
+								<?php
+								$keyfacts = array_flip($pEstates->getHighlightedFields());
+								$estateFacts = iterator_to_array($currentEstate);
+								// keep order but float keyfacts to the top
+								$estateFacts = array_merge(
+									array_intersect_key($estateFacts, $keyfacts), // get only highlighted fields
+									array_diff_key($estateFacts, $keyfacts) // get only non highlighted
+								);
+								foreach ( $estateFacts as $field => $value ) {
 									if ( is_numeric( $value ) && 0 == $value ) {
 										continue;
 									}
@@ -133,7 +141,10 @@ $dimensions = [
 									) {
 										continue;
 									}
-									echo '<div class="oo-listtd">'.esc_html($pEstates->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
+
+									$class = 'oo-listtd'. ($pEstates->isHighlightedField($field) ? ' --highlight' : '');
+									echo '<div class="'.$class.'">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'.
+										'<div class="'.$class.'">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 								} ?>
 							</div>
 							<div class="oo-detailslink">
