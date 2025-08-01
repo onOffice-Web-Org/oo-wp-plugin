@@ -257,14 +257,14 @@
 }
 
 .oo-detailstable {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 0.5rem;
 }
 
 .oo-details-fact__label {
     list-style: none;
     font-weight:700;
-    width: 25%;
     padding: 5px 0;
 	margin: 0;
     border-bottom: 2px solid #efefef;
@@ -272,7 +272,6 @@
 
 .oo-details-fact__value {
     list-style: none;
-    width: 25%;
     padding: 5px 0;
 	margin: 0;
     border-bottom: 2px solid #efefef;
