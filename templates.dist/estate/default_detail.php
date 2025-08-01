@@ -263,7 +263,7 @@ $dimensions = [
 						</div>
 					<?php endif; ?>
 
-					<div class="oo-detailstable">
+					<dl class="oo-detailstable">
 						<?php
 						$fields = [
 							'baujahr',
@@ -274,14 +274,17 @@ $dimensions = [
 						];
 					
 						foreach ($fields as $field) {
-							if (empty($currentEstate[$field])) continue;
-							echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
-								. '<div class="oo-detailslisttd">'
-								. (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field]))
-								. '</div>' . "\n";
+							if (empty($currentEstate[$field])) continue;?>
+							<dt class="oo-details-fact__label">
+								<?php echo esc_html($pEstates->getFieldLabel($field)) ?>
+							</dt>
+							<dd class="oo-details-fact__value">
+								<?php echo (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field])) ?>
+							</dd>
+							<?php
 						}
 						?>
-					</div>
+					</dl>
 				</div>
 			<?php } ?>
 
