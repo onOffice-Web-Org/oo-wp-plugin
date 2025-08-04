@@ -114,6 +114,173 @@ jQuery(document).ready(function($){
 
 	let isMultiplePages = $('#multi-page-container').is(':visible');
 
+	const MultiPageTitle = {
+		init: function() {
+			this.convertMultiPageTitles();
+		},
+		convertMultiPageTitles: function () {
+			document.querySelectorAll('.multi-page-title').forEach((multiPageTitleSection, index) => {
+				const titleInputs = multiPageTitleSection.querySelectorAll('input[name^=oopluginformmultipagetitle-value]');
+				const page = multiPageTitleSection.getAttribute('data-page');
+				const localeSelect = multiPageTitleSection.querySelector('select[name=oopluginformmultipagetitle-locale].onoffice-input');
+				titleInputs.forEach((titleInput) => {
+					const parent = titleInput.closest('.wp-clearfix.custom-input-field');
+					const langCode = titleInput.getAttribute('data-localized');
+					const selectOption = Array.from(localeSelect.options).find(opt => opt.value === langCode);
+
+					if (langCode !== 'native') {
+						parent.appendChild(this.createDeleteButton(page, langCode, parent, selectOption));
+						this.removeLanguageFromSelect(selectOption);
+					}
+					titleInput.name = `oopluginformmultipagetitle[${page}][${langCode}]`;
+				});
+
+				//Add new page title input for localization
+				this.addMultiPageLanguageSelectEventListeners(localeSelect, multiPageTitleSection, page);
+			});
+		},
+		addMultiPageTitle: function(pageNumber) {
+			const container = document.createElement('div');
+			const span = document.createElement('span');
+			const paragraph = document.createElement('p');
+			const label = document.createElement('label');
+			const input = document.createElement('input');
+
+			container.classList.add('multi-page-title');
+			span.className = 'page-title';
+			span.textContent = `${onOffice_loc_settings.page_title} ${pageNumber}`;
+
+			paragraph.classList.add('wp-clearfix', 'custom-input-field');
+			label.classList.add('howto', 'custom-label');
+			label.textContent = oOMultiPageI18n.pageTitle;
+			input.classList.add('onoffice-input');
+			input.setAttribute('type', 'text');
+			input.name = `oopluginformmultipagetitle[${pageNumber}][native]`;
+
+			paragraph.appendChild(label);
+			paragraph.appendChild(input);
+			container.appendChild(span);
+			container.appendChild(paragraph);
+			container.appendChild(this.addMultiPageLanguageSelect(container, pageNumber));
+
+			return container;
+		},
+
+		addMultiPageLanguageSelect: function(multiPageTitleSection, page) {
+			const paragraph = document.createElement('p');
+			const label = document.createElement('label');
+			const select = document.createElement('select');
+			const installedLanguages = Object.keys(onOffice_loc_settings.installed_wp_languages);
+
+
+			paragraph.classList.add('wp-clearfix', 'custom-input-field');
+			label.classList.add('howto', 'custom-label');
+			label.textContent = oOMultiPageI18n.addLanguage;
+			select.classList.add('onoffice-input');
+			select.name = `oopluginformmultipagetitle-locale`;
+			select.options.add(new Option(onOffice_loc_settings.label_choose_language, ''));
+			installedLanguages.forEach(function (k) {
+				const v = onOffice_loc_settings.installed_wp_languages[k];
+				if (k === onOffice_loc_settings.language_native) {
+					k = 'native';
+				}
+				select.options.add(new Option(v, k));
+			});
+			select.options.selectedIndex = 0;
+			this.addMultiPageLanguageSelectEventListeners(select, multiPageTitleSection, page);
+
+			paragraph.appendChild(label);
+			paragraph.appendChild(select);
+
+			return paragraph;
+		},
+
+		addMultiPageLanguageSelectEventListeners: function(localeSelect, multiPageTitleSection, page) {
+			const self = this;
+
+			localeSelect.addEventListener('change', function () {
+				const selectedLocale = this.value;
+				const selectedOption = this.options[localeSelect.selectedIndex];
+				const selectedLocaleText = selectedOption.text;
+				const parent = localeSelect.closest('.wp-clearfix.custom-input-field');
+				const identifier = `oopluginformmultipagetitle[${page}][${selectedLocale}]`;
+
+				let existingInput = multiPageTitleSection.querySelector(`input[name="${identifier}"]`);
+				if (!existingInput) {
+					self.removeLanguageFromSelect(selectedOption);
+					const paragraph = document.createElement('p');
+					paragraph.classList.add('wp-clearfix', 'custom-input-field');
+					paragraph.appendChild(self.createLabel(identifier, page, selectedLocaleText));
+					paragraph.appendChild(self.createInput(identifier, selectedLocale));
+					paragraph.appendChild(self.createDeleteButton(page, selectedLocale, paragraph, selectedOption));
+					parent.insertAdjacentElement('beforebegin', paragraph);
+				}
+				localeSelect.value = '';
+			});
+		},
+
+		createInput: function(identifier, langCode) {
+			const input = document.createElement('input');
+			const langShort = langCode.split('_')[0]; //e.g. "es_ES" → "es"
+			input.id = identifier;
+			input.type = 'text';
+			input.name = identifier;
+			input.setAttribute('lang', langShort);
+			return input;
+		},
+
+		removeLanguageFromSelect: function(selectOption) {
+			if (selectOption) {
+				selectOption.hidden = true;
+				selectOption.style.display = 'none';
+				selectOption.disabled = true;
+			}
+		},
+
+	 	addLanguageToSelect: function(lang, selectOption) {
+			if (selectOption) {
+				selectOption.hidden = false;
+				selectOption.style.display = 'block';
+				selectOption.disabled = false;
+			}
+		},
+
+		createLabel: function (identifier, page, selectedLocaleText) {
+			const label = document.createElement('label');
+			const nativeInput = document.querySelector(`input[name="oopluginformmultipagetitle[${page}][native]"]`);
+
+			if (nativeInput) {
+				const nativeLabel = document.querySelector(`label[for="${nativeInput.id}"]`);
+				label.textContent = (nativeLabel?.textContent ?? "") + " " + selectedLocaleText;
+			}
+			label.htmlFor = identifier;
+			return label;
+		},
+
+	 	createDeleteButton: function(page, langCode, parent, selectOption) {
+			const self = this;
+			const deleteButton = document.createElement('button');
+			deleteButton.id = 'deletePageTitle' + `[${page}][${langCode}]`;
+			deleteButton.className = 'dashicons dashicons-dismiss multi-page-title-delete';
+			deleteButton.type = 'button';
+			deleteButton.setAttribute('aria-label', oOMultiPageI18n.removeTitleForLanguage.replace('%s', langCode));
+
+			deleteButton.addEventListener('click', function (e) {
+				if (parent) {
+					parent.remove();
+					self.addLanguageToSelect(langCode, selectOption);
+				}
+			});
+			return deleteButton;
+		}
+	}
+	try {
+		MultiPageTitle.init();
+	} catch (error) {
+		console.error('Error initializing MultiPageTitle:', error);
+	}
+
+
 	const FormMultiPageManager = {
 		maxClicks: 6,
 		clickCount: $('.list-fields-for-each-page').length,
@@ -237,7 +404,7 @@ jQuery(document).ready(function($){
 
 		createNewPage: function(pageNumber) {
 			const newPage = $('<div>', { class: `list-fields-for-each-page fieldsListPage-${pageNumber}` })
-				.append(`<span class="page-title">${onOffice_loc_settings.page_title} ${pageNumber}</span>`)
+				.append(MultiPageTitle.addMultiPageTitle(pageNumber))
 				.append(`<ul class="filter-fields-list attachSortableFieldsList multi-page-list fieldsListPage-${pageNumber} sortableFieldsListForForm"></ul>`)
 				.append(`<div class="item-remove-page"><a class="item-remove-page-link submitdelete">${onOffice_loc_settings.remove_page}</a></div>`);
 
@@ -306,7 +473,7 @@ jQuery(document).ready(function($){
 		draggablePages: function () {
 			if ($('#multi-page-container .list-fields-for-each-page').length > 1) {
 				$('#multi-page-container .list-fields-for-each-page').css("cursor", "move");
-				
+
 				$('#multi-page-container').sortable({
 					items: '.list-fields-for-each-page',
 					placeholder: 'sortable-placeholder',
@@ -321,35 +488,35 @@ jQuery(document).ready(function($){
 						ui.placeholder.height(ui.item.height());
 						$('.list-fields-for-each-page').css('transition', 'all 0.08s');
 						ui.item.addClass('page-dragging');
-						
+
 						const $pages = $('.list-fields-for-each-page');
 						const childLists = $pages.map(function() {
 							return $(this).find('.filter-fields-list')[0];
 						}).get();
-						
+
 						$(document).on('mousemove.draggablePages', function(e) {
 							const x = e.clientX;
 							const y = e.clientY;
-							
+
 							$pages.each(function(index) {
 								const $page = $(this);
 								const pageRect = this.getBoundingClientRect();
 								const childRect = childLists[index].getBoundingClientRect();
-								
+
 								const inPage = (
-									x >= pageRect.left && 
+									x >= pageRect.left &&
 									x <= pageRect.right &&
-									y >= pageRect.top && 
+									y >= pageRect.top &&
 									y <= pageRect.bottom
 								);
-								
+
 								const inChild = (
-									x >= childRect.left && 
+									x >= childRect.left &&
 									x <= childRect.right &&
-									y >= childRect.top && 
+									y >= childRect.top &&
 									y <= childRect.bottom
 								);
-								
+
 								if (!$page.is(ui.item)) {
 									$page.toggleClass('page-dragging', inPage && !inChild);
 								}
@@ -370,7 +537,7 @@ jQuery(document).ready(function($){
 					$('#multi-page-container').sortable('destroy');
 					$('#multi-page-container .list-fields-for-each-page').css("cursor", "default");
 				}
-				
+
 				$(document).off('mousemove.draggablePages');
 			}
 		},
@@ -385,17 +552,17 @@ jQuery(document).ready(function($){
 			const $selectAll = $('#postbox-select-all');
 			const total = $checkboxes.length;
 			const checked = $checkboxes.filter(':checked').length;
-		
+
 			$selectAll.prop('checked', total > 0 && checked === total);
 		},
 
 		multiSelectItems: function () {
 			const $container = $('#multi-page-container');
-		
+
 			$container.off('change.multiSelect').on('change.multiSelect', '.list-fields-for-each-page input[type="checkbox"]', (event) => {
 				const $checkbox = $(event.target);
 				const $item = $checkbox.closest('.item');
-		
+
 				if ($checkbox.prop('checked')) {
 					$item.addClass('selected');
 				} else {
@@ -407,7 +574,7 @@ jQuery(document).ready(function($){
 				}, 0);
 				this.multiSortable();
 			});
-		
+
 			$(document).off('click.multiSelectDeselect').on('click.multiSelectDeselect', (event) => {
 				if (!$(event.target).closest('.fieldsSortable').length) {
 					$container.find('.list-fields-for-each-page .selected').removeClass('selected');
@@ -418,11 +585,11 @@ jQuery(document).ready(function($){
 					this.multiSortable();
 				}
 			});
-		
+
 			$('#postbox-select-all').off('change.multiSelectAll').on('change.multiSelectAll', (event) => {
 				const isChecked = $(event.target).prop('checked');
 				const $checkboxes = $container.find('.list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
-			
+
 				$checkboxes.each(function () {
 					const $cb = $(this);
 					$cb.prop('checked', isChecked);
@@ -438,14 +605,14 @@ jQuery(document).ready(function($){
 				this.multiSortable();
 			});
 		},
-		
+
 		multiSortable: function () {
 			let multiDragSelectedOrdered = [];
 			let draggedOriginalItem = null;
 			let isMultiDrag = false;
 			const $list = $('.filter-fields-list');
 			$list.sortable('destroy');
-		
+
 			$list.sortable({
 				axis: 'y',
 				connectWith: '.filter-fields-list',
@@ -453,7 +620,7 @@ jQuery(document).ready(function($){
 				helper: function (event, item) {
 					const $selected = $('#multi-page-container .selected');
 					isMultiDrag = item.hasClass('selected') && $selected.length > 1;
-		
+
 					if (isMultiDrag) {
 						multiDragSelectedOrdered = $selected.toArray();
 						draggedOriginalItem = item[0];
@@ -471,23 +638,23 @@ jQuery(document).ready(function($){
 				stop: function (event, ui) {
 					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
 					const validDrop = droppedOver && droppedOver.closest('.list-fields-for-each-page');
-		
+
 					if (!validDrop) {
 						$(this).sortable('cancel');
 						return;
 					}
-		
+
 					const $droppedItem = ui.item;
-					
+
 					if (isMultiDrag) {
 						const targetList = $droppedItem.closest('.filter-fields-list');
 						const dropIndex = $droppedItem.index();
-		
+
 						$droppedItem.detach();
 						multiDragSelectedOrdered.forEach(item => {
 							$(item).detach();
 						});
-		
+
 						if (targetList.children().length === 0) {
 							targetList.append(multiDragSelectedOrdered);
 						} else if (dropIndex >= targetList.children().length) {
@@ -496,7 +663,7 @@ jQuery(document).ready(function($){
 							targetList.children().eq(dropIndex).before(multiDragSelectedOrdered);
 						}
 					}
-		
+
 					FormMultiPageManager.reorderPages();
 				}
 			});
@@ -505,7 +672,7 @@ jQuery(document).ready(function($){
 
 	if ($('#multi-page-container').length) {
 		var cbAdmin = new onOffice.checkboxAdmin();
-		$('input[name="oopluginforms-template"]').change(function() {
+		$('input[name="oopluginforms-template"]').change(function () {
 			if ($(this).is(':checked') && $(this).val().includes('ownerleadgeneratorform.php')) {
 				isMultiplePages = true;
 				$('#single-page-container').hide().find('input, select, textarea').prop('disabled', true);
@@ -527,16 +694,16 @@ jQuery(document).ready(function($){
 		FormMultiPageManager.init();
 	}
 
-	$('.oo-search-field .input-search').on('click', function(event) {
+	$('.oo-search-field .input-search').on('click', function (event) {
 		event.stopPropagation();
 		$('.field-lists').show();
 	});
 
-	$('.oo-search-field #clear-input').on('click', function() {
+	$('.oo-search-field #clear-input').on('click', function () {
 		$('.input-search').val('').trigger('input');
 	});
 
-	var getCheckedFieldButton = function(btn, pageId) {
+	var getCheckedFieldButton = function (btn, pageId) {
 		var addField = 1;
 		var removeField = 2;
 		var checkTypeField = $(btn).children().attr('typeField');
@@ -547,7 +714,7 @@ jQuery(document).ready(function($){
 			var category = $(btn).attr('data-onoffice-category');
 			var module = $(btn).attr('data-onoffice-module');
 			var actionFieldName = 'labelButtonHandleField-' + valElName;
-			$('.' + actionFieldName).each(function() {
+			$('.' + actionFieldName).each(function () {
 				const parentItem = $(this);
 				parentItem.find('.dashicons').removeClass('dashicons-insert').addClass('dashicons-remove').attr('typeField', removeField);
 				parentItem.find('.check-action').addClass('action-remove');
@@ -580,7 +747,7 @@ jQuery(document).ready(function($){
 			var valElName = $(btn).attr('value');
 			var checkedFields = [];
 			const actionFieldName = 'labelButtonHandleField-' + valElName;
-			$('.' + actionFieldName).each(function() {
+			$('.' + actionFieldName).each(function () {
 				const parentItem = $(this);
 				parentItem.find('.dashicons').removeClass('dashicons-remove').addClass('dashicons-insert').attr('typeField', addField);
 				parentItem.find('.check-action').removeClass('action-remove');
@@ -596,14 +763,14 @@ jQuery(document).ready(function($){
 
 		return checkedFields;
 	};
-	var getCheckedFields = function(but) {
+	var getCheckedFields = function (but) {
 		var label = $(but).attr('data-action-div');
 		var categoryShort = but.name;
 		var category = $(but).attr('data-onoffice-category');
 		var checkedFields = [];
 		var inputConfigFields = $('#' + categoryShort).find('input.onoffice-possible-input:checked');
 
-		$(inputConfigFields).each(function(index) {
+		$(inputConfigFields).each(function (index) {
 			var valElName = $(this).val();
 			var valElLabel = $(this).next().text();
 			var module = $(this).attr('data-onoffice-module');
@@ -620,14 +787,13 @@ jQuery(document).ready(function($){
 				if ($('#sortableFieldsList').find('#menu-item-' + valElName).length === 0) {
 					attachField = true;
 				}
-			}
-			else {
+			} else {
 				//this case is for estate detail view
-				var detailViewDivId='actionForestate';
+				var detailViewDivId = 'actionForestate';
 				if (categoryShort.startsWith('address')) {
 					detailViewDivId = 'actionForaddress';
 				}
-				if ($('#'+detailViewDivId).find('#sortableFieldsList').find('#menu-item-' + valElName).length === 0) {
+				if ($('#' + detailViewDivId).find('#sortableFieldsList').find('#menu-item-' + valElName).length === 0) {
 					attachField = true;
 				}
 			}
@@ -650,7 +816,7 @@ jQuery(document).ready(function($){
 		return checkedFields;
 	};
 
-	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory, module, label, optionsAvailable, actionFieldName, pageId) {
+	var createNewFieldItem = function (fieldName, fieldLabel, fieldCategory, module, label, optionsAvailable, actionFieldName, pageId) {
 		var myLabel = label ? $('#' + label) : {};
 		var dummyKey;
 		const pageContainer = isMultiplePages ? '#multi-page-container' : '#single-page-container';
@@ -664,7 +830,10 @@ jQuery(document).ready(function($){
 				dummyKey = $(pageContainer + ' #menu-item-dummy_key' + pageIdSelector);
 			}
 
-			if (pageContainer === '#multi-page-container' && !$(pageContainer + ' .list-fields-for-each-page').length) { return '' };
+			if (pageContainer === '#multi-page-container' && !$(pageContainer + ' .list-fields-for-each-page').length) {
+				return ''
+			}
+			;
 		} else {
 			if (myLabel.length) {
 				dummyKey = myLabel.find('#menu-item-dummy_key');
@@ -674,7 +843,7 @@ jQuery(document).ready(function($){
 		}
 		var clonedElement = dummyKey.clone(true, true);
 
-		clonedElement.attr('id', 'menu-item-'+fieldName);
+		clonedElement.attr('id', 'menu-item-' + fieldName);
 		clonedElement.attr('action-field-name', actionFieldName);
 		clonedElement.find('span.item-title:contains("dummy_label")').text(fieldLabel);
 		clonedElement.find('span.item-type:contains("dummy_category")').text(fieldCategory);
@@ -685,7 +854,7 @@ jQuery(document).ready(function($){
 		clonedElement.find('input[value=dummy_label]').val(fieldLabel);
 		clonedElement.find('span.menu-item-settings-name').text(fieldName);
 		clonedElement.find('input[data-onoffice-ignore=true]').removeAttr('data-onoffice-ignore');
-		clonedElement.find('[name^=exclude]').attr('name', function(index, name) {
+		clonedElement.find('[name^=exclude]').attr('name', function (index, name) {
 			return name.replace('exclude', '');
 		})
 
@@ -699,7 +868,7 @@ jQuery(document).ready(function($){
 			clonedElement.find('input[name^="oopluginformfieldconfig-pageperform"]').val(pageId);
 		}
 		if (!optionsAvailable) {
-            var selectors = ['oopluginformfieldconfig-availableOptions', 'oopluginfieldconfig-availableOptions'];
+			var selectors = ['oopluginformfieldconfig-availableOptions', 'oopluginfieldconfig-availableOptions'];
 			var availableOptionEl = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
 			availableOptionEl.parent().remove();
 		}
@@ -725,7 +894,7 @@ jQuery(document).ready(function($){
 			hidden.parent().remove();
 		}
 
-		if(onOffice_loc_settings.modulelabels && module){
+		if (onOffice_loc_settings.modulelabels && module) {
 			var inputModule = clonedElement.find('input[name^=oopluginformfieldconfig-module]');
 			inputModule.val(module);
 			var labelIdFor = inputModule.attr('id');
@@ -740,13 +909,13 @@ jQuery(document).ready(function($){
 		}
 		clonedElement.show();
 		dummyKey.parent().append(clonedElement);
-        return clonedElement[0];
+		return clonedElement[0];
 	};
 });
 
 
-(function($) {
-	var refreshTemplateMouseOver = function() {
+(function ($) {
+	var refreshTemplateMouseOver = function () {
 		var value = templateSelector.find('option:selected').text();
 		templateSelector.attr('title', value);
 	};
