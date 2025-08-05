@@ -134,6 +134,7 @@ class DataDetailViewHandler
 		$pDataDetailView->setTemplate($row['template'] ?? '');
 		$pDataDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
 		$pDataDetailView->setFields($row[DataDetailView::FIELDS] ?? []);
+		$pDataDetailView->setHighlightedFields($row[DataDetailView::HIGHLIGHTED] ?? []);
 		$pDataDetailView->setPictureTypes($row[DataDetailView::PICTURES] ?? []);
 		$pDataDetailView->setHasDetailView((bool)($row[InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL] ?? ''));
 		$pDataDetailView->setHasDetailViewRestrict( (bool) ( $row[ InputModelOptionFactoryDetailView::INPUT_RESTRICT_ACCESS_CONTROL ] ?? '' ) );

@@ -155,6 +155,18 @@ class TestClassDataListView
 	 *
 	 */
 
+	public function testHighlightedFields()
+	{
+		$this->assertEquals([], $this->_pSubject->getHighlightedFields());
+		$this->_pSubject->setHighlightedFields(['highlighted1', 'highlighted2']);
+		$this->assertEquals(['highlighted1', 'highlighted2'], $this->_pSubject->getHighlightedFields());
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testGetId()
 	{
 		$this->assertEquals(123, $this->_pSubject->getId());
