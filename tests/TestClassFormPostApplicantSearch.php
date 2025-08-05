@@ -71,7 +71,7 @@ class TestClassFormPostApplicantSearch
 	public function prepare()
 	{
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend'])
+			->onlyMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 
@@ -131,7 +131,7 @@ class TestClassFormPostApplicantSearch
 
 		$pSearchcriteriaFields = $this->getMockBuilder(SearchcriteriaFields::class)
 			->setConstructorArgs([new FieldsCollectionBuilderShort(new Container)])
-			->setMethods(['getFormFields'])
+			->onlyMethods(['getFormFields'])
 			->getMock();
 		$pSearchcriteriaFields->method('getFormFields')->with($this->anything())->will($this->returnArgument(0));
 

@@ -259,7 +259,7 @@ implements AddressListBase
 		);
 
 		if ($this->_pDataViewAddress instanceof DataListViewAddress) {
-			$parameters['params_list_cache'] = $this->getAddressListParametersForCache($language, $formatOutput);
+			$parameters['params_list_cache'] = $this->getAddressListParametersForCache($formatOutput, $language);
 			$parameters = array('listname' => $this->_pDataViewAddress->getName()) + $parameters;
 		}
 
@@ -280,10 +280,12 @@ implements AddressListBase
 	 * @return array
 	 * @throws UnknownViewException
 	 */
-	public function getAddressListParametersForCache(string $lang, bool $formatOutput)
+	public function getAddressListParametersForCache(bool $formatOutput, ?string $lang = null)
 	{
 		$pFieldModifierHandler = $this->generateRecordModifier();
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->getDefaultFilter();
+
+		$lang = $lang ?? Language::getDefault();
 
 		$fields = $pFieldModifierHandler->getAllAPIFields();
 		$fields[] = $this->_pDataViewAddress->getSortby();

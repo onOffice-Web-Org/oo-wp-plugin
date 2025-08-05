@@ -57,7 +57,7 @@ class TestClassContentFilterShortCodeForm
 	public function prepare()
 	{
 		$pTemplate = $this->getMockBuilder(Template::class)
-			->setMethods(['render', 'getImpressum'])
+			->onlyMethods(['render'])
 			->getMock();
 		$pTemplate->method('render')->willReturn('testResult');
 		$this->_pDataFormConfigurationFactory = $this->getMockBuilder(DataFormConfigurationFactory::class)

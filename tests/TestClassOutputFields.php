@@ -158,20 +158,20 @@ class TestClassOutputFields
 			->disableOriginalConstructor()
 			->getMock();
 		$pMockRecordManagerFactory = $this->getMockBuilder(RecordManagerFactory::class)
-			->setMethods(['create'])
+			->onlyMethods(['create'])
 			->getMock();
 		$pMockRecordManagerFactory->method('create')
 			->with(onOfficeSDK::MODULE_ADDRESS, RecordManagerFactory::ACTION_READ, $this->anything())
 			->will($this->returnValue($pMockRecordManager));
 
 		$pGeoPosition = $this->getMockBuilder(GeoPositionFieldHandler::class)
-			->setMethods(['getActiveFields'])
+			->onlyMethods(['getActiveFields'])
 			->setConstructorArgs([$pMockRecordManagerFactory])
 			->getMock();
 		$pGeoPosition->method('getActiveFields')->will($this->returnValue($activeGeoFields));
 
 		$pCompoundFieldsMocker = $this->getMockBuilder(CompoundFieldsFilter::class)
-			->setMethods(['mergeListFilterableFields'])
+			->onlyMethods(['mergeListFilterableFields'])
 			->getMock();
 		$pCompoundFieldsMocker->method('mergeListFilterableFields')->will($this->returnValue(
 			$expectation));

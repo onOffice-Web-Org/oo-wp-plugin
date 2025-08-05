@@ -53,7 +53,7 @@ class TestClassSearchcriteriaFields
 	public function prepare()
 	{
 		$pFieldsCollectionBuilder = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsSearchCriteria', 'addFieldsAddressEstate'])
+			->onlyMethods(['addFieldsSearchCriteria', 'addFieldsAddressEstate'])
 			->setConstructorArgs([new Container])
 			->getMock();
 		$pFieldsCollectionBuilder->method('addFieldsSearchCriteria')->with($this->anything())
