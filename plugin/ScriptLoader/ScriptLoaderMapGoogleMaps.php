@@ -68,6 +68,7 @@ class ScriptLoaderMapGoogleMaps
 	public function enqueue()
 	{
 		$this->_pWPScriptStyle->enqueueScript('gmapsinit');
+		$this->_pWPScriptStyle->enqueueScript('google-maps-cluster');
 	}
 
 
@@ -80,6 +81,7 @@ class ScriptLoaderMapGoogleMaps
 		$key = $this->_pWPOptionWrapper->getOption('onoffice-settings-googlemaps-key', null);
 		$url = 'https://maps.googleapis.com/maps/api/js?'.http_build_query(['key' => $key]);
 		$this->_pWPScriptStyle->registerScript('google-maps', $url);
+		$this->_pWPScriptStyle->registerScript('google-maps-cluster', plugins_url('/dist/google-marker-cluster.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'));
 		$this->_pWPScriptStyle->registerScript('gmapsinit',
 			plugins_url('/dist/gmapsinit.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['google-maps']);
 	}
