@@ -224,6 +224,22 @@
     right: 25px;
 }
 
+.oo-detailsgallery .slick-arrow:has(span),
+.oo-detailsgallery .slick-arrow:has(span):focus,
+.oo-detailsgallery .slick-arrow:has(span):hover {
+  background: none;
+  outline: none;
+  text-shadow: -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff, 1px 1px 0 #ffffff;
+}
+
+.oo-detailsgallery .slick-arrow:has(span):hover {
+  background: none;
+}
+
+.slick-arrow:has(span):before {
+  content: none;
+}
+
 .oo-detailspicture, .oo-detailspicture.slick-slide {
     background-size: cover;
     background-position: center center;
