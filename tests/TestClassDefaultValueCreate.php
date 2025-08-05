@@ -60,7 +60,7 @@ class TestClassDefaultValueCreate
 	public function prepare()
 	{
 		$this->_pRecordManagerFactory = $this->getMockBuilder(RecordManagerFactory::class)
-			->setMethods(['createRecordManagerInsertGeneric'])
+			->onlyMethods(['createRecordManagerInsertGeneric'])
 			->getMock();
 		$this->_pRecordManagerInsertGeneric = $this->getMockBuilder(RecordManagerInsertGeneric::class)
 			->setConstructorArgs(['testMainTable'])

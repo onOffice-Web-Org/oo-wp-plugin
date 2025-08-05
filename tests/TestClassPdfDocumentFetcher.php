@@ -61,7 +61,7 @@ class TestClassPdfDocumentFetcher
 	{
 		$this->_pAPIClientAction = $this->getMockBuilder(APIClientActionGeneric::class)
 			->setConstructorArgs([new SDKWrapper(), '', ''])
-			->setMethods(['sendRequests', 'getResultRecords'])
+			->onlyMethods(['sendRequests', 'getResultRecords'])
 			->getMock();
 
 		$this->_pAPIClientAction->method('sendRequests');

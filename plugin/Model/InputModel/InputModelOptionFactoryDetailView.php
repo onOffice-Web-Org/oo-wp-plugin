@@ -69,6 +69,9 @@ class InputModelOptionFactoryDetailView
 	const INPUT_FIELD_CONFIG = DataDetailView::FIELDS;
 
 	/** */
+	const INPUT_FIELD_HIGHLIGHTED = DataDetailView::HIGHLIGHTED;
+
+	/** */
 	const INPUT_FIELD_CONTACTDATA_ONLY = DataDetailView::ADDRESSFIELDS;
 
 	/** */

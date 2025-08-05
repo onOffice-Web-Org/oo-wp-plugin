@@ -58,7 +58,7 @@ class TestClassDefaultValueRead
 	{
 		$this->_pWPDBMock = $this->getMockBuilder(\wpdb::class)
 			->disableOriginalConstructor()
-			->setMethods(['get_row', 'get_results'])
+			->onlyMethods(['get_row', 'get_results'])
 			->getMock();
 
 		$this->_pSubject = new DefaultValueRead($this->_pWPDBMock);

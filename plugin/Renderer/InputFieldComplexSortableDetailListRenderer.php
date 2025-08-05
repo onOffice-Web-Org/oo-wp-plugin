@@ -74,6 +74,11 @@ class InputFieldComplexSortableDetailListRenderer
 	 *
 	 */
 
+	 private function isOwnerLeadGeneratorForm(): bool
+	{
+    	return strpos($this->_template, 'ownerleadgeneratorform.php') !== false;
+	}
+
 	public function render()
 	{
 		$this->readInactiveFields();
@@ -81,7 +86,7 @@ class InputFieldComplexSortableDetailListRenderer
 		$allFields = $values[0] ?? [];
 
 		if ($this->_isMultiPage) {
-			$isOwnerLeadGeneratorForm = strpos($this->_template, 'ownerleadgeneratorform.php') !== false;
+			$isOwnerLeadGeneratorForm = $this->isOwnerLeadGeneratorForm();
 			echo '<div id="single-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'none' : 'block') . ';">';
 			$this->renderSinglePage($allFields);
 			echo '</div>';
@@ -169,6 +174,19 @@ class InputFieldComplexSortableDetailListRenderer
 		$deactivatedInOnOffice = null;
 		$dummyText = $isDummy ? 'data-onoffice-ignore="true"' : '';
 		$name = $isDummy ? AdminPageAjax::EXCLUDE_FIELD . $this->getName() : $this->getName();
+		$isHighlighted = false;
+		if(gettype($extraInputModels[0]->getValueCallback()) == 'array') {
+			$formModelBuilder = $extraInputModels[0]->getValueCallback()[0];
+			if(str_contains(get_class($formModelBuilder), 'FormModelBuilderDBEstateListSettings')) {
+				$isHighlighted = $formModelBuilder->isHightlightedField($key);
+			}
+			else if(
+				str_contains(get_class($formModelBuilder),'FormModelBuilderEstateDetailSettings') ||
+				str_contains(get_class($formModelBuilder),'FormModelBuilderSimilarEstateSettings')
+			) {
+				$isHighlighted = $formModelBuilder->isHightlightedField($key);
+			}
+		}
 
 		if ($label == null) {
 			$label = $inactiveFields[$key] ?? null;
@@ -177,10 +195,12 @@ class InputFieldComplexSortableDetailListRenderer
 			$type = InputModelBase::HTML_TYPE_TEXT;
 		}
 
-		echo '<li class="sortable-item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
+		echo '<li class="sortable-item item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
 			.'<div class="menu-item-bar">'
 				.'<div class="menu-item-handle ui-sortable-handle">'
+					.($this->isOwnerLeadGeneratorForm() ? '<input type="checkbox">' : '')
 					.'<span class="item-title" '.$deactivatedStyle.'>'
+						.($isHighlighted ? '★ ' : '')
 						.esc_html($label)
 						.esc_html($deactivatedInOnOffice)
 					.'</span>'

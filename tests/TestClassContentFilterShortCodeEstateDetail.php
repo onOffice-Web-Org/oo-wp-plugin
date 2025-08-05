@@ -65,7 +65,7 @@ class TestClassContentFilterShortCodeEstateDetail
 	private function generateEstateDetail()
 	{
 		$this->_pEstate = $this->getMockBuilder(EstateDetail::class)
-			->setMethods(['getEstateUnits',
+			->onlyMethods(['getEstateUnits',
 				'estateIterator',
 				'getFieldLabel',
 				'getEstateContacts',
@@ -157,7 +157,7 @@ class TestClassContentFilterShortCodeEstateDetail
 	{
 		$pTemplateMocker = new TemplateMocker();
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
-			->setMethods(['getDetailView'])
+			->onlyMethods(['getDetailView'])
 			->getMock();
 
 		$pDataDetailView = new DataDetailView;
@@ -171,7 +171,7 @@ class TestClassContentFilterShortCodeEstateDetail
 		$pWPQuery->query_vars['estate_id'] = 13;
 
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
-			->setMethods(['getWPQuery'])
+			->onlyMethods(['getWPQuery'])
 			->getMock();
 		$pWPQueryWrapper->expects($this->once())
 			->method('getWPQuery')
@@ -210,7 +210,7 @@ class TestClassContentFilterShortCodeEstateDetail
 	public function testRenderHtmlHelperUserIfEmptyEstateId()
 	{
 		$pEstateDetailFactory = $this->getMockBuilder(ContentFilterShortCodeEstateDetail::class)
-		->setMethods(['getRandomEstateDetail','getEstateLink'])
+		->onlyMethods(['getRandomEstateDetail','getEstateLink'])
 		->disableOriginalConstructor()
 		->getMock();
 
@@ -241,7 +241,7 @@ class TestClassContentFilterShortCodeEstateDetail
 		$title                = 'abc';
 		$pInstance            = $this->_pContainer->get( EstateDetailUrl::class );
 		$pEstateDetailFactory = $this->getMockBuilder( ContentFilterShortCodeEstateDetail::class )
-		                             ->setMethods( [ 'getPageLink' ] )
+		                             ->onlyMethods( [ 'getPageLink' ] )
 		                             ->disableOriginalConstructor()
 		                             ->getMock();
 		$pEstateDetailFactory->method( 'getPageLink' )->willReturn( $url );
@@ -258,7 +258,8 @@ class TestClassContentFilterShortCodeEstateDetail
 
 		$pEstateDetailFactory = $this->getMockBuilder( ContentFilterShortCodeEstateDetail::class )
 		                             ->disableOriginalConstructor()
-		                             ->setMethods( [ 'getRandomEstateDetail', 'getEstateLink', 'is_user_logged_in' ] )
+		                             ->onlyMethods(['getRandomEstateDetail', 'getEstateLink',])
+		                             ->addMethods(['is_user_logged_in'])
 		                             ->getMock();
 
 		$pEstateDetailFactory->method( 'getRandomEstateDetail' )->willReturn( $this->getDataEstateDetail() );

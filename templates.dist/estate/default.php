@@ -164,7 +164,15 @@ $dimensions = [
 						<?php echo $currentEstate["objekttitel"]; ?>
 					</div>
 					<div class="oo-listinfotable oo-listinfotableview">
-						<?php foreach ( $currentEstate as $field => $value ) {
+						<?php
+							$keyfacts = array_flip($pEstatesClone->getHighlightedFields());
+							$estateFacts = iterator_to_array($currentEstate);
+							// keep order but float keyfacts to the top
+							$estateFacts = array_merge(
+								array_intersect_key($estateFacts, $keyfacts), // get only highlighted fields
+								array_diff_key($estateFacts, $keyfacts) // get only non highlighted
+							);
+							foreach ( $estateFacts as $field => $value ) {
 							if ( is_numeric( $value ) && 0 == $value ) {
 								continue;
 							}
@@ -174,7 +182,20 @@ $dimensions = [
 							if ( empty($value) ) {
 								continue;
 							}
-							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
+							// skip negative boolean fields
+							if (is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0"){
+								continue;
+							}
+							if (
+								($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
+								in_array($field,['innen_courtage', 'aussen_courtage'],true)
+							) {
+								continue;
+							}
+
+							$class = 'oo-listtd'. ($pEstates->isHighlightedField($field) ? ' --highlight' : '');
+							echo '<div class="'.$class.'">'.esc_html($pEstatesClone->getFieldLabel( $field )).'</div>'.
+								'<div class="'.$class.'">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 						} ?>
 					</div>
 					<div class="oo-detailslink">

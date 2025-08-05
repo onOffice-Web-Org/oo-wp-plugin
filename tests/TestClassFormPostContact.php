@@ -77,7 +77,7 @@ class TestClassFormPostContact
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormFrontend'])
+			->onlyMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 		add_option('onoffice-settings-honeypot', true);
