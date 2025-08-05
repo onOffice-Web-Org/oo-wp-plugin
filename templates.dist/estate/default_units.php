@@ -29,6 +29,7 @@ $dont_echo = ['vermarktungsstatus','objekttitel'];
 
 $pEstatesClone = clone $pEstates;
 $pEstatesClone->resetEstateIterator();
+$rawValues = $pEstates->getRawValues();
 ?>
 
 <?php if (
@@ -47,6 +48,7 @@ $pEstatesClone->resetEstateIterator();
                             $current_property = $pEstatesClone->estateIterator()
 
                         ) {
+							$estateId = $pEstatesClone->getCurrentEstateId();
                             if (!empty($current_property)) {
                                 foreach ($current_property as $field => $value) {
                                     if (in_array($field, $dont_echo)) {
@@ -57,9 +59,7 @@ $pEstatesClone->resetEstateIterator();
                                             (is_numeric($value) && 0 == $value) ||
                                             $value == '0000-00-00' ||
                                             $value == '0.00' ||
-                                            $value == 'Nein' ||
-                                            $value == 'No' ||
-                                            $value == 'Ne' ||
+                                            (is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0") || // skip negative boolean fields
                                             $value == '' ||
                                             empty($value)
                                         )
@@ -98,6 +98,7 @@ $pEstatesClone->resetEstateIterator();
                     <?php
                     $pEstates->resetEstateIterator();
                     while ($current_property = $pEstates->estateIterator()) {
+						$estateId = $pEstates->getCurrentEstateId();
                         echo '<tr class="oo-units__row">';
                         foreach ($current_property as $field => $value):
                             if (
@@ -111,11 +112,11 @@ $pEstatesClone->resetEstateIterator();
                                 (is_numeric($value) && 0 == $value) ||
                                 $value == '0000-00-00' ||
                                 $value == '0.00' ||
-                                $value == 'Nein' ||
-                                $value == 'No' ||
-                                $value == 'Ne' ||
                                 $value == '' ||
-                                empty($value)
+                                empty($value) ||
+								(is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0") // skip negative boolean fields
+								(($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
+									in_array($field,['innen_courtage', 'aussen_courtage'],true))
                             ) {
                                 $value = '-';
                                 $class = ' --empty';

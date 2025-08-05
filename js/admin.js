@@ -125,6 +125,8 @@ jQuery(document).ready(function($){
 			this.initializeDroppable();
 			this.checkSortableFieldsList();
 			this.bindEvents();
+			this.draggablePages();
+			this.multiSelectItems();
 		},
 
 		checkTemplate: function() {
@@ -143,6 +145,9 @@ jQuery(document).ready(function($){
 				handle: ".menu-item-bar",
 				placeholder: "ui-sortable-placeholder",
 				stop: function(event, ui) {
+					FormMultiPageManager.reorderPages();
+				},
+				update: function(event, ui) {
 					FormMultiPageManager.reorderPages();
 				}
 			}).disableSelection();
@@ -216,6 +221,7 @@ jQuery(document).ready(function($){
 					FormMultiPageManager.clickCount--;
 					FormMultiPageManager.reorderPages();
 					FormMultiPageManager.checkSortableFieldsList();
+					FormMultiPageManager.draggablePages();
 				}
 			});
 		},
@@ -226,6 +232,7 @@ jQuery(document).ready(function($){
 			$('#multi-page-container').append(newPage);
 			this.initializeSortable();
 			this.checkTemplate();
+			this.draggablePages();
 		},
 
 		createNewPage: function(pageNumber) {
@@ -294,6 +301,205 @@ jQuery(document).ready(function($){
 			ulElement.removeClass(function(index, className) {
 				return (className.match(/(^|\s)fieldsListPage-\S+/g) || []).join(' ');
 			}).addClass(`fieldsListPage-${pageNumber}`);
+		},
+
+		draggablePages: function () {
+			if ($('#multi-page-container .list-fields-for-each-page').length > 1) {
+				$('#multi-page-container .list-fields-for-each-page').css("cursor", "move");
+				
+				$('#multi-page-container').sortable({
+					items: '.list-fields-for-each-page',
+					placeholder: 'sortable-placeholder',
+					tolerance: 'pointer',
+					cursor: 'move',
+					cursorAt: { top: 5, left: 5 },
+					delay: 40,
+					opacity: 0.8,
+					axis: 'y',
+					forcePlaceholderSize: true,
+					start: function(e, ui) {
+						ui.placeholder.height(ui.item.height());
+						$('.list-fields-for-each-page').css('transition', 'all 0.08s');
+						ui.item.addClass('page-dragging');
+						
+						const $pages = $('.list-fields-for-each-page');
+						const childLists = $pages.map(function() {
+							return $(this).find('.filter-fields-list')[0];
+						}).get();
+						
+						$(document).on('mousemove.draggablePages', function(e) {
+							const x = e.clientX;
+							const y = e.clientY;
+							
+							$pages.each(function(index) {
+								const $page = $(this);
+								const pageRect = this.getBoundingClientRect();
+								const childRect = childLists[index].getBoundingClientRect();
+								
+								const inPage = (
+									x >= pageRect.left && 
+									x <= pageRect.right &&
+									y >= pageRect.top && 
+									y <= pageRect.bottom
+								);
+								
+								const inChild = (
+									x >= childRect.left && 
+									x <= childRect.right &&
+									y >= childRect.top && 
+									y <= childRect.bottom
+								);
+								
+								if (!$page.is(ui.item)) {
+									$page.toggleClass('page-dragging', inPage && !inChild);
+								}
+							});
+						});
+					},
+					stop: function(e, ui) {
+						$('.list-fields-for-each-page').css('transition', '');
+						$(document).off('mousemove.draggablePages');
+						$('.list-fields-for-each-page').removeClass('page-dragging');
+					},
+					update: function(e, ui) {
+						FormMultiPageManager.reorderPages();
+					}
+				});
+			} else {
+				if ($('#multi-page-container').data("ui-sortable")) {
+					$('#multi-page-container').sortable('destroy');
+					$('#multi-page-container .list-fields-for-each-page').css("cursor", "default");
+				}
+				
+				$(document).off('mousemove.draggablePages');
+			}
+		},
+
+		toggleAddPageButton: function () {
+			const hasSelectedItems = $('.list-fields-for-each-page .item.selected').length > 0;
+			$('.add-page-button').prop('disabled', hasSelectedItems);
+		},
+
+		updateSelectAllCheckbox: function () {
+			const $checkboxes = $('#multi-page-container .list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
+			const $selectAll = $('#postbox-select-all');
+			const total = $checkboxes.length;
+			const checked = $checkboxes.filter(':checked').length;
+		
+			$selectAll.prop('checked', total > 0 && checked === total);
+		},
+
+		multiSelectItems: function () {
+			const $container = $('#multi-page-container');
+		
+			$container.off('change.multiSelect').on('change.multiSelect', '.list-fields-for-each-page input[type="checkbox"]', (event) => {
+				const $checkbox = $(event.target);
+				const $item = $checkbox.closest('.item');
+		
+				if ($checkbox.prop('checked')) {
+					$item.addClass('selected');
+				} else {
+					$item.removeClass('selected');
+				}
+				this.toggleAddPageButton();
+				setTimeout(() => {
+					this.updateSelectAllCheckbox();
+				}, 0);
+				this.multiSortable();
+			});
+		
+			$(document).off('click.multiSelectDeselect').on('click.multiSelectDeselect', (event) => {
+				if (!$(event.target).closest('.fieldsSortable').length) {
+					$container.find('.list-fields-for-each-page .selected').removeClass('selected');
+					$container.find('.list-fields-for-each-page input[type="checkbox"]').prop('checked', false);
+					$('#postbox-select-all').prop('checked', false);
+					this.toggleAddPageButton();
+					this.updateSelectAllCheckbox();
+					this.multiSortable();
+				}
+			});
+		
+			$('#postbox-select-all').off('change.multiSelectAll').on('change.multiSelectAll', (event) => {
+				const isChecked = $(event.target).prop('checked');
+				const $checkboxes = $container.find('.list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
+			
+				$checkboxes.each(function () {
+					const $cb = $(this);
+					$cb.prop('checked', isChecked);
+					const $item = $cb.closest('.item');
+					if (isChecked) {
+						$item.addClass('selected');
+					} else {
+						$item.removeClass('selected');
+					}
+				});
+				this.toggleAddPageButton();
+				this.updateSelectAllCheckbox();
+				this.multiSortable();
+			});
+		},
+		
+		multiSortable: function () {
+			let multiDragSelectedOrdered = [];
+			let draggedOriginalItem = null;
+			let isMultiDrag = false;
+			const $list = $('.filter-fields-list');
+			$list.sortable('destroy');
+		
+			$list.sortable({
+				axis: 'y',
+				connectWith: '.filter-fields-list',
+				revert: 'invalid',
+				helper: function (event, item) {
+					const $selected = $('#multi-page-container .selected');
+					isMultiDrag = item.hasClass('selected') && $selected.length > 1;
+		
+					if (isMultiDrag) {
+						multiDragSelectedOrdered = $selected.toArray();
+						draggedOriginalItem = item[0];
+						return $('<li class="multi-drag-helper"/>').append($selected.clone());
+					} else {
+						multiDragSelectedOrdered = [item[0]];
+						draggedOriginalItem = item[0];
+						return item.clone();
+					}
+				},
+				start: function (event, ui) {
+					ui.item.data('origIndex', ui.item.index());
+					ui.item.data('origParent', ui.item.parent());
+				},
+				stop: function (event, ui) {
+					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
+					const validDrop = droppedOver && droppedOver.closest('.list-fields-for-each-page');
+		
+					if (!validDrop) {
+						$(this).sortable('cancel');
+						return;
+					}
+		
+					const $droppedItem = ui.item;
+					
+					if (isMultiDrag) {
+						const targetList = $droppedItem.closest('.filter-fields-list');
+						const dropIndex = $droppedItem.index();
+		
+						$droppedItem.detach();
+						multiDragSelectedOrdered.forEach(item => {
+							$(item).detach();
+						});
+		
+						if (targetList.children().length === 0) {
+							targetList.append(multiDragSelectedOrdered);
+						} else if (dropIndex >= targetList.children().length) {
+							targetList.append(multiDragSelectedOrdered);
+						} else {
+							targetList.children().eq(dropIndex).before(multiDragSelectedOrdered);
+						}
+					}
+		
+					FormMultiPageManager.reorderPages();
+				}
+			});
 		}
 	};
 

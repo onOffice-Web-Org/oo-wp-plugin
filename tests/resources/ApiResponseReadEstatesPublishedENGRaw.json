@@ -14,7 +14,8 @@
 			"objekt_des_tages",
 			"vermarktungsart",
 			"preisAufAnfrage",
-			"virtualAddress"
+			"virtualAddress",
+			"provisionsfrei"
 		],
 		"filter": {
 			"veroeffentlichen": [
