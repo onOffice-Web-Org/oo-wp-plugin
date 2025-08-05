@@ -730,7 +730,7 @@ class FormModelBuilderDBForm
 	 */
 	public function callbackValueInputModelTitlePage(InputModelBase $pInputModel, array $title): void
 	{
-		$pInputModel->setValue($title['page']);
+		$pInputModel->setValue($title['page'] ?? 1);
 	}
 
 	/**
@@ -1236,9 +1236,9 @@ class FormModelBuilderDBForm
 		$pInputModel = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_MULTIPAGE_TITLE_LOCALE, $labelMultiPageLanguageSwitch);
 		$pInputModel->setValuesAvailable($this->getAvailableLanguageSelectValues());
-		$pInputModel->setValueCallback(function (InputModelDB $pInputModel) {
+		$pInputModel->setValueCallback(function (InputModelDB $pInputModel) use ($labelMultiPageLanguageSwitch) {
 			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
+			$pInputModel->setLabel($labelMultiPageLanguageSwitch);
 		});
 		return $pInputModel;
 	}

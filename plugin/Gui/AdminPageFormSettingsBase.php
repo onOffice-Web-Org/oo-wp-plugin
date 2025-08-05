@@ -258,6 +258,10 @@ abstract class AdminPageFormSettingsBase
 				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_TASKCONFIG_FORMS);
 				$row[RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM]['form_id'] = $recordId;
 				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM);
+				foreach ($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS] as $key => $value) {
+					$value['form_id'] = $recordId;
+					$row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS][$key] = $value;
+				}
 				$pRecordManagerInsertForm->insertAdditionalValues($row);
 				$result = true;
 			} catch (RecordManagerInsertException $pException) {
@@ -776,13 +780,6 @@ abstract class AdminPageFormSettingsBase
 			wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
 			wp_register_script('onoffice-custom-email-subject', plugins_url('/dist/onoffice-custom-email-subject.min.js', $pluginPath));
 			wp_enqueue_script('onoffice-custom-email-subject');
-		}
-		if ($this->getType() === Form::TYPE_OWNER) {
-			wp_register_script('onoffice-admin-leadform', plugins_url('/dist/onoffice-admin-leadform.min.js', $pluginPath));
-			wp_localize_script('onoffice-admin-leadform', 'oOAdminLeadFormI18n', [
-				'removeTitleForLanguage' => sprintf(__('Remove title for language %s', 'onoffice-for-wp-websites'), '%s'),
-			]);
-			wp_enqueue_script('onoffice-admin-leadform');
 		}
 	}
 
