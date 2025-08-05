@@ -50,7 +50,11 @@ class TestClassArrayContainerEscape
 		$this->assertEmpty($pArrayContainerEscape->current());
 		$this->assertEmpty($pArrayContainerEscape->getValue(8));
 		$this->assertEmpty($pArrayContainerEscape->getValue('bla'));
+		$this->assertEmpty($pArrayContainerEscape->getValue(0, Escape::HTML));
+		$this->assertEmpty($pArrayContainerEscape->getValue(0, Escape::JS));
 		$this->assertEmpty($pArrayContainerEscape->getValue(0, Escape::URL));
+		$this->assertEmpty($pArrayContainerEscape->getValue(0, Escape::TEXTAREA));
+		$this->assertEmpty($pArrayContainerEscape->getValue(0, Escape::ATTR));
 		$this->assertNull($pArrayContainerEscape->key());
 		$this->assertFalse($pArrayContainerEscape->offsetExists(0));
 		$this->assertFalse($pArrayContainerEscape->offsetExists(1));

@@ -52,7 +52,7 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 	public function prepare()
 	{
 		$this->_pFieldModule = $this->getMockBuilder(FieldModuleCollectionDecoratorReadAddress::class)
-		                            ->setMethods(['getAddressEstateField', 'getFieldByModuleAndName', 'setAllAddressEstateField'])
+		                            ->onlyMethods(['getAddressEstateField', 'getFieldByModuleAndName', 'setAllAddressEstateField'])
 		                            ->setConstructorArgs([new FieldsCollection()])
 		                            ->getMock();
 		$this->_pFieldModule->method('setAllAddressEstateField')->with([FieldModuleCollectionDecoratorReadAddress::getNewAddressFields()]);

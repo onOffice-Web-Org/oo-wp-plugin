@@ -69,7 +69,7 @@ class TestClassPdfDocumentModelValidator
 	{
 		$this->_pAPIClientAction = $this->getMockBuilder(APIClientActionGeneric::class)
 			->setConstructorArgs([new SDKWrapper(), '', ''])
-			->setMethods(['getResultStatus', 'getResultRecords', 'withActionIdAndResourceType',
+			->onlyMethods(['getResultStatus', 'getResultRecords', 'withActionIdAndResourceType',
 				'sendRequests', 'setParameters'])
 			->getMock();
 		$pDetailView = new DataDetailView();

@@ -54,7 +54,7 @@ class TestClassEstateStatusLabel
 	public function setUpFieldnames()
 	{
 		$this->_pFieldnamesInactive = $this->getMockBuilder(Fieldnames::class)
-			->setMethods(['getFieldLabel', 'getFieldInformation', 'loadLanguage'])
+			->onlyMethods(['getFieldLabel', 'getFieldInformation', 'loadLanguage'])
 			->setConstructorArgs([new FieldsCollection()])
 			->getMock();
 		$this->_pFieldnamesInactive->method('getFieldInformation')
@@ -66,7 +66,7 @@ class TestClassEstateStatusLabel
 				return ['label' => $field.'-label'];
 			}));
 		$this->_pFieldnamesActive = $this->getMockBuilder(Fieldnames::class)
-			->setMethods(['getFieldLabel', 'getFieldInformation', 'loadLanguage'])
+			->onlyMethods(['getFieldLabel', 'getFieldInformation', 'loadLanguage'])
 			->setConstructorArgs([new FieldsCollection(), true])
 			->getMock();
 		$this->_pFieldnamesActive

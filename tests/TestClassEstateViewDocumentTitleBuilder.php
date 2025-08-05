@@ -45,11 +45,11 @@ class TestClassEstateViewDocumentTitleBuilder
 		$this->_pContainer = $pContainerBuilder->build();
 		$pEstateTitleBuilder = $this->getMockBuilder(EstateTitleBuilder::class)
 			->disableOriginalConstructor()
-			->setMethods(['buildTitle','buildCustomFieldTitle'])
+			->onlyMethods(['buildTitle','buildCustomFieldTitle'])
 			->getMock();
 		$pWPQuery = $this->getMockBuilder(\WP_Query::class)->disableOriginalConstructor()->getMock();
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
-			->setMethods(['getWPQuery'])
+			->onlyMethods(['getWPQuery'])
 			->getMock();
 		$pWPQueryWrapper->method('getWPQuery')->will($this->returnValue($pWPQuery));
 		$this->_pContainer->set(EstateTitleBuilder::class, $pEstateTitleBuilder);

@@ -79,7 +79,7 @@ class TestClassFieldsCollectionBuilder
 	public function testBuildFieldsCollection()
 	{
 		$pFieldLoader = $this->getMockBuilder(FieldLoader::class)
-			->setMethods(['load'])
+			->onlyMethods(['load'])
 			->getMock();
 		$pFieldLoader->method('load')
 			->will($this->returnCallback(function(): Generator {

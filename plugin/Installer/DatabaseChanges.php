@@ -81,325 +81,103 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 		// If you are modifying this, please also make sure to edit the test
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
-		if ($dbversion === null) {
+		$isNewInstall = false;
+		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null) ?? 0;
+		if ($dbversion == 0) {
 			$isNewInstall = true;
 			dbDelta( $this->getCreateQueryCache() );
 			$this->setDetailTemplate();
 
-			$dbversion = 1.0;
 			$this->_pWpOption->addOption( 'oo_plugin_db_version', $dbversion, true );
 		}
 
-		if ($dbversion == 1.0) {
-			dbDelta( $this->getCreateQueryListviews() );
-			dbDelta( $this->getCreateQueryFieldConfig() );
-			dbDelta( $this->getCreateQueryPictureTypes() );
-			dbDelta( $this->getCreateQueryListViewContactPerson() );
-			dbDelta( $this->getCreateQueryForms() );
-			dbDelta( $this->getCreateQueryFormFieldConfig() );
+		dbDelta( $this->getCreateQueryAddressFieldConfig() );
+		dbDelta( $this->getCreateQueryContactTypes() );
+		dbDelta( $this->getCreateQueryFieldConfig() );
+		dbDelta( $this->getCreateQueryFieldConfigAddressCustomsLabels() );
+		dbDelta( $this->getCreateQueryFieldConfigAddressTranslatedLabels() );
+		dbDelta( $this->getCreateQueryFieldConfigCustomsLabels() );
+		dbDelta( $this->getCreateQueryFieldConfigDefaults() );
+		dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
+		dbDelta( $this->getCreateQueryFieldConfigEstateCustomsLabels() );
+		dbDelta( $this->getCreateQueryFieldConfigEstateTranslatedLabels() );
+		dbDelta( $this->getCreateQueryFieldConfigTranslatedLabels() );
+		dbDelta( $this->getCreateQueryForms() );
+		dbDelta( $this->getCreateQueryFormActivityConfig() );
+		dbDelta( $this->getCreateQueryFormFieldConfig() );
+		dbDelta( $this->getCreateQueryFormTaskConfig() );
+		dbDelta( $this->getCreateQueryListviews() );
+		dbDelta( $this->getCreateQueryListViewContactPerson() );
+		dbDelta( $this->getCreateQueryListViewsAddress() );
+		dbDelta( $this->getCreateQueryPictureTypes() );
+		dbDelta( $this->getCreateQuerySortByUserValues() );
+		dbDelta( $this->addColumnsForHighlights() );
 
-			$dbversion = 2.0;
-		}
-
-		if ($dbversion == 2.0) {
-			dbDelta( $this->getCreateQueryListViewsAddress() );
-			dbDelta( $this->getCreateQueryAddressFieldConfig() );
-			$dbversion = 3.0;
-		}
-
-		if ($dbversion == 3.0) {
-			// new column: captcha
-			dbDelta( $this->getCreateQueryForms() );
-			$dbversion = 4;
-		}
-
-		if ($dbversion == 4.0) {
-			// new column: newsletter
-			dbDelta( $this->getCreateQueryForms() );
-			$dbversion = 5;
-		}
-
-		if ($dbversion == 5.0) {
-			// new columns: filterable, hidden
-			dbDelta( $this->getCreateQueryAddressFieldConfig() );
-			$dbversion = 6;
-		}
-
-		if ($dbversion == 6.0) {
-			// new columns: availableOptions
-			dbDelta( $this->getCreateQueryFieldConfig() );
-			dbDelta( $this->getCreateQueryFormFieldConfig() );
-			$dbversion = 7;
-		}
-
-		if ($dbversion >= 7.0 && $dbversion <= 11) {
-			// version 8: new columns: {country,zip,street,radius}_active
-			// version 9: new columns: radius
-			// version 10 new columns: city_active
-			// version 11: new columns: geo_order
-			// version 12: new column in getCreateQueryForms: show_estate_context
-			dbDelta( $this->getCreateQueryListviews() );
-			dbDelta( $this->getCreateQueryForms() );
-			$dbversion = 12;
-		}
-
-		if ( $dbversion == 12 || $dbversion == 13)	{
-			dbDelta( $this->getCreateQueryListviews() );
-			dbDelta( $this->getCreateQuerySortByUserValues() );
-			$dbversion = 14;
-		}
-
-		if ( $dbversion == 14) {
-			$this->updateSortByUserDefinedDefault();
-			$dbversion = 15;
-		}
-
-		if ($dbversion == 15) {
-			dbDelta( $this->getCreateQueryFieldConfigDefaults() );
-			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
-			$dbversion = 16;
-		}
-
-		if ($dbversion == 16) {
-			$this->migrationsDataSimilarEstates();
-			$dbversion = 17;
-		}
-
-		if ($dbversion == 17) {
-			$dbversion = 18;
-		}
-
-		if ($dbversion == 18) {
-			$this->deleteCommentFieldApplicantSearchForm();
-			$dbversion = 19;
-		}
-
-		if ($dbversion == 19) {
-			dbDelta($this->getCreateQueryFieldConfigCustomsLabels());
-			dbDelta($this->getCreateQueryFieldConfigTranslatedLabels());
-			$dbversion = 20;
-		}
-
-		if ($dbversion == 20) {
-			$this->updateCreateAddressFieldOfIntersetAndOwnerForm();
-			$dbversion = 21;
-		}
-
-		if ($dbversion == 21) {
-			dbDelta($this->getCreateQueryListviews());
-			$this->updateShowReferenceEstateOfList();
-			$dbversion = 22;
-		}
-
-		if ($dbversion == 22) {
-			dbDelta($this->getCreateQueryForms());
-			$dbversion = 23;
-		}
-
-		if ($dbversion == 23) {
-			if (!isset($isNewInstall)){
-				$this->deactivateCheckDuplicateOfForm();
-				$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
-			}
-			$dbversion = 24;
-		}
-
-		if ($dbversion == 24) {
-			dbDelta($this->getCreateQueryListviews());
-			dbDelta($this->getCreateQueryListViewsAddress());
-			dbDelta($this->getCreateQueryForms());
-			$dbversion = 25;
-		}
-		if ($dbversion == 25) {
-			$this->setDataDetailViewAccessControlValue();
-			$dbversion = 26;
-		}
-
-		if ($dbversion == 26) {
-			$this->deleteMessageFieldApplicantSearchForm();
-			$dbversion = 27;
-		}
-
-		if ($dbversion == 27) {
-			$this->updateEstateListSortBySetting();
-			$dbversion = 28;
-		}
-
-		if ($dbversion == 28) {
-			$this->checkContactFieldInDefaultDetail();
-			$dbversion = 29;
-		}
-
-		if ($dbversion == 29) {
-			$this->checkAllPageIdsHaveDetailShortCode();
-			$this->_pWpOption->addOption( 'add-detail-posts-to-rewrite-rules', false );
-			$this->_pWpOption->updateOption( 'onoffice-detail-view-showTitleUrl', true );
-			$dbversion = 30;
-		}
-
-		if ($dbversion == 30) {
-			dbDelta($this->getCreateQueryForms());
-			$dbversion = 31;
-		}
-
-		if ( $dbversion == 31 ) {
-			$this->_pWpOption->addOption('onoffice-is-encryptcredent', false);
-			$dbversion = 32;
-		}
-
-		if ( $dbversion == 32 ) {
-			$this->updateShowReferenceEstate();
-			$this->setDataDetailViewRestrictAccessControlValue();
-			$dbversion = 33;
-		}
-
-		if ( $dbversion == 33 ) {
-			$this->updateDefaultSettingsTitleAndDescription();
-			$dbversion = 34;
-		}
-
-		if ( $dbversion == 34 ) {
-			dbDelta( $this->getCreateQueryFormFieldConfig() );
-			$dbversion = 35;
-		}
-
-		if ( $dbversion == 35 ) {
-			dbDelta( $this->getCreateQueryFieldConfigEstateCustomsLabels() );
-			dbDelta( $this->getCreateQueryFieldConfigEstateTranslatedLabels() );
-			$dbversion = 36;
-		}
-
-		if ( $dbversion == 36 ) {
-			$this->_pWpOption->addOption( 'onoffice-settings-honeypot', true );
-			$dbversion = 37;
-		}
-
-		if ( $dbversion == 37 ) {
-			$this->_pWpOption->updateOption( 'onoffice-settings-honeypot', false );
-			$dbversion = 38;
-		}
-
-		if ( $dbversion == 38 ) {
-			dbDelta($this->getCreateQueryListviews());
-			$this->updateShowPriceOnRequestOptionForListView();
-			$this->updateShowPriceOnRequestOptionForSimilarView();
-			$this->updateShowPriceOnRequestOptionForDetailView();
-			$dbversion = 39;
-		}
-
-		if ( $dbversion == 39 ) {
-			dbDelta($this->getCreateQueryListviews());
-			$dbversion = 40;
-		}
-
-		if ( $dbversion == 40 ) {
-			$this->updateDefaultPictureTypesForSimilarEstate();
-			$dbversion = 41;
-		}
-
-		if ($dbversion == 41) {
-			$this->updateValueGeoFieldsForEsateList();
-			$dbversion = 42;
-		}
-
-		if ($dbversion == 42) {
-			$this->deleteExposeColumnFromListviews();
-			$dbversion = 43;
-		}
-
-		if ($dbversion == 43) {
-			$this->_pWpOption->updateOption('onoffice-settings-duration-cache', 'hourly');
-			$dbversion = 44;
-		}
-
-		if ($dbversion == 44) {
-			dbDelta($this->getCreateQueryFieldConfig());
-			$dbversion = 45;
-		}
-
-		if ($dbversion == 45) {
-			dbDelta($this->getCreateQueryFormFieldConfig());
-			$dbversion = 46;
-		}
-
-		if ($dbversion == 46) {
-			dbDelta($this->getCreateQueryContactTypes());
-			$this->migrateContactTypes();
-			$dbversion = 47;
-		}
-
-		if ($dbversion == 47) {
-			dbDelta($this->getCreateQueryListviews());
-			$dbversion = 48;
-		}
-
-		if ($dbversion == 48) {
-			dbDelta($this->getCreateQueryAddressFieldConfig());
-			$dbversion = 49;
-		}
-
-		if ($dbversion == 49) {
-			dbDelta($this->getCreateQueryFieldConfigAddressCustomsLabels());
-			dbDelta($this->getCreateQueryFieldConfigAddressTranslatedLabels());
-			$dbversion = 50;
-		}
-
-		if ($dbversion == 50) {
-			dbDelta($this->getCreateQueryFormActivityConfig());
-			$dbversion = 51;
-		}
-
-		if ($dbversion == 51) {
-			dbDelta($this->getCreateQueryListViewsAddress());
-			$dbversion = 52;
-		}
-
-		if ($dbversion == 52) {
-			$this->updateContactImageTypesForDetailPage();
-			$dbversion = 53;
-		}
-
-		if ($dbversion == 53) {
-			$this->updatePriceFieldsOptionForSimilarEstate();
-			$this->updatePriceFieldsOptionDetailView();
-			$dbversion = 54;
-		}
-
-		if ($dbversion == 54) {
-			dbDelta($this->getCreateQueryFormTaskConfig());
-			$dbversion = 55;
-		}
-
-		if ($dbversion == 55) {
-			dbDelta($this->getCreateQueryListViewsAddress());
-			$dbversion = 56;
-		}
-
-		if ($dbversion == 56) {
-			dbDelta($this->getCreateQueryForms());
-			$dbversion = 57;
-		}
-
-		if ($dbversion == 57) {
-			dbDelta($this->getCreateQueryFormFieldConfig());
-			$dbversion = 58;
-		}
-
-		if ($dbversion == 58) {
-			$this->migrationsDataShortCodeFormForDetailView();
-			$dbversion = 59;
-		}
-
-		if ($dbversion == 59) {
-			$this->updateValueGeoFieldsForForms();
-			$dbversion = 60;
-		}
-
-		if ($dbversion == 60) {
-			// new column 'highlighted' in 'oo_plugin_fieldconfig'
-			dbDelta($this->addColumnsForHighlights());
-			$dbversion = 61;
+		// DELIBERATE FALLTHROUGH
+		switch (true) {
+			case $dbversion <= 14:
+				$this->updateSortByUserDefinedDefault();
+			case $dbversion <= 16:
+				$this->migrationsDataSimilarEstates();
+			case $dbversion <= 18:
+				$this->deleteCommentFieldApplicantSearchForm();
+			case $dbversion <= 20:
+				$this->updateCreateAddressFieldOfIntersetAndOwnerForm();
+			case $dbversion <= 21:
+				$this->updateShowReferenceEstateOfList();
+			case $dbversion <= 23:
+				if ($isNewInstall) {
+					$this->deactivateCheckDuplicateOfForm();
+					$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
+				}
+			case $dbversion <= 25:
+				$this->setDataDetailViewAccessControlValue();
+			case $dbversion <= 26:
+				$this->deleteMessageFieldApplicantSearchForm();
+			case $dbversion <= 27:
+				$this->updateEstateListSortBySetting();
+			case $dbversion <= 28:
+				$this->checkContactFieldInDefaultDetail();
+			case $dbversion <= 29:
+				$this->checkAllPageIdsHaveDetailShortCode();
+				$this->_pWpOption->addOption( 'add-detail-posts-to-rewrite-rules', false );
+				$this->_pWpOption->updateOption( 'onoffice-detail-view-showTitleUrl', true );
+			case $dbversion <= 31:
+				$this->_pWpOption->addOption('onoffice-is-encryptcredent', false);
+			case $dbversion <= 32:
+				$this->updateShowReferenceEstate();
+				$this->setDataDetailViewRestrictAccessControlValue();
+			case $dbversion <= 33:
+				$this->updateDefaultSettingsTitleAndDescription();
+			case $dbversion <= 36:
+				$this->_pWpOption->addOption( 'onoffice-settings-honeypot', true );
+			case $dbversion <= 37:
+				$this->_pWpOption->updateOption( 'onoffice-settings-honeypot', false );
+			case $dbversion <= 38:
+				$this->updateShowPriceOnRequestOptionForListView();
+				$this->updateShowPriceOnRequestOptionForSimilarView();
+				$this->updateShowPriceOnRequestOptionForDetailView();
+			case $dbversion <= 40:
+				$this->updateDefaultPictureTypesForSimilarEstate();
+			case $dbversion <= 41:
+				$this->updateValueGeoFieldsForEsateList();
+			case $dbversion <= 42:
+				$this->deleteExposeColumnFromListviews();
+			case $dbversion <= 43:
+				$this->_pWpOption->updateOption('onoffice-settings-duration-cache', 'hourly');
+			case $dbversion <= 46:
+				$this->migrateContactTypes();
+			case $dbversion <= 52:
+				$this->updateContactImageTypesForDetailPage();
+			case $dbversion <= 53:
+				$this->updatePriceFieldsOptionForSimilarEstate();
+				$this->updatePriceFieldsOptionDetailView();
+			case $dbversion <= 58:
+				$this->migrationsDataShortCodeFormForDetailView();
+			case $dbversion <= 59:
+				$this->updateValueGeoFieldsForForms();
+			default:
+				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
 
 		if ($dbversion == 61) {
