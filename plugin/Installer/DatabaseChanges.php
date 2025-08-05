@@ -45,7 +45,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 60;
+	const MAX_VERSION = 61;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -177,6 +177,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->updateValueGeoFieldsForForms();
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
+		}
+
+		if ($dbversion == 60) {
+			// new column 'highlighted' in 'oo_plugin_fieldconfig'
+			dbDelta($this->addColumnsForHighlights());
+			$dbversion = 61;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -1086,6 +1092,21 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->_pWpOption->updateOption('onoffice-default-view', null);
 			}
 		}
+	}
+
+	/**
+	 * @return void
+	 */
+	private function addColumnsForHighlights(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_fieldconfig";
+		$sql = "CREATE TABLE $tableName (
+			`highlighted` tinyint(1) NOT NULL DEFAULT '0',
+		) $charsetCollate;";
+
+		return $sql;
 	}
 
 	/**

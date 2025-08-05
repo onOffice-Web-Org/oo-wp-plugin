@@ -140,9 +140,16 @@ $dimensions = [
 				}
 				?>
 			</div>
-			<div class="oo-detailstable">
-				<?php
-				foreach ($currentEstate as $field => $value) {
+			<?php
+				$highlightKeys = array_flip($pEstates->getHighlightedFields());
+				$estateDetails = array_filter(iterator_to_array($currentEstate)); // filter empty values
+				$keyfacts = array_intersect_key($estateDetails, $highlightKeys); // get only highlighted fields
+				$estatefacts = array_diff_key($estateDetails, $highlightKeys); // get only non highlighteds
+			?>
+			<?php if(!empty($keyfacts)) {
+				echo '<h2 class="oo-details-highlights-headline">' . __('Highlights', 'onoffice-for-wp-websites') . '</h2>' .
+					'<dl class="oo-details-highlights-table">';
+				foreach ($keyfacts as $field => $value) {
 					if ($pEstates->getShowEnergyCertificate() && in_array($field, $energyCertificateFields)) {
 						continue;
 					}
@@ -155,12 +162,46 @@ $dimensions = [
 					if (empty($value)) {
 						continue;
 					}
-					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
-						. '<div class="oo-detailslisttd">'
+					echo '<div class="oo-details-highlight">';
+					echo '<dt class="oo-details-highlight__label">' . esc_html($pEstates->getFieldLabel($field)) . '</dt>';
+					echo '<dd class="oo-details-highlight__value">' . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)) . '</dd>';
+					echo '</div>';
+				} 
+				echo '</dl>';
+			} ?>
+			<?php if(!empty($estatefacts)) {
+				echo '<dl class="oo-detailstable">';
+				foreach ($estatefacts as $field => $value) {
+					if ($pEstates->getShowEnergyCertificate() && in_array($field, $energyCertificateFields)) {
+						continue;
+					}
+					if (is_numeric($value) && 0 == $value) {
+						continue;
+					}
+					if (in_array($field, $dontEcho)) {
+						continue;
+					}
+					if (empty($value)) {
+						continue;
+					}
+					// skip negative boolean fields
+					if (is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0"){
+						continue;
+					}
+					if (
+						($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
+						in_array($field,['innen_courtage', 'aussen_courtage'],true)
+					) {
+						continue;
+					}
+
+					echo '<dt class="oo-details-fact__label">' . esc_html($pEstates->getFieldLabel($field)) . '</dt>' . "\n"
+						. '<dd class="oo-details-fact__value">'
 						. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
-						. '</div>' . "\n";
-				} ?>
-			</div>
+						. '</dd>' . "\n";
+				} 
+				echo '</dl>';
+			} ?>
 
 			<?php if ($currentEstate["dreizeiler"] !== "") { ?>
 				<div class="oo-detailsfreetext">
@@ -587,11 +628,12 @@ $dimensions = [
 			?>
 
 		</div>
-		<?php $similar = trim($pEstates->getSimilarEstates()); ?>
-		<?php if (!empty($similar)): ?>
-        	<?php echo $similar; ?>
-		<?php endif; ?>
-	<?php } ?>
+		<?php
+		$similar = trim($pEstates->getSimilarEstates());
+		if (!empty($similar)) {
+			echo $similar;
+		}
+	} ?>
 
 </div>
 
