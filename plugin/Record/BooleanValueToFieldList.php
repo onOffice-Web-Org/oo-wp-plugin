@@ -88,6 +88,9 @@ class BooleanValueToFieldList
 	{
 		$fieldsArray = $this->readFieldsArray();
 		$pInputModel = $this->_pInputModelFactory->create($type, '', true);
+		if($pInputModel == null) {
+			return;
+		}
 		$identifier = $pInputModel->getIdentifier();
 
 		if (property_exists($this->_pValues, $identifier)) {

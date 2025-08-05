@@ -253,6 +253,7 @@ class EstateList
 		$estateParametersRaw['data'][] = 'vermarktungsart';
 		$estateParametersRaw['data'][] = 'preisAufAnfrage';
 		$estateParametersRaw['data'][] = 'virtualAddress';
+		$estateParametersRaw['data'][] = 'provisionsfrei';
 
 		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
 			$estateParametersRaw['data'] []= 'waehrung';
@@ -527,6 +528,7 @@ class EstateList
 		$requestParams['data'][] = $pListView->getSortby();
 		$requestParams['data'] = array_merge($requestParams['data'], $pListView->getSortByUserValues());
 		$requestParams['data'][] = 'preisAufAnfrage';
+		$requestParams['data'][] = 'provisionsfrei';
 		$requestParams['data'][] = 'referenz';
 		$requestParams['sortby'] = $pListView->getSortby();
 		$requestParams['sortorder'] = $pListView->getSortorder();
@@ -1570,5 +1572,25 @@ class EstateList
 		}
 
 		return false;
+	}
+
+	/**
+	 * checks whether or not a given value is highlighted
+	 * @param string $value
+	 * @return bool
+	 */
+	public function isHighlightedField(string $value) : bool
+	{
+		return in_array($value, $this->getDataView()->getHighlightedFields());
+	}
+
+	/**
+	 * checks whether or not a given value is highlighted
+	 * @param string $value
+	 * @return bool
+	 */
+	public function getHighlightedFields() : array
+	{
+		return $this->getDataView()->getHighlightedFields();
 	}
 }

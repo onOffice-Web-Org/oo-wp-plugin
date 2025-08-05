@@ -43,6 +43,9 @@ class DataSimilarView
 	/** */
 	const PICTURES = 'pictures';
 
+	/** */
+	const HIGHLIGHTED = 'highlighted';
+
 	/** @var string[] */
 	private $_fields = [
 		'Id',
@@ -58,6 +61,9 @@ class DataSimilarView
 		'grundstuecksflaeche',
 		'nutzflaeche'
 	];
+
+	/** @var string[] */
+	private $_highlighted = [];
 
 	/** @var int */
 	private $_pageId = 0;
@@ -86,9 +92,16 @@ class DataSimilarView
 	public function setPageId(int $pageId)
 		{ $this->_pageId = $pageId; }
 
+	public function getHighlightedFields(): array
+		{ return $this->_highlighted; }
+
 	/** @return array */
 	public function getFields(): array
 		{ return $this->_fields; }
+
+	/** @param array $keyfacts */
+	public function setHighlightedFields(array $highlighted)
+		{ $this->_highlighted = $highlighted; }
 
 	/** @param array $fields */
 	public function setFields(array $fields)
