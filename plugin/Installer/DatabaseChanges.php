@@ -111,6 +111,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		dbDelta( $this->getCreateQueryListViewsAddress() );
 		dbDelta( $this->getCreateQueryPictureTypes() );
 		dbDelta( $this->getCreateQuerySortByUserValues() );
+		dbDelta( $this->addColumnsForHighlights() );
 
 		// DELIBERATE FALLTHROUGH
 		switch (true) {
@@ -177,12 +178,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->updateValueGeoFieldsForForms();
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
-		}
-
-		if ($dbversion == 60) {
-			// new column 'highlighted' in 'oo_plugin_fieldconfig'
-			dbDelta($this->addColumnsForHighlights());
-			$dbversion = 61;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
