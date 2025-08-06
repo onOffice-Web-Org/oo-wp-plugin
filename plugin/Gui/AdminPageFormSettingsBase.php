@@ -258,10 +258,12 @@ abstract class AdminPageFormSettingsBase
 				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_TASKCONFIG_FORMS);
 				$row[RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM]['form_id'] = $recordId;
 				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM);
-				foreach ($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS] as $key => $value) {
-					$value['form_id'] = $recordId;
-					$row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS][$key] = $value;
-				}
+				if (array_key_exists(RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS, $row) && is_array($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS])) {
+					foreach ($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS] as $key => $value) {
+						$value['form_id'] = $recordId;
+						$row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS][$key] = $value;
+					}
+				} 
 				$pRecordManagerInsertForm->insertAdditionalValues($row);
 				$result = true;
 			} catch (RecordManagerInsertException $pException) {
