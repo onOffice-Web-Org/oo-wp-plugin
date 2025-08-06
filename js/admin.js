@@ -123,6 +123,12 @@ jQuery(document).ready(function($){
 				const titleInputs = multiPageTitleSection.querySelectorAll('input[name^=oopluginformmultipagetitle-value]');
 				const page = multiPageTitleSection.getAttribute('data-page');
 				const localeSelect = multiPageTitleSection.querySelector('select[name=oopluginformmultipagetitle-locale].onoffice-input');
+
+				if (!localeSelect) {
+					console.warn(`Locale select not found for page ${page}. Skipping.`);
+					return;
+				}
+
 				titleInputs.forEach((titleInput) => {
 					const parent = titleInput.closest('.wp-clearfix.custom-input-field');
 					const langCode = titleInput.getAttribute('data-localized');
@@ -833,7 +839,6 @@ jQuery(document).ready(function($){
 			if (pageContainer === '#multi-page-container' && !$(pageContainer + ' .list-fields-for-each-page').length) {
 				return ''
 			}
-			;
 		} else {
 			if (myLabel.length) {
 				dummyKey = myLabel.find('#menu-item-dummy_key');

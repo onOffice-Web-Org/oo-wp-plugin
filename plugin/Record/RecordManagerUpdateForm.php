@@ -139,7 +139,7 @@ class RecordManagerUpdateForm
 		$result = true;
 
 		foreach ($titles as $row) {
-			$result = $result && $pWpDb->insert($pWpDb->prefix.self::TABLENAME_MULTIPAGE_TITLE_FORMS, $row);
+			$result = $result && $pWpDb->insert($prefix.self::TABLENAME_MULTIPAGE_TITLE_FORMS, $row);
 		}
 		return $result;
 	}

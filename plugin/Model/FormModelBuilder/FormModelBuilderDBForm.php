@@ -713,15 +713,17 @@ class FormModelBuilderDBForm
 	 */
 	public function callbackValueInputModelTitleValue(InputModelBase $pInputModel, array $title): void
 	{
+		$locale = $title['locale'] ?? 'native';
+		$value = $title['value'] ?? '';
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
-		if($title['locale'] === 'native') {
+		if($locale === 'native') {
 			$pInputModel->setLabel(__('Page title:', 'onoffice-for-wp-websites'));
 		} else {
 			$languages = $this->getAvailableLanguageSelectValues();
-			$pInputModel->setLabel(sprintf(__('Page title: %s', 'onoffice-for-wp-websites'), $languages[$title['locale']]));
+			$pInputModel->setLabel(sprintf(__('Page title: %s', 'onoffice-for-wp-websites'), $languages[$locale]));
 		}
-		$pInputModel->setValue($title['value']);
-		$pInputModel->setLanguage($title['locale']);
+		$pInputModel->setValue($value);
+		$pInputModel->setLanguage($locale);
 	}
 
 	/**
@@ -1246,7 +1248,7 @@ class FormModelBuilderDBForm
 	/**
 	 * @return array
 	 */
-	private function getAvailableLanguageSelectValues():array{
+	private function getAvailableLanguageSelectValues(): array {
 		$pLanguageReader = new InstalledLanguageReader;
 		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
 			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();

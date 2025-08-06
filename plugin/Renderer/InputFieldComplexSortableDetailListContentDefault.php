@@ -24,9 +24,11 @@ namespace onOffice\WPlugin\Renderer;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Exception;
 use onOffice\WPlugin\Gui\AdminPageAjax;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Types\FieldTypes;
+use RuntimeException;
 use function __;
 use function esc_html;
 use function esc_html__;
@@ -40,13 +42,37 @@ use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 class InputFieldComplexSortableDetailListContentDefault
 {
 	/**
+	 * @var InputModelRenderer
+	 */
+	private InputModelRenderer $inputModelRenderer;
+
+	/**
+	 * Initializes a new instance of the class
+	 *
+	 * @throws RuntimeException|Exception
+	 */
+	public function __construct()
+	{
+		try {
+			$pDIContainerBuilder = new ContainerBuilder();
+			$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+			$pContainer = $pDIContainerBuilder->build();
+			$this->inputModelRenderer = $pContainer->get(InputModelRenderer::class);
+		} catch (DependencyException | NotFoundException $e) {
+			throw new RuntimeException('Failed to initialize InputModelRenderer: ' . $e->getMessage(), 0, $e);
+		}
+
+	}
+
+	/**
 	 * @param string $key
 	 * @param bool $isDummy
 	 * @param string $type
-	 * @param array $extraInputModels 
+	 * @param array $extraInputModels
 	 * @param bool $isMutiplePage
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws Exception
 	 */
 
 	public function render(string $key, bool $isDummy,
@@ -93,45 +119,56 @@ class InputFieldComplexSortableDetailListContentDefault
 			$pFormModel->addInputModel($pInputModel);
 		}
 
-		$pDIContainerBuilder = new ContainerBuilder();
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pDIContainerBuilder->build();
-		/* @var $pInputModelRenderer InputModelRenderer */
-		$pInputModelRenderer = $pContainer->get(InputModelRenderer::class);
 		echo '<p class="wp-clearfix key-of-field-block"><label class="howto">' . esc_html__('Key of Field:', 'onoffice-for-wp-websites')
 				.'&nbsp;</label><span class="menu-item-settings-name">'.esc_html($key).'</span></p>';
 
-		$pInputModelRenderer->buildForAjax($pFormModel);
+		$this->inputModelRenderer->buildForAjax($pFormModel);
 
 		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice-for-wp-websites').'</a>';
 	}
 
+	/**
+	 * Renders input fields for multilingual page titles
+	 *
+	 * @param array $titleInputModels
+	 * @param array $titles
+	 * @return void
+	 * @throws Exception
+	 */
 	public function renderTitlesForMultiPage(array $titleInputModels, array $titles):void {
 		$pFormModel = new FormModel();
 
 		foreach ($titleInputModels as $pInputModel) {
 			if ($pInputModel->getField() === 'value') {
 				foreach ($titles as $title) {
-					$localizedTitleInputModel = clone $pInputModel;
-					$callbackValue = $localizedTitleInputModel->getValueCallback();
-					if ($callbackValue !== null) {
-						call_user_func($callbackValue, $localizedTitleInputModel, $title);
-					}
-					$pFormModel->addInputModel($localizedTitleInputModel);
+					$this->addInputModelToFormModel(clone $pInputModel,$pFormModel, $title);
 				}
 			} else {
-				$callbackValue = $pInputModel->getValueCallback();
-				if ($callbackValue !== null) {
-					call_user_func($callbackValue, $pInputModel, $titles);
-				}
-				$pFormModel->addInputModel($pInputModel);
+				$this->addInputModelToFormModel($pInputModel, $pFormModel, $titles);
 			}
 		}
-		$pDIContainerBuilder = new ContainerBuilder();
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pDIContainerBuilder->build();
-		/* @var $pInputModelRenderer InputModelRenderer */
-		$pInputModelRenderer = $pContainer->get(InputModelRenderer::class);
-		$pInputModelRenderer->buildForAjax($pFormModel);
+		try {
+			$this->inputModelRenderer->buildForAjax($pFormModel);
+		} catch (Exception $e) {
+			throw new RuntimeException('Failed to render title for multipage form: ' . $e->getMessage(), 0, $e);
+		}
+	}
+
+
+	/**
+	 * Add an input model to form model with callback if available
+	 *
+	 * @param $pInputModel
+	 * @param $pFormModel
+	 * @param mixed $callbackParam
+	 * @return void
+	 */
+	private function addInputModelToFormModel($pInputModel, $pFormModel, mixed $callbackParam): void
+	{
+		$callbackValue = $pInputModel->getValueCallback();
+		if ($callbackValue !== null) {
+			call_user_func($callbackValue, $pInputModel, $callbackParam);
+		}
+		$pFormModel->addInputModel($pInputModel);
 	}
 }

@@ -263,8 +263,7 @@ class DataFormConfigurationFactory
 	 * @param DataFormConfiguration\DataFormConfiguration $pFormConfiguration
 	 *
 	 */
-	private function configureTitlePerMultipageByRow(array $row,
-										  DataFormConfiguration\DataFormConfiguration $pFormConfiguration): void
+	private function configureTitlePerMultipageByRow(array $row, DataFormConfiguration\DataFormConfiguration $pFormConfiguration): void
 	{
 		foreach ($row as $titleData) {
 			if (array_key_exists('value', $titleData) && array_key_exists('page', $titleData)) {
