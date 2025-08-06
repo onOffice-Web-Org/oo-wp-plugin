@@ -159,6 +159,18 @@ class TestClassEstateList
 		$this->assertCount(5, $pClosureGetEstateResult());
 	}
 
+	public function testLoadEstatesSortKaufpreis()
+	{
+		$this->_pEstateList->getDataView()->setSortby('kaufpreis');
+		$this->_pEstateList->loadEstates(1);
+		$pClosureGetEstateResult = Closure::bind(function() {
+			return $this->_records;
+		}, $this->_pEstateList, EstateList::class);
+		// If the test didnt throw by now, he tried to get the response for a sortby of ['preisAufAnfrage' => 'ASC', 'kaufpreis' => 'ASC']
+		// Which is correct if sortby was initialized with 'kaufpreis'
+		$this->assertCount(5, $pClosureGetEstateResult());
+	}
+
 
 	/**
 	 *
@@ -1033,6 +1045,11 @@ class TestClassEstateList
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstatesCostsCalculatorRaw, null, $responseReadEstatesCostsCalculatorRaw);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'fields', '', $parametersGetFieldCurrency, null, $responseGetFieldCurrency);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', array_merge($parametersReadEstate, ['sortby' => ['preisAufAnfrage' => 'ASC', 'kaufpreis' => 'ASC']]), null, $responseReadEstate);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'estate', '', array_merge($parametersReadEstateRaw, ['sortby' => ['preisAufAnfrage' => 'ASC', 'kaufpreis' => 'ASC']]), null, $responseReadEstate);
+
 
 		unset($parametersReadEstate['georangesearch']);
 		unset($parametersReadEstateRaw['georangesearch']);
@@ -1148,7 +1165,7 @@ class TestClassEstateList
 	private function getDataView(): DataListView
 	{
 		$pDataView = new DataListView(1, 'test');
-		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'warmmiete', 'kaufpreis', 'erbpacht', 'nettokaltmiete', 'pacht', 'kaltmiete']);
+		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'warmmiete', 'kaufpreis', 'erbpacht', 'nettokaltmiete', 'pacht', 'kaltmiete', 'preisAufAnfrage']);
 		$pDataView->setSortby('Id');
 		$pDataView->setSortorder('ASC');
 		$pDataView->setFilterId(12);
