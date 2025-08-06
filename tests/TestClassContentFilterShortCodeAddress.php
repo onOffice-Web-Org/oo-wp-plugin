@@ -62,12 +62,12 @@ class TestClassContentFilterShortCodeAddress
 		$this->_pContainer = $pContainerBuilder->build();
 
 		$pTemplateMock = $this->getMockBuilder(Template::class)
-			->setMethods(['render', 'withAddressList', 'withTemplateName'])
+			->onlyMethods(['render', 'withAddressList', 'withTemplateName'])
 			->getMock();
 		$pTemplateMock->method('withTemplateName')->will($this->returnSelf()); // should be a clone!
 
 		$pLogger = $this->getMockBuilder(Logger::class)
-			->setMethods(['logErrorAndDisplayMessage'])
+			->onlyMethods(['logErrorAndDisplayMessage'])
 			->getMock();
 
 		$pDataListViewAddress = new DataListViewAddress(1, 'test');
@@ -75,7 +75,7 @@ class TestClassContentFilterShortCodeAddress
 		$pDataListViewAddress->setFilterableFields(['Ort']);
 
 		$pMockDataListViewFactoryAddress = $this->getMockBuilder(DataListViewFactoryAddress::class)
-			->setMethods(['getListViewByName'])
+			->onlyMethods(['getListViewByName'])
 			->disableOriginalConstructor()
 			->getMock();
 		$pMockDataListViewFactoryAddress->method('getListViewByName')->will
@@ -89,7 +89,7 @@ class TestClassContentFilterShortCodeAddress
 		$pWPQueryWrapperMock->method('getWPQuery')->will($this->returnValue($pWPQueryMock));
 
 		$pSearchParametersModelBuilder = $this->getMockBuilder(SearchParametersModelBuilder::class)
-			->setMethods(['build'])
+			->onlyMethods(['build'])
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -97,7 +97,7 @@ class TestClassContentFilterShortCodeAddress
 		$pSearchParametersModelBuilder->method('build')->with($this->anything())->willReturn($pSearchParametersModel);
 
 		$pAddressListFactory = $this->getMockBuilder(AddressListFactory::class)
-			->setMethods(['create'])
+			->onlyMethods(['create'])
 			->disableOriginalConstructor()
 			->getMock();
 

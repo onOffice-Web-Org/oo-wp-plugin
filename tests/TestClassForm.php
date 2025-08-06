@@ -77,7 +77,7 @@ class TestClassForm
 
 		$pDataFormConfigurationFactory = $this->getMockBuilder(DataFormConfigurationFactory::class)
 			->disableOriginalConstructor()
-			->setMethods(['loadByFormName'])
+			->onlyMethods(['loadByFormName'])
 			->getMock();
 		$this->_pContainer->set(DataFormConfigurationFactory::class, $pDataFormConfigurationFactory);
 		$pDataFormConfiguration = new DataFormConfigurationInterest;

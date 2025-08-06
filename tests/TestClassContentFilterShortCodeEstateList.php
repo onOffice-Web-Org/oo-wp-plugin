@@ -51,7 +51,7 @@ class TestClassContentFilterShortCodeEstateList
 		$this->_pContainer = $pContainerBuilder->build();
 
 		$pDataListViewFactory = $this->getMockBuilder(DataListViewFactory::class)
-			->setMethods(['getListViewByName'])
+			->onlyMethods(['getListViewByName'])
 			->getMock();
 		$pDataListView = new DataListView(13, 'test_view_list');
 		$pDataListView->setTemplate('default_list.php');
@@ -60,12 +60,12 @@ class TestClassContentFilterShortCodeEstateList
 
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->disableOriginalConstructor()
-			->setMethods(['addFieldsAddressEstate'])
+			->onlyMethods(['addFieldsAddressEstate'])
 			->getMock();
 
 		$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
 			->disableOriginalConstructor()
-			->setMethods(['createEstateList'])
+			->onlyMethods(['createEstateList'])
 			->getMock();
 		$pEstateList = $this->generateEstateList($pDataListView);
 		$pEstateDetailFactory->method('createEstateList')->will($this->returnValue($pEstateList));
@@ -87,13 +87,13 @@ class TestClassContentFilterShortCodeEstateList
 		$pEstateListEnvironment = $this->getMockBuilder(EstateListEnvironment::class)
 			->getMock();
 		$pEstate = $this->getMockBuilder(EstateList::class)
-			->setMethods(['getEstateUnits',
+			->onlyMethods([
+				'getEstateUnits',
 				'estateIterator',
 				'getFieldLabel',
 				'getEstateContacts',
 				'getMovieEmbedPlayers',
 				'getEstatePictures',
-				'setEstateId',
 				'getEstateMovieLinks',
 				'getEstatePictureUrl',
 				'getEstatePictureTitle',
@@ -101,6 +101,7 @@ class TestClassContentFilterShortCodeEstateList
 				'getCurrentEstateId',
 				'loadEstates',
 			])
+			->addMethods(['setEstateId'])
 			->setConstructorArgs([$pDataListView, $pEstateListEnvironment])
 			->getMock();
 

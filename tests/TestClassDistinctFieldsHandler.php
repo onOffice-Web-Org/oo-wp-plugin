@@ -89,7 +89,7 @@ class TestClassDistinctFieldsHandler
 	private function buildFieldsCollectionBuilderShort(string $module): FieldsCollectionBuilderShort
 	{
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->onlyMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
 			->setConstructorArgs([new Container])
 			->getMock();
 

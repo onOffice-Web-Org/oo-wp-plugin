@@ -24,7 +24,7 @@ class TestClassFormPreviewEstate
 		$pDataListView = new DataListView(12, 'testList');
 		$pDataListView->setFilterId(24);
 		$pDataListViewFactory = $this->getMockBuilder(DataListViewFactory::class)
-			->setMethods(['getListViewByName'])
+			->onlyMethods(['getListViewByName'])
 			->getMock();
 		$pDataListViewFactory->expects($this->once())-> method('getListViewByName')
 			->with('testList', null)->willReturn($pDataListView);
