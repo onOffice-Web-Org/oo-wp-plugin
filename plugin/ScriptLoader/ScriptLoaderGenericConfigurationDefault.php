@@ -201,7 +201,7 @@ class ScriptLoaderGenericConfigurationDefault
 			(new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'slick', plugins_url('/third_party/slick/slick.js', $pluginPath)))
+			(new IncludeFileModel($script, 'accessible-slick', plugins_url('/third_party/accessible-slick/accessible-slick.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true)
 				->setLoadAsynchronous($defer),
@@ -218,8 +218,8 @@ class ScriptLoaderGenericConfigurationDefault
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
 			new IncludeFileModel($style, 'onoffice-address-detail', plugins_url('/css/onoffice-address-detail.css', $pluginPath)),
-			new IncludeFileModel($style, 'slick', plugins_url('/third_party/slick/slick.css', $pluginPath)),
-			new IncludeFileModel($style, 'slick-theme', plugins_url('/third_party/slick/slick-theme.css', $pluginPath)),
+			new IncludeFileModel($style, 'accessible-slick', plugins_url('/third_party/accessible-slick/accessible-slick.css', $pluginPath)),
+			new IncludeFileModel($style, 'accessible-slick-theme', plugins_url('/third_party/accessible-slick/accessible-slick-theme.css', $pluginPath)),
 		];
         if (Favorites::isFavorizationEnabled()) {
             $values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/dist/favorites.min.js', $pluginPath)))
@@ -309,7 +309,7 @@ class ScriptLoaderGenericConfigurationDefault
 	private function renderScriptForEstateDetailPage(): array
 	{
 		$scripts = [
-			'slick',
+			'accessible-slick',
 			'onoffice_defaultview'
 		];
 
@@ -323,8 +323,8 @@ class ScriptLoaderGenericConfigurationDefault
 	private function renderStyleForEstateDetailPage(): array 
 	{
 		$styles = [
-			'slick',
-			'slick-theme'
+			'accessible-slick',
+			'accessible-slick-theme'
 		];
 		return $styles;
 	}

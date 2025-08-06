@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 6.2
+Stable tag: 6.4
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,47 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.4 (2025-07-24) =
+
+**Added**
+
+* Ability to reorder entire pages via drag & drop in multi-page forms, allowing for easier reorganization of content
+
+= 6.3.3 (2025-07-17) =
+
+**Added**
+
+* Language support for Dutch
+
+**Changed**
+
+* 'Commission-free', internal commission, and external commission are now displayed in relation to each other
+
+**Fixed**
+
+* SQL Injection Vulnerabilities
+
+= 6.3.2 (2025-07-02) =
+
+**Fixed**
+
+* Fixed submission for honeypot forms
+* Allow nullable default language for Plugin Cache Function
+* Fixed missing Status Properties for estate list and detail page
+* Fixed sendContactForm for AddressDetail Page
+
+= 6.3.1 (2025-07-01) =
+
+**Fixed**
+
+* reCAPTCHA for forms (missing minified JS)
+
+= 6.3 (2025-06-27) =
+
+**Fixed**
+
+* reCAPTCHA for forms
 
 = 6.2 (2025-06-16) = 
 

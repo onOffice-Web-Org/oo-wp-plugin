@@ -62,7 +62,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend',  'addFieldsEstateGeoPosisionBackend'])
+				->onlyMethods(['addFieldsAddressEstate', 'addFieldsEstateDecoratorReadAddressBackend',  'addFieldsEstateGeoPosisionBackend'])
 				->setConstructorArgs([$this->_pContainer])
 				->getMock();
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
@@ -103,7 +103,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -122,7 +122,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
 
 		$pInstance->method('readFieldnames')
@@ -157,7 +157,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 		                  ->disableOriginalConstructor()
-		                  ->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
+		                  ->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 		                  ->getMock();
 
 		$pInstance->method('readFieldnames')
@@ -204,7 +204,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
 
 		$pInstance->method('readFieldnames')
@@ -251,7 +251,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
 
 		$pInstance->method('readFieldnames')
@@ -288,7 +288,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
 
 		$pInstance->method('readFieldnames')
@@ -324,7 +324,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
 
 		$pInstance->method('readFieldnames')
@@ -355,7 +355,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -385,7 +385,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -404,7 +404,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -437,7 +437,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder( FormModelBuilderDBEstateListSettings::class )
 		                  ->disableOriginalConstructor()
-		                  ->setMethods( [ 'getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields' ] )
+		                  ->onlyMethods( [ 'getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields' ] )
 		                  ->getMock();
 
 		$pInstance->method( 'getInputModelDBFactory' )->willReturn( $this->_pInputModelFactoryDBEntry );
@@ -456,7 +456,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -475,7 +475,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -494,7 +494,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 		                  ->disableOriginalConstructor()
-		                  ->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readExposes'])
+		                  ->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readExposes'])
 		                  ->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -529,7 +529,8 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 		                  ->disableOriginalConstructor()
-		                  ->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', "readFilters", 'getHintHtml'])
+		                  ->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', "readFilters"])
+		                  ->addMethods(['getHintHtml'])
 		                  ->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -573,7 +574,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 		                  ->disableOriginalConstructor()
-		                  ->setMethods(['getInputModelDBFactory', 'getValue'])
+		                  ->onlyMethods(['getInputModelDBFactory', 'getValue'])
 		                  ->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -592,7 +593,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 		                  ->disableOriginalConstructor()
-		                  ->setMethods(['readAvailableLanguageNamesUsingNativeName'])
+		                  ->addMethods(['readAvailableLanguageNamesUsingNativeName'])
 		                  ->getMock();
 						  
 		$inputModel = $pInstance->getInputModelCustomLabelLanguageSwitch();
@@ -614,7 +615,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -669,6 +670,36 @@ class TestClassFormModelBuilderDBEstateListSettings
     }
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getInputModelIsHighlight
+	 */
+	public function testGetInputModelIsHighlight()
+	{
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+
+		$pInputModelDB = $pInstance->getInputModelIsHighlight();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
+		$this->assertEquals([$pInstance, 'callbackValueInputModelIsHighlight'], $pInputModelDB->getValueCallback());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::callbackValueInputModelIsHighlight
+	 */
+	public function testCallbackValueInputModelIsHighlight()
+	{
+		$key = 'field_key';
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+		$pInputModelBase = new InputModelDB('testInput', 'testLabel');
+		$pInputModelBase->setValue('bonjour');
+		$pInputModelBase->setValuesAvailable('field_key');
+
+		$pInstance->callbackValueInputModelIsHidden($pInputModelBase, $key);
+		
+		$this->assertFalse($pInputModelBase->getValue());
+		$this->assertEquals($key, $pInputModelBase->getValuesAvailable());
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::callbackValueInputModelIsFilterable
 	 */
 	public function testCallbackValueInputModelIsFilterable()
@@ -709,7 +740,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -728,7 +759,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->onlyMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);

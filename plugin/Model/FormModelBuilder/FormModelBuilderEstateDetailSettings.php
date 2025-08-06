@@ -34,6 +34,7 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
@@ -371,6 +372,9 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesArray);
 		$pInputModelFieldsConfig->setValue($fields);
+		if($module == onOfficeSDK::MODULE_ESTATE) {
+			$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelIsHighlight());
+		}
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 		return $pInputModelFieldsConfig;
@@ -558,6 +562,38 @@ class FormModelBuilderEstateDetailSettings
 	}
 
 	/**
+	 * @return InputModelDB
+	 */
+	public function getInputModelIsHighlight(): InputModelDB
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create(
+			InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHTED,
+			__('Feld besonders hervorheben', 'onoffice-for-wp-website'),
+			true
+		);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelIsHighlight'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 */
+	public function callbackValueInputModelIsHighlight(InputModelBase $pInputModel, $key)
+	{
+		$valueFromConf = $this->_pDataDetailView->getHighlightedFields();
+		$filterableFields = is_array($valueFromConf) ? $valueFromConf : array();
+		$value = in_array($key, $filterableFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+	/**
 	 *
 	 * @return InputModelOption
 	 *
@@ -640,7 +676,9 @@ class FormModelBuilderEstateDetailSettings
 	 */
 	public function createInputModelTotalCostsCalculator(): InputModelOption
 	{
-		$labelShowTotalCostsCalculator = __('Show total price calculator', 'onoffice-for-wp-websites');
+		$asterisk = '<span style="color: red;">*</span>';
+		$labelShowTotalCostsCalculator = __('Show total price calculator', 'onoffice-for-wp-websites').$asterisk;
+
 		$pInputModelShowTotalCostsCalculator = $this->_pInputModelDetailViewFactory->create
 		(InputModelOptionFactoryDetailView::INPUT_SHOW_TOTAL_COSTS_CALCULATOR, $labelShowTotalCostsCalculator);
 		$pInputModelShowTotalCostsCalculator->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
@@ -659,9 +697,14 @@ class FormModelBuilderEstateDetailSettings
 		}
 
 		$textHint = sprintf(esc_html__(
-			'The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs.', 'onoffice-for-wp-websites'), 
+			'The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs. %4$s %4$s', 'onoffice-for-wp-websites'), 
 			'<code>'.$result['kaufpreis'].'</code>', '<code>'.$result['aussen_courtage'].'</code>', '<code>'.$result['bundesland'].'</code>', '<br>'
 		);
+		$textHint .= $asterisk.
+			esc_html__(
+				'The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications.',
+				'onoffice-for-wp-websites');
+		
 		$pInputModelShowTotalCostsCalculator->setHintHtml($textHint);
 
 		return $pInputModelShowTotalCostsCalculator;
@@ -707,5 +750,14 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelContactImageTypes->setValue($contactImageTypes);
 
 		return $pInputModelContactImageTypes;
+	}
+
+	/**
+	 * @param string $key
+	 * @return bool
+	 */
+	public function isHightlightedField(string $key): bool
+	{
+		return in_array($key, $this->_pDataDetailView->getHighlightedFields() ?? []);
 	}
 }

@@ -51,7 +51,7 @@ class TestClassTemplateCallbackBuilder
 		$pListView->setSortByUserDefinedDirection(1);
 
 		$pEstateList = $this->getMockBuilder(EstateList::class)
-			->setMethods(['getDataView'])
+			->onlyMethods(['getDataView'])
 			->disableOriginalConstructor()
 			->getMock();
 

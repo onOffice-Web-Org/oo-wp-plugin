@@ -53,7 +53,7 @@ class TestClassRecordManagerRead
 	public function prepare()
 	{
 		$this->_pSubject = $this->getMockBuilder(RecordManagerRead::class)
-			->setMethods(['getRecords', 'getRowByName', 'checkSameName'])
+			->onlyMethods(['getRecords', 'getRowByName', 'checkSameName'])
 			->getMock();
 	}
 
@@ -139,18 +139,6 @@ class TestClassRecordManagerRead
 		$this->assertEquals(10, $this->_pSubject->getLimit());
 		$this->_pSubject->setLimit(25);
 		$this->assertEquals(25, $this->_pSubject->getLimit());
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testJoins()
-	{
-		$this->assertEquals([], $this->_pSubject->getJoins());
-		$this->_pSubject->addJoin('1 = 1');
-		$this->assertEquals(['1 = 1'], $this->_pSubject->getJoins());
 	}
 
 

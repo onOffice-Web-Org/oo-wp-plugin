@@ -17,9 +17,9 @@ msgstr "Se suele utilizar un valor estándar del 1.5% y del 0.5% para calcular l
 #: 
 msgid "%1$s"
 msgid_plural "%1$s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%1$s"
+msgstr[1] "%1$s"
+msgstr[2] "%1$s"
 
 #: 
 msgid "Land Register Entry"
@@ -637,7 +637,7 @@ msgid "%s other parking lot"
 msgid_plural "%s other parking lots"
 msgstr[0] "%s otro aparcamiento"
 msgstr[1] "%s otros aparcamientos"
-msgstr[2] ""
+msgstr[2] "%s aparcamiento subterráneo"
 
 #. translators: %s is the amount of underground garages
 #: 
@@ -645,7 +645,7 @@ msgid "%s underground garage"
 msgid_plural "%s underground garages"
 msgstr[0] "%s aparcamiento subterráneo"
 msgstr[1] "%s aparcamientos subterráneos"
-msgstr[2] ""
+msgstr[2] "%s aparcamiento subterráneo"
 
 #. translators: %s is the amount of multi story garages
 #: 
@@ -653,7 +653,7 @@ msgid "%s multi-story garage"
 msgid_plural "%s multi-story garages"
 msgstr[0] "%s aparcamiento de varias plantas"
 msgstr[1] "%s aparcamientos de varias plantas"
-msgstr[2] ""
+msgstr[2] "%s aparcamiento de varias plantas"
 
 #. translators: %s is the amount of garages
 #: 
@@ -661,7 +661,7 @@ msgid "%s garage"
 msgid_plural "%s garages"
 msgstr[0] "%s garaje"
 msgstr[1] "%s garajes"
-msgstr[2] ""
+msgstr[2] "%s garaje"
 
 #. translators: %s is the amount of parking spaces
 #: 
@@ -669,7 +669,7 @@ msgid "%s parking space"
 msgid_plural "%s parking spaces"
 msgstr[0] "%s plaza de aparcamiento"
 msgstr[1] "%s plazas de aparcamiento"
-msgstr[2] ""
+msgstr[2] "%s aparcamiento subterráneo"
 
 #. translators: %s is the amount of duplexes
 #: 
@@ -677,7 +677,7 @@ msgid "%s duplex"
 msgid_plural "%s duplexes"
 msgstr[0] "%s dúplex"
 msgstr[1] "%s dúplex"
-msgstr[2] ""
+msgstr[2] "%s dúplex"
 
 #. translators: %s is the amount of carports
 #: 
@@ -685,7 +685,7 @@ msgid "%s carport"
 msgid_plural "%s carports"
 msgstr[0] "cochera %s"
 msgstr[1] "%s cocheras"
-msgstr[2] ""
+msgstr[2] "cochera %s"
 
 #. translators: %s is the marketing type of rent
 #: 
@@ -703,7 +703,7 @@ msgid "%1$s, %2$s%3$s"
 msgid_plural "%1$s, %2$s %3$s"
 msgstr[0] "%1$s, %2$s%3$s"
 msgstr[1] "%1$s, %2$s %3$s"
-msgstr[2] ""
+msgstr[2] "%1$s, %2$s%3$s"
 
 #: 
 msgid "Choose an estate filter from onOffice enterprise. %s"
@@ -1491,7 +1491,7 @@ msgid "%s Prospective Buyer"
 msgid_plural "%s Prospective Buyers"
 msgstr[0] "%s Posible Comprador"
 msgstr[1] "%s Posibles compradores"
-msgstr[2] ""
+msgstr[2] "%s Posible Comprador"
 
 #: 
 msgid "Search for Prospective Buyers"
@@ -1579,7 +1579,7 @@ msgid "%s form has been deleted."
 msgid_plural "%s forms have been deleted."
 msgstr[0] "%s ha sido borrado."
 msgstr[1] "%s se han borrado los formularios."
-msgstr[2] ""
+msgstr[2] "%s ha sido borrado."
 
 #: 
 msgid "No list view was deleted."
@@ -1591,7 +1591,7 @@ msgid "%s list view has been deleted."
 msgid_plural "%s list views have been deleted."
 msgstr[0] "%s se ha eliminado la vista de lista."
 msgstr[1] "%s se han eliminado las vistas de lista."
-msgstr[2] ""
+msgstr[2] "%s se ha eliminado la vista de lista."
 
 #: 
 msgid "Are you sure you want to delete the selected items?"
@@ -1835,7 +1835,7 @@ msgid "Search Criteria"
 msgid_plural "Search Criteria"
 msgstr[0] "Criterio de búsqueda"
 msgstr[1] "Criterios de búsqueda"
-msgstr[2] ""
+msgstr[2] "Criterio de búsqueda"
 
 #: 
 msgctxt "modules"
@@ -1843,7 +1843,7 @@ msgid "Estate"
 msgid_plural "Estates"
 msgstr[0] "Inmueble"
 msgstr[1] "Inmuebles"
-msgstr[2] ""
+msgstr[2] "Inmueble"
 
 #: 
 msgctxt "modules"
@@ -1851,7 +1851,7 @@ msgid "Address"
 msgid_plural "Addresses"
 msgstr[0] "Contacto"
 msgstr[1] "Contactos"
-msgstr[2] ""
+msgstr[2] "Contacto"
 
 #: 
 msgctxt "forms"
@@ -1859,7 +1859,7 @@ msgid "Applicant Search Form"
 msgid_plural "Applicant Search Forms"
 msgstr[0] "Formulario de búsqueda de prospectos"
 msgstr[1] "Formularios de búsqueda de prospectos"
-msgstr[2] ""
+msgstr[2] "Formulario de búsqueda de prospectos"
 
 #: 
 msgctxt "forms"
@@ -1867,7 +1867,7 @@ msgid "Owner Form"
 msgid_plural "Owner Forms"
 msgstr[0] "Formulario de Propietario"
 msgstr[1] "Formularios de Propietario"
-msgstr[2] ""
+msgstr[2] "Formulario de Propietario"
 
 #: 
 msgctxt "forms"
@@ -1875,7 +1875,7 @@ msgid "Interest Form"
 msgid_plural "Interest Forms"
 msgstr[0] "Formulario de interés"
 msgstr[1] "Formularios de interés"
-msgstr[2] ""
+msgstr[2] "Formulario de interés"
 
 #: 
 msgctxt "forms"
@@ -1883,15 +1883,15 @@ msgid "Contact Form"
 msgid_plural "Contact Forms"
 msgstr[0] "Formulario de actualización del contacto"
 msgstr[1] "Formularios de contacto"
-msgstr[2] ""
+msgstr[2] "Formulario de actualización del contacto"
 
 #: 
 msgctxt "forms"
 msgid "All"
 msgid_plural "All"
-msgstr[0] "Todos"
+msgstr[0] "Todo"
 msgstr[1] "Todos"
-msgstr[2] ""
+msgstr[2] "Todo"
 
 #: 
 msgid "unknown address list name"
@@ -2204,7 +2204,7 @@ msgstr "Motor de búsqueda"
 
 #: plugin/Gui/AdminPageApiSettings.php:396
 msgid "Favorise"
-msgstr ""
+msgstr "Favorito"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:157
 #: plugin/Gui/AdminPageEstateUnitSettings.php:110
@@ -2286,17 +2286,25 @@ msgstr "Información adicional"
 
 #: 
 msgid "There was a problem saving the list. The Name field has been exist."
-msgstr ""
+msgstr "Hubo un problema al guardar la lista. El campo Nombre ya existe."
 
 #: 
 msgid "There was a problem saving the list. The Name field must not be empty."
-msgstr ""
+msgstr "Hubo un problema al guardar la lista. El campo Nombre no debe estar vacío."
 
 #: 
 msgid "Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?"
-msgstr ""
+msgstr "Por favor, asegúrate de que no exista otra vista con este nombre, incluso si es de un tipo diferente. ¿Quieres salir de la página sin guardar?"
 
 #: 
 msgid "The Name field must not be empty. Do you want to leave the page without saving?"
-msgstr ""
+msgstr "El campo Nombre no debe estar vacío. ¿Quieres salir de la página sin guardar?"
+
+#: 
+msgid "Cache is being cleared in the background. This may take a few minutes."
+msgstr "La memoria caché se está limpiando en segundo plano. Esto puede tardar unos minutos."
+
+#: 
+msgid "Save changes"
+msgstr "Guardar cambios"
 

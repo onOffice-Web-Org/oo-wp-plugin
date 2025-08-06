@@ -233,14 +233,16 @@ class TestClassRecordManagerReadForm
 
 		$pWPDB = $this->getMockBuilder(wpdb::class)
 			->disableOriginalConstructor(['testUser', 'testPassword', 'testDB', 'testHost'])
-			->setMethods(['get_row'])
+			->onlyMethods(['prepare', 'get_row'])
 			->getMock();
 		$pWPDB->prefix = 'testPrefix';
+		$pWPDB->method('prepare')
+			->will($this->returnArgument(0));
 		$pWPDB->expects($this->once())
 			->method('get_row')
 			->willReturnOnConsecutiveCalls($configOutput);
 		$pRecordManagerReadForm = $this->getMockBuilder(RecordManagerReadForm::class)
-			->setMethods(['getWpdb'])
+			->onlyMethods(['getWpdb'])
 			->getMock();
 
 		$pRecordManagerReadForm->method('getWpdb')->will($this->returnValue($pWPDB));

@@ -101,7 +101,7 @@ class TestClassSDKWrapper
 	public function prepare()
 	{
 		$this->_pMockSDK = $this->getMockBuilder(onOfficeSDK::class)
-			->setMethods(['call', 'getResponseArray', 'getErrors', 'callGeneric','removeCacheInstances'])
+			->onlyMethods(['call', 'getResponseArray', 'getErrors', 'callGeneric','removeCacheInstances'])
 			->getMock();
 		$this->_pMockSDK->method('call')
 			->with('testAction', '', null, 'testResource', [])

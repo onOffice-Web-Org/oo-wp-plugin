@@ -75,6 +75,7 @@ class DataListViewFactory
 		$pListView->setRandom((bool)$row['random']);
 		$pListView->setFilterableFields($row['filterable']);
 		$pListView->setHiddenFields($row['hidden']);
+		$pListView->setHighlightedFields($row['highlighted']);
 		$pListView->setAvailableOptions($row['availableOptions']);
 		$pListView->setSortBySetting((int)$row['sortBySetting']);
 		$pListView->setSortByUserDefinedDefault($row['sortByUserDefinedDefault']);
