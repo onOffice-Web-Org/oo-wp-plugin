@@ -709,7 +709,7 @@ class FormModelBuilderDBEstateListSettings
 			'miete' => __('Rented', 'onoffice-for-wp-websites'),
 			'reserviert' => __('Reserved', 'onoffice-for-wp-websites'),
 			'referenz' => __('Reference', 'onoffice-for-wp-websites'),
-			'exklusiv' => __('Exklusive', 'onoffice-for-wp-websites'),
+			'exclusive' => __('Exklusive', 'onoffice-for-wp-websites'),
 			'preisreduktion' => __('Price reduction', 'onoffice-for-wp-websites'),
 			'objekt_des_tages' => __('Property of the day', 'onoffice-for-wp-websites'),
 			'objekt_der_woche' => __('Property of the week', 'onoffice-for-wp-websites'),

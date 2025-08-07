@@ -54,7 +54,6 @@ class EstateStatusLabel
 		'objekt_des_tages',
 		'objekt_der_woche',
 		'secret_sale'
-		// // 'exklusiv',
 	];
 
 

@@ -135,8 +135,6 @@ class TestClassEstateStatusLabel
 			'courtage_frei',
 			'objekt_des_tages',
 			'objekt_der_woche',
-			'exklusiv',
-			'preisreduktion',
 			'secret_sale'
 		];
 

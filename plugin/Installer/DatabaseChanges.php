@@ -272,7 +272,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`page_shortcode` tinytext NOT NULL,
 			`show_map` tinyint(1) NOT NULL DEFAULT '1',
 			`show_price_on_request` tinyint(1) NOT NULL DEFAULT '0',
-			`markedPropertiesSort` VARCHAR( 255 ) NOT NULL DEFAULT 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz,exklusiv,preisreduktion,objekt_des_tages,objekt_der_woche,secret_sale',
+			`markedPropertiesSort` VARCHAR( 255 ) NOT NULL DEFAULT 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz,exclusive,preisreduktion,objekt_des_tages,objekt_der_woche,secret_sale',
 			`sortByTags` tinytext NOT NULL,
 			`sortByTagsDirection` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
 			PRIMARY KEY (`listview_id`),

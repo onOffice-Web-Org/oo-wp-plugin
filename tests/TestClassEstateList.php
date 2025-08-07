@@ -1146,8 +1146,6 @@ class TestClassEstateList
 			'courtage_frei',
 			'objekt_des_tages',
 			'objekt_der_woche',
-			'exklusiv',
-			'preisreduktion',
 			'secret_sale'
 		]);
 		$redirectIfOldUrl = $this->getMockBuilder(Redirector::class)
