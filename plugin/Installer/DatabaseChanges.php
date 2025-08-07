@@ -112,6 +112,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		dbDelta( $this->getCreateQueryPictureTypes() );
 		dbDelta( $this->getCreateQuerySortByUserValues() );
 		dbDelta( $this->addColumnsForHighlights() );
+		dbDelta( $this->getCreateQueryFormMultiPageTitle() );
 
 		// DELIBERATE FALLTHROUGH
 		switch (true) {
@@ -820,6 +821,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_address_translated_labels",
 			$prefix."oo_plugin_form_activityconfig",
 			$prefix."oo_plugin_form_taskconfig",
+			$prefix."oo_plugin_form_multipage_title",
 		);
 
 		foreach ($tables as $table)	{
@@ -1244,5 +1246,25 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$pDataDetailViewOptions->setListFieldsShowPriceOnRequest($pDataDataDetailView->getListFieldsShowPriceOnRequest());
 			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
 		}
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFormMultiPageTitle(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_form_multipage_title";
+		$sql = "CREATE TABLE $tableName (
+			`form_multipage_title_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` bigint(20) NOT NULL,
+			`locale` tinytext NULL DEFAULT NULL,
+			`value` text,
+			`page` tinyint(1) NOT NULL DEFAULT '0',
+			PRIMARY KEY (`form_multipage_title_id`)
+		) $charsetCollate;";
+
+		return $sql;
 	}
 }

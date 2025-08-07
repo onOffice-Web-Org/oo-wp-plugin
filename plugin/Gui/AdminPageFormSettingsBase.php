@@ -236,6 +236,10 @@ abstract class AdminPageFormSettingsBase
 			if (array_key_exists(RecordManager::TABLENAME_TASKCONFIG_FORMS, $row)) {
 				$result = $result && $pRecordManagerUpdateForm->updateTasksConfigByRow($row[RecordManager::TABLENAME_TASKCONFIG_FORMS]);
 			}
+
+			if (array_key_exists(RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS, $row)) {
+				$result = $result && $pRecordManagerUpdateForm->updateMultiPageTitleByRow($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS]);
+			}
 		} else {
 			$action = RecordManagerFactory::ACTION_INSERT;
 			// insert
@@ -254,6 +258,12 @@ abstract class AdminPageFormSettingsBase
 				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_TASKCONFIG_FORMS);
 				$row[RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM]['form_id'] = $recordId;
 				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM);
+				if (array_key_exists(RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS, $row) && is_array($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS])) {
+					foreach ($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS] as $key => $value) {
+						$value['form_id'] = $recordId;
+						$row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS][$key] = $value;
+					}
+				} 
 				$pRecordManagerInsertForm->insertAdditionalValues($row);
 				$result = true;
 			} catch (RecordManagerInsertException $pException) {
@@ -968,7 +978,7 @@ abstract class AdminPageFormSettingsBase
 			}
 			$values->$fieldName[$key] = $data[$value];
 		}
-	
+
 		return $values;
 	}
 
