@@ -105,7 +105,7 @@ class Form
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
-			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstate($pFieldsCollection, true)
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsFormFrontend($pFieldsCollection)
 			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName)
@@ -509,7 +509,34 @@ class Form
 		if (!$raw) {
 			$result = $this->escapePermittedValues($result);
 		}
+
 		return $result;
+	}
+
+	/**
+	 * Returns the dependencies for a given form field.
+	 *
+	 * @param string $field
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+	public function getFieldDependencies(string $field): array
+	{
+		$module = $this->getModuleOfField($field);
+		if (!$module) {
+			return [];
+		}
+		
+		$fieldObject = $this->_pFieldsCollection->getFieldByModuleAndName($module, $field);
+		
+		// Check if getDependencies method exists and return dependencies if available
+		if (method_exists($fieldObject, 'getDependencies')) {
+			return $fieldObject->getDependencies() ?? [];
+		}
+		
+		return [];
 	}
 
 	/**
