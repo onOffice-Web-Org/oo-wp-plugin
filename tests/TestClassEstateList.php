@@ -1137,14 +1137,18 @@ class TestClassEstateList
 			'referenz',
 			'reserviert',
 			'verkauft',
-			"objekttitel",
-			"objektbeschreibung",
+			'objekttitel',
+			'objektbeschreibung',
 			'exclusive',
 			'neu',
 			'top_angebot',
 			'preisreduktion',
 			'courtage_frei',
 			'objekt_des_tages',
+			'objekt_der_woche',
+			'exklusiv',
+			'preisreduktion',
+			'secret_sale'
 		]);
 		$redirectIfOldUrl = $this->getMockBuilder(Redirector::class)
 			->disableOriginalConstructor()
