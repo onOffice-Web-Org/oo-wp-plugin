@@ -63,7 +63,7 @@ class TestClassFieldModuleCollectionDecoratorInterestForms
 	public function testContainsFieldByModule()
 	{
 		$pDecoratorAddress = $this->getMockBuilder(FieldModuleCollectionDecoratorReadAddress::class)
-		                          ->setMethods(['getAddressEstateField', 'getFieldByModuleAndName', 'setAllAddressEstateField'])
+		                          ->onlyMethods(['getAddressEstateField', 'getFieldByModuleAndName', 'setAllAddressEstateField'])
 		                          ->setConstructorArgs([$this->getPrefilledCollection()])
 		                          ->getMock();
 		$pDecoratorAddress->method('setAllAddressEstateField')->with([FieldModuleCollectionDecoratorReadAddress::getNewAddressFields()]);

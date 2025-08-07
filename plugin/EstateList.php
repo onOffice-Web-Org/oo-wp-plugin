@@ -497,7 +497,7 @@ class EstateList
 	 * @return array
 	 * @throws UnknownViewException
 	 */
-	public function getEstateListParametersForCache (?string $lang = null, bool $formatOutput)
+	public function getEstateListParametersForCache (bool $formatOutput, ?string $lang = null)
 	{
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
@@ -583,7 +583,7 @@ class EstateList
 		];
 
 		if ($pListView instanceof DataListView) {
-			$requestParams['params_list_cache'] = $this->getEstateListParametersForCache($language, $formatOutput);
+			$requestParams['params_list_cache'] = $this->getEstateListParametersForCache($formatOutput, $language);
 			$requestParams = array('listname' => $this->_pDataView->getName()) + $requestParams;
 		}
 
@@ -669,6 +669,13 @@ class EstateList
 			if ($geoRangeSearchParameters !== []) {
 				$requestParams['georangesearch'] = $geoRangeSearchParameters;
 			}
+		}
+
+		if(in_array($requestParams['sortby'], $pListView->getListFieldsShowPriceOnRequest())){
+			$sortKey = $requestParams['sortby'];
+			$sortOrder = $requestParams['sortorder'];
+
+			$requestParams['sortby'] = ['preisAufAnfrage' => 'ASC', $sortKey => $sortOrder];
 		}
 
 		return $requestParams;

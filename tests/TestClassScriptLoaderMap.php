@@ -58,7 +58,7 @@ class TestClassScriptLoaderMap
 	public function prepare()
 	{
 		$this->_pMapProvider = $this->getMockBuilder(MapProvider::class)
-			->setMethods(['getActiveMapProvider'])
+			->onlyMethods(['getActiveMapProvider'])
 			->getMock();
 		$this->_pContainer = new Container;
 		$this->_pContainer->set(WPScriptStyleBase::class, new WPScriptStyleTest());
