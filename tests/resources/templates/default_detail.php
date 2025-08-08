@@ -39,7 +39,7 @@ use onOffice\WPlugin\EstateDetail;
 	};
 
 	foreach ($pEstates->getEstateContacts() as $contactData) {
-		echo '* ' . esc_html__('Contact person', 'onoffice-for-wp-websites') . ': '
+		echo '* ' . esc_html__('Contact person image', 'onoffice-for-wp-websites') . ': '
 			. esc_html($contactData['Vorname'] . ' ' . $contactData['Name']) . "\n";
 	}
 

@@ -414,7 +414,7 @@ $dimensions = [
 					<div class="oo-aspinfo-wrapper">
 					<?php
 					$imageUrl      = $contactData['imageUrl'];
-					$imageAlt      = !empty($contactData['imageAlt']) ? $contactData['imageAlt'] : esc_html__('Contact person', 'onoffice-for-wp-websites');
+					$imageAlt      = !empty($contactData['imageAlt']) ? $contactData['imageAlt'] : esc_html__('Contact person image', 'onoffice-for-wp-websites');
 					$formOfAddress = $contactData['Anrede'];
 					$title         = $contactData['Titel'];
 					$firstName     = $contactData['Vorname'];

@@ -907,6 +907,7 @@ button.slick-next:before {
     justify-content: flex-start;
     align-items: center;
     gap: 5px;
+    padding: 8px 12px;
 }
 
 .ts-wrapper .ts-control::after, .ts-wrapper.single .ts-control::after, .ts-wrapper.multi .ts-control::after {
@@ -923,6 +924,7 @@ button.slick-next:before {
     mask-repeat: no-repeat;
     mask-size: 1.25rem;
     mask-position: center;
+    background: #3D3D3D;
 }
 
 .ts-wrapper .ts-item-remove:before, .ts-wrapper.single .ts-item-remove:before, .ts-wrapper.multi .ts-item-remove:before {

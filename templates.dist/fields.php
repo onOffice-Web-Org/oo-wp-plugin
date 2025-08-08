@@ -368,8 +368,10 @@ if (!function_exists('renderRegionalAddition')) {
 if (!function_exists('renderCityField')) {
 	function renderCityField(string $inputName, array $properties): string
 	{
+		$fieldLabel = $properties['label'];
 		$permittedValues = $properties['permittedvalues'];
-		$htmlSelect = '<select aria-hidden="true" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
+		$htmlSelect = '<label for="' . esc_html($inputName) . '-ts-control">'.$fieldLabel.'</label>';
+		$htmlSelect .= '<select aria-hidden="true" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
 		foreach ($permittedValues as $value) {
 			$selected = null;
 			if (is_array($properties['value']) && in_array($value, $properties['value'])) {
