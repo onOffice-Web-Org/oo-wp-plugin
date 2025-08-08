@@ -41,7 +41,8 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
     </h2>
     <?php
         if (!empty($imageUrl)) {
-            $imageAlt = $pAddressList->generateImageAlt($addressId);
+            $altText = $pAddressList->generateImageAlt($addressId);
+			$imageAlt = !empty($altText) ? $altText : esc_html__('Contact person image', 'onoffice-for-wp-websites');			
             echo '<picture class="oo-picture oo-address-picture">';
             echo '<img class="oo-responsive-image" ' .
                 'src="' . esc_url($imageUrl) . '" ' .

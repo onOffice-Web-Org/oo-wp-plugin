@@ -48,7 +48,8 @@ require 'SearchFormAddress.php';
 			<div class="oo-listobjectwrap">
 				<?php
 				if (!empty($imageUrl)) {
-					$imageAlt = $pAddressList->generateImageAlt($addressId);
+					$altText = $pAddressList->generateImageAlt($addressId);
+					$imageAlt = !empty($altText) ? $altText : esc_html__('Contact person image', 'onoffice-for-wp-websites');					
 					echo  '<img src="' . esc_url($imageUrl) . '" class="oo-address-image" alt="' . esc_html($imageAlt) . '" loading="lazy">';
 				}
 				?>
