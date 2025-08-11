@@ -257,9 +257,8 @@
 }
 
 .oo-detailstable {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .oo-details-fact__label {
@@ -268,6 +267,7 @@
     padding: 5px 0;
 	margin: 0;
     border-bottom: 2px solid #efefef;
+    width: 25%
 }
 
 .oo-details-fact__value {
@@ -275,6 +275,7 @@
     padding: 5px 0;
 	margin: 0;
     border-bottom: 2px solid #efefef;
+    width: 25%
 }
 
 .oo-detailsfreetext, .oo-detailsmap, .oo-area-butler, .oo-detailspricecalculator, .oo-units {
