@@ -134,6 +134,7 @@ span.oo-searchrange {
     font-size: 16px;
     line-height: 28px;
     border: 1px solid #000;
+    display: block;
 }
 .oo-form input[type='submit']:hover {
     cursor: pointer;
