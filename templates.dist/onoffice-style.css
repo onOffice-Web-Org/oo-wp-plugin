@@ -264,18 +264,18 @@
 .oo-details-fact__label {
     list-style: none;
     font-weight:700;
+    width: 25%;
     padding: 5px 0;
 	margin: 0;
     border-bottom: 2px solid #efefef;
-    width: 25%
 }
 
 .oo-details-fact__value {
     list-style: none;
+    width: 25%;
     padding: 5px 0;
 	margin: 0;
     border-bottom: 2px solid #efefef;
-    width: 25%
 }
 
 .oo-detailsfreetext, .oo-detailsmap, .oo-area-butler, .oo-detailspricecalculator, .oo-units {
