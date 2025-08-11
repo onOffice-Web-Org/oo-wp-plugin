@@ -74,10 +74,10 @@ class FieldsCollectionBuilderShort
 	 * @throws NotFoundException
 	 */
 
-	public function addFieldsAddressEstate(FieldsCollection $pFieldsCollection, $loadDepedencies = false): self
+	public function addFieldsAddressEstate(FieldsCollection $pFieldsCollection, $loadDependencies = false): self
 	{
 		$pFieldLoader = $this->_pContainer->get(FieldLoaderGeneric::class);
-		$pFieldLoader->setLoadFieldDependencies($loadDepedencies);
+		$pFieldLoader->setLoadFieldDependencies($loadDependencies);
 		$pFieldCollectionAddressEstate = $this->_pContainer->get(FieldsCollectionBuilder::class)
 			->buildFieldsCollection($pFieldLoader);
 		$pFieldsCollection->merge($pFieldCollectionAddressEstate);
