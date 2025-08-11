@@ -231,14 +231,14 @@ class SDKWrapper
 					$pListViewFilterBuilder = $pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
 					$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
 					foreach ($languages as $lang) {
-						$paramsRaw = $pEstateList->getEstateListParametersForCache($lang, false); // raw
+						$paramsRaw = $pEstateList->getEstateListParametersForCache(false, $lang); // raw
 						$responseRaw = $this->createCacheForList($paramsRaw, 'estate');
 						$pApiActionRaw = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'estate', $paramsRaw, '', null);
 						$pRequest = new Request($pApiActionRaw);
 						$usedParametersRaw = $pRequest->getApiAction()->getActionParameters();
 						$pCache->write($usedParametersRaw,serialize($responseRaw));
 
-						$params = $pEstateList->getEstateListParametersForCache($lang, true); // formatted
+						$params = $pEstateList->getEstateListParametersForCache(true, $lang); // formatted
 						$response = $this->createCacheForList($params, 'estate');
 						$pApiAction = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'estate', $params, '', null);
 						$pRequest = new Request($pApiAction);
@@ -255,14 +255,14 @@ class SDKWrapper
 					$pListViewFilterBuilder = $pDefaultFilterBuilderListViewAddressFactory->create($pListView);
 					$addressList->setDefaultFilterBuilder($pListViewFilterBuilder);
 					foreach ($languages as $lang) {
-						$paramsRaw = $addressList->getAddressListParametersForCache($lang, false); // raw
+						$paramsRaw = $addressList->getAddressListParametersForCache(false, $lang); // raw
 						$responseRaw = $this->createCacheForList($paramsRaw, 'address');
 						$pApiActionRaw = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'address', $paramsRaw, '', null);
 						$pRequestRaw = new Request($pApiActionRaw);
 						$usedParametersRaw = $pRequestRaw->getApiAction()->getActionParameters();
 						$pCache->write($usedParametersRaw,serialize($responseRaw));
 
-						$params = $addressList->getAddressListParametersForCache($lang, true); // formatted
+						$params = $addressList->getAddressListParametersForCache(true, $lang); // formatted
 						$response = $this->createCacheForList($params, 'address');
 						$pApiAction = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'address', $params, '', null);
 						$pRequest = new Request($pApiAction);

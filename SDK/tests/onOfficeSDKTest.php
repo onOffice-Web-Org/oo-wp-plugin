@@ -8,7 +8,7 @@ class onOfficeSDKTest extends \PHPUnit\Framework\TestCase
 	{
 		$apiCall = $this->getMockBuilder(\onOffice\SDK\internal\ApiCall::class)
 			->disableOriginalConstructor()
-			->setMethods(['setServer'])
+			->onlyMethods(['setServer'])
 			->getMock();
 
 		$apiCall->expects($this->once())
@@ -23,7 +23,7 @@ class onOfficeSDKTest extends \PHPUnit\Framework\TestCase
 	{
 		$apiCall = $this->getMockBuilder(\onOffice\SDK\internal\ApiCall::class)
 			->disableOriginalConstructor()
-			->setMethods(['setServer', 'setApiVersion'])
+			->onlyMethods(['setServer', 'setApiVersion'])
 			->getMock();
 
 		$apiCall->expects($this->once())
@@ -42,7 +42,7 @@ class onOfficeSDKTest extends \PHPUnit\Framework\TestCase
 	{
 		$apiCall = $this->getMockBuilder(\onOffice\SDK\internal\ApiCall::class)
 			->disableOriginalConstructor()
-			->setMethods(['setServer', 'setCurlOptions'])
+			->onlyMethods(['setServer', 'setCurlOptions'])
 			->getMock();
 
 		$apiCall->expects($this->once())
@@ -61,7 +61,7 @@ class onOfficeSDKTest extends \PHPUnit\Framework\TestCase
 	{
 		$apiCall = $this->getMockBuilder(\onOffice\SDK\internal\ApiCall::class)
 			->disableOriginalConstructor()
-			->setMethods(['setServer', 'callByRawData'])
+			->onlyMethods(['setServer', 'callByRawData'])
 			->getMock();
 
 		$apiCall->expects($this->once())
@@ -90,7 +90,7 @@ class onOfficeSDKTest extends \PHPUnit\Framework\TestCase
 	{
 		$apiCall = $this->getMockBuilder(\onOffice\SDK\internal\ApiCall::class)
 			->disableOriginalConstructor()
-			->setMethods(['setServer', 'sendRequests'])
+			->onlyMethods(['setServer', 'sendRequests'])
 			->getMock();
 
 		$apiCall->expects($this->once())
@@ -115,7 +115,7 @@ class onOfficeSDKTest extends \PHPUnit\Framework\TestCase
 	{
 		$apiCall = $this->getMockBuilder(\onOffice\SDK\internal\ApiCall::class)
 			->disableOriginalConstructor()
-			->setMethods(['setServer', 'getResponse'])
+			->onlyMethods(['setServer', 'getResponse'])
 			->getMock();
 
 		$apiCall->expects($this->once())
@@ -137,7 +137,7 @@ class onOfficeSDKTest extends \PHPUnit\Framework\TestCase
 	{
 		$apiCall = $this->getMockBuilder(\onOffice\SDK\internal\ApiCall::class)
 			->disableOriginalConstructor()
-			->setMethods(['setServer', 'addCache'])
+			->onlyMethods(['setServer', 'addCache'])
 			->getMock();
 
 		$apiCall->expects($this->once())
