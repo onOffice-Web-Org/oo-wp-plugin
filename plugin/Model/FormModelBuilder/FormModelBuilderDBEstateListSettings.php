@@ -735,6 +735,7 @@ class FormModelBuilderDBEstateListSettings
 			'objekt_des_tages' => __('Property of the day', 'onoffice-for-wp-websites'),
 			'objekt_der_woche' => __('Property of the week', 'onoffice-for-wp-websites'),
 			'secret_sale' => __('Secret sale', 'onoffice-for-wp-websites'),
+			'courtage_frei' => __('Commission free', 'onoffice-for-wp-websites'),
 		];
 	}
 
