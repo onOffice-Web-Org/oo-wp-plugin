@@ -91,9 +91,10 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				?>
 
                 <?php
-                $totalPages = count($addressValues);
+                $totalPages = max(1, count($addressValues));
+				$pageIndex = 0;
 
-                foreach ($addressValues as $pageNumber => $fields): ?>
+                foreach ($addressValues as $pageNumber => $fields): $pageIndex++?>
                     <div class="lead-lightbox lead-page-<?php echo $pageNumber; ?>">
 
                         <?php if($totalPages > 1): ?>
@@ -102,7 +103,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
                         <p>
                             <?php echo implode('<br>', $fields); ?>
                         </p>
-                        <?php if ($pageNumber == $totalPages): ?>
+                        <?php if ($pageIndex === $totalPages): ?>
                             <p>
                             <div style="float:right">
                                 <?php
