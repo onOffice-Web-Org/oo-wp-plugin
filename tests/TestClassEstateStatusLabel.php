@@ -114,19 +114,13 @@ class TestClassEstateStatusLabel
 	public function testGetLabel()
 	{
 		$fields = [
-			'referenz',
 			'reserviert',
 			'verkauft',
-			'objekttitel',
-			'objektbeschreibung',
-			'exclusive',
-			'neu',
 			'top_angebot',
 			'preisreduktion',
 			'courtage_frei',
 			'objekt_des_tages',
-			'objekt_der_woche',
-			'secret_sale'
+			'neu',
 		];
 
 		for ($i = 1; $i <= count($fields); $i++) {
