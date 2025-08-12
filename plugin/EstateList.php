@@ -671,6 +671,13 @@ class EstateList
 			}
 		}
 
+		if(in_array($requestParams['sortby'], $pListView->getListFieldsShowPriceOnRequest())){
+			$sortKey = $requestParams['sortby'];
+			$sortOrder = $requestParams['sortorder'];
+
+			$requestParams['sortby'] = ['preisAufAnfrage' => 'ASC', $sortKey => $sortOrder];
+		}
+
 		return $requestParams;
 	}
 
