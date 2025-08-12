@@ -325,7 +325,7 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT `form_type`, COUNT(`form_id`) as count
-			FROM `{$prefix}{oo_plugin_forms}`
+			FROM `{$prefix}oo_plugin_forms`
 			GROUP BY `form_type`"
 		);
 
