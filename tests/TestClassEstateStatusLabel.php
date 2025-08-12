@@ -114,15 +114,6 @@ class TestClassEstateStatusLabel
 	public function testGetLabel()
 	{
 		$fields = [
-			// 'reserviert',
-			// 'verkauft',
-			// 'top_angebot',
-			// 'preisreduktion',
-			// 'courtage_frei',
-			// 'objekt_des_tages',
-			// 'neu',
-
-			// do I need these? what is this? why only so few?
 			'referenz',
 			'reserviert',
 			'verkauft',
