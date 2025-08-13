@@ -335,6 +335,11 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus {
     right: 25px;
 }
 
+.oo-detailsgallery .slick-next:focus .slick-next-icon, .oo-detailsgallery .slick-next:focus .slick-prev-icon, .oo-detailsgallery .slick-prev:focus .slick-next-icon, .oo-detailsgallery .slick-prev:focus .slick-prev-icon {
+    color: #3d7bb1;
+}
+
+
 .oo-detailspicture, .oo-detailspicture.slick-slide {
     background-size: cover;
     background-position: center center;
