@@ -290,6 +290,27 @@ class RecordManagerReadForm
 		return $result;
 	}
 
+	/**
+	 * Reads all multilingual page titles for a specific form
+	 *
+	 * @param int $formId The ID of the form to read titles for
+	 * @return array Array of title records with page and language information
+	 */
+	public function readTitlePerMultipageByFormId(int $formId): array
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlTitlePerPages = $pWpDb->prepare(
+			"SELECT *
+                FROM `{$prefix}oo_plugin_form_multipage_title`
+                WHERE `form_id` = %d",
+			$formId
+		);
+
+		return $pWpDb->get_results($sqlTitlePerPages, ARRAY_A) ?: [];
+	}
+
 
 	/**
 	 *
@@ -304,7 +325,7 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT `form_type`, COUNT(`form_id`) as count
-			FROM `{$prefix}{oo_plugin_forms}`
+			FROM `{$prefix}oo_plugin_forms`
 			GROUP BY `form_type`"
 		);
 

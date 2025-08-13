@@ -5,7 +5,7 @@
 1. Run `git clone --recursive https://github.com/onOfficeGmbH/oo-wp-plugin.git` to clone this repository and its submodules.
 2. Install [composer](https://getcomposer.org/).
 3. Run `composer check-platform-reqs` to ensure you have installed the required PHP extensions.
-    - Example: The command tells you that the extensions `ext-mbstring` and `ext-simplexml` are missing. On Ubuntu, you can install these by running `sudo apt install php-mbstring php-simplexml`.
+    - Example: The command tells you that the extensions `ext-mbstring` and `ext-simplexml` are missing. On Ubuntu, you can install these by running `sudo apt install php8.2-mbstring php8.2-simplexml`. Make sure you match the version to your php installation, currently 8.2
 4. Run `composer install` to install the dependencies.
 
 ## Make a release .zip
