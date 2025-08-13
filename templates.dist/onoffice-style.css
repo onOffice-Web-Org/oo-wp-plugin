@@ -335,7 +335,8 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus {
     right: 25px;
 }
 
-.oo-detailsgallery .slick-next:focus .slick-next-icon, .oo-detailsgallery .slick-next:focus .slick-prev-icon, .oo-detailsgallery .slick-prev:focus .slick-next-icon, .oo-detailsgallery .slick-prev:focus .slick-prev-icon {
+.oo-detailsgallery .slick-next:focus .slick-next-icon, .oo-detailsgallery .slick-next:focus .slick-prev-icon, .oo-detailsgallery .slick-prev:focus .slick-next-icon, .oo-detailsgallery .slick-prev:focus .slick-prev-icon, .slick-dots li button:focus .slick-dot-icon::before
+{
     color: #3d7bb1;
 }
 
