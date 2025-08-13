@@ -316,18 +316,14 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus {
     margin-bottom: 25px;
 }
 
-button.slick-prev:before {
-    content: url('data:image/svg+xml,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve"><path fill="none" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15,18l-6-6l6-6"/></svg>');
-}
-button.slick-next:before {
-    content: url('data:image/svg+xml,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve"><path fill="none" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9,18l6-6L9,6"/></svg>');
-}
-
 .oo-detailsgallery .slick-arrow {
-    background: #3d7bb1;
-    z-index: 999;
-    width: 32px;
-    height: 32px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    text-shadow: -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff, 1px 1px 0 #ffffff;
 }
 
 .oo-detailsgallery .slick-prev {
@@ -336,14 +332,6 @@ button.slick-next:before {
 
 .oo-detailsgallery .slick-next {
     right: 25px;
-}
-.oo-detailsgallery .slick-prev:hover, .oo-detailsgallery .slick-prev:focus, .oo-detailsgallery .slick-next:hover, .oo-detailsgallery .slick-next:focus {
-    background-color: #174770;
-}
-
- .oo-detailsgallery .slick-prev:focus, .oo-detailsgallery .slick-next:focus {
-    outline: 2px solid #174770;
-    outline-offset: 2px;
 }
 
 .oo-detailspicture, .oo-detailspicture.slick-slide {
