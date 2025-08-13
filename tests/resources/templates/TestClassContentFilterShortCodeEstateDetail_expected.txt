@@ -11,7 +11,7 @@ label-objektbeschreibung: große Freifläche
 label-lage: Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.
 label-ausstatt_beschr: teilweise mit einer alten Mauer aus Findlingen umgeben
 label-sonstige_angaben: Vereinbaren Sie noch heute einen Besichtigungstermin
-* Contact person: Peter Parker
+* Contact person image: Peter Parker
 <a href="https://asd.de" title="test movie">test movie</a>
 Fotolia_3286409_Subscription_XL: https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg
     <div class="oo-map" role="region" id="oo_map_estate_detail" style="width: 100%; height: 100%;" aria-label="Map with properties"></div>
