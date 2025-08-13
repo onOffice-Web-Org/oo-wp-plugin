@@ -324,6 +324,7 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus {
     justify-content: center;
     align-items: center;
     text-shadow: -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff, 1px 1px 0 #ffffff;
+    z-index: 1;
 }
 
 .oo-detailsgallery .slick-prev {
