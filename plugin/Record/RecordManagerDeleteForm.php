@@ -65,6 +65,8 @@ class RecordManagerDeleteForm
 		foreach ($ids as $id) {
 			$pWpdb->delete($prefix.'oo_plugin_forms', ['form_id' => $id]);
 			$pWpdb->delete($prefix.'oo_plugin_form_fieldconfig', ['form_id' => $id]);
+			$pWpdb->delete($prefix.'oo_plugin_form_multipage_title', ['form_id' => $id]);
+
 			$defaultIds = $pWpdb->get_col(
 				"SELECT defaults_id "
 				."FROM {$prefix}oo_plugin_fieldconfig_form_defaults "

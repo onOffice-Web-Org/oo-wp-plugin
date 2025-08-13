@@ -199,7 +199,26 @@ abstract class AdminPageAjax
 					if ( is_array( $field ) && ( $index === 'defaultvalue-lang' || $index === 'customlabel-lang' || $index === 'oopluginfieldconfigformdefaultsvalues-value' ) ) {
 						$fields[ $key ] = (object) $field;
 					}
+					if ( is_array( $field ) && ( $index === 'oopluginformmultipagetitle' ) ) {
+						if(!array_key_exists('oopluginformmultipagetitle-value', $result)) {
+							$result['oopluginformmultipagetitle-value'] = [];
+						}
+						if(!array_key_exists('oopluginformmultipagetitle-page', $result)) {
+							$result['oopluginformmultipagetitle-page'] = [];
+						}
+						if(!array_key_exists('oopluginformmultipagetitle-locale', $result)) {
+							$result['oopluginformmultipagetitle-locale'] = [];
+						}
+						foreach ( $field as $loc => $title ) {
+							$result['oopluginformmultipagetitle-value'][] = $title;
+							$result['oopluginformmultipagetitle-page'][] = $key;
+							$result['oopluginformmultipagetitle-locale'][] = $loc;
+						}
+					}
 				}
+			}
+			if($index === 'oopluginformmultipagetitle-page' || $index === 'oopluginformmultipagetitle-locale') {
+				continue;
 			}
 			if ( $index === 'defaultvalue-lang' || $index === 'customlabel-lang' || $index === 'oopluginfieldconfigformdefaultsvalues-value' ) {
 				$result[ $index ] = (object) $fields;

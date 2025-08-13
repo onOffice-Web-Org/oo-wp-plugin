@@ -73,7 +73,6 @@ class FormData
 	/** @var DataFormConfiguration */
 	private $_pDataFormConfiguration = null;
 
-
 	/**
 	 *
 	 * @param DataFormConfiguration $pDataFormConfiguration

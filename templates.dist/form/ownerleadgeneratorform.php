@@ -29,6 +29,7 @@ add_thickbox();
 $addressValues = array();
 $miscValues = array();
 $hiddenValues = array();
+$pageTitles = $pForm->getPageTitlesByCurrentLanguage();
 
 $showFormAsModal = $pForm->getShowFormAsModal() || $pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS;
 
@@ -90,24 +91,19 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				?>
 
                 <?php
-                $pageTitles = [];
+                $totalPages = max(1, count($addressValues));
+				$pageIndex = 0;
 
-                for ($i = 1; $i <= 6; $i++) {
-                    $pageTitles[$i] = esc_html__('Page ' . $i, 'onoffice-for-wp-websites');
-                }
-
-                $totalPages = count($addressValues);
-
-                foreach ($addressValues as $pageNumber => $fields): ?>
+                foreach ($addressValues as $pageNumber => $fields): $pageIndex++?>
                     <div class="lead-lightbox lead-page-<?php echo $pageNumber; ?>">
 
                         <?php if($totalPages > 1): ?>
-                            <span><?php echo sprintf('%s', $pageTitles[$pageNumber]); ?></span>
+                            <span><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></span>
                         <?php endif; ?>
                         <p>
                             <?php echo implode('<br>', $fields); ?>
                         </p>
-                        <?php if ($pageNumber == $totalPages): ?>
+                        <?php if ($pageIndex === $totalPages): ?>
                             <p>
                             <div style="float:right">
                                 <?php
