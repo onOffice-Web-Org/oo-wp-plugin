@@ -103,9 +103,8 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 	if (is_network_admin()) {
 		return;
 	}
-	$user = wp_get_current_user();
-	$allowed_roles = array('editor', 'administrator');
-	if( array_intersect($allowed_roles, $user->roles ) ){
+
+	if( current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_VIEW_MENU) ) {
 		$toolBarConfig = [
 			[
 				'id'    => 'onoffice',
