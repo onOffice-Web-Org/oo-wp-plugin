@@ -30,6 +30,10 @@
     width: 33.33%;
 }
 
+.oo-searchformfield:last-child {
+    margin-top: auto;
+}
+
 .oo-searchformfield label {
     display: block;
     margin: 0;
