@@ -88,7 +88,7 @@ $dimensions = [
 	while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)) {
 		$estateId = $pEstates->getCurrentEstateId();
 		$rawValues = $pEstates->getRawValues();
-		$energyCertificateFields = ["baujahr","endenergiebedarf","energieverbrauchskennwert","energieausweistyp","energieausweis_gueltig_bis","energyClass","energietraeger"];
+		$energyCertificateFields = ["baujahr","endenergiebedarf","energieverbrauchskennwert","energieausweistyp","energieausweis_gueltig_bis","energyClass","energietraeger","co2_Emissionsklasse","co2ausstoss"];
 		?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
@@ -270,9 +270,10 @@ $dimensions = [
 							'energieausweistyp',
 							'energieausweis_gueltig_bis',
 							'energyClass',
-							'energietraeger'
+							'energietraeger',
+							'co2_Emissionsklasse',
+							'co2ausstoss'
 						];
-					
 						foreach ($fields as $field) {
 							if (empty($currentEstate[$field])) continue;?>
 							<dt class="oo-details-fact__label">

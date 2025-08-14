@@ -85,6 +85,10 @@
     font-size: 16px;
     outline: 1px solid rgba(0,0,0,0);
 }
+.oo-searchformfield input:not([id$="ts-control"]) {
+    height: 48px;
+}
+
 span.oo-searchrange {
     grid-template-columns: repeat(2, 1fr);
     gap: 0 2rem;
@@ -125,7 +129,7 @@ span.oo-searchrange {
     border-color: #3d7bb1;
 }
 
-.oo-form input[type='submit'] {
+.oo-form input[type='submit'], .oo-searchformfield input[type='submit'] {
     text-align: center;
     color: #ffffff !important;
     padding: 5px;
@@ -136,7 +140,7 @@ span.oo-searchrange {
     border: 1px solid #000;
     display: block;
 }
-.oo-form input[type='submit']:hover {
+.oo-form input[type='submit']:hover, .oo-searchformfield input[type='submit']:hover {
     cursor: pointer;
 }
 
@@ -288,7 +292,7 @@ span.oo-searchrange {
     text-decoration: none !important;
 }
 
-button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus {
+button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus, .oo-form input[type='submit']:focus, .oo-searchformfield input[type='submit']:focus {
     background: #174770;
 }
 
@@ -844,6 +848,8 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus {
     display: flex; 
     flex-direction: row;
     background: transparent;
+    height: 48px;
+    line-height: 28px;
 }
 
 .ts-dropdown, .ts-control, .ts-control input {
@@ -862,7 +868,6 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus {
     justify-content: center;
     list-style: none;
 }
-
 
   .oo-post-nav-links a {
     display: inline-block;
@@ -922,7 +927,11 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus {
     mask-position: center;
     background: #3D3D3D;
 }
-
+.ts-wrapper.focus .ts-control::after, .ts-wrapper.single.focus .ts-control::after, .ts-wrapper.multi.focus .ts-control::after {
+    top: 0%;
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
 .ts-wrapper .ts-item-remove:before, .ts-wrapper.single .ts-item-remove:before, .ts-wrapper.multi .ts-item-remove:before {
     content: "";
     display: inline-block;
@@ -955,6 +964,8 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus {
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
+    padding: 6px; 
+    height: 48px;
 }
 
 .plugin-checkbox_options:not(.rtl) .option input {
