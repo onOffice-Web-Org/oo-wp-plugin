@@ -345,7 +345,7 @@ if (!function_exists('renderRegionalAddition')) {
 			$requiredAttribute = "required aria-required='true' aria-invalid='false'";
 		}
 
-		$output .= '<select id="' . $name . '" class="custom-single-select-tom oo-regions" aria-hidden="true" tabindex="-1" autocomplete="off" name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';
+		$output .= '<select id="' . $name . '" class="custom-single-select-tom oo-regions" aria-hidden="true" autocomplete="off" name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';
 		$pRegionController = new RegionController();
 
 		if ($permittedValues !== null) {
