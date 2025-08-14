@@ -178,7 +178,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			case $dbversion <= 59:
 				$this->updateValueGeoFieldsForForms();
 			case $dbversion <= 61:
-					dbDelta( $this->migrateMarkedPropertiesSort() );
+				$this->migrateMarkedPropertiesSort();
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
