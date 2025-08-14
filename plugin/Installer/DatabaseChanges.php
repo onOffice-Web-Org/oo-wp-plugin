@@ -113,6 +113,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		dbDelta( $this->getCreateQuerySortByUserValues() );
 		dbDelta( $this->addColumnsForHighlights() );
 		dbDelta( $this->getCreateQueryFormMultiPageTitle() );
+		dbDelta( $this->migrateMarkedPropertiesSort() );
 
 		// DELIBERATE FALLTHROUGH
 		switch (true) {
@@ -1266,5 +1267,60 @@ class DatabaseChanges implements DatabaseChangesInterface
 		) $charsetCollate;";
 
 		return $sql;
+	}
+
+	/**
+	* @return int
+	*/
+	private function migrateMarkedPropertiesSort()
+	{
+		$requiredTerms = [
+			'exclusive',
+			'preisreduktion',
+			'objekt_des_tages',
+			'objekt_der_woche',
+			'secret_sale',
+			'courtage_frei'
+		];
+	
+		$requiredTermsLower = array_map('strtolower', $requiredTerms);
+		$tableName = $this->getPrefix() . "oo_plugin_listviews";
+	
+		$rows = $this->_pWPDB->get_results(
+			"SELECT `listview_id`, `markedPropertiesSort` FROM {$tableName}"
+		);
+	
+		$updatedCount = 0;
+	
+		foreach ($rows as $row) {
+			$currentTerms = array_filter(array_map('trim', explode(',', $row->markedPropertiesSort)));
+	
+			$remainingTerms = [];
+			foreach ($currentTerms as $term) {
+				if (!in_array(strtolower($term), $requiredTermsLower, true)) {
+					$remainingTerms[] = $term;
+				}
+			}
+	
+			$mergedTerms = array_merge($requiredTerms, $remainingTerms);
+			$updatedTermsCsv = implode(',', $mergedTerms);
+	
+			if (strcasecmp($updatedTermsCsv, $row->markedPropertiesSort) !== 0) {
+				$updateResult = $this->_pWPDB->update(
+					$tableName,
+					['markedPropertiesSort' => $updatedTermsCsv],
+					['listview_id' => $row->listview_id],
+					['%s'],
+					['%d']
+				);
+	
+				if ($updateResult === false) {
+					error_log("Failed to update listview_id {$row->listview_id} in migrateProperties()");
+				} else {
+					$updatedCount++;
+				}
+			}
+		}
+		return $updatedCount;
 	}
 }

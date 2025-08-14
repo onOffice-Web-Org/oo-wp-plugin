@@ -120,27 +120,6 @@ class FormModelBuilderDBEstateListSettings
 			if ((int)$values['recordsPerPage'] === 0) {
 				$values['recordsPerPage'] = self::DEFAULT_RECORDS_PER_PAGE;
 			}
-
-			// Ensure markedPropertiesSort contains all default marker keys (append missing, keep existing order)
-            $defaultMarkerKeys = array_keys($this->getDefaultDataOfMarkedPropertiesSort());
-            $keyName = DataListView::SORT_MARKED_PROPERTIES;
-            $current = [];
-            if (!empty($values[$keyName])) {
-                $current = array_filter(array_map('trim', explode(',', $values[$keyName])));
-            }
-            if (empty($current)) {
-                // Set full default order
-                $values[$keyName] = implode(',', $defaultMarkerKeys);
-            } else {
-                // Append missing defaults while preserving existing order
-                foreach ($defaultMarkerKeys as $k) {
-                    if (!in_array($k, $current, true)) {
-                        $current[] = $k;
-                    }
-                }
-                $values[$keyName] = implode(',', $current);
-            }
-		
 			$this->setValues($values);
 		}
 		else
@@ -721,7 +700,7 @@ class FormModelBuilderDBEstateListSettings
 	 * @return array
 	 */
 
-	public function getDefaultDataOfMarkedPropertiesSort() {
+	private function getDefaultDataOfMarkedPropertiesSort() {
 		return [
 			'neu' => __('New', 'onoffice-for-wp-websites'),
 			'top_angebot' => __('Top offer', 'onoffice-for-wp-websites'),
