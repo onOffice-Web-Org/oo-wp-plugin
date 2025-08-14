@@ -45,7 +45,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 61;
+	const MAX_VERSION = 62;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -113,7 +113,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		dbDelta( $this->getCreateQuerySortByUserValues() );
 		dbDelta( $this->addColumnsForHighlights() );
 		dbDelta( $this->getCreateQueryFormMultiPageTitle() );
-		dbDelta( $this->migrateMarkedPropertiesSort() );
 
 		// DELIBERATE FALLTHROUGH
 		switch (true) {
@@ -178,6 +177,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->migrationsDataShortCodeFormForDetailView();
 			case $dbversion <= 59:
 				$this->updateValueGeoFieldsForForms();
+			case $dbversion <= 61:
+					dbDelta( $this->migrateMarkedPropertiesSort() );
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}

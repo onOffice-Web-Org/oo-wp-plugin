@@ -119,7 +119,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(61, $dbversion);
+		$this->assertEquals(62, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -203,7 +203,7 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(8))
+		$this->_pWPDBMock->expects($this->exactly(9))
 			->method('get_results')
 			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput);
 
@@ -255,7 +255,7 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(6))
+		$this->_pWPDBMock->expects($this->exactly(7))
 			->method('get_results')
 			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput);
 
@@ -272,7 +272,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(61, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(62, DatabaseChanges::MAX_VERSION);
 	}
 
 
