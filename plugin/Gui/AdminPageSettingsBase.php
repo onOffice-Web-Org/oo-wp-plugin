@@ -206,9 +206,14 @@ abstract class AdminPageSettingsBase
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections( get_current_screen()->id, 'side', null );
 		echo '</div>';
-		echo '<div class="fieldsSortable postbox">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields',
-				'onoffice-for-wp-websites' ) . '</span></h2>';
+		$this->renderBulkActionControls();
+		echo '<div class="fieldsSortable postbox" id="oo-fields-sortable-container">';
+		echo '<h2 class="hndle ui-sortable-handle">'
+				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
+					.'<input type="checkbox" class="oo-sortable-checkbox-master" onchange="ooHandleMasterCheckboxChange(event)"/>'
+				.'</span>'
+				.'<span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span>'
+			.'</h2>';
 		$pInputModelRenderer->buildForAjax( $pFormViewSortableFields );
 		echo '</div>';
 		echo '<div class="clear"></div>';
@@ -614,6 +619,8 @@ abstract class AdminPageSettingsBase
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
 		wp_enqueue_script('oo-unsaved-changes-message');
+		wp_register_script('onoffice-bulk-actions-fields', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-bulk-actions-fields.min.js');
+		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 
 

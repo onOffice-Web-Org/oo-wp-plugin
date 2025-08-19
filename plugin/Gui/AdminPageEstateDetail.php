@@ -201,9 +201,15 @@ class AdminPageEstateDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
 		echo '</div>';
+		$this->renderBulkActionControls('address', esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)));
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Contact Person Fields', 'onoffice-for-wp-websites').'</span></h2>';
+		echo '<h2 class="hndle ui-sortable-handle">'
+				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
+					.'<input type="checkbox" class="oo-sortable-checkbox-master" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS))."'".')"/>'
+				.'</span>'
+				.'<span>'.__('Contact Person Fields', 'onoffice-for-wp-websites').'</span>'
+			 .'</h2>';
 		$pRenderer->buildForAjax($pFormViewSortablecontactFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
@@ -216,9 +222,14 @@ class AdminPageEstateDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'advanced', null);
 		echo '</div>';
+		$this->renderBulkActionControls('estate', esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)));
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Real Estate Fields', 'onoffice-for-wp-websites').'</span></h2>';
+		echo '<h2 class="hndle ui-sortable-handle">'
+				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
+					.'<input type="checkbox" class="oo-sortable-checkbox-master" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE))."'".')"/>'
+				.'</span>'
+			 .'<span>'.__('Real Estate Fields', 'onoffice-for-wp-websites').'</span></h2>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
@@ -490,6 +501,8 @@ class AdminPageEstateDetail
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
 		wp_enqueue_script('oo-unsaved-changes-message');
+		wp_register_script('onoffice-bulk-actions-fields', plugins_url('/dist/onoffice-bulk-actions-fields.min.js', $pluginPath));
+		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 
 	/**
