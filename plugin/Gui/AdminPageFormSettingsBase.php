@@ -879,7 +879,7 @@ abstract class AdminPageFormSettingsBase
 		echo '<div class="postbox-header">
         <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
 		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen
-			<input type="checkbox" id="postbox-select-all" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event)"/>
+			<input type="checkbox" id="postbox-select-all" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event)"/>
 			</label>
       	</div>';
 		$pInputModelRenderer->buildForAjax( $pFormViewSortableFields );
