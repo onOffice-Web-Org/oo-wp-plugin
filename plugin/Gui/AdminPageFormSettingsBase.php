@@ -875,7 +875,7 @@ abstract class AdminPageFormSettingsBase
 		do_accordion_sections( get_current_screen()->id, 'side', null );
 		echo '</div>';
 		$this->renderBulkActionControls();
-		echo '<div class="fieldsSortable postbox">';
+		echo '<div class="fieldsSortable postbox" id="oo-fields-sortable-container">';
 		echo '<div class="postbox-header">
         <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
 		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen

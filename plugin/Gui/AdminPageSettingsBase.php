@@ -207,7 +207,7 @@ abstract class AdminPageSettingsBase
 		do_accordion_sections( get_current_screen()->id, 'side', null );
 		echo '</div>';
 		$this->renderBulkActionControls();
-		echo '<div class="fieldsSortable postbox">';
+		echo '<div class="fieldsSortable postbox" id="oo-fields-sortable-container">';
 		echo '<h2 class="hndle ui-sortable-handle">'
 				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
 					.'<input type="checkbox" class="oo-sortable-checkbox-master" onchange="ooHandleMasterCheckboxChange(event)"/>'

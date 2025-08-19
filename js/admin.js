@@ -582,7 +582,12 @@ jQuery(document).ready(function($){
 			});
 
 			$(document).off('click.multiSelectDeselect').on('click.multiSelectDeselect', (event) => {
-				if (!$(event.target).closest('.fieldsSortable').length) {
+				const $target = $(event.target);
+
+				const clickedInsideContainer  = $target.closest('#oo-fields-sortable-container').length > 0;
+				const clickedInsideBulkAction = $target.closest('#oo-bulk-action-container').length > 0;
+
+				if (!clickedInsideContainer && !clickedInsideBulkAction) {
 					$container.find('.list-fields-for-each-page .selected').removeClass('selected');
 					$container.find('.list-fields-for-each-page input[type="checkbox"]').prop('checked', false);
 					$('#postbox-select-all').prop('checked', false);

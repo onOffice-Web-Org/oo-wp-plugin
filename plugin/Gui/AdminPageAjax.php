@@ -244,7 +244,7 @@ abstract class AdminPageAjax
 
 		}
 
-		echo '<div style="float:right; margin-bottom: 20px;">';
+		echo '<div style="float:right; margin-bottom: 20px;" id="oo-bulk-action-container">';
 		echo '<label for="'.$selector_id.'" class="screen-reader-text">'.__('Choose Bulk Actions', 'onoffice-for-wp-websites').'</label>';
 		echo '<select id="'.$selector_id.'">';
 		echo '<option value="-1">'.__('Bulk Actions', 'onoffice-for-wp-websites').'</option>';
