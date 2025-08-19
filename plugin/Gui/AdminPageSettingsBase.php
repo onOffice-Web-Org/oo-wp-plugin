@@ -602,6 +602,11 @@ abstract class AdminPageSettingsBase
 
 		wp_enqueue_script('postbox');
 		wp_enqueue_script('admin-js');
+		wp_localize_script('admin-js', 'oOMultiPageI18n', [
+			'pageTitle' => __('Page title:', 'onoffice-for-wp-websites'),
+			'addLanguage' => __('Add Language', 'onoffice-for-wp-websites'),
+			'removeTitleForLanguage' => sprintf(__('Remove title for language %s', 'onoffice-for-wp-websites'), '%s'),
+		]);
 
 		wp_register_script('oo-sanitize-shortcode-name',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-sanitize-shortcode-name.min.js',

@@ -76,7 +76,10 @@ abstract class InputFieldRenderer
 
 	/** @var bool */
     private $_isDisabled = false;
-	
+
+	/** @var bool */
+	private $_isFieldInactive = false;
+
 	/**
 	 *
 	 * @param string $type
@@ -120,6 +123,17 @@ abstract class InputFieldRenderer
 		}
 	}
 
+	public function renderInactive()
+	{
+		$deactivatedInTheSoftware = ' ('.esc_html__('Disabled in onOffice', 'onoffice-for-wp-websites').')';
+		$disabledElement = <<<HTML
+			<span class="onoffice-field-inactive-text" style="color:red">
+				$deactivatedInTheSoftware
+			</span>
+HTML;
+
+		echo $disabledElement;
+	}
 
 	/**
 	 *
@@ -267,4 +281,13 @@ abstract class InputFieldRenderer
     /** @param bool $isDisabled */
     public function setIsDisabled(bool $isDisabled)
     { $this->_isDisabled = $isDisabled; }
+
+
+    /** @return bool */
+    public function getIsFieldInactive()
+    { return $this->_isFieldInactive; }
+
+    /** @param bool $isFieldInactive */
+    public function setIsFieldInactive(bool $isFieldInactive)
+    { $this->_isFieldInactive = $isFieldInactive; }
 }

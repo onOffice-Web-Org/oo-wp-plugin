@@ -77,7 +77,7 @@ class TestClassFormPostContact
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormFrontend'])
+			->onlyMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 		add_option('onoffice-settings-honeypot', true);
@@ -136,6 +136,10 @@ class TestClassFormPostContact
 				$FieldTelefon1 = new Field('Telefon1', onOfficeSDK::MODULE_ADDRESS);
 				$FieldTelefon1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 				$pFieldsCollection->addField($FieldTelefon1);
+
+				$pFieldArtDaten = new Field('ArtDaten', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldArtDaten->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldArtDaten);
 
 				$pFieldAgbAkzeptiert = new Field('AGB_akzeptiert', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldAgbAkzeptiert->setType(FieldTypes::FIELD_TYPE_BOOLEAN);

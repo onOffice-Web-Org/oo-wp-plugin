@@ -58,7 +58,7 @@ class TestClassDataDetailViewCheckAccessControl
 		                             ->getMock();
 		$pEstateDetail        = $this->getMockBuilder( EstateDetail::class )
 		                             ->setConstructorArgs( [ new DataDetailView() ] )
-		                             ->setMethods( [ 'loadEstates', 'estateIterator', 'getRawValues' ] )
+		                             ->onlyMethods( [ 'loadEstates', 'estateIterator', 'getRawValues' ] )
 		                             ->getMock();
 		$pEstateDetail
 			->expects( $this->once() )->method( 'estateIterator' )

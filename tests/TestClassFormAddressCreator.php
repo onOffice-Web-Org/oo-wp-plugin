@@ -69,7 +69,7 @@ class TestClassFormAddressCreator
 	public function prepare()
 	{
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate','addFieldsSearchCriteria','addFieldsFormFrontend'])
+			->onlyMethods(['addFieldsAddressEstate','addFieldsSearchCriteria','addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 		$this->_pSDKWrapper = new SDKWrapperMocker();
@@ -115,6 +115,10 @@ class TestClassFormAddressCreator
 				$pField7->setLabel('newsletter');
 				$pFieldsCollection->addField($pField7);
 
+				$pFieldArtDaten = new Field('ArtDaten', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldArtDaten->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldArtDaten);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 	}
@@ -151,7 +155,7 @@ class TestClassFormAddressCreator
 	public function testGetAddressDataForEmail()
 	{
 		$pFormData = $this->getMockBuilder(FormData::class)
-			->setMethods(['getAddressData'])
+			->onlyMethods(['getAddressData'])
 			->disableOriginalConstructor()
 			->getMock();
 

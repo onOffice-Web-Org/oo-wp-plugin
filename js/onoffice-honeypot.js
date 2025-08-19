@@ -5,7 +5,7 @@ jQuery(document).ready(function ($) {
 
     function getFormsBySpecialHtmlAttribute() {
         const formElements = [];
-        const forms = document.querySelectorAll('.oo-form, #onoffice-form');
+        const forms = document.querySelectorAll(".oo-form, [id^='onoffice-form']");
 
         forms.forEach(form => {
             const dataAttr = form.getAttribute('data-applicant-form-id');

@@ -69,7 +69,7 @@ class TestClassSortListDropDownGenerator
 		$this->_pListView->setSortByUserDefinedDirection(1);
 
 		$this->_pDataListViewFactory = $this->getMockBuilder(DataListViewFactory::class)
-			->setMethods(['getListViewByName'])
+			->onlyMethods(['getListViewByName'])
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -78,7 +78,7 @@ class TestClassSortListDropDownGenerator
 			->willReturn($this->_pListView);
 
 		$this->_pBuilder = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate','addCustomLabelFieldsEstateFrontend'])
+			->onlyMethods(['addFieldsAddressEstate','addCustomLabelFieldsEstateFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 

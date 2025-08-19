@@ -52,7 +52,7 @@ class TestClassSearchParametersModelBuilder
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
 		$this->_pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->onlyMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
 			->setConstructorArgs([new Container])
 			->getMock();
 		$this->_pBuilderShort->method('addFieldsAddressEstate')

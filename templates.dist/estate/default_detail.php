@@ -140,9 +140,16 @@ $dimensions = [
 				}
 				?>
 			</div>
-			<div class="oo-detailstable">
-				<?php
-				foreach ($currentEstate as $field => $value) {
+			<?php
+				$highlightKeys = array_flip($pEstates->getHighlightedFields());
+				$estateDetails = array_filter(iterator_to_array($currentEstate)); // filter empty values
+				$keyfacts = array_intersect_key($estateDetails, $highlightKeys); // get only highlighted fields
+				$estatefacts = array_diff_key($estateDetails, $highlightKeys); // get only non highlighteds
+			?>
+			<?php if(!empty($keyfacts)) {
+				echo '<h2 class="oo-details-highlights-headline">' . __('Highlights', 'onoffice-for-wp-websites') . '</h2>' .
+					'<dl class="oo-details-highlights-table">';
+				foreach ($keyfacts as $field => $value) {
 					if ($pEstates->getShowEnergyCertificate() && in_array($field, $energyCertificateFields)) {
 						continue;
 					}
@@ -155,12 +162,46 @@ $dimensions = [
 					if (empty($value)) {
 						continue;
 					}
-					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
-						. '<div class="oo-detailslisttd">'
+					echo '<div class="oo-details-highlight">';
+					echo '<dt class="oo-details-highlight__label">' . esc_html($pEstates->getFieldLabel($field)) . '</dt>';
+					echo '<dd class="oo-details-highlight__value">' . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)) . '</dd>';
+					echo '</div>';
+				} 
+				echo '</dl>';
+			} ?>
+			<?php if(!empty($estatefacts)) {
+				echo '<dl class="oo-detailstable">';
+				foreach ($estatefacts as $field => $value) {
+					if ($pEstates->getShowEnergyCertificate() && in_array($field, $energyCertificateFields)) {
+						continue;
+					}
+					if (is_numeric($value) && 0 == $value) {
+						continue;
+					}
+					if (in_array($field, $dontEcho)) {
+						continue;
+					}
+					if (empty($value)) {
+						continue;
+					}
+					// skip negative boolean fields
+					if (is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0"){
+						continue;
+					}
+					if (
+						($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
+						in_array($field,['innen_courtage', 'aussen_courtage'],true)
+					) {
+						continue;
+					}
+
+					echo '<dt class="oo-details-fact__label">' . esc_html($pEstates->getFieldLabel($field)) . '</dt>' . "\n"
+						. '<dd class="oo-details-fact__value">'
 						. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
-						. '</div>' . "\n";
-				} ?>
-			</div>
+						. '</dd>' . "\n";
+				} 
+				echo '</dl>';
+			} ?>
 
 			<?php if ($currentEstate["dreizeiler"] !== "") { ?>
 				<div class="oo-detailsfreetext">
@@ -203,41 +244,26 @@ $dimensions = [
 			<?php if ($pEstates->getShowEnergyCertificate()) {
 				$energyClass = $rawValues->getValueRaw($estateId)['elements']['energyClass'] ?? '';
 				$energyClassPermittedValues = $pEstates->getPermittedValues('energyClass');
-				$energyCertificateType = $rawValues->getValueRaw($estateId)['elements']['energieausweistyp'] ?? '';
-				$energyCertificateValueRanges = [
-					"Endenergiebedarf" => ["0", "25", "50", "75", "100", "125", "150", "175", "200", ">200"],
-					"Energieverbrauchskennwert" => ["0", "50", "100", "150", "200", "250", "300", "350", "400"]
-				];
+				$energyCertificateValueLabels = ["0", "30", "50", "75", "100", "130", "160", "200", "250", ">250"];
 			?>
 				<div class="oo-details-energy-certificate">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
-					<?php
-					function renderEnergyCertificate(string $energyCertificateType, array $energyClassPermittedValues, string $selectedEnergyClass, string $type, array $labels) {
-						if ($energyCertificateType === $type) { ?>
-							<div class="energy-certificate-container">
-								<div class="segmented-bar">
-									<?php
-									foreach ($energyClassPermittedValues as $key => $label) {
-										$labelIndex = array_keys($energyClassPermittedValues)[$key];
-										echo '<div class="energy-certificate-label"><span>' . $labels[$labelIndex] . '</span></div>';
-										echo '<div class="segment' . ($selectedEnergyClass == $label ? ' selected' : '') . '"><span>' . $label . '</span></div>';
-									}
-									if ($type === "Endenergiebedarf") {
-										echo '<div class="energy-certificate-label"><span>'.end($labels).'</span></div>';
-									}
-									?>
-								</div>
+
+					<?php if (!empty($energyClassPermittedValues) && !empty($energyClass)) : ?>
+						<div class="energy-certificate-container">
+							<div class="segmented-bar">
+								<?php foreach ($energyClassPermittedValues as $key => $label): ?>
+									<div class="energy-certificate-label"><span><?php echo $energyCertificateValueLabels[$key] ?? ''; ?></span></div>
+									<div class="segment<?php echo ($energyClass === $label ? ' selected' : ''); ?>">
+										<span><?php echo esc_html($label); ?></span>
+									</div>
+								<?php endforeach; ?>
+								<div class="energy-certificate-label"><span><?php echo end($energyCertificateValueLabels); ?></span></div>
 							</div>
-							<?php
-						}
-					}
-					if (!empty($energyClassPermittedValues) && !empty($energyClass) && !empty($energyCertificateType)) {
-						foreach ($energyCertificateValueRanges as $type => $labels) {
-							renderEnergyCertificate($energyCertificateType, $energyClassPermittedValues, $energyClass, $type, $labels);
-						}
-					}
-					?>
-					<div class="oo-detailstable">
+						</div>
+					<?php endif; ?>
+
+					<dl class="oo-detailstable">
 						<?php
 						$fields = [
 							'baujahr',
@@ -246,27 +272,22 @@ $dimensions = [
 							'energyClass',
 							'energietraeger'
 						];
-
-						if ($energyCertificateType === "Endenergiebedarf") {
-							$fields[] = 'endenergiebedarf';
-						} elseif ($energyCertificateType === "Energieverbrauchskennwert") {
-							$fields[] = 'energieverbrauchskennwert';
-						}
-
+					
 						foreach ($fields as $field) {
-							if (empty($currentEstate[$field])) {
-								continue;
-							}
-
-							echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
-								. '<div class="oo-detailslisttd">'
-								. (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field]))
-								. '</div>' . "\n";
+							if (empty($currentEstate[$field])) continue;?>
+							<dt class="oo-details-fact__label">
+								<?php echo esc_html($pEstates->getFieldLabel($field)) ?>
+							</dt>
+							<dd class="oo-details-fact__value">
+								<?php echo (is_array($currentEstate[$field]) ? esc_html(implode(', ', $currentEstate[$field])) : esc_html($currentEstate[$field])) ?>
+							</dd>
+							<?php
 						}
 						?>
-					</div>
+					</dl>
 				</div>
 			<?php } ?>
+
 
 			<?php if ($currentEstate["ausstatt_beschr"] !== "") { ?>
 				<div class="oo-detailsfreetext">
@@ -587,11 +608,12 @@ $dimensions = [
 			?>
 
 		</div>
-		<?php $similar = trim($pEstates->getSimilarEstates()); ?>
-		<?php if (!empty($similar)): ?>
-        	<?php echo $similar; ?>
-		<?php endif; ?>
-	<?php } ?>
+		<?php
+		$similar = trim($pEstates->getSimilarEstates());
+		if (!empty($similar)) {
+			echo $similar;
+		}
+	} ?>
 
 </div>
 

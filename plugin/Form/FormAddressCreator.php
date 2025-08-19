@@ -31,6 +31,8 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Cache\CacheHandler;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilder;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\FormData;
@@ -82,6 +84,12 @@ class FormAddressCreator
 			$requestParams['noOverrideByDuplicate'] = true;
 		}
 
+		$addressFields = $this->getAddressFields();
+		if(!isset($addressFields['ArtDaten'])){
+			//Field is not active
+			$contactType = [];
+		}
+
 		if (!empty($contactType)) {
 			$requestParams['ArtDaten'] = $contactType;
 		}
@@ -110,6 +118,19 @@ class FormAddressCreator
 			return $addressId;
 		}
 		throw new ApiClientException($pApiClientAction);
+	}
+
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getAddressFields(): array
+	{
+		$pFieldsCollection = new FieldsCollection();
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		return $pFieldsCollection->getFieldsByModule('address');
 	}
 
 	/**
@@ -400,9 +421,13 @@ class FormAddressCreator
 		$addressFields = $pFormData->getDataFormConfiguration()->getInputs();
 
 		foreach ($addressFields as $fieldName => $module) {
-			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $fieldName);
-			if ($pField->getModule() === onOfficeSDK::MODULE_ADDRESS) {
-				$addressData[$fieldName] = $module;
+			try {
+				$pField = $pFieldsCollection->getFieldByModuleAndName($module, $fieldName);
+				if ($pField->getModule() === onOfficeSDK::MODULE_ADDRESS) {
+					$addressData[$fieldName] = $module;
+				}
+			} catch (UnknownFieldException $e) {
+				continue; // Skip the field if is not found e.g., not active in enterprise
 			}
 		}
 

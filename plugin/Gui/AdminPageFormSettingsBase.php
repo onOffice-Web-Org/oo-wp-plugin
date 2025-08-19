@@ -236,6 +236,10 @@ abstract class AdminPageFormSettingsBase
 			if (array_key_exists(RecordManager::TABLENAME_TASKCONFIG_FORMS, $row)) {
 				$result = $result && $pRecordManagerUpdateForm->updateTasksConfigByRow($row[RecordManager::TABLENAME_TASKCONFIG_FORMS]);
 			}
+
+			if (array_key_exists(RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS, $row)) {
+				$result = $result && $pRecordManagerUpdateForm->updateMultiPageTitleByRow($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS]);
+			}
 		} else {
 			$action = RecordManagerFactory::ACTION_INSERT;
 			// insert
@@ -254,6 +258,12 @@ abstract class AdminPageFormSettingsBase
 				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_TASKCONFIG_FORMS);
 				$row[RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM]['form_id'] = $recordId;
 				$pRecordManagerInsertForm->insertSingleRow($row, RecordManager::TABLENAME_ACTIVITY_CONFIG_FORM);
+				if (array_key_exists(RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS, $row) && is_array($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS])) {
+					foreach ($row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS] as $key => $value) {
+						$value['form_id'] = $recordId;
+						$row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS][$key] = $value;
+					}
+				}
 				$pRecordManagerInsertForm->insertAdditionalValues($row);
 				$result = true;
 			} catch (RecordManagerInsertException $pException) {
@@ -866,12 +876,12 @@ abstract class AdminPageFormSettingsBase
 		echo '</div>';
 		$this->renderBulkActionControls();
 		echo '<div class="fieldsSortable postbox">';
-		echo '<h2 class="hndle ui-sortable-handle">'
-				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
-					.'<input type="checkbox" class="oo-sortable-checkbox-master" onchange="ooHandleMasterCheckboxChange(event)"/>'
-				.'</span>'
-				.'<span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span>'
-			.'</h2>';
+		echo '<div class="postbox-header">
+        <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen
+			<input type="checkbox" id="postbox-select-all" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event)"/>
+			</label>
+      	</div>';
 		$pInputModelRenderer->buildForAjax( $pFormViewSortableFields );
 		echo '</div>';
 		echo '<div class="clear"></div>';
@@ -969,7 +979,7 @@ abstract class AdminPageFormSettingsBase
 			}
 			$values->$fieldName[$key] = $data[$value];
 		}
-	
+
 		return $values;
 	}
 

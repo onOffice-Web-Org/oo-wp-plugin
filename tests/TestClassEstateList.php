@@ -159,6 +159,18 @@ class TestClassEstateList
 		$this->assertCount(5, $pClosureGetEstateResult());
 	}
 
+	public function testLoadEstatesSortKaufpreis()
+	{
+		$this->_pEstateList->getDataView()->setSortby('kaufpreis');
+		$this->_pEstateList->loadEstates(1);
+		$pClosureGetEstateResult = Closure::bind(function() {
+			return $this->_records;
+		}, $this->_pEstateList, EstateList::class);
+		// If the test didnt throw by now, he tried to get the response for a sortby of ['preisAufAnfrage' => 'ASC', 'kaufpreis' => 'ASC']
+		// Which is correct if sortby was initialized with 'kaufpreis'
+		$this->assertCount(5, $pClosureGetEstateResult());
+	}
+
 
 	/**
 	 *
@@ -282,7 +294,7 @@ class TestClassEstateList
 		$pDataDetailView->setPageId(0);
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
 			->disableOriginalConstructor()
-			->setMethods(['getDetailView'])
+			->onlyMethods(['getDetailView'])
 			->getMock();
 		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
 		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
@@ -481,12 +493,12 @@ class TestClassEstateList
 	{
 		$valueMap = true;
 		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
-		                         ->setMethods(['__construct', 'hasDetailView'])
+		                         ->onlyMethods(['__construct', 'hasDetailView'])
 		                         ->getMock();
 		$pDataDetailView->expects($this->once())->method('hasDetailView')->willReturn($valueMap);
 
 		$pDataDetailViewHandlerMock = $this->getMockBuilder(DataDetailViewHandler::class)
-		                         ->setMethods(['__construct', 'getDetailView'])
+		                         ->onlyMethods(['__construct', 'getDetailView'])
 		                         ->getMock();
 		$pDataDetailViewHandlerMock->expects($this->once())->method('getDetailView')->willReturn($pDataDetailView);
 
@@ -525,7 +537,7 @@ class TestClassEstateList
 			['52', ['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email']],
 		];
 		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
-			->setMethods(['__construct', 'getAddressById', 'loadAddressesById'])
+			->onlyMethods(['__construct', 'getAddressById', 'loadAddressesById'])
 			->getMock();
 		$pAddressDataMock->expects($this->once())->method('loadAddressesById')->with([50, 52], ['Name', 'Vorname', "imageUrl"]);
 		$pAddressDataMock->method('getAddressById')->willReturnMap($valueMap);
@@ -582,12 +594,12 @@ class TestClassEstateList
 	{
 		$pDataListView = new DataListView(1, 'defaultUnits');
 		$pEstateUnitsMock = $this->getMockBuilder(EstateUnits::class)
-			->setMethods([
-				'getEstateUnitsByName',
+			->onlyMethods([
 				'loadByMainEstates',
 				'getSubEstateCount',
 				'generateHtmlOutput',
 			])
+			->addMethods(['getEstateUnitsByName'])
 			->setConstructorArgs([$pDataListView])
 			->getMock();
 		$pEstateUnitsMock
@@ -659,7 +671,7 @@ class TestClassEstateList
 	public function testGetVisibleFilterableFields()
 	{
 		$pMockOutputFields = $this->getMockBuilder(OutputFields::class)
-			->setMethods(['getVisibleFilterableFields'])
+			->onlyMethods(['getVisibleFilterableFields'])
 			->disableOriginalConstructor()
 			->getMock();
 		$pMockOutputFields->expects($this->once())
@@ -819,19 +831,22 @@ class TestClassEstateList
 
 		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
 			->setConstructorArgs([$this->_pContainer])
-			->setMethods(['getRecordsPerPage',
-				'getSortby',
-				'getSortorder',
-				'getFilterId',
+			->onlyMethods([
 				'getFields',
 				'getPictureTypes',
 				'getAddressFields',
-				'getFilterableFields',
 				'getPageId',
 				'getViewRestrict',
 				'getShowPriceOnRequest',
 				'getListFieldsShowPriceOnRequest',
 				'getContactPerson'
+			])
+			->addMethods([
+				'getRecordsPerPage',
+				'getSortby',
+				'getSortorder',
+				'getFilterId',
+				'getFilterableFields',
 			])
 			->getMock();
 		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
@@ -850,7 +865,7 @@ class TestClassEstateList
 
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
 		                               ->disableOriginalConstructor()
-		                               ->setMethods(['getDetailView'])
+		                               ->onlyMethods(['getDetailView'])
 		                               ->getMock();
 		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
 		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
@@ -869,7 +884,7 @@ class TestClassEstateList
 	{
 		$EstateListMock = $this->getMockBuilder(EstateList::class)
 			->disableOriginalConstructor()
-			->setMethods(['getShowReferenceStatus'])
+			->onlyMethods(['getShowReferenceStatus'])
 			->getMock();
 		$EstateListMock->method('getShowReferenceStatus')->willReturn(false);
 		$this->_pEstateList->loadEstates();
@@ -937,19 +952,22 @@ class TestClassEstateList
 
 		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
 			->setConstructorArgs([$this->_pContainer])
-			->setMethods(['getRecordsPerPage',
-				'getSortby',
-				'getSortorder',
-				'getFilterId',
+			->onlyMethods([
 				'getFields',
 				'getPictureTypes',
 				'getAddressFields',
-				'getFilterableFields',
 				'getPageId',
 				'getViewRestrict',
 				'getShowPriceOnRequest',
 				'getListFieldsShowPriceOnRequest',
 				'getShowTotalCostsCalculator'
+			])
+			->addMethods([
+				'getRecordsPerPage',
+				'getSortby',
+				'getSortorder',
+				'getFilterId',
+				'getFilterableFields',
 			])
 			->getMock();
 		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
@@ -968,7 +986,7 @@ class TestClassEstateList
 
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
 		                               ->disableOriginalConstructor()
-		                               ->setMethods(['getDetailView'])
+		                               ->onlyMethods(['getDetailView'])
 		                               ->getMock();
 		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
 		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
@@ -1027,11 +1045,17 @@ class TestClassEstateList
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstatesCostsCalculatorRaw, null, $responseReadEstatesCostsCalculatorRaw);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'fields', '', $parametersGetFieldCurrency, null, $responseGetFieldCurrency);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', array_merge($parametersReadEstate, ['sortby' => ['preisAufAnfrage' => 'ASC', 'kaufpreis' => 'ASC']]), null, $responseReadEstate);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'estate', '', array_merge($parametersReadEstateRaw, ['sortby' => ['preisAufAnfrage' => 'ASC', 'kaufpreis' => 'ASC']]), null, $responseReadEstate);
+
 
 		unset($parametersReadEstate['georangesearch']);
+		unset($parametersReadEstateRaw['georangesearch']);
+
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
-		unset($parametersReadEstateRaw['georangesearch']);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
 
@@ -1048,13 +1072,27 @@ class TestClassEstateList
 			'language' => 'ENG'
 		], null, $responseGetEstatePictures);
 
+		$dataGetEstateFiles = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseGetEstatesFiles.json'), true);
+			
+		$estateIds = [15,1051,1082,1193,1071];
+		$parameters = [];
+		foreach ($estateIds as $estateId) {
+			$parameters['estateid'] = $estateId;
+			$parameters['showispublishedonhomepage'] = true;
+			$parameters['listlimit'] = 100;
+			$responseGetEstateFiles = $dataGetEstateFiles['response'];
+			$this->_pSDKWrapperMocker->addResponseByParameters
+				(onOfficeSDK::ACTION_ID_GET, 'file', 'estate', $parameters, null, $responseGetEstateFiles);
+		}
+
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
 		$this->_pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
 		$this->_pEnvironment = $this->getMockBuilder(EstateListEnvironmentDefault::class)
 			->setConstructorArgs([$this->_pContainer])
-			->setMethods([
+			->onlyMethods([
 				'getDefaultFilterBuilder',
 				'getGeoSearchBuilder',
 				'getEstateStatusLabel',
@@ -1083,17 +1121,17 @@ class TestClassEstateList
 				return $pFieldsCollectionBuilderShort;
 			});
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
-	
+
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
 		$this->_pEnvironment->method('getDefaultFilterBuilder')->willReturn($pDefaultFilterBuilder);
 		$this->_pEstateList = new EstateList($pDataListView, $this->_pEnvironment);
 
-		$pGeoSearchBuilder = $this->getMockBuilder(GeoSearchBuilderEmpty::class)->setMethods(['buildParameters'])->getMock();
+		$pGeoSearchBuilder = $this->getMockBuilder(GeoSearchBuilderEmpty::class)->onlyMethods(['buildParameters'])->getMock();
 		$pGeoSearchBuilder->method('buildParameters')->willReturn(['radius' => 500, 'country' => 'DEU', 'zip' => '52068']);
 		$this->_pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 		$this->_pEnvironment->method('getGeoSearchBuilder')->willReturn($pGeoSearchBuilder);
 		$pEstateStatusLabel = $this->getMockBuilder(EstateStatusLabel::class)
-			->setMethods(['getFieldsByPrio', 'getLabel'])
+			->onlyMethods(['getFieldsByPrio', 'getLabel'])
 			->getMock();
 		$pEstateStatusLabel->method('getFieldsByPrio')->willReturn([
 			'referenz',
@@ -1110,9 +1148,8 @@ class TestClassEstateList
 		]);
 		$redirectIfOldUrl = $this->getMockBuilder(Redirector::class)
 			->disableOriginalConstructor()
-			->setMethods(['redirectDetailView'])
+			->onlyMethods([])
 			->getMock();
-		$redirectIfOldUrl->method('redirectDetailView')->willReturn(true);
 
 		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
 			($pEstateStatusLabel);
@@ -1128,7 +1165,7 @@ class TestClassEstateList
 	private function getDataView(): DataListView
 	{
 		$pDataView = new DataListView(1, 'test');
-		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'warmmiete', 'kaufpreis', 'erbpacht', 'nettokaltmiete', 'pacht', 'kaltmiete']);
+		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'warmmiete', 'kaufpreis', 'erbpacht', 'nettokaltmiete', 'pacht', 'kaltmiete', 'preisAufAnfrage']);
 		$pDataView->setSortby('Id');
 		$pDataView->setSortorder('ASC');
 		$pDataView->setFilterId(12);

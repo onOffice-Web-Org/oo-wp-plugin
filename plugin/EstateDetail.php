@@ -267,17 +267,6 @@ class EstateDetail
 
 	/**
 	 *
-	 * @param $field
-	 * @return string
-	 */
-
-	 public function getFieldInformation(string $field): array
-	 {
-		 return $this->getEnvironment()->getFieldnames()->getFieldInformation($field, onOfficeSDK::MODULE_ESTATE);
-	 }
-
-	/**
-	 *
 	 * @return int
 	 *
 	 */
@@ -338,5 +327,25 @@ class EstateDetail
 	public function getAddressLink(string $id) : string 
 	{
 		return $this->getEnvironment()->getAddressList()->getAddressLink($id);
+	}
+
+	/**
+	 * checks whether or not a given value is highlighted
+	 * @param string $value
+	 * @return bool
+	 */
+	public function isHighlightedField(string $value) : bool
+	{
+		return in_array($value, $this->getDataView()->getHighlightedFields());
+	}
+
+	/**
+	 * checks whether or not a given value is highlighted
+	 * @param string $value
+	 * @return bool
+	 */
+	public function getHighlightedFields() : array
+	{
+		return $this->getDataView()->getHighlightedFields();
 	}
 }

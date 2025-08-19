@@ -159,6 +159,7 @@ class InputModelRenderer
 				$pInstance->setAllFields($pInputModel->getValuesAvailable());
 				$pInstance->setIsMultiPage($pInputModel->getIsMultiPage());
 				$pInstance->setTemplate($pInputModel->getTemplate());
+				$pInstance->setTitlesPerMultipage($pInputModel->getTitlePerMultipageForm());
 				break;
 
 			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
@@ -207,6 +208,11 @@ class InputModelRenderer
 				if ( $pInputModel->isDeactivate() ) {
 					$pInstance->addAdditionalAttribute( 'disabled', true );
 				}
+				if (!empty($pInputModel->getLanguage())) {
+					$langCode = $pInputModel->getLanguage();
+					$pInstance->addAdditionalAttribute('data-localized', $langCode);
+					$pInstance->addAdditionalAttribute('lang', explode('_', $langCode)[0]); //e.g. "es_ES" → "es"
+				}
 
 				break;
 			case InputModelOption::HTML_TYPE_HIDDEN:
@@ -238,7 +244,11 @@ class InputModelRenderer
                 }
                 $pInstance->addAdditionalAttribute('class', $cssClasses);
                 $pInstance->setMultiple($isMultiple);
-				$pInstance->setSelectedValue($pInputModel->getValue());
+				$pInstance->setIsFieldInactive($pInputModel->isFieldInactive());
+
+				if(!$pInputModel->isFieldInactive()){
+					$pInstance->setSelectedValue($pInputModel->getValue());
+				}
 				break;
 
 			case InputModelOption::HTML_TYPE_NUMBER:

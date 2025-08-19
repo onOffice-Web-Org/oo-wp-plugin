@@ -58,7 +58,7 @@ class TestClassContentFilterShortCodeImprint
 	{
 		$this->_pImpressum = $this->getMockBuilder(Impressum::class)
 			->setConstructorArgs([new SDKWrapper()])
-			->setMethods(['load'])
+			->onlyMethods(['load'])
 			->getMock();
 		$this->_pLogger = $this->getMockBuilder(Logger::class)
 			->getMock();

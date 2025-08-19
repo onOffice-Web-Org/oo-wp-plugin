@@ -12,7 +12,7 @@ jobs:
       developmentVersion: ${{ steps.get-development-version.outputs.developmentVersion }}
     steps:
       - name: Checkout from GIT
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           # We need to fetch more than just the most recent commit,
           # since we later use `git describe`.
@@ -45,6 +45,9 @@ jobs:
     env:
       SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
     steps:
+      - name: install svn
+        run: sudo apt install subversion
+
       - name: Download release
         uses: actions/download-artifact@v4.1.7
         with:

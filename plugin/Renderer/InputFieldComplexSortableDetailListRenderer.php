@@ -57,6 +57,9 @@ class InputFieldComplexSortableDetailListRenderer
 	/** @var string */
 	private $_template = '';
 
+	/** @var array */
+	private $_titlesPerMultipage = [];
+
 	/**
 	 *
 	 * @param string $name
@@ -74,6 +77,11 @@ class InputFieldComplexSortableDetailListRenderer
 	 *
 	 */
 
+	 private function isOwnerLeadGeneratorForm(): bool
+	{
+    	return strpos($this->_template, 'ownerleadgeneratorform.php') !== false;
+	}
+
 	public function render()
 	{
 		$this->readInactiveFields();
@@ -81,7 +89,7 @@ class InputFieldComplexSortableDetailListRenderer
 		$allFields = $values[0] ?? [];
 
 		if ($this->_isMultiPage) {
-			$isOwnerLeadGeneratorForm = strpos($this->_template, 'ownerleadgeneratorform.php') !== false;
+			$isOwnerLeadGeneratorForm = $this->isOwnerLeadGeneratorForm();
 			echo '<div id="single-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'none' : 'block') . ';">';
 			$this->renderSinglePage($allFields);
 			echo '</div>';
@@ -120,11 +128,22 @@ class InputFieldComplexSortableDetailListRenderer
 			$page = $this->_allFields[$properties]['page'] ?? 1;
 			$fieldsByPage[$page][$properties] = $this->_allFields[$properties];
 		}
-		$extraInputModels = $this->_extraInputModels;
+		$titleInputModels = [];
+		$extraInputModels = array_values(array_filter($this->_extraInputModels, function($pInputModel) use (&$titleInputModels) {
+			if ($pInputModel->getTable() === 'oo_plugin_form_multipage_title') {
+				$titleInputModels[] = $pInputModel;
+				return false;
+			}
+			return true;
+		}));
+
 		$page = 1;
 		foreach ($fieldsByPage as $fields) {
 			echo '<div class="list-fields-for-each-page">';
-			echo '<span class="page-title">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</span>';
+			echo '<div class="multi-page-title" data-page="'.$page.'">';
+			echo '<span class="multi-page-counter">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</span>';
+			$this->_pContentRenderer->renderTitlesForMultiPage($titleInputModels, $this->getLocalizedTitlesPerPage($page));
+			echo '</div>';
 			echo '<ul class="filter-fields-list attachSortableFieldsList multi-page-list fieldsListPage-' . esc_attr($page) . ' sortableFieldsListForForm">';
 			$i = 1;
 
@@ -169,6 +188,19 @@ class InputFieldComplexSortableDetailListRenderer
 		$deactivatedInOnOffice = null;
 		$dummyText = $isDummy ? 'data-onoffice-ignore="true"' : '';
 		$name = $isDummy ? AdminPageAjax::EXCLUDE_FIELD . $this->getName() : $this->getName();
+		$isHighlighted = false;
+		if(gettype($extraInputModels[0]->getValueCallback()) == 'array') {
+			$formModelBuilder = $extraInputModels[0]->getValueCallback()[0];
+			if(str_contains(get_class($formModelBuilder), 'FormModelBuilderDBEstateListSettings')) {
+				$isHighlighted = $formModelBuilder->isHightlightedField($key);
+			}
+			else if(
+				str_contains(get_class($formModelBuilder),'FormModelBuilderEstateDetailSettings') ||
+				str_contains(get_class($formModelBuilder),'FormModelBuilderSimilarEstateSettings')
+			) {
+				$isHighlighted = $formModelBuilder->isHightlightedField($key);
+			}
+		}
 
 		if ($label == null) {
 			$label = $inactiveFields[$key] ?? null;
@@ -177,13 +209,14 @@ class InputFieldComplexSortableDetailListRenderer
 			$type = InputModelBase::HTML_TYPE_TEXT;
 		}
 
-		echo '<li class="sortable-item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
+		echo '<li class="sortable-item item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
 			.'<div class="menu-item-bar">'
 				.'<div class="menu-item-handle ui-sortable-handle" style="display: flex; align-items: center; gap: 8px;">'
 					.'<span class="oo-sortable-checkbox-wrapper">'
 						.'<input type="checkbox" class="oo-sortable-checkbox" value="'.$key.'" onchange="ooHandleChildCheckboxChange(event)"/>'
 					.'</span>'
 					.'<span class="item-title oo-sortable-title" '.$deactivatedStyle.'>'
+						.($isHighlighted ? '★ ' : '')
 						.esc_html($label)
 						.esc_html($deactivatedInOnOffice)
 					.'</span>'
@@ -244,4 +277,30 @@ class InputFieldComplexSortableDetailListRenderer
 	/** @param string $template */
 	public function setTemplate(string $template)
 		{ $this->_template = $template; }
+
+	/**
+	 * @param int $page
+	 * @param string $locale
+	 * @return array
+	 */
+	public function getLocalizedTitlesPerPage(int $page):array
+		{
+			$titles = [];
+			foreach ($this->_titlesPerMultipage as $title) {
+				if (isset($title['page']) && (int) $title['page'] === $page) {
+					$titles[] = $title;
+				}
+			}
+			//Fallback for new leadgenerator forms
+			if (empty($titles)) {
+				$titles[] = [
+					'page' => 1,
+					'locale' => 'native',
+					'value' => ''
+				];
+			}
+			return $titles;
+		}
+	public function setTitlesPerMultipage(array $titlesPerMultipage)
+		{ $this->_titlesPerMultipage = $titlesPerMultipage; }
 }

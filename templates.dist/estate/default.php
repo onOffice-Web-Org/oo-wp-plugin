@@ -114,8 +114,6 @@ $dimensions = [
 	$pEstatesClone = clone $pEstates;
 	$pEstatesClone->resetEstateIterator();
 	while ( $currentEstate = $pEstatesClone->estateIterator() ) :
-		if( !$pEstatesClone->isCurrentEstateContactsInAddressFilter() )
-			continue;
 		$marketingStatus = $currentEstate['vermarktungsstatus'];
 		unset($currentEstate['vermarktungsstatus']);
 		$estateId = $pEstatesClone->getCurrentEstateId();
@@ -166,7 +164,15 @@ $dimensions = [
 						<?php echo $currentEstate["objekttitel"]; ?>
 					</div>
 					<div class="oo-listinfotable oo-listinfotableview">
-						<?php foreach ( $currentEstate as $field => $value ) {
+						<?php
+							$keyfacts = array_flip($pEstatesClone->getHighlightedFields());
+							$estateFacts = iterator_to_array($currentEstate);
+							// keep order but float keyfacts to the top
+							$estateFacts = array_merge(
+								array_intersect_key($estateFacts, $keyfacts), // get only highlighted fields
+								array_diff_key($estateFacts, $keyfacts) // get only non highlighted
+							);
+							foreach ( $estateFacts as $field => $value ) {
 							if ( is_numeric( $value ) && 0 == $value ) {
 								continue;
 							}
@@ -176,7 +182,20 @@ $dimensions = [
 							if ( empty($value) ) {
 								continue;
 							}
-							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
+							// skip negative boolean fields
+							if (is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0"){
+								continue;
+							}
+							if (
+								($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
+								in_array($field,['innen_courtage', 'aussen_courtage'],true)
+							) {
+								continue;
+							}
+
+							$class = 'oo-listtd'. ($pEstates->isHighlightedField($field) ? ' --highlight' : '');
+							echo '<div class="'.$class.'">'.esc_html($pEstatesClone->getFieldLabel( $field )).'</div>'.
+								'<div class="'.$class.'">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 						} ?>
 					</div>
 					<div class="oo-detailslink">
@@ -213,13 +232,87 @@ $dimensions = [
 		</div>
 	<?php endwhile; ?>
 </div>
-<div>
-	<?php
-	if (get_option('onoffice-pagination-paginationbyonoffice')) {
-		wp_link_pages();
+<?php
+if (get_option('onoffice-pagination-paginationbyonoffice')) {
+	
+	global $onoffice_instance_counter;
+
+	if (!isset($onoffice_instance_counter)) {
+		$onoffice_instance_counter = 0;
 	}
+
+	$onoffice_instance_counter++;
+
+	// Generate a unique instance ID for the pagination with a counter
+	$current_instance_id = 'oo-listpagination-instance-' . $onoffice_instance_counter;
+
+	$listViewId = $pEstates->getListViewId();
+
+	$paginationKeys = ['page_of_id_' . $listViewId, 'paged', 'page'];
+	$cleanedParams = [];
+
+	foreach ($_GET as $key => $value) {
+		$sanitized_key = sanitize_key($key);
+		
+		// Skip pagination keys
+		// This prevents the pagination from being included in the query parameters
+		if (in_array($sanitized_key, $paginationKeys)) {
+			continue;
+		}
+		
+		if (is_array($value)) {
+			foreach ($value as $k => $v) {
+				$cleanedParams[] = [
+					'key' => $sanitized_key . '[' . sanitize_key($k) . ']',
+					'value' => sanitize_text_field($v)
+				];
+			}
+		} else {
+			$cleanedParams[] = [
+				'key' => $sanitized_key, 
+				'value' => sanitize_text_field($value)
+			];
+		}
+	}
+
 	?>
-</div>
+
+	<div id="<?php echo esc_attr($current_instance_id); ?>" class="oo-listpagination">
+		<?php
+		// Create pagination links
+		wp_link_pages();
+		?>
+		<script>
+			jQuery(document).ready(function($) {
+
+				var $currentPagination = $('#<?php echo esc_js($current_instance_id); ?>');
+
+				if ($currentPagination.length === 0) {
+					return; // Exit if the container isn't found
+				}
+
+				var queryParams = <?php echo json_encode($cleanedParams); ?>;
+
+				$currentPagination.find('.post-nav-links a').each(function() {
+					var link = $(this);
+					// Create a new URL object based on the link's href and the current origin
+					var url = new URL(link.attr('href'), window.location.origin);
+
+					queryParams.forEach(function(param) {
+						// Set or update the search parameter
+						url.searchParams.set(param.key, param.value);
+					});
+
+					// Update the link's href with the new URL and search parameters
+					link.attr('href', url.toString());
+				});
+			});
+		</script>
+	</div>
+<?php
+}
+?>
+
 <?php if (Favorites::isFavorizationEnabled()) { ?>
 <script>
 	jQuery(document).ready(function($) {
