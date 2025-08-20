@@ -101,6 +101,14 @@ class EstateUnits
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function getShowEstateMarketingStatus(): bool
+	{
+		return $this->_pEstateUnitsConfiguration->getEstateList()->getShowEstateMarketingStatus();
+	}
+
+	/**
 	 * @param int $estateId
 	 * @return int
 	 */
