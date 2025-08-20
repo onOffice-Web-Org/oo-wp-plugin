@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\DataView;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\ViewProperty;
+use onOffice\WPlugin\GeoPosition;
 
 /**
  *
@@ -192,6 +193,14 @@ class DataListView
 		'kaufpreis_pro_qm',
 		'mietpreis_pro_qm',
 		'calculatedPrice'
+	];
+
+	/** @var array */
+	private $_requiredFields = [
+		GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,
+		GeoPosition::ESTATE_LIST_SEARCH_ZIP,
+		GeoPosition::ESTATE_LIST_SEARCH_CITY,
+		GeoPosition::ESTATE_LIST_SEARCH_RADIUS
 	];
 
 	/**
@@ -495,4 +504,12 @@ class DataListView
 	/** @param array $convertTextToSelectForCityField */
 	public function setConvertTextToSelectForCityField(array $convertTextToSelectForCityField)
 		{ $this->_convertTextToSelectForCityField = $convertTextToSelectForCityField; }
+
+	/** @return array */
+	public function getRequiredFields(): array
+		{ return $this->_requiredFields; }
+
+	/** @param array $requiredFields */
+	public function setRequiredFields(array $requiredFields)
+		{ $this->_requiredFields = $requiredFields; }
 }
