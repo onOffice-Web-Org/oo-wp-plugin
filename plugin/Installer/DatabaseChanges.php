@@ -1271,9 +1271,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 	}
 
 	/**
-	* @return int
+	* @return void
 	*/
-	private function migrateMarkedPropertiesSort()
+	private function migrateMarkedPropertiesSort(): void
 	{
 		$requiredTerms = [
 			'exclusive',
@@ -1291,8 +1291,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 			"SELECT `listview_id`, `markedPropertiesSort` FROM {$tableName}"
 		);
 	
-		$updatedCount = 0;
-	
 		foreach ($rows as $row) {
 			$currentTerms = array_filter(array_map('trim', explode(',', $row->markedPropertiesSort)));
 	
@@ -1303,7 +1301,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 				}
 			}
 	
-			$mergedTerms = array_merge($requiredTerms, $remainingTerms);
+			$mergedTerms = array_merge($remainingTerms, $requiredTerms);
 			$updatedTermsCsv = implode(',', $mergedTerms);
 	
 			if (strcasecmp($updatedTermsCsv, $row->markedPropertiesSort) !== 0) {
@@ -1316,12 +1314,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 				);
 	
 				if ($updateResult === false) {
-					error_log("Failed to update listview_id {$row->listview_id} in migrateProperties()");
-				} else {
-					$updatedCount++;
+					error_log("Failed to update listview_id {$row->listview_id} in migrateMarkedPropertiesSort()");
 				}
 			}
 		}
-		return $updatedCount;
 	}
 }
