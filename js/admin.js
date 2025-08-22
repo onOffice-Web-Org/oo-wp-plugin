@@ -582,15 +582,21 @@ jQuery(document).ready(function($){
 			});
 
 			$(document).off('click.multiSelectDeselect').on('click.multiSelectDeselect', (event) => {
-				if (!$(event.target).closest('.fieldsSortable').length) {
-					$container.find('.list-fields-for-each-page .selected').removeClass('selected');
-					$container.find('.list-fields-for-each-page input[type="checkbox"]').prop('checked', false);
+                // Only deselect checkboxes within .menu-item-handle
+                const $target = $(event.target);
+
+				const isWithinMenuItem = $target.closest('.menu-item-bar, .menu-item-settings, .item-edit').length > 0;
+
+				if (!isWithinMenuItem) {
+					// Only deselect checkboxes within .menu-item-handle
+					$container.find('.menu-item-handle input[type="checkbox"]').prop('checked', false);
+					$container.find('.menu-item-bar').closest('.item').removeClass('selected');
 					$('#postbox-select-all').prop('checked', false);
 					this.toggleAddPageButton();
-					this.updateSelectAllCheckbox();
+					this.updateSelectAllCheckbox();					
 					this.multiSortable();
 				}
-			});
+            });
 
 			$('#postbox-select-all').off('change.multiSelectAll').on('change.multiSelectAll', (event) => {
 				const isChecked = $(event.target).prop('checked');
