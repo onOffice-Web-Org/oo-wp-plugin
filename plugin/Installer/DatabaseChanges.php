@@ -45,7 +45,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 61;
+	const MAX_VERSION = 62;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;

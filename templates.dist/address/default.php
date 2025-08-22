@@ -21,6 +21,7 @@
 
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Pagination\ListPagination;
 
 // display search form
 require 'SearchFormAddress.php';
@@ -47,13 +48,14 @@ require 'SearchFormAddress.php';
 			<div class="oo-listobjectwrap">
 				<?php
 				if (!empty($imageUrl)) {
-					$imageAlt = $pAddressList->generateImageAlt($addressId);
+					$altText = $pAddressList->generateImageAlt($addressId);
+					$imageAlt = !empty($altText) ? $altText : esc_html__('Contact person image', 'onoffice-for-wp-websites');					
 					echo  '<img src="' . esc_url($imageUrl) . '" class="oo-address-image" alt="' . esc_html($imageAlt) . '" loading="lazy">';
 				}
 				?>
 				<div class="oo-listinfo">
 					<div class="oo-listinfotable oo-listinfotableview">
-						<?php echo "<span>ID: ".$addressId."</span>";
+						<?php
 						foreach ($escapedValues as $field => $value) {
 							if ($pAddressList->getFieldType($field) === FieldTypes::FIELD_TYPE_BLOB) {
 								continue;
@@ -69,7 +71,7 @@ require 'SearchFormAddress.php';
 						?>
 					</div>
 					<div class="oo-detailslink">
-						<a class="oo-details-btn" href="<?php echo esc_url($pAddressList->getAddressLink($addressId)) ?>">
+						<a class="oo-details-btn" href="<?php echo esc_url($pAddressList->getAddressLink($addressId)) ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Address No. %d', 'onoffice-for-wp-websites'), $addressId); ?>">
 								<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
 						</a>
 					</div>
@@ -81,7 +83,20 @@ require 'SearchFormAddress.php';
 <div>
 	<?php
 	if (get_option('onoffice-pagination-paginationbyonoffice')) {
-		wp_link_pages();
+		?>
+		<div class="oo-listpagination">
+			<?php
+		
+			$ListPagination = new ListPagination([
+				'class' => 'oo-post-nav-links',
+				'type' => 'address',
+				'anchor' => 'oo-listheadline',
+			]);
+			
+			echo $ListPagination->render();
+			?>
+		</div>
+	<?php
 	}
 	?>
 </div>
