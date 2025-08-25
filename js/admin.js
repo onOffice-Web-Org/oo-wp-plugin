@@ -554,21 +554,21 @@ jQuery(document).ready(function($){
 		},
 
 		updateSelectAllCheckbox: function () {
-			const $checkboxes = $('#multi-page-container .list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
+			const $checkboxes = $('#multi-page-container .list-fields-for-each-page .menu-item-handle input[type="checkbox"]').not('#postbox-select-all');
 			const $selectAll = $('#postbox-select-all');
 			const total = $checkboxes.length;
 			const checked = $checkboxes.filter(':checked').length;
-
+		
 			$selectAll.prop('checked', total > 0 && checked === total);
 		},
-
+		
 		multiSelectItems: function () {
 			const $container = $('#multi-page-container');
-
-			$container.off('change.multiSelect').on('change.multiSelect', '.list-fields-for-each-page input[type="checkbox"]', (event) => {
+		
+			$container.off('change.multiSelect').on('change.multiSelect', '.list-fields-for-each-page .menu-item-handle input[type="checkbox"]', (event) => {
 				const $checkbox = $(event.target);
 				const $item = $checkbox.closest('.item');
-
+		
 				if ($checkbox.prop('checked')) {
 					$item.addClass('selected');
 				} else {
@@ -580,22 +580,22 @@ jQuery(document).ready(function($){
 				}, 0);
 				this.multiSortable();
 			});
-
+		
 			$(document).off('click.multiSelectDeselect').on('click.multiSelectDeselect', (event) => {
 				if (!$(event.target).closest('.fieldsSortable').length) {
 					$container.find('.list-fields-for-each-page .selected').removeClass('selected');
-					$container.find('.list-fields-for-each-page input[type="checkbox"]').prop('checked', false);
+					$container.find('.list-fields-for-each-page .menu-item-handle input[type="checkbox"]').prop('checked', false);
 					$('#postbox-select-all').prop('checked', false);
 					this.toggleAddPageButton();
 					this.updateSelectAllCheckbox();
 					this.multiSortable();
 				}
 			});
-
+		
 			$('#postbox-select-all').off('change.multiSelectAll').on('change.multiSelectAll', (event) => {
 				const isChecked = $(event.target).prop('checked');
-				const $checkboxes = $container.find('.list-fields-for-each-page input[type="checkbox"]').not('#postbox-select-all');
-
+				const $checkboxes = $container.find('.list-fields-for-each-page .menu-item-handle input[type="checkbox"]').not('#postbox-select-all');
+		
 				$checkboxes.each(function () {
 					const $cb = $(this);
 					$cb.prop('checked', isChecked);
