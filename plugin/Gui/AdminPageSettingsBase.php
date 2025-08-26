@@ -208,12 +208,12 @@ abstract class AdminPageSettingsBase
 		echo '</div>';
 		$this->renderBulkActionControls();
 		echo '<div class="fieldsSortable postbox" id="oo-fields-sortable-container">';
-		echo '<h2 class="hndle ui-sortable-handle">'
-				.'<span class="oo-sortable-checkbox-wrapper" style="margin-right: 0.5rem;">'
-					.'<input type="checkbox" class="oo-sortable-checkbox-master" onchange="ooHandleMasterCheckboxChange(event)"/>'
-				.'</span>'
-				.'<span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span>'
-			.'</h2>';
+		echo '<div class="postbox-header">
+        <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen
+			<input type="checkbox" id="postbox-select-all" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event)"/>
+			</label>
+      	</div>';
 		$pInputModelRenderer->buildForAjax( $pFormViewSortableFields );
 		echo '</div>';
 		echo '<div class="clear"></div>';
