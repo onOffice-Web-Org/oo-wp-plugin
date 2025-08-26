@@ -12,7 +12,9 @@ jQuery(document).ready(function ($) {
 
 	document.querySelectorAll(".custom-single-select-tom, .custom-multiple-select-tom").forEach(function (select) {
 		if (typeof TomSelect !== 'undefined') {
-			new TomSelect(select, {
+	
+			// Basis-Config
+			let config = {
 				hidePlaceholder: true,
 				sortField: {
 					field: "text",
@@ -21,10 +23,6 @@ jQuery(document).ready(function ($) {
 				plugins: {
 					remove_button: {
 						title: 'Remove this item',
-					},
-					checkbox_options: {
-						checkedClassNames: ['ts-checked'],
-						uncheckedClassNames: ['ts-unchecked'],
 					}
 				},
 				onItemAdd: function () {
@@ -44,10 +42,19 @@ jQuery(document).ready(function ($) {
 						}
 					}
 				}
-			});
+			};
+	
+			// Nur bei multiple Selects checkbox_options aktivieren
+			if (select.classList.contains("custom-multiple-select-tom")) {
+				config.plugins.checkbox_options = {
+					checkedClassNames: ['ts-checked'],
+					uncheckedClassNames: ['ts-unchecked'],
+				};
+			}
+	
+			new TomSelect(select, config);
 		}
 	});
-
 
 	if ($adminSelect.length > 0) {
 		$adminSelect.select2({
