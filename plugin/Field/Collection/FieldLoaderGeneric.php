@@ -50,6 +50,9 @@ class FieldLoaderGeneric
 	/** @var RegionFilter */
 	private $_pRegionFilter;
 
+	/** @var bool */
+    private $_loadFieldDependencies = false;
+
 
 	/**
 	 * @param SDKWrapper $pSDKWrapper
@@ -65,6 +68,18 @@ class FieldLoaderGeneric
 		$this->_pRegionController = $pRegionController;
 		$this->_pRegionFilter = $pRegionFilter;
 	}
+
+	 /**
+     * Enable or disable loading of field dependencies
+     * 
+     * @param bool $loadDependencies
+     * @return self
+     */
+    public function setLoadFieldDependencies(bool $loadDependencies): self
+    {
+        $this->_loadFieldDependencies = $loadDependencies;
+        return $this;
+    }
 
 	/**
 	 * @return Generator
@@ -118,6 +133,7 @@ class FieldLoaderGeneric
 			'showTable' => true,
 			'language' => Language::getDefault(),
 			'modules' => [onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE],
+			'showfielddependencies' => $this->_loadFieldDependencies,
 			'realDataTypes' => true
 		];
 

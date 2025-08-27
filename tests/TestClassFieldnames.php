@@ -279,7 +279,8 @@ class TestClassFieldnames
 			'additionalTranslations' => [],
 			'labelOnlyValues' => [],
 			'compoundFields' => [],
-			'tablename' => ''
+			'tablename' => '',
+			'dependencies' => []
 		];
 		$actualResult = $pFieldNames->getFieldInformation('country', onOfficeSDK::MODULE_ESTATE);
 		$this->assertEquals($expectedResult, $actualResult);
