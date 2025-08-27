@@ -142,7 +142,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
                             <span><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></span>
                         <?php endif; ?>
                         <p>
-                            <?php echo implode('<br>', $fields); ?>
+                            <?php echo implode('', $fields); ?>
                         </p>
                         <?php if ($pageIndex === $totalPages): ?>
                             <p>

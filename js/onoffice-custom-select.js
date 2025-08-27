@@ -13,7 +13,6 @@ jQuery(document).ready(function ($) {
 	document.querySelectorAll(".custom-single-select-tom, .custom-multiple-select-tom").forEach(function (select) {
 		if (typeof TomSelect !== 'undefined') {
 	
-			// Basis-Config
 			let config = {
 				hidePlaceholder: true,
 				sortField: {
@@ -44,7 +43,6 @@ jQuery(document).ready(function ($) {
 				}
 			};
 	
-			// Nur bei multiple Selects checkbox_options aktivieren
 			if (select.classList.contains("custom-multiple-select-tom")) {
 				config.plugins.checkbox_options = {
 					checkedClassNames: ['ts-checked'],
