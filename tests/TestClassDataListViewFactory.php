@@ -66,7 +66,7 @@ class TestClassDataListViewFactory
 		'show_price_on_request' => true,
 		'show_map' => '1',
 		'convertTextToSelectForCityField' => ['ort'],
-		'markedPropertiesSort' => 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz',
+		'markedPropertiesSort' => 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz,exclusive,preisreduktion,objekt_des_tages,objekt_der_woche,secret_sale',
 		'sortByTags' => 'kaufpreis',
 		'sortByTagsDirection' => 'ASC'
 	];
