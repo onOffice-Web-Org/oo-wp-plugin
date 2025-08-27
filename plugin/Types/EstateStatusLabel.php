@@ -52,6 +52,8 @@ class EstateStatusLabel
 		'preisreduktion',
 		'courtage_frei',
 		'objekt_des_tages',
+		'objekt_der_woche',
+		'secret_sale'
 	];
 
 

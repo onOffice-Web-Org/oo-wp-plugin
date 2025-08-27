@@ -45,7 +45,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 61;
+	const MAX_VERSION = 62;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -177,6 +177,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->migrationsDataShortCodeFormForDetailView();
 			case $dbversion <= 59:
 				$this->updateValueGeoFieldsForForms();
+			case $dbversion <= 61:
+				$this->migrateMarkedPropertiesSort();
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
@@ -266,14 +268,14 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
-			`sortBySetting` ENUM('0','1','2') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined',
+			`sortBySetting` ENUM('0','1','2') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined, 2 means marked properties, if random is active this is empty',
 			`sortByUserDefinedDefault` VARCHAR(200) NOT NULL COMMENT 'Standardsortierung',
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
 			`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
 			`show_map` tinyint(1) NOT NULL DEFAULT '1',
 			`show_price_on_request` tinyint(1) NOT NULL DEFAULT '0',
-			`markedPropertiesSort` VARCHAR( 255 ) NOT NULL DEFAULT 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz',
+			`markedPropertiesSort` VARCHAR( 255 ) NOT NULL DEFAULT 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz,exclusive,preisreduktion,objekt_des_tages,objekt_der_woche,secret_sale,courtage_frei',
 			`sortByTags` tinytext NOT NULL,
 			`sortByTagsDirection` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
 			PRIMARY KEY (`listview_id`),
@@ -1266,5 +1268,55 @@ class DatabaseChanges implements DatabaseChangesInterface
 		) $charsetCollate;";
 
 		return $sql;
+	}
+
+	/**
+	* @return void
+	*/
+	private function migrateMarkedPropertiesSort(): void
+	{
+		$requiredTerms = [
+			'exclusive',
+			'preisreduktion',
+			'objekt_des_tages',
+			'objekt_der_woche',
+			'secret_sale',
+			'courtage_frei'
+		];
+	
+		$requiredTermsLower = array_map('strtolower', $requiredTerms);
+		$tableName = $this->getPrefix() . "oo_plugin_listviews";
+	
+		$rows = $this->_pWPDB->get_results(
+			"SELECT `listview_id`, `markedPropertiesSort` FROM {$tableName}"
+		);
+	
+		foreach ($rows as $row) {
+			$currentTerms = array_filter(array_map('trim', explode(',', $row->markedPropertiesSort)));
+	
+			$remainingTerms = [];
+			foreach ($currentTerms as $term) {
+				if (!in_array(strtolower($term), $requiredTermsLower, true)) {
+					$remainingTerms[] = $term;
+				}
+			}
+	
+			$mergedTerms = array_merge($remainingTerms, $requiredTerms);
+			$updatedTermsCsv = implode(',', $mergedTerms);
+	
+			if (strcasecmp($updatedTermsCsv, $row->markedPropertiesSort) !== 0) {
+				$updateResult = $this->_pWPDB->update(
+					$tableName,
+					['markedPropertiesSort' => $updatedTermsCsv],
+					['listview_id' => $row->listview_id],
+					['%s'],
+					['%d']
+				);
+	
+				if ($updateResult === false) {
+					error_log("Failed to update listview_id {$row->listview_id} in migrateMarkedPropertiesSort()");
+				}
+			}
+		}
 	}
 }
