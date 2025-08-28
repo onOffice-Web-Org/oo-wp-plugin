@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 6.4
+Stable tag: 6.5
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,33 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.5 (2025-08-28) =
+
+**Added**
+
+* Key Facts feature for property lists and detail pages - highlight important fields like price, plot size, or number of rooms to draw visitors attention
+* Multi-field management - select and remove multiple fields at once in field lists for improved efficiency
+* Custom naming for individual pages in multi-page leadgenerator forms for better navigation
+* Info text for total price calculator indicating availability only for Germany due to country-specific requirements
+* Updated accessible-slick slider for improved accessibility including keyboard navigation and ARIA compatibility
+
+**Changed**
+
+* Energy certificate scale values adjusted with unified scale for consumption and demand certificates in residential buildings
+* Improved database migration process for better performance
+* Enhanced test coverage and workflow automation
+* Updated Building.md documentation for development setup
+* Code refactoring for better maintainability, quality and performance across multiple components
+* Improved leadgenerator form with optional API dependencies
+
+**Fixed**
+
+* Forms showing error message despite successful submission
+* Sorting of properties with "price on request" - these are now correctly placed at the end of the list
+* Critical error when "Contact Category Origin" field is deactivated in onOffice enterprise
+* Property status sorting now correctly reflects the configured order in backend settings
+* Added missing property status values to sorting logic
 
 = 6.4 (2025-07-24) =
 
