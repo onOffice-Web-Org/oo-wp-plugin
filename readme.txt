@@ -83,7 +83,6 @@ Start editing inside the `onoffice-personalized` folder.
 * Key Facts feature for property lists and detail pages - highlight important fields like price, plot size, or number of rooms to draw visitors attention
 * Multi-field management - select and remove multiple fields at once in field lists for improved efficiency
 * Custom naming for individual pages in multi-page leadgenerator forms for better navigation
-* Leadgenerator form configuration with up to 6 pages and drag & drop field arrangement per page
 * Info text for total price calculator indicating availability only for Germany due to country-specific requirements
 * Updated accessible-slick slider for improved accessibility including keyboard navigation and ARIA compatibility
 
@@ -94,6 +93,7 @@ Start editing inside the `onoffice-personalized` folder.
 * Enhanced test coverage and workflow automation
 * Updated Building.md documentation for development setup
 * Code refactoring for better maintainability, quality and performance across multiple components
+* Improved leadgenerator form with optional API dependencies
 
 **Fixed**
 
