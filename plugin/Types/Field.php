@@ -43,6 +43,9 @@ class Field
 	/** @var array */
 	private $_permittedvalues = [];
 
+	/** @var array */
+	private $_dependencies = [];
+
 	/** @var string */
 	private $_default = null;
 
@@ -124,6 +127,16 @@ class Field
 
 	/**
 	 *
+	 * @return array
+	 *
+	 */
+	public function getDependencies(): array
+	{
+		return $this->_dependencies;
+	}
+
+	/**
+	 *
 	 * @return string
 	 *
 	 */
@@ -179,6 +192,16 @@ class Field
 	public function setPermittedvalues(array $permittedvalues)
 	{
 		$this->_permittedvalues = $permittedvalues;
+	}
+
+	/**
+	 *
+	 * @param array $dependencies
+	 *
+	 */
+	public function setDependencies(array $dependencies)
+	{
+		$this->_dependencies = $dependencies;
 	}
 
 	/**
@@ -379,6 +402,7 @@ class Field
 			'default' => $this->_default,
 			'length' => $this->_length === 0 ? null : $this->_length,
 			'permittedvalues' => $this->_permittedvalues,
+			'dependencies' => $this->_dependencies,
 			'content' => $this->_category,
 			'tablename' => $this->_tableName,
 			'module' => $this->_module,
@@ -405,6 +429,7 @@ class Field
 		$pField->setDefault($row['default'] ?? null);
 		$pField->setLength($row['length'] ?? 0);
 		$pField->setPermittedvalues($row['permittedvalues'] ?? []);
+		$pField->setDependencies($row['dependencies'] ?? []);
 		$pField->setCategory($row['content'] ?? '');
 		$pField->setTableName($row['tablename'] ?? '');
 		$pField->setType($row['type']);

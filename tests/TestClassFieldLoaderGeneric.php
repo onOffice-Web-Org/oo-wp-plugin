@@ -57,6 +57,7 @@ class TestClassFieldLoaderGeneric
 			'showTable' => true,
 			'language' => 'ENG',
 			'modules' => ['address', 'estate'],
+			'showfielddependencies' => false,
 			'realDataTypes' => true
 		];
 		$pSDKWrapper = new SDKWrapperMocker();
