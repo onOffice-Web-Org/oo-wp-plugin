@@ -211,9 +211,11 @@ class InputFieldComplexSortableDetailListRenderer
 
 		echo '<li class="sortable-item item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
 			.'<div class="menu-item-bar">'
-				.'<div class="menu-item-handle ui-sortable-handle">'
-					.($this->isOwnerLeadGeneratorForm() ? '<input type="checkbox">' : '')
-					.'<span class="item-title" '.$deactivatedStyle.'>'
+				.'<div class="menu-item-handle ui-sortable-handle" style="display: flex; align-items: center; gap: 8px;">'
+					.'<span class="oo-sortable-checkbox-wrapper">'
+						.'<input type="checkbox" class="oo-sortable-checkbox" value="'.$key.'" onchange="ooHandleChildCheckboxChange(event)"/>'
+					.'</span>'
+					.'<span class="item-title oo-sortable-title" '.$deactivatedStyle.'>'
 						.($isHighlighted ? '★ ' : '')
 						.esc_html($label)
 						.esc_html($deactivatedInOnOffice)

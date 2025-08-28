@@ -263,7 +263,7 @@ abstract class AdminPageFormSettingsBase
 						$value['form_id'] = $recordId;
 						$row[RecordManager::TABLENAME_MULTIPAGE_TITLE_FORMS][$key] = $value;
 					}
-				} 
+				}
 				$pRecordManagerInsertForm->insertAdditionalValues($row);
 				$result = true;
 			} catch (RecordManagerInsertException $pException) {
@@ -874,11 +874,12 @@ abstract class AdminPageFormSettingsBase
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections( get_current_screen()->id, 'side', null );
 		echo '</div>';
-		echo '<div class="fieldsSortable postbox">';
+		$this->renderBulkActionControls();
+		echo '<div class="fieldsSortable postbox" id="oo-fields-sortable-container">';
 		echo '<div class="postbox-header">
         <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
 		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen
-			<input type="checkbox" id="postbox-select-all" name="postbox-select-all"/>
+			<input type="checkbox" id="postbox-select-all" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event)"/>
 			</label>
       	</div>';
 		$pInputModelRenderer->buildForAjax( $pFormViewSortableFields );
