@@ -206,8 +206,8 @@ class AdminPageEstateDetail
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
 		echo '<div class="postbox-header">
         <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
-		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen
-			<input type="checkbox" id="postbox-select-all" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS))."'".')"/>
+		<label class="postbox-select-all" for="postbox-select-all-address">Alle auswählen
+			<input type="checkbox" id="postbox-select-all-address" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS))."'".')"/>
 			</label>
       	</div>';
 		$pRenderer->buildForAjax($pFormViewSortablecontactFields);
@@ -227,8 +227,8 @@ class AdminPageEstateDetail
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
 		echo '<div class="postbox-header">
         <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
-		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen
-			<input type="checkbox" id="postbox-select-all" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE))."'".')"/>
+		<label class="postbox-select-all" for="postbox-select-all-estate">Alle auswählen
+			<input type="checkbox" id="postbox-select-all-estate" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE))."'".')"/>
 			</label>
       	</div>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
