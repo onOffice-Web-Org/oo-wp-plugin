@@ -26,6 +26,7 @@ namespace onOffice\WPlugin\Controller;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\WP\WPPageWrapper;
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
+use onOffice\WPlugin\WP\WPPluginChecker;
 
 class RewriteRuleBuilder
 {
@@ -38,19 +39,25 @@ class RewriteRuleBuilder
 	/** @var DataAddressDetailViewHandler */
 	private $_pDataAddressDetailViewHandler;
 
+	/** @var WPPluginChecker */
+	private $_pWPPluginChecker;
+
 	/**
 	 * @param DataDetailViewHandler $pDataDetailViewHandler
 	 * @param WPPageWrapper $pWPPageWrapper
 	 * @param DataAddressDetailViewHandler $pDataAddressDetailViewHandler
+	 * @param WPPluginChecker $pWPPluginChecker
 	 */
 	public function __construct(
 		DataDetailViewHandler $pDataDetailViewHandler,
 		WPPageWrapper $pWPPageWrapper,
-		DataAddressDetailViewHandler $pDataAddressDetailViewHandler)
+		DataAddressDetailViewHandler $pDataAddressDetailViewHandler,
+		WPPluginChecker $pWPPluginChecker = null)
 	{
 		$this->_pDataDetailViewHandler = $pDataDetailViewHandler;
 		$this->_pWPPageWrapper = $pWPPageWrapper;
 		$this->_pDataAddressDetailViewHandler = $pDataAddressDetailViewHandler;
+		$this->_pWPPluginChecker = $pWPPluginChecker ?? new WPPluginChecker();
 	}
 
 	public function addCustomRewriteTags()
@@ -81,12 +88,23 @@ class RewriteRuleBuilder
 
 	private function setCanonicalUrlFromRequest(array $pageIds)
 	{
-		add_filter('get_canonical_url', function($url) use ($pageIds) {
-			if (in_array(get_the_ID(), $pageIds) && isset($_SERVER['REQUEST_URI'])) {
-				return home_url($_SERVER['REQUEST_URI']);
-			}
-			return $url;
-		});
+		$canonicalFilters = [
+			'get_canonical_url',                    // WordPress default
+			'wpseo_canonical',                      // Yoast SEO
+			'rank_math/frontend/canonical',         // Rank Math SEO
+			'aioseo_canonical_url',                 // All in One SEO
+			'seopress_titles_canonical',            // SEOPress
+			'the_seo_framework_canonical_url',      // The SEO Framework
+		];
+
+		foreach ($canonicalFilters as $filter) {
+			add_filter($filter, function($url) use ($pageIds) {
+				if (in_array(get_the_ID(), $pageIds) && isset($_SERVER['REQUEST_URI'])) {
+					return home_url($_SERVER['REQUEST_URI']);
+				}
+				return $url;
+			}, 20, 1);
+		}
 	}
 
 	public function addCustomRewriteTagsForAddressDetail()
