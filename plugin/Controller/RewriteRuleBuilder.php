@@ -82,8 +82,8 @@ class RewriteRuleBuilder
 	private function setCanonicalUrlFromRequest(array $pageIds)
 	{
 		$canonicalFilters = [
-			'get_canonical_url',                    // WordPress default
-			'wpseo_canonical',                      // Yoast SEO
+			'get_canonical_url', // WordPress default
+			'wpseo_canonical',   // Yoast SEO
 		];
 
 		foreach ($canonicalFilters as $filter) {
