@@ -271,7 +271,7 @@ onOffice.default_values_input_converter = function () {
             mainInputClone.value = predefinedValues[fieldName]['max'] || '';
         }
 
-        //  Validation for range fields
+        // Validation for range fields
         var errorElement = document.createElement('div');
         errorElement.className = 'onoffice-range-error';
         errorElement.style.color = 'red';
@@ -280,48 +280,43 @@ onOffice.default_values_input_converter = function () {
         errorElement.textContent = onOffice_loc_settings.validation_default_value_range_mismatch;
         mainInputClone.parentElement.appendChild(errorElement);
 
-        function validateAllRangesOnForm() {
+        function validateRangeFields() {
             var form = mainInput.closest('form');
             if (!form) return true;
 
-            // Find all range field pairs on this form
+            var hasFormError = false;
             var rangeMinInputs = form.querySelectorAll('input[name*="[min]"][type="number"]');
-            var hasAnyError = false;
 
             rangeMinInputs.forEach(function(minInput) {
                 var maxInput = minInput.parentElement.querySelector('input[name*="[max]"][type="number"]');
-                if (maxInput) {
-                    var minValue = parseFloat(minInput.value) || 0;
-                    var maxValue = parseFloat(maxInput.value) || 0;
-                    if (minValue > maxValue && minInput.value !== '' && maxInput.value !== '') {
-                        hasAnyError = true;
-                    }
+                if (!maxInput) return;
+
+                var minValue = parseFloat(minInput.value) || 0;
+                var maxValue = parseFloat(maxInput.value) || 0;
+                var hasError = minValue > maxValue && minInput.value !== '' && maxInput.value !== '';
+                
+                // Show/hide error for this specific range pair
+                var errorEl = maxInput.parentElement.querySelector('.onoffice-range-error');
+                if (errorEl) {
+                    errorEl.style.display = hasError ? 'block' : 'none';
                 }
+                
+                if (hasError) hasFormError = true;
             });
 
-            // Update all submit buttons on the form
+            // Disable submit button on errors
             var submitButtons = form.querySelectorAll('input[type="submit"], button[type="submit"]');
             submitButtons.forEach(function(button) {
-                button.disabled = hasAnyError;
+                button.disabled = hasFormError;
             });
 
-            return !hasAnyError;
+            return !hasFormError;
         }
 
-        function validateRange() {
-            var minValue = parseFloat(mainInput.value) || 0;
-            var maxValue = parseFloat(mainInputClone.value) || 0;
-            var hasError = minValue > maxValue && mainInput.value !== '' && mainInputClone.value !== '';
-            errorElement.style.display = hasError ? 'block' : 'none';
-            validateAllRangesOnForm();
-            return !hasError;
-        }
-
-        mainInput.addEventListener('input', validateRange);
-        mainInputClone.addEventListener('input', validateRange);
-
-        // Initial validation
-        validateRange();
+        [mainInput, mainInputClone].forEach(function(input) {
+            input.addEventListener('input', validateRangeFields);
+        });
+        validateRangeFields();
     });
 };
 
