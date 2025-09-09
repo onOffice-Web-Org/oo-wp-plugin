@@ -107,7 +107,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		$isHiddenField = $pForm->isHiddenField('message');
 		if (!$isHiddenField) {
 			$line = '<label class="' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$pForm->getFieldLabel( 'message' );
-			$line .= $additionMessage;
+			$line .= ' '.$additionMessage;
 			$line .= '<textarea name="message" autocomplete="off"' . ($isRequiredMessage ? ' required aria-required="true" aria-invalid="false"' : '') . '>' . $pForm->getFieldValue('message') . '</textarea></label>';
 
 		} else {

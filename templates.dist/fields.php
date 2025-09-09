@@ -179,6 +179,7 @@ if (!function_exists('renderFormField')) {
 		}
 		
 		$isRequired = $pForm->isRequiredField($fieldName);
+		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
@@ -280,6 +281,8 @@ if (!function_exists('renderFormField')) {
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
 			) {
 				$inputType = 'type="number" step="1" ';
+				$errorMessage = esc_html__('Please enter a text.', 'onoffice-for-wp-websites');
+
 			} elseif (
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATE ||
 				$typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_DATE
@@ -304,11 +307,11 @@ if (!function_exists('renderFormField')) {
 				$isRangeValue && $pForm->inRangeSearchcriteriaInfos($fieldName) &&
 				count($pForm->getSearchcriteriaRangeInfosForField($fieldName)) > 0
 			) {
-
+				$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 				foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
 					$value = 'value="' . esc_attr($pForm->getFieldValue($key, true)) . '"';
-					$output .= '<label>' . esc_attr($rangeDescription) . '<input autocomplete="off" ' . $inputType . $requiredAttribute . ' name="' . esc_attr($key) . '" '
-						. $value . ' placeholder="' . esc_attr($rangeDescription) . '"></label>';
+					$output .= '<label>' . esc_attr($rangeDescription) .' '. $addition .'<input autocomplete="off" ' . $inputType . $requiredAttribute . ' name="' . esc_attr($key) . '" '
+						. $value . ' placeholder="' . esc_attr($rangeDescription) . '">'.$errorHtml.'</label>';
 				}
 			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
 				$output = '<fieldset>
