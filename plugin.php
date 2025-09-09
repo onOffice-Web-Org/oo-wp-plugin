@@ -297,39 +297,40 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 } else {
 
     // Option disabled: Only adjust the final Yoast SEO title on estate detail pages.
-    add_filter('wpseo_title', function ($yoastTitle) use ($pDI) {
+     add_filter('document_title_parts', function ($title) use ($pDI) {
 
-        // Only override when an estate detail view is active (query var injected by rewrite rules).
+        // Only process when an estate detail view is active (query var injected by rewrite rules).
         if (!get_query_var('estate_id')) {
-            return $yoastTitle;
+            return $title;
         }
 
         try {
             /** @var \onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder $builder */
             $builder = $pDI->get(\onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder::class);
 
-            // The builder expects an array like the one used in document_title_parts.
-            $result = $builder->buildDocumentTitle(['title' => $yoastTitle]);
+            // Pass the title parts array to the builder.
+            $result = $builder->buildDocumentTitle($title);
 
-            $new = $result['title'] ?? $yoastTitle;
+            // Extract the modified title.
+            $newTitle = $result['title'] ?? $title['title'] ?? '';
 
             // Enforce character limit (fallback to word boundary).
-            if (strlen($new) > DEFAULT_LIMIT_CHARACTER_TITLE) {
-                $short = substr($new, 0, DEFAULT_LIMIT_CHARACTER_TITLE);
-                if (substr($new, DEFAULT_LIMIT_CHARACTER_TITLE, 1) !== ' ') {
+            if (!empty($newTitle) && strlen($newTitle) > DEFAULT_LIMIT_CHARACTER_TITLE) {
+                $short = substr($newTitle, 0, DEFAULT_LIMIT_CHARACTER_TITLE);
+                if (substr($newTitle, DEFAULT_LIMIT_CHARACTER_TITLE, 1) !== ' ') {
                     $short = substr($short, 0, strrpos($short, ' '));
                 }
-                $new = $short;
+                $result['title'] = $short;
             }
 
-            return $new;
+            return $result;
 
         } catch (\Throwable $e) {
-            // Fail safe: log and return original Yoast title.
-            error_log('onoffice wpseo_title error: '.$e->getMessage());
-            return $yoastTitle;
+            // Fail safe: log error and return original title parts.
+            error_log('onoffice document_title_parts error: '.$e->getMessage());
+            return $title;
         }
-    }, 20);
+    }, 20, 1);
 }
 
 // Return title custom by custom field onOffice
