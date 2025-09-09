@@ -75,75 +75,74 @@ jQuery(document).ready(function ($) {
 	}
 });
 
-  $(function () {
-    const rules = {
-      email: node => /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(node.value),
-      name: node => /^\s*[a-zA-Z0-9,\s]+\s*$/.test(node.value),
-      text: node => node.value.trim().length > 0,
-		  checkbox: node => node.checked 
-    };
-
-    function isValid(node) {
-      const ruleName = node.dataset.rule;
-      return rules[ruleName] ? rules[ruleName](node) : node.checkValidity();
-    }
-
+$(function () {
+	const rules = {
+	  email: node => /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(node.value),
+	  name: node => /^\s*[a-zA-Z0-9,\s]+\s*$/.test(node.value),
+	  text: node => node.value.trim().length > 0,
+	  checkbox: node => node.checked 
+	};
+  
+	function isValid(node) {
+	  const ruleName = node.dataset.rule;
+	  return rules[ruleName] ? rules[ruleName](node) : node.checkValidity();
+	}
+  
 	function validate(node) {
-		const $node = $(node);
-		const $formRow = $node.closest('label, .oo-form');
-		const $error = $formRow.find('.error');
-		const valid = isValid(node);
-
-		$node.attr('aria-invalid', !valid);
-		$error
-			.attr('aria-hidden', valid ? 'true' : 'false')
-			[valid ? 'hide' : 'show']();
+	  const $node = $(node);
+	  const $formRow = $node.closest('label, .oo-form');
+	  const $error = $formRow.find('.error');
+	  const valid = isValid(node);
+  
+	  $node.attr('aria-invalid', !valid);
+	  $error
+		.attr('aria-hidden', valid ? 'true' : 'false')
+		[valid ? 'hide' : 'show']();
 	} 
 	  
 	function validateForm($form) {
-		let allValid = true;
-
-		$form.find('[aria-invalid]').each(function () {
+	  let allValid = true;
+  
+	  $form.find('[aria-invalid]').each(function () {
 		validate(this);
 		if (this.getAttribute('aria-invalid') === 'true') {
-			allValid = false;
+		  allValid = false;
 		}
-		});
-
-		return allValid && $form[0].checkValidity();
-	}
-
-    $(document).on('blur', '[aria-invalid]', function () {
-      validate(this);
-    });
-
-	
-	$(document).on('input change', '.oo-form [aria-invalid]', function () {
-		const $form = $(this).closest('form');
-		const formValid = validateForm($form);
-		$form.find('[type="submit"]').prop('disabled', !formValid);
 	  });
-
-    $(document).on('submit', '.oo-form', function (e) {
-      const $form = $(this);
-      const isValidForm = validateForm($form);
-
+  
+	  return allValid && $form[0].checkValidity();
+	}
+  
+	$(document).on('blur', '[aria-invalid]', function () {
+	  validate(this);
+	});
+	
+	$(document).on('submit', '.oo-form', function (e) {
+	  const $form = $(this);
+	  const isValidForm = validateForm($form);
+  
 	  if (!isValidForm) {
 		e.preventDefault();
 		e.stopPropagation();
-
+  
 		const firstInvalid = $form.find('[aria-invalid="true"]').first()[0];
 		if (firstInvalid) {
-			firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-			firstInvalid.focus({ preventScroll: true });
+		  firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		  firstInvalid.focus({ preventScroll: true });
 		}
-
-
-	  }
-	  if (isValidForm) {
+		$form.find('[type="submit"]').prop('disabled', true);
+	  } else {
 		$form.find('[type="submit"]').prop('disabled', false);
 	  }
-      $form.addClass('oo-validated');
-    });
+	  
+	  $form.addClass('oo-validated');
+	});
+  
+	$(document).on('input change', '.oo-form [aria-invalid]', function () {
+	  const $form = $(this).closest('form');
+	  const validInputs = $form.find('[aria-invalid="false"]').length === $form.find('[aria-invalid]').length;
+	  $form.find('[type="submit"]').prop('disabled', !validInputs);
+	});
   });
+
 
