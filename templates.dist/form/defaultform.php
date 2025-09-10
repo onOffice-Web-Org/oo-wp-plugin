@@ -90,10 +90,14 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage   = $isRequiredMessage ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 			$isHiddenField = $pForm->isHiddenField('message');
+			$errorMessage = esc_html__('Please enter a text.', 'onoffice-for-wp-websites');
+			$errorHtml = renderErrorHtml($errorMessage, $isRequiredMessage);
+
+
 			if (!$isHiddenField) {
 				echo  '<label class="' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$pForm->getFieldLabel( 'message' );
 				echo  ' '.$additionMessage;
-				echo  '<textarea name="message" autocomplete="off"' . ($isRequiredMessage ? ' required aria-required="true" aria-invalid="false"' : '') . '>' . $pForm->getFieldValue('message') . '</textarea></label>';
+				echo  '<textarea name="message" data-rule="text" autocomplete="off"' . ($isRequiredMessage ? ' required aria-required="true" aria-invalid="false"' : '') . '>' . $pForm->getFieldValue('message') . '</textarea>'.$errorHtml.'</label>';
 			} else {
 				echo '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
 			}
