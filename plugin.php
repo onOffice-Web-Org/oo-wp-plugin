@@ -237,47 +237,100 @@ add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewControl
 
 $pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 
+// Dynamically provide custom meta (title/description or other fields) for estate detail pages.
+// Behavior depends on the option 'onoffice-settings-title-and-description':
+//  - If the option is '1': we expose virtual meta fields via get_post_metadata (used by themes/SEO plugins).
+//  - Else: we only override Yoast SEO's computed <title> via 'wpseo_title'.
 if (get_option('onoffice-settings-title-and-description') === '1')
 {
-	add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pDI) {
-		$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class );
-		$pDetailView = $pDataDetailViewHandler->getDetailView();
-		$detail_page_id = $pDetailView->getPageId();
-		$fieldsDetail = $pDetailView->getFields();
-		$list_meta_keys = [];
-		if ( $object_id == $detail_page_id ) {
-			$limitEllipsis = '';
-			foreach ( $fieldsDetail as $field ) {
-				if ( strpos( $meta_key, 'ellipsis' ) && strpos( $meta_key, $field ) ) {
-					preg_match( "/^.*ellipsis(.+?)_.*$/i", $meta_key, $matches );
-					if ( count( $matches ) !== 0 ) {
-						$limitEllipsis = $matches[1];
-					}
-					$list_meta_keys[ "onoffice_ellipsis" . $limitEllipsis . "_" . $field ] = $field;
-				} else {
-					$list_meta_keys[ "onoffice_" . $field ] = $field;
-				}
-			}
-			if ( isset( $list_meta_keys[ $meta_key ] ) ) {
-				return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ], (int) $limitEllipsis, $meta_key );
-			}
-		} else {
-			return null;
-		}
-	}, 1, 3);
-} else {
-    add_filter('document_title_parts', function ($title) use ($pDI){
-		$result = $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
-		if (strlen($result['title']) > DEFAULT_LIMIT_CHARACTER_TITLE) {
-			$shortenedTitle = substr($result['title'], 0, DEFAULT_LIMIT_CHARACTER_TITLE);
-			if (substr($result['title'], DEFAULT_LIMIT_CHARACTER_TITLE, 1) != ' ') {
-				$shortenedTitle = substr($shortenedTitle, 0, strrpos($shortenedTitle, ' '));
-			}
-			$result['title'] = $shortenedTitle;
-		}
+    add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pDI) {
 
-		return $result;
-    }, 10, 2);
+        // Obtain current detail view configuration.
+        $pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class );
+        $pDetailView            = $pDataDetailViewHandler->getDetailView();
+
+        // All pages (including translated / duplicated ones) that contain the detail shortcode.
+        $detail_page_ids = $pDetailView->getPageIdsHaveDetailShortCode();
+
+		// Fallback: Use last saved page ID.
+        if (!is_array($detail_page_ids) || empty($detail_page_ids)) {
+            $detail_page_ids = [$pDetailView->getPageId()];
+        }
+
+        // Only serve dynamic meta on pages that actually host the detail shortcode.
+        if (in_array((int)$object_id, $detail_page_ids, true)) {
+
+            $fieldsDetail    = $pDetailView->getFields(); // Field list configured for the detail view.
+            $list_meta_keys  = [];                        // Maps meta key => raw field name.
+            $limitEllipsis   = '';                        // Length extracted from keys like onoffice_ellipsis{N}_FIELD.
+
+            // Build mapping of allowed meta keys that we can answer.
+            foreach ($fieldsDetail as $field) {
+
+                // Support truncated variants: onoffice_ellipsis{LEN}_{field}
+                if (strpos($meta_key, 'ellipsis') && strpos($meta_key, $field)) {
+                    preg_match("/^.*ellipsis(.+?)_.*$/i", $meta_key, $matches);
+                    if (count($matches) !== 0) {
+                        $limitEllipsis = $matches[1]; // Extract numeric length from requested key.
+                    }
+                    $list_meta_keys["onoffice_ellipsis".$limitEllipsis."_".$field] = $field;
+                } else {
+                    // Full (untruncated) variant: onoffice_{field}
+                    $list_meta_keys["onoffice_".$field] = $field;
+                }
+            }
+
+            // If the requested meta key matches a dynamic onOffice field, compute and return it.
+            if (isset($list_meta_keys[$meta_key])) {
+                return customFieldCallback($pDI, $list_meta_keys[$meta_key], (int)$limitEllipsis, $meta_key);
+            }
+
+            // If key not handled, fall through to return null (let WP continue default handling).
+        } else {
+            // Not a detail view page -> do not interfere.
+            return null;
+        }
+
+        // Default: do nothing (so WordPress continues its normal meta retrieval).
+    }, 1, 3);
+
+} else {
+
+    // Option disabled: Only adjust the final title on estate detail pages.
+     add_filter('document_title_parts', function ($title) use ($pDI) {
+
+        // Only process when an estate detail view is active (query var injected by rewrite rules).
+        if (!get_query_var('estate_id')) {
+            return $title;
+        }
+
+        try {
+            /** @var \onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder $builder */
+            $builder = $pDI->get(\onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder::class);
+
+            // Pass the title parts array to the builder.
+            $result = $builder->buildDocumentTitle($title);
+
+            // Extract the modified title.
+            $newTitle = $result['title'] ?? $title['title'] ?? '';
+
+            // Enforce character limit (fallback to word boundary).
+            if (!empty($newTitle) && strlen($newTitle) > DEFAULT_LIMIT_CHARACTER_TITLE) {
+                $short = substr($newTitle, 0, DEFAULT_LIMIT_CHARACTER_TITLE);
+                if (substr($newTitle, DEFAULT_LIMIT_CHARACTER_TITLE, 1) !== ' ') {
+                    $short = substr($short, 0, strrpos($short, ' '));
+                }
+                $result['title'] = $short;
+            }
+
+            return $result;
+
+        } catch (\Throwable $e) {
+            // Fail safe: log error and return original title parts.
+            error_log('onoffice document_title_parts error: '.$e->getMessage());
+            return $title;
+        }
+    }, 20, 1);
 }
 
 // Return title custom by custom field onOffice
