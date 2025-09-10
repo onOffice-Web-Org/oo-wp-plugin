@@ -296,7 +296,7 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 
 } else {
 
-    // Option disabled: Only adjust the final Yoast SEO title on estate detail pages.
+    // Option disabled: Only adjust the final title on estate detail pages.
      add_filter('document_title_parts', function ($title) use ($pDI) {
 
         // Only process when an estate detail view is active (query var injected by rewrite rules).
