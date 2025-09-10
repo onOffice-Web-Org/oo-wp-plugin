@@ -89,17 +89,23 @@ $(function () {
 	}
   
 	function validate(node) {
-	  const $node = $(node);
-	  const $formRow = $node.closest('label, .oo-form');
-	  const $error = $formRow.find('.error');
-	  const valid = isValid(node);
-  
-	  $node.attr('aria-invalid', !valid);
-	  $error
-		.attr('aria-hidden', valid ? 'true' : 'false')
-		[valid ? 'hide' : 'show']();
-	} 
+		const $node = $(node);
+		const $formRow = $node.closest('label, .oo-form');
+		const $error = $formRow.find('.error');
+		
+		const isTomSelectControl = $node.hasClass('ts-control');
+		const targetNode = isTomSelectControl ? $formRow.find('select').get(0) : node;
 	  
+		const valid = isValid(targetNode);
+	  
+		const $nodeToMark = isTomSelectControl ? $node.closest('.ts-wrapper') : $node;
+		$nodeToMark.attr('aria-invalid', !valid);
+	  
+		$error
+		  .attr('aria-hidden', valid ? 'true' : 'false')
+		  [valid ? 'hide' : 'show']();
+	  } 
+
 	function validateForm($form) {
 	  let allValid = true;
   
@@ -113,10 +119,6 @@ $(function () {
 	  return allValid && $form[0].checkValidity();
 	}
   
-	$(document).on('blur', '[aria-invalid]', function () {
-	  validate(this);
-	});
-	
 	$(document).on('submit', '.oo-form', function (e) {
 	  const $form = $(this);
 	  const isValidForm = validateForm($form);
@@ -137,12 +139,16 @@ $(function () {
 	  
 	  $form.addClass('oo-validated');
 	});
-  
+
+	$(document).on('blur', '.oo-form [aria-invalid]', function () {
+		validate(this);
+	  });
+
 	$(document).on('input change', '.oo-form [aria-invalid]', function () {
-	  const $form = $(this).closest('form');
-	  const validInputs = $form.find('[aria-invalid="false"]').length === $form.find('[aria-invalid]').length;
-	  $form.find('[type="submit"]').prop('disabled', !validInputs);
+	  validate(this);
 	});
+	
+	  window.validateForm = validateForm;
   });
 
 

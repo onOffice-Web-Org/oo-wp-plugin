@@ -73,8 +73,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 
-		
-
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 	
@@ -92,7 +90,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$isHiddenField = $pForm->isHiddenField('message');
 			$errorMessage = esc_html__('Please enter a text.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $isRequiredMessage);
-
 
 			if (!$isHiddenField) {
 				echo  '<label class="' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$pForm->getFieldLabel( 'message' );
