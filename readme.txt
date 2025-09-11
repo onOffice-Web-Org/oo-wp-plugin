@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 6.5
+Stable tag: 6.5.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,15 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.5.1 (2025-09-11) =
+
+**Fixed**
+
+* Title and description tags not loading correctly on multilingual sites when using SEO shortcodes on both language versions
+* Critical error (UnknownFieldException) when using currency field on property detail pages
+* Browser share functionality on mobile devices (iPhone and Android)
+* Duplicate HTML IDs in backend for "Select All" checkboxes
 
 = 6.5 (2025-08-28) =
 
