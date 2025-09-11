@@ -71,10 +71,28 @@ class RewriteRuleBuilder
 	public function addDynamicRewriteRules()
 	{
 		$detailPageIds = $this->_pDataDetailViewHandler->getDetailView()->getPageIdsHaveDetailShortCode();
+		$this->setCanonicalUrlFromRequest($detailPageIds);
 		foreach ( $detailPageIds as $detailPageId ) {
 			$pageName = $this->_pWPPageWrapper->getPageUriByPageId( $detailPageId );
 			add_rewrite_rule( '^(' . preg_quote( $pageName ) . ')/([0-9]+)(-([^$]+)?)?/?$',
 				'index.php?pagename=' . urlencode( $pageName ) . '&view=$matches[1]&estate_id=$matches[2]', 'top' );
+		}
+	}
+
+	private function setCanonicalUrlFromRequest(array $pageIds)
+	{
+		$canonicalFilters = [
+			'get_canonical_url', // WordPress default
+			'wpseo_canonical',   // Yoast SEO
+		];
+
+		foreach ($canonicalFilters as $filter) {
+			add_filter($filter, function($url) use ($pageIds) {
+				if (in_array(get_the_ID(), $pageIds) && isset($_SERVER['REQUEST_URI'])) {
+					return home_url($_SERVER['REQUEST_URI']);
+				}
+				return $url;
+			}, 20, 1);
 		}
 	}
 
