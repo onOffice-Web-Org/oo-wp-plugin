@@ -383,6 +383,7 @@ abstract class AdminPageFormSettingsBase
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			'label_default_value_from' => __('Default Value From:', 'onoffice-for-wp-websites'),
 			'label_default_value_up_to' => __('Default Value Up To:', 'onoffice-for-wp-websites'),
+			'validation_default_value_range_mismatch' => __('The From value cannot be greater than To value', 'onoffice-for-wp-websites'),
 			'fieldList' => $this->getFieldList(),
 			'installed_wp_languages' => $this->getInstalledLanguages(),
 			'language_native' => $pLanguage->getLocale(),

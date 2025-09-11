@@ -233,12 +233,24 @@ onOffice.default_values_input_converter = function () {
                 mainInput.setAttribute('type', 'datetime-local');
                 mainInput.setAttribute('step', 1);
             }
+            if ([
+                'integer', 'float',
+                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float',
+                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:int',
+                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer',
+                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
+            ].indexOf(fieldDefinition.type) >= 0) {
+                mainInput.setAttribute('type', 'number');
+                mainInput.setAttribute('min', '0');
+            }
             mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
             mainInput.value = predefinedValues[fieldName][0] || '';
             return;
         }
 
         mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + '][min]';
+        mainInput.type = 'number';
+        mainInput.setAttribute('min', '0');
         var mainInputClone = mainInput.cloneNode(true);
         mainInputClone.id = 'input_js_' + onOffice.js_field_count;
         onOffice.js_field_count += 1;
@@ -258,6 +270,53 @@ onOffice.default_values_input_converter = function () {
             mainInput.value = predefinedValues[fieldName]['min'] || '';
             mainInputClone.value = predefinedValues[fieldName]['max'] || '';
         }
+
+        // Validation for range fields
+        var errorElement = document.createElement('div');
+        errorElement.className = 'onoffice-range-error';
+        errorElement.style.color = 'red';
+        errorElement.style.display = 'none';
+        errorElement.style.width = '100%';
+        errorElement.textContent = onOffice_loc_settings.validation_default_value_range_mismatch;
+        mainInputClone.parentElement.appendChild(errorElement);
+
+        function validateRangeFields() {
+            var form = mainInput.closest('form');
+            if (!form) return true;
+
+            var hasFormError = false;
+            var rangeMinInputs = form.querySelectorAll('input[name*="[min]"][type="number"]');
+
+            rangeMinInputs.forEach(function(minInput) {
+                var maxInput = minInput.parentElement.querySelector('input[name*="[max]"][type="number"]');
+                if (!maxInput) return;
+
+                var minValue = parseFloat(minInput.value) || 0;
+                var maxValue = parseFloat(maxInput.value) || 0;
+                var hasError = minValue > maxValue && minInput.value !== '' && maxInput.value !== '';
+                
+                // Show/hide error for this specific range pair
+                var errorEl = maxInput.parentElement.querySelector('.onoffice-range-error');
+                if (errorEl) {
+                    errorEl.style.display = hasError ? 'block' : 'none';
+                }
+                
+                if (hasError) hasFormError = true;
+            });
+
+            // Disable submit button on errors
+            var submitButtons = form.querySelectorAll('input[type="submit"], button[type="submit"]');
+            submitButtons.forEach(function(button) {
+                button.disabled = hasFormError;
+            });
+
+            return !hasFormError;
+        }
+
+        [mainInput, mainInputClone].forEach(function(input) {
+            input.addEventListener('input', validateRangeFields);
+        });
+        validateRangeFields();
     });
 };
 
