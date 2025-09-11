@@ -80,7 +80,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixed**
 
-* Title and description tags not loading correctly on multilingual sites when using SEO shortcodes on both language versions
+* Title and description tags not loading correctly on multilingual sites when using Yoast tags on both language versions
 * Critical error (UnknownFieldException) when using currency field on property detail pages
 * Browser share functionality on mobile devices (iPhone and Android)
 * Duplicate HTML IDs in backend for "Select All" checkboxes
