@@ -1,41 +1,33 @@
 jQuery(document).ready(function($) {
     $('.onofficeSortListSelector').change(function() {
         let listviewID = $(this).data('sort-listviewid');
-        var selectedvalue = $(this).val();
-        var sortUrlParameter = [];
+        let selectedValue = $(this).val();
+        let sortUrlParameter = {};
 
-        if (selectedvalue != "") {
-            sortUrlParameter[`sortby_id_${listviewID}`] = selectedvalue.split("#")[0];
-            sortUrlParameter[`sortorder_id_${listviewID}`] = selectedvalue.split("#")[1];
+        if (selectedValue !== "") {
+            const parts = selectedValue.split("#");
+            sortUrlParameter[`sortby_id_${listviewID}`] = parts[0];
+            sortUrlParameter[`sortorder_id_${listviewID}`] = parts[1];
         }
-        var searchparams = new URLSearchParams(window.location.search);
 
-        for (key in sortUrlParameter) {
-            if (searchparams.has(key)){
-                if (sortUrlParameter[key] == ""){
-                    searchparams.delete(key);
-                } else{
-                    searchparams.set(key, sortUrlParameter[key] );
-                }
-            } else {
-                if (sortUrlParameter[key]  != "") {
-                    searchparams.append(key, sortUrlParameter[key] );
+        const url = new URL(window.location.href);
+        const searchParams = url.searchParams;
+
+        for (const key in sortUrlParameter) {
+            if (sortUrlParameter.hasOwnProperty(key)) {
+                if (sortUrlParameter[key] === "") {
+                    searchParams.delete(key);
+                } else {
+                    searchParams.set(key, sortUrlParameter[key]);
                 }
             }
         }
 
-        var newLocationParameters = searchparams.toString();
+        // Construct the new URL by combining the original parts in the correct order
+        // This ensures the query string is always before the hash
+        const newLocation = `${url.origin}${url.pathname}?${searchParams.toString()}${url.hash}`;
 
-        var loc = window.location.href;
-        var locWithoutParams = loc.split("?");
-
-        if (newLocationParameters != ""){
-            locWithoutParams[1] = newLocationParameters;
-        } else {
-            if (locWithoutParams.length > 1) {
-                locWithoutParams.pop();
-            }
-        }
-        window.location.href = locWithoutParams.join("?");
+        // Update the browser's location, which triggers a reload
+        window.location.href = newLocation;
     });
 });
