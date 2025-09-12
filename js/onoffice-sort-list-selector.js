@@ -1,41 +1,40 @@
 jQuery(document).ready(function($) {
-    $('.onofficeSortListSelector').change(function() {
-        let listviewID = $(this).data('sort-listviewid');
-        var selectedvalue = $(this).val();
-        var sortUrlParameter = [];
+	$('.onofficeSortListSelector').change(function() {
+		let listviewID = $(this).data('sort-listviewid');
+		let selectedValue = $(this).val();
+		let sortUrlParameter = {};
 
-        if (selectedvalue != "") {
-            sortUrlParameter[`sortby_id_${listviewID}`] = selectedvalue.split("#")[0];
-            sortUrlParameter[`sortorder_id_${listviewID}`] = selectedvalue.split("#")[1];
-        }
-        var searchparams = new URLSearchParams(window.location.search);
+		if (selectedValue !== "") {
+			const parts = selectedValue.split("#");
+			sortUrlParameter[`sortby_id_${listviewID}`] = parts[0];
+			sortUrlParameter[`sortorder_id_${listviewID}`] = parts[1];
+		}
 
-        for (key in sortUrlParameter) {
-            if (searchparams.has(key)){
-                if (sortUrlParameter[key] == ""){
-                    searchparams.delete(key);
-                } else{
-                    searchparams.set(key, sortUrlParameter[key] );
-                }
-            } else {
-                if (sortUrlParameter[key]  != "") {
-                    searchparams.append(key, sortUrlParameter[key] );
-                }
-            }
-        }
+		const url = new URL(window.location.href);
+		const searchParams = url.searchParams;
 
-        var newLocationParameters = searchparams.toString();
+		for (const key in sortUrlParameter) {
+			if (sortUrlParameter.hasOwnProperty(key)) {
+				if (sortUrlParameter[key] === "") {
+					searchParams.delete(key);
+				} else {
+					searchParams.set(key, sortUrlParameter[key]);
+				}
+			}
+		}
 
-        var loc = window.location.href;
-        var locWithoutParams = loc.split("?");
+		let hash = url.hash;
 
-        if (newLocationParameters != ""){
-            locWithoutParams[1] = newLocationParameters;
-        } else {
-            if (locWithoutParams.length > 1) {
-                locWithoutParams.pop();
-            }
-        }
-        window.location.href = locWithoutParams.join("?");
-    });
+		// Add a slash to the hash if it exists and doesn't already have one
+		if (hash && !hash.startsWith('/')) {
+			hash = '/' + hash;
+		}
+
+		// Construct the new URL by combining the original parts in the correct order
+		// This ensures the query string is always before the hash
+		const newLocation = `${url.origin}${url.pathname}?${searchParams.toString()}${hash}`;
+
+		// Update the browser's location, which triggers a reload
+		window.location.href = newLocation;
+	});
 });

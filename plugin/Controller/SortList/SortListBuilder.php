@@ -201,7 +201,14 @@ class SortListBuilder
 
 		if ($sortorder != null && $pValidator->isSortorderValide($sortorder)) {
 			$selectedSortOrder = $sortorder;
-		} else {
+		}
+		else if ($sortorder === 'DESC/') {
+			$selectedSortOrder = 'DESC';
+		}
+		else if ($sortorder === 'ASC/') {
+			$selectedSortOrder = 'ASC';
+		}
+		else {
 			$selectedSortOrder = $this->extractDefaultSortDirection($sortbyDefault);
 		}
 		return $selectedSortOrder;
