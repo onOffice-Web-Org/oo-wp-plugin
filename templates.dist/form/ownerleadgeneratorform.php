@@ -23,7 +23,7 @@ use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormPost;
 
 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
-
+$displayError = false;
 add_thickbox();
 
 $addressValues = array();
@@ -34,16 +34,19 @@ $pageTitles = $pForm->getPageTitlesByCurrentLanguage();
 $showFormAsModal = $pForm->getShowFormAsModal() || $pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS;
 
 if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
-	esc_html_e('The form was sent successfully.', 'onoffice-for-wp-websites');
-	echo '<br>';
+	echo '<p role="status">'.esc_html__('Thank you for your inquiry. We will get back to you as soon as possible.', 'onoffice-for-wp-websites').'</p>';
 } else {
 	if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
-		esc_html_e('There was an error sending the form.', 'onoffice-for-wp-websites');
-		echo '<br>';
-	} elseif ($pForm->getFormStatus() === FormPost::MESSAGE_RECAPTCHA_SPAM) {
-		esc_html_e('The form wasn\'t sent because spam was detected.', 'onoffice-for-wp-websites');
-		echo '<br>';
+		echo '<p role="status">'.esc_html__('An error has occurred. Please check your details.', 'onoffice-for-wp-websites').'</p>';
+	} elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
+		echo '<p role="status">'.esc_html__('Not all mandatory fields have been filled out. Please check your entries.', 'onoffice-for-wp-websites').'</p>';
+		$displayError = true;
+	} elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
+		echo '<p role="status">'.esc_html__('Spam recognized!', 'onoffice-for-wp-websites').'</p>';
 	}
+
+
+
 
 	/* @var $pForm Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
@@ -51,16 +54,39 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			$hiddenValues []= renderFormField($input, $pForm);
 			continue;
 		}
+
+		
+	
 		if ( $pForm->isMissingField( $input )  &&
 			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 			/* translators: %s will be replaced with a translated field name. */
 			echo sprintf(__('Please enter a value for %s.', 'onoffice-for-wp-websites'), esc_html($pForm->getFieldLabel( $input ))).'<br>';
 		}
 
+		switch ($input) {
+			case "ort": $fieldLabel = esc_html__('Ort der Immobilie', 'onoffice-for-wp-websites'); break;
+			case "plz": $fieldLabel = esc_html__('PLZ der Immobilie', 'onoffice-for-wp-websites'); break;
+			case "strasse": $fieldLabel = esc_html__('Straße der Immobilie', 'onoffice-for-wp-websites'); break;
+			case "hausnummer": $fieldLabel = esc_html__('Hausnummer der Immobilie', 'onoffice-for-wp-websites'); break;
+			default: $fieldLabel = $pForm->getFieldLabel($input);
+		}
+
 		$isRequired = $pForm->isRequiredField($input);
-		$addition = $isRequired ? '*' : '';
-		$line = $pForm->getFieldLabel($input).$addition.': ';
-		$line .= renderFormField($input, $pForm);
+		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
+		$isHiddenField = $pForm->isHiddenField($input);
+		$label = $fieldLabel.' '.$addition;
+
+		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
+
+			$line = '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>';
+			$line .=  renderFormField($input, $pForm).'</div>';	
+
+		} else {
+			$line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label;
+			$line .= renderFormField($input, $pForm).'</span></label>';		
+		}
+
+	
 		$pageNumber = $pForm->getPagePerForm($input);
 		if (!isset($addressValues[$pageNumber])) {
 			$addressValues[$pageNumber] = array();
@@ -79,10 +105,26 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 </script>
 
 <div id="onoffice-lead-<?php echo sanitize_title($pForm->getFormId()); ?>" <?php echo $showFormAsModal ? 'style="display:none;"' : ''; ?>>
-	<p>
-		<form name="leadgenerator" action="" method="post" id="leadgeneratorform-<?php echo sanitize_title($pForm->getFormId()); ?>">
+		<form name="leadgenerator" action="" method="post" id="leadgeneratorform-<?php echo sanitize_title($pForm->getFormId()); ?>"  class="oo-form" novalidate>
 			<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
 			<input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
+
+			<?php 
+			$firstRequired = false;
+			$hasRequiredFields = false;
+
+			foreach ($pForm->getInputFields() as $input => $table) {
+				if (
+					$pForm->isRequiredField($input)
+				) {
+					$hasRequiredFields = true;
+					break;
+				}
+			}
+
+			if ($hasRequiredFields) {
+				echo '<div class="oo-form-required" aria-hidden="true">' . esc_html__('* Mandatory fields', 'onoffice-for-wp-websites') . '</div>';
+			} ?>
 			<div id="leadform-<?php echo sanitize_title($pForm->getFormId()); ?>">
 				<?php
 					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
@@ -96,12 +138,11 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
                 foreach ($addressValues as $pageNumber => $fields): $pageIndex++?>
                     <div class="lead-lightbox lead-page-<?php echo $pageNumber; ?>">
-
                         <?php if($totalPages > 1): ?>
                             <span><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></span>
                         <?php endif; ?>
                         <p>
-                            <?php echo implode('<br>', $fields); ?>
+                            <?php echo implode('', $fields); ?>
                         </p>
                         <?php if ($pageIndex === $totalPages): ?>
                             <p>
@@ -111,22 +152,20 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
                                 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
                                 ?>
                             </div>
-                            </p>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
 				<?php echo implode($hiddenValues); ?>
-				<span class="leadform-back" style="float:left; cursor:pointer;">
+				<span class="leadform-back" style="float:left; cursor:pointer;" role="button">
 					<?php echo esc_html__('Back', 'onoffice-for-wp-websites'); ?>
 				</span>
 				<?php if ($totalPages !== 1): ?>
-				<span class="leadform-forward" style="float:right; cursor:pointer;">
+				<span class="leadform-forward" style="float:right; cursor:pointer;" role="button">
 					<?php echo esc_html__('Next', 'onoffice-for-wp-websites'); ?>
 				</span>
 				<?php endif; ?>
 			</div>
 		</form>
-	</p>
 </div>
 
 <?php
@@ -136,7 +175,7 @@ if (in_array($pForm->getFormStatus(), [
 		FormPost::MESSAGE_ERROR,
 		FormPost::MESSAGE_REQUIRED_FIELDS_MISSING,
 	]) && $pForm->getShowFormAsModal()) {
-	echo '<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead-' . sanitize_title($pForm->getFormId()) . '" class="thickbox">';
+	echo '<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead-' . sanitize_title($pForm->getFormId()) . '" target="_top" class="thickbox oo-leadformlink">';
 	echo esc_html__('Open the Form', 'onoffice-for-wp-websites');
 	echo '</a>';
 }

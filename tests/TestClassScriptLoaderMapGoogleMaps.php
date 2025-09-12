@@ -59,6 +59,11 @@ class TestClassScriptLoaderMapGoogleMaps
 			'ver' => false,
 			'inFooter' => false,
 		],
+		'google-maps-cluster' => [
+			'deps' => ['google-maps-cluster'],
+			'ver' => false,
+			'inFooter' => false,
+		],
 	];
 
 
@@ -93,6 +98,8 @@ class TestClassScriptLoaderMapGoogleMaps
 
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredScripts['gmapsinit']['src']);
 		$this->assertStringEndsWith(getcwd().'/dist/gmapsinit.min.js', $registeredScripts['gmapsinit']['src']);
+		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredScripts['google-maps-cluster']['src']);
+		$this->assertStringEndsWith(getcwd().'/dist/google-marker-cluster.min.js', $registeredScripts['google-maps-cluster']['src']);
 
 		$this->assertEquals('https://maps.googleapis.com/maps/api/js?key=abcdef123', $registeredScripts['google-maps']['src']);
 	}
@@ -106,7 +113,7 @@ class TestClassScriptLoaderMapGoogleMaps
 	{
 		$this->_pSubject->register();
 		$this->_pSubject->enqueue();
-		$this->assertEquals(['gmapsinit'], $this->_pWPScriptStyle->getEnqueuedScripts());
+		$this->assertEquals(['gmapsinit', 'google-maps-cluster'], $this->_pWPScriptStyle->getEnqueuedScripts());
 		$this->assertEquals([], $this->_pWPScriptStyle->getEnqueuedStyles());
 	}
 }
