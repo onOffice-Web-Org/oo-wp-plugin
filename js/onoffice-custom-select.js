@@ -75,7 +75,7 @@ jQuery(document).ready(function ($) {
 	}
 });
 
-$(function () {
+jQuery(function () {
 	const rules = {
 	  email: node => /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(node.value),
 	  name: node => /^\s*[a-zA-Z0-9,\s]+\s*$/.test(node.value),
@@ -119,7 +119,7 @@ $(function () {
 	  return allValid && $form[0].checkValidity();
 	}
   
-	$(document).on('submit', '.oo-form', function (e) {
+	jQuery(document).on('submit', '.oo-form', function (e) {
 	  const $form = $(this);
 	  const isValidForm = validateForm($form);
   
@@ -140,11 +140,11 @@ $(function () {
 	  $form.addClass('oo-validated');
 	});
 
-	$(document).on('blur', '.oo-form [aria-invalid]', function () {
+	jQuery(document).on('blur', '.oo-form [aria-invalid]', function () {
 		validate(this);
 	  });
 
-	$(document).on('input change', '.oo-form [aria-invalid]', function () {
+	jQuery(document).on('input change', '.oo-form [aria-invalid]', function () {
 	  validate(this);
 	});
 	
