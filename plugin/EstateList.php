@@ -571,6 +571,7 @@ class EstateList
 					$condition['val'] =  strtoupper($condition['val']);
 				}
 			}
+			unset($condition);
 		}
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
