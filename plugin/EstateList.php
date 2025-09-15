@@ -565,6 +565,15 @@ class EstateList
 			$filter['Id'] = [["op" => "IN", "val" => $estateIds]];
 		}
 
+		if (isset($filter["objektnr_extern"])) {
+			foreach ($filter['objektnr_extern'] as &$condition) {
+				if (isset($condition['op']) && $condition['op'] === 'like' && isset($condition['val'])) {
+					$condition['val'] =  strtoupper($condition['val']);
+				}
+			}
+			unset($condition);
+		}
+
 		$numRecordsPerPage = $this->getRecordsPerPage();
 
 		$pFieldModifierHandler = new ViewFieldModifierHandler(
