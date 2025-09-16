@@ -167,9 +167,14 @@ class AdminPageAddressDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
 		echo '</div>';
-
+		$this->renderBulkActionControls();
 		echo '<div class="fieldsSortable postbox">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Fields', 'onoffice-for-wp-websites') . '</span></h2>';
+		echo '<div class="postbox-header">
+        <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen
+			<input type="checkbox" id="postbox-select-all" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event)"/>
+			</label>
+      	</div>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
@@ -359,6 +364,8 @@ class AdminPageAddressDetail
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
 		wp_enqueue_script('oo-unsaved-changes-message');
+		wp_register_script('onoffice-bulk-actions-fields', plugins_url('/dist/onoffice-bulk-actions-fields.min.js', $pluginPath));
+		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 
 	/**

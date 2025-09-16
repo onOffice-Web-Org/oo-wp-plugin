@@ -201,9 +201,15 @@ class AdminPageEstateDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
 		echo '</div>';
+		$this->renderBulkActionControls('address', esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)));
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Contact Person Fields', 'onoffice-for-wp-websites').'</span></h2>';
+		echo '<div class="postbox-header">
+        <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+		<label class="postbox-select-all" for="postbox-select-all-address">Alle auswählen
+			<input type="checkbox" id="postbox-select-all-address" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS))."'".')"/>
+			</label>
+      	</div>';
 		$pRenderer->buildForAjax($pFormViewSortablecontactFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
@@ -216,9 +222,15 @@ class AdminPageEstateDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'advanced', null);
 		echo '</div>';
+		$this->renderBulkActionControls('estate', esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)));
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Real Estate Fields', 'onoffice-for-wp-websites').'</span></h2>';
+		echo '<div class="postbox-header">
+        <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+		<label class="postbox-select-all" for="postbox-select-all-estate">Alle auswählen
+			<input type="checkbox" id="postbox-select-all-estate" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE))."'".')"/>
+			</label>
+      	</div>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
@@ -490,6 +502,8 @@ class AdminPageEstateDetail
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
 			['jquery'], '', true);
 		wp_enqueue_script('oo-unsaved-changes-message');
+		wp_register_script('onoffice-bulk-actions-fields', plugins_url('/dist/onoffice-bulk-actions-fields.min.js', $pluginPath));
+		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 
 	/**

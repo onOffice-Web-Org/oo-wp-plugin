@@ -2,14 +2,14 @@
 # This file is distributed under the AGPL 3+.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice for WP-Websites 6.3\n"
+"Project-Id-Version: onOffice for WP-Websites 6.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-01T10:44:50+00:00\n"
+"POT-Creation-Date: 2025-08-28T08:13:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -284,6 +284,9 @@ msgstr ""
 msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
 msgstr ""
 
+msgid "Page %d"
+msgstr ""
+
 msgid "Attention: Duplicate detected! This data is similar to existing data records. Please take a moment to check for duplicates and decide whether updates are required."
 msgstr ""
 
@@ -428,6 +431,18 @@ msgstr ""
 
 #. translators: %s will be replaced with the link to the login credentials page.
 msgid "It looks like you did not enter any valid API credentials. Please go back and review your %s."
+msgstr ""
+
+msgid "Choose Bulk Actions"
+msgstr ""
+
+msgid "Bulk Actions"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Apply"
 msgstr ""
 
 msgid "API token"
@@ -660,12 +675,6 @@ msgstr ""
 msgid "There was a problem saving the detail view."
 msgstr ""
 
-msgid "Contact Person Fields"
-msgstr ""
-
-msgid "Real Estate Fields"
-msgstr ""
-
 msgid "Contact Image"
 msgstr ""
 
@@ -813,6 +822,12 @@ msgid "Please provide an Email address!"
 msgstr ""
 
 msgid "Fields Configuration"
+msgstr ""
+
+msgid "Page title:"
+msgstr ""
+
+msgid "Remove title for language %s"
 msgstr ""
 
 msgid "The similar estates view has been saved."
@@ -1041,6 +1056,24 @@ msgstr ""
 msgid "Reference"
 msgstr ""
 
+msgid "Exklusive"
+msgstr ""
+
+msgid "Price reduction"
+msgstr ""
+
+msgid "Property of the day"
+msgstr ""
+
+msgid "Property of the week"
+msgstr ""
+
+msgid "Secret sale"
+msgstr ""
+
+msgid "Commission free"
+msgstr ""
+
 msgid "Standard Sort"
 msgstr ""
 
@@ -1133,6 +1166,9 @@ msgid "Label uses %s"
 msgstr ""
 
 msgid "Add language"
+msgstr ""
+
+msgid "Page title: %s"
 msgstr ""
 
 msgid "Module"
@@ -1294,7 +1330,10 @@ msgstr ""
 msgid "Show total price calculator"
 msgstr ""
 
-msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs."
+msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs. %4$s %4$s"
+msgstr ""
+
+msgid "The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications."
 msgstr ""
 
 msgid "Show energy certificate with a scale"
@@ -1367,9 +1406,6 @@ msgid "Add to List >>"
 msgstr ""
 
 msgid "Key of Field:"
-msgstr ""
-
-msgid "Delete"
 msgstr ""
 
 msgid "Add Page"
@@ -1528,6 +1564,9 @@ msgstr ""
 msgid "Remove from favorites"
 msgstr ""
 
+msgid "Highlights"
+msgstr ""
+
 msgid "AreaButler"
 msgstr ""
 
@@ -1649,9 +1688,6 @@ msgstr ""
 
 #. translators: %s will be replaced with a translated field name.
 msgid "Please enter a value for %s."
-msgstr ""
-
-msgid "Page "
 msgstr ""
 
 msgid "Back"

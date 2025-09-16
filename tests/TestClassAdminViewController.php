@@ -174,7 +174,7 @@ class TestClassAdminViewController
 		$adminPage = new AdminPageEstateDetail('admin_page_onoffice-editlistview');
 		$pWpHook->callbacks = [[['function' => [$adminPage]]]];
 		$pAdminViewController->enqueueExtraJs("admin_page_onoffice-editlistview");
-		$this->assertEquals(['handle-notification-actions', 'admin-js', 'postbox', 'oo-copy-shortcode', 'onoffice-custom-form-label-js', 'onoffice-multiselect', 'oo-unsaved-changes-message'], wp_scripts()->queue);
+		$this->assertEquals(['handle-notification-actions', 'admin-js', 'postbox', 'oo-copy-shortcode', 'onoffice-custom-form-label-js', 'onoffice-multiselect', 'oo-unsaved-changes-message', 'onoffice-bulk-actions-fields'], wp_scripts()->queue);
 	}
 
 	/**

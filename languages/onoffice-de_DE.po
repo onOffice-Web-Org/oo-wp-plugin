@@ -830,12 +830,6 @@ msgstr ""
 msgid "There was a problem saving the detail view."
 msgstr ""
 
-msgid "Contact Person Fields"
-msgstr ""
-
-msgid "Real Estate Fields"
-msgstr ""
-
 msgid "Contact Image"
 msgstr ""
 
@@ -1461,9 +1455,6 @@ msgstr ""
 msgid "Show total price calculator"
 msgstr ""
 
-msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs."
-msgstr ""
-
 msgid "Show energy certificate with a scale"
 msgstr ""
 
@@ -1660,5 +1651,50 @@ msgstr ""
 msgid "Your search criteria"
 msgstr ""
 
-msgid "Page "
+msgid "Page %d"
+msgstr ""
+
+msgid "Choose Bulk Actions"
+msgstr ""
+
+msgid "Bulk Actions"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Page title:"
+msgstr ""
+
+msgid "Remove title for language %s"
+msgstr ""
+
+msgid "Exklusive"
+msgstr ""
+
+msgid "Price reduction"
+msgstr ""
+
+msgid "Property of the day"
+msgstr ""
+
+msgid "Property of the week"
+msgstr ""
+
+msgid "Secret sale"
+msgstr ""
+
+msgid "Commission free"
+msgstr ""
+
+msgid "Page title: %s"
+msgstr ""
+
+msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs. %4$s %4$s"
+msgstr ""
+
+msgid "The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications."
+msgstr ""
+
+msgid "Highlights"
 msgstr ""

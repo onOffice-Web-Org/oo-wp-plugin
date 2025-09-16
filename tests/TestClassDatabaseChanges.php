@@ -197,15 +197,24 @@ class TestClassDatabaseChanges
 				'list_type' => 'preisAufAnfrage',
 			]
 		];
+		$fieldListViewWithMarkedPropertiesOutput = [
+			(object)[
+				'listview_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'default',
+				'markedPropertiesSort' => 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz',
+			]
+		];
+
 		$detailPageIds = [[ "ID" => 8 ]];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(8))
+		$this->_pWPDBMock->expects($this->exactly(9))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput);
 
 		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
 			->will($this->returnValue(true));
@@ -249,15 +258,24 @@ class TestClassDatabaseChanges
 				'list_type' => 'preisAufAnfrage',
 			]
 		];
+
+		$fieldListViewWithMarkedPropertiesOutput = [
+			(object)[
+				'listview_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'default',
+				'markedPropertiesSort' => 'neu,top_angebot,no_marker,kauf,miete,reserviert,referenz',
+			]
+		];
 		$detailPageIds = [[ "ID" => 8 ]];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(6))
+		$this->_pWPDBMock->expects($this->exactly(7))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput);
 
 		$this->_pWPDBMock->expects($this->once())->method('delete')
 			->will($this->returnValue(true));

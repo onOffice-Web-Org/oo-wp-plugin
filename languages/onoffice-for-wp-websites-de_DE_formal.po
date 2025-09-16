@@ -40,9 +40,6 @@ msgstr "Übersicht der Kosten"
 msgid "Total costs"
 msgstr "Gesamtkosten"
 
-msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs."
-msgstr "Die Felder %1$s, %2$s und %3$s müssen in onOffice enterprise ausgefüllt werden, damit eine Ausgabe möglich ist. %4$s %4$s Für die Berechnung der Notar- und Grundbucheintragskosten wird üblicherweise ein Standardwert von 1,5%% bzw. 0,5%% verwendet."
-
 msgid "Show total price calculator"
 msgstr "Gesamtpreiskalkulator anzeigen"
 
@@ -66,9 +63,6 @@ msgstr "Nachricht vom Eigentümerformular auf Ihrer Website"
 
 msgid "New newsletter registration"
 msgstr "Neue Newsletter-Anmeldung"
-
-msgid "Page "
-msgstr "Seite "
 
 msgid "Page %s"
 msgstr "Seite %s"
@@ -939,12 +933,6 @@ msgstr "Die „Ähnliche Immobilien“-Ansicht wurde gespeichert."
 msgid "Similar Estates View"
 msgstr "Ähnliche Immobilien"
 
-msgid "Real Estate Fields"
-msgstr "Immobiliendaten"
-
-msgid "Contact Person Fields"
-msgstr "Ansprechpartnerdaten"
-
 msgid "Show %s matches"
 msgstr "%s Treffer anzeigen"
 
@@ -1678,4 +1666,52 @@ msgid "Cache is being cleared in the background. This may take a few minutes."
 msgstr ""
 
 msgid "Save changes"
+msgstr ""
+
+msgid "Page %d"
+msgstr ""
+
+msgid "Choose Bulk Actions"
+msgstr ""
+
+msgid "Bulk Actions"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Page title:"
+msgstr ""
+
+msgid "Remove title for language %s"
+msgstr ""
+
+msgid "Exklusive"
+msgstr ""
+
+msgid "Price reduction"
+msgstr ""
+
+msgid "Property of the day"
+msgstr ""
+
+msgid "Property of the week"
+msgstr ""
+
+msgid "Secret sale"
+msgstr ""
+
+msgid "Commission free"
+msgstr ""
+
+msgid "Page title: %s"
+msgstr ""
+
+msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs. %4$s %4$s"
+msgstr ""
+
+msgid "The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications."
+msgstr ""
+
+msgid "Highlights"
 msgstr ""

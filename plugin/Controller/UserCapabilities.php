@@ -74,6 +74,8 @@ class UserCapabilities
 
 	const OO_PLUGINCAP_MANAGE_PLUGIN_TEMPLATES = 'oo_plugincap_manage_plugin_templates';
 
+	const OO_PLUGINCAP_MANAGE_VIEW_MENU = 'oo_plugincap_manage_view_menu';
+
 
 	/** @var array */
 	private $_ruleToCapability = [
@@ -148,6 +150,9 @@ class UserCapabilities
 				);
 				$role->add_cap(
 					self::OO_PLUGINCAP_MANAGE_PLUGIN_TEMPLATES,
+				);
+				$role->add_cap(
+					self::OO_PLUGINCAP_MANAGE_VIEW_MENU,
 				);
 			}
 		}
