@@ -35,7 +35,7 @@ jQuery(document).ready(function ($) {
   function validate(node) {
     const $node = $(node);
     const $formRow = $node.closest('label, .oo-form');
-    const $error = $formRow.find('.error');
+    const $error = $formRow.find('.error').first();
 
     const isTomSelectControl = $node.hasClass('ts-control');
     const targetNode = isTomSelectControl ? $formRow.find('select').get(0) : node;

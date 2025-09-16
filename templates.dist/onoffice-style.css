@@ -51,11 +51,11 @@
 .oo-form input[aria-invalid='true'], .oo-form select[aria-invalid='true'], .oo-form textarea[aria-invalid='true'], .oo-form .displayerror input, .oo-form .displayerror textarea, .required.invalid:has(+ div[aria-hidden='false']) {
     border: 2px solid #DC2625;
     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23DC2625" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>');    background-repeat: no-repeat;
-    background-position: calc(100% - 0.5em) center;
+    background-position: right 30px center;
 }
 
 .oo-form input[aria-invalid='true'][type="date"], .oo-form input[aria-invalid='true'][type="number"], .oo-form .displayerror input[type="date"], .oo-form .displayerror input[type="number"] {
-    background-position: calc(90% - 0.5em) center;
+    background-position: right 30px center;
 }
 
 .oo-form input[aria-invalid='true'][type="checkbox"], .oo-form .displayerror input[type="checkbox"] {
