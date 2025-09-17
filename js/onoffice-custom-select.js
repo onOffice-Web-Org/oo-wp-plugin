@@ -37,16 +37,18 @@ jQuery(document).ready(function ($) {
     const $formRow = $node.closest('label, .oo-form');
     const $error = $formRow.find('.error').first();
 
-    const isTomSelectControl = $node.hasClass('ts-control');
-    const targetNode = isTomSelectControl ? $formRow.find('select').get(0) : node;
+    if ($node.attr('required')) {
+
+    const targetNode = node;
     const valid = isValid(targetNode);
 
-    const $nodeToMark = isTomSelectControl ? $node.closest('.ts-wrapper') : $node;
+    const $nodeToMark = $node;
     $nodeToMark.attr('aria-invalid', !valid);
 
     $error
       .attr('aria-hidden', valid ? 'true' : 'false')
       [valid ? 'hide' : 'show']();
+    } 
   }
 
   function validateForm($form) {
@@ -84,7 +86,6 @@ jQuery(document).ready(function ($) {
     $form.addClass('oo-validated');
   });
 
-  // Blur + input change validation
   jQuery(document).on('blur', '.oo-form [aria-invalid]', function () {
     validate(this);
   });
@@ -95,7 +96,6 @@ jQuery(document).ready(function ($) {
 
   window.validateForm = validateForm;
 
-  // Init TomSelect
   document.querySelectorAll(".custom-single-select-tom, .custom-multiple-select-tom").forEach(function (select) {
     if (typeof TomSelect !== 'undefined') {
 
@@ -161,5 +161,4 @@ jQuery(document).ready(function ($) {
       width: '50%'
     });
   }
-
 });
