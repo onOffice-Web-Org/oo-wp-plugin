@@ -89,6 +89,7 @@ return (function (AddressList $pAddressClone) {
             google.maps.event.addDomListener(window, "load", gmapInit);
         })();
     </script>
-    <div class="oo-gmap" id="<?php echo esc_attr($mapId) ?>" style="width: 100%; height: 100%;"></div>
+        <div class="oo-gmap" role="region" id="<?php echo esc_attr($mapId) ?>" style="width: 100%; height: 100%;" aria-label="<?php echo esc_html__(
+    'Map with real estate agents','onoffice-for-wp-websites'); ?>"></div>
 	<?php
 });

@@ -80,7 +80,7 @@ class TestClassSortListRenderer
 	 */
 	public function testAdjustableWithDefault()
 	{
-		$expected = '<select name="userDefinedSelection" data-sort-listviewid="1" class="onofficeSortListSelector"><option value="kaltmiete#ASC" >Kaltmiete (ascending)</option><option value="kaltmiete#DESC" >Kaltmiete (descending)</option><option value="kaufpreis#ASC"  selected>Kaufpreis (ascending)</option><option value="kaufpreis#DESC" >Kaufpreis (descending)</option></select>';
+		$expected = '<select name="userDefinedSelection" autocomplete="off" title="Sorting" data-sort-listviewid="1" class="onofficeSortListSelector"><option value="kaltmiete#ASC" >Kaltmiete (ascending)</option><option value="kaltmiete#DESC" >Kaltmiete (descending)</option><option value="kaufpreis#ASC"  selected>Kaufpreis (ascending)</option><option value="kaufpreis#DESC" >Kaufpreis (descending)</option></select>';
 
 		$pSortListRenderer = new SortListRenderer;
 		$this->assertEquals($expected, $pSortListRenderer->createHtmlSelector($this->_pSortListModelAdjustable, $this->_pListView->getId()));
@@ -111,7 +111,7 @@ class TestClassSortListRenderer
 	public function testAdjustableFromRequestVars()
 	{
 		$_GET = ['sortby' => 'kaltmiete', 'sortorder' => 'DESC'];
-		$expected = '<select name="userDefinedSelection" data-sort-listviewid="1" class="onofficeSortListSelector"><option value="kaltmiete#ASC" >Kaltmiete (ascending)</option><option value="kaltmiete#DESC" >Kaltmiete (descending)</option><option value="kaufpreis#ASC"  selected>Kaufpreis (ascending)</option><option value="kaufpreis#DESC" >Kaufpreis (descending)</option></select>';
+		$expected = '<select name="userDefinedSelection" autocomplete="off" title="Sorting" data-sort-listviewid="1" class="onofficeSortListSelector"><option value="kaltmiete#ASC" >Kaltmiete (ascending)</option><option value="kaltmiete#DESC" >Kaltmiete (descending)</option><option value="kaufpreis#ASC"  selected>Kaufpreis (ascending)</option><option value="kaufpreis#DESC" >Kaufpreis (descending)</option></select>';
 
 		$pSortListRenderer = new SortListRenderer;
 		$this->assertEquals($expected, $pSortListRenderer->createHtmlSelector($this->_pSortListModelAdjustable, $this->_pListView->getId()));
