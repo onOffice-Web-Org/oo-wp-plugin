@@ -69,21 +69,25 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 	$searchcriteriaLine = '';
-
-	if ( in_array( $input, array( 'kaufpreis','kaltmiete','wohnflaeche','anzahl_zimmer' ) ) ) {
-		$searchcriteriaLine .= '<div class="oo-input-wrapper">';
-		$searchcriteriaLine .= renderFormField($input, $pForm).'</div>';
-	}
 	$isHiddenField = $pForm->isHiddenField($input);
 	$label = $pForm->getFieldLabel($input);
 
-	if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
-		$line =	 !$isHiddenField ? '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
 
-	} else {
-		$line = '<label>'.$pForm->getFieldLabel($input).' '.$addition;
-		$line .= renderFormField($input, $pForm).'</span></label>';
+	if ( in_array( $input, array( 'kaufpreis','kaltmiete','wohnflaeche','anzahl_zimmer' ) ) ) {
+		$line = '<div class="oo-input-wrapper">';
+		$line .= renderFormField($input, $pForm).'</div>';
+	} 
+	else {
+		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
+			$line =	 !$isHiddenField ? '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
+		} else {
+			$line = '<label>'.$pForm->getFieldLabel($input).' '.$addition;
+			$line .= renderFormField($input, $pForm).'</span></label>';
+		}
+
 	}
+
+
 
 	if (
         in_array($input, ['gdprcheckbox', 'Id']) ||
@@ -123,7 +127,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ($table == 'searchcriteria') {
-		$searchcriteriaValues []= $searchcriteriaLine;
+		$searchcriteriaValues []= $line;
 	}
 
 	if ($table == '') {
