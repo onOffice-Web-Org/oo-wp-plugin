@@ -124,7 +124,7 @@ if (!function_exists('renderFormField')) {
 
 	function renderErrorHtml(?string $errorMessage, bool $shouldDisplay): string {
 		if (!empty($errorMessage) && $shouldDisplay) {
-			return "<div class='error' aria-hidden='true' role='alert' aria-live='assertive' aria-atomic='true'><p>$errorMessage</p></div>";
+			return "<div class='error' aria-hidden='true' role='alert' aria-atomic='true'><p>$errorMessage</p></div>";
 		}
 		return '';
 	}
@@ -209,7 +209,7 @@ if (!function_exists('renderFormField')) {
 			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 
-			$output .= '<select data-rule="text" data-placeholder="' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '" id="'.$fieldName.'" aria-hidden="true" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
+			$output .= '<select data-placeholder="' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '" id="'.$fieldName.'" aria-hidden="true" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
 			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {
@@ -250,16 +250,16 @@ if (!function_exists('renderFormField')) {
 			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 
-			$output = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . ' data-rule="text">';
+			$output = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
 			$output .= $htmlOptions;
 			$output .= '</select>'.$errorHtml;
 		} else {
-			$inputType = 'type="text" data-rule="text"';
+			$inputType = 'type="text"';
 			$value = 'value="' . esc_attr($pForm->getFieldValue($fieldName, true)) . '"';
 			$errorMessage = esc_html__('Please enter a text.', 'onoffice-for-wp-websites');
 
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
-				$inputType = 'type="checkbox" data-rule="checkbox"';
+				$inputType = 'type="checkbox"';
 
 				if (($fieldName == 'gdprcheckbox') || ($fieldName == 'AGB_akzeptiert'))
 				{
@@ -295,11 +295,11 @@ if (!function_exists('renderFormField')) {
 			}
 
 			if ($isApplyThousandSeparatorField) {
-				$inputType = 'type="text" class="apply-thousand-separator-format" data-rule="text"';
+				$inputType = 'type="text" class="apply-thousand-separator-format""';
 			}
 
 			if ($fieldName == 'Email') {
-				$inputType = 'type="email" data-rule="email"';
+				$inputType = 'type="email"';
 				$errorMessage = esc_html__('Please enter a valid e-mail address.', 'onoffice-for-wp-websites');
 			}
 

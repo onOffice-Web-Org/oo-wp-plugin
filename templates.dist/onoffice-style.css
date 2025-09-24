@@ -48,24 +48,35 @@
     margin: 0;
 }
 
-.oo-form input[aria-invalid='true'], .oo-form select[aria-invalid='true'], .oo-form textarea[aria-invalid='true'], .oo-form .displayerror input, .oo-form .displayerror textarea, .required.invalid:has(+ div[aria-hidden='false']) {
+.oo-form.validated input:invalid, .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated textarea:invalid, .oo-form.validated .displayerror input, .oo-form.validated .displayerror textarea, .required.invalid:has(+ div[aria-hidden='false']) {
     border: 2px solid #DC2625;
-    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23DC2625" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>');    background-repeat: no-repeat;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23DC2625" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>');    
+    background-repeat: no-repeat;
     background-position: right 30px center;
 }
 
-.oo-form input[aria-invalid='true'][type="date"], .oo-form input[aria-invalid='true'][type="number"], .oo-form .displayerror input[type="date"], .oo-form .displayerror input[type="number"] {
-    background-position: right 30px center;
-}
 
-.oo-form input[aria-invalid='true'][type="checkbox"], .oo-form .displayerror input[type="checkbox"] {
+.oo-form.validated input:invalid[type="checkbox"], .oo-form.validated .displayerror input[type="checkbox"] {
     outline: 2px solid red;
 }
-.oo-form .displayerror input[type="checkbox"] ~ .error, .oo-form input[aria-invalid='true'][type="checkbox"] ~ .error {
+.oo-form.validated .displayerror input[type="checkbox"] ~ .error,.validated .oo-form input:invalid[type="checkbox"] ~ .error {
     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23DC2625" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>');    background-repeat: no-repeat;
     padding-left: 30px;
  }
 
+ .oo-form.validated textarea:required:valid,
+ .oo-form.validated input:required:valid, .oo-form.validated .oo-single-select .required.has-items.ts-wrapper  {
+   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%2328a745' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/></svg>");
+   background-repeat: no-repeat;
+   background-position: right 15px center;
+   border: 1px solid green;
+   background-size: 1.25rem;
+   
+ }
+ 
+ .oo-form.validated .oo-single-select .required.has-items.ts-wrapper,  .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated input:invalid[type="date"], .oo-form.validated input:invalid[type="number"], .oo-form.validated .displayerror input[type="date"], .oo-form.validated .displayerror input[type="number"] {
+    background-position: right 30px center;
+}
 
 .oo-form .error {
     display: none;
@@ -78,7 +89,7 @@
     margin: 0;
 }
 
-.oo-form.oo-validated .error, .oo-form input[aria-invalid='true']~.oo-form.oo-validated .error, .displayerror .error {
+.oo-form.oo-validated .error, .oo-form input:invalid~.oo-form.oo-validated .error, .displayerror .error {
     display: block;
 }
 

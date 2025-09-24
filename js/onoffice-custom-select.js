@@ -8,93 +8,96 @@ jQuery(document).ready(function ($) {
   const $multiSelectAdminSorting = $('#viewrecordssorting .oo-custom-select2.oo-custom-select2--multiple');
   const $singleSelectAdminSorting = $("#viewrecordssorting .oo-custom-select2.oo-custom-select2--single");
 
-  // Init select2 for normal selects
   document.querySelectorAll(".custom-single-select, .custom-multiple-select").forEach(function (select) {
     if (typeof $ !== 'undefined' && typeof $.fn.select2 !== 'undefined') {
       $(select).select2({ width: '100%' });
     }
   });
 
-  // Validation rules
-  const rules = {
-    email: node => /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(node.value),
-    name: node => /^\s*[a-zA-Z0-9,\s]+\s*$/.test(node.value),
-    text: node => node.value.trim().length > 0,
-    checkbox: node => node.checked
-  };
+    const forms = document.querySelectorAll('.oo-form');
+  
+    forms.forEach(function(form) {
+      form.setAttribute('novalidate', '');
+      const inputs = form.querySelectorAll('input, textarea');
+      const selects = form.querySelectorAll('select');
+  
+      const showError = (input, message) => {
+        const errorDiv = input.closest('label, div')?.querySelector('.error');
+        if (errorDiv) {      
+          $(errorDiv).css('display', 'block');
+          errorDiv.setAttribute('aria-live', 'polite');
+        }
+      };
+  
+      const hideError = (input) => {
+        const errorDiv = input.closest('label, div')?.querySelector('.error');
+        if (errorDiv) {
+          errorDiv.textContent = '';
+          errorDiv.classList.remove('is-visible');
+          errorDiv.removeAttribute('aria-live');
+        }
+      };
+  
+      const inputHandleBlur = (input) => {
+        if (!input.checkValidity()) {
+          showError(input);
+        } else {
+          hideError(input);
+        }
+      }
+  
+      inputs.forEach(function(input) {
+        input.addEventListener('blur', function() {
+          inputHandleBlur(input)
+        });
+  
+        input.addEventListener('input', function() {
+          if (input.checkValidity()) {
+            hideError(input);
+          }
+        });
+      });
 
-  function isValid(node) {
-    if (!node || !node.dataset) {
-      return false;
+      const selectHandleChange = (select) => {
+        const tomSelectControl = select.nextElementSibling;
+        if (!select.checkValidity()) {
+            tomSelectControl.classList.add('is-invalid');
+            showError(select);
+        } else {
+            tomSelectControl.classList.remove('is-invalid');
+            hideError(select);
+        }
     }
 
-    const ruleName = node.dataset.rule;
-    return rules[ruleName] ? rules[ruleName](node) : node.checkValidity();
-  }
-
-  function validate(node) {
-    const $node = $(node);
-    const $formRow = $node.closest('label, .oo-form');
-    const $error = $formRow.find('.error').first();
-
-    if ($node.attr('required')) {
-
-    const targetNode = node;
-    const valid = isValid(targetNode);
-
-    const $nodeToMark = $node;
-    $nodeToMark.attr('aria-invalid', !valid);
-
-    $error
-      .attr('aria-hidden', valid ? 'true' : 'false')
-      [valid ? 'hide' : 'show']();
-    } 
-  }
-
-  function validateForm($form) {
-    let allValid = true;
-
-    $form.find('[aria-invalid]').each(function () {
-      validate(this);
-      if (this.getAttribute('aria-invalid') === 'true') {
-        allValid = false;
+    const jumpToFirstInvalidInput = (form) => {
+      const firstInvalid = form.querySelector(':invalid');
+      if (firstInvalid) {
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstInvalid.focus({ preventScroll: true });
       }
+  }
+    selects.forEach(select => {
+      select.addEventListener('change', function() {
+        selectHandleChange(select)
+      });
     });
 
-    return allValid && $form[0].checkValidity();
-  }
-
-  // Form submit
-  jQuery(document).on('submit', '.oo-form', function (e) {
-    const $form = $(this);
-    const isValidForm = validateForm($form);
-
-    if (!isValidForm) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const firstInvalid = $form.find('[aria-invalid="true"]').first()[0];
-      if (firstInvalid) {
-        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        firstInvalid.focus({ preventScroll: true });
+    form.addEventListener('submit', function(event) {
+      if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+          inputs.forEach(input => {
+              inputHandleBlur(input)
+          });
+          selects.forEach(select => {
+              selectHandleChange(select)
+          })
+          jumpToFirstInvalidInput(form);
       }
-      $form.find('[type="submit"]').prop('disabled', true);
-    } else {
-      $form.find('[type="submit"]').prop('disabled', false);
-    }
-
-    $form.addClass('oo-validated');
+      form.classList.add('validated');
+  });
   });
 
-  jQuery(document).on('blur', '.oo-form [aria-invalid]', function () {
-    validate(this);
-  });
-
-  jQuery(document).on('input change', '.oo-form [aria-invalid]', function () {
-    validate(this);
-  });
-
-  window.validateForm = validateForm;
 
   document.querySelectorAll(".custom-single-select-tom, .custom-multiple-select-tom").forEach(function (select) {
     if (typeof TomSelect !== 'undefined') {
@@ -115,9 +118,6 @@ jQuery(document).ready(function ($) {
           this.refreshOptions();
         },
         create: true,
-        onBlur: function () {
-          validate(this.input);
-        },
         render: {
           option: function (data, escape) {
             return '<div class="d-flex"><span>' + escape(data.text) + '</span></div>';
