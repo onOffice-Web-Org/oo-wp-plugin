@@ -126,6 +126,12 @@ class EstateList
 	/** @var string */
 	private $_energyCertificate = '';
 
+	/** @var bool */
+	private $_multiSearchMode = false;
+
+	/** @var array */
+	private $_searchVariations = [];
+
 
 	/**
 	 * @param DataView $pDataView
@@ -178,6 +184,19 @@ class EstateList
 	protected function getPreloadEstateFileCategories()
 	{
 		return $this->_pDataView->getPictureTypes();
+	}
+
+
+	/**
+	 * Get the objektnr_extern search term from request
+	 * 
+	 * @return string|null
+	 */
+	private function getObjektnrExternSearchTerm(): ?string
+	{
+		// Implement based on how you receive the search term
+		// Could be from $_GET, $_POST, or a filter parameter
+		return $_GET['objektnr_extern_search'] ?? null;
 	}
 
 	/**
@@ -244,6 +263,12 @@ class EstateList
 	 */
 	private function loadRecords(int $currentPage)
 	{
+		 // Check if we're in multi-search mode for objektnr_extern
+		if (!empty($this->_multiSearchMode) && !empty($this->_searchVariations)) {
+			$this->loadRecordsWithMultipleSearches($currentPage);
+			return;
+		}
+
 		$estateParameters = $this->getEstateParameters($currentPage, $this->_formatOutput);
 		$this->_pApiClientAction->setParameters($estateParameters);
 		$this->_pApiClientAction->addRequestToQueue();
@@ -278,6 +303,91 @@ class EstateList
 		$this->_records = $this->_pApiClientAction->getResultRecords();
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+	}
+
+	/**
+	 * Load records using multiple search variations
+	 * 
+	 * @param int $currentPage
+	 * @throws API\ApiClientException
+	 */
+	private function loadRecordsWithMultipleSearches(int $currentPage)
+	{
+		$allRecords = [];
+		$allRecordsRaw = [];
+		$searchHandles = [];
+		$searchHandlesRaw = [];
+		
+		// Queue all search variation requests
+		foreach ($this->_searchVariations as $index => $params) {
+			$pApiAction = clone $this->_pApiClientAction;
+			$pApiAction->setParameters($params);
+			$searchHandles[$index] = $pApiAction->addRequestToQueue();
+			
+			// Create raw value request
+			$paramsRaw = $params;
+			$paramsRaw['formatoutput'] = false;
+			$paramsRaw['data'] = array_merge(
+				$paramsRaw['data'],
+				$this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio(),
+				['vermarktungsart', 'preisAufAnfrage', 'virtualAddress', 'provisionsfrei']
+			);
+			
+			if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
+				$paramsRaw['data'][] = 'waehrung';
+			}
+			
+			if ($this->getShowTotalCostsCalculator()) {
+				$fields = ['kaufpreis', 'aussen_courtage', 'bundesland', 'waehrung'];
+				$paramsRaw['data'] = array_merge($paramsRaw['data'], $fields);
+			}
+			
+			if ($this->getShowEnergyCertificate()) {
+				$energyCertificateFields = ['energieausweistyp', 'energyClass'];
+				$paramsRaw['data'] = array_merge($paramsRaw['data'], $energyCertificateFields);
+			}
+			
+			$paramsRaw['data'] = array_unique($paramsRaw['data']);
+			
+			$pApiActionRaw = clone $this->_pApiClientAction;
+			$pApiActionRaw->setParameters($paramsRaw);
+			$searchHandlesRaw[$index] = $pApiActionRaw->addRequestToQueue();
+		}
+		
+		// Send all requests at once
+		$this->_pApiClientAction->sendRequests();
+		
+		// Collect results from all searches
+		foreach ($searchHandles as $index => $handle) {
+			$results = $this->_pApiClientAction->getResultRecords();
+			if (!empty($results)) {
+				// Merge results, avoiding duplicates
+				foreach ($results as $record) {
+					if (!isset($allRecords[$record['id']])) {
+						$allRecords[$record['id']] = $record;
+					}
+				}
+			}
+		}
+		
+		// Collect raw results
+		foreach ($searchHandlesRaw as $index => $handle) {
+			$resultsRaw = $this->_pApiClientAction->getResultRecords();
+			if (!empty($resultsRaw)) {
+				foreach ($resultsRaw as $record) {
+					if (!isset($allRecordsRaw[$record['id']])) {
+						$allRecordsRaw[$record['id']] = $record;
+					}
+				}
+			}
+		}
+		
+		$this->_records = array_values($allRecords);
+		$this->_recordsRaw = $allRecordsRaw;
+		
+		// Reset multi-search mode
+		$this->_multiSearchMode = false;
+		$this->_searchVariations = [];
 	}
 
 	/**
@@ -558,6 +668,14 @@ class EstateList
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$filter = $this->getDefaultFilterBuilder()->buildFilter();
 
+		// Check if we have an objektnr_extern search term
+		$searchTerm = $this->getObjektnrExternSearchTerm(); // You'll need to implement this method to get the search term
+		
+		if (!empty($searchTerm)) {
+			// Case-insensitive search: create multiple requests with different case variations
+			return $this->buildCaseInsensitiveSearchParameters($searchTerm, $currentPage, $formatOutput, $filter, $language, $pListView);
+		}
+
 		if ($this->_filterAddressId != 0) {
 			$addressList = $this->_pEnvironment->getAddressList();
 			$addressList->fetchEstatesForAddressIds([$this->_filterAddressId]);
@@ -565,6 +683,7 @@ class EstateList
 			$filter['Id'] = [["op" => "IN", "val" => $estateIds]];
 		}
 
+		/*
 		if (isset($filter["objektnr_extern"])) {
 			foreach ($filter['objektnr_extern'] as &$condition) {
 				if (isset($condition['op']) && $condition['op'] === 'like' && isset($condition['val'])) {
@@ -573,6 +692,7 @@ class EstateList
 			}
 			unset($condition);
 		}
+		*/	
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
 
@@ -624,6 +744,97 @@ class EstateList
 		}
 		return $requestParams;
 	}
+
+	/**
+	 * Build parameters for case-insensitive objektnr_extern search
+	 * 
+	 * @param string $searchTerm
+	 * @param int $currentPage
+	 * @param bool $formatOutput
+	 * @param array $baseFilter
+	 * @param string $language
+	 * @param DataView $pListView
+	 * @return array
+	 */
+	private function buildCaseInsensitiveSearchParameters(string $searchTerm, int $currentPage, bool $formatOutput, array $baseFilter, string $language, $pListView): array
+	{
+		$numRecordsPerPage = $this->getRecordsPerPage();
+		$offset = ($currentPage - 1) * $numRecordsPerPage;
+		
+		$pFieldModifierHandler = new ViewFieldModifierHandler(
+			$pListView->getFields(),
+			onOfficeSDK::MODULE_ESTATE
+		);
+		
+		// Base parameters that will be shared across all search variations
+		$baseParams = [
+			'data' => $pFieldModifierHandler->getAllAPIFields(),
+			'estatelanguage' => $language,
+			'outputlanguage' => $language,
+			'listlimit' => $numRecordsPerPage,
+			'formatoutput' => $formatOutput,
+			'addMainLangId' => true,
+			'listoffset' => $offset
+		];
+		
+		// Add list-specific parameters
+		if ($pListView instanceof DataListView) {
+			$baseParams['params_list_cache'] = $this->getEstateListParametersForCache($formatOutput, $language);
+			$baseParams = array('listname' => $this->_pDataView->getName()) + $baseParams;
+		}
+		
+		// Add extra parameters like sorting
+		$baseParams += $this->addExtraParams();
+		
+		// Create search variations for case-insensitive search
+		$searchVariations = $this->generateSearchVariations($searchTerm);
+		
+		// For multiple API calls, we'll need special handling
+		$this->_multiSearchMode = true;
+		$this->_searchVariations = [];
+		
+		foreach ($searchVariations as $variation) {
+			$params = $baseParams;
+			$params['filter'] = $baseFilter;
+			$params['filter']['objektnr_extern'] = [['op' => '=', 'val' => $variation]];
+			
+			// Apply reference estate filters
+			if ($pListView->getName() === 'detail' && $this->getViewRestrict()) {
+				$params['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
+				$params['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
+				$params['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+			}
+			
+			$this->_searchVariations[] = $params;
+		}
+		
+		// Return first variation as primary (others will be handled in loadRecords)
+		return $this->_searchVariations[0];
+	}
+
+
+	/**
+	 * Generate search variations for case-insensitive search
+	 * 
+	 * @param string $searchTerm
+	 * @return array
+	 */
+	private function generateSearchVariations(string $searchTerm): array
+	{
+		$variations = [
+			$searchTerm, // Original
+			strtolower($searchTerm), // lowercase
+			strtoupper($searchTerm), // UPPERCASE
+			ucfirst(strtolower($searchTerm)), // Capitalized
+			ucwords(strtolower($searchTerm)), // Title Case
+		];
+		
+		// Remove duplicates
+		return array_unique($variations);
+	}
+
 	/**
 	 * @param string $addressId
 	 * @return string
