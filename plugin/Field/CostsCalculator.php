@@ -74,16 +74,16 @@ class CostsCalculator
 	{
 		$purchasePriceRaw = $recordRaw['kaufpreis'];
 
+		if(!isset($propertyTransferTax[$recordRaw['bundesland']])){
+			return []; // empty array prevents total costs from being rendered
+		}
+
 		$othersCosts = [
 			'bundesland' => $propertyTransferTax[$recordRaw['bundesland']],
 			'aussen_courtage' => $externalCommission,
 			'notary_fees' => DataDetailView::NOTARY_FEES,
 			'land_register_entry' => DataDetailView::LAND_REGISTER_ENTRY
 		];
-
-		if($othersCosts['bundesland'] === null) {
-			return []; // empty array prevents total costs from being rendered
-		}
 
 		$rawAllCosts = ['kaufpreis' => ['raw' => $purchasePriceRaw]];
 		$totals = 0;
