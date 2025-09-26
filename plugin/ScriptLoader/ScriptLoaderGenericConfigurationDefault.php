@@ -201,9 +201,6 @@ class ScriptLoaderGenericConfigurationDefault
 			(new IncludeFileModel($script, 'onoffice-leadform', plugins_url('/dist/onoffice-leadform.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/dist/onoffice-prevent-double-form-submission.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
@@ -260,7 +257,6 @@ class ScriptLoaderGenericConfigurationDefault
 			'onoffice-multiselect', 
 			'onoffice-estatetype', 
 			'onoffice-leadform', 
-			'onoffice-prevent-double-form-submission', 
 			'onoffice-apply-thousand-separator'
 		];
 

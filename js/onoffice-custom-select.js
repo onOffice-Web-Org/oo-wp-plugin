@@ -14,90 +14,6 @@ jQuery(document).ready(function ($) {
     }
   });
 
-    const forms = document.querySelectorAll('.oo-form');
-  
-    forms.forEach(function(form) {
-      form.setAttribute('novalidate', '');
-      const inputs = form.querySelectorAll('input, textarea');
-      const selects = form.querySelectorAll('select');
-  
-      const showError = (input, message) => {
-        const errorDiv = input.closest('label, div')?.querySelector('.error');
-        if (errorDiv) {      
-          $(errorDiv).css('display', 'block');
-          errorDiv.setAttribute('aria-live', 'polite');
-        }
-      };
-  
-      const hideError = (input) => {
-        const errorDiv = input.closest('label, div')?.querySelector('.error');
-        if (errorDiv) {
-          errorDiv.textContent = '';
-          errorDiv.classList.remove('is-visible');
-          errorDiv.removeAttribute('aria-live');
-        }
-      };
-  
-      const inputHandleBlur = (input) => {
-        if (!input.checkValidity()) {
-          showError(input);
-        } else {
-          hideError(input);
-        }
-      }
-  
-      inputs.forEach(function(input) {
-        input.addEventListener('blur', function() {
-          inputHandleBlur(input)
-        });
-  
-        input.addEventListener('input', function() {
-          if (input.checkValidity()) {
-            hideError(input);
-          }
-        });
-      });
-
-      const selectHandleChange = (select) => {
-        const tomSelectControl = select.nextElementSibling;
-        if (!select.checkValidity()) {
-            tomSelectControl.classList.add('is-invalid');
-            showError(select);
-        } else {
-            tomSelectControl.classList.remove('is-invalid');
-            hideError(select);
-        }
-    }
-
-    const jumpToFirstInvalidInput = (form) => {
-      const firstInvalid = form.querySelector(':invalid');
-      if (firstInvalid) {
-          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          firstInvalid.focus({ preventScroll: true });
-      }
-  }
-    selects.forEach(select => {
-      select.addEventListener('change', function() {
-        selectHandleChange(select)
-      });
-    });
-
-    form.addEventListener('submit', function(event) {
-      if (!form.checkValidity()) {
-          event.preventDefault();
-          event.stopPropagation();
-          inputs.forEach(input => {
-              inputHandleBlur(input)
-          });
-          selects.forEach(select => {
-              selectHandleChange(select)
-          })
-          jumpToFirstInvalidInput(form);
-      }
-      form.classList.add('validated');
-  });
-  });
-
 
   document.querySelectorAll(".custom-single-select-tom, .custom-multiple-select-tom").forEach(function (select) {
     if (typeof TomSelect !== 'undefined') {
@@ -161,4 +77,117 @@ jQuery(document).ready(function ($) {
       width: '50%'
     });
   }
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  const forms = document.querySelectorAll('.oo-form');
+
+  forms.forEach(function (form) {
+    form.setAttribute('novalidate', '');
+    const inputs = form.querySelectorAll('input, textarea');
+    const selects = form.querySelectorAll('select');
+    const submitInput = form.querySelector('input[type=submit]');
+
+    const showError = (input) => {
+      const errorDiv = input.closest('.validated') 
+      ? input.closest('label')?.querySelector('.error') 
+      : null;
+      if (errorDiv) {
+        $(errorDiv).css('display', 'block');
+        errorDiv.setAttribute('aria-live', 'polite');
+      }
+    };
+
+    const hideError = (input) => {
+      const errorDiv = input.closest('.validated') 
+  ? input.closest('label')?.querySelector('.error') 
+  : null;
+      if (errorDiv) {
+        errorDiv.removeAttribute('aria-live');
+        $(errorDiv).css('display', 'none');
+      }
+    };
+
+    const inputHandleBlur = (input) => {
+      if (!input.checkValidity()) {
+        showError(input);
+      } else {
+        hideError(input);
+      }
+    };
+
+    const selectHandleChange = (select) => {
+      const tomSelectControl = select.nextElementSibling;
+      if (!select.checkValidity()) {
+        tomSelectControl.classList.add('is-invalid');
+        showError(select);
+      } else {
+        tomSelectControl.classList.remove('is-invalid');
+        hideError(select);
+      }
+    };
+
+    const jumpToFirstInvalidInput = (form) => {
+      const firstInvalid = form.querySelector(':invalid');
+      if (firstInvalid) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstInvalid.focus({ preventScroll: true });
+      }
+    };
+
+    // 🔥 Neu: Submit-Button erst nach dem ersten Absenden toggeln
+    const toggleSubmitButton = () => {
+      if (submitInput && form.classList.contains('validated')) {
+        submitInput.disabled = !form.checkValidity();
+      }
+    };
+
+    // Event-Listener für Inputs
+    inputs.forEach(function (input) {
+      input.addEventListener('blur', function () {
+        inputHandleBlur(input);
+        toggleSubmitButton();
+      });
+
+      input.addEventListener('input', function () {
+        if (input.checkValidity()) {
+          hideError(input);
+        }
+        toggleSubmitButton();
+      });
+    });
+
+    // Event-Listener für Selects
+    selects.forEach(select => {
+      select.addEventListener('change', function () {
+        selectHandleChange(select);
+        toggleSubmitButton();
+      });
+    });
+
+    // Initialzustand: Button bleibt aktiv bis zum ersten Submit
+    if (submitInput) submitInput.disabled = false;
+
+    // Submit-Handler
+    form.addEventListener('submit', function (event) {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+        inputs.forEach(input => inputHandleBlur(input));
+        selects.forEach(select => selectHandleChange(select));
+        jumpToFirstInvalidInput(form);
+      } else {
+        // Nur wenn gültig: doppelte Submits verhindern
+        if (submitInput) {
+          submitInput.disabled = true;
+        }
+      }
+
+      // 🔑 Ab hier wird der Button beim Eingeben automatisch getoggelt
+      form.classList.add('validated');
+      toggleSubmitButton();
+    });
+  });
 });
