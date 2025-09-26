@@ -81,6 +81,10 @@ class CostsCalculator
 			'land_register_entry' => DataDetailView::LAND_REGISTER_ENTRY
 		];
 
+		if($othersCosts['bundesland'] === null) {
+			return []; // empty array prevents total costs from being rendered
+		}
+
 		$rawAllCosts = ['kaufpreis' => ['raw' => $purchasePriceRaw]];
 		$totals = 0;
 
