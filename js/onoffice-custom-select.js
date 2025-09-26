@@ -137,14 +137,12 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     };
 
-    // 🔥 Neu: Submit-Button erst nach dem ersten Absenden toggeln
     const toggleSubmitButton = () => {
       if (submitInput && form.classList.contains('validated')) {
         submitInput.disabled = !form.checkValidity();
       }
     };
 
-    // Event-Listener für Inputs
     inputs.forEach(function (input) {
       input.addEventListener('blur', function () {
         inputHandleBlur(input);
@@ -159,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
 
-    // Event-Listener für Selects
     selects.forEach(select => {
       select.addEventListener('change', function () {
         selectHandleChange(select);
@@ -167,10 +164,8 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
 
-    // Initialzustand: Button bleibt aktiv bis zum ersten Submit
     if (submitInput) submitInput.disabled = false;
 
-    // Submit-Handler
     form.addEventListener('submit', function (event) {
       if (!form.checkValidity()) {
         event.preventDefault();
@@ -179,13 +174,10 @@ document.addEventListener('DOMContentLoaded', function () {
         selects.forEach(select => selectHandleChange(select));
         jumpToFirstInvalidInput(form);
       } else {
-        // Nur wenn gültig: doppelte Submits verhindern
         if (submitInput) {
           submitInput.disabled = true;
         }
       }
-
-      // 🔑 Ab hier wird der Button beim Eingeben automatisch getoggelt
       form.classList.add('validated');
       toggleSubmitButton();
     });
