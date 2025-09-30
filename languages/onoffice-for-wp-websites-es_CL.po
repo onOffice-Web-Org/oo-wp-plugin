@@ -1707,11 +1707,17 @@ msgstr ""
 msgid "Page title: %s"
 msgstr ""
 
-msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs. %4$s %4$s"
-msgstr ""
-
 msgid "The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications."
 msgstr ""
 
 msgid "Highlights"
+msgstr ""
+
+msgid "The From value cannot be greater than To value"
+msgstr ""
+
+msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
+msgstr ""
+
+msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
 msgstr ""
