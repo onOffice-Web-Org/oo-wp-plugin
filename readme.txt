@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 6.5.2
+Stable tag: 6.6
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,13 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.6 (2025-09-30) =
+
+**Fixed**
+
+* Critical error on detail page settings.
+* Critical error in the Total Price Calculator
 
 = 6.5.2 (2025-09-15) =
 
