@@ -1,133 +1,128 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: WP-OO-Plugin\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-09-30T09:40:26+00:00\n"
+"PO-Revision-Date: 2025-09-30T09:40:26+00:00\n"
+"Language: fr\n"
 "X-Generator: POEditor.com\n"
 "X-Domain: onoffice-for-wp-websites\n"
-"Project-Id-Version: WP-OO-Plugin\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: 
 msgid "A standard value of 1.5% and 0.5% is usually used to calculate notary and land registry costs."
-msgstr "Une valeur standard de 1,5 % et 0,5 % est généralement utilisée pour le calcul des frais de notaire et d’inscription au registre foncier.\n"
+msgstr ""
+"Une valeur standard de 1,5 % et 0,5 % est généralement utilisée pour le calcul des frais de notaire et d’inscription au registre foncier.\n"
 "\n"
 ""
 
 #. translators: 1: Count and name of parking lot
-#: 
 msgid "%1$s"
 msgid_plural "%1$s"
-msgstr[0] "%1$s\n"
+msgstr[0] ""
+"%1$s\n"
 "Pluriel : %1$s\n"
 ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgid "Land Register Entry"
-msgstr "Inscription au registre foncier\n"
+msgstr ""
+"Inscription au registre foncier\n"
 "\n"
 ""
 
-#: 
 msgid "Notary Fees"
-msgstr "Frais de notaire\n"
+msgstr ""
+"Frais de notaire\n"
 "\n"
 ""
 
-#: 
 msgid "Broker commission"
-msgstr "Commission d’agence\n"
+msgstr ""
+"Commission d’agence\n"
 "\n"
 ""
 
-#: 
 msgid "Property transfer tax"
-msgstr "Droits de mutation\n"
+msgstr ""
+"Droits de mutation\n"
 "\n"
 ""
 
-#: 
 msgid "Overview of costs"
-msgstr "Aperçu des coûts\n"
+msgstr ""
+"Aperçu des coûts\n"
 "\n"
 ""
 
-#: 
 msgid "Total costs"
-msgstr "Coûts totaux\n"
+msgstr ""
+"Coûts totaux\n"
 "\n"
 ""
 
-#: 
-msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs."
-msgstr "Les champs %1$s, %2$s et %3$s doivent être remplis dans onOffice enterprise pour que l’affichage soit possible. %4$s %4$s Une valeur standard de 1,5 % et 0,5 % est généralement utilisée pour le calcul des frais de notaire et d’inscription au registre foncier."
-
-#: 
 msgid "Show total price calculator"
-msgstr "Afficher le calculateur de coût total\n"
+msgstr ""
+"Afficher le calculateur de coût total\n"
 "\n"
 ""
 
-#: 
 msgid "Total costs calculator"
-msgstr "Calculateur de coût total\n"
+msgstr ""
+"Calculateur de coût total\n"
 "\n"
 ""
 
-#: 
 msgid "Insert variable"
-msgstr "Insérer une variable\n"
+msgstr ""
+"Insérer une variable\n"
 "\n"
 ""
 
-#: 
 msgid "We recommend a maximum number of characters between 40 and 60 or up to 10 words."
-msgstr "Nous recommandons un maximum de 40 à 60 caractères ou jusqu’à 10 mots.\n"
+msgstr ""
+"Nous recommandons un maximum de 40 à 60 caractères ou jusqu’à 10 mots.\n"
 "\n"
 ""
 
-#: 
 msgid "Message from the contact form of your website"
-msgstr "Message du formulaire de contact de votre site web\n"
+msgstr ""
+"Message du formulaire de contact de votre site web\n"
 "\n"
 ""
 
-#: 
 msgid "Message from the interest form on your website"
-msgstr "Message du formulaire d’intérêt de votre site web\n"
+msgstr ""
+"Message du formulaire d’intérêt de votre site web\n"
 "\n"
 ""
 
-#: 
 msgid "Message from the owner form of your website"
-msgstr "Message du formulaire propriétaire de votre site web\n"
+msgstr ""
+"Message du formulaire propriétaire de votre site web\n"
 "\n"
 ""
 
-#: 
 msgid "New newsletter registration"
-msgstr "Nouvelle inscription à la newsletter\n"
+msgstr ""
+"Nouvelle inscription à la newsletter\n"
 "\n"
 ""
 
-#: 
-msgid "Page "
-msgstr "Page\n"
-"\n"
-""
-
-#: 
 msgid "Page %s"
-msgstr "Page %s\n"
+msgstr ""
+"Page %s\n"
 "\n"
 ""
 
-#: 
 msgid "Add Page"
-msgstr "Ajouter une page\n"
+msgstr ""
+"Ajouter une page\n"
 "\n"
 "\n"
 "\n"
@@ -136,573 +131,470 @@ msgstr "Ajouter une page\n"
 "\n"
 ""
 
-#: 
 msgid "Show form as modal"
-msgstr "Afficher le formulaire en tant que fenêtre modale\n"
+msgstr ""
+"Afficher le formulaire en tant que fenêtre modale\n"
 "\n"
 ""
 
-#: 
 msgid "Remove Page"
-msgstr "Supprimer la page\n"
+msgstr ""
+"Supprimer la page\n"
 "\n"
 ""
 
-#: 
 msgid "Page"
 msgstr "Page"
 
-#: 
 msgid "%s list documentation"
 msgstr "Documentation de la liste %s"
 
-#: 
 msgid "estate"
-msgstr "bien immobilier\n"
+msgstr ""
+"bien immobilier\n"
 ""
 
-#: 
 msgid "Example address"
 msgstr "Adresse d’exemple"
 
-#: 
 msgid "https://wp-plugin.onoffice.com/"
 msgstr "https://wp-plugin.onoffice.com/"
 
-#: 
 msgid "address"
 msgstr "adresse"
 
-#: 
 msgid "Show energy certificate with a scale"
-msgstr "Afficher le certificat énergétique avec une échelle\n"
+msgstr ""
+"Afficher le certificat énergétique avec une échelle\n"
 "\n"
 ""
 
-#: 
 msgid "The main contact person is the address data record of the broker type, which is stored in the first place in onOffice enterprise."
 msgstr "Le contact principal est la fiche d’adresse de type agent immobilier qui est enregistrée en premier dans onOffice enterprise."
 
-#: 
 msgid "Only show main contact person"
-msgstr "Afficher uniquement le contact principal\n"
+msgstr ""
+"Afficher uniquement le contact principal\n"
 "\n"
 ""
 
-#: 
 msgid "Show all contact persons"
-msgstr "Afficher tous les contacts\n"
+msgstr ""
+"Afficher tous les contacts\n"
 "\n"
 ""
 
-#: 
 msgid "Show address map"
-msgstr "Afficher la carte de l’adresse\n"
+msgstr ""
+"Afficher la carte de l’adresse\n"
 "\n"
 ""
 
-#: 
 msgid "Need clarification"
-msgstr "Nécessite une clarification\n"
+msgstr ""
+"Nécessite une clarification\n"
 "\n"
 ""
 
-#: 
 msgid "Checked"
 msgstr "Vérifié"
 
-#: 
 msgid "Miscellaneous"
-msgstr "Divers\n"
+msgstr ""
+"Divers\n"
 "\n"
 ""
 
-#: 
 msgid "Cancelled"
-msgstr "Annulé\n"
+msgstr ""
+"Annulé\n"
 "\n"
 ""
 
-#: 
 msgid "Deferred"
 msgstr "Reporté"
 
-#: 
 msgid "Completed"
 msgstr "Terminé"
 
-#: 
 msgid "In process"
 msgstr "En cours"
 
-#: 
 msgid "Not started"
 msgstr "Pas commencé"
 
-#: 
 msgid "lowest"
 msgstr "Très basse"
 
-#: 
 msgid "low"
 msgstr "Basse"
 
-#: 
 msgid "high"
 msgstr "Élevée"
 
-#: 
 msgid "highest"
-msgstr "Très élevée\n"
+msgstr ""
+"Très élevée\n"
 ""
 
-#: 
 msgid "standard"
 msgstr "Standard"
 
-#: 
 msgid "Status"
 msgstr "Statut"
 
-#: 
 msgid "Task description"
 msgstr "Description de la tâche"
 
-#: 
 msgid "Subject"
 msgstr "Sujet"
 
-#: 
 msgid "Priority"
 msgstr "Priorité"
 
-#: 
 msgid "Type"
 msgstr "Type"
 
-#: 
 msgid "Processor"
 msgstr "Agent en charge"
 
-#: 
 msgid "Responsibility"
 msgstr "Responsabilité"
 
-#: 
 msgid "Create tasks in onOffice enterprise"
 msgstr "Créer des tâches dans onOffice enterprise"
 
-#: 
 msgid "Advisory Level"
 msgstr "Niveau de conseil"
 
-#: 
 msgid "G Cancellation"
 msgstr "G Annulation"
 
-#: 
 msgid "F Documentation ordered"
 msgstr "F Documentation commandée"
 
-#: 
 msgid "E Documentation received"
 msgstr "E Documentation reçue"
 
-#: 
 msgid "D Interested, but still reviewing"
 msgstr "D Intéressé, en cours d'examen"
 
-#: 
 msgid "C Intense communication"
 msgstr "C Communication intense"
 
-#: 
 msgid "B Written rental / purchase commitment"
 msgstr "B Engagement écrit de location / d'achat"
 
-#: 
 msgid "A Rental/purchase contract signed"
 msgstr "A Contrat de location/achat signé"
 
-#: 
 msgid "Origin Contact"
 msgstr "Contact d'origine"
 
-#: 
 msgid "Characteristic"
 msgstr "Caractéristique"
 
-#: 
 msgid "Callback"
 msgstr "Rappel"
 
-#: 
 msgid "Kind of action"
 msgstr "Genre d'action"
 
-#: 
 msgid "Type of action"
 msgstr "Type d'action"
 
-#: 
 msgid "Write activity"
 msgstr "Écrire activité"
 
-#: 
 msgid "Image website"
 msgstr "Site web d'image"
 
-#: 
 msgid "Tasks"
 msgstr "Tâches"
 
-#: 
 msgid "Activities"
 msgstr "Activités"
 
-#: 
 msgid "Contact Image"
 msgstr "Image du contact"
 
-#: 
 msgid "If this checkbox is selected, the name and company of the address will be included in the URLs of the address detail views. The name and company will be placed after the record number, eg. <code>/1234-firstname-lastname-company</code>."
-msgstr "Si cette case est cochée, le nom et la société de l'adresse seront inclus dans les URL des vues détaillées de l'adresse. Le nom et la société seront placés après le numéro d'enregistrement, par exemple :\n"
+msgstr ""
+"Si cette case est cochée, le nom et la société de l'adresse seront inclus dans les URL des vues détaillées de l'adresse. Le nom et la société seront placés après le numéro d'enregistrement, par exemple :\n"
 "<code>/1234-prenom-nom-societe</code>"
 
-#: 
 msgid "Show Name and Company in the URL"
 msgstr "Afficher le nom et la société dans l’URL"
 
-#: 
 msgid "Sort direction"
 msgstr "Direction de tri"
 
-#: 
 msgid "Sort criteria within same selection"
 msgstr "Critères de tri dans la même sélection"
 
-#: 
 msgid "Sequence"
 msgstr "Séquence"
 
-#: 
 msgid "Marked properties"
 msgstr "Biens marqués"
 
-#: 
 msgid "Reference"
 msgstr "Référence"
 
-#: 
 msgid "Reserved"
 msgstr "Réservé"
 
-#: 
 msgid "Rented"
 msgstr "Loué"
 
-#: 
 msgid "Sold"
 msgstr "Vendu"
 
-#: 
 msgid "No marker"
 msgstr "Aucun marqueur"
 
-#: 
 msgid "Top offer"
 msgstr "Meilleure offre"
 
-#: 
 msgid "New"
 msgstr "Nouveau"
 
-#: 
 msgid "Reference Estate"
 msgstr "Bien de référence"
 
-#: 
 msgid "No Estate"
 msgstr "Aucun bien"
 
-#: 
 msgid "Active Estate"
 msgstr " Bien actif"
 
-#: 
 msgid "Address Detail View"
 msgstr "Vue détaillée de l'adresse"
 
-#: 
 msgid "There was a problem saving the view. Please make sure the name of the view is unique, even across all address list types."
 msgstr "Problème d’enregistrement de la vue. Veuillez vous assurer que le nom est unique, même entre tous les types de listes d’adresses."
 
-#: 
 msgid "There was a problem saving the address detail view."
 msgstr "Problème lors de l'enregistrement de la vue détaillée de l'adresse."
 
-#: 
 msgid "The address detail view has been saved."
 msgstr "La vue détaillée de l'adresse a été enregistrée."
 
-#: 
 msgid "Address Views"
 msgstr "Vues d'adresse"
 
-#: 
 msgid "Hidden Field"
 msgstr "Champ masqué"
 
-#: 
 msgid "Google ReCAPTCHA"
 msgstr "Google ReCAPTCHA"
 
-#: 
 msgid "Comma (ex: 123,456,789)"
 msgstr "Virgule (ex : 123,456,789)"
 
-#: 
 msgid "Dot (ex: 123.456.789)"
 msgstr "Point (ex : 123.456.789"
 
-#: 
 msgid "Please choose"
 msgstr "Veuillez choisir"
 
-#: 
 msgid "Thousand Separator Format"
 msgstr "Format du séparateur de milliers"
 
-#: 
 msgid "Separator Format Settings"
 msgstr "Paramètres du format de séparateur"
 
-#: 
 msgid "Cache"
 msgstr " Cache"
 
-#: 
 msgid "The Cache duration value determines the period of time after which the plugin cache of your page is refreshed. This value is set to 1 hour by default."
-msgstr "Si cette case est cochée, le nom et la société de l'adresse seront inclus dans les URL des vues détaillées de l'adresse. Le nom et la société seront placés après le numéro d'enregistrement, par exemple :\n"
+msgstr ""
+"Si cette case est cochée, le nom et la société de l'adresse seront inclus dans les URL des vues détaillées de l'adresse. Le nom et la société seront placés après le numéro d'enregistrement, par exemple :\n"
 "<code>/1234-prenom-nom-societe</code>"
 
-#: 
 msgid "24 hours"
 msgstr "24 heures"
 
-#: 
 msgid "12 hours"
 msgstr "12 heures"
 
-#: 
 msgid "1 hour"
 msgstr "1 heure"
 
-#: 
 msgid "Duration"
 msgstr " Durée"
 
-#: 
 msgid "6 hours"
 msgstr "6 heures"
 
-#: 
 msgid "30 minutes"
 msgstr "30 minutes"
 
-#: 
 msgid "10 minutes"
 msgstr "10 minutes"
 
-#: 
 msgid "Image of property"
 msgstr "Image du bien"
 
-#: 
 msgid "You can show up to 500 data records per page."
-msgstr "Vous pouvez afficher jusqu'à 500 enregistrements par page.\n"
+msgstr ""
+"Vous pouvez afficher jusqu'à 500 enregistrements par page.\n"
 ""
 
-#: 
 msgid "Data records per page"
 msgstr "Enregistrements par page"
 
-#: 
 msgid "Select an Option"
 msgstr "Sélectionner une option"
 
-#: 
 msgid "Select Some Options"
 msgstr "Sélectionner plusieurs options"
 
-#: 
 msgid "For information on how to use custom fields in your SEO plugin, please refer to its documentation."
-msgstr "Pour savoir comment utiliser les champs personnalisés dans votre plugin SEO, veuillez consulter sa documentation.\n"
+msgstr ""
+"Pour savoir comment utiliser les champs personnalisés dans votre plugin SEO, veuillez consulter sa documentation.\n"
 ""
 
-#: 
 msgid "An example of integration with the Yoast SEO plugin would be:%1$s %2$s or%1$s %3$s or%1$s %4$s"
-msgstr "Un exemple d’intégration avec le plugin Yoast SEO serait : %1\\$s %2\\$s ou %1\\$s %3\\$s ou %1\\$s %4\\$s\n"
+msgstr ""
+"Un exemple d’intégration avec le plugin Yoast SEO serait : %1\\$s %2\\$s ou %1\\$s %3\\$s ou %1\\$s %4\\$s\n"
 ""
 
-#: 
 msgid "These custom fields allow you to insert specific information, such as the property title and property number from onOffice enterprise. The corresponding field names can be found in the field list on the detail page. Please note that only fields that are active for the detail page, for example, can be output."
-msgstr "Ces champs personnalisés permettent d’insérer des informations spécifiques, telles que le titre du bien et le numéro du bien depuis onOffice enterprise. Les noms de champs correspondants se trouvent dans la liste des champs sur la page de détail. Veuillez noter que seuls les champs actifs pour la page de détail, par exemple, peuvent être affichés.\n"
+msgstr ""
+"Ces champs personnalisés permettent d’insérer des informations spécifiques, telles que le titre du bien et le numéro du bien depuis onOffice enterprise. Les noms de champs correspondants se trouvent dans la liste des champs sur la page de détail. Veuillez noter que seuls les champs actifs pour la page de détail, par exemple, peuvent être affichés.\n"
 ""
 
-#: 
 msgid "With the help of an SEO plugin, it is possible to use individual fields to insert data directly from onOffice enterprise into the title and metadata of your website."
 msgstr "Avec l’aide d’un plugin SEO, il est possible d’utiliser des champs individuels pour insérer directement des données depuis onOffice enterprise dans le titre et les métadonnées de votre site web."
 
-#: 
 msgid "Further information on custom fields"
-msgstr "Informations supplémentaires sur les champs personnalisés\n"
+msgstr ""
+"Informations supplémentaires sur les champs personnalisés\n"
 "\n"
 ""
 
-#: 
 msgid "Social MetaData"
-msgstr "Métadonnées sociales\n"
+msgstr ""
+"Métadonnées sociales\n"
 "\n"
 ""
 
-#: 
 msgid "We have detected an active SEO plugin: %s. This option can lead to conflicts with the SocialMedia Data settings. Therefore they are disabled."
 msgstr "Nous avons détecté un plugin SEO actif : %s. Cette option peut entraîner des conflits avec les paramètres des données des réseaux sociaux. Elles sont donc désactivées."
 
-#: 
 msgid "Enable Twitter Cards"
-msgstr "Activer les cartes Twitter\n"
+msgstr ""
+"Activer les cartes Twitter\n"
 "\n"
 ""
 
-#: 
 msgid "Enable Open Graph"
-msgstr "Activer Open Graph\n"
+msgstr ""
+"Activer Open Graph\n"
 "\n"
 ""
 
-#: 
 msgid "Leave without saving"
-msgstr "Quitter sans enregistrer\n"
+msgstr ""
+"Quitter sans enregistrer\n"
 "\n"
 ""
 
-#: 
 msgid "Your changes have not been saved yet! Do you want to leave the page without saving?"
-msgstr "Vos modifications n’ont pas encore été enregistrées ! Voulez-vous quitter la page sans enregistrer ?\n"
+msgstr ""
+"Vos modifications n’ont pas encore été enregistrées ! Voulez-vous quitter la page sans enregistrer ?\n"
 "\n"
 ""
 
-#: 
 msgid "AreaButler"
 msgstr "AreaButler"
 
-#: 
 msgid "Delete Keys"
-msgstr "Supprimer les clés\n"
+msgstr ""
+"Supprimer les clés\n"
 "\n"
 ""
 
-#: 
 msgid "Display as selection list instead of text input"
-msgstr "Afficher comme liste de sélection au lieu d’un champ de saisie de texte\n"
+msgstr ""
+"Afficher comme liste de sélection au lieu d’un champ de saisie de texte\n"
 "\n"
 ""
 
-#: 
 msgid "The duplicate check identifies existing duplicates of address data records and triggers an e-mail notification with information on manual duplicate management."
-msgstr "Le contrôle des doublons identifie les doublons existants dans les enregistrements d’adresses et déclenche une notification par e-mail contenant des informations sur la gestion manuelle des doublons.\n"
+msgstr ""
+"Le contrôle des doublons identifie les doublons existants dans les enregistrements d’adresses et déclenche une notification par e-mail contenant des informations sur la gestion manuelle des doublons.\n"
 "\n"
 ""
 
-#: 
 msgid "https://de.enterprisehilfe.onoffice.com/help_entries/dubletten/?lang=en"
 msgstr ""
 
-#: 
 msgid "How to search and update duplicates in onOffice enterprise:"
-msgstr "Comment rechercher et mettre à jour des doublons dans onOffice enterprise :\n"
+msgstr ""
+"Comment rechercher et mettre à jour des doublons dans onOffice enterprise :\n"
 "\n"
 ""
 
-#: 
 msgid "Existing data record:"
-msgstr "Enregistrement de données existant :\n"
+msgstr ""
+"Enregistrement de données existant :\n"
 "\n"
 ""
 
-#: 
 msgid "Attention: Duplicate detected! This data is similar to existing data records. Please take a moment to check for duplicates and decide whether updates are required."
 msgstr "Attention : doublon détecté ! Ces données sont similaires à des enregistrements existants. Veuillez vérifier s’il s’agit de doublons et décider si une mise à jour est nécessaire."
 
-#: 
 msgid "Would you like to permanently delete the site key and the secret key?"
 msgstr "Souhaitez-vous supprimer définitivement la clé de site et la clé secrète"
 
-#: 
 msgid "Search the field list for the desired fields."
 msgstr "Recherchez les champs souhaités dans la liste des champs."
 
-#: 
 msgid "At least city or postcode are required."
 msgstr "Au moins la ville ou le code postal est requis."
 
-#: 
 msgid "Field list search"
 msgstr "Recherche dans la liste des champs"
 
-#: 
 msgid "Publish"
 msgstr "Publier"
 
-#: 
 msgid "Show price on request"
-msgstr "Afficher le prix sur demande\n"
+msgstr ""
+"Afficher le prix sur demande\n"
 ""
 
-#: 
 msgid "Show estate map"
 msgstr "Afficher la carte du bien"
 
-#: 
 msgid "Hide empty values from onOffice enterprise"
 msgstr "Masquer les valeurs vides de onOffice enterprise"
 
-#: 
 msgid "Show in search"
 msgstr "Afficher dans la recherche"
 
-#: 
 msgid "There was a problem saving the form. The Name field cannot be empty."
 msgstr "Un problème est survenu lors de l’enregistrement du formulaire. Le champ Nom ne peut pas être vide."
 
-#: 
 msgid "There was a problem saving the list. The Name field cannot be empty."
 msgstr "Un problème est survenu lors de l’enregistrement de la liste. Le champ Nom ne peut pas être vide."
 
-#: 
 msgid "There was a problem saving the address. The Name field cannot be empty."
 msgstr "Un problème est survenu lors de l’enregistrement de l’adresse. Le champ Nom ne peut pas être vide."
 
-#: 
 msgid "Price on request"
 msgstr "Prix sur demande"
 
-#: 
-msgid "The cache was cleared successfully."
-msgstr "Le cache a été vidé avec succès"
-
-#: 
 msgid "A honeypot is an invisible field to trick spam bots. Note that when a bot is detected, it will pretend the form was sent successfully. We recommend to keep this active, but you can deactivate it if it causes any problems."
 msgstr "Un honeypot est un champ invisible destiné à piéger les robots spammeurs. Notez que lorsqu’un bot est détecté, il simulera un envoi réussi du formulaire. Nous vous recommandons de laisser cette fonction activée, mais vous pouvez la désactiver si elle pose des problèmes."
 
-#: 
 msgid "Add honeypot to forms"
 msgstr "Ajouter un honeypot aux formulaires"
 
-#: 
-msgid "## Connect your website to onOffice enterprise\n"
+msgid ""
+"## Connect your website to onOffice enterprise\n"
 "\n"
 "You are ready to integrate all your real estate into your website and create forms that send data into onOffice enterprise.\n"
 "\n"
@@ -710,7 +602,8 @@ msgid "## Connect your website to onOffice enterprise\n"
 "\n"
 "The [documentation website](https://wp-plugin.onoffice.com/en/) also offers detailed explanations of the features. If you encounter a problem, you can send us a message using the [support form](https://wp-plugin.onoffice.com/en/support/).\n"
 ""
-msgstr "## Connectez votre site web à onOffice enterprise\n"
+msgstr ""
+"## Connectez votre site web à onOffice enterprise\n"
 "\n"
 "Vous êtes prêt à intégrer tous vos biens immobiliers à votre site web et à créer des formulaires qui envoient des données vers onOffice enterprise.\n"
 "\n"
@@ -718,1295 +611,1080 @@ msgstr "## Connectez votre site web à onOffice enterprise\n"
 "\n"
 "Le site de documentation propose également des explications détaillées des fonctionnalités. Si vous rencontrez un problème, vous pouvez nous contacter via le formulaire d’assistance."
 
-#: 
 msgid "Getting started"
 msgstr "Commencer"
 
 #. translators: %s is the amount of other parking lots
-#: 
 msgid "%s other parking lot"
 msgid_plural "%s other parking lots"
-msgstr[0] " %s autre place de parking\n"
+msgstr[0] ""
+" %s autre place de parking\n"
 "Pluriel : %s autres places de parking"
 msgstr[1] ""
 msgstr[2] ""
 
 #. translators: %s is the amount of underground garages
-#: 
 msgid "%s underground garage"
 msgid_plural "%s underground garages"
-msgstr[0] "%s garage souterrain\n"
+msgstr[0] ""
+"%s garage souterrain\n"
 "Pluriel : %s garages souterrains"
 msgstr[1] ""
 msgstr[2] ""
 
 #. translators: %s is the amount of multi story garages
-#: 
 msgid "%s multi-story garage"
 msgid_plural "%s multi-story garages"
-msgstr[0] "%s garage à étages\n"
+msgstr[0] ""
+"%s garage à étages\n"
 "Pluriel : %s garages à étages"
 msgstr[1] ""
 msgstr[2] ""
 
 #. translators: %s is the amount of garages
-#: 
 msgid "%s garage"
 msgid_plural "%s garages"
-msgstr[0] "%s garage\n"
+msgstr[0] ""
+"%s garage\n"
 "Pluriel : %s garages"
 msgstr[1] ""
 msgstr[2] ""
 
 #. translators: %s is the amount of parking spaces
-#: 
 msgid "%s parking space"
 msgid_plural "%s parking spaces"
-msgstr[0] "%s parking spaces\n"
+msgstr[0] ""
+"%s parking spaces\n"
 "→ %s place de parking"
 msgstr[1] ""
 msgstr[2] ""
 
 #. translators: %s is the amount of duplexes
-#: 
 msgid "%s duplex"
 msgid_plural "%s duplexes"
-msgstr[0] "%s duplex\n"
+msgstr[0] ""
+"%s duplex\n"
 "Pluriel : %s duplex"
 msgstr[1] ""
 msgstr[2] ""
 
 #. translators: %s is the amount of carports
-#: 
 msgid "%s carport"
 msgid_plural "%s carports"
-msgstr[0] "%s abri voiture\n"
+msgstr[0] ""
+"%s abri voiture\n"
 "Pluriel : %s abris voiture"
 msgstr[1] ""
 msgstr[2] ""
 
 #. translators: %s is the marketing type of rent
-#: 
 msgid " (rent)"
 msgstr "(location)"
 
 #. translators: %s is the marketing type of buy
-#: 
 msgid " (purchase)"
 msgstr "(achat)"
 
 #. translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type
-#: 
 msgid "%1$s, %2$s%3$s"
 msgid_plural "%1$s, %2$s %3$s"
-msgstr[0] " %1$s, %2$s%3$s\n"
+msgstr[0] ""
+" %1$s, %2$s%3$s\n"
 "Plural: %1$s, %2$s %3$s"
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgid "Choose an estate filter from onOffice enterprise. %s"
 msgstr "Choisissez un filtre immobilier depuis onOffice enterprise. %s"
 
-#: 
 msgid "Learn more."
 msgstr "En savoir plus."
 
-#: 
 msgid "https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en"
 msgstr ""
 
-#: 
 msgid "The plugin couldn't find any %s. Please make sure that you have published some %s, as described in the %s"
 msgstr "Le plugin n’a trouvé aucun %s. Veuillez vérifier que vous avez publié des %s comme décrit dans le %s"
 
-#: 
 msgid "https://wp-plugin.onoffice.com/en/first-steps/estate-lists/"
 msgstr ""
 
-#: 
 msgid "Label uses %s"
 msgstr "L’étiquette utilise %s"
 
-#: 
 msgid "https://wp-plugin.onoffice.com/en/advanced-features/markdown-labels"
 msgstr ""
 
-#: 
 msgid "Markdown"
 msgstr "Markdown"
 
-#: 
 msgid "GDPR (Checkbox)"
 msgstr "RGPD (case à cocher)"
 
-#: 
 msgid "Since you are logged in, here is a link to a random %s so that you can preview the detail page: %s"
 msgstr "Puisque vous êtes connecté, voici un lien vers un %s aléatoire..."
 
-#: 
 msgid "Example estate"
 msgstr "Exemple de bien"
 
-#: 
 msgid "You have opened the detail page, but we do not know which %s to show you, because there is no %s ID in the URL. Please go to an %s list and open an %s from there."
 msgstr "Vous avez ouvert la page de détail, mais nous ne savons pas quel %s afficher..."
 
-#: 
 msgid "Applicant Search Form"
 msgstr "Formulaire de recherche de candidats"
 
-#: 
 msgid "Owner Form"
 msgstr "Formulaire du propriétaire"
 
-#: 
 msgid "Interest Form"
 msgstr " Formulaire d’intérêt"
 
-#: 
 msgid "SEO"
 msgstr "SEO"
 
-#: 
 msgid "Do not modify"
 msgstr "Ne pas modifier"
 
-#: 
 msgid "Fill out"
 msgstr "Remplir"
 
-#: 
 msgid "Title and description"
 msgstr "Titre et description"
 
-#: 
 msgid "This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin."
 msgstr "Ce plugin complétera le titre et la description avec les informations du bien affiché. Cette option est recommandée si vous n’utilisez pas de plugin SEO."
 
-#: 
-msgid "We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.\n"
+msgid ""
+"We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.\n"
 "\t\t\t\t\t\t\t\tWe recommend that you configure the onOffice plugin to not modify the title and description."
 msgstr "Nous avons détecté un plugin SEO actif : %s. Cette option peut entraîner des conflits avec ce plugin. Nous vous recommandons de configurer le plugin onOffice pour qu’il ne modifie pas le titre ni la description."
 
-#: 
 msgid "The title and description of the detail page are set using the %1$s and %2$s tags. They make it possible to show a summary of the page when you share a link."
 msgstr "Le titre et la description de la page de détail sont définis à l’aide des balises %1$s et %2$s. Cela permet d’afficher un résumé de la page lors du partage du lien."
 
-#: 
 msgid "This plugin will not modify the title and description. This enables other plugins to manage those tags."
 msgstr "Ce plugin ne modifiera pas le titre ni la description. Cela permet à d’autres plugins de gérer ces balises."
 
-#: 
-msgid "The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.\n"
+msgid ""
+"The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.\n"
 "\t\t\t\t\t\t\t\tWe recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin."
 msgstr "Le plugin onOffice a détecté un plugin SEO actif : %s. Vous avez actuellement configuré le plugin onOffice pour remplir le titre et la description de la page de détail, ce qui peut entraîner des conflits avec le plugin SEO. Nous vous recommandons d’aller dans le %s et de configurer le plugin onOffice pour qu’il ne modifie pas le titre ni la description. Cela vous permettra de gérer ces balises avec votre plugin SEO actif."
 
-#: 
 msgid "onOffice plugin settings"
 msgstr "Paramètres du plugin onOffice"
 
-#. translators: %1$s is office server status page link, %2$s is support form
-#. page link
-#: 
+#. translators: %1$s is office server status page link, %2$s is support form page link
 msgid "Please check the %1$s to see if there are known problems. Otherwise, report the problem using the %2$s."
 msgstr "Veuillez vérifier le %1$s pour voir s’il existe des problèmes connus. Sinon, signalez le problème via le %2$s."
 
-#: 
 msgid "https://wp-plugin.onoffice.com/en/support/"
 msgstr ""
 
-#: 
 msgid "support form"
 msgstr "formulaire d’assistance"
 
-#: 
 msgid "https://status.onoffice.de/"
 msgstr ""
 
-#: 
 msgid "onOffice server status"
 msgstr "Statut du serveur onOffice"
 
-#: 
 msgid "The onOffice plugin has an unexpected problem when trying to reach the onOffice API."
 msgstr "Le plugin onOffice a rencontré un problème inattendu lors de la tentative de connexion à l’API onOffice."
 
-#: 
 msgid "Direct download for PDF exposé"
 msgstr "Téléchargement direct de la fiche PDF"
 
-#: 
 msgid "You can show up to 500 per page."
 msgstr "Vous pouvez afficher jusqu’à 500 éléments par page."
 
-#: 
 msgid "Estates per page"
 msgstr "Biens immobiliers par page"
 
-#: 
 msgid "Clear onOffice cache"
-msgstr "Vider le cache onOffice\n"
+msgstr ""
+"Vider le cache onOffice\n"
 ""
 
-#: 
 msgid "Your search criteria"
 msgstr "Vos critères de recherche"
 
-#: 
 msgid "Remove from favorites"
 msgstr "Retirer des favoris"
 
-#: 
 msgid "Remove from watchlist"
 msgstr "Retirer de la liste de suivi"
 
-#: 
 msgid "Add to favorites"
-msgstr "Ajouter aux favoris\n"
+msgstr ""
+"Ajouter aux favoris\n"
 ""
 
-#: 
 msgid "Add to watchlist"
-msgstr "Ajouter à la liste de surveillance\n"
+msgstr ""
+"Ajouter à la liste de surveillance\n"
 ""
 
-#: 
 msgid "Included"
 msgstr "Inclus"
 
-#: 
 msgid "Personalized (Plugin)"
 msgstr "Personnalisé (plugin)"
 
-#: 
 msgid "Personalized (Theme)"
 msgstr "Personnalisé (thème)"
 
-#: 
 msgid "Restrict access to reference estates (404 Not Found)"
 msgstr "Restreindre l’accès aux biens de référence (404 non trouvé)"
 
-#: 
 msgid "Show only reference estates (filter out all others)"
 msgstr "Afficher uniquement les biens de référence (filtrer tous les autres)"
 
-#: 
 msgid "Show reference estates (alongside others)"
 msgstr "Afficher les biens de référence (avec les autres)"
 
-#: 
 msgid "Hide reference estates"
 msgstr "Masquer les biens de référence"
 
-#: 
 msgid "Reference estates will link to their detail page, because the access is %s."
 msgstr "Les biens de référence mèneront à leur page de détail, car l’accès est %s."
 
-#: 
 msgid "not restricted"
-msgstr "non restreint\n"
+msgstr ""
+"non restreint\n"
 ""
 
-#: 
 msgid "Reference estates will not link to their detail page, because the access is %s."
 msgstr "Les biens de référence ne mèneront pas à leur page de détail, car l’accès est %s."
 
-#: 
 msgid "restricted"
 msgstr "restreint"
 
-#: 
 msgid "Favorites"
 msgstr "Favoris"
 
-#: 
 msgid ", shortcode: "
 msgstr "code court :"
 
-#: 
 msgid "Type: "
 msgstr "Type :"
 
-#: 
 msgid "Shortcode: "
 msgstr "Code court :"
 
-#: 
 msgid " is not yet used."
 msgstr "n’est pas encore utilisé."
 
 #. translators: %s will be replaced with a link to the appropriate page.
-#: 
 msgid "  is used on %s"
 msgstr "est utilisé sur %s"
 
-#: 
 msgid "Copy"
 msgstr "Copier"
 
-#: 
 msgid "The shortcode "
 msgstr "Le code court"
 
-#: 
 msgid "API settings (encrypted)"
-msgstr "Paramètres API (chiffrés)\n"
+msgstr ""
+"Paramètres API (chiffrés)\n"
 ""
 
-#: 
 msgid "Override email address"
 msgstr "Écraser l’adresse e-mail"
 
-#: 
 msgid "Use default email address "
 msgstr "Utiliser l’adresse e-mail par défaut"
 
-#: 
 msgid "Use default email address %s"
 msgstr "Utiliser l’adresse e-mail par défaut %s"
 
-#: 
 msgid "%s (override)"
 msgstr "%s (écrasement)"
 
-#: 
 msgid "missing"
-msgstr "manquant\n"
+msgstr ""
+"manquant\n"
 ""
 
-#: 
 msgid "Email"
 msgstr "E-mail"
 
-#: 
 msgid "Default Email Address"
-msgstr "Adresse e-mail par défaut\n"
+msgstr ""
+"Adresse e-mail par défaut\n"
 ""
 
-#: 
 msgid "Comment"
-msgstr "Commentaire\n"
+msgstr ""
+"Commentaire\n"
 ""
 
-#: 
 msgid "Image"
 msgstr "Image"
 
-#: 
 msgid "All e-mail addresses"
-msgstr "Toutes les adresses e-mail\n"
+msgstr ""
+"Toutes les adresses e-mail\n"
 ""
 
-#: 
 msgid "All mobile numbers"
-msgstr "Tous les numéros de portable\n"
+msgstr ""
+"Tous les numéros de portable\n"
 ""
 
-#: 
 msgid "All fax numbers"
-msgstr "Tous les numéros de fax\n"
+msgstr ""
+"Tous les numéros de fax\n"
 ""
 
-#: 
 msgid "All non-mobile phone numbers"
 msgstr "Tous les numéros de téléphone fixes"
 
-#: 
 msgid "Search Criteria Comment (external)"
 msgstr "Commentaire sur les critères de recherche (externe)"
 
-#: 
 msgid "Special Fields"
 msgstr "Champs spéciaux"
 
 #. translators: %s will be replaced with the translation of 'plugin settings'.
-#: 
 msgid "The onOffice plugin is missing a default email address. You have forms that use the default email and they will currently not send emails. Please add a default email address in the %s to dismiss this warning."
 msgstr "Il manque une adresse e-mail par défaut dans le plugin onOffice. Vous avez des formulaires qui utilisent cette adresse, mais ils ne peuvent pas envoyer d’e-mails pour l’instant. Veuillez en ajouter une dans le %s pour supprimer cet avertissement."
 
-#: 
 msgid "plugin settings"
 msgstr "paramètres du plugin"
 
-#: 
 msgid "Objects"
 msgstr "Objets"
 
-#: 
 msgid "360° tours"
 msgstr "Visites virtuelles 360°"
 
-#: 
 msgid "Videos"
 msgstr "Vidéos"
 
-#: 
 msgid "Links"
-msgstr "Liens\n"
+msgstr ""
+"Liens\n"
 ""
 
-#: 
 msgid "Object-Links"
-msgstr "Liens de l’objet\n"
+msgstr ""
+"Liens de l’objet\n"
 ""
 
-#: 
 msgid "Embedded"
 msgstr "Intégré"
 
-#: 
 msgid "Ogulo-Links"
 msgstr "Liens Ogulo"
 
-#: 
 msgid "Deactivated"
-msgstr "Désactivé\n"
+msgstr ""
+"Désactivé\n"
 ""
 
-#: 
 msgid "Random order"
 msgstr "Ordre aléatoire"
 
-#: 
 msgid "User selection"
 msgstr "Sélection utilisateur "
 
-#: 
 msgid "Default sort"
-msgstr "Tri par défaut\n"
+msgstr ""
+"Tri par défaut\n"
 ""
 
-#: 
 msgid "All"
 msgstr "Tous"
 
-#: 
 msgid "Popular"
 msgstr "Populaire"
 
-#: 
 msgid "By default, no link is created to the estate when the plugin creates the address. If the contact form is on an detail page and you want to link the address and the requested estate, you can open the email in onOffice enterprise or use the %s."
-msgstr "Par défaut, aucun lien n’est créé vers le bien lorsque le plugin crée l’adresse. Si le formulaire est sur une page de détail et que vous souhaitez relier l’adresse au bien demandé, vous pouvez ouvrir l’e-mail dans onOffice enterprise ou utiliser le %s.\n"
+msgstr ""
+"Par défaut, aucun lien n’est créé vers le bien lorsque le plugin crée l’adresse. Si le formulaire est sur une page de détail et que vous souhaitez relier l’adresse au bien demandé, vous pouvez ouvrir l’e-mail dans onOffice enterprise ou utiliser le %s.\n"
 ""
 
-#: 
 msgid "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en"
 msgstr ""
 
-#: 
 msgid "Request Manager"
 msgstr "Gestionnaire des requêtes"
 
-#: 
 msgid "Sorting"
 msgstr "Tri"
 
-#: 
 msgid "(in the folder \"%s\")"
 msgstr "(dans le dossier « %s »)"
 
-#: 
 msgid "Search Forms"
 msgstr "Rechercher des formulaires"
 
-#: 
 msgid "Search Estate Views"
 msgstr "Rechercher des vues de biens"
 
-#: 
 msgid "Search Addresses"
 msgstr "Rechercher des adresses"
 
-#: 
 msgid "Access Control"
-msgstr "Contrôle d’accès\n"
+msgstr ""
+"Contrôle d’accès\n"
 ""
 
-#: 
 msgid "Form type"
 msgstr " Type de formulaire"
 
-#: 
 msgid "Recipient e-mail address"
 msgstr "Adresse e-mail du destinataire"
 
-#: 
 msgid "Form name"
 msgstr "Nom du formulaire"
 
-#: 
 msgid "List type"
-msgstr "Type de liste\n"
+msgstr ""
+"Type de liste\n"
 ""
 
-#: 
 msgid "Pages using the shortcode"
 msgstr "Pages utilisant le code court"
 
-#: 
 msgid "Selected filter"
 msgstr "Filtre sélectionné"
 
-#: 
 msgid "List name"
-msgstr "Nom de la liste\n"
+msgstr ""
+"Nom de la liste\n"
 ""
 
-#: 
 msgid "We have deactivated the plugin's duplicate check for all of your forms, because the duplicate check can unintentionally overwrite address records. This function will be removed in the future. The option has been deactivated for these forms: Contact, Interest, Owner"
 msgstr "Nous avons désactivé la vérification des doublons du plugin pour tous vos formulaires, car elle peut écraser involontairement les enregistrements d’adresses. Cette fonction sera supprimée à l’avenir. L’option a été désactivée pour les formulaires suivants : Contact, Intérêt, Propriétaire"
 
-#: 
 msgid "Contact Type of New Address"
-msgstr "Type de contact pour la nouvelle adresse\n"
+msgstr ""
+"Type de contact pour la nouvelle adresse\n"
 ""
 
-#: 
 msgid "Show reference estates"
 msgstr "Afficher les biens de référence"
 
-#: 
 msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
-msgstr "Si cette case est cochée, le titre du bien fera partie des URL des vues détaillées. Le titre est placé après le numéro d’enregistrement, par exemple : <code>/1234-belle-situation-avec-vue</code>. Pas plus de cinq mots du titre ne sont utilisés.\n"
+msgstr ""
+"Si cette case est cochée, le titre du bien fera partie des URL des vues détaillées. Le titre est placé après le numéro d’enregistrement, par exemple : <code>/1234-belle-situation-avec-vue</code>. Pas plus de cinq mots du titre ne sont utilisés.\n"
 ""
 
-#: 
 msgid "If you allow indexing, your search engine ranking can be negatively affected and your brochures can be available from search engines even months after the corresponding estate is deleted."
 msgstr "Si vous autorisez l’indexation, cela peut nuire à votre référencement, et vos brochures peuvent rester accessibles via les moteurs de recherche même après la suppression du bien."
 
-#: 
 msgid "Allow indexing of PDF brochures"
-msgstr "Autoriser l’indexation des brochures PDF\n"
+msgstr ""
+"Autoriser l’indexation des brochures PDF\n"
 ""
 
-#: 
 msgid "Create Address and Property"
-msgstr "Créer une adresse et un bien\n"
+msgstr ""
+"Créer une adresse et un bien\n"
 ""
 
-#: 
 msgid "Create Address and Search Profile"
-msgstr "Créer une adresse et un profil de recherche\n"
+msgstr ""
+"Créer une adresse et un profil de recherche\n"
 ""
 
-#: 
 msgid "Detail View URLs"
 msgstr "URLs de la vue détaillée"
 
-#: 
 msgid "Show title in URL"
 msgstr "Afficher le titre dans l’URL"
 
-#: 
 msgid "Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email."
-msgstr "Si le formulaire est placé sur une page de détail et que le bien a une personne de contact, l’e-mail lui sera envoyé. Sinon, ce sera cette adresse e-mail qui le recevra.\n"
+msgstr ""
+"Si le formulaire est placé sur une page de détail et que le bien a une personne de contact, l’e-mail lui sera envoyé. Sinon, ce sera cette adresse e-mail qui le recevra.\n"
 ""
 
-#: 
-msgid "Save changes and clear API cache"
-msgstr "Enregistrer les modifications et vider le cache API"
-
-#: 
 msgid "By onOffice-Plugin"
-msgstr "Par le plugin onOffice\n"
+msgstr ""
+"Par le plugin onOffice\n"
 ""
 
-#: 
 msgid "By WP Theme"
-msgstr "Par le thème WP\n"
+msgstr ""
+"Par le thème WP\n"
 ""
 
-#: 
 msgid "Pagination"
 msgstr "Pagination"
 
-#: 
 msgid "Custom Label"
-msgstr "Étiquette personnalisée\n"
+msgstr ""
+"Étiquette personnalisée\n"
 ""
 
-#: 
 msgid "Add custom label language"
-msgstr "Ajouter une langue personnalisée pour les étiquettes\n"
+msgstr ""
+"Ajouter une langue personnalisée pour les étiquettes\n"
 ""
 
-#: 
 msgid "Custom Label: %s"
 msgstr "Étiquette personnalisée : %s"
 
-#: 
 msgid "Duplicate"
 msgstr "Doublon"
 
-#: 
 msgid "Contact Form"
-msgstr "Formulaire de contact\n"
+msgstr ""
+"Formulaire de contact\n"
 ""
 
-#: 
 msgid "No Contact Form"
-msgstr "Aucun formulaire de contact\n"
+msgstr ""
+"Aucun formulaire de contact\n"
 ""
 
-#: 
 msgid "Select Contact Form"
 msgstr "Sélectionner le formulaire de contact"
 
-#: 
 msgid "There was a problem saving the similar estates view."
 msgstr "Un problème est survenu lors de l’enregistrement de la vue des biens similaires."
 
-#: 
 msgid "The similar estates view has been saved."
 msgstr "La vue des biens similaires a été enregistrée."
 
-#: 
 msgid "Similar Estates View"
-msgstr "Vue des biens similaires\n"
+msgstr ""
+"Vue des biens similaires\n"
 ""
 
-#: 
-msgid "Real Estate Fields"
-msgstr "Champs de biens immobiliers"
-
-#: 
-msgid "Contact Person Fields"
-msgstr "Champs de la personne de contact\n"
-""
-
-#. translators: %s is the amount of results
-#: 
 msgid "Show %s matches"
 msgstr "Afficher %s résultats"
 
-#: 
 msgid "Show exact match"
 msgstr "Afficher la correspondance exacte"
 
-#: 
 msgid "0 matches"
 msgstr "0 correspondance"
 
-#: 
 msgid "Energy-Pass Range"
 msgstr "Plage du DPE"
 
-#: 
 msgid "Location Map"
-msgstr "Carte de localisation\n"
+msgstr ""
+"Carte de localisation\n"
 ""
 
-#: 
 msgid "Ground Plan"
 msgstr "Plan d’étage"
 
-#: 
 msgid "Panorama"
 msgstr "Panorama"
 
-#: 
 msgid "Photo (big)"
 msgstr "Photo (grande)"
 
-#: 
 msgid "Photo"
 msgstr "Photo"
 
-#: 
 msgid "Cover Photo"
-msgstr "Photo de couverture\n"
+msgstr ""
+"Photo de couverture\n"
 ""
 
-#: 
 msgid "Map"
 msgstr "Carte"
 
-#: 
 msgid "Search"
 msgstr "Rechercher"
 
-#: 
 msgid "Default Value Up To:"
-msgstr "Valeur maximale par défaut :\n"
+msgstr ""
+"Valeur maximale par défaut :\n"
 ""
 
-#: 
 msgid "Default Value From:"
-msgstr "Valeur minimale par défaut :\n"
+msgstr ""
+"Valeur minimale par défaut :\n"
 ""
 
 #. translators: %s is the name of a language
-#: 
 msgid "Default Value: %s"
 msgstr "Valeur par défaut : %s"
 
-#: 
 msgid "Add Language"
-msgstr "Ajouter une langue\n"
+msgstr ""
+"Ajouter une langue\n"
 ""
 
-#: 
 msgid "Edit Values"
 msgstr "Modifier les valeurs"
 
-#: 
 msgid "Default Value"
-msgstr "Valeur par défaut\n"
+msgstr ""
+"Valeur par défaut\n"
 ""
 
-#: 
 msgid "Choose Language"
-msgstr "Choisir une langue\n"
+msgstr ""
+"Choisir une langue\n"
 ""
 
-#: 
 msgid "Add language"
-msgstr "Ajouter une langue\n"
+msgstr ""
+"Ajouter une langue\n"
 ""
 
-#: 
 msgid "Formulation of sorting directions"
 msgstr "Formulation des critères de tri "
 
-#: 
 msgid "ascending / descending"
-msgstr "croissant / décroissant\n"
+msgstr ""
+"croissant / décroissant\n"
 ""
 
-#: 
 msgid "lowest First / highest First"
-msgstr "du plus bas au plus élevé / du plus élevé au plus bas\n"
+msgstr ""
+"du plus bas au plus élevé / du plus élevé au plus bas\n"
 ""
 
-#: 
 msgid "Standard Sort"
 msgstr "Tri standard"
 
-#: 
 msgid "descending"
 msgstr "décroissant"
 
-#: 
 msgid "ascending"
 msgstr "croissant"
 
-#: 
 msgid "highest first"
 msgstr " du plus élevé au plus bas"
 
-#: 
 msgid "lowest first"
-msgstr "ordre croissant\n"
+msgstr ""
+"ordre croissant\n"
 ""
 
 #. Plugin URI of the plugin
-#: 
 msgid "https://wpplugindoc.onoffice.de"
 msgstr ""
 
 #. translators: %s will be replaced with the translated field name.
-#: 
 msgid "Choose %s"
-msgstr "Choisir %s\n"
+msgstr ""
+"Choisir %s\n"
 ""
 
-#: 
 msgid "Up to: "
 msgstr "Jusqu’à :"
 
-#: 
 msgid "From: "
 msgstr "De :"
 
-#: 
 msgid "Choose country"
-msgstr "Choisir un pays\n"
+msgstr ""
+"Choisir un pays\n"
 ""
 
-#: 
 msgid "Contact Person"
-msgstr "Personne de contact\n"
+msgstr ""
+"Personne de contact\n"
 ""
 
-#: 
 msgid "Show Details"
 msgstr "Afficher les détails"
 
 #. translators: %d will be replaced with a number.
-#: 
 msgctxt "template"
 msgid "Found %d estates over all."
 msgstr "%d biens immobiliers trouvés au total."
 
-#: 
 msgid "Overview of Estates"
 msgstr "Aperçu des biens immobiliers"
 
-#: 
 msgid "Entities"
 msgstr "Entités"
 
-#: 
 msgid "Send"
 msgstr "Envoyer"
 
-#: 
 msgid "PDF expose"
 msgstr "Fiche PDF"
 
-#: 
 msgid "Documents"
 msgstr "Documents"
 
-#: 
 msgid "Contact person"
-msgstr "Personne de contact\n"
+msgstr ""
+"Personne de contact\n"
 ""
 
-#: 
 msgid "More Estates like this"
-msgstr "D'autres biens similaires\n"
+msgstr ""
+"D'autres biens similaires\n"
 ""
 
-#: 
 msgid "Open the Form"
 msgstr "Ouvrir le formulaire"
 
-#: 
 msgid "Next"
 msgstr "Suivant"
 
-#: 
 msgid "Back"
-msgstr "Retour\n"
+msgstr ""
+"Retour\n"
 ""
 
 #. translators: %s will be replaced with a translated field name.
-#: 
 msgid "Please enter a value for %s."
 msgstr "Veuillez saisir une valeur pour %s."
 
-#: 
 msgid "The form wasn't sent because spam was detected."
 msgstr "Le formulaire n’a pas été envoyé car un spam a été détecté."
 
-#: 
 msgid "There was an error sending the form."
 msgstr "Une erreur est survenue lors de l’envoi du formulaire."
 
-#: 
 msgid "The form was sent successfully."
 msgstr "Le formulaire a été envoyé avec succès."
 
-#: 
 msgid "Spam detected!"
 msgstr "Spam détecté !"
 
-#: 
 msgid "Information about your property"
-msgstr "Informations sur votre bien\n"
+msgstr ""
+"Informations sur votre bien\n"
 ""
 
-#: 
 msgid "Your contact details"
 msgstr "Vos coordonnées"
 
-#: 
 msgid "Message"
 msgstr "Message"
 
-#: 
 msgid "Please fill in"
 msgstr "Veuillez remplir"
 
-#: 
 msgid "Missing Fields!"
-msgstr "Champs manquants !\n"
+msgstr ""
+"Champs manquants !\n"
 ""
 
-#: 
 msgid "SUCCESS!"
 msgstr "SUCCÈS !"
 
 #. translators: %s will be replaced with a customer reference number.
-#: 
 msgid "Customer ref. number %s"
-msgstr "Réf. client %s\n"
+msgstr ""
+"Réf. client %s\n"
 ""
 
 #. translators: %s will be replaced with a number.
-#: 
 msgid "%s Prospective Buyer"
 msgid_plural "%s Prospective Buyers"
-msgstr[0] "%s acheteur potentiel\n"
+msgstr[0] ""
+"%s acheteur potentiel\n"
 "Pluriel : %s acheteurs potentiels"
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgid "Search for Prospective Buyers"
 msgstr "Rechercher des acheteurs potentiels"
 
-#: 
 msgid "search within distance of:"
 msgstr "rechercher dans un rayon de :"
 
-#: 
 msgid "Please fill in!"
 msgstr "Veuillez remplir !"
 
-#: 
 msgid "ERROR!"
 msgstr "ERREUR !"
 
-#: 
 msgid "Records"
 msgstr "Enregistrements"
 
-#: 
 msgid "Edit Units View"
 msgstr "Modifier la vue des unités"
 
-#: 
 msgid "There was a problem saving the list. Please make sure the name of the list is unique."
 msgstr "Un problème est survenu lors de l’enregistrement de la liste. Veuillez vous assurer que le nom de la liste est unique."
 
-#: 
 msgid "The address list was saved."
 msgstr "La liste d’adresses a été enregistrée."
 
-#: 
 msgid "Filter & Records"
 msgstr "Filtre & Enregistrements"
 
-#: 
 msgid "Edit Address List"
 msgstr "Modifier la liste d’adresses"
 
-#: 
 msgid "Fields Configuration"
 msgstr "Configuration des champs"
 
-#: 
 msgid "Maps"
 msgstr "Cartes"
 
-#: 
 msgid "Google Maps"
 msgstr "Google Maps"
 
-#: 
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: 
 msgid "Map Provider"
-msgstr "Fournisseur de cartes\n"
+msgstr ""
+"Fournisseur de cartes\n"
 ""
 
-#: 
 msgid "Watchlist"
 msgstr "Liste de suivi"
 
-#: 
 msgid "Expression used"
 msgstr "Expression utilisée"
 
-#: 
 msgid "Enable Watchlist"
 msgstr "Activer la liste de suivi "
 
-#: 
 msgid "Units Lists"
 msgstr "Listes des unités"
 
-#: 
 msgid "No form was deleted."
-msgstr "Aucun formulaire n’a été supprimé.\n"
+msgstr ""
+"Aucun formulaire n’a été supprimé.\n"
 ""
 
 #. translators: %s will be replaced with a number.
-#: 
 msgid "%s form has been deleted."
 msgid_plural "%s forms have been deleted."
-msgstr[0] "%s formulaire a été supprimé.\n"
+msgstr[0] ""
+"%s formulaire a été supprimé.\n"
 "Pluriel : %s formulaires ont été supprimés."
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgid "No list view was deleted."
-msgstr "Aucune vue en liste n’a été supprimée.\n"
+msgstr ""
+"Aucune vue en liste n’a été supprimée.\n"
 ""
 
 #. translators: %s will be replaced with a number.
-#: 
 msgid "%s list view has been deleted."
 msgid_plural "%s list views have been deleted."
-msgstr[0] "%s vue en liste a été supprimée.\n"
+msgstr[0] ""
+"%s vue en liste a été supprimée.\n"
 "Pluriel : %s vues en liste ont été supprimées."
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgid "Are you sure you want to delete the selected items?"
-msgstr "Êtes-vous sûr de vouloir supprimer les éléments sélectionnés ?\n"
+msgstr ""
+"Êtes-vous sûr de vouloir supprimer les éléments sélectionnés ?\n"
 ""
 
-#: 
 msgid "Unit Lists"
 msgstr "Listes des unités"
 
-#: 
 msgid "List Views"
-msgstr "Vues en liste\n"
+msgstr ""
+"Vues en liste\n"
 ""
 
-#: 
 msgid "Add New"
-msgstr "Ajouter nouveau\n"
+msgstr ""
+"Ajouter nouveau\n"
 ""
 
-#: 
 msgid "There was a problem saving the form. Please make sure the name of the form is unique."
 msgstr "Un problème est survenu lors de l’enregistrement du formulaire. Veuillez vous assurer que le nom du formulaire est unique."
 
-#: 
 msgid "The Form was saved."
 msgstr "Le formulaire a été enregistré."
 
-#: 
 msgid "Edit Form"
 msgstr "Modifier le formulaire"
 
-#: 
 msgid "Please provide an Email address!"
 msgstr "Veuillez fournir une adresse e-mail !"
 
-#: 
 msgid "Form Specific Options"
 msgstr "Options spécifiques au formulaire"
 
-#: 
 msgid "There was a problem saving the view. Please make sure the name of the view is unique, even across all estate list types."
 msgstr "Un problème est survenu lors de l’enregistrement de la vue. Veuillez vous assurer que le nom de la vue est unique, même pour tous les types de listes de biens."
 
-#: 
 msgid "The view has been saved."
 msgstr "La vue a été enregistrée."
 
-#: 
 msgid "Geo Fields"
 msgstr "Champs géographique"
 
-#: 
 msgid "Filters & Records"
 msgstr "Filtres & Enregistrements"
 
-#: 
 msgid "choose name"
-msgstr "Choisir un nom\n"
+msgstr ""
+"Choisir un nom\n"
 ""
 
-#: 
 msgid "The cache was cleaned."
 msgstr "Le cache a été vidé."
 
-#: 
 msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
 msgstr "Pour utiliser Google reCAPTCHA, vous devez fournir vos clés. Vous pouvez l’activer dans les paramètres du formulaire pour une utilisation ultérieure."
 
-#: 
 msgid "The request is invalid or malformed."
 msgstr "La requête est invalide ou mal formée."
 
-#: 
 msgid "The response parameter is invalid or malformed."
 msgstr "Le paramètre de réponse est invalide ou mal formé."
 
-#: 
 msgid "The response parameter is missing."
 msgstr "Le paramètre de réponse est manquant."
 
-#: 
 msgid "The secret parameter is invalid or malformed."
 msgstr "Le paramètre secret est invalide ou mal formé."
 
-#: 
 msgid "The secret parameter is missing."
 msgstr "Le paramètre secret est manquant."
 
-#: 
 msgid "There was an error:"
 msgstr "Une erreur est survenue :"
 
-#: 
 msgid "The keys are OK."
 msgstr "Les clés sont valides."
 
-#: 
 msgid "Google Maps Key"
 msgstr "Clé Google Maps"
 
-#: 
 msgid "Google reCAPTCHA"
 msgstr " Google reCAPTCHA"
 
-#: 
 msgid "Secret Key"
 msgstr "Clé secrète"
 
-#: 
 msgid "Site Key"
-msgstr "Clé du site\n"
+msgstr ""
+"Clé du site\n"
 ""
 
-#: 
 msgid "API settings"
-msgstr "Paramètres API\n"
+msgstr ""
+"Paramètres API\n"
 ""
 
-#: 
 msgid "API secret"
-msgstr "Clé secrète API\n"
+msgstr ""
+"Clé secrète API\n"
 ""
 
-#: 
 msgid "API token"
-msgstr "Jeton API\n"
+msgstr ""
+"Jeton API\n"
 ""
 
-#: 
 msgid "There was a problem saving the detail view."
 msgstr "Un problème est survenu lors de l’enregistrement de la vue détaillée."
 
-#: 
 msgid "The detail view has been saved."
 msgstr "La vue détaillée a été enregistrée."
 
-#: 
 msgid "Similar Estates"
-msgstr "Biens similaires\n"
+msgstr ""
+"Biens similaires\n"
 ""
 
-#: 
 msgid "Additional Media"
 msgstr "Médias supplémentaires "
 
-#: 
 msgid "Photo Types"
 msgstr "Types de photo"
 
-#: 
 msgid "Layout & Design"
-msgstr "Mise en page & design\n"
+msgstr ""
+"Mise en page & design\n"
 ""
 
-#: 
 msgid "Fields"
 msgstr "Champs"
 
-#: 
 msgid "Edit Page"
 msgstr "Modifier la page"
 
-#: 
 msgid "Edit List View"
 msgstr "Modifier la vue en liste"
 
 #. translators: %s will be replaced with a number.
-#: 
 msgid "(Unknown Filter (ID: %s))"
 msgstr "(Filtre inconnu (ID : %s))"
 
-#: 
 msgid "(Needs valid API credentials)"
 msgstr "(Nécessite des identifiants API valides)"
 
-#: 
 msgid "No"
 msgstr "Non"
 
-#: 
 msgid "Yes"
 msgstr "Oui"
 
 #. translators: %s is the name of the list view.
-#: 
-msgid "You are about to delete the listview '%s'\n"
+msgid ""
+"You are about to delete the listview '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr "Vous êtes sur le point de supprimer la vue de liste « %s » – « Annuler » pour interrompre, « OK » pour supprimer."
 
-#: plugin/Gui/Table/WP/ListTable.php:80
-msgid "No items found."
-msgstr "Aucun élément trouvé.\n"
-""
-
 #. translators: %s is the name of the form.
-#: 
-msgid "You are about to delete the form '%s'\n"
+msgid ""
+"You are about to delete the form '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr "Vous êtes sur le point de supprimer le formulaire « %s » – « Annuler » pour interrompre, « OK » pour supprimer."
 
-#: 
 msgid "Type of Form"
 msgstr "Type de formulaire"
 
-#: 
 msgid "Name of Form"
-msgstr "Nom du formulaire\n"
+msgstr ""
+"Nom du formulaire\n"
 ""
 
 #. translators: %s is the name of the unit view.
-#: 
-msgid "You are about to delete the unit view '%s'\n"
+msgid ""
+"You are about to delete the unit view '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr "Vous êtes sur le point de supprimer la vue d’unité « %s » – « Annuler » pour interrompre, « OK » pour supprimer."
 
-#: 
 msgid "Shortcode"
 msgstr "Code court"
 
-#: 
 msgid "Name of View"
-msgstr "Nom de la vue\n"
+msgstr ""
+"Nom de la vue\n"
 ""
 
-#. translators: %s will be replaced with the link to the login credentials
-#. page.
-#: 
+#. translators: %s will be replaced with the link to the login credentials page.
 msgid "It looks like you did not enter any valid API credentials. Please go back and review your %s."
-msgstr "Il semble que vous n’ayez pas saisi d’identifiants API valides. Veuillez revenir en arrière et vérifier votre %s.\n"
+msgstr ""
+"Il semble que vous n’ayez pas saisi d’identifiants API valides. Veuillez revenir en arrière et vérifier votre %s.\n"
 ""
 
-#: 
 msgid "login credentials"
-msgstr "Identifiants de connexion\n"
+msgstr ""
+"Identifiants de connexion\n"
 ""
 
-#: 
 msgid "Geo Range Search"
 msgstr "Recherche par zone géographique"
 
-#: 
 msgid "Search Criteria"
 msgstr "Search Criteria"
 
-#: 
 msgid "Geo Position"
 msgstr "Position géographique"
 
-#: 
 msgctxt "modules"
 msgid "Search Criteria"
 msgid_plural "Search Criteria"
-msgstr[0] "Critères de recherche\n"
+msgstr[0] ""
+"Critères de recherche\n"
 "Pluriel : Critères de recherche"
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgctxt "modules"
 msgid "Estate"
 msgid_plural "Estates"
@@ -2014,563 +1692,393 @@ msgstr[0] "Bien immobilier "
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgctxt "modules"
 msgid "Address"
 msgid_plural "Addresses"
-msgstr[0] "Adresse\n"
+msgstr[0] ""
+"Adresse\n"
 "Pluriel : Adresses"
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgctxt "forms"
 msgid "Applicant Search Form"
 msgid_plural "Applicant Search Forms"
-msgstr[0] "Formulaire de recherche de candidats \n"
+msgstr[0] ""
+"Formulaire de recherche de candidats \n"
 "Pluriel : Formulaires de recherche de candidats\n"
 ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgctxt "forms"
 msgid "Owner Form"
 msgid_plural "Owner Forms"
-msgstr[0] "Formulaire du propriétaire\n"
+msgstr[0] ""
+"Formulaire du propriétaire\n"
 "Pluriel : Formulaires du propriétaire"
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgctxt "forms"
 msgid "Interest Form"
 msgid_plural "Interest Forms"
-msgstr[0] "Formulaire d’intérêt \n"
+msgstr[0] ""
+"Formulaire d’intérêt \n"
 "Pluriel : Formulaires d’intérêt\n"
 "\n"
 ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgctxt "forms"
 msgid "Contact Form"
 msgid_plural "Contact Forms"
-msgstr[0] "Pluriel : Formulaires de contact\n"
+msgstr[0] ""
+"Pluriel : Formulaires de contact\n"
 ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgctxt "forms"
 msgid "All"
 msgid_plural "All"
-msgstr[0] "Tous\n"
+msgstr[0] ""
+"Tous\n"
 "Pluriel : Tous"
 msgstr[1] ""
 msgstr[2] ""
 
-#: 
 msgid "unknown address list name"
 msgstr "nom de liste d’adresses inconnu"
 
-#: 
 msgid "sold"
 msgstr "vendu"
 
-#: 
 msgid "rented"
 msgstr "loué"
 
-#: 
 msgid "(Remains unchanged)"
 msgstr "(Reste inchangé)"
 
-#: 
 msgid "Edit"
 msgstr "Modifier"
 
-#: 
 msgid "Add to List >>"
-msgstr "Ajouter à la liste >>\n"
+msgstr ""
+"Ajouter à la liste >>\n"
 ""
 
-#: 
 msgid "Delete"
-msgstr "Supprimer\n"
+msgstr ""
+"Supprimer\n"
 "\n"
 ""
 
-#: 
 msgid "Key of Field:"
-msgstr "Clé du champ :\n"
+msgstr ""
+"Clé du champ :\n"
 " "
 
-#: 
 msgid "Disabled in onOffice"
 msgstr "Désactivé dans onOffice"
 
-#: 
 msgid "Please configure your onOffice API credentials first!"
 msgstr "Veuillez d’abord configurer vos identifiants API onOffice !"
 
-#: 
 msgid "Favorites List"
 msgstr "Liste de favoris"
 
-#: 
 msgid "Reference estates"
 msgstr "Biens immobiliers de référence"
 
-#: 
 msgid "Default"
-msgstr "Par défaut\n"
+msgstr ""
+"Par défaut\n"
 ""
 
-#: 
 msgid "Show Estate Status"
 msgstr "Afficher le statut du bien"
 
-#: 
 msgid "Type of List"
 msgstr "Type de liste"
 
-#: 
 msgid "Amount of Estates"
-msgstr "Nombre de biens immobiliers\n"
+msgstr ""
+"Nombre de biens immobiliers\n"
 ""
 
-#: 
 msgid "Same Postal Code"
 msgstr "Même code postal"
 
-#: 
 msgid "Same Marketing Method"
 msgstr "Même méthode de commercialisation"
 
-#: 
 msgid "Same Kind of Estate"
 msgstr "Même type de bien"
 
-#: 
 msgid "Player"
 msgstr "Lecteur"
 
-#: 
 msgid "Link"
 msgstr "Lien"
 
-#: 
 msgid "Movie Links"
-msgstr "Liens vidéos\n"
+msgstr ""
+"Liens vidéos\n"
 ""
 
-#: 
 msgid "Show Similar Estates"
 msgstr "Afficher les biens similaires"
 
-#: 
 msgid "Detail View"
 msgstr "Vue détaillée"
 
-#: 
 msgid "Template"
 msgstr "Modèle"
 
-#: 
 msgid "Descending"
 msgstr "Décroissant"
 
-#: 
 msgid "Ascending"
 msgstr "Croissant"
 
-#: 
 msgid "Sort order"
-msgstr "Ordre de tri\n"
+msgstr ""
+"Ordre de tri\n"
 ""
 
-#: 
 msgid "Sort by"
-msgstr "Trier par\n"
+msgstr ""
+"Trier par\n"
 ""
 
-#: 
 msgid "View Name"
 msgstr "Nom de la vue"
 
 #. translators: %s is a translated module name
-#: 
 msgid "Module: %s"
-msgstr "Module : %s\n"
+msgstr ""
+"Module : %s\n"
 ""
 
-#: 
 msgid "Module"
 msgstr "Module"
 
-#: 
 msgid "Required"
 msgstr "Requis"
 
-#: 
 msgid "Result Limit"
 msgstr "Limite de résultats"
 
-#. translators: %s will be replaced with the translation of '(won't work until
-#. set up globally)', if captcha hasn't been set up appropriately yet, or blank
-#. otherwise.
-#: 
+#. translators: %s will be replaced with the translation of '(won't work until set up globally)', if captcha hasn't been set up appropriately yet, or blank otherwise.
 msgid "Requires Captcha %s"
 msgstr "Nécessite un Captcha %s "
 
-#: 
 msgid "(won't work until set up globally)"
 msgstr "(ne fonctionnera qu’une fois configuré globalement)"
 
-#: 
 msgid "Form Name"
 msgstr "Nom du formulaire"
 
-#: 
 msgid "Form"
 msgstr "Formulaire"
 
-#: 
 msgid "Hidden"
 msgstr "Masqué"
 
-#: 
 msgid "Passport Photo"
 msgstr "Photo d’identité"
 
-#: 
 msgid "Filter"
 msgstr "Filtre"
 
-#: 
 msgid "List View"
-msgstr "Vue en liste\n"
+msgstr ""
+"Vue en liste\n"
 ""
 
-#: 
 msgid "Random Order"
 msgstr "Ordre aléatoire"
 
-#: 
 msgid "Unit List"
 msgstr "Liste des unités"
 
-#: 
 msgid "Radius"
 msgstr "Rayon"
 
-#: 
 msgid "Street"
 msgstr "Rue"
 
-#: 
 msgid "City"
-msgstr "Ville\n"
+msgstr ""
+"Ville\n"
 ""
 
-#: 
 msgid "Postal Code"
 msgstr "Code postal"
 
-#: 
 msgid "Country"
 msgstr "Pays"
 
-#: 
 msgid "Order"
 msgstr "Commande"
 
-#: 
 msgid "Not Specified"
-msgstr "Non spécifié\n"
+msgstr ""
+"Non spécifié\n"
 ""
 
-#: 
 msgid "Default Value for Radius"
-msgstr "Valeur par défaut pour le rayon\n"
+msgstr ""
+"Valeur par défaut pour le rayon\n"
 ""
 
-#: 
 msgid "Subject (optional)"
 msgstr "Objet (facultatif)"
 
-#: 
 msgid "Create Address"
-msgstr "Créer une adresse\n"
+msgstr ""
+"Créer une adresse\n"
 ""
 
-#: 
 msgid "Check for Duplicates"
-msgstr "Vérifier les doublons\n"
+msgstr ""
+"Vérifier les doublons\n"
 ""
 
-#: 
 msgid "Newsletter"
-msgstr "Bulletin d'information\n"
+msgstr ""
+"Bulletin d'information\n"
 ""
 
-#: 
 msgid "Set Estate Context as Heading"
 msgstr " Définir le contexte du bien comme en-tête"
 
-#. translators: %s will be replaced with the translation of 'API token and
-#. secret'.
-#: 
+#. translators: %s will be replaced with the translation of 'API token and secret'.
 msgid "It looks like you did not enter any valid API credentials. Please consider reviewing your %s."
 msgstr "Il semble que vous n’ayez pas saisi d’identifiants API valides. Veuillez vérifier vos %s."
 
-#: 
 msgid "API token and secret"
 msgstr "Jeton et clé secrète API"
 
-#: 
 msgid "Settings"
 msgstr "Paramètres"
 
-#: 
 msgid "Forms"
 msgstr "Formulaires"
 
-#: 
 msgid "Estates"
 msgstr "Biens immobiliers"
 
-#: 
 msgid "Addresses"
 msgstr "Adresses"
 
-#: 
 msgid "onOffice"
 msgstr "onOffice"
 
 #. translators: %1$s is the estate title, %5$s is the estate ID
-#: 
 msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
 msgstr "Votre demande concernant le bien immobilier « %1$s » (%5$s)"
 
-#: 
 msgid "Submit"
 msgstr "Soumettre"
 
-#: 
 msgid "An error occured:"
-msgstr "Une erreur est survenue :\n"
+msgstr ""
+"Une erreur est survenue :\n"
 ""
 
 #. translators: %s is the path of a page.
-#: 
 msgid "Bad path \"%s\". The Page was not found."
-msgstr "Chemin incorrect « %s ». La page est introuvable.\n"
+msgstr ""
+"Chemin incorrect « %s ». La page est introuvable.\n"
 ""
 
 #. Author URI of the plugin
-#: 
 msgid "https://en.onoffice.com/"
 msgstr ""
 
 #. Author of the plugin
-#: 
 msgid "onOffice GmbH"
 msgstr "onOffice GmbH"
 
 #. Description of the plugin
-#: 
 msgid "Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code."
 msgstr "Votre connexion à onOffice : ce plugin vous permet d’accéder rapidement aux biens et formulaires – aucune synchronisation supplémentaire avec le logiciel n’est nécessaire. Pour le code source, contactez support@onoffice.de."
 
 #. Plugin Name of the plugin
-#: 
 msgid "onOffice for WP-Websites"
 msgstr "onOffice pour pages web de WP"
 
-#. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
-#: plugin/Controller/EstateViewDocumentTitleBuilder.php:65
-msgid "%2$s (%3$s) in %4$s - %5$s"
-msgstr "%2$s (%3$s) à %4$s - %5$s"
-
-#: plugin/Gui/AdminPageApiSettings.php:221
-msgid "Search engine"
-msgstr "Moteur de recherche"
-
-#: plugin/Gui/AdminPageApiSettings.php:396
-msgid "Favorise"
-msgstr "Favoriser "
-
-#: plugin/Gui/AdminPageEstateListSettings.php:157
-#: plugin/Gui/AdminPageEstateUnitSettings.php:110
-msgid "Downloadable Documents"
-msgstr "Documents téléchargeables"
-
-#: plugin/Gui/AdminPageEstateListSettings.php:172
-msgid "At least the following fields must be active: country, radius and city or postcode."
-msgstr "Au minimum, les champs suivants doivent être actifs : pays, rayon et ville ou code postal.\n"
-""
-
-#: plugin/Gui/AdminPageFormSettingsContact.php:150
-#: plugin/Gui/AdminPageFormSettingsContact.php:161
-msgid "Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk."
-msgstr "Attention : lorsque cette option est activée, le contrôle des doublons peut écraser les adresses existantes. Cette fonction sera supprimée à l’avenir. Utilisez-la à vos risques et périls.\n"
-""
-
-#: plugin/Gui/Table/EstateListTable.php:215
-msgid "Show Status"
-msgstr "Afficher le statut"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:152
-msgid "Records per Page"
-msgstr "Enregistrements par page"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:233
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:203
-msgid "Filterable"
-msgstr "Filtrable"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:224
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:453
-msgid "Reduce values according to selected filter"
-msgstr "Réduire les valeurs selon le filtre sélectionné"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:447
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
-msgid "PDF-Expose"
-msgstr "Fiche PDF"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:470
-msgid "Reference Estates"
-msgstr "Biens immobiliers de référence"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:140
-msgid "Allow detail view for reference estates"
-msgstr "Autoriser la vue détaillée pour les biens de référence\n"
-""
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:76
-msgid "Check for Duplicates (override existing address if the email is the same)"
-msgstr "Vérifier les doublons (remplacer l’adresse existante si l’e-mail est identique)\n"
-""
-
-#: templates.dist/address/default.php:39
-msgid "Picture: "
-msgstr "Image :"
-
-#: templates.dist/estate/default.php:120
-#: templates.dist/estate/default.php:143
-msgid "Add to "
-msgstr "Ajouter à"
-
-#: templates.dist/estate/default.php:149
-msgid "Remove from "
-msgstr "Retirer de"
-
-#: templates.dist/estate/default_detail.php:77
-msgid "Description"
-msgstr "Description"
-
-#: templates.dist/estate/default_detail.php:84
-msgid "Location"
-msgstr "Emplacement\n"
-""
-
-#: templates.dist/estate/default_detail.php:101
-msgid "Equipment"
-msgstr "Équipement"
-
-#: templates.dist/estate/default_detail.php:108
-msgid "Other Information"
-msgstr "Autres informations"
-
-#: 
 msgid "There was a problem saving the list. The Name field has been exist."
 msgstr "Un problème est survenu lors de l’enregistrement de la liste. Le champ Nom existe déjà."
 
-#: 
 msgid "There was a problem saving the list. The Name field must not be empty."
 msgstr "Un problème est survenu lors de l’enregistrement de la liste. Le champ Nom ne doit pas être vide."
 
-#: 
 msgid "Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?"
 msgstr "Veuillez vous assurer qu’aucune autre vue portant ce nom n’existe, même si elle est d’un autre type. Voulez-vous quitter la page sans enregistrer ?"
 
-#: 
 msgid "The Name field must not be empty. Do you want to leave the page without saving?"
 msgstr "Le champ Nom ne doit pas être vide. Voulez-vous quitter la page sans enregistrer ?"
 
-#: 
 msgid "Cache is being cleared in the background. This may take a few minutes."
 msgstr "Le cache est en cours de vidage en arrière-plan. Cela peut prendre quelques minutes."
 
-#: 
 msgid "Save changes"
 msgstr "Enregistrer les modifications"
 
-#: 
 msgid "Page %d"
 msgstr ""
 
-#: 
 msgid "Choose Bulk Actions"
 msgstr "Choisir actions groupées"
 
-#: 
 msgid "Bulk Actions"
 msgstr "Actions groupées"
 
-#: 
 msgid "Apply"
 msgstr "Appliquer"
 
-#: 
 msgid "Page title:"
 msgstr "Titre de la page :"
 
-#: 
 msgid "Remove title for language %s"
 msgstr "Supprimer le titre pour la langue %s"
 
-#: 
 msgid "Exklusive"
 msgstr "Exclusif"
 
-#: 
 msgid "Price reduction"
 msgstr "Réduction de prix"
 
-#: 
 msgid "Property of the day"
 msgstr "Bien du jour"
 
-#: 
 msgid "Property of the week"
 msgstr "Bien de la semaine"
 
-#: 
 msgid "Secret sale"
 msgstr "Vente discrète"
 
-#: 
 msgid "Commission free"
 msgstr "Sans commission"
 
-#: 
 msgid "Page title: %s"
 msgstr ""
 
-#: 
-msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs. %4$s %4$s"
-msgstr ""
-
-#: 
 msgid "The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications."
 msgstr ""
 
-#: 
 msgid "Highlights"
 msgstr ""
 
+msgid "The From value cannot be greater than To value"
+msgstr ""
+
+msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
+msgstr ""
+
+msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
+msgstr ""

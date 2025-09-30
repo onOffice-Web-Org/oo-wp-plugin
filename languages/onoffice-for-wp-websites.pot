@@ -2,14 +2,14 @@
 # This file is distributed under the AGPL 3+.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice for WP-Websites 6.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
+"Project-Id-Version: onOffice for WP-Websites 6.5.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-websites\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-11T09:01:09+00:00\n"
+"POT-Creation-Date: 2025-09-30T09:40:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -791,6 +791,9 @@ msgstr ""
 msgid "Default Value Up To:"
 msgstr ""
 
+msgid "The From value cannot be greater than To value"
+msgstr ""
+
 msgid "Page"
 msgstr ""
 
@@ -1330,7 +1333,10 @@ msgstr ""
 msgid "Show total price calculator"
 msgstr ""
 
-msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs. %4$s %4$s"
+msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
+msgstr ""
+
+msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
 msgstr ""
 
 msgid "The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications."
