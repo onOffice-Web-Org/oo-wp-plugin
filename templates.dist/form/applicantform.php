@@ -79,7 +79,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	} 
 	else {
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
-			$line =	 !$isHiddenField ? '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
+			$line =	 !$isHiddenField ? '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.' '.$addition.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
 		} else {
 			$line = '<label>'.$pForm->getFieldLabel($input).' '.$addition;
 			$line .= renderFormField($input, $pForm).'</span></label>';
