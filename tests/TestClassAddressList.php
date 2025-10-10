@@ -205,23 +205,18 @@ class TestClassAddressList
 			'filter' => [],
 			'formatoutput' => true,
 		];
-		$parametersLoadedByIdRaw = [
-			'recordids' => [13, 37],
-			'data' => ['contactCategory',
-				'Vorname',
-				'Name',
-				'Zusatz1',
-				'branch',
-				'communityOfHeirs',
-				'communityOfOwners',
-				'umbrellaOrganization',
-				'association',
-				'institution',
-				'department'],
-			'outputlanguage' => Language::getDefault(),
-			'filter' => [],
-			'formatoutput' => false,
-		];
+        // Raw-by-id now merges the view fields with the alt fields (array_unique keeps first occurrences)
+        $parametersLoadedByIdRaw = [
+            'recordids' => [13, 37],
+            'data' => [
+                'Name','KdNr','Vorname','phone',       // from $fields passed to loadAddressesById
+                'contactCategory','Zusatz1','branch','communityOfHeirs','communityOfOwners',
+                'umbrellaOrganization','association','institution','department' // alt deps
+            ],
+            'outputlanguage' => Language::getDefault(),
+            'filter' => [],
+            'formatoutput' => false,
+        ];
 		$responseRelation = $this->getResponseRelation();
 		$parametersRelation = [
 			'childids' => [13, 37],
@@ -263,12 +258,16 @@ class TestClassAddressList
 			'formatoutput' => false,
 		];
 
-		$addressParametersWithFormatDetail = [
-				'recordids' => [13, 37],
-				'data' => ['contactCategory', 'Vorname', 'Name', 'Zusatz1', 'branch', 'communityOfHeirs', 'communityOfOwners', 'umbrellaOrganization', 'association', 'institution', 'department'],
-				'outputlanguage' => "ENG",
-				'formatoutput' => false,
-		];
+        $addressParametersWithFormatDetail = [
+            'recordids' => [13, 37],
+            'data' => [
+                'Name','KdNr','Vorname','phone',
+                'contactCategory','Zusatz1','branch','communityOfHeirs','communityOfOwners',
+                'umbrellaOrganization','association','institution','department'
+            ],
+            'outputlanguage' => "ENG",
+            'formatoutput' => false,
+        ];
 
 		$pSDKWrapper->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'address', '', $parametersDefault, null, $response);
