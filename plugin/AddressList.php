@@ -206,7 +206,14 @@ implements AddressListBase
 		];
 		$parametersRaw = [
 				'recordids' => $addressIds,
-				'data' => $this->_addressParametersForImageAlt,
+				'data' => array_values(
+							array_unique(
+								array_merge(
+									$fields,                           // whatever the view asked for (formatted)
+									$this->_addressParametersForImageAlt // still keep alt deps
+								)
+							)
+						),
 				'outputlanguage' => Language::getDefault(),
 				'filter' => $filter,
 				'formatoutput' => false,
