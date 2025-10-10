@@ -524,6 +524,26 @@ implements AddressListBase
 	}
 
 	/**
+	 * Return the full raw address records (unformatted).
+	 * @return array<int, array{id:int, elements:array<string, mixed>}>
+	 */
+	public function getRawRecords(): array
+	{
+		return $this->_recordsRaw;
+	}
+
+	/**
+	 * Return the raw (unformatted) elements for a single address ID.
+	 *
+	 * @param int $id Address record ID.
+	 * @return array<string, mixed> Raw field values for the record (empty if missing).
+	 */
+	public function getRawById(int $id): array
+	{
+		return $this->_recordsRaw[$id]['elements'] ?? [];
+	}
+
+	/**
 	 * @param bool $raw
 	 * @param array $row
 	 * @return ArrayContainerEscape
