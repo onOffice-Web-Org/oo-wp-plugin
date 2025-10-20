@@ -74,6 +74,10 @@ class InputVariableReaderParser
 		}
 
 		switch ($type) {
+			case FieldTypes::FIELD_TYPE_VARCHAR:
+				$value = $this->parseString($value);
+				break;
+
 			case FieldTypes::FIELD_TYPE_FLOAT:
 				$value = $this->parseFloat($value);
 				break;
@@ -139,6 +143,29 @@ class InputVariableReaderParser
 		}
 
 		return $boolString === 'y';
+	}
+
+
+	/**
+	 * Decode only apostrophes and trim strings safely.
+	 *
+	 * @param string|null $parseString
+	 * @return string|null
+	 */
+
+	public function parseString(?string $parseString): ?string
+	{
+		if (empty($parseString)) {
+			return null;
+		}
+
+		$decoded = str_replace(
+			['&#39;', '&apos;'],
+			["'"],
+			$parseString
+		);
+
+		return trim($decoded);
 	}
 
 
