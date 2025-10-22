@@ -265,7 +265,7 @@ $dimensions = [
 
 					<dl class="oo-detailstable">
 						<?php
-						
+					
 						foreach ($energyCertificateFields as $field) {
 							if (empty($currentEstate[$field])) continue;?>
 							<dt class="oo-details-fact__label">

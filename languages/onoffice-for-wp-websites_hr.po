@@ -2372,3 +2372,15 @@ msgstr ""
 msgid "Highlights"
 msgstr ""
 
+#: 
+msgid "The From value cannot be greater than To value"
+msgstr ""
+
+#: 
+msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
+msgstr ""
+
+#: 
+msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
+msgstr ""
+

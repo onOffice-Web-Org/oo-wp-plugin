@@ -206,7 +206,14 @@ implements AddressListBase
 		];
 		$parametersRaw = [
 				'recordids' => $addressIds,
-				'data' => $this->_addressParametersForImageAlt,
+				'data' => array_values(
+							array_unique(
+								array_merge(
+									$fields,                           // whatever the view asked for (formatted)
+									$this->_addressParametersForImageAlt // still keep alt deps
+								)
+							)
+						),
 				'outputlanguage' => Language::getDefault(),
 				'filter' => $filter,
 				'formatoutput' => false,
@@ -521,6 +528,26 @@ implements AddressListBase
 
 			return $this->getArrayContainerByRow($raw, $valuesNew);
 		}, $this->_addressesById);
+	}
+
+	/**
+	 * Return the full raw address records (unformatted).
+	 * @return array<int, array{id:int, elements:array<string, mixed>}>
+	 */
+	public function getRawRecords(): array
+	{
+		return $this->_recordsRaw;
+	}
+
+	/**
+	 * Return the raw (unformatted) elements for a single address ID.
+	 *
+	 * @param int $id Address record ID.
+	 * @return array<string, mixed> Raw field values for the record (empty if missing).
+	 */
+	public function getRawById(int $id): array
+	{
+		return $this->_recordsRaw[$id]['elements'] ?? [];
 	}
 
 	/**

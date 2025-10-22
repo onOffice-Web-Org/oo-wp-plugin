@@ -44,24 +44,24 @@ class CostsCalculator
 	 */
 	public function getTotalCosts(array $recordRaw, array $propertyTransferTax, float $externalCommission): array
 	{
-		$totalCostsData = $this->calculateRawCosts($recordRaw, $propertyTransferTax, $externalCommission);
-		$currencySymbol = $this->getCurrencySymbol();
-
-		if (empty($currencySymbol)) {
+		try {
+			$totalCostsData = $this->calculateRawCosts($recordRaw, $propertyTransferTax, $externalCommission);
+			$currencySymbol = $this->getCurrencySymbol();
+			if (empty($currencySymbol)) {
+				return [];
+			}
+			if (!isset($recordRaw['waehrung'])) {
+				return [];
+			}
+			if (!isset($currencySymbol[$recordRaw['waehrung']])) {
+				return [];
+			}
+			$currency = $currencySymbol[$recordRaw['waehrung']];
+			return $this->formatPrice($totalCostsData, $currency);
+		} catch (\Throwable  $e) {
+			error_log("Error calculating total costs: " . $e->getMessage());
 			return [];
 		}
-
-		if (!isset($recordRaw['waehrung'])) {
-			return [];
-		}
-
-		if (!isset($currencySymbol[$recordRaw['waehrung']])) {
-			return [];
-		}
-
-		$currency = $currencySymbol[$recordRaw['waehrung']];
-
-		return $this->formatPrice($totalCostsData, $currency);
 	}
 
 	/**
