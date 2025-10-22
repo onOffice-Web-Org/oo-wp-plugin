@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "node webpack.config.js",
-		"i18n": "echo 'Install WPCLI if you havent yet: https://make.wordpress.org/cli/handbook/guides/installing/' && wp i18n make-pot . languages/onoffice-for-wp-websites.pot --no-location && wp i18n update-po languages/onoffice-for-wp-websites.pot && wp i18n make-mo languages"
+    "i18n": "echo 'Install WPCLI if you havent yet: https://make.wordpress.org/cli/handbook/guides/installing/' && wp i18n make-pot . languages/onoffice-for-wp-websites.pot --no-location && wp i18n update-po languages/onoffice-for-wp-websites.pot && wp i18n make-mo languages"
   },
   "dependencies": {
     "terser": "^5.0.0"

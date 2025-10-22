@@ -10,7 +10,7 @@
                 infinite: true,
                 arrows: false,
                 dots: true,
-                autoplay: true,
+                autoplay: false,
                 slidesToShow: 3,
                 slidesToScroll: 1,
                 responsive: [{
