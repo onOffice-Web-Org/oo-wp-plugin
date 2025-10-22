@@ -265,16 +265,7 @@ $dimensions = [
 
 					<dl class="oo-detailstable">
 						<?php
-						$fields = [
-							'baujahr',
-							'energieausweistyp',
-							'energieausweis_gueltig_bis',
-							'energyClass',
-							'energietraeger',
-							'co2_Emissionsklasse',
-							'co2ausstoss'
-						];
-						foreach ($fields as $field) {
+						foreach ($energyCertificateFields as $field) {
 							if (empty($currentEstate[$field])) continue;?>
 							<dt class="oo-details-fact__label">
 								<?php echo esc_html($pEstates->getFieldLabel($field)) ?>
