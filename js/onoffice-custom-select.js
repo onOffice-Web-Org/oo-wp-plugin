@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', function (event) {
       if (!form.checkValidity()) {
         event.preventDefault();
-        event.stopPropagation();
+        event.stopImmediatePropagation();
         inputs.forEach(input => inputHandleBlur(input));
         selects.forEach(select => selectHandleChange(select));
         jumpToFirstInvalidInput(form);
