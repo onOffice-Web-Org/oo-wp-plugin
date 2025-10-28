@@ -760,9 +760,6 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus, .oo-form i
       display: grid;
       grid-template-columns: repeat(2, 1fr);
     }
-    .oo-details-fact__label, .oo-details-fact__value {
-        width: 50%;
-    }
 }
 @media (max-width: 768px) {
 
