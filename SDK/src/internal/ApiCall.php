@@ -412,7 +412,8 @@ class ApiCall
 								unset($filteredArray[$index]);
 								break;
 							}
-						} elseif(!array_key_exists($fieldName,$itemRaw["elements"]) || !str_contains($itemRaw["elements"][$fieldName], $val)){
+						} elseif(!array_key_exists($fieldName,$itemRaw["elements"]) 
+        				|| stripos($itemRaw["elements"][$fieldName], $val) === false){
 							unset($filteredArray[$index]);
 							break;
 						}
