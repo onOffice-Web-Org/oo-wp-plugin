@@ -147,26 +147,39 @@ class InputVariableReaderParser
 
 
 	/**
-	 * Decode only apostrophes and trim strings safely.
+	 * Safely parse VARCHAR input:
+	 * - Decode apostrophes / HTML entities.
+	 * - Keep letters, numbers, umlauts, punctuation, hyphens, dashes, etc.
+	 * - Trim whitespace.
+	 * - Preserve '0', backticks, and valid symbols.
+	 * - Return null only if input is actually null, not empty string.
 	 *
 	 * @param string|null $parseString
 	 * @return string|null
 	 */
-
 	public function parseString(?string $parseString): ?string
 	{
-		if (empty($parseString)) {
+		if ($parseString === null) {
 			return null;
 		}
 
-		$decoded = str_replace(
-			['&#39;', '&apos;'],
-			["'"],
-			$parseString
-		);
+		// Decode apostrophes and HTML entities
+		$decoded = html_entity_decode($parseString, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
-		return trim($decoded);
+		// Normalize all line breaks and tabs to spaces
+		$normalized = preg_replace('/[\r\n\t]+/u', ' ', $decoded);
+
+		// Remove any control characters except normal printable unicode
+		// Keep umlauts, dashes, quotes, and backticks
+		$cleaned = preg_replace('/[^\P{C}]/u', '', $normalized);
+
+		// Optional: collapse multiple spaces
+		$cleaned = preg_replace('/\s{2,}/u', ' ', $cleaned);
+
+		// Don't turn empty string into null — keep original semantics
+		return $cleaned;
 	}
+
 
 
 	/**
