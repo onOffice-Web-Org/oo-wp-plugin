@@ -1047,7 +1047,7 @@ class FormModelBuilderDBForm
 		$pInputModelOriginContact->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 		$pInputModelOriginContact->setValue($this->getValue('origincontact') ?? '');
 		$defaultOriginContact = ['' => __('Please choose', 'onoffice-for-wp-websites')]
-			+ $this->_originContact['permittedvalues'];
+			+ ($this->_originContact['permittedvalues'] ?? []);
 		$pInputModelOriginContact->setValuesAvailable($defaultOriginContact ?? []);
 
 		return $pInputModelOriginContact;

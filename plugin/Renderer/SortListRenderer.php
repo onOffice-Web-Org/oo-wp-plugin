@@ -118,7 +118,7 @@ class SortListRenderer
 
 	private function createHtml(SortListDataModel $pSortListModel, int $listViewId): string
 	{
-		$htmlString = '<select name="userDefinedSelection" data-sort-listviewid="' . esc_html($listViewId) . '" class="' . self::ELEMENT_CLASS . '">';
+		$htmlString = '<select name="userDefinedSelection" autocomplete="off" title="Sorting" data-sort-listviewid="' . esc_html($listViewId) . '" class="' . self::ELEMENT_CLASS . '">';
 
 		$selectedValue = $this->createSelectedValue($pSortListModel);
 		$possibleSortorders = [SortListTypes::SORTORDER_ASC, SortListTypes::SORTORDER_DESC];
