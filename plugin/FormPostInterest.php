@@ -247,8 +247,8 @@ class FormPostInterest
 		foreach ($searchData as $key => $value) {
 			if (str_ends_with($key, '__von') || str_ends_with($key, '__bis')) {
 				if (is_string($value) && !empty($value)) {
-					// Replace dots that are thousand separators (followed by exactly 3 digits)
-					$searchData[$key] = preg_replace('/\.(?=\d{3}(?:\D|$))/', '', $value);
+					// Remove dots and commas that are thousand separators (followed by exactly 3 digits)
+					$searchData[$key] = preg_replace('/[.,](?=\d{3}(?:\D|$))/', '', $value);
 				}
 			}
 		}
