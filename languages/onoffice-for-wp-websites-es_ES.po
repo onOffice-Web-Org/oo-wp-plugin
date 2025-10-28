@@ -2372,3 +2372,15 @@ msgstr "El calculador de precio total está disponible actualmente solo para Ale
 msgid "Highlights"
 msgstr "Destacados"
 
+#: 
+msgid "The From value cannot be greater than To value"
+msgstr "El valor Desde no puede ser mayor que el valor Hasta"
+
+#: 
+msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
+msgstr "Los campos %s, %s y %s deben completarse en onOffice enterprise para que sea posible generar la salida."
+
+#: 
+msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
+msgstr "Normalmente se utiliza un valor estándar de 1,5 % y 0,5 % respectivamente para calcular los costes del notario y de la inscripción en el Registro de la Propiedad."
+

@@ -88,7 +88,7 @@ $dimensions = [
 	while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)) {
 		$estateId = $pEstates->getCurrentEstateId();
 		$rawValues = $pEstates->getRawValues();
-		$energyCertificateFields = ["baujahr","endenergiebedarf","energieverbrauchskennwert","energieausweistyp","energieausweis_gueltig_bis","energyClass","energietraeger"];
+		$energyCertificateFields = ["baujahr","endenergiebedarf","energieverbrauchskennwert","energieausweistyp","energieausweis_gueltig_bis","energyClass","energietraeger","co2_Emissionsklasse","co2ausstoss"];
 		?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
@@ -134,7 +134,7 @@ $dimensions = [
                     echo '<img class="oo-responsive-image estate-status" ' .
                         'src="' . esc_url($pEstates->getEstatePictureUrl($id, isset($dimensions['1600']['w']) || isset($dimensions['1600']['h']) ? ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']] : null)) . '" ' .
                         'alt="' . esc_html($pEstates->getEstatePictureTitle($id) ?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
-                        'loading="lazy"/>';
+                        'loading="lazy">';
                     echo '</picture>';;
 					echo '</div>';
 				}
@@ -227,7 +227,7 @@ $dimensions = [
 			if (!empty($areaButlerUrl)) { ?>
 				<div class="oo-area-butler">
 					<h2><?php esc_html_e('AreaButler', 'onoffice-for-wp-websites'); ?></h2>
-					<iframe class="oo-area-butler-iframe" src="<?php echo esc_url($areaButlerUrl); ?>"></iframe>
+					<iframe class="oo-area-butler-iframe" title="AreaButler" src="<?php echo esc_url($areaButlerUrl); ?>"></iframe>
 				</div>
 			<?php } ?>
 
@@ -265,15 +265,8 @@ $dimensions = [
 
 					<dl class="oo-detailstable">
 						<?php
-						$fields = [
-							'baujahr',
-							'energieausweistyp',
-							'energieausweis_gueltig_bis',
-							'energyClass',
-							'energietraeger'
-						];
 					
-						foreach ($fields as $field) {
+						foreach ($energyCertificateFields as $field) {
 							if (empty($currentEstate[$field])) continue;?>
 							<dt class="oo-details-fact__label">
 								<?php echo esc_html($pEstates->getFieldLabel($field)) ?>
@@ -394,7 +387,7 @@ $dimensions = [
 					<div class="oo-aspinfo-wrapper">
 					<?php
 					$imageUrl      = $contactData['imageUrl'];
-					$imageAlt      = !empty($contactData['imageAlt']) ? $contactData['imageAlt'] : esc_html__('Contact person', 'onoffice-for-wp-websites');
+					$imageAlt      = !empty($contactData['imageAlt']) ? $contactData['imageAlt'] : esc_html__('Contact person image', 'onoffice-for-wp-websites');
 					$formOfAddress = $contactData['Anrede'];
 					$title         = $contactData['Titel'];
 					$firstName     = $contactData['Vorname'];
@@ -405,7 +398,7 @@ $dimensions = [
 					$town          = $contactData['Ort'];
 
 					if ($imageUrl) {
-						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" height="150px" alt="' . esc_html($imageAlt) . '"></div>';
+						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" alt="' . esc_html($imageAlt) . '"></div>';
 					}
 
 					// Output name, depending on available fields.
@@ -475,14 +468,16 @@ $dimensions = [
 					</div>
 				<?php endforeach; ?>
 			</div>
-			<div class="oo-asp oo-detailsexpose">
+			
 				<?php if ($pEstates->getDocument() != '') : ?>
+					<div class="oo-asp oo-detailsexpose">
 					<h2><?php esc_html_e('Documents', 'onoffice-for-wp-websites'); ?></h2>
 					<a href="<?php echo $pEstates->getDocument(); ?>">
 						<?php esc_html_e('PDF expose', 'onoffice-for-wp-websites'); ?>
 					</a>
+					</div>
 				<?php endif; ?>
-			</div>
+			
 
 			<?php
 
@@ -494,12 +489,11 @@ $dimensions = [
 				if ($title) {
 					return
 						'<a class="player-title" target="_blank" href="' . esc_attr($url) . '">
-							<div>' . esc_html($title) . '
-								<svg width="0.7em" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
+							' . esc_html($title) . '
+								<svg aria-hidden="true" focusable="false" width="0.7em" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
 									<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>
 									<path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/>
 								</svg>
-							</div>
 						</a>';
 				} else {
 					return '';
