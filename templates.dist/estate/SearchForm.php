@@ -22,7 +22,6 @@ $visible = $pEstates->getVisibleFilterableFields();
 if (count($visible) === 0) {
 	return;
 }
-$formId = sanitize_key($getListName());
 ?>
 <div class="oo-searchform">
 	<form method="get" data-estate-search-name="<?php echo esc_attr($getListName()); ?>">
