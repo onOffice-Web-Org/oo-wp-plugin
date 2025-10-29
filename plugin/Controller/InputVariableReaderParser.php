@@ -148,9 +148,7 @@ class InputVariableReaderParser
 
 	/**
 	 * Safely parse VARCHAR input:
-	 * - Decode apostrophes / HTML entities.
-	 * - Keep letters, numbers, umlauts, punctuation, hyphens, dashes, etc.
-	 * - Trim whitespace.
+	 * - Decode apostrophes and keep letters, numbers, umlauts, punctuation, hyphens, dashes, etc.
 	 * - Preserve '0', backticks, and valid symbols.
 	 * - Return null only if input is actually null, not empty string.
 	 *
