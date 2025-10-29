@@ -761,7 +761,12 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus, .oo-form i
       grid-template-columns: repeat(2, 1fr);
     }
 }
+@media (max-width: 768px) {
 
+    .oo-details-fact__label, .oo-details-fact__value {
+        width: 50%;
+    }
+}
 @media (min-width: 1200px) {
 
     .oo-units__wrapper {
