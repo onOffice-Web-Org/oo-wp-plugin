@@ -2289,77 +2289,77 @@ msgstr "Wijzigingen opslaan"
 
 #: 
 msgid "Page %d"
-msgstr ""
+msgstr "Pagina %d"
 
 #: 
 msgid "Choose Bulk Actions"
-msgstr ""
+msgstr "Kies bulkacties"
 
 #: 
 msgid "Bulk Actions"
-msgstr ""
+msgstr "Bulkacties"
 
 #: 
 msgid "Apply"
-msgstr ""
+msgstr "Toepassen"
 
 #: 
 msgid "Page title:"
-msgstr ""
+msgstr "Paginatitel:"
 
 #: 
 msgid "Remove title for language %s"
-msgstr ""
+msgstr "Titel verwijderen voor taal %s"
 
 #: 
 msgid "Exklusive"
-msgstr ""
+msgstr "Exclusief"
 
 #: 
 msgid "Price reduction"
-msgstr ""
+msgstr "Prijsverlaging"
 
 #: 
 msgid "Property of the day"
-msgstr ""
+msgstr "Woning van de dag"
 
 #: 
 msgid "Property of the week"
-msgstr ""
+msgstr "Woning van de week"
 
 #: 
 msgid "Secret sale"
-msgstr ""
+msgstr "Geheime verkoop"
 
 #: 
 msgid "Commission free"
-msgstr ""
+msgstr "Commissievrij"
 
 #: 
 msgid "Page title: %s"
-msgstr ""
+msgstr "Paginatitel: %s"
 
 #: 
 msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs. %4$s %4$s"
-msgstr ""
+msgstr "De velden %1$s, %2$s en %3$s moeten ingevuld worden in onOffice enterprise zodat uitvoer mogelijk is. %4$s %4$s Een standaardwaarde van respectievelijk 1.5%% en 0.5%% wordt doorgaans gebruikt om de notariskosten en de kosten voor inschrijving in het kadaster te berekenen. %4$s %4$s"
 
 #: 
 msgid "The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications."
-msgstr ""
+msgstr "De totale prijscalculator is momenteel alleen beschikbaar voor Duitsland, aangezien de berekening van bijkomende aankoopkosten (bijv. overdrachtsbelasting, notariskosten, makelaarscourtage) gebaseerd is op landspecifieke bepalingen."
 
 #: 
 msgid "Highlights"
-msgstr ""
+msgstr "Hoogtepunten"
 
 #: 
 msgid "The From value cannot be greater than To value"
-msgstr ""
+msgstr "De 'Van'-waarde mag niet groter zijn dan de 'Tot'-waarde"
 
 #: 
 msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
-msgstr ""
+msgstr "De velden %s, %s en %s moeten ingevuld worden in onOffice enterprise zodat uitvoer mogelijk is."
 
 #: 
 msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
-msgstr ""
+msgstr "Een standaardwaarde van respectievelijk 1.5% en 0.5% wordt doorgaans gebruikt om de notariskosten en de kosten voor inschrijving in het kadaster te berekenen."
 
