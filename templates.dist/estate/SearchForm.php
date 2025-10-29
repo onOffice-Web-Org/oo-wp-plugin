@@ -25,13 +25,13 @@ if (count($visible) === 0) {
 $formId = sanitize_key($getListName());
 ?>
 <div class="oo-searchform">
-	<form method="get" data-estate-search-name="<?php echo esc_attr($formId); ?>">
+	<form method="get" data-estate-search-name="<?php echo esc_attr($getListName()); ?>">
 		<div class="oo-searchformfieldwrap">
 			<?php
 			foreach ($visible as $inputName => $properties) :
 				echo '<div class="oo-searchformfield">';
 				//echo '<label for="' . esc_html($inputName) . '">'.esc_html($properties['label']);
-				renderFieldEstateSearch($inputName, $properties, $formId).'</label>';
+				renderFieldEstateSearch($inputName, $properties).'</label>';
 				echo '</div>';
 			endforeach;
 			?>		
