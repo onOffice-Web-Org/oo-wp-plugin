@@ -346,7 +346,7 @@ msgstr "Ohne Markierung"
 
 #: 
 msgid "Top offer"
-msgstr "Top Angebot"
+msgstr "Top Offerte"
 
 #: 
 msgid "New"
@@ -693,8 +693,8 @@ msgstr " (Kauf)"
 #: 
 msgid "%1$s, %2$s%3$s"
 msgid_plural "%1$s, %2$s %3$s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$s, %2$s%3$s"
+msgstr[1] "%1$s, %2$s %3$s"
 
 #: 
 msgid "Choose an estate filter from onOffice enterprise. %s"
@@ -2176,191 +2176,191 @@ msgstr "onOffice für WP-Websites"
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
 #: plugin/Controller/EstateViewDocumentTitleBuilder.php:65
 msgid "%2$s (%3$s) in %4$s - %5$s"
-msgstr ""
+msgstr "%2$s (%3$s) in %4$s - %5$s"
 
 #: plugin/Gui/AdminPageApiSettings.php:221
 msgid "Search engine"
-msgstr ""
+msgstr "Suchmaschine"
 
 #: plugin/Gui/AdminPageApiSettings.php:396
 msgid "Favorise"
-msgstr ""
+msgstr "Merken"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:157
 #: plugin/Gui/AdminPageEstateUnitSettings.php:110
 msgid "Downloadable Documents"
-msgstr ""
+msgstr "Dokumente zum Herunterladen"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:172
 msgid "At least the following fields must be active: country, radius and city or postcode."
-msgstr ""
+msgstr "Mindestens die folgenden Felder müssen aktiv sein: Land, Umkreis und Stadt oder Postleitzahl."
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:150
 #: plugin/Gui/AdminPageFormSettingsContact.php:161
 msgid "Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk."
-msgstr ""
+msgstr "Beachten Sie, dass bei Aktivierung Adressdatensätze überschrieben werden können. Diese Funktion wird in Zukunft entfernt. Die Verwendung erfolgt auf eigene Gefahr."
 
 #: plugin/Gui/Table/EstateListTable.php:215
 msgid "Show Status"
-msgstr ""
+msgstr "Status anzeigen"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:152
 msgid "Records per Page"
-msgstr ""
+msgstr "Einträge pro Seite"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:233
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:203
 msgid "Filterable"
-msgstr ""
+msgstr "Filterbar"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:224
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:453
 msgid "Reduce values according to selected filter"
-msgstr ""
+msgstr "Werte entsprechend dem ausgewählten Filter reduzieren"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:447
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
 msgid "PDF-Expose"
-msgstr ""
+msgstr "PDF-Expose"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:470
 msgid "Reference Estates"
-msgstr ""
+msgstr "Referenzimmobilien"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:140
 msgid "Allow detail view for reference estates"
-msgstr ""
+msgstr "Zeige Detailansicht für Referenzimmobilien"
 
 #: plugin/Model/InputModel/InputModelConfigurationFormContact.php:76
 msgid "Check for Duplicates (override existing address if the email is the same)"
-msgstr ""
+msgstr "Duplikatsprüfung (kann Adressdatensätze überschreiben)"
 
 #: templates.dist/address/default.php:39
 msgid "Picture: "
-msgstr ""
+msgstr "Bild: "
 
 #: templates.dist/estate/default.php:120
 #: templates.dist/estate/default.php:143
 msgid "Add to "
-msgstr ""
+msgstr "Hinzufügen zu "
 
 #: templates.dist/estate/default.php:149
 msgid "Remove from "
-msgstr ""
+msgstr "Löschen von "
 
 #: templates.dist/estate/default_detail.php:77
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
 #: templates.dist/estate/default_detail.php:84
 msgid "Location"
-msgstr ""
+msgstr "Lage"
 
 #: templates.dist/estate/default_detail.php:101
 msgid "Equipment"
-msgstr ""
+msgstr "Ausstattung"
 
 #: templates.dist/estate/default_detail.php:108
 msgid "Other Information"
-msgstr ""
+msgstr "Sonstige Angaben"
 
 #: 
 msgid "There was a problem saving the list. The Name field has been exist."
-msgstr ""
+msgstr "Beim Speichern der Liste ist ein Problem aufgetreten. Das Feld „Name“ existiert bereits."
 
 #: 
 msgid "There was a problem saving the list. The Name field must not be empty."
-msgstr ""
+msgstr "Beim Speichern der Liste ist ein Problem aufgetreten. Das Feld „Name“ darf nicht leer sein."
 
 #: 
 msgid "Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?"
-msgstr ""
+msgstr "Bitte stellen Sie sicher, dass keine andere Ansicht mit diesem Namen existiert, auch wenn sie einen anderen Typ hat. Möchten Sie die Seite ohne Speichern verlassen?"
 
 #: 
 msgid "The Name field must not be empty. Do you want to leave the page without saving?"
-msgstr ""
+msgstr "Das Feld „Name“ darf nicht leer sein. Möchten Sie die Seite ohne Speichern verlassen?"
 
 #: 
 msgid "Cache is being cleared in the background. This may take a few minutes."
-msgstr ""
+msgstr "Der Cache wird im Hintergrund gelöscht. Dies kann einige Minuten dauern."
 
 #: 
 msgid "Save changes"
-msgstr ""
+msgstr "Änderungen speichern"
 
 #: 
 msgid "Page %d"
-msgstr ""
+msgstr "Seite %d"
 
 #: 
 msgid "Choose Bulk Actions"
-msgstr ""
+msgstr "Aktion auswählen"
 
 #: 
 msgid "Bulk Actions"
-msgstr ""
+msgstr "Massenaktionen"
 
 #: 
 msgid "Apply"
-msgstr ""
+msgstr "Anwenden"
 
 #: 
 msgid "Page title:"
-msgstr ""
+msgstr "Seitentitel:"
 
 #: 
 msgid "Remove title for language %s"
-msgstr ""
+msgstr "Titel für Sprache %s löschen"
 
 #: 
 msgid "Exklusive"
-msgstr ""
+msgstr "Exklusive"
 
 #: 
 msgid "Price reduction"
-msgstr ""
+msgstr "Preisnachlass"
 
 #: 
 msgid "Property of the day"
-msgstr ""
+msgstr "Immobilie des Tages"
 
 #: 
 msgid "Property of the week"
-msgstr ""
+msgstr "Immobilie der Woche"
 
 #: 
 msgid "Secret sale"
-msgstr ""
+msgstr "Secret Sale"
 
 #: 
 msgid "Commission free"
-msgstr ""
+msgstr "Provisionsfrei"
 
 #: 
 msgid "Page title: %s"
-msgstr ""
+msgstr "Seitentitel: %s"
 
 #: 
 msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs. %4$s %4$s"
-msgstr ""
+msgstr "Die Felder %1$s, %2$s und %3$s müssen in onOffice enterprise ausgefüllt werden, damit eine Ausgabe möglich ist. %4$s %4$s Zur Berechnung der Notar- und Grundbucheintragungskosten wird in der Regel ein Standardwert von 1,5 % bzw. 0,5 % verwendet. %4$s %4$s"
 
 #: 
 msgid "The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications."
-msgstr ""
+msgstr "Der Gesamtpreisrechner ist derzeit nur für Deutschland verfügbar, da die Berechnung der Nebenkosten (z. B. Grunderwerbsteuer, Notargebühren, Maklerprovision) auf länderspezifischen Vorgaben basiert."
 
 #: 
 msgid "Highlights"
-msgstr ""
+msgstr "Highlights"
 
 #: 
 msgid "The From value cannot be greater than To value"
-msgstr ""
+msgstr "Der Wert „Von“ darf nicht grösser sein als der Wert „Bis“."
 
 #: 
 msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
-msgstr ""
+msgstr "Die Felder %s, %s und %s müssen in onOffice Enterprise ausgefüllt werden, damit eine Ausgabe möglich ist."
 
 #: 
 msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
-msgstr ""
+msgstr "Zur Berechnung der Notar- und Grundbucheintragungskosten werden in der Regel Standardwerte von 1,5 % bzw. 0,5 % verwendet."
 
