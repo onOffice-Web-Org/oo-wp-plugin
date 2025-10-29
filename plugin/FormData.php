@@ -134,7 +134,10 @@ class FormData
 
 			if (onOfficeSDK::MODULE_ADDRESS === $inputModule) {
 				$pField = $pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ADDRESS, $input);
-
+				
+				if ($pField->getType() == FieldTypes::FIELD_TYPE_VARCHAR) {
+					$value = $pInputVariableReaderAddress->parseString($value);
+				}
 				if ($pField->getType() == FieldTypes::FIELD_TYPE_BOOLEAN) {
 					$value = $pInputVariableReaderAddress->parseBool($value);
 				}
