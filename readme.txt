@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.6.1
 Requires PHP: 7.4
-Stable tag: 6.6
+Stable tag: 6.7
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,18 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.7 (2025-10-30) =
+
+**Fixed**
+
+* Ensure BFSG-compliant accessibility
+* Transfer of apostrophes to Enterprise
+* Display of the property detail page on mobile devices
+* Error in the applicant contact form
+* Configuration errors in forms
+* Raw values for an address list
+* Display of all energy certificate fields
 
 = 6.6 (2025-09-30) =
 
