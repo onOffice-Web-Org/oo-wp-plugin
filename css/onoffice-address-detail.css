@@ -18,7 +18,7 @@
 .oo-address-field {
     display: flex;
     flex-wrap: wrap;
-    font-size: 1rem;
+    font-size: 15px;
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
 }

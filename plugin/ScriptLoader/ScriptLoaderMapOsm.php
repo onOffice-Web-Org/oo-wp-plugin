@@ -59,6 +59,8 @@ class ScriptLoaderMapOsm
 	public function enqueue()
 	{
 		$this->_pWPScriptStyle->enqueueScript('leaflet-script');
+		$this->_pWPScriptStyle->enqueueScript('leaflet-script-a11y');
+		$this->_pWPScriptStyle->enqueueScript('leaflet-script-cluster');
 		$this->_pWPScriptStyle->enqueueStyle('leaflet-style');
 	}
 
@@ -74,5 +76,12 @@ class ScriptLoaderMapOsm
 
 		$this->_pWPScriptStyle->registerScript('leaflet-script',
 			plugins_url('/third_party/leaflet/leaflet.js', ONOFFICE_PLUGIN_DIR.'/index.php'));
+
+		$this->_pWPScriptStyle->registerScript('leaflet-script-a11y',
+			plugins_url('/third_party/leaflet/leaflet-a11y.js', ONOFFICE_PLUGIN_DIR.'/index.php'));
+
+		$this->_pWPScriptStyle->registerScript('leaflet-script-cluster',
+			plugins_url('/third_party/leaflet/leaflet-cluster.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'));
+
 	}
 }

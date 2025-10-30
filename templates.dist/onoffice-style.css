@@ -5,8 +5,11 @@
 
 .oo-searchformfieldwrap {
     display: flex;
-    align-items: end;
+    align-items: flex-start;
     flex-wrap: wrap;
+    flex-direction: row;
+    align-content: flex-start;
+    justify-content: flex-start;
 }
 
 .oo-searchformfield {
@@ -15,20 +18,86 @@
     width: 33.33%;
 }
 
+.oo-searchformfield:last-child {
+    margin-top: auto;
+}
+
 .oo-searchformfield label {
     display: block;
     margin: 0;
     padding: 0;
 }
 
+.oo-form label, .oo-single-select, .oo-multi-select {
+    margin-bottom: 20px;
+}
+
+.oo-single-select label, .oo-multi-select label {
+    margin: 0;
+}
+
+.oo-form.validated input:invalid, .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated textarea:invalid, .required.invalid:has(+ div[aria-hidden='false']) {
+    border: 2px solid #DC2625;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23DC2625" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>');    
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+}
+
+.oo-form.validated input:invalid[type="checkbox"]{
+    outline: 2px solid red;
+}
+.validated .oo-form input:invalid[type="checkbox"] ~ .error {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23DC2625" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>');    
+    background-repeat: no-repeat;
+    padding-left: 30px;
+ }
+
+ .oo-form.validated textarea:required:valid,
+ .oo-form.validated input:required:valid, .oo-form.validated .oo-single-select .required.has-items.ts-wrapper  {
+   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%2328a745' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/></svg>");
+   background-repeat: no-repeat;
+   background-position: right 15px center;
+   border: 1px solid green;
+   background-size: 1.25rem;
+   
+ }
+ 
+ .oo-form.validated .oo-single-select .required.has-items.ts-wrapper,  .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated input:required:valid[type="date"], .oo-form.validated input:required:valid[type="number"], .oo-form.validated input:invalid[type="number"] {
+    background-position: right 30px center;
+}
+
+.oo-form .error p {
+    margin: 0;
+}
+
+.oo-form.oo-validated .error, .oo-form input:invalid~.oo-form.oo-validated .error{
+    display: block;
+}
+
 .oo-searchformfield input, .oo-searchformfield button, .oo-searchformfield .multiselect {
     width: 100%;
     margin: 0 !important;
+    line-height: 28px;
+    font-size: 16px;
+    outline: 1px solid rgba(0,0,0,0);
+}
+.oo-searchformfield input:not([id$="ts-control"]) {
+    height: 48px;
+}
+
+span.oo-searchrange {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 2rem;
+    display: grid;
 }
 
 .oo-searchformfield input[type="checkbox"] {
-    width: auto;
+    width: 24px;
+    height: 24px;
     margin-right: 5px;
+}
+.oo-searchformfield input[type="radio"] {
+    width: auto;
 }
 
 .oo-searchformfield .multiselect {
@@ -50,6 +119,37 @@
     display: none;
 }
 
+.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus, .oo-searchformfield input:focus, .ts-wrapper.focus, .ts-wrapper:focus-visible, .ts-wrapper.single.focus, .ts-wrapper.single:focus-visible, .ts-wrapper.multi.focus, .ts-wrapper.multi:focus-visible, .oo-post-nav-links a:focus {
+    outline: #3d7bb1 solid 2px;
+    border-color: #3d7bb1;
+}
+
+.oo-form input[type='submit'], .oo-searchformfield input[type='submit'] {
+    text-align: center;
+    color: #ffffff !important;
+    padding: 5px;
+    background-color: #3d7bb1;
+    transition: all 0.3s;
+    font-size: 16px;
+    line-height: 28px;
+    border: 1px solid #000;
+    display: block;
+}
+.oo-form input[type='submit']:hover, .oo-searchformfield input[type='submit']:hover {
+    cursor: pointer;
+}
+
+.oo-form .oo-input-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.oo-form .oo-input-wrapper label:nth-child(2){
+    margin-left: 20px;
+}
 /* estate map */
 .oo-estate-map {
     padding: 0 15px;
@@ -71,6 +171,7 @@
 
 .oo-detailsmap .oo-map, .oo-estate-map .oo-map, .oo-detailsmap .oo-gmap, .oo-estate-map .oo-gmap {
     height: 350px !important;
+    z-index: 0;
 }
 
 .oo-estate-map .oo-map .leaflet-top, .oo-estate-map .oo-map .leaflet-bottom {
@@ -158,15 +259,21 @@
 
 .oo-listtd.--highlight {
     font-weight: bold;
-    color: #80acd3;
+    color: #3d7bb1;
 }
 
-.oo-detailslink a, .favorize, .oo-unitslink a {
+.oo-detailslink {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.oo-detailslink a, .favorize, .oo-unitslink a, .oo-leadformlink {
     display: block;
     text-align: center;
     color: #ffffff !important;
     padding: 5px;
-    background-color: #80acd3;
+    background-color: #3d7bb1;
     transition: all 0.3s;
     text-decoration: none;
     font-size: 16px;
@@ -174,15 +281,18 @@
     line-height: 28px;
 }
 
-.oo-detailslink a:hover, .favorize:hover, .oo-unitslink a:hover {
-    opacity: 0.8;
+.oo-detailslink a:hover, button.favorize:hover, .oo-unitslink a:hover, .oo-form input[type='submit']:hover, .oo-leadformlink:hover, .oo-post-nav-links a:hover {
+    background: #174770;
     color: #ffffff !important;
     text-decoration: none !important;
 }
 
-.favorize {
-    border: 1px solid #839fce;
-    cursor: pointer;
+button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus, .oo-form input[type='submit']:focus, .oo-searchformfield input[type='submit']:focus {
+    background: #174770;
+}
+
+.leaflet-container a.leaflet-popup-close-button:focus, .leaflet-bar a:hover, .leaflet-bar a:focus, .gm-style div:focus,  .gm-style button:focus {
+    outline: 2px solid #174770;
 }
 
 /* details */
@@ -202,7 +312,7 @@
 }
 
 .oo-detailsgallery {
-    margin-bottom: 24px;
+    margin-bottom: 25px;
 }
 
 .oo-detailsgallery .slick-arrow {
@@ -213,7 +323,7 @@
     justify-content: center;
     align-items: center;
     text-shadow: -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff, 1px 1px 0 #ffffff;
-    z-index: 999;
+    z-index: 1;
 }
 
 .oo-detailsgallery .slick-prev {
@@ -223,6 +333,12 @@
 .oo-detailsgallery .slick-next {
     right: 25px;
 }
+
+.oo-detailsgallery .slick-next:focus .slick-next-icon, .oo-detailsgallery .slick-next:focus .slick-prev-icon, .oo-detailsgallery .slick-prev:focus .slick-next-icon, .oo-detailsgallery .slick-prev:focus .slick-prev-icon, .slick-dots li button:focus .slick-dot-icon::before
+{
+    color: #3d7bb1;
+}
+
 
 .oo-detailspicture, .oo-detailspicture.slick-slide {
     background-size: cover;
@@ -302,8 +418,17 @@
     border-bottom: 2px solid #efefef;
 }
 
+.oo-video {
+    display: flex;
+    flex-direction: column;
+}
+
 .oo-aspname, .oo-video, .oo-detailsexpose {
     margin-bottom: 15px;
+}
+
+.player-title svg {
+    display: inline;
 }
 
 .oo-asplocation {
@@ -314,6 +439,10 @@
     margin-bottom: 15px;
 }
 
+.oo-contact-info img {
+    height: 150px;
+
+}
 .oo-contact-info p {
     margin: 0;
 }
@@ -632,7 +761,12 @@
       grid-template-columns: repeat(2, 1fr);
     }
 }
+@media (max-width: 768px) {
 
+    .oo-details-fact__label, .oo-details-fact__value {
+        width: 50%;
+    }
+}
 @media (min-width: 1200px) {
 
     .oo-units__wrapper {
@@ -708,4 +842,133 @@
     .oo-units__data.oo-unitslink {
         padding-bottom: 16px;
     }
+}
+
+.ts-control {
+    display: flex; 
+    flex-direction: row;
+    background: transparent;
+    height: 48px;
+    line-height: 28px;
+}
+
+.ts-dropdown, .ts-control, .ts-control input {
+    font-size: inherit;
+    color: inherit;
+}
+
+.oo-post-nav-links {
+    text-align: center; 
+}
+  
+.oo-post-nav-links ul {
+    display: flex;
+    gap: .25rem;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+}
+
+  .oo-post-nav-links a {
+    display: inline-block;
+    padding: 5px 10px; 
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+  }
+  
+  .oo-post-nav-links .current {
+    font-weight: bold; 
+    color: #000;
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+  }
+  
+  .oo-post-nav-links {
+    margin-top: 20px;
+  }
+
+
+.ts-wrapper.has-items .ts-control input, .ts-wrapper.single.has-items .ts-control input, .ts-wrapper.multi.has-items .ts-control input {
+    width: auto;
+}
+
+
+.ts-dropdown .option.selected {
+    font-weight: bold;
+}
+.ts-dropdown .option {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+}
+
+.ts-wrapper .ts-control::after, .ts-wrapper.single .ts-control::after, .ts-wrapper.multi .ts-control::after {
+    content: "";
+    position: absolute;
+    right: .5rem;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 14px;
+    height: 100%;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    mask-repeat: no-repeat;
+    mask-size: 1.25rem;
+    mask-position: center;
+    background: #3D3D3D;
+}
+.ts-wrapper.focus .ts-control::after, .ts-wrapper.single.focus .ts-control::after, .ts-wrapper.multi.focus .ts-control::after {
+    top: 0%;
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.ts-wrapper .ts-item-remove:before, .ts-wrapper.single .ts-item-remove:before, .ts-wrapper.multi .ts-item-remove:before {
+    content: "";
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E");
+    mask-repeat: no-repeat;
+    mask-size: 1.25rem;
+    mask-position: center;
+
+}
+
+.ts-wrapper.plugin-remove_button .item .remove {
+    text-decoration: none;
+    vertical-align: middle;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.ts-wrapper.multi.has-items .ts-control {
+    overflow: hidden;
+    display: inline-block;
+    height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+    padding: 6px; 
+    height: 48px;
+}
+
+.plugin-checkbox_options:not(.rtl) .option input {
+    min-width: 24px;
+    min-height: 24px;
 }

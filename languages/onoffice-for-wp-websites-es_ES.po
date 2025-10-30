@@ -7,8 +7,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-30T09:40:26+00:00\n"
-"PO-Revision-Date: 2025-09-30T09:40:26+00:00\n"
+"POT-Creation-Date: 2025-10-30T09:21:14+00:00\n"
+"PO-Revision-Date: 2025-10-30T09:21:14+00:00\n"
 "Language: es\n"
 "X-Generator: POEditor.com\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -88,13 +88,13 @@ msgid "estate"
 msgstr "inmueble"
 
 msgid "Example address"
-msgstr "Ejemplo de dirección"
+msgstr "Ejemplo de contacto"
 
 msgid "https://wp-plugin.onoffice.com/"
 msgstr "https://wp-plugin.onoffice.com/"
 
 msgid "address"
-msgstr "dirección"
+msgstr "contacto"
 
 msgid "Show energy certificate with a scale"
 msgstr "Mostrar certificado energético con escala"
@@ -187,7 +187,7 @@ msgid "E Documentation received"
 msgstr "E Documentación recibida"
 
 msgid "D Interested, but still reviewing"
-msgstr "D Interesado, pero sigue examinando"
+msgstr "D Cliente potencial, pero sigue examinando"
 
 msgid "C Intense communication"
 msgstr "C En conversación intensa"
@@ -1032,7 +1032,6 @@ msgstr "menor primero"
 msgid "https://wpplugindoc.onoffice.de"
 msgstr "https://wp-plugin.onoffice.com/es/"
 
-#. translators: %s will be replaced with the translated field name.
 msgid "Choose %s"
 msgstr "Seleccione %s"
 
@@ -1090,18 +1089,6 @@ msgstr "Atrás"
 msgid "Please enter a value for %s."
 msgstr "Por favor, introduzca un valor para %s."
 
-msgid "The form wasn't sent because spam was detected."
-msgstr "El formulario no se envió porque se detectó spam."
-
-msgid "There was an error sending the form."
-msgstr "Se ha producido un error al enviar el formulario."
-
-msgid "The form was sent successfully."
-msgstr "El formulario ha sido enviado con éxito."
-
-msgid "Spam detected!"
-msgstr "Spam detectado"
-
 msgid "Information about your property"
 msgstr "Información sobre su propiedad"
 
@@ -1110,15 +1097,6 @@ msgstr "Sus datos de contacto"
 
 msgid "Message"
 msgstr "Mensaje"
-
-msgid "Please fill in"
-msgstr "Por favor, rellena"
-
-msgid "Missing Fields!"
-msgstr "¡Faltan campos!"
-
-msgid "SUCCESS!"
-msgstr "¡CORRECTO!"
 
 #. translators: %s will be replaced with a customer reference number.
 msgid "Customer ref. number %s"
@@ -1136,9 +1114,6 @@ msgstr "Búsqueda de posibles compradores"
 
 msgid "search within distance of:"
 msgstr "buscar cerca de:"
-
-msgid "Please fill in!"
-msgstr "¡Por favor, rellena!"
 
 msgid "ERROR!"
 msgstr "¡ERROR!"
@@ -1735,10 +1710,80 @@ msgid "Highlights"
 msgstr "Destacados"
 
 msgid "The From value cannot be greater than To value"
-msgstr ""
+msgstr "El valor Desde no puede ser mayor que el valor Hasta"
 
 msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
-msgstr ""
+msgstr "Los campos %s, %s y %s deben completarse en onOffice enterprise para que sea posible generar la salida."
 
 msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
+msgstr "Normalmente se utiliza un valor estándar de 1,5 % y 0,5 % respectivamente para calcular los costes del notario y de la inscripción en el Registro de la Propiedad."
+
+msgid "Post navigation"
+msgstr ""
+
+msgctxt "template"
+msgid "Seite %d"
+msgstr ""
+
+msgid "Contact person image"
+msgstr ""
+
+msgid "Map with real estate agents"
+msgstr ""
+
+msgid "Real Estate No."
+msgstr ""
+
+msgid "Map with properties"
+msgstr ""
+
+msgid "Pflichtfeld"
+msgstr ""
+
+msgid "Postal code of the property"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Please select at least one option."
+msgstr ""
+
+msgid "Please enter a text."
+msgstr ""
+
+msgid "Please agree to the terms and conditions."
+msgstr ""
+
+msgid "Please select this option."
+msgstr ""
+
+msgid "Please enter a valid e-mail address."
+msgstr ""
+
+msgid "Thank you for your inquiry. We will get back to you as soon as possible."
+msgstr ""
+
+msgid "An error has occurred. Please check your details."
+msgstr ""
+
+msgid "Not all mandatory fields have been filled out. Please check your entries."
+msgstr ""
+
+msgid "Spam recognized!"
+msgstr ""
+
+msgid "* Mandatory fields"
+msgstr ""
+
+msgid "Ort der Immobilie"
+msgstr ""
+
+msgid "PLZ der Immobilie"
+msgstr ""
+
+msgid "Straße der Immobilie"
+msgstr ""
+
+msgid "Hausnummer der Immobilie"
 msgstr ""

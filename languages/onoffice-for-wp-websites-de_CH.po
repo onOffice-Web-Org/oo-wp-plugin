@@ -7,8 +7,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-30T09:40:26+00:00\n"
-"PO-Revision-Date: 2025-09-30T09:40:26+00:00\n"
+"POT-Creation-Date: 2025-10-30T09:21:14+00:00\n"
+"PO-Revision-Date: 2025-10-30T09:21:14+00:00\n"
 "Language: de-ch\n"
 "X-Generator: POEditor.com\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -261,7 +261,7 @@ msgid "No marker"
 msgstr "Ohne Markierung"
 
 msgid "Top offer"
-msgstr "Top Angebot"
+msgstr "Top Offerte"
 
 msgid "New"
 msgstr "Neu"
@@ -530,8 +530,8 @@ msgstr " (Kauf)"
 #. translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type
 msgid "%1$s, %2$s%3$s"
 msgid_plural "%1$s, %2$s %3$s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$s, %2$s%3$s"
+msgstr[1] "%1$s, %2$s %3$s"
 
 msgid "Choose an estate filter from onOffice enterprise. %s"
 msgstr "Wählen Sie einen Immobilienfilter aus onOffice enterprise. %s"
@@ -1023,7 +1023,6 @@ msgstr "niedrigste zuerst"
 msgid "https://wpplugindoc.onoffice.de"
 msgstr "https://wpplugindoc.onoffice.de"
 
-#. translators: %s will be replaced with the translated field name.
 msgid "Choose %s"
 msgstr "%s auswählen"
 
@@ -1081,18 +1080,6 @@ msgstr "Zurück"
 msgid "Please enter a value for %s."
 msgstr "Bitte gib einen Wert für %s ein."
 
-msgid "The form wasn't sent because spam was detected."
-msgstr "Das Formular wurde nicht abgeschickt, da der Verdacht auf Spam besteht."
-
-msgid "There was an error sending the form."
-msgstr "Beim Senden des Formulars ist ein Fehler aufgetreten."
-
-msgid "The form was sent successfully."
-msgstr "Das Formular wurde erfolgreich abgeschickt."
-
-msgid "Spam detected!"
-msgstr "Spam erkannt!"
-
 msgid "Information about your property"
 msgstr "Angaben zu deinem Eigentum"
 
@@ -1101,15 +1088,6 @@ msgstr "Deine Kontaktdaten"
 
 msgid "Message"
 msgstr "Nachricht"
-
-msgid "Please fill in"
-msgstr "Bitte ausfüllen"
-
-msgid "Missing Fields!"
-msgstr "Fehlende Felder!"
-
-msgid "SUCCESS!"
-msgstr "ERFOLG!"
 
 #. translators: %s will be replaced with a customer reference number.
 msgid "Customer ref. number %s"
@@ -1126,9 +1104,6 @@ msgstr "Suche nach potenziellen Käufern"
 
 msgid "search within distance of:"
 msgstr "Suche in der Nähe von:"
-
-msgid "Please fill in!"
-msgstr "Bitte ausfüllen!"
 
 msgid "ERROR!"
 msgstr "FEHLER!"
@@ -1652,73 +1627,143 @@ msgid "onOffice for WP-Websites"
 msgstr "onOffice für WP-Websites"
 
 msgid "There was a problem saving the list. The Name field has been exist."
-msgstr ""
+msgstr "Beim Speichern der Liste ist ein Problem aufgetreten. Das Feld „Name“ existiert bereits."
 
 msgid "There was a problem saving the list. The Name field must not be empty."
-msgstr ""
+msgstr "Beim Speichern der Liste ist ein Problem aufgetreten. Das Feld „Name“ darf nicht leer sein."
 
 msgid "Please make sure that no other view with this name exists, even if it has a different type. Do you want to leave the page without saving?"
-msgstr ""
+msgstr "Bitte stellen Sie sicher, dass keine andere Ansicht mit diesem Namen existiert, auch wenn sie einen anderen Typ hat. Möchten Sie die Seite ohne Speichern verlassen?"
 
 msgid "The Name field must not be empty. Do you want to leave the page without saving?"
-msgstr ""
+msgstr "Das Feld „Name“ darf nicht leer sein. Möchten Sie die Seite ohne Speichern verlassen?"
 
 msgid "Cache is being cleared in the background. This may take a few minutes."
-msgstr ""
+msgstr "Der Cache wird im Hintergrund gelöscht. Dies kann einige Minuten dauern."
 
 msgid "Save changes"
-msgstr ""
+msgstr "Änderungen speichern"
 
 msgid "Page %d"
-msgstr ""
+msgstr "Seite %d"
 
 msgid "Choose Bulk Actions"
-msgstr ""
+msgstr "Aktion auswählen"
 
 msgid "Bulk Actions"
-msgstr ""
+msgstr "Massenaktionen"
 
 msgid "Apply"
-msgstr ""
+msgstr "Anwenden"
 
 msgid "Page title:"
-msgstr ""
+msgstr "Seitentitel:"
 
 msgid "Remove title for language %s"
-msgstr ""
+msgstr "Titel für Sprache %s löschen"
 
 msgid "Exklusive"
-msgstr ""
+msgstr "Exklusive"
 
 msgid "Price reduction"
-msgstr ""
+msgstr "Preisnachlass"
 
 msgid "Property of the day"
-msgstr ""
+msgstr "Immobilie des Tages"
 
 msgid "Property of the week"
-msgstr ""
+msgstr "Immobilie der Woche"
 
 msgid "Secret sale"
-msgstr ""
+msgstr "Secret Sale"
 
 msgid "Commission free"
-msgstr ""
+msgstr "Provisionsfrei"
 
 msgid "Page title: %s"
-msgstr ""
+msgstr "Seitentitel: %s"
 
 msgid "The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications."
-msgstr ""
+msgstr "Der Gesamtpreisrechner ist derzeit nur für Deutschland verfügbar, da die Berechnung der Nebenkosten (z. B. Grunderwerbsteuer, Notargebühren, Maklerprovision) auf länderspezifischen Vorgaben basiert."
 
 msgid "Highlights"
-msgstr ""
+msgstr "Highlights"
 
 msgid "The From value cannot be greater than To value"
-msgstr ""
+msgstr "Der Wert „Von“ darf nicht grösser sein als der Wert „Bis“."
 
 msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
-msgstr ""
+msgstr "Die Felder %s, %s und %s müssen in onOffice Enterprise ausgefüllt werden, damit eine Ausgabe möglich ist."
 
 msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
+msgstr "Zur Berechnung der Notar- und Grundbucheintragungskosten werden in der Regel Standardwerte von 1,5 % bzw. 0,5 % verwendet."
+
+msgid "Post navigation"
+msgstr ""
+
+msgctxt "template"
+msgid "Seite %d"
+msgstr ""
+
+msgid "Contact person image"
+msgstr ""
+
+msgid "Map with real estate agents"
+msgstr ""
+
+msgid "Real Estate No."
+msgstr ""
+
+msgid "Map with properties"
+msgstr ""
+
+msgid "Pflichtfeld"
+msgstr ""
+
+msgid "Postal code of the property"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Please select at least one option."
+msgstr ""
+
+msgid "Please enter a text."
+msgstr ""
+
+msgid "Please agree to the terms and conditions."
+msgstr ""
+
+msgid "Please select this option."
+msgstr ""
+
+msgid "Please enter a valid e-mail address."
+msgstr ""
+
+msgid "Thank you for your inquiry. We will get back to you as soon as possible."
+msgstr ""
+
+msgid "An error has occurred. Please check your details."
+msgstr ""
+
+msgid "Not all mandatory fields have been filled out. Please check your entries."
+msgstr ""
+
+msgid "Spam recognized!"
+msgstr ""
+
+msgid "* Mandatory fields"
+msgstr ""
+
+msgid "Ort der Immobilie"
+msgstr ""
+
+msgid "PLZ der Immobilie"
+msgstr ""
+
+msgid "Straße der Immobilie"
+msgstr ""
+
+msgid "Hausnummer der Immobilie"
 msgstr ""

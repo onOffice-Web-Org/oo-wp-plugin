@@ -2,14 +2,14 @@
 # This file is distributed under the AGPL 3+.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice for WP-Websites 6.5.2\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-websites\n"
+"Project-Id-Version: onOffice for WP-Websites 6.6\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-30T09:40:15+00:00\n"
+"POT-Creation-Date: 2025-10-30T09:21:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -1405,6 +1405,13 @@ msgstr ""
 msgid "Street"
 msgstr ""
 
+msgid "Post navigation"
+msgstr ""
+
+msgctxt "template"
+msgid "Seite %d"
+msgstr ""
+
 msgid "unknown address list name"
 msgstr ""
 
@@ -1541,7 +1548,13 @@ msgstr ""
 msgid "Bad path \"%s\". The Page was not found."
 msgstr ""
 
+msgid "Contact person image"
+msgstr ""
+
 msgid "Show Details"
+msgstr ""
+
+msgid "Map with real estate agents"
 msgstr ""
 
 msgid "Send"
@@ -1562,6 +1575,9 @@ msgid "Add to watchlist"
 msgstr ""
 
 msgid "Add to favorites"
+msgstr ""
+
+msgid "Real Estate No."
 msgstr ""
 
 msgid "Remove from watchlist"
@@ -1621,6 +1637,9 @@ msgstr ""
 msgid "Entities"
 msgstr ""
 
+msgid "Map with properties"
+msgstr ""
+
 msgid "Search"
 msgstr ""
 
@@ -1636,32 +1655,52 @@ msgstr ""
 msgid "Up to: "
 msgstr ""
 
-#. translators: %s will be replaced with the translated field name.
+msgid "Pflichtfeld"
+msgstr ""
+
+msgid "Postal code of the property"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Please select at least one option."
+msgstr ""
+
 msgid "Choose %s"
 msgstr ""
 
-msgid "SUCCESS!"
+msgid "Please enter a text."
 msgstr ""
 
-msgid "ERROR!"
+msgid "Please agree to the terms and conditions."
 msgstr ""
 
-msgid "Missing Fields!"
+msgid "Please select this option."
 msgstr ""
 
-msgid "Spam detected!"
+msgid "Please enter a valid e-mail address."
 msgstr ""
 
-msgid "Please fill in"
+msgid "Thank you for your inquiry. We will get back to you as soon as possible."
+msgstr ""
+
+msgid "An error has occurred. Please check your details."
+msgstr ""
+
+msgid "Not all mandatory fields have been filled out. Please check your entries."
+msgstr ""
+
+msgid "Spam recognized!"
+msgstr ""
+
+msgid "* Mandatory fields"
 msgstr ""
 
 msgid "Your contact details"
 msgstr ""
 
 msgid "Your search criteria"
-msgstr ""
-
-msgid "Please fill in!"
 msgstr ""
 
 msgid "search within distance of:"
@@ -1680,20 +1719,26 @@ msgstr[1] ""
 msgid "Customer ref. number %s"
 msgstr ""
 
+msgid "Ort der Immobilie"
+msgstr ""
+
+msgid "PLZ der Immobilie"
+msgstr ""
+
+msgid "Straße der Immobilie"
+msgstr ""
+
+msgid "Hausnummer der Immobilie"
+msgstr ""
+
 msgid "Information about your property"
-msgstr ""
-
-msgid "The form was sent successfully."
-msgstr ""
-
-msgid "There was an error sending the form."
-msgstr ""
-
-msgid "The form wasn't sent because spam was detected."
 msgstr ""
 
 #. translators: %s will be replaced with a translated field name.
 msgid "Please enter a value for %s."
+msgstr ""
+
+msgid "ERROR!"
 msgstr ""
 
 msgid "Back"

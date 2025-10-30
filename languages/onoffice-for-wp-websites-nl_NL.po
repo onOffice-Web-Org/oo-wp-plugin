@@ -7,8 +7,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-30T09:40:26+00:00\n"
-"PO-Revision-Date: 2025-09-30T09:40:26+00:00\n"
+"POT-Creation-Date: 2025-10-30T09:21:14+00:00\n"
+"PO-Revision-Date: 2025-10-30T09:21:14+00:00\n"
 "Language: nl\n"
 "X-Generator: POEditor.com\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -1022,7 +1022,6 @@ msgstr "laagste eerst"
 msgid "https://wpplugindoc.onoffice.de"
 msgstr "https://wpplugindoc.onoffice.de"
 
-#. translators: %s will be replaced with the translated field name.
 msgid "Choose %s"
 msgstr "Kies %s"
 
@@ -1080,18 +1079,6 @@ msgstr "Terug"
 msgid "Please enter a value for %s."
 msgstr "Vul een waarde in voor %s."
 
-msgid "The form wasn't sent because spam was detected."
-msgstr "Het formulier is niet verzonden omdat er spam is gedetecteerd."
-
-msgid "There was an error sending the form."
-msgstr "Er is een fout opgetreden bij het verzenden van het formulier."
-
-msgid "The form was sent successfully."
-msgstr "Het formulier is succesvol verzonden."
-
-msgid "Spam detected!"
-msgstr "Spam gedetecteerd!"
-
 msgid "Information about your property"
 msgstr "Informatie over uw eigendom"
 
@@ -1100,15 +1087,6 @@ msgstr "Uw contactgegevens"
 
 msgid "Message"
 msgstr "Bericht"
-
-msgid "Please fill in"
-msgstr "Vul alstublieft in"
-
-msgid "Missing Fields!"
-msgstr "Ontbrekende velden!"
-
-msgid "SUCCESS!"
-msgstr "SUCCES!"
 
 #. translators: %s will be replaced with a customer reference number.
 msgid "Customer ref. number %s"
@@ -1125,9 +1103,6 @@ msgstr "Zoek naar potentiële kopers"
 
 msgid "search within distance of:"
 msgstr "zoeken binnen afstand van:"
-
-msgid "Please fill in!"
-msgstr "Vul alstublieft in!"
 
 msgid "ERROR!"
 msgstr "FOUT!"
@@ -1669,55 +1644,125 @@ msgid "Save changes"
 msgstr "Wijzigingen opslaan"
 
 msgid "Page %d"
-msgstr ""
+msgstr "Pagina %d"
 
 msgid "Choose Bulk Actions"
-msgstr ""
+msgstr "Kies bulkacties"
 
 msgid "Bulk Actions"
-msgstr ""
+msgstr "Bulkacties"
 
 msgid "Apply"
-msgstr ""
+msgstr "Toepassen"
 
 msgid "Page title:"
-msgstr ""
+msgstr "Paginatitel:"
 
 msgid "Remove title for language %s"
-msgstr ""
+msgstr "Titel verwijderen voor taal %s"
 
 msgid "Exklusive"
-msgstr ""
+msgstr "Exclusief"
 
 msgid "Price reduction"
-msgstr ""
+msgstr "Prijsverlaging"
 
 msgid "Property of the day"
-msgstr ""
+msgstr "Woning van de dag"
 
 msgid "Property of the week"
-msgstr ""
+msgstr "Woning van de week"
 
 msgid "Secret sale"
-msgstr ""
+msgstr "Geheime verkoop"
 
 msgid "Commission free"
-msgstr ""
+msgstr "Commissievrij"
 
 msgid "Page title: %s"
-msgstr ""
+msgstr "Paginatitel: %s"
 
 msgid "The total price calculator is currently only available for Germany, as the calculation of ancillary purchase costs (e.g. land transfer tax, notary fees, broker commission) is based on country-specific specifications."
-msgstr ""
+msgstr "De totale prijscalculator is momenteel alleen beschikbaar voor Duitsland, aangezien de berekening van bijkomende aankoopkosten (bijv. overdrachtsbelasting, notariskosten, makelaarscourtage) gebaseerd is op landspecifieke bepalingen."
 
 msgid "Highlights"
-msgstr ""
+msgstr "Hoogtepunten"
 
 msgid "The From value cannot be greater than To value"
-msgstr ""
+msgstr "De 'Van'-waarde mag niet groter zijn dan de 'Tot'-waarde"
 
 msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
-msgstr ""
+msgstr "De velden %s, %s en %s moeten ingevuld worden in onOffice enterprise zodat uitvoer mogelijk is."
 
 msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
+msgstr "Een standaardwaarde van respectievelijk 1.5% en 0.5% wordt doorgaans gebruikt om de notariskosten en de kosten voor inschrijving in het kadaster te berekenen."
+
+msgid "Post navigation"
+msgstr ""
+
+msgctxt "template"
+msgid "Seite %d"
+msgstr ""
+
+msgid "Contact person image"
+msgstr ""
+
+msgid "Map with real estate agents"
+msgstr ""
+
+msgid "Real Estate No."
+msgstr ""
+
+msgid "Map with properties"
+msgstr ""
+
+msgid "Pflichtfeld"
+msgstr ""
+
+msgid "Postal code of the property"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Please select at least one option."
+msgstr ""
+
+msgid "Please enter a text."
+msgstr ""
+
+msgid "Please agree to the terms and conditions."
+msgstr ""
+
+msgid "Please select this option."
+msgstr ""
+
+msgid "Please enter a valid e-mail address."
+msgstr ""
+
+msgid "Thank you for your inquiry. We will get back to you as soon as possible."
+msgstr ""
+
+msgid "An error has occurred. Please check your details."
+msgstr ""
+
+msgid "Not all mandatory fields have been filled out. Please check your entries."
+msgstr ""
+
+msgid "Spam recognized!"
+msgstr ""
+
+msgid "* Mandatory fields"
+msgstr ""
+
+msgid "Ort der Immobilie"
+msgstr ""
+
+msgid "PLZ der Immobilie"
+msgstr ""
+
+msgid "Straße der Immobilie"
+msgstr ""
+
+msgid "Hausnummer der Immobilie"
 msgstr ""

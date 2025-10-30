@@ -7,8 +7,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-30T09:40:26+00:00\n"
-"PO-Revision-Date: 2025-09-30T09:40:26+00:00\n"
+"POT-Creation-Date: 2025-10-30T09:21:14+00:00\n"
+"PO-Revision-Date: 2025-10-30T09:21:14+00:00\n"
 "Language: it\n"
 "X-Generator: POEditor.com\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -1032,7 +1032,6 @@ msgstr "dal più basso"
 msgid "https://wpplugindoc.onoffice.de"
 msgstr "https://wpplugindoc.onoffice.de"
 
-#. translators: %s will be replaced with the translated field name.
 msgid "Choose %s"
 msgstr "Scegli %s"
 
@@ -1090,18 +1089,6 @@ msgstr "Indietro"
 msgid "Please enter a value for %s."
 msgstr "Inserire un valore per %s."
 
-msgid "The form wasn't sent because spam was detected."
-msgstr "Il modulo non è stato inviato perché lo spam è stato rilevato."
-
-msgid "There was an error sending the form."
-msgstr "C'è stato un errore nell'invio del modulo."
-
-msgid "The form was sent successfully."
-msgstr "Il modulo è stato inviato con successo."
-
-msgid "Spam detected!"
-msgstr "Rilevato spam!"
-
 msgid "Information about your property"
 msgstr "Informazioni sulla vostra proprietà"
 
@@ -1110,15 +1097,6 @@ msgstr "I vostri dati di contatto"
 
 msgid "Message"
 msgstr "Messaggio"
-
-msgid "Please fill in"
-msgstr "Compila il seguente modulo"
-
-msgid "Missing Fields!"
-msgstr "Campi mancanti!"
-
-msgid "SUCCESS!"
-msgstr "COMPLETATO CON SUCCESSO!"
 
 #. translators: %s will be replaced with a customer reference number.
 msgid "Customer ref. number %s"
@@ -1136,9 +1114,6 @@ msgstr "Ricerca di potenziali acquirenti"
 
 msgid "search within distance of:"
 msgstr "cerca nel raggio di:"
-
-msgid "Please fill in!"
-msgstr "Compila!"
 
 msgid "ERROR!"
 msgstr "ERRORE!"
@@ -1735,10 +1710,80 @@ msgid "Highlights"
 msgstr "Highlights"
 
 msgid "The From value cannot be greater than To value"
-msgstr ""
+msgstr "Il valore “Da” non può essere maggiore del valore “A”"
 
 msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
-msgstr ""
+msgstr "I campi %s, %s e %s devono essere compilati in onOffice enterprise affinché sia possibile ottenere un output."
 
 msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
+msgstr "Un valore standard di 1,5% e 0,5% rispettivamente viene solitamente utilizzato per calcolare i costi notarili e di trascrizione catastale."
+
+msgid "Post navigation"
+msgstr ""
+
+msgctxt "template"
+msgid "Seite %d"
+msgstr ""
+
+msgid "Contact person image"
+msgstr ""
+
+msgid "Map with real estate agents"
+msgstr ""
+
+msgid "Real Estate No."
+msgstr ""
+
+msgid "Map with properties"
+msgstr ""
+
+msgid "Pflichtfeld"
+msgstr ""
+
+msgid "Postal code of the property"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Please select at least one option."
+msgstr ""
+
+msgid "Please enter a text."
+msgstr ""
+
+msgid "Please agree to the terms and conditions."
+msgstr ""
+
+msgid "Please select this option."
+msgstr ""
+
+msgid "Please enter a valid e-mail address."
+msgstr ""
+
+msgid "Thank you for your inquiry. We will get back to you as soon as possible."
+msgstr ""
+
+msgid "An error has occurred. Please check your details."
+msgstr ""
+
+msgid "Not all mandatory fields have been filled out. Please check your entries."
+msgstr ""
+
+msgid "Spam recognized!"
+msgstr ""
+
+msgid "* Mandatory fields"
+msgstr ""
+
+msgid "Ort der Immobilie"
+msgstr ""
+
+msgid "PLZ der Immobilie"
+msgstr ""
+
+msgid "Straße der Immobilie"
+msgstr ""
+
+msgid "Hausnummer der Immobilie"
 msgstr ""

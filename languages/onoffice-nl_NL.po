@@ -140,23 +140,10 @@ msgstr "Van: "
 msgid "Up to: "
 msgstr "Tot aan: "
 
-#. translators: %s will be replaced with the translated field name.
 msgid "Choose %s"
 msgstr "Kies %s"
 
-msgid "SUCCESS!"
-msgstr ""
-
 msgid "ERROR!"
-msgstr ""
-
-msgid "Missing Fields!"
-msgstr ""
-
-msgid "Please fill in"
-msgstr ""
-
-msgid "Please fill in!"
 msgstr ""
 
 msgid "search within distance of:"
@@ -175,9 +162,6 @@ msgstr[1] "%s Potentiële kopers"
 msgid "Customer ref. number %s"
 msgstr "Ref. nummer van de klant %s"
 
-msgid "Spam detected!"
-msgstr ""
-
 msgid "Message"
 msgstr "Bericht"
 
@@ -186,15 +170,6 @@ msgstr "Uw contactgegevens"
 
 msgid "Information about your property"
 msgstr "Informatie over uw woning"
-
-msgid "The form was sent successfully."
-msgstr "Het formulier is succesvol verzonden."
-
-msgid "There was an error sending the form."
-msgstr "Er is een fout gemaakt bij het verzenden van het formulier."
-
-msgid "The form wasn't sent because spam was detected."
-msgstr "Het formulier werd niet verzonden omdat er spam werd gedetecteerd."
 
 #. translators: %s will be replaced with a translated field name.
 msgid "Please enter a value for %s."
@@ -1708,4 +1683,74 @@ msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that ou
 msgstr ""
 
 msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
+msgstr ""
+
+msgid "Post navigation"
+msgstr ""
+
+msgctxt "template"
+msgid "Seite %d"
+msgstr ""
+
+msgid "Contact person image"
+msgstr ""
+
+msgid "Map with real estate agents"
+msgstr ""
+
+msgid "Real Estate No."
+msgstr ""
+
+msgid "Map with properties"
+msgstr ""
+
+msgid "Pflichtfeld"
+msgstr ""
+
+msgid "Postal code of the property"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Please select at least one option."
+msgstr ""
+
+msgid "Please enter a text."
+msgstr ""
+
+msgid "Please agree to the terms and conditions."
+msgstr ""
+
+msgid "Please select this option."
+msgstr ""
+
+msgid "Please enter a valid e-mail address."
+msgstr ""
+
+msgid "Thank you for your inquiry. We will get back to you as soon as possible."
+msgstr ""
+
+msgid "An error has occurred. Please check your details."
+msgstr ""
+
+msgid "Not all mandatory fields have been filled out. Please check your entries."
+msgstr ""
+
+msgid "Spam recognized!"
+msgstr ""
+
+msgid "* Mandatory fields"
+msgstr ""
+
+msgid "Ort der Immobilie"
+msgstr ""
+
+msgid "PLZ der Immobilie"
+msgstr ""
+
+msgid "Straße der Immobilie"
+msgstr ""
+
+msgid "Hausnummer der Immobilie"
 msgstr ""

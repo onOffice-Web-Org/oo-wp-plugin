@@ -24,6 +24,9 @@
  */
 
 /* @var $pEstates onOffice\WPlugin\EstateList */
+use onOffice\WPlugin\Pagination\ListPagination;
+// Listing ID for pagination query parameter
+$list_id = $pEstates->getDataView()->getId();
 
 $dont_echo = ['vermarktungsstatus','objekttitel'];
 
@@ -154,11 +157,23 @@ $rawValues = $pEstates->getRawValues();
         </div>
     </div>
     <?php
-	if (get_option('onoffice-pagination-paginationbyonoffice')) {
-        echo "<div>";
-		wp_link_pages();
-        echo "</div>";
-	}    
+if (get_option('onoffice-pagination-paginationbyonoffice')) {
+	?>
+	<div class="oo-listpagination">
+		<?php
+	
+		$ListPagination = new ListPagination([
+			'class' => 'oo-post-nav-links',
+			'type' => 'property',
+			'anchor' => 'oo-listheadline',
+			'list_id' => $list_id
+		]);
+		
+		echo $ListPagination->render();
+		?>
+	</div>
+<?php
+} 
 } ?>
 
 	
