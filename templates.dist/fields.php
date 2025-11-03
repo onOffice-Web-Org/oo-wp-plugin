@@ -119,8 +119,9 @@ if (!function_exists('renderFieldEstateSearch')) {
 		} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="' . esc_attr($properties['length']) . '"' : '';
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType and $lengthAttr are controlled attribute strings
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is a controlled attribute string
 			echo '<label>' . esc_html($fieldLabel) . '<input autocomplete="off" name="' . esc_attr($inputName) . '" ' . $inputType;
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $lengthAttr is a controlled attribute string
 			echo 'value="' . esc_attr($selectedValue) . '"' . $lengthAttr . '></label>';
 		}
 	}
