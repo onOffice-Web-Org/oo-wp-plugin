@@ -129,11 +129,12 @@ class InputFieldTemplateListRenderer
 				}
 				$inputId = 'label' . $this->getGuiId() . 'b' . $key;
 				echo '<input type="' . esc_html($this->getType()) . '" name="' . esc_html($this->getName())
-					. '" value="' . esc_html($key) . '"'
-					. ($checked ? ' checked="checked" ' : '')
-					. $this->renderAdditionalAttributes()
-					. ' id="' . esc_html($inputId) . '">'
-					. '<label for="' . esc_html($inputId) . '">' . esc_html($label) . '</label><br>';
+                    . '" value="' . esc_html($key) . '"'
+                    . ($checked ? ' checked="checked" ' : '')
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
+                    . $this->renderAdditionalAttributes()
+                    . ' id="' . esc_html($inputId) . '">'
+                    . '<label for="' . esc_html($inputId) . '">' . esc_html($label) . '</label><br>';
 			}
 			echo '<p class="oo-template-folder-path">'. esc_html(sprintf(__('(in the folder "%s")', 'onoffice-for-wp-websites'), $templateValue['folder'])) ."</p>";
 			echo (count($this->getValue()) > 1) ? '</details>' : '';

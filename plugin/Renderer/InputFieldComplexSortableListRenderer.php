@@ -77,18 +77,25 @@ class InputFieldComplexSortableListRenderer
 				}
 			}
 
-			echo '<li class="sortable-item" '.$deactivatedStyle.'>'
-					.'<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName()).'[]'
-						.'" value="'.esc_html($key).'"'
-						.$checked
-						.$this->renderAdditionalAttributes()
-						.' id="'.esc_html('label'.$this->getGuiId().'b'.$key).'">'
-						.esc_html($label)
-						.$deactivatedInTheSoftware
-					.'<input type="hidden" name="filter_fields_order'.$i.'[id]" value="'.$i.'">'
-					.'<input type="hidden" name="filter_fields_order'.$i.'[name]" value="'.$label.'">'
-					.'<input type="hidden" name="filter_fields_order'.$i.'[slug]" value="'.$key.'">'
-				.'</li>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $deactivatedStyle is a safe inline CSS string
+            echo '<li class="sortable-item" '.$deactivatedStyle.'>'
+                    .'<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName()).'[]'
+                        .'" value="'.esc_html($key).'"'
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $checked is a safe HTML attribute
+                        .$checked
+                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
+                        .$this->renderAdditionalAttributes()
+                        .' id="'.esc_html('label'.$this->getGuiId().'b'.$key).'">'
+                        .esc_html($label)
+                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $deactivatedInTheSoftware is already escaped above
+                        .$deactivatedInTheSoftware
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $i is a safe integer counter
+                    .'<input type="hidden" name="filter_fields_order'.esc_attr($i).'[id]" value="'.esc_attr($i).'">'
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $i is a safe integer counter
+                    .'<input type="hidden" name="filter_fields_order'.esc_attr($i).'[name]" value="'.esc_attr($label).'">'
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $i is a safe integer counter
+                    .'<input type="hidden" name="filter_fields_order'.esc_attr($i).'[slug]" value="'.esc_attr($key).'">'
+                .'</li>';
 
 			$i++;
 		}
