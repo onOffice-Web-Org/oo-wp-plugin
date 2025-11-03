@@ -387,12 +387,13 @@ class AdminPageApiSettings
 		if ($tokenOptions !== '' && $secretOptions !== '') {
 			$template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'resource'
 				.DIRECTORY_SEPARATOR.'CaptchaTestForm.html');
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Template uses printf placeholders; values are escaped individually
 			printf($template,
 				json_encode(admin_url('admin-ajax.php')),
 				json_encode($stringTranslations),
-				esc_html($tokenOptions));
+				esc_attr($tokenOptions));
 		} else {
-			echo __('In order to use Google reCAPTCHA, you need to provide your keys. '
+			echo esc_html__('In order to use Google reCAPTCHA, you need to provide your keys. '
 				.'You\'re free to enable it in the form settings for later use.', 'onoffice-for-wp-websites');
 		}
 	}

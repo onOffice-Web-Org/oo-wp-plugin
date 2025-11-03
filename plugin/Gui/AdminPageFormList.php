@@ -93,22 +93,23 @@ class AdminPageFormList
 	 */
 
 	public function renderContent()
-	{
-		$this->generatePageMainTitle(__('Forms', 'onoffice-for-wp-websites'));
+    {
+        $this->generatePageMainTitle(__('Forms', 'onoffice-for-wp-websites'));
 
-		$this->_pFormsTable->prepare_items();
-		$page = 'onoffice-forms';
-		$buttonSearch = __('Search Forms', 'onoffice-for-wp-websites');
-		$type = isset($_GET['type']) ? esc_html($_GET['type']) : '';
-		$id = 'onoffice-form-search-form';
-		$this->generateSearchForm($page,$buttonSearch,$type,null,$id);
-		echo '<p>';
-		echo '<form method="post">';
-		echo $this->_pFormsTable->views();
-		$this->_pFormsTable->display();
-		echo '</form>';
-		echo '</p>';
-	}
+        $this->_pFormsTable->prepare_items();
+        $page = 'onoffice-forms';
+        $buttonSearch = __('Search Forms', 'onoffice-for-wp-websites');
+        $type = isset($_GET['type']) ? esc_html($_GET['type']) : '';
+        $id = 'onoffice-form-search-form';
+        $this->generateSearchForm($page,$buttonSearch,$type,null,$id);
+        echo '<p>';
+        echo '<form method="post">';
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- views() returns escaped HTML
+        echo $this->_pFormsTable->views();
+        $this->_pFormsTable->display();
+        echo '</form>';
+        echo '</p>';
+    }
 
 
 	/**
@@ -127,17 +128,18 @@ class AdminPageFormList
 	 *
 	 */
 
-	public function handleAdminNotices()
-	{
-		$itemsDeleted = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_NUMBER_INT);
+	 public function handleAdminNotices()
+    {
+        $itemsDeleted = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_NUMBER_INT);
 
-		if ($itemsDeleted !== null && $itemsDeleted !== false) {
-			add_action('admin_notices', function() use ($itemsDeleted) {
-				$pHandler = new AdminNoticeHandlerListViewDeletion();
-				echo $pHandler->handleFormView($itemsDeleted);
-			});
-		}
-	}
+        if ($itemsDeleted !== null && $itemsDeleted !== false) {
+            add_action('admin_notices', function() use ($itemsDeleted) {
+                $pHandler = new AdminNoticeHandlerListViewDeletion();
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- handleFormView() returns escaped HTML
+                echo $pHandler->handleFormView($itemsDeleted);
+            });
+        }
+    }
 
 	/**
 	 *
@@ -202,8 +204,9 @@ class AdminPageFormList
 		$translation = $pFormTranslation->getPluralTranslationForForm($tab, 1);
 
 		if ($subTitle != '') {
-			echo ' › ' . esc_html( $subTitle ) . ' › ' . $translation;
-		}
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $translation is a safe translated string from FormTranslation class
+            echo ' › ' . esc_html( $subTitle ) . ' › ' . $translation;
+        }
 
 		$typeParam = AdminPageFormSettingsMain::GET_PARAM_TYPE;
 		$newLink = add_query_arg( $typeParam, $tab, admin_url( 'admin.php?page=onoffice-editform' ) );
@@ -219,29 +222,34 @@ class AdminPageFormList
 		echo '</h1>';
 
 		if ( $tab !== 'all' ) {
-			echo '<a href="' . $newLink . '" class="page-title-action">'
-			     . esc_html__( 'Add New', 'onoffice-for-wp-websites' ) . '</a>';
-		} else {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $newLink is escaped by add_query_arg() and admin_url()
+            echo '<a href="' . esc_url($newLink) . '" class="page-title-action">'
+                 . esc_html__( 'Add New', 'onoffice-for-wp-websites' ) . '</a>';
+        }  else {
 		echo '<div class="page-option-add-form">'
 			     . '<details class="page-option-action">'
 			     . '<summary class="radios">'
 			     . '<div>' . esc_html__( 'Add New', 'onoffice-for-wp-websites' ) . '</div>'
 			     . '</summary>'
 			     . '<ul class="options-menu">'
-			     . '<li><a href="' . $linkAddNewContactForm . '"><p>' . esc_html__( 'Contact Form',
-					'onoffice-for-wp-websites' ) . '</p></a></li>'
-			     . '<li><a href="' . $linkAddNewInterestForm . '"><p>' . esc_html__( 'Interest Form',
-					'onoffice-for-wp-websites' ) . '</p></a></li>';
+			     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $linkAddNewContactForm is escaped by add_query_arg() and admin_url()
+                 . '<li><a href="' . esc_url($linkAddNewContactForm) . '"><p>' . esc_html__( 'Contact Form',
+                    'onoffice-for-wp-websites' ) . '</p></a></li>'
+                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $linkAddNewInterestForm is escaped by add_query_arg() and admin_url()
+                 . '<li><a href="' . esc_url($linkAddNewInterestForm) . '"><p>' . esc_html__( 'Interest Form',
+                    'onoffice-for-wp-websites' ) . '</p></a></li>';
 
 				if (current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_OWNER))	{
-					echo '<li><a href="' . $linkAddNewOwnerForm . '"><p>' . esc_html__( 'Owner Form',
-					'onoffice-for-wp-websites' ) . '</p></a></li>';
-				}			
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $linkAddNewOwnerForm is escaped by add_query_arg() and admin_url()
+                    echo '<li><a href="' . esc_url($linkAddNewOwnerForm) . '"><p>' . esc_html__( 'Owner Form',
+                    'onoffice-for-wp-websites' ) . '</p></a></li>';
+                }			
 
-				if (current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH))	{		
-			    	echo  '<li><a href="' . $linkAddNewApplicantSearchForm . '"><p>' . esc_html__( 'Applicant Search Form',
-					'onoffice-for-wp-websites' ) . '</p></a></li>';
-				}
+                if (current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH))	{
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $linkAddNewApplicantSearchForm is escaped by add_query_arg() and admin_url()
+                	echo  '<li><a href="' . esc_url($linkAddNewApplicantSearchForm) . '"><p>' . esc_html__( 'Applicant Search Form',
+                    'onoffice-for-wp-websites' ) . '</p></a></li>';
+                }
 
 				echo '</ul>'
 			     . '</details>'

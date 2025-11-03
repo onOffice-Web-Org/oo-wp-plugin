@@ -129,10 +129,13 @@ class AdminPageSimilarEstates
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
 		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- admin_url() is a safe wordpress function
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
-		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
-		echo '<input type="hidden" name="tab" value="' . AdminPageEstate::PAGE_SIMILAR_ESTATES . '" />';
-		wp_nonce_field( get_current_screen()->id, 'nonce' );
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_current_screen()->id is a safe WordPress screen ID
+        echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- AdminPageEstate::PAGE_SIMILAR_ESTATES is a safe constant string
+        echo '<input type="hidden" name="tab" value="' . AdminPageEstate::PAGE_SIMILAR_ESTATES . '" />';
+        wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 		echo '<div id="poststuff" class="oo-poststuff oo-poststuff-similar-estate">';
@@ -158,8 +161,9 @@ class AdminPageSimilarEstates
 		$this->renderBulkActionControls();
 		echo '<div class="fieldsSortable postbox" id="'
 			. esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)) . '">';
-		echo '<div class="postbox-header">
-        <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+		echo '<div class="postbox-header">' .
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
+		'<h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
 		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen
 			<input type="checkbox" id="postbox-select-all" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event)"/>
 			</label>
@@ -457,6 +461,7 @@ class AdminPageSimilarEstates
 	private function renderSearchFieldForFieldLists(InputModelRenderer $pRenderer, $pFormViewSearchFieldForFieldLists)
 	{
 		echo '<div class="oo-search-field postbox">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
 		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Field list search', 'onoffice-for-wp-websites') . '</span></h2>';
 		echo '<div class="inside">';
 		$pRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);

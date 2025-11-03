@@ -1344,8 +1344,10 @@ class EstateList
 		add_action('wp_head', function () use ($metaData, $keySocial) {
 			foreach ($metaData as $metaKey => $metaValue) {
 				if ($keySocial === GenerateMetaDataSocial::TWITTER_KEY) {
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- TWITTER_KEY is a safe class constant
 					echo '<meta name="' . GenerateMetaDataSocial::TWITTER_KEY . ':' . esc_html($metaKey) . '" content="' . esc_attr($metaValue) . '">';
 				} elseif ($keySocial === GenerateMetaDataSocial::OPEN_GRAPH_KEY) {
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- OPEN_GRAPH_KEY is a safe class constant
 					echo '<meta property="' . GenerateMetaDataSocial::OPEN_GRAPH_KEY . ':' . esc_html($metaKey) . '" content="' . esc_attr($metaValue) . '">';
 				}
 			}

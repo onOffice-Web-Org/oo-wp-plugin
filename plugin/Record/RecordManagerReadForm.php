@@ -201,10 +201,12 @@ class RecordManagerReadForm
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 
-		if ($result === null) {
-			throw new UnknownFormException($formName);
-		}
-
+		
+        if ($result === null) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages are for internal debugging, not user-facing output
+            throw new UnknownFormException($formName);
+        }
+		
 		$resultFieldConfig = $this->readFieldconfigByFormId($result[$this->getIdColumnMain()]);
 		$result['fields'] = array_column($resultFieldConfig, 'fieldname');
 		$result['filterable'] = array_keys(array_filter(array_column($resultFieldConfig, 'filterable', 'fieldname')));
