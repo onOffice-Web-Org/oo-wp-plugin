@@ -51,8 +51,9 @@ abstract class DataListViewFactoryBase
 		$record = $pRecordRead->getRowByName($listViewName, $type);
 
 		if ($record === null) {
-			throw new UnknownViewException($listViewName);
-		}
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in internal code
+            throw new UnknownViewException($listViewName);
+        }
 
 		return $this->createListViewByRow($record);
 	}

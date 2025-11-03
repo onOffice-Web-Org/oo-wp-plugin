@@ -120,22 +120,27 @@ class InputFieldCheckboxRenderer
 				$onofficeMultipleSelect = $this->isMultipleSelect($key, $pFieldsCollection) ? '1' : '0';
 
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
-					.'" value="'.esc_html($key).'"'
-					.(is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues()) ? ' checked="checked" ' : '')
-					.$this->renderAdditionalAttributes()
-					.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
-					.' id="'.esc_html($inputId).'">'
-					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'
-					.$textHtml;
+                    .'" value="'.esc_html($key).'"'
+                    .(is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues()) ? ' checked="checked" ' : '')
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped attributes
+                    .$this->renderAdditionalAttributes()
+                    .' onoffice-multipleSelectType="'.esc_attr($onofficeMultipleSelect).'"'
+                    .' id="'.esc_html($inputId).'">'
+                    .'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $textHtml contains escaped hint text
+                    .$textHtml;
 			}
 		} else {
-			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
-				.'" value="'.esc_html($this->getValue()).'"'
-				.($this->getValue() == $this->getCheckedValues() ? ' checked="checked" ' : '')
-				.$this->renderAdditionalAttributes()
-				.' id="'.esc_html($this->getGuiId()).'">'
-				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '')
-				.$textHtml;
+            echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
+                .'" value="'.esc_html($this->getValue()).'"'
+                .($this->getValue() == $this->getCheckedValues() ? ' checked="checked" ' : '')
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped attributes
+                .$this->renderAdditionalAttributes()
+                .' id="'.esc_html($this->getGuiId()).'">'
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- _descriptionTextHTML is sanitized
+                .(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '')
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $textHtml contains escaped hint text
+                .$textHtml;
 		}
 	}
 }
