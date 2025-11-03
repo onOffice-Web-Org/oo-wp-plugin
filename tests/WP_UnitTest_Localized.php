@@ -93,11 +93,12 @@ abstract class WP_UnitTest_Localized
 		}
 
 		if (determine_locale() !== $newLocale) {
-			if (!switch_to_locale($newLocale)) {
-				throw new Exception('Failed to switch locale '.$newLocale);
-			}
-			$this->_localeSwitched = true;
-		}
+            if (!switch_to_locale($newLocale)) {
+                // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test code
+                throw new Exception('Failed to switch locale '.$newLocale);
+            }
+            $this->_localeSwitched = true;
+        }
 	}
 
 

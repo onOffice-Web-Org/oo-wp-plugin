@@ -86,11 +86,12 @@ class TestClassTemplate extends \WP_UnitTestCase
 		$themeTemplateDir = get_stylesheet_directory().'/onoffice-theme/';
 
 		if (!is_dir($themeTemplateDir) &&
-			!mkdir($themeTemplateDir . '/templates/', 755, true) &&
-			!is_dir($themeTemplateDir . '/templates/'))
-		{
-			throw new RuntimeException(sprintf('Directory "%s" was not created', $themeTemplateDir . '/templates/'));
-		}
+            !mkdir($themeTemplateDir . '/templates/', 755, true) &&
+            !is_dir($themeTemplateDir . '/templates/'))
+        {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test code
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $themeTemplateDir . '/templates/'));
+        }
 		copy(__DIR__.'/resources/templates/default_detail.php', $themeTemplateDir.'/templates/default_detail.php');
 
 		$output = (new Template)
@@ -104,11 +105,12 @@ class TestClassTemplate extends \WP_UnitTestCase
 	{
 		$templatePath = ABSPATH.'/wp-content/plugins/onoffice-personalized/';
 		if (!is_dir($templatePath) &&
-			!mkdir($templatePath . '/templates/', 755, true) &&
-			!is_dir($templatePath . '/templates/'))
-		{
-			throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . '/templates/'));
-		}
+            !mkdir($templatePath . '/templates/', 755, true) &&
+            !is_dir($templatePath . '/templates/'))
+        {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test code
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . '/templates/'));
+        }
 		copy(__DIR__.'/resources/templates/default_detail.php', $templatePath.'/templates/default_detail.php');
 		$output = (new Template)
 			->withEstateList($this->_pEstate)
@@ -120,13 +122,13 @@ class TestClassTemplate extends \WP_UnitTestCase
 	public function testRender_templatesInPluginDir()
 	{
 		$pluginDirName = basename(ONOFFICE_PLUGIN_DIR);
-		$templatePath = ABSPATH.'/wp-content/plugins/'.$pluginDirName;
 		if (!is_dir($templatePath) &&
-			!mkdir($templatePath . '/templates.dist/estate/', 755, true) &&
-			!is_dir($templatePath . '/templates.dist/estate/'))
-		{
-			throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . '/templates.dist/estate/'));
-		}
+            !mkdir($templatePath . '/templates.dist/estate/', 755, true) &&
+            !is_dir($templatePath . '/templates.dist/estate/'))
+        {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test code
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . '/templates.dist/estate/'));
+        }
 		copy(__DIR__.'/resources/templates/default_detail.php', $templatePath.'/templates.dist/estate/default_detail.php');
 		$output = (new Template)
 			->withEstateList($this->_pEstate)
