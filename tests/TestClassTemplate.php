@@ -11,6 +11,9 @@ use onOffice\WPlugin\DataView\DataListView;
 
 class TestClassTemplate extends \WP_UnitTestCase
 {
+
+	use HtmlNormalizerTrait;
+
 	/**
 	 * @var EstateDetail
 	 */
@@ -98,7 +101,7 @@ class TestClassTemplate extends \WP_UnitTestCase
 			->withEstateList($this->_pEstate)
 			->withTemplateName('onoffice-theme/templates/default_detail.php')
 			->render();
-		$this->assertStringEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
+		$this->assertHtmlEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
 	}
 
 	public function testRender_templatesInPersonalizedDir()
@@ -116,7 +119,7 @@ class TestClassTemplate extends \WP_UnitTestCase
 			->withEstateList($this->_pEstate)
 			->withTemplateName('onoffice-personalized/templates/default_detail.php')
 			->render();
-		$this->assertStringEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
+		$this->assertHtmlEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
 	}
 
 	public function testRender_templatesInPluginDir()
@@ -134,7 +137,7 @@ class TestClassTemplate extends \WP_UnitTestCase
 			->withEstateList($this->_pEstate)
 			->withTemplateName($pluginDirName.'/templates.dist/estate/default_detail.php')
 			->render();
-		$this->assertStringEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
+		$this->assertHtmlEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
 	}
 
 	public function testRender_invalidDir()

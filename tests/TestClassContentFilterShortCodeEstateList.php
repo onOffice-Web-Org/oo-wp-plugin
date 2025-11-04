@@ -38,6 +38,9 @@ use onOffice\WPlugin\Template;
 class TestClassContentFilterShortCodeEstateList
 	extends \WP_UnitTestCase
 {
+
+	use HtmlNormalizerTrait;
+
 	/** @var Container */
 	private $_pContainer;
 
@@ -158,6 +161,6 @@ class TestClassContentFilterShortCodeEstateList
 		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstateList::class);
 		$result = $pSubject->render(['view' => 'test_view_list', 'units' => '']);
 		$expectedFile = __DIR__.'/resources/templates/TestClassContentFilterShortCodeEstateList_expected.txt';
-		$this->assertStringEqualsFile($expectedFile, $result);
+		$this->assertHtmlEqualsFile($expectedFile, $result);
 	}
 }

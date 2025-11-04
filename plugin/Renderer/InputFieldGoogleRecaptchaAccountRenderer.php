@@ -78,3 +78,4 @@ class InputFieldGoogleRecaptchaAccountRenderer extends InputFieldRenderer
             echo '<button class="button delete-google-recaptcha-keys-button">'. __('Delete Keys', 'onoffice-for-wp-websites') .'</button>';
         }
     }
+}

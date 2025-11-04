@@ -11,6 +11,8 @@ use onOffice\WPlugin\Renderer\InputFieldSelectTwoRenderer;
 
 class TestClassInputFieldSelectTwoRenderer extends \WP_UnitTestCase
 {
+	use HtmlNormalizerTrait;
+
 	/**
 	 *
 	 */
@@ -20,7 +22,7 @@ class TestClassInputFieldSelectTwoRenderer extends \WP_UnitTestCase
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer[]" id="select_1" multiple></select>', $output);
+		$this->assertHtmlEquals('<select name="testRenderer[]" id="select_1" multiple></select>', $output);
 	}
 
 	/**
@@ -33,7 +35,7 @@ class TestClassInputFieldSelectTwoRenderer extends \WP_UnitTestCase
 		$pSubject->setMultiple(false);
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer2" id="select_1"></select>', $output);
+		$this->assertHtmlEquals('<select name="testRenderer2" id="select_1"></select>', $output);
 	}
 
 	/**
@@ -54,7 +56,7 @@ class TestClassInputFieldSelectTwoRenderer extends \WP_UnitTestCase
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer3[]" id="select_1" multiple>'
+		$this->assertHtmlEquals('<select name="testRenderer3[]" id="select_1" multiple>'
 			.'<optgroup label="Popular">'
 				.'<option value="kaufpreis" >Kaufpreis</option>'
 				.'<option value="kaltmiete" >Kaltmiete</option>'
@@ -81,7 +83,7 @@ class TestClassInputFieldSelectTwoRenderer extends \WP_UnitTestCase
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer4[]" id="select_1" multiple>'
+		$this->assertHtmlEquals('<select name="testRenderer4[]" id="select_1" multiple>'
 			.'<optgroup label="Popular">'
 				.'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
 				.'<option value="kaltmiete" >Kaltmiete</option>'
@@ -109,7 +111,7 @@ class TestClassInputFieldSelectTwoRenderer extends \WP_UnitTestCase
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer5" id="select_1">'
+		$this->assertHtmlEquals('<select name="testRenderer5" id="select_1">'
 			.'<optgroup label="Popular">'
 				.'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
 				.'<option value="kaltmiete" >Kaltmiete</option>'
@@ -128,7 +130,7 @@ class TestClassInputFieldSelectTwoRenderer extends \WP_UnitTestCase
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer6[]" id="select_1" multiple>'
+		$this->assertHtmlEquals('<select name="testRenderer6[]" id="select_1" multiple>'
 			.'<option value="kaufpreis" >Kaufpreis</option>'
 			.'<option value="kaltmiete" >Kaltmiete</option>'
 			.'</select>', $output);
@@ -146,7 +148,7 @@ class TestClassInputFieldSelectTwoRenderer extends \WP_UnitTestCase
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer7[]" id="select_1" multiple>'
+		$this->assertHtmlEquals('<select name="testRenderer7[]" id="select_1" multiple>'
 			.'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
 			.'<option value="kaltmiete" >Kaltmiete</option>'
 			.'</select>', $output);
