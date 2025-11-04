@@ -124,6 +124,8 @@ class TestClassTemplate extends \WP_UnitTestCase
 
 	public function testRender_templatesInPluginDir()
 	{
+		$templatePath = ABSPATH.'/wp-content/plugins/onoffice-personalized/';
+
 		$pluginDirName = basename(ONOFFICE_PLUGIN_DIR);
 		if (!is_dir($templatePath) &&
             !mkdir($templatePath . '/templates.dist/estate/', 755, true) &&
