@@ -91,7 +91,7 @@ $dimensions = [
 		$energyCertificateFields = ["baujahr","endenergiebedarf","energieverbrauchskennwert","energieausweistyp","energieausweis_gueltig_bis","energyClass","energietraeger","co2_Emissionsklasse","co2ausstoss"];
 		?>
 		<div class="oo-detailsheadline">
-            <h1><?php echo esc_html($currentEstate["objekttitel"]); ?></h1>
+			<h1><?php echo esc_html($currentEstate["objekttitel"]); ?></h1>
 			<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>
 				<span style="padding:0 15px"><?php echo esc_html(ucfirst($currentEstate['vermarktungsstatus'])); ?></span>
 				<?php unset($currentEstate['vermarktungsstatus']); ?>
@@ -211,23 +211,23 @@ $dimensions = [
 			} ?>
 
 			<?php if ($currentEstate["dreizeiler"] !== "") { ?>
-                <div class="oo-detailsfreetext">
-                    <h2><?php echo esc_html($pEstates->getFieldLabel('dreizeiler')); ?></h2>
-                    <?php echo wp_kses_post(nl2br($currentEstate["dreizeiler"])); ?>
-                </div>
-            <?php } ?>
-            <?php if ($currentEstate["objektbeschreibung"] !== "") { ?>
-                <div class="oo-detailsfreetext">
-                    <h2><?php echo esc_html($pEstates->getFieldLabel('objektbeschreibung')); ?></h2>
-                    <?php echo wp_kses_post(nl2br($currentEstate["objektbeschreibung"])); ?>
-                </div>
-            <?php } ?>
-            <?php if ($currentEstate["lage"] !== "") { ?>
-                <div class="oo-detailsfreetext">
-                    <h2><?php echo esc_html($pEstates->getFieldLabel('lage')); ?></h2>
-                    <?php echo wp_kses_post(nl2br($currentEstate["lage"])); ?>
-                </div>
-            <?php } ?>
+				<div class="oo-detailsfreetext">
+					<h2><?php echo esc_html($pEstates->getFieldLabel('dreizeiler')); ?></h2>
+					<?php echo wp_kses_post(nl2br($currentEstate["dreizeiler"])); ?>
+				</div>
+			<?php } ?>
+			<?php if ($currentEstate["objektbeschreibung"] !== "") { ?>
+				<div class="oo-detailsfreetext">
+					<h2><?php echo esc_html($pEstates->getFieldLabel('objektbeschreibung')); ?></h2>
+					<?php echo wp_kses_post(nl2br($currentEstate["objektbeschreibung"])); ?>
+				</div>
+			<?php } ?>
+			<?php if ($currentEstate["lage"] !== "") { ?>
+				<div class="oo-detailsfreetext">
+					<h2><?php echo esc_html($pEstates->getFieldLabel('lage')); ?></h2>
+					<?php echo wp_kses_post(nl2br($currentEstate["lage"])); ?>
+				</div>
+			<?php } ?>
 
 			<?php
 			$areaButlerUrl = !empty($currentEstate['MPAreaButlerUrlWithAddress']) ? $currentEstate['MPAreaButlerUrlWithAddress'] : ($currentEstate['MPAreaButlerUrlNoAddress'] ?? '');
@@ -262,12 +262,12 @@ $dimensions = [
 						<div class="energy-certificate-container">
 							<div class="segmented-bar">
 								<?php foreach ($energyClassPermittedValues as $key => $label): ?>
-                                    <div class="energy-certificate-label"><span><?php echo esc_html($energyCertificateValueLabels[$key] ?? ''); ?></span></div>
-                                    <div class="segment<?php echo ($energyClass === $label ? ' selected' : ''); ?>">
-                                        <span><?php echo esc_html($label); ?></span>
-                                    </div>
-                                <?php endforeach; ?>
-                                <div class="energy-certificate-label"><span><?php echo esc_html(end($energyCertificateValueLabels)); ?></span></div>
+										<div class="energy-certificate-label"><span><?php echo esc_html($energyCertificateValueLabels[$key] ?? ''); ?></span></div>
+										<div class="segment<?php echo ($energyClass === $label ? ' selected' : ''); ?>">
+											<span><?php echo esc_html($label); ?></span>
+										</div>
+									<?php endforeach; ?>
+									<div class="energy-certificate-label"><span><?php echo esc_html(end($energyCertificateValueLabels)); ?></span></div>
 							</div>
 						</div>
 					<?php endif; ?>
@@ -292,18 +292,18 @@ $dimensions = [
 
 
 			<?php if ($currentEstate["ausstatt_beschr"] !== "") { ?>
-                <div class="oo-detailsfreetext">
-                    <h2><?php echo esc_html($pEstates->getFieldLabel('ausstatt_beschr')); ?></h2>
-                    <?php echo wp_kses_post(nl2br($currentEstate["ausstatt_beschr"])); ?>
-                </div>
-            <?php } ?>
+				<div class="oo-detailsfreetext">
+					<h2><?php echo esc_html($pEstates->getFieldLabel('ausstatt_beschr')); ?></h2>
+					<?php echo wp_kses_post(nl2br($currentEstate["ausstatt_beschr"])); ?>
+				</div>
+			<?php } ?>
 
-            <?php if ($currentEstate["sonstige_angaben"] !== "") { ?>
-                <div class="oo-detailsfreetext">
-                    <h2><?php echo esc_html($pEstates->getFieldLabel('sonstige_angaben')); ?></h2>
-                    <?php echo wp_kses_post(nl2br($currentEstate["sonstige_angaben"])); ?>
-                </div>
-            <?php } ?>
+			<?php if ($currentEstate["sonstige_angaben"] !== "") { ?>
+				<div class="oo-detailsfreetext">
+					<h2><?php echo esc_html($pEstates->getFieldLabel('sonstige_angaben')); ?></h2>
+					<?php echo wp_kses_post(nl2br($currentEstate["sonstige_angaben"])); ?>
+				</div>
+			<?php } ?>
 
 			<?php if (!empty($pEstates->getTotalCostsData())) {
 				$totalCostsData = $pEstates->getTotalCostsData();
