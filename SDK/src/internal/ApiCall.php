@@ -657,6 +657,7 @@ class ApiCall
 
 			if (!$pResponse->isValid())
 			{
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message is for internal debugging only
 				throw new ApiCallFaultyResponseException('Handle: '.$handle);
 			}
 

@@ -88,6 +88,7 @@ class PdfDocumentModelValidator
 		try {
 			$parametersGetEstate = $this->buildParameters($pModelClone);
 		} catch (UnknownViewException $pEx) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Re-throwing exception for internal error handling
 			throw new PdfDocumentModelValidationException('', 0, $pEx);
 		}
 

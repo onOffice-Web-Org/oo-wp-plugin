@@ -66,6 +66,7 @@ class PdfDocumentFetcher
 		};
 
 		$writeCallback = function($ch, $data): int {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Binary PDF data passed through from API
 			echo $data;
 			return strlen($data);
 		};
