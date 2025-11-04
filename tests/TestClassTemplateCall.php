@@ -40,8 +40,6 @@ use function json_decode;
 class TestClassTemplateCall
 	extends WP_UnitTestCase
 {
-	use HtmlNormalizerTrait;
-
 	/** @var array */
 	private $_expectationPdf = [
 		'urn:onoffice-de-ns:smart:2.5:pdf:expose:kurz:design01Aushang' => 'Design01Aushang',
@@ -119,7 +117,7 @@ class TestClassTemplateCall
 		$pTemplateCall = new TemplateCall(TemplateCall::TEMPLATE_TYPE_EXPOSE, $pSDKWrapperMocker);
 		$pTemplateCall->loadTemplates();
 
-		$this->assertHtmlEquals($this->_expectationPdf, $pTemplateCall->getTemplates());
+		$this->assertEquals($this->_expectationPdf, $pTemplateCall->getTemplates());
 	}
 
 
@@ -145,6 +143,6 @@ class TestClassTemplateCall
 		];
 		$templatePath = $pTemplateCall->formatTemplatesData($templatesAll, 'address');
 
-		$this->assertHtmlEquals($this->_expectationTemplatePath, $templatePath);
+		$this->assertEquals($this->_expectationTemplatePath, $templatePath);
 	}
 }
