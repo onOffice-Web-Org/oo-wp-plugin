@@ -180,7 +180,7 @@ class Template
 		}
 		$templatePath = realpath(WP_PLUGIN_DIR.'/'.$this->_templateName);
 		if (!__String::getNew($templatePath)->startsWith(realpath(WP_PLUGIN_DIR.'/onoffice-personalized/')) &&
-            !__String::getNew($templatePath)->startsWith(realpath(get_theme_file_path()))) {
+            !__String::getNew($templatePath)->startsWith(realpath(WP_PLUGIN_DIR.'/'.$pluginDirName.'/templates.dist/'))) {
             // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in internal code
             throw new RuntimeException('Invalid template path');
         }
