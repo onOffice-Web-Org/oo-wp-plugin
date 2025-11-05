@@ -262,12 +262,12 @@ $dimensions = [
 						<div class="energy-certificate-container">
 							<div class="segmented-bar">
 								<?php foreach ($energyClassPermittedValues as $key => $label): ?>
-										<div class="energy-certificate-label"><span><?php echo esc_html($energyCertificateValueLabels[$key] ?? ''); ?></span></div>
-										<div class="segment<?php echo ($energyClass === $label ? ' selected' : ''); ?>">
-											<span><?php echo esc_html($label); ?></span>
-										</div>
-									<?php endforeach; ?>
-									<div class="energy-certificate-label"><span><?php echo esc_html(end($energyCertificateValueLabels)); ?></span></div>
+									<div class="energy-certificate-label"><span><?php echo esc_html($energyCertificateValueLabels[$key] ?? ''); ?></span></div>
+									<div class="segment<?php echo ($energyClass === $label ? ' selected' : ''); ?>">
+										<span><?php echo esc_html($label); ?></span>
+									</div>
+								<?php endforeach; ?>
+								<div class="energy-certificate-label"><span><?php echo esc_html(end($energyCertificateValueLabels)); ?></span></div>
 							</div>
 						</div>
 					<?php endif; ?>
