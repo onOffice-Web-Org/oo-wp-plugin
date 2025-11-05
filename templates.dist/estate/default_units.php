@@ -86,7 +86,7 @@ $rawValues = $pEstates->getRawValues();
                                 }
 
                                 echo '<th class="oo-units__data">';
-                                echo $pEstates->getFieldLabel($field);
+                                echo esc_html($pEstates->getFieldLabel($field));
                                 echo '</th>';
                             }
                         }
@@ -117,9 +117,9 @@ $rawValues = $pEstates->getRawValues();
                                 $value == '0.00' ||
                                 $value == '' ||
                                 empty($value) ||
-								(is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0") // skip negative boolean fields
-								(($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
-									in_array($field,['innen_courtage', 'aussen_courtage'],true))
+                                (is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0") || // skip negative boolean fields
+                                (($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
+                                    in_array($field,['innen_courtage', 'aussen_courtage'],true))
                             ) {
                                 $value = '-';
                                 $class = ' --empty';
@@ -129,11 +129,11 @@ $rawValues = $pEstates->getRawValues();
                             }
                         
                             echo '<td class="oo-units__data' .
-                                $class.
+                                esc_attr($class).
                                 '" data-label="' .
-                                $pEstates->getFieldLabel($field) .
+                                esc_attr($pEstates->getFieldLabel($field)) .
                                 '">';
-                            echo $value;
+                            echo is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value);
                             echo '</td>';
                         endforeach;
                     
@@ -141,7 +141,7 @@ $rawValues = $pEstates->getRawValues();
                             esc_html__('Details', 'oo_theme') .
                             '">';
                         if (!empty($pEstates->getEstateLink())) {
-                            echo '<a class="oo-units-btn" title="'.esc_html__('Zur Einheit', 'oo_theme').': '.$current_property['objekttitel'].'" href="' .
+                            echo '<a class="oo-units-btn" title="'.esc_attr__('Zur Einheit', 'oo_theme').': '.esc_attr($current_property['objekttitel']).'" href="' .
                                 esc_url($pEstates->getEstateLink()) .
                                 '">';
                         }
@@ -169,7 +169,8 @@ if (get_option('onoffice-pagination-paginationbyonoffice')) {
 			'list_id' => $list_id
 		]);
 		
-		echo $ListPagination->render();
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render() method outputs escaped HTML
+        echo $ListPagination->render();
 		?>
 	</div>
 <?php

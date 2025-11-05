@@ -77,7 +77,7 @@ abstract class ListTable extends WP_List_Table
 
 	public function no_items()
 	{
-		_e( 'No items found.' );
+		esc_html_e( 'No items found.' );
 	}
 
 

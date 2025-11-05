@@ -65,26 +65,27 @@ class InputModelRenderer
 	 */
 
 	public function buildForAjax(FormModel $pFormModel)
-	{
-		if ($pFormModel->getIsInvisibleForm()) {
-			return;
-		}
+    {
+        if ($pFormModel->getIsInvisibleForm()) {
+            return;
+        }
 
-		foreach ($pFormModel->getInputModel() as $pInputModel) {
-			$pInputField = $this->createInputField($pInputModel, $pFormModel);
-			$italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
-			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_SORTABLE_TAGS && $pInputModel->getHtmlType() !== InputModelBase::HTML_VERTICAL_RADIO ) {
-				echo '<p id="" class="wp-clearfix custom-input-field">';
-				echo '<label class="howto custom-label" for="'. esc_html($pInputField->getGuiId()).'">';
-				echo $pInputModel->getLabel(). $italicText;
-				echo '</label>';
-				$pInputField->render();
-				echo '</p>';
-			} else {
-				$pInputField->render();
-			}
-		}
-	}
+        foreach ($pFormModel->getInputModel() as $pInputModel) {
+            $pInputField = $this->createInputField($pInputModel, $pFormModel);
+            $italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
+            if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_SORTABLE_TAGS && $pInputModel->getHtmlType() !== InputModelBase::HTML_VERTICAL_RADIO ) {
+                echo '<p id="" class="wp-clearfix custom-input-field">';
+                echo '<label class="howto custom-label" for="'. esc_html($pInputField->getGuiId()).'">';
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $pInputModel->getLabel() returns safe label text
+                echo $pInputModel->getLabel(). $italicText;
+                echo '</label>';
+                $pInputField->render();
+                echo '</p>';
+            } else {
+                $pInputField->render();
+            }
+        }
+    }
 
 
 	/**

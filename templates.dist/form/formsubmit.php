@@ -22,39 +22,39 @@
 $key = get_option('onoffice-settings-captcha-sitekey', '');
 /** @var \onOffice\WPlugin\Form $pForm */
 if ($pForm->needsReCaptcha() && $key !== '') {
-	$formId = $pForm->getGenericSetting('formId');
-	$pFormNo = $pForm->getFormNo();
+    $formId = $pForm->getGenericSetting('formId');
+    $pFormNo = $pForm->getFormNo();
 ?>
-	<script>
-		function submitForm<?php echo $pFormNo; ?>() {
-			const selectorFormById = `form[id^="onoffice-form"] input[name="oo_formno"][value="<?php echo $pFormNo; ?>"]`;
-			const form = document.querySelector(selectorFormById).closest('#onoffice-form, .oo-form, #leadgeneratorform');
-			const submitButtonElement = form.querySelector('.submit_button');
-			form.submit();
-			submitButtonElement.disabled = true;
-			submitButtonElement.classList.add('onoffice-unclickable-form');
-		}
-	</script>
-	<div class="g-recaptcha"
-		data-sitekey="<?php echo esc_attr($key); ?>" 
-		data-callback="submitForm<?php echo $pFormNo; ?>" data-size="invisible">
-	</div>
-	<button class="submit_button">
-		<?php echo esc_html($pForm->getGenericSetting('submitButtonLabel')); ?>
-	</button>
-	<script>
-		(function() {
-			const selectorFormById = `form[id^="onoffice-form"] input[name="oo_formno"][value="<?php echo $pFormNo; ?>"]`;
-			const form = document.querySelector(selectorFormById).closest('#onoffice-form, .oo-form, #leadgeneratorform');
-			const submitButtonElement = form.querySelector('.submit_button');
-			onOffice.captchaControl(form, submitButtonElement);
-		})();
-	</script>
+    <script>
+        function submitForm<?php echo esc_js($pFormNo); ?>() {
+            const selectorFormById = `form[id^="onoffice-form"] input[name="oo_formno"][value="<?php echo esc_js($pFormNo); ?>"]`;
+            const form = document.querySelector(selectorFormById).closest('#onoffice-form, .oo-form, #leadgeneratorform');
+            const submitButtonElement = form.querySelector('.submit_button');
+            form.submit();
+            submitButtonElement.disabled = true;
+            submitButtonElement.classList.add('onoffice-unclickable-form');
+        }
+    </script>
+    <div class="g-recaptcha"
+        data-sitekey="<?php echo esc_attr($key); ?>" 
+        data-callback="submitForm<?php echo esc_js($pFormNo); ?>" data-size="invisible">
+    </div>
+    <button class="submit_button">
+        <?php echo esc_html($pForm->getGenericSetting('submitButtonLabel')); ?>
+    </button>
+    <script>
+        (function() {
+            const selectorFormById = `form[id^="onoffice-form"] input[name="oo_formno"][value="<?php echo esc_js($pFormNo); ?>"]`;
+            const form = document.querySelector(selectorFormById).closest('#onoffice-form, .oo-form, #leadgeneratorform');
+            const submitButtonElement = form.querySelector('.submit_button');
+            onOffice.captchaControl(form, submitButtonElement);
+        })();
+    </script>
 <?php
 } else {
 ?>
 
-<input type="submit" value="<?php echo esc_html($pForm->getGenericSetting('submitButtonLabel')); ?>">
+<input type="submit" value="<?php echo esc_attr($pForm->getGenericSetting('submitButtonLabel')); ?>">
 
 <?php
 

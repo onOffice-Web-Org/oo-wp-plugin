@@ -117,6 +117,7 @@ class FormAddressCreator
 		if ($addressId > 0) {
 			return $addressId;
 		}
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- ApiClientException is for internal API error handling
 		throw new ApiClientException($pApiClientAction);
 	}
 

@@ -51,28 +51,31 @@ class InputFieldGoogleRecaptchaAccountRenderer extends InputFieldRenderer
 	 */
 
 	public function render()
-	{
-		$iconShowPassword = '';
-		$showDeleteGoogleRecaptchaKeysButton = false;
-		if ($this->getName() === 'onoffice-settings-captcha-secretkey') {
-			$iconShowPassword = '<button type="button" class="button" data-toggle="0">
-				<span class="dashicons dashicons-visibility oo-icon-eye-secret-key" aria-hidden="true"></span> 
-				</button>';
-			$showDeleteGoogleRecaptchaKeysButton = true;
-		} elseif ($this->getName() === 'onoffice-settings-captcha-sitekey') {
-			$iconShowPassword = '<button type="button" class="button" data-toggle="0">
-				<span class="dashicons dashicons-visibility oo-icon-eye-site-key" aria-hidden="true"></span> 
-				</button>';
-		}
-		echo '<div class="oo-google-recaptcha-key">';
-		echo '<input type="password" name="' . esc_html($this->getName())
-			. '" value="' . esc_html($this->getValue()) . '" id="' . esc_html($this->getGuiId()) . '"'
-			. ' ' . $this->renderAdditionalAttributes()
-			. '>' . $iconShowPassword;
-		echo '</div>';
+    {
+        $iconShowPassword = '';
+        $showDeleteGoogleRecaptchaKeysButton = false;
+        if ($this->getName() === 'onoffice-settings-captcha-secretkey') {
+            $iconShowPassword = '<button type="button" class="button" data-toggle="0">
+                    <span class="dashicons dashicons-visibility oo-icon-eye-secret-key" aria-hidden="true"></span> 
+                    </button>';
+            $showDeleteGoogleRecaptchaKeysButton = true;
+        } elseif ($this->getName() === 'onoffice-settings-captcha-sitekey') {
+            $iconShowPassword = '<button type="button" class="button" data-toggle="0">
+                    <span class="dashicons dashicons-visibility oo-icon-eye-site-key" aria-hidden="true"></span> 
+                    </button>';
+        }
+        echo '<div class="oo-google-recaptcha-key">';
+        echo '<input type="password" name="' . esc_html($this->getName())
+            . '" value="' . esc_html($this->getValue()) . '" id="' . esc_html($this->getGuiId()) . '"'
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
+            . ' ' . $this->renderAdditionalAttributes()
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $iconShowPassword is a safe HTML string constructed above
+            . '>' . $iconShowPassword;
+        echo '</div>';
 
-		if ($showDeleteGoogleRecaptchaKeysButton) {
-			echo '<button class="button delete-google-recaptcha-keys-button">'. __('Delete Keys', 'onoffice-for-wp-websites') .'</button>';
-		}
-	}
+        if ($showDeleteGoogleRecaptchaKeysButton) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
+            echo '<button class="button delete-google-recaptcha-keys-button">'. __('Delete Keys', 'onoffice-for-wp-websites') .'</button>';
+        }
+    }
 }

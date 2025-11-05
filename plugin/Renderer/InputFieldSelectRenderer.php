@@ -80,9 +80,10 @@ class InputFieldSelectRenderer
             $textHtml = '<p>' . $this->_descriptionTextHTML . '</p>';
         }
 		echo '<select name="'.esc_html($this->getName()).'" '
-			 .($this->_multiple ? ' multiple = "multiple" ' : null)
-			 .$this->renderAdditionalAttributes()
-			 .' id="'.esc_html($this->getGuiId()).'">';
+             .($this->_multiple ? ' multiple = "multiple" ' : null)
+             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
+             .$this->renderAdditionalAttributes()
+             .' id="'.esc_html($this->getGuiId()).'">';
 
 		foreach ($this->getValue() as $key => $label)
 		{
@@ -97,7 +98,8 @@ class InputFieldSelectRenderer
 			}
 		}
 
-		echo '</select>'. $textHtml;
+		 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $textHtml contains escaped or safe HTML
+        echo '</select>'. $textHtml;
 	}
 
 

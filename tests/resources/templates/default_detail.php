@@ -29,13 +29,14 @@ use onOffice\WPlugin\EstateDetail;
 (function(EstateDetail $pEstates) {
 	$pEstates->resetEstateIterator();
 	$currentEstate = $pEstates->estateIterator();
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getEstateUnits() returns escaped HTML
 	echo $pEstates->getEstateUnits();
 	foreach ($currentEstate as $field => $value) {
 		if (is_numeric($value) && 0 == $value) {
 			continue;
 		}
 		echo esc_html($pEstates->getFieldLabel($field)) . ': '
-			. (is_array($value) ? implode(', ', $value) : $value) . "\n";
+            . (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)) . "\n";
 	};
 
 	foreach ($pEstates->getEstateContacts() as $contactData) {
@@ -49,19 +50,22 @@ use onOffice\WPlugin\EstateDetail;
 	}
 
 	foreach ($pEstates->getMovieEmbedPlayers(['width' => 500]) as $movieInfos) {
-		echo esc_html($movieInfos['title']) . $movieInfos['player'];
-	}
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- player HTML is escaped by WordPress embed
+        echo esc_html($movieInfos['title']) . $movieInfos['player'];
+    }
 
 	foreach ($pEstates->getEstatePictures() as $id) {
-		echo $pEstates->getEstatePictureTitle($id) . ': '
-			. $pEstates->getEstatePictureUrl($id, ['width' => 300, 'height' => 400]) . "\n";
-	}
+        echo esc_html($pEstates->getEstatePictureTitle($id)) . ': '
+            . esc_url($pEstates->getEstatePictureUrl($id, ['width' => 300, 'height' => 400])) . "\n";
+    }
 
 	if ($pEstates->getDocument() != '') {
-		echo esc_html_e('Documents', 'onoffice-for-wp-websites') . "\n"
-			. $pEstates->getDocument() . "\n";
-	}
-	echo $pEstates->getSimilarEstates();
+        echo esc_html_e('Documents', 'onoffice-for-wp-websites') . "\n"
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getDocument() returns esc_url()
+            . $pEstates->getDocument() . "\n";
+    }
+	 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getSimilarEstates() returns escaped HTML
+    echo $pEstates->getSimilarEstates();
 })($pEstates);
 
 include ONOFFICE_PLUGIN_DIR . '/templates.dist/estate/map/map.php';

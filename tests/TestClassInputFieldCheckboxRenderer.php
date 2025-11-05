@@ -37,6 +37,8 @@ use WP_UnitTestCase;
 class TestClassInputFieldCheckboxRenderer
 	extends WP_UnitTestCase
 {
+	use HtmlNormalizerTrait;
+
 	/** @var Container */
 	private $_pContainer;
 
@@ -64,7 +66,7 @@ class TestClassInputFieldCheckboxRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<input type="checkbox" name="testRenderer" value="1" id="checkbox_1">', $output);
+		$this->assertHtmlEquals('<input type="checkbox" name="testRenderer" value="1" id="checkbox_1">', $output);
 	}
 	
 	/**
@@ -78,7 +80,7 @@ class TestClassInputFieldCheckboxRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<input type="checkbox" name="testRenderer" value="johndoe" checked="checked"  onoffice-multipleSelectType="0" id="labelcheckbox_1bjohndoe">'
+		$this->assertHtmlEquals('<input type="checkbox" name="testRenderer" value="johndoe" checked="checked"  onoffice-multipleSelectType="0" id="labelcheckbox_1bjohndoe">'
 			. '<label for="labelcheckbox_1bjohndoe">John Doe</label>'
 			. '<br><input type="checkbox" name="testRenderer" value="konradzuse" onoffice-multipleSelectType="0" id="labelcheckbox_1bkonradzuse"><label for="labelcheckbox_1bkonradzuse">Konrad Zuse</label><br>', $output);
 	}
@@ -99,7 +101,7 @@ class TestClassInputFieldCheckboxRenderer
 		$pCheckboxFieldRenderer = new InputFieldCheckboxRenderer('testRenderer',[1,2]);
 		$pCheckboxFieldRenderer->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<input type="checkbox" name="testRenderer" value="0" onoffice-multipleSelectType="0" id="labelcheckbox_1b0"><label for="labelcheckbox_1b0">1</label><br><input type="checkbox" name="testRenderer" value="1" onoffice-multipleSelectType="0" id="labelcheckbox_1b1"><label for="labelcheckbox_1b1">2</label><br>', $output);
+		$this->assertHtmlEquals('<input type="checkbox" name="testRenderer" value="0" onoffice-multipleSelectType="0" id="labelcheckbox_1b0"><label for="labelcheckbox_1b0">1</label><br><input type="checkbox" name="testRenderer" value="1" onoffice-multipleSelectType="0" id="labelcheckbox_1b1"><label for="labelcheckbox_1b1">2</label><br>', $output);
 	}
 	
 	public function testSetCheckedValues()

@@ -24,8 +24,8 @@ $displayError = false;
 ?>
 <form method="post" id="onoffice-form" class="oo-form oo-form-owner" novalidate>
 
-	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
-	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
+	<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
+    <input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
 <?php
 
 $addressValues = array();
@@ -77,23 +77,27 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 		
 		$isHiddenField = $pForm->isHiddenField($input);
-		$label = $pForm->getFieldLabel($input);
+		$label = esc_html($pForm->getFieldLabel($input)) . ' ' . wp_kses_post($addition);
 
 		if ((\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input))) {
-
-			$line =	 !$isHiddenField ? '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.' '.$addition.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label contains escaped HTML and renderFormField returns escaped HTML
+            $line =	 !$isHiddenField ? '<div class="oo-single-select"><label for="'.esc_attr($input).'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
 		} else if ((\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT== $pForm->getFieldType($input))) {
-			$line =	 !$isHiddenField ? '<div class="oo-multi-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.' '.$addition.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label contains escaped HTML and renderFormField returns escaped HTML
+            $line =	 !$isHiddenField ? '<div class="oo-multi-select"><label for="'.esc_attr($input).'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
 		}
 		
 		else {
-			$line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.' '.$addition;
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label contains escaped HTML returns escaped HTML
+            $line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label;
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderFormField returns escaped HTML
 			$line .= renderFormField($input, $pForm).'</span></label>';
 		}
 
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-			$line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.renderFormField( 'gdprcheckbox', $pForm );
-			$line .= $pForm->getFieldLabel( 'gdprcheckbox' ) .' '. $addition.'</span></label>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderFormField returns escaped HTML
+            $line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.renderFormField( 'gdprcheckbox', $pForm );
+			$line .= esc_html($pForm->getFieldLabel( 'gdprcheckbox' )) .' '. wp_kses_post($addition).'</span></label>';
 		}
 		if ( in_array( $input, array( 'message' )) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
@@ -105,7 +109,8 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			if (!$isHiddenField) {
 				$line = '<label class="' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$pForm->getFieldLabel( 'message' );
 				$line .= ' '.$additionMessage;
-				$line .= '<textarea name="message" autocomplete="off"' . ($isRequiredMessage ? ' required aria-required="true" aria-invalid="false"' : '') . '>' . $pForm->getFieldValue('message') . '</textarea>'.$errorHtml.'</label>';
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $errorHtml is already escaped from renderErrorHtml
+                $line .= '<textarea name="message" autocomplete="off"' . ($isRequiredMessage ? ' required aria-required="true" aria-invalid="false"' : '') . '>' . esc_textarea($pForm->getFieldValue('message')) . '</textarea>'.$errorHtml.'</label>';
 
 			} else {
 				$line = '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
@@ -126,12 +131,15 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 	echo '<h2>'.esc_html__('Your contact details', 'onoffice-for-wp-websites').'</h2>'
 		.'<div>';
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $addressValues contains escaped HTML from renderFormField
 	echo implode('', $addressValues);
 	echo '</div>
 		<h2>'.esc_html__('Information about your property', 'onoffice-for-wp-websites').'</h2>
 		<div>';
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $estateValues contains escaped HTML from renderFormField
 	echo implode('', $estateValues);
 	echo '</div>';
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $hiddenValues contains escaped HTML from renderFormField
 	echo implode($hiddenValues);
 
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');

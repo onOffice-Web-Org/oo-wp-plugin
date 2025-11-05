@@ -84,17 +84,24 @@ $dimensions = [
 		                     * @param bool $maxWidth, default = false)
 		                     * @return string for image source on various media
 		                     */
-		                    echo $pEstates->getResponsiveImageSource($id, 575, $dimensions['575']['w'], $dimensions['575']['h'], true);
-		                    echo $pEstates->getResponsiveImageSource($id, 1600, $dimensions['1600']['w'], $dimensions['1600']['h']);
-		                    echo $pEstates->getResponsiveImageSource($id, 1400, $dimensions['1400']['w'], $dimensions['1400']['h']);
-		                    echo $pEstates->getResponsiveImageSource($id, 1200, $dimensions['1200']['w'], $dimensions['1200']['h']);
-		                    echo $pEstates->getResponsiveImageSource($id, 992, $dimensions['992']['w'], $dimensions['992']['h']);
-		                    echo $pEstates->getResponsiveImageSource($id, 768, $dimensions['768']['w'], $dimensions['768']['h']);
-		                    echo $pEstates->getResponsiveImageSource($id, 576, $dimensions['576']['w'], $dimensions['576']['h']);
+		                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
+                            echo $pEstates->getResponsiveImageSource($id, 575, $dimensions['575']['w'], $dimensions['575']['h'], true);
+                            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
+                            echo $pEstates->getResponsiveImageSource($id, 1600, $dimensions['1600']['w'], $dimensions['1600']['h']);
+                            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
+                            echo $pEstates->getResponsiveImageSource($id, 1400, $dimensions['1400']['w'], $dimensions['1400']['h']);
+                            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
+                            echo $pEstates->getResponsiveImageSource($id, 1200, $dimensions['1200']['w'], $dimensions['1200']['h']);
+                            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
+                            echo $pEstates->getResponsiveImageSource($id, 992, $dimensions['992']['w'], $dimensions['992']['h']);
+                            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
+                            echo $pEstates->getResponsiveImageSource($id, 768, $dimensions['768']['w'], $dimensions['768']['h']);
+                            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
+                            echo $pEstates->getResponsiveImageSource($id, 576, $dimensions['576']['w'], $dimensions['576']['h']);
 		                    echo '<img class="oo-responsive-image estate-status" ' .
-		                        'src="' . esc_url($pEstates->getEstatePictureUrl($id, isset($dimensions['1600']['w']) || isset($dimensions['1600']['h']) ? ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']] : null)) . '" ' .
-		                        'alt="' . esc_html($pEstates->getEstatePictureTitle($id) ?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
-		                        'loading="lazy">';
+                                'src="' . esc_url($pEstates->getEstatePictureUrl($id, isset($dimensions['1600']['w']) || isset($dimensions['1600']['h']) ? ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']] : null)) . '" ' .
+                                'alt="' . esc_attr($pEstates->getEstatePictureTitle($id) ?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
+                                'loading="lazy">';
 		                    echo '</picture>';
 							if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 								echo '<span>'.esc_html($marketingStatus).'</span>';
@@ -103,7 +110,7 @@ $dimensions = [
 						} ?>
 						<div class="oo-listinfo">
 							<div class="oo-listtitle">
-								<?php echo $currentEstate["objekttitel"]; ?>
+								<?php echo esc_html($currentEstate["objekttitel"]); ?>
 							</div>
 							<div class="oo-listinfotable">
 								<?php
@@ -136,23 +143,23 @@ $dimensions = [
 									}
 
 									$class = 'oo-listtd'. ($pEstates->isHighlightedField($field) ? ' --highlight' : '');
-									echo '<div class="'.$class.'">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'.
-										'<div class="'.$class.'">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
+                                    echo '<div class="'.esc_attr($class).'">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'.
+                                        '<div class="'.esc_attr($class).'">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 								} ?>
 							</div>
 							<div class="oo-detailslink">
-								<?php if ($referenz === "1") { ?>
-									<?php if (!$pEstates->getViewRestrict()) { ?>
-										<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), $estateId); ?>">
-											<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
-										</a>
-									<?php } ?>
-								<?php } else { ?>
-									<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), $estateId); ?>">
-										<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
-									</a>
-								<?php } ?>
-							</div>
+                                <?php if ($referenz === "1") { ?>
+                                    <?php if (!$pEstates->getViewRestrict()) { ?>
+                                        <a class="oo-details-btn" href="<?php echo esc_url($pEstates->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
+                                            <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
+                                        </a>
+                                    <?php } ?>
+                                <?php } else { ?>
+                                    <a class="oo-details-btn" href="<?php echo esc_url($pEstates->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
+                                        <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
+                                    </a>
+                                <?php } ?>
+                            </div>
 						</div>
 					</div>
 				</div>

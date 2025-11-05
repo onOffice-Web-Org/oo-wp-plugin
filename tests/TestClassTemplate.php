@@ -11,6 +11,9 @@ use onOffice\WPlugin\DataView\DataListView;
 
 class TestClassTemplate extends \WP_UnitTestCase
 {
+
+	use HtmlNormalizerTrait;
+
 	/**
 	 * @var EstateDetail
 	 */
@@ -86,35 +89,37 @@ class TestClassTemplate extends \WP_UnitTestCase
 		$themeTemplateDir = get_stylesheet_directory().'/onoffice-theme/';
 
 		if (!is_dir($themeTemplateDir) &&
-			!mkdir($themeTemplateDir . '/templates/', 755, true) &&
-			!is_dir($themeTemplateDir . '/templates/'))
-		{
-			throw new RuntimeException(sprintf('Directory "%s" was not created', $themeTemplateDir . '/templates/'));
-		}
+            !mkdir($themeTemplateDir . '/templates/', 755, true) &&
+            !is_dir($themeTemplateDir . '/templates/'))
+        {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test code
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $themeTemplateDir . '/templates/'));
+        }
 		copy(__DIR__.'/resources/templates/default_detail.php', $themeTemplateDir.'/templates/default_detail.php');
 
 		$output = (new Template)
 			->withEstateList($this->_pEstate)
 			->withTemplateName('onoffice-theme/templates/default_detail.php')
 			->render();
-		$this->assertStringEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
+		$this->assertHtmlEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
 	}
 
 	public function testRender_templatesInPersonalizedDir()
 	{
 		$templatePath = ABSPATH.'/wp-content/plugins/onoffice-personalized/';
 		if (!is_dir($templatePath) &&
-			!mkdir($templatePath . '/templates/', 755, true) &&
-			!is_dir($templatePath . '/templates/'))
-		{
-			throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . '/templates/'));
-		}
+            !mkdir($templatePath . '/templates/', 755, true) &&
+            !is_dir($templatePath . '/templates/'))
+        {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test code
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . '/templates/'));
+        }
 		copy(__DIR__.'/resources/templates/default_detail.php', $templatePath.'/templates/default_detail.php');
 		$output = (new Template)
 			->withEstateList($this->_pEstate)
 			->withTemplateName('onoffice-personalized/templates/default_detail.php')
 			->render();
-		$this->assertStringEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
+		$this->assertHtmlEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
 	}
 
 	public function testRender_templatesInPluginDir()
@@ -122,17 +127,18 @@ class TestClassTemplate extends \WP_UnitTestCase
 		$pluginDirName = basename(ONOFFICE_PLUGIN_DIR);
 		$templatePath = ABSPATH.'/wp-content/plugins/'.$pluginDirName;
 		if (!is_dir($templatePath) &&
-			!mkdir($templatePath . '/templates.dist/estate/', 755, true) &&
-			!is_dir($templatePath . '/templates.dist/estate/'))
-		{
-			throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . '/templates.dist/estate/'));
-		}
+            !mkdir($templatePath . '/templates.dist/estate/', 755, true) &&
+            !is_dir($templatePath . '/templates.dist/estate/'))
+        {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test code
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . '/templates.dist/estate/'));
+        }
 		copy(__DIR__.'/resources/templates/default_detail.php', $templatePath.'/templates.dist/estate/default_detail.php');
 		$output = (new Template)
 			->withEstateList($this->_pEstate)
 			->withTemplateName($pluginDirName.'/templates.dist/estate/default_detail.php')
 			->render();
-		$this->assertStringEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
+		$this->assertHtmlEqualsFile(__DIR__ . '/resources/templates/TestClassTemplate_expected.txt', $output);
 	}
 
 	public function testRender_invalidDir()

@@ -55,6 +55,7 @@ class AdminPageAddressList
 		$this->generateSearchForm($page,$buttonSearch, null,null,$id);
 		echo '<p>';
 		echo '<form method="post">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- views() returns escaped HTML
 		echo $this->_pAddressListTable->views();
 		$this->_pAddressListTable->display();
 		echo '</form>';
@@ -81,7 +82,8 @@ class AdminPageAddressList
 		$newLink = admin_url('admin.php?page=onoffice-editlistviewaddress');
 
 		echo '</h1>';
-		echo '<a href="'.$newLink.'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $newLink is escaped by admin_url()
+		echo '<a href="'.esc_url($newLink).'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
 

@@ -50,7 +50,7 @@ require 'SearchFormAddress.php';
 				if (!empty($imageUrl)) {
 					$altText = $pAddressList->generateImageAlt($addressId);
 					$imageAlt = !empty($altText) ? $altText : esc_html__('Contact person image', 'onoffice-for-wp-websites');					
-					echo  '<img src="' . esc_url($imageUrl) . '" class="oo-address-image" alt="' . esc_html($imageAlt) . '" loading="lazy">';
+					echo  '<img src="' . esc_url($imageUrl) . '" class="oo-address-image" alt="' . esc_attr($imageAlt) . '" loading="lazy">';
 				}
 				?>
 				<div class="oo-listinfo">
@@ -66,14 +66,15 @@ require 'SearchFormAddress.php';
 							}
 
 							$fieldLabel = $pAddressList->getFieldLabel($field);
-							echo '<div class="oo-listtd">' . esc_html($fieldLabel) . '</div><div class="oo-listtd">' . (is_array($value) ? implode(', ', array_filter($value)) : $value) . '</div>';
+							echo '<div class="oo-listtd">' . esc_html($fieldLabel) . '</div><div class="oo-listtd">' . 
+                                (is_array($value) ? esc_html(implode(', ', array_filter($value))) : esc_html($value)) . '</div>';
 						}
 						?>
 					</div>
 					<div class="oo-detailslink">
-						<a class="oo-details-btn" href="<?php echo esc_url($pAddressList->getAddressLink($addressId)) ?>" aria-label="<?php echo sprintf(esc_html_x('Show Details for Address No. %d', 'onoffice-for-wp-websites'), $addressId); ?>">
-								<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
-						</a>
+						<a class="oo-details-btn" href="<?php echo esc_url($pAddressList->getAddressLink($addressId)) ?>" aria-label="<?php echo sprintf(esc_attr__('Show Details for Address No. %d', 'onoffice-for-wp-websites'), (int)$addressId); ?>">
+                                <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
+                        </a>
 					</div>
 				</div>
 			</div>
@@ -93,6 +94,7 @@ require 'SearchFormAddress.php';
 				'anchor' => 'oo-listheadline',
 			]);
 			
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- ListPagination::render() returns escaped HTML
 			echo $ListPagination->render();
 			?>
 		</div>

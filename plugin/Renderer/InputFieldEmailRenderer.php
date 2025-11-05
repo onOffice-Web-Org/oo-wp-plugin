@@ -57,9 +57,11 @@ class InputFieldEmailRenderer
 		if ( ! empty( $this->getHint() ) ) {
 			$textHtml = '<p class="hint-fallback-email hint-text">' . esc_html( $this->getHint() ) . '</p>';
 		}
-		echo '<input type="' . esc_html( $this->getType() ) . '" name="' . esc_html( $this->getName() )
-		     . '" value="' . esc_html( $this->getValue() ) . '" id="' . esc_html( $this->getGuiId() ) . '"'
-		     . ' ' . $this->renderAdditionalAttributes()
-		     . '>' . $textHtml;
+        echo '<input type="' . esc_html( $this->getType() ) . '" name="' . esc_html( $this->getName() )
+             . '" value="' . esc_html( $this->getValue() ) . '" id="' . esc_html( $this->getGuiId() ) . '"'
+			 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped attributes
+             . ' ' . $this->renderAdditionalAttributes()
+             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $textHtml contains escaped hint text
+             . '>' . $textHtml;
 	}
 }

@@ -572,12 +572,13 @@ add_action('wp', function () {
 });
 
 add_action('admin_notices', function () {
-	if (get_option('onoffice-notice-cache-was-cleared') == true) {
-		$class = 'notice notice-success is-dismissible';
-		$message = esc_html__('Cache is being cleared in the background. This may take a few minutes.', 'onoffice-for-wp-websites');
-		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
-		update_option('onoffice-notice-cache-was-cleared', false);
-	}
+    if (get_option('onoffice-notice-cache-was-cleared') == true) {
+        $class = 'notice notice-success is-dismissible';
+        $message = __('The cache was cleaned.', 'onoffice-for-wp-websites');
+
+        printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
+        update_option('onoffice-notice-cache-was-cleared', false);
+    }
 });
 
 add_filter('script_loader_tag', 'filter_script_loader_tag', 10, 2);

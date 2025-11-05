@@ -177,7 +177,9 @@ abstract class AdminPageSettingsBase
 		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
 		$this->generatePageMainTitle( $this->getPageTitle() );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- admin-url() is a safe WordPress function
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_current_screen()->id is a safe WordPress screen ID
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
 		echo '<input type="hidden" name="record_id" value="' . esc_attr( $_GET['id'] ?? 0 ) . '" />';
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
@@ -208,8 +210,9 @@ abstract class AdminPageSettingsBase
 		echo '</div>';
 		$this->renderBulkActionControls();
 		echo '<div class="fieldsSortable postbox" id="oo-fields-sortable-container">';
-		echo '<div class="postbox-header">
-        <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+		echo '<div class="postbox-header">' .
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
+        '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
 		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen
 			<input type="checkbox" id="postbox-select-all" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event)"/>
 			</label>
@@ -513,6 +516,7 @@ abstract class AdminPageSettingsBase
 	protected function renderSearchFieldForFieldLists(InputModelRenderer $pInputModelRenderer, $pFormViewSearchFieldForFieldLists)
 	{
 		echo '<div class="oo-search-field postbox">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
 		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Field list search', 'onoffice-for-wp-websites' ) . '</span></h2>';
 		echo '<div class="inside">';
 		$pInputModelRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);

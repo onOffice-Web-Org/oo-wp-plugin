@@ -161,6 +161,7 @@ class FormPostInterest
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
 
 		if (!$pAPIClientAction->getResultStatus()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is for internal API error handling, not user-facing output
 			throw new ApiClientException($pAPIClientAction);
 		}
 	}
@@ -213,6 +214,7 @@ class FormPostInterest
 		$pAPIClientAction->setParameters($requestParams);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
 		if (!$pAPIClientAction->getResultStatus()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is for internal API error handling, not user-facing output
 			throw new ApiClientException($pAPIClientAction);
 		}
 	}
@@ -267,6 +269,7 @@ class FormPostInterest
 		$pSDKWrapper->sendRequests();
 
 		if (!$pApiClientAction->getResultStatus()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is for internal API error handling, not user-facing output
 			throw new ApiClientException($pApiClientAction);
 		}
 	}

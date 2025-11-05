@@ -32,6 +32,8 @@ use onOffice\WPlugin\Renderer\InputFieldRadioRenderer;
 class TestClassInputFieldRadioRenderer
 	extends \WP_UnitTestCase
 {
+	use HtmlNormalizerTrait;
+
 	public function testConstruct()
 	{
 		$pInputFieldRadioRenderer = new InputFieldRadioRenderer('testInputName','testInputValue');
@@ -47,7 +49,7 @@ class TestClassInputFieldRadioRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<input type="radio" name="testRenderer" value="">', $output);
+		$this->assertHtmlEquals('<input type="radio" name="testRenderer" value="">', $output);
 	}
 
 	/**
@@ -62,7 +64,7 @@ class TestClassInputFieldRadioRenderer
 		$pSubject->render();
 		$output = ob_get_clean();
 		$this->assertEquals(['johndoe'], $pSubject->getCheckedValue());
-		$this->assertEquals( '<input type="radio" name="testRenderer" value="johndoe" id="labelradio_1bjohndoetestRenderer">'
+		$this->assertHtmlEquals( '<input type="radio" name="testRenderer" value="johndoe" id="labelradio_1bjohndoetestRenderer">'
 		                     . '<label for="labelradio_1bjohndoetestRenderer">John Doe</label>'
 		                     . ' <input type="radio" name="testRenderer" value="konradzuse" id="labelradio_1bkonradzusetestRenderer">'
 		                     . '<label for="labelradio_1bkonradzusetestRenderer">Konrad Zuse</label> ', $output );
@@ -80,7 +82,7 @@ class TestClassInputFieldRadioRenderer
 		$pSubject->render();
 		$output = ob_get_clean();
 		$this->assertEquals(['johndoe'], $pSubject->getCheckedValue());
-		$this->assertEquals( '<input type="radio" name="testRenderer" value="johndoe" id="labelradio_1bjohndoetestRenderer">'
+		$this->assertHtmlEquals( '<input type="radio" name="testRenderer" value="johndoe" id="labelradio_1bjohndoetestRenderer">'
 		                     . '<label for="labelradio_1bjohndoetestRenderer">John Doe</label> '
 		                     . '<p class="description">John Doe</p><br>'
 		                     . '<input type="radio" name="testRenderer" value="konradzuse" id="labelradio_1bkonradzusetestRenderer">'

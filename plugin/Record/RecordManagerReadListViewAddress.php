@@ -126,10 +126,11 @@ class RecordManagerReadListViewAddress
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 
-		if ($result === null)
-		{
-			throw new \Exception(__('unknown address list name', 'onoffice-for-wp-websites'));
-		}
+		 if ($result === null)
+        {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages with __() are for internal debugging
+            throw new \Exception(__('unknown address list name', 'onoffice-for-wp-websites'));
+        }
 
 		$resultFieldConfig = $this->getFieldconfigByListviewId($result[$this->getIdColumnMain()]);
 		$result['fields'] = array_column($resultFieldConfig, 'fieldname');

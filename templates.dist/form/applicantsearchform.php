@@ -24,8 +24,8 @@ $displayError = false;
 ?>
 <form method="post" id="onoffice-form" class="oo-form oo-form-applicantsearch" data-applicant-form-id="<?php echo esc_attr($pForm->getFormId()); ?>" novalidate>
 
-	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
-	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
+	<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
+    <input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
 	<?php if ( isset( $currentEstate ) ) : ?>
 	<input type="hidden" name="Id" value="<?php echo esc_attr($currentEstate['Id']); ?>">
 	<?php endif; ?>
@@ -55,7 +55,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 	$inputAddition = $isRequired ? ' required' : '';
-	$label = $pForm->getFieldLabel($input);
+	$label = esc_html($pForm->getFieldLabel($input)) . ' ' . wp_kses_post($addition);
 	
 	$permittedValues = $pForm->getPermittedValues( $input, true );
 
@@ -68,7 +68,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 			if (in_array($values['type'], $selectTypes)) {
 				$permittedValues = $values['permittedvalues'];
 
-				echo '<select class="custom-single-select" size="1" name="'.$key.'">';
+				echo '<select class="custom-single-select" size="1" name="'.esc_attr($key).'">';
 				echo '<option value="">'.esc_html('not specified').'</option>';
 
 				foreach ( $permittedValues as $countryCode => $countryName ) {
@@ -78,8 +78,10 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 				echo '</select>';
 			} else {
-				echo '<input type="text" name="'.esc_html($key).'" value="'
-					.esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'>';
+				
+				echo '<input type="text" name="'.esc_attr($key).'" value="'
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputAddition contains safe attribute string
+                    .esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'>';
 			}
 		}
 
@@ -88,7 +90,8 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ($input === 'regionaler_zusatz') {
-		echo '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.esc_html($pForm->getFieldLabel( $input )).$addition.'<select class="custom-single-select" size="1" name="'.esc_html($input).'">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label contains escaped HTML
+		 echo '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'<select class="custom-single-select" size="1" name="'.esc_attr($input).'">';
 		$pRegionController = new \onOffice\WPlugin\Region\RegionController();
 		if ($permittedValues === null) {
 			$regions = $pRegionController->getRegions();
@@ -104,9 +107,11 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	} else {
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
-			echo '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.' '.$addition.'</span></label>'.renderFormField($input, $pForm).'</div>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label contains escaped HTML and renderFormField returns escaped HTML
+            echo '<div class="oo-single-select"><label for="'.esc_attr($input).'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>'.renderFormField($input, $pForm).'</div>';
 		} else {
-			echo '<div class="oo-single-select"><label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.esc_html($pForm->getFieldLabel( $input )).' '.$addition.renderFormField($input, $pForm, false).'</span></label></div>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label contains escaped HTML and renderFormField returns escaped HTML
+			echo '<div class="oo-single-select"><label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.renderFormField($input, $pForm, false).'</span></label></div>';
 		}
 	}
 }
@@ -142,11 +147,11 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 				if (is_array($value)) {
 					if ($value[0] > 0) {
-						echo $realName.' min. '.$value[0].'<br>';
+						echo esc_html($realName).' min. '.esc_html($value[0]).'<br>';
 					}
 
 					if ($value[1] > 0) {
-						echo $realName.' max. '.$value[1];
+						echo esc_html($realName).' max. '.esc_html($value[1]);
 					}
 					echo '<br>';
 					continue;
@@ -187,11 +192,11 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				}
 			}
 
-			echo '<span>'.esc_html($realName).': '.(is_array($value) ? implode(', ', $value) : $value).'</span><br>';
+			echo '<span>'.esc_html($realName).': '.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</span><br>';
 		}
 
 		if (count($umkreis) > 0) {
-			echo '<span><i>'.implode(' ', array_values($umkreis)).'</i></span><br>';
+			echo '<span><i>'.esc_html(implode(' ', array_values($umkreis))).'</i></span><br>';
 		}
 	}
 }

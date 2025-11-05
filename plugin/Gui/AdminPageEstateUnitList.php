@@ -81,7 +81,8 @@ class AdminPageEstateUnitList
 		$new_link = admin_url('admin.php?page=onoffice-editunitlist');
 
 		echo '</h1>';
-		echo '<a href="'.$new_link.'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $new_link is escaped by admin_url()
+		echo '<a href="'.esc_url($new_link).'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
 
