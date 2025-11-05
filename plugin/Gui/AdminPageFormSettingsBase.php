@@ -849,7 +849,7 @@ abstract class AdminPageFormSettingsBase
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_current_screen()->id is a safe WordPress screen ID
         echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
-        echo '<input type="hidden" name="record_id" value="0" />';
+        echo '<input type="hidden" name="record_id" value="' . esc_attr( $_GET['id'] ?? 0 ) . '" />';
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $this->getType() returns a safe form type constant
         echo '<input type="hidden" name="type" value="' . $this->getType() . '" />';
         wp_nonce_field( get_current_screen()->id, 'nonce' );

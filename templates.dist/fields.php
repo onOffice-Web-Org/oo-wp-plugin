@@ -9,7 +9,7 @@ if (!function_exists('printRegion')) {
     {
         $prefix = str_repeat('-', $level);
         $selectStr = (in_array($pRegion->getId(), $selected, false) ? ' selected' : '');
-        echo '<option value="' . esc_attr($pRegion->getId()) . '"' . esc_attr($selectStr) . '>'
+        echo '<option value="' . esc_attr($pRegion->getId()) . '" ' . esc_attr($selectStr) . '>'
             . esc_html($prefix) . ' ' . esc_html($pRegion->getName()) . '</option>';
         foreach ($pRegion->getChildren() as $pRegionChild) {
             printRegion($pRegionChild, $selected, $level + 1);
