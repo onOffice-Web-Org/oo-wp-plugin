@@ -46,7 +46,8 @@ class RenderHtmlHelperUsers
         $html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--default">' . sprintf(__("You have opened the detail page, but we do not know which %1\$s to show you, because there is no %2\$s ID in the URL. Please go to an %3\$s list and open an %4\$s from there.", 'onoffice-for-wp-websites'), $type, $type, $type, $type) . '</p>';
 
         if (!empty($pDataDetail)) {
-            $description = sprintf(__('Since you are logged in, here is a link to a random %s so that you can preview the detail page: %s', 'onoffice-for-wp-websites'), $type, $linkDetail);
+            /* translators: 1: type (e.g., estate, address), 2: link to detail page */
+            $description = sprintf(__('Since you are logged in, here is a link to a random %1$s so that you can preview the detail page: %2$s', 'onoffice-for-wp-websites'), $type, $linkDetail);
         }
 
         if (is_user_logged_in()) {
