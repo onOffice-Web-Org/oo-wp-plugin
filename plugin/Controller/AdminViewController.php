@@ -463,8 +463,7 @@ class AdminViewController
 			$label = __('API token and secret', 'onoffice-for-wp-websites');
 			$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', esc_html($label));
 			/* translators: %s will be replaced with the translation of 'API token and secret'. */
-			$message = sprintf(esc_html(__('It looks like you did not enter any valid API '
-				.'credentials. Please consider reviewing your %s.', 'onoffice-for-wp-websites')), $loginCredentialsLink);
+			$message = sprintf(esc_html__('It looks like you did not enter any valid API credentials. Please consider reviewing your %s.', 'onoffice-for-wp-websites'), $loginCredentialsLink);
 
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $message contains intentional HTML link
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
@@ -493,10 +492,7 @@ class AdminViewController
 	{
 		if ( get_option( 'onoffice-duplicate-check-warning', '' ) === "1" ) {
 			$class = 'notice notice-error duplicate-check-notify is-dismissible';
-			$message = esc_html(__("We have deactivated the plugin's duplicate check for all of your forms, "
-				. "because the duplicate check can unintentionally overwrite address records. This function will be removed "
-				. "in the future. The option has been deactivated for these forms: Contact, Interest, Owner",
-				'onoffice-for-wp-websites'));
+			$message = esc_html__("We have deactivated the plugin's duplicate check for all of your forms, because the duplicate check can unintentionally overwrite address records. This function will be removed in the future. The option has been deactivated for these forms: Contact, Interest, Owner", 'onoffice-for-wp-websites');
 
 			// $message is already escaped with esc_html above, safe to output
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
@@ -521,8 +517,8 @@ class AdminViewController
 				&& get_current_screen()->id !== 'onoffice_page_onoffice-settings'
 				&& get_option('onoffice-settings-title-and-description') == 0) {
 				$class = 'notice notice-warning active-plugin-seo is-dismissible';
-				$message = sprintf(esc_html__('The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.
-								We recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
+				/* translators: 1: list of active SEO plugins, 2: link to onOffice plugin settings */
+                $message = sprintf(esc_html__('The onOffice plugin has detected an active SEO plugin: %1$s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin. We recommend that you go to the %2$s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
 				$messageParsedown = Parsedown::instance()
 					->setSafeMode(true)
 					->setUrlsLinked(false)
