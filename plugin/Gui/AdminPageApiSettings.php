@@ -295,6 +295,7 @@ class AdminPageApiSettings
 							</div> <p>%7$s</p>', $titleDoNotModify, $summaryDetailDoNotModify,
 			$descriptionDetailDoNotModify, $guideUseCustomFieldsDoNotModify, $snippetVariablesExampleDoNotModify, $referUseCustomFieldsInSeoPluginDocsDoNotModify,
 			$titleDescriptionDoNotModify );
+		/* translators: %s: list of active SEO plugin names */
 		$messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.
 								We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites'), $listNamePluginSEO);
 		$messageNoticeSEO =  Parsedown::instance()

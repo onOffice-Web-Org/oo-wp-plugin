@@ -363,8 +363,7 @@ abstract class AdminPageFormSettingsBase
 		return [
 			self::GET_PARAM_TYPE => $this->getType(),
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Form was saved.', 'onoffice-for-wp-websites'),
-			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the form. Please make '
-				.'sure the name of the form is unique.', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the form. Please make sure the name of the form is unique.', 'onoffice-for-wp-websites'),
 			self::ENQUEUE_DATA_MERGE => [
 				AdminPageSettingsBase::POST_RECORD_ID,
 				self::GET_PARAM_TYPE,
@@ -380,6 +379,7 @@ abstract class AdminPageFormSettingsBase
 			'label_choose_language' => __('Choose Language', 'onoffice-for-wp-websites'),
 			/* translators: %s is the name of a language */
 			'label_default_value' => __('Default Value: %s', 'onoffice-for-wp-websites'),
+			/* translators: %s will be replaced with the field name */
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			'label_default_value_from' => __('Default Value From:', 'onoffice-for-wp-websites'),
 			'label_default_value_up_to' => __('Default Value Up To:', 'onoffice-for-wp-websites'),
@@ -825,8 +825,7 @@ abstract class AdminPageFormSettingsBase
 		}
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'false' ) {
 			echo '<div class="notice notice-error is-dismissible"><p>'
-			     . esc_html__( 'There was a problem saving the form. Please make '
-			                   . 'sure the name of the form is unique.', 'onoffice-for-wp-websites' )
+			     . esc_html__( 'There was a problem saving the form. Please make sure the name of the form is unique.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'empty' ) {

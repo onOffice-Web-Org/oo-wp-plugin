@@ -609,6 +609,7 @@ abstract class AdminPageSettingsBase
 		wp_localize_script('admin-js', 'oOMultiPageI18n', [
 			'pageTitle' => __('Page title:', 'onoffice-for-wp-websites'),
 			'addLanguage' => __('Add Language', 'onoffice-for-wp-websites'),
+			/* translators: %s will be replaced with the language code or name */
 			'removeTitleForLanguage' => sprintf(__('Remove title for language %s', 'onoffice-for-wp-websites'), '%s'),
 		]);
 

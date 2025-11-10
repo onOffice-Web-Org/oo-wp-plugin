@@ -125,11 +125,13 @@ class AdminPageEstateListSettings
 		if ( $restrictAccessControl ) {
 			$restrictedPageDetail = '<a href="' . esc_attr( admin_url( 'admin.php?page=onoffice-estates&tab=detail' ) ) . '" target="_blank">' . __( 'restricted',
 					'onoffice-for-wp-websites' ) . '</a>';
+			/* translators: %s will be replaced with a link indicating the access restriction status */
 			$pInputModelListReferenceEstates->setHintHtml( sprintf( __( 'Reference estates will not link to their detail page, because the access is %s.',
 				'onoffice-for-wp-websites' ), $restrictedPageDetail ) );
 		} else {
 			$restrictedPageDetail = '<a href="' . esc_attr( admin_url( 'admin.php?page=onoffice-estates&tab=detail' ) ) . '" target="_blank">' . __( 'not restricted',
 					'onoffice-for-wp-websites' ) . '</a>';
+			/* translators: %s will be replaced with a link indicating the access restriction status */
 			$pInputModelListReferenceEstates->setHintHtml( sprintf( __( 'Reference estates will link to their detail page, because the access is %s.',
 				'onoffice-for-wp-websites' ), $restrictedPageDetail ) );
 		}

@@ -97,9 +97,7 @@ class AdminPageAddressListSettings
 		}
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'false' ) {
 			echo '<div class="notice notice-error is-dismissible"><p>'
-			     . esc_html__( 'There was a problem saving the view. Please make '
-			                   . 'sure the name of the view is unique, even across all address list types.',
-					'onoffice-for-wp-websites' )
+			     . esc_html__( 'There was a problem saving the view. Please make sure the name of the view is unique, even across all address list types.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
 		parent::renderContent();
@@ -407,6 +405,7 @@ class AdminPageAddressListSettings
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
+			/* translators: %s will be replaced with the field name */
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			self::VIEW_SAVE_SAME_NAME_MESSAGE => __('There was a problem saving the list. The Name field has been exist.', 'onoffice-for-wp-websites'),
 			self::VIEW_SAVE_EMPTY_NAME_MESSAGE => __('There was a problem saving the list. The Name field must not be empty.', 'onoffice-for-wp-websites'),
