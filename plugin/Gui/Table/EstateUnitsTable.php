@@ -159,7 +159,7 @@ class EstateUnitsTable extends ListTable
 		$editLink = admin_url('admin.php?page=onoffice-editunitlist&'.$viewIdParam.'='.$pItem->ID);
 
 		$actions = [];
-		$actions['edit'] = '<a href="'.$editLink.'">'.esc_html__('Edit').'</a>';
+		$actions['edit'] = '<a href="'.$editLink.'">'.esc_html__('Edit', 'onoffice-for-wp-websites').'</a>';
 		$actions['duplicate'] = "<a class='button-duplicate' href='"
 			. esc_attr(wp_nonce_url(admin_url('admin.php') . '?page=onoffice-estates&action=bulk_duplicate&listVewId=' . $pItem->ID,
 				'bulk-estatelists'))
@@ -170,7 +170,7 @@ class EstateUnitsTable extends ListTable
 			.esc_js(sprintf(
 			/* translators: %s is the name of the unit view. */
 			__("You are about to delete the unit view '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice-for-wp-websites'), $pItem->name))
-			."' ) ) { return true;}return false;\">" . __('Delete') . "</a>";
+			."' ) ) { return true;}return false;\">" . esc_html__('Delete', 'onoffice-for-wp-websites') . "</a>";
 		return $this->row_actions( $actions );
 	}
 

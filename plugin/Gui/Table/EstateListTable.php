@@ -279,7 +279,7 @@ class EstateListTable extends ListTable
 			.esc_js(sprintf(
 			/* translators: %s is the name of the list view. */
 			__("You are about to delete the listview '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice-for-wp-websites'), $pItem->name))
-			."' ) ) { return true;}return false;\">" . esc_html__('Delete') . "</a>";
+			."' ) ) { return true;}return false;\">" . esc_html__('Delete', 'onoffice-for-wp-websites') . "</a>";
 		return $this->row_actions($actions);
 	}
 }
