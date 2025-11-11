@@ -136,6 +136,7 @@ class InputFieldTemplateListRenderer
                     . ' id="' . esc_html($inputId) . '">'
                     . '<label for="' . esc_html($inputId) . '">' . esc_html($label) . '</label><br>';
 			}
+			/* translators: %s: folder path */
 			echo '<p class="oo-template-folder-path">'. esc_html(sprintf(__('(in the folder "%s")', 'onoffice-for-wp-websites'), $templateValue['folder'])) ."</p>";
 			echo (count($this->getValue()) > 1) ? '</details>' : '';
 		}

@@ -112,7 +112,9 @@ return (function(EstateList $pEstatesClone) {
     var markers = L.markerClusterGroup();
 
     const translations = {
-        ariaLabelTemplate: "<?php echo esc_js(esc_html_x('Show Details for Real Estate No. %s', 'onoffice-for-wp-websites')); ?>"
+        ariaLabelTemplate: "<?php 
+            /* translators: %s: real estate ID number */
+            echo esc_js(esc_html_x('Show Details for Real Estate No. %s', 'onoffice-for-wp-websites')); ?>"
     };
 
     for (let i in estateMarkers) {

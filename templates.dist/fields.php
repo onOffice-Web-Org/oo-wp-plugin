@@ -215,8 +215,9 @@ if (!function_exists('renderFormField')) {
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
 			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
-
+			/* translators: %s: field label */
 			$output .= '<select data-placeholder="' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '" id="'.$fieldName.'" aria-hidden="true" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
+			/* translators: %s: field label */
 			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {

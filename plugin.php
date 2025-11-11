@@ -389,19 +389,19 @@ function custom_cron_schedules($schedules) {
 	if(!isset($schedules['ten_minutes'])) {
 		$schedules['ten_minutes'] = array(
 			'interval' => 60 * 10,
-			'display' => __('10 minutes')
+			'display' => __('10 minutes', 'onoffice-for-wp-websites')
 		);
 	}
 	if(!isset($schedules['thirty_minutes'])) {
 		$schedules['thirty_minutes'] = array(
 			'interval' => 60 * 30,
-			'display' => __('30 minutes')
+			'display' => __('30 minutes', 'onoffice-for-wp-websites')
 		);
 	}
 	if(!isset($schedules['six_hours'])) {
 		$schedules['six_hours'] = array(
 			'interval' => 60 * 60 * 6,
-			'display'  => __('6 hours')
+			'display'  => __('6 hours', 'onoffice-for-wp-websites')
 		);
 	}
 

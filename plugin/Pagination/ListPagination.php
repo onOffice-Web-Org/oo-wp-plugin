@@ -103,8 +103,9 @@ class ListPagination
             if ($this->page == $i) {
                 echo '<span class="current" aria-current="page">' . esc_html($i) . '</span>';
             } else {
+                /* translators: %d: page number */
                 echo '<a href="' . esc_url($this->getPagenumLink($i)) . '" aria-label="' . 
-                    esc_attr(sprintf(esc_html_x('Seite %d', 'template', 'onoffice-for-wp-websites'), $i)) . 
+                    esc_attr(sprintf(esc_html_x('Page %d', 'template', 'onoffice-for-wp-websites'), $i)) . 
                 '"><span aria-hidden="true">' . esc_html($i) . '</span></a>';
             }
             echo '</li>';

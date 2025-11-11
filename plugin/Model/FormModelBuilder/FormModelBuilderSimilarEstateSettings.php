@@ -460,7 +460,7 @@ class FormModelBuilderSimilarEstateSettings
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create(
 			InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHTED,
-			__('Feld besonders hervorheben', 'onoffice-for-wp-website'),
+			__('Feld besonders hervorheben', 'onoffice-for-wp-websites'),
 			true
 		);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
