@@ -1314,6 +1314,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 				);
 	
 				if ($updateResult === false) {
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log -- Needed for debugging database migration issues
 					error_log("Failed to update listview_id {$row->listview_id} in migrateMarkedPropertiesSort()");
 				}
 			}

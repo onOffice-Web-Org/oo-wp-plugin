@@ -61,11 +61,13 @@ class ListPagination
 
     protected function determineCurrentPage()
     {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public pagination parameter, no side effects
         if ($this->parameter && isset($_GET[$this->parameter]) && is_numeric($_GET[$this->parameter])) {
             return (int) $_GET[$this->parameter];
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
     
-        // Fallback auf Standard-WordPress-Pagination
+        // Fallback to standard pagination query vars
         if (is_home() || is_front_page()) {
             return get_query_var('page') ?: 1;
         }
