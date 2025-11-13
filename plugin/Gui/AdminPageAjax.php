@@ -31,6 +31,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\HtmlIdGenerator;
 use function __;
+use function esc_html__;
 use function add_meta_box;
 use function get_current_screen;
 use function is_admin;
@@ -78,11 +79,12 @@ abstract class AdminPageAjax
 				$this->buildForms();
 			} catch (APIClientCredentialsException $pCredentialsException) {
 				$label = __('login credentials', 'onoffice-for-wp-websites');
-				$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
+				$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', esc_html($label));
 				
-                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $loginCredentialsLink contains safe HTML with escaped $label
 				/* translators: %s will be replaced with the link to the login credentials page. */
-                wp_die( sprintf( __( 'It looks like you did not enter any valid API credentials. Please go back and review your %s.', 'onoffice-for-wp-websites' ), $loginCredentialsLink ), 'onOffice plugin' );
+                wp_die( sprintf( esc_html__( 'It looks like you did not enter any valid API credentials. Please go back and review your %s.', 'onoffice-for-wp-websites' ), 
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $loginCredentialsLink is constructed with escaped content
+				$loginCredentialsLink ), 'onOffice plugin' );
 			} catch ( APIEmptyResultException $pEmptyResultException ) {
 				$label = __('The onOffice plugin has an unexpected problem when trying to reach the onOffice API.', 'onoffice-for-wp-websites');
 				$labelOnOfficeServerStatus = __( 'onOffice server status', 'onoffice-for-wp-websites' );

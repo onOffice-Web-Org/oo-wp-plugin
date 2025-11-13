@@ -366,6 +366,7 @@ if (!function_exists('renderRegionalAddition')) {
 			$regions = $pRegionController->getRegions();
 		}
 		ob_start();
+		/* translators: %s: field label for regional addition dropdown */
 		echo '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 		foreach ($regions as $pRegion) {
 			/* @var $pRegion Region */
