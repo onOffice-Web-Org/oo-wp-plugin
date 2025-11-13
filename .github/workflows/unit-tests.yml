@@ -53,7 +53,7 @@ jobs:
     - name: Run unit tests
       run: |
         mkdir -p build/logs
-        ./vendor/bin/phpunit --fail-on-warning --fail-on-risky --disallow-test-output --coverage-clover build/logs/clover.xml
+        composer exec -- ./vendor/bin/phpunit --fail-on-warning --fail-on-risky --disallow-test-output --coverage-clover build/logs/clover.xml
 
     - name: Upload coverage results to coveralls.io
       if: matrix.php-versions == '7.3'
