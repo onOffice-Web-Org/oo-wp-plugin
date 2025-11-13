@@ -114,7 +114,7 @@ return (function(EstateList $pEstatesClone) {
     const translations = {
         ariaLabelTemplate: "<?php 
             /* translators: %s: real estate ID number */
-            echo esc_js(esc_html_x('Show Details for Real Estate No. %s', 'onoffice-for-wp-websites')); ?>"
+            echo esc_js(esc_html_x('Show Details for Real Estate No. %s', 'template', 'onoffice-for-wp-websites')); ?>"
     };
 
     for (let i in estateMarkers) {

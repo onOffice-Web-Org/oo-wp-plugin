@@ -105,7 +105,8 @@ class ListPagination
             } else {
                 /* translators: %d: page number */
                 echo '<a href="' . esc_url($this->getPagenumLink($i)) . '" aria-label="' . 
-                    esc_attr(sprintf(esc_html_x('Page %d', 'template', 'onoffice-for-wp-websites'), $i)) . 
+                /* translators: %d: page number */
+                esc_attr(sprintf(esc_html_x('Page %d', 'template', 'onoffice-for-wp-websites'), $i)) . 
                 '"><span aria-hidden="true">' . esc_html($i) . '</span></a>';
             }
             echo '</li>';

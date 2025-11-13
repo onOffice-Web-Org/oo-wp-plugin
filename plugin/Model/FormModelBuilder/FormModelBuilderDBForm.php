@@ -781,7 +781,8 @@ class FormModelBuilderDBForm
 				break;
 			}
 		}
-		$moduleTranslated = __(ModuleTranslation::getLabelSingular($module ?? ''), 'onoffice-for-wp-websites');
+		$moduleLabelSingular = ModuleTranslation::getLabelSingular($module ?? '');
+		$moduleTranslated = __($moduleLabelSingular, 'onoffice-for-wp-websites');
 		/* translators: %s will be replaced with the translated module name */
 		$label = sprintf(__('Module: %s', 'onoffice-for-wp-websites'), $moduleTranslated);
 		$pInputModel->setLabel($label);
