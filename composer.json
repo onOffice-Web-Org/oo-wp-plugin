@@ -27,7 +27,7 @@
 		}
 	},
 	"require": {
-		"composer-runtime-api": "2.2.0",
+		"composer-runtime-api": "^2.2.0",
 		"php": ">=7.2.0",
 		"php-di/php-di": "^6.3.4",
 		"ext-curl": "*",
