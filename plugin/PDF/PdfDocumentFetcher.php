@@ -34,91 +34,101 @@ use onOffice\WPlugin\Utility\__String;
 
 class PdfDocumentFetcher
 {
-    /** @var array */
-    const WHITELIST_HEADERS = ['content-length', 'content-type'];
+	/** @var array */
+	const WHITELIST_HEADERS = ['content-length', 'content-type'];
 
-    /** @var APIClientActionGeneric */
-    private $_pApiClientAction;
+	/** @var APIClientActionGeneric */
+	private $_pApiClientAction;
 
-    /**
-     * @param APIClientActionGeneric $pApiClientAction
-     */
-    public function __construct(APIClientActionGeneric $pApiClientAction)
-    {
-        $this->_pApiClientAction = $pApiClientAction;
-    }
+	/**
+	 * @param APIClientActionGeneric $pApiClientAction
+	 */
+	public function __construct(APIClientActionGeneric $pApiClientAction)
+	{
+		$this->_pApiClientAction = $pApiClientAction;
+	}
 
-     /**
-     * HTTP tunnel meant to transport big files with low RAM usage
-     * @param PdfDocumentModel $pModel
-     * @param string $url
-     * @throws PdfDownloadException
-     */
-    public function proxyResult(PdfDocumentModel $pModel, string $url)
-    {
-        // First, make a HEAD request to get headers without downloading the full content
-        $headResponse = wp_remote_head($url, ['timeout' => 30]);
-        
-        if (is_wp_error($headResponse)) {
-            throw new PdfDownloadException();
-        }
+	/**
+	 * HTTP tunnel meant to transport big files with low RAM usage
+	 * @param PdfDocumentModel $pModel
+	 * @param string $url
+	 * @throws PdfDownloadException
+	 */
+	public function proxyResult(PdfDocumentModel $pModel, string $url)
+	{
+		$filename = sprintf('%s_%s.pdf',
+			str_replace('urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:', '', $pModel->getTemplate()),
+			$pModel->getEstateIdExternal());
+		header('Content-Disposition: attachment; filename="'.$filename.'"');
 
-        $responseCode = wp_remote_retrieve_response_code($headResponse);
-        if ($responseCode !== 200) {
-            throw new PdfDownloadException();
-        }
+        // phpcs:disable WordPress.WP.AlternativeFunctions -- cURL required for efficient streaming of large PDF files directly to output. WordPress HTTP API doesn't support streaming to php://output with callbacks reliably.
+		$curl = curl_init($url);
+		$pCallbackHeader = function($ch, $data): int {
+			return $this->setHeaders($data);
+		};
 
-        // Set headers BEFORE streaming starts
-        $headers = wp_remote_retrieve_headers($headResponse);
-        foreach (self::WHITELIST_HEADERS as $headerName) {
-            if (isset($headers[$headerName])) {
-                header($headerName . ': ' . $headers[$headerName]);
-            }
-        }
+		$writeCallback = function($ch, $data): int {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Binary PDF data passed through from API
+			echo $data;
+			return strlen($data);
+		};
 
-        $filename = sprintf('%s_%s.pdf',
-            str_replace('urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:', '', $pModel->getTemplate()),
-            $pModel->getEstateIdExternal());
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
+		curl_setopt_array($curl, [
+			CURLOPT_FAILONERROR => true,
+			CURLOPT_WRITEFUNCTION => $writeCallback,
+			CURLOPT_HEADERFUNCTION => $pCallbackHeader,
+			CURLOPT_BUFFERSIZE => 1024 ** 2,
+		]);
 
-        // Now stream the actual content
-        $response = wp_remote_get($url, [
-            'timeout' => 300,
-            'stream' => true,
-            'filename' => 'php://output',
-        ]);
+		if (!curl_exec($curl) || curl_getinfo($curl, CURLINFO_HTTP_CODE) !== 200) {
+			curl_close($curl);
+			throw new PdfDownloadException;
+		}
+		curl_close($curl);
+         // phpcs:enable WordPress.WP.AlternativeFunctions
+	}
 
-        if (is_wp_error($response)) {
-            throw new PdfDownloadException();
-        }
-    }
+	/**
+	 * @param string $inputString
+	 * @return int
+	 */
+	private function setHeaders(string $inputString): int
+	{
+		foreach (self::WHITELIST_HEADERS as $header) {
+			if (__String::getNew(strtolower($inputString))->startsWith($header . ':') &&
+				substr_count($inputString, ':') === 1) {
+				header($inputString);
+			}
+		}
+		return strlen($inputString);
+	}
 
-    /**
-     * @param PdfDocumentModel $pModel
-     * @return string
-     * @throws ApiClientException
-     */
-    public function fetchUrl(PdfDocumentModel $pModel): string
-    {
-        $pApiClientAction = $this->_pApiClientAction
-            ->withActionIdAndResourceType(onOfficeSDK::ACTION_ID_GET, 'pdf');
-        $parameters = $this->getParameters($pModel);
-        $pApiClientAction->setParameters($parameters);
-        $pApiClientAction->addRequestToQueue()->sendRequests();
-        return $pApiClientAction->getResultRecords()[0]['elements'][0] ?? '';
-    }
+	/**
+	 * @param PdfDocumentModel $pModel
+	 * @return string
+	 * @throws ApiClientException
+	 */
+	public function fetchUrl(PdfDocumentModel $pModel): string
+	{
+		$pApiClientAction = $this->_pApiClientAction
+			->withActionIdAndResourceType(onOfficeSDK::ACTION_ID_GET, 'pdf');
+		$parameters = $this->getParameters($pModel);
+		$pApiClientAction->setParameters($parameters);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+		return $pApiClientAction->getResultRecords()[0]['elements'][0] ?? '';
+	}
 
-    /**
-     * @param PdfDocumentModel $pModel
-     * @return array
-     */
-    private function getParameters(PdfDocumentModel $pModel): array
-    {
-        return [
-            'estateid' => $pModel->getEstateId(),
-            'language' => $pModel->getLanguage(),
-            'template' => $pModel->getTemplate(),
-            'asurl' => true,
-        ];
-    }
+	/**
+	 * @param PdfDocumentModel $pModel
+	 * @return array
+	 */
+	private function getParameters(PdfDocumentModel $pModel): array
+	{
+		return [
+			'estateid' => $pModel->getEstateId(),
+			'language' => $pModel->getLanguage(),
+			'template' => $pModel->getTemplate(),
+			'asurl' => true,
+		];
+	}
 }
