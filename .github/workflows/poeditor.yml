@@ -1,0 +1,27 @@
+name: Upload to POEditor
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'languages/onoffice-for-wp-websites-de_DE.po'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Upload to POEditor
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Call POEditor webhook
+        run: curl -X GET "${{ secrets.POEDITOR_WEBHOOK_URL }}"
+
+      - name: Send Google Chat notification
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d @.github/ci/poeditor_notification_payload.json \
+          "${{ secrets.POEDITOR_GOOGLE_CHAT_WEBHOOK }}"
