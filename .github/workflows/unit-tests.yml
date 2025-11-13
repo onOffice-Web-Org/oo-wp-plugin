@@ -33,7 +33,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: ${{ matrix.php-versions }}
+        php-version: ${{ matrix.php-versions == '7.4' && '2.2.0' || 'latest' }}
         extensions: mbstring, mysqli, intl, curl #optional, setup extensions
         coverage: xdebug #optional, setup coverage driver
 
