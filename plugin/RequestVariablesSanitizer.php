@@ -39,6 +39,7 @@ class RequestVariablesSanitizer
 
 	public function getFilteredGet(string $name, int $filter = FILTER_DEFAULT, $option = null)
 	{
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Utility method for sanitized access, nonce verification is caller's responsibility.
 		return $this->getFiltered($_GET, $name, $filter, $option);
 	}
 
@@ -53,6 +54,7 @@ class RequestVariablesSanitizer
 
 	public function getFilteredPost(string $name, int $filter = FILTER_DEFAULT, $option = null)
 	{
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Utility method for sanitized access, nonce verification is caller's responsibility.
 		return $this->getFiltered($_POST, $name, $filter, $option);
 	}
 

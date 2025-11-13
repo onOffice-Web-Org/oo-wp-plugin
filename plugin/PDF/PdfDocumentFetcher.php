@@ -48,7 +48,7 @@ class PdfDocumentFetcher
         $this->_pApiClientAction = $pApiClientAction;
     }
 
-    /**
+     /**
      * HTTP tunnel meant to transport big files with low RAM usage
      * @param PdfDocumentModel $pModel
      * @param string $url
@@ -56,11 +56,32 @@ class PdfDocumentFetcher
      */
     public function proxyResult(PdfDocumentModel $pModel, string $url)
     {
+        // First, make a HEAD request to get headers without downloading the full content
+        $headResponse = wp_remote_head($url, ['timeout' => 30]);
+        
+        if (is_wp_error($headResponse)) {
+            throw new PdfDownloadException();
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($headResponse);
+        if ($responseCode !== 200) {
+            throw new PdfDownloadException();
+        }
+
+        // Set headers BEFORE streaming starts
+        $headers = wp_remote_retrieve_headers($headResponse);
+        foreach (self::WHITELIST_HEADERS as $headerName) {
+            if (isset($headers[$headerName])) {
+                header($headerName . ': ' . $headers[$headerName]);
+            }
+        }
+
         $filename = sprintf('%s_%s.pdf',
             str_replace('urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:', '', $pModel->getTemplate()),
             $pModel->getEstateIdExternal());
         header('Content-Disposition: attachment; filename="'.$filename.'"');
 
+        // Now stream the actual content
         $response = wp_remote_get($url, [
             'timeout' => 300,
             'stream' => true,
@@ -69,19 +90,6 @@ class PdfDocumentFetcher
 
         if (is_wp_error($response)) {
             throw new PdfDownloadException();
-        }
-
-        $responseCode = wp_remote_retrieve_response_code($response);
-        if ($responseCode !== 200) {
-            throw new PdfDownloadException();
-        }
-
-        // Set whitelisted headers from response
-        $headers = wp_remote_retrieve_headers($response);
-        foreach (self::WHITELIST_HEADERS as $headerName) {
-            if (isset($headers[$headerName])) {
-                header($headerName . ': ' . $headers[$headerName]);
-            }
         }
     }
 

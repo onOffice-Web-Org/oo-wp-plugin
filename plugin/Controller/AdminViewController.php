@@ -297,7 +297,8 @@ class AdminViewController
 			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR.'/dist/ajax_settings.min.js'), true);
 		wp_enqueue_script('onoffice-ajax-settings');
 		wp_enqueue_script('onoffice-geofieldbox',
-			plugins_url('/dist/geofieldbox.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);
+            plugins_url('/dist/geofieldbox.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [],
+            FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR.'/dist/geofieldbox.min.js'), true);
 
 		wp_localize_script('oo-sort-by-user-selection', 'onoffice_mapping_translations',
 			SortListTypes::getSortOrder());

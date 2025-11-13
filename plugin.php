@@ -37,7 +37,6 @@ const ONOFFICE_PLUGIN_VERSION = '6.7';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
 
 require __DIR__ . '/vendor/autoload.php';
-require plugin_dir_path( __FILE__ ) . 'oo-updater.php';
 
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
@@ -156,28 +155,32 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 }, 500);
 
 add_action('admin_init', function () use ( $pDI ) {
-	if ( strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
-		$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
-		$timestamp = wp_next_scheduled('oo_cache_renew');
-		if ($timestamp) {
-			wp_unschedule_event($timestamp, 'oo_cache_renew');
-		}
+    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- strpos() doesn't execute or display the value, only checks string position.
+    if ( isset($_SERVER["REQUEST_URI"]) && strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
+        $onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
+        $timestamp = wp_next_scheduled('oo_cache_renew');
+        if ($timestamp) {
+            wp_unschedule_event($timestamp, 'oo_cache_renew');
+        }
 
-		wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
-		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
-		update_option('onoffice-notice-cache-was-cleared', true);
-		wp_safe_redirect($location);
-		exit();
-	}
+        wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_safe_redirect() validates and sanitizes the URL.
+        $location = ! empty($_SERVER['HTTP_REFERER']) ? wp_unslash($_SERVER['HTTP_REFERER']) : admin_url('admin.php?page=onoffice-settings');
+        update_option('onoffice-notice-cache-was-cleared', true);
+        wp_safe_redirect($location);
+        exit();
+    }
 });
 
-if (is_admin() && isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit') {
-	$post_id = $_GET['post'];
-	$post_type = get_post_type($post_id);
-	if ($post_type === 'page') {
-		return $pDI;
-	}
+// phpcs:disable WordPress.Security.NonceVerification.Recommended -- WordPress core edit action check, no side effects.
+if (is_admin() && isset($_GET['post']) && isset($_GET['action']) && sanitize_key(wp_unslash($_GET['action'])) === 'edit') {
+    $post_id = absint(wp_unslash($_GET['post']));
+    $post_type = get_post_type($post_id);
+    if ($post_type === 'page') {
+        return $pDI;
+    }
 }
+// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 $pDI->get(ScriptLoaderRegistrator::class)->generate();
 
@@ -327,7 +330,7 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 
         } catch (\Throwable $e) {
             // Fail safe: log error and return original title parts.
-            error_log('onoffice document_title_parts error: '.$e->getMessage());
+            error_log('onoffice document_title_parts error: '.$e->getMessage()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Fail-safe error logging for title generation.
             return $title;
         }
     }, 20, 1);

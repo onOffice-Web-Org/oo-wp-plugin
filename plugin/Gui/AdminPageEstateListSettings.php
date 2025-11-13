@@ -345,7 +345,8 @@ class AdminPageEstateListSettings
 		wp_enqueue_script('oo-copy-shortcode');
 		wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js', ['jquery'], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/vendor/select2/select2/dist/js/select2.min.js'), true);
 		wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css', [], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/vendor/select2/select2/dist/css/select2.min.css'));
-		wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
+		wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath), ['jquery'],
+            FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-select.min.js'), true);
 		wp_localize_script('onoffice-custom-select', 'custom_select2_translation', $translation);
 		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);
 	}

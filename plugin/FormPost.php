@@ -249,12 +249,14 @@ abstract class FormPost
 			$fields[] = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
 		}
 
-		foreach ($fields as $field) {
-			if ($field->getType() === FieldTypes::FIELD_TYPE_MULTISELECT && isset($_POST[$field->getName()]) && !empty($_POST[$field->getName()])
-				&& is_string($_POST[$field->getName()])) {
-				$_POST[$field->getName()] = explode(', ', $_POST[$field->getName()]);
-			}
-		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Called within form processing pipeline after nonce/reCAPTCHA verification in initialCheck().
+        foreach ($fields as $field) {
+            if ($field->getType() === FieldTypes::FIELD_TYPE_MULTISELECT && isset($_POST[$field->getName()]) && !empty($_POST[$field->getName()])
+                && is_string($_POST[$field->getName()])) {
+                $_POST[$field->getName()] = array_map('sanitize_text_field', explode(', ', wp_unslash($_POST[$field->getName()])));
+            }
+        }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 	/**
@@ -463,20 +465,22 @@ abstract class FormPost
 		if ( ! get_option( 'onoffice-settings-honeypot' ) ) {
 			return;
 		}
-		$honeypotValue = $this->_pFormPostConfiguration->getPostHoneypot();
-		if ( $honeypotValue !== '' ) {
-			if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
-				$_POST['message'] = $_POST['tmpField'];
-			} else {
-				unset( $_POST['message'] );
-			}
-			$_POST['tmpField'] = $honeypotValue;
-		} else {
-			if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
-				$_POST['message'] = $_POST['tmpField'];
-				unset( $_POST['tmpField'] );
-			}
-		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Internal form processing, called within form submission pipeline with reCAPTCHA verification.
+        $honeypotValue = $this->_pFormPostConfiguration->getPostHoneypot();
+        if ( $honeypotValue !== '' ) {
+            if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
+                $_POST['message'] = isset($_POST['tmpField']) ? sanitize_textarea_field(wp_unslash($_POST['tmpField'])) : '';
+            } else {
+                unset( $_POST['message'] );
+            }
+            $_POST['tmpField'] = sanitize_text_field($honeypotValue);
+        } else {
+            if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
+                $_POST['message'] = isset($_POST['tmpField']) ? sanitize_textarea_field(wp_unslash($_POST['tmpField'])) : '';
+                unset( $_POST['tmpField'] );
+            }
+        }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 	
 	/**
