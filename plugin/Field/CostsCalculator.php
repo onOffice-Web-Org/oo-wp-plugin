@@ -59,8 +59,7 @@ class CostsCalculator
 			$currency = $currencySymbol[$recordRaw['waehrung']];
 			return $this->formatPrice($totalCostsData, $currency);
 		} catch (\Throwable  $e) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log -- Needed for debugging calculation errors in production
-			error_log("Error calculating total costs: " . $e->getMessage());
+			error_log("Error calculating total costs: " . $e->getMessage()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Needed for debugging calculation errors in production.
 			return [];
 		}
 	}
