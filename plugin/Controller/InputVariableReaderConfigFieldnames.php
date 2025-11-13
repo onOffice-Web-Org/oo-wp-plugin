@@ -150,6 +150,7 @@ class InputVariableReaderConfigFieldnames
 
 	public function getIsRequestVarArray(string $name): bool
 	{
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public search parameter check, no side effects
 		return is_array($_REQUEST[$name] ?? null);
 	}
 }

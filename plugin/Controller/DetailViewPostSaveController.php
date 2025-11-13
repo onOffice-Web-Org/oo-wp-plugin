@@ -243,6 +243,7 @@ class DetailViewPostSaveController
 	 */
 
 	public function onMoveTrash() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- WordPress core handles nonce verification for trash action
 		// Validate and sanitize input
 		if (!isset($_GET['post'])) {
 			return;
@@ -251,6 +252,8 @@ class DetailViewPostSaveController
 		$posts = is_array($_GET['post']) 
 			? array_map('absint', wp_unslash($_GET['post'])) 
 			: [absint(wp_unslash($_GET['post']))];
+
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		
 		if (empty($posts)) {
 			return;
