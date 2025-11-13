@@ -52,6 +52,9 @@ use function wp_scripts;
 class TestClassAdminViewController
 	extends WP_UnitTestCase
 {
+	
+	use HtmlNormalizerTrait;
+
 	/** @var Container */
 	private $_pContainer;
 	/**
@@ -242,8 +245,13 @@ class TestClassAdminViewController
 			->onlyMethods(['getField'])
 			->getMock();
 		$pAdminViewController->method('getField')->willReturn($fieldNamesMock);
-		$pAdminViewController->displayAPIError();
-		$this->expectOutputString('<div class="notice notice-error"><p>It looks like you did not enter any valid API credentials. Please consider reviewing your <a href="admin.php?page=onoffice-settings">API token and secret</a>.</p></div>');
+
+		ob_start();
+        $pAdminViewController->displayAPIError();
+        $actualOutput = ob_get_clean();
+
+		$expectedOutput = '<div class="notice notice-error"><p>It looks like you did not enter any valid API credentials. Please consider reviewing your <a href="admin.php?page=onoffice-settings">API token and secret</a>.</p></div>';
+        $this->assertHtmlEquals($expectedOutput, $actualOutput);
 	}
 
 	public function testDisplayDeactivateDuplicateCheckWarningWithoutOption()
@@ -253,15 +261,20 @@ class TestClassAdminViewController
 	}
 
 	public function testDisplayDeactivateDuplicateCheckWarningWithOption()
-	{
-		add_option('onoffice-duplicate-check-warning', '1');
-		$pAdminViewController = new AdminViewController();
-		$pAdminViewController->displayDeactivateDuplicateCheckWarning();
-		$this->expectOutputString('<div class="notice notice-error duplicate-check-notify is-dismissible"><p>'
-			. 'We have deactivated the plugin&#039;s duplicate check for all of your forms, because the duplicate '
-			. 'check can unintentionally overwrite address records. This function will be removed in the future. '
-			. 'The option has been deactivated for these forms: Contact, Interest, Owner</p></div>');
-	}
+    {
+        add_option('onoffice-duplicate-check-warning', '1');
+        $pAdminViewController = new AdminViewController();
+        
+        ob_start();
+        $pAdminViewController->displayDeactivateDuplicateCheckWarning();
+        $actualOutput = ob_get_clean();
+        
+        $expectedOutput = '<div class="notice notice-error duplicate-check-notify is-dismissible"><p>'
+            . 'We have deactivated the plugin&#039;s duplicate check for all of your forms, because the duplicate '
+            . 'check can unintentionally overwrite address records. This function will be removed in the future. '
+            . 'The option has been deactivated for these forms: Contact, Interest, Owner</p></div>';
+        $this->assertHtmlEquals($expectedOutput, $actualOutput);
+    }
 
 	public function testDisplayUsingEmptyDefaultEmailError()
 	{
@@ -277,8 +290,13 @@ class TestClassAdminViewController
 
 		$pAdminViewController->method('getRecordManagerReadForm')
 			->willReturn($recordManagerReadForm);
-		$pAdminViewController->displayUsingEmptyDefaultEmailError();
-		$this->expectOutputString('<div class="notice notice-error"><p>The onOffice plugin is missing a default email address. You have forms that use the default email and they will currently not send emails. Please add a default email address in the <a href="admin.php?page=onoffice-settings">plugin settings</a> to dismiss this warning.</p></div>');
+
+		ob_start();
+        $pAdminViewController->displayUsingEmptyDefaultEmailError();
+        $actualOutput = ob_get_clean();
+        
+        $expectedOutput = '<div class="notice notice-error"><p>The onOffice plugin is missing a default email address. You have forms that use the default email and they will currently not send emails. Please add a default email address in the <a href="admin.php?page=onoffice-settings">plugin settings</a> to dismiss this warning.</p></div>';
+        $this->assertHtmlEquals($expectedOutput, $actualOutput);
 	}
 
 	public function testGetField()
@@ -288,16 +306,21 @@ class TestClassAdminViewController
 	}
 
 	public function testGeneralAdminNoticeSEO()
-	{
-		$this->run_activate_plugin_for_test( 'wordpress-seo/wp-seo.php' );
-		add_option('onoffice-settings-title-and-description', '0');
-		add_option('onoffice-click-button-close-action', '0');
-		set_current_screen('testscreen01337');
-		$pAdminViewController = new AdminViewController();
-		$pAdminViewController->generalAdminNoticeSEO();
-		$this->expectOutputString("<div class=\"notice notice-warning active-plugin-seo is-dismissible\"><p>The onOffice plugin has detected an active SEO plugin: Yoast SEO. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.<br />
-We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?page=onoffice-settings#notice-seo' target='_blank' rel='noopener'>onOffice plugin settings</a> and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.</p></div>");
-	}
+    {
+        $this->run_activate_plugin_for_test( 'wordpress-seo/wp-seo.php' );
+        add_option('onoffice-settings-title-and-description', '0');
+        add_option('onoffice-click-button-close-action', '0');
+        set_current_screen('testscreen01337');
+        $pAdminViewController = new AdminViewController();
+        
+        ob_start();
+        $pAdminViewController->generalAdminNoticeSEO();
+        $actualOutput = ob_get_clean();
+        
+        $expectedOutput = "<div class=\"notice notice-warning active-plugin-seo is-dismissible\"><p>The onOffice plugin has detected an active SEO plugin: Yoast SEO. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.<br />
+We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?page=onoffice-settings#notice-seo' target='_blank' rel='noopener'>onOffice plugin settings</a> and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.</p></div>";
+        $this->assertHtmlEquals($expectedOutput, $actualOutput);
+    }
 
 	private function run_activate_plugin_for_test( $plugin ) {
 		$current = get_option( 'active_plugins' );
@@ -316,26 +339,31 @@ We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?p
 	}
 
 	public function testDisplayEmptyResultException()
-	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
+    {
+        $pContainerBuilder = new ContainerBuilder;
+        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+        $pContainer = $pContainerBuilder->build();
 
-		$exception = $pContainer->get(APIEmptyResultException::class);
-		$fieldNamesMock = $this->getMockBuilder(Fieldnames::class)
-			->disableOriginalConstructor()
-			->onlyMethods(['loadApiEstateCategories'])
-			->getMock();
-		$fieldNamesMock->method('loadApiEstateCategories')->will($this->throwException($exception));
+        $exception = $pContainer->get(APIEmptyResultException::class);
+        $fieldNamesMock = $this->getMockBuilder(Fieldnames::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['loadApiEstateCategories'])
+            ->getMock();
+        $fieldNamesMock->method('loadApiEstateCategories')->will($this->throwException($exception));
 
-		$pAdminViewController = $this->getMockBuilder(AdminViewController::class)
-			->disableOriginalConstructor()
-			->onlyMethods(['getField'])
-			->getMock();
-		$pAdminViewController->method('getField')->willReturn($fieldNamesMock);
-		$pAdminViewController->displayAPIError();
-		$this->expectOutputString('<div class="notice notice-error"><p>The onOffice plugin has an unexpected problem when trying to reach the onOffice API.</p><p>Please check the <a href="https://status.onoffice.de/">onOffice server status</a> to see if there are known problems. Otherwise, report the problem using the <a href="https://wp-plugin.onoffice.com/en/support/">support form</a>.</p></div>');
-	}
+        $pAdminViewController = $this->getMockBuilder(AdminViewController::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getField'])
+            ->getMock();
+        $pAdminViewController->method('getField')->willReturn($fieldNamesMock);
+        
+        ob_start();
+        $pAdminViewController->displayAPIError();
+        $actualOutput = ob_get_clean();
+        
+        $expectedOutput = '<div class="notice notice-error"><p>The onOffice plugin has an unexpected problem when trying to reach the onOffice API.</p><p>Please check the <a href="https://status.onoffice.de/">onOffice server status</a> to see if there are known problems. Otherwise, report the problem using the <a href="https://wp-plugin.onoffice.com/en/support/">support form</a>.</p></div>';
+        $this->assertHtmlEquals($expectedOutput, $actualOutput);
+    }
 
 	/**
 	 * @depends testOnInit
