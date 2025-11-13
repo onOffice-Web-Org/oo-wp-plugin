@@ -52,7 +52,7 @@ class EstateDetailUrl
 		$slashChar     = '';
 
 		if ( $estateId !== 0 ) {
-			$urlElements   = parse_url( $url );
+			$urlElements   = wp_parse_url( $url );
 			$getParameters = [];
 
 			if ( ! empty( $urlElements['query'] ) ) {
@@ -60,7 +60,7 @@ class EstateDetailUrl
 			}
 
 			if ( ! is_null( $oldUrl ) ) {
-				$oldUrlElements = parse_url( $oldUrl );
+				$oldUrlElements = wp_parse_url( $oldUrl );
 				$oldUrlPathArr  = explode( '/', $oldUrlElements['path'] );
 				if ( empty( end( $oldUrlPathArr ) ) || $flag ) {
 					$slashChar = '/';
@@ -125,7 +125,7 @@ class EstateDetailUrl
 	public function getUrlWithEstateTitle(int $estateId, string $title = null, string $oldUrl = null, bool $isUrlHaveTitle = false, bool $pEstateRedirection = false): string
 	{
 		$getParameters = [];
-		$urlElements   = parse_url( $oldUrl );
+		$urlElements   = wp_parse_url( $oldUrl );
 		$urlTemp       = $estateId;
 		$tickerUrlHasTitleFlag = false;
 

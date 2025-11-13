@@ -591,18 +591,35 @@ abstract class AdminPageSettingsBase
 
 	public function doExtraEnqueues()
 	{
-		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/admin.min.js',
-			['jquery', 'jquery-ui-draggable', 'jquery-ui-droppable'], '', true);
+		wp_register_script('admin-js', 
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/admin.min.js',
+			['jquery', 'jquery-ui-draggable', 'jquery-ui-droppable'], 
+			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/admin.min.js'), 
+			true);
 
 		wp_register_script('oo-reference-estate-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-reference-estate-select.min.js', ['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-reference-estate-select.min.js', 
+			['jquery'], 
+			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-reference-estate-select.min.js'), 
+			true);
 
 		wp_register_script('oo-checkbox-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/checkbox.min.js', ['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/checkbox.min.js', 
+			['jquery'], 
+			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/checkbox.min.js'), 
+			true);
+		
 		wp_register_script('onoffice-default-form-values-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-default-form-values.min.js', ['onoffice-multiselect'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-default-form-values.min.js', 
+			['onoffice-multiselect'], 
+			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-default-form-values.min.js'), 
+			true);
+		
 		wp_register_script('onoffice-custom-form-label-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', ['onoffice-multiselect'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', 
+			['onoffice-multiselect'], 
+			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-form-label.min.js'), 
+			true);
 
 		wp_enqueue_script('postbox');
 		wp_enqueue_script('admin-js');
@@ -615,16 +632,30 @@ abstract class AdminPageSettingsBase
 
 		wp_register_script('oo-sanitize-shortcode-name',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-sanitize-shortcode-name.min.js',
-			['jquery'], '', true);
+			['jquery'], 
+			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-sanitize-shortcode-name.min.js'), 
+			true);
 
 		wp_register_script('oo-copy-shortcode',
-		plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-copycode.min.js',
-			['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-copycode.min.js',
+			['jquery'], 
+			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-copycode.min.js'), 
+			true);
 
-		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
-			['jquery'], '', true);
+		wp_register_script('oo-unsaved-changes-message', 
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
+			['jquery'], 
+			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-unsaved-changes-message.min.js'), 
+			true);
+		
 		wp_enqueue_script('oo-unsaved-changes-message');
-		wp_register_script('onoffice-bulk-actions-fields', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-bulk-actions-fields.min.js');
+		
+		wp_register_script('onoffice-bulk-actions-fields', 
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-bulk-actions-fields.min.js',
+			['jquery'],
+			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-bulk-actions-fields.min.js'),
+			true);
+			
 		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 

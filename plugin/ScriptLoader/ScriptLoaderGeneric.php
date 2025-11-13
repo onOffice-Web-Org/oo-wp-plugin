@@ -80,14 +80,31 @@ class ScriptLoaderGeneric
 	{
 		/* @var $pIncludeModel IncludeFileModel */
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_SCRIPT) as $pIncludeModel) {
+			$version = $this->getFileVersion($pIncludeModel->getFilePath());
 			wp_register_script($pIncludeModel->getIdentifier(), $pIncludeModel->getFilePath(),
-				$pIncludeModel->getDependencies(), false, array('strategy' => $pIncludeModel->getLoadAsynchronous(), 'in_footer' => $pIncludeModel->getLoadInFooter()));
+				$pIncludeModel->getDependencies(), $version, array('strategy' => $pIncludeModel->getLoadAsynchronous(), 'in_footer' => $pIncludeModel->getLoadInFooter()));
 			$this->_pConfiguration->localizeScript($pIncludeModel->getIdentifier());
 		}
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_STYLE) as $pIncludeModel) {
+			$version = $this->getFileVersion($pIncludeModel->getFilePath());
 			wp_register_style($pIncludeModel->getIdentifier(), $pIncludeModel->getFilePath(),
-				$pIncludeModel->getDependencies(), false, $pIncludeModel->getLoadInFooter());
+				$pIncludeModel->getDependencies(), $version, $pIncludeModel->getLoadInFooter());
 		}
+	}
+
+	/**
+	 * Get file version based on modification time
+	 *
+	 * @param string $fileUrl
+	 * @return string|bool
+	 */
+	private function getFileVersion(string $fileUrl)
+	{
+		$pluginUrl = plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php');
+		$relativePath = str_replace($pluginUrl, '', $fileUrl);
+		$localPath = ONOFFICE_PLUGIN_DIR . '/' . $relativePath;
+		
+		return file_exists($localPath) ? filemtime($localPath) : '1.0.0';
 	}
 
 

@@ -286,10 +286,14 @@ class AdminViewController
 		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
 
 		wp_register_script('oo-sort-by-user-selection',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-sort-by-user-selection.min.js', ['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-sort-by-user-selection.min.js', 
+			['jquery'], 
+			filemtime(ONOFFICE_PLUGIN_DIR.'/dist/onoffice-sort-by-user-selection.min.js'), 
+			true);
 
 		wp_register_script('onoffice-ajax-settings',
-			plugins_url('/dist/ajax_settings.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection']);
+			plugins_url('/dist/ajax_settings.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection'],
+			filemtime(ONOFFICE_PLUGIN_DIR.'/dist/ajax_settings.min.js'), true);
 		wp_enqueue_script('onoffice-ajax-settings');
 		wp_enqueue_script('onoffice-geofieldbox',
 			plugins_url('/dist/geofieldbox.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);

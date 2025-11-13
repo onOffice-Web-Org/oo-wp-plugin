@@ -110,9 +110,11 @@ class AdminPageEstateUnitList
 
 	public function doExtraEnqueues()
 	{
-		wp_register_script( 'oo-copy-shortcode',
-			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-copycode.min.js',
-			[ 'jquery' ], '', true );
+		wp_register_script('oo-copy-shortcode',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php') . '/dist/onoffice-copycode.min.js',
+			['jquery'], 
+			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-copycode.min.js'), 
+			true);
 		wp_enqueue_script( 'oo-copy-shortcode' );
 	}
 }

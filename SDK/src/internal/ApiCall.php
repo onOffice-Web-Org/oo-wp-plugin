@@ -298,7 +298,8 @@ class ApiCall
 			$itemRaw = $filteredArrayRaw[$k];
 			if($itemRaw == null)
 			{
-				error_log("Error in ApiCall by filtering records: ItemRaw is null");
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Logging critical API errors
+    			error_log("Error in ApiCall by filtering records: ItemRaw is null");
 				continue;
 			}
 			foreach($filter as $fieldName => $value) {

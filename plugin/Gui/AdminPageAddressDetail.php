@@ -344,20 +344,19 @@ class AdminPageAddressDetail
 	public function doExtraEnqueues()
 	{
 		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/admin.min.js',
-			array('jquery'), '', true);
+        array('jquery'), filemtime(ONOFFICE_PLUGIN_DIR . '/dist/admin.min.js'), true);
 
 		wp_enqueue_script('admin-js');
 		wp_register_script('checkbox', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/checkbox.min.js',
-				array('jquery'), '', true);
-
+				array('jquery'), filemtime(ONOFFICE_PLUGIN_DIR . '/dist/checkbox.min.js'), true);
 		wp_enqueue_script('checkbox');
 		wp_enqueue_script('postbox');
 		wp_register_script( 'oo-copy-shortcode',
 			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'dist/onoffice-copycode.min.js',
-			[ 'jquery' ], '', true );
+			[ 'jquery' ], filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-copycode.min.js'), true );
 		wp_enqueue_script( 'oo-copy-shortcode' );
 		wp_register_script('onoffice-custom-form-label-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', ['onoffice-multiselect'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', ['onoffice-multiselect'], filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-form-label.min.js'), true);
 		wp_enqueue_script('onoffice-custom-form-label-js');
         $pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
         wp_register_script('onoffice-multiselect', plugins_url('dist/onoffice-multiselect.min.js', $pluginPath));
@@ -366,7 +365,7 @@ class AdminPageAddressDetail
         wp_enqueue_style('onoffice-multiselect');
 
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-unsaved-changes-message.min.js',
-			['jquery'], '', true);
+			['jquery'], filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-unsaved-changes-message.min.js'), true);
 		wp_enqueue_script('oo-unsaved-changes-message');
 		wp_register_script('onoffice-bulk-actions-fields', plugins_url('/dist/onoffice-bulk-actions-fields.min.js', $pluginPath));
 		wp_enqueue_script('onoffice-bulk-actions-fields');

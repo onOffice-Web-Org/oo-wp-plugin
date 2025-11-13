@@ -99,7 +99,7 @@ class RequestVariablesSanitizer
 		$optionsDecode = ($noQuotes ? ENT_QUOTES : ENT_NOQUOTES) | ENT_SUBSTITUTE;
 
 		$value = stripslashes($value);
-		$value = strip_tags($value);
+		$value = wp_strip_all_tags($value);
 		$value = htmlspecialchars($value, $options);
 
 		// Fix that HTML entities are converted to entity numbers instead of entity name (e.g. ' -> &#34; and not ' -> &quote;)

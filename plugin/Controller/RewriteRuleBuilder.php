@@ -89,7 +89,8 @@ class RewriteRuleBuilder
 		foreach ($canonicalFilters as $filter) {
 			add_filter($filter, function($url) use ($pageIds) {
 				if (in_array(get_the_ID(), $pageIds) && isset($_SERVER['REQUEST_URI'])) {
-					return home_url($_SERVER['REQUEST_URI']);
+					$requestUri = sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI']));
+					return home_url($requestUri);
 				}
 				return $url;
 			}, 20, 1);

@@ -127,7 +127,7 @@ class InputVariableReaderConfigFieldnames
 			if ($sanitizer !== FILTER_DEFAULT) {
 				if ($sanitizer === FILTER_SANITIZE_FULL_SPECIAL_CHARS) {
 					// This preserves special characters like quotes while ensuring security
-					$value = strip_tags($value);
+					$value = wp_strip_all_tags($value);
 				} else {
 					// Apply the original sanitizer for other filter types
 					$value = filter_var($value, $sanitizer);
