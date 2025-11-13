@@ -306,21 +306,20 @@ class TestClassAdminViewController
 	}
 
 	public function testGeneralAdminNoticeSEO()
-    {
-        $this->run_activate_plugin_for_test( 'wordpress-seo/wp-seo.php' );
-        add_option('onoffice-settings-title-and-description', '0');
-        add_option('onoffice-click-button-close-action', '0');
-        set_current_screen('testscreen01337');
-        $pAdminViewController = new AdminViewController();
-        
-        ob_start();
-        $pAdminViewController->generalAdminNoticeSEO();
-        $actualOutput = ob_get_clean();
-        
-        $expectedOutput = "<div class=\"notice notice-warning active-plugin-seo is-dismissible\"><p>The onOffice plugin has detected an active SEO plugin: Yoast SEO. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.<br />
-We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?page=onoffice-settings#notice-seo' target='_blank' rel='noopener'>onOffice plugin settings</a> and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.</p></div>";
-        $this->assertHtmlEquals($expectedOutput, $actualOutput);
-    }
+	{
+		$this->run_activate_plugin_for_test( 'wordpress-seo/wp-seo.php' );
+		add_option('onoffice-settings-title-and-description', '0');
+		add_option('onoffice-click-button-close-action', '0');
+		set_current_screen('testscreen01337');
+		$pAdminViewController = new AdminViewController();
+		
+		ob_start();
+		$pAdminViewController->generalAdminNoticeSEO();
+		$actualOutput = ob_get_clean();
+		
+		$expectedOutput = "<div class=\"notice notice-warning active-plugin-seo is-dismissible\"><p>The onOffice plugin has detected an active SEO plugin: Yoast SEO. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin. We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?page=onoffice-settings#notice-seo' target='_blank' rel='noopener'>onOffice plugin settings</a> and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.</p></div>";
+		$this->assertHtmlEquals($expectedOutput, $actualOutput);
+	}
 
 	private function run_activate_plugin_for_test( $plugin ) {
 		$current = get_option( 'active_plugins' );
