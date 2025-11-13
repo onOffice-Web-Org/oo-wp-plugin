@@ -253,7 +253,10 @@ abstract class FormPost
         foreach ($fields as $field) {
             if ($field->getType() === FieldTypes::FIELD_TYPE_MULTISELECT && isset($_POST[$field->getName()]) && !empty($_POST[$field->getName()])
                 && is_string($_POST[$field->getName()])) {
-                $_POST[$field->getName()] = array_map('sanitize_text_field', explode(', ', wp_unslash($_POST[$field->getName()])));
+                $fieldName = $field->getName();
+                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Already validated with isset() and is_string() checks above, sanitized with array_map() and wp_unslash() below.
+                $rawValue = wp_unslash($_POST[$fieldName]);
+                $_POST[$fieldName] = array_map('sanitize_text_field', explode(', ', $rawValue));
             }
         }
         // phpcs:enable WordPress.Security.NonceVerification.Missing
