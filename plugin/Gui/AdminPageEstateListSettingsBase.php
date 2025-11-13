@@ -61,6 +61,7 @@ abstract class AdminPageEstateListSettingsBase
 	public function renderContent()
 	{
 		$this->validate($this->getListViewId());
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameters for display messages, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'empty' ) {
 			echo '<div class="notice notice-error is-dismissible"><p>'
 				. esc_html__( 'There was a problem saving the list. The Name field cannot be empty.', 'onoffice-for-wp-websites' )
@@ -71,6 +72,7 @@ abstract class AdminPageEstateListSettingsBase
 			     . esc_html__( 'There was a problem saving the view. Please make sure the name of the view is unique, even across all estate list types.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		parent::renderContent();
 	}
 

@@ -247,8 +247,11 @@ class AdminPageEstate
 
 				/* @var $pRecordManagerDuplicateListViewEstate RecordManagerDuplicateListViewEstate */
 				$pRecordManagerDuplicateListViewEstate = $pDI->get(RecordManagerDuplicateListViewEstate::class);
-				$listViewRootId = $_GET['listVewId'];
-				$pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
+				$listViewRootId = isset($_GET['listVewId']) ? absint(wp_unslash($_GET['listVewId'])) : 0;
+				if ($listViewRootId > 0) {
+					$pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
+				}
 			}
 			return $redirectTo;
 		};

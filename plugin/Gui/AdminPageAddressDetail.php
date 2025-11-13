@@ -94,6 +94,7 @@ class AdminPageAddressDetail
 
 	public function renderContent()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter for display message, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'true' ) {
 			echo '<div class="notice notice-success is-dismissible"><p>'
 			     . esc_html__( 'The address detail view has been saved.', 'onoffice-for-wp-websites' )
@@ -104,6 +105,7 @@ class AdminPageAddressDetail
 			     . esc_html__( 'There was a problem saving the address detail view.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		$pDataAddressDetailViewHandler = new DataAddressDetailViewHandler();
 		$pAddressDataView = $pDataAddressDetailViewHandler->getAddressDetailView();
 

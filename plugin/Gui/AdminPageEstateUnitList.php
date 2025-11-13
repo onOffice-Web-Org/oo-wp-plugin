@@ -51,7 +51,9 @@ class AdminPageEstateUnitList
 		$this->_pEstateUnitsTable->prepare_items();
 		$page = 'onoffice-estates';
 		$buttonSearch = __('Search Estate Views', 'onoffice-for-wp-websites');
-		$tab = isset($_GET['tab']) ? esc_html($_GET['tab']) : '';
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter for tab display filtering, no form processing
+		$tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		$id = 'onoffice-form-search-estate';
 		$this->generateSearchForm($page,$buttonSearch,null,$tab,$id);
 		echo '<p>';

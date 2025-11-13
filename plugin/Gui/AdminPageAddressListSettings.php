@@ -91,6 +91,7 @@ class AdminPageAddressListSettings
 
 	public function renderContent()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter for display message, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'empty' ) {
 			echo '<div class="notice notice-error is-dismissible"><p>'
 				. esc_html__( 'There was a problem saving the address. The Name field cannot be empty.', 'onoffice-for-wp-websites' )
@@ -101,6 +102,7 @@ class AdminPageAddressListSettings
 			     . esc_html__( 'There was a problem saving the view. Please make sure the name of the view is unique, even across all address list types.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		parent::renderContent();
 	}
 
@@ -420,8 +422,14 @@ class AdminPageAddressListSettings
 	 */
 	public function handleNotificationError()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- AJAX validation endpoint, no side effects
+		$name = isset($_GET['name']) ? sanitize_text_field(wp_unslash($_GET['name'])) : '';
+		$id = isset($_GET['id']) ? absint(wp_unslash($_GET['id'])) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		
 		$pRecordManagerRead = new RecordManagerReadListViewAddress();
-		$sameNameStatus = $pRecordManagerRead->checkSameName($_GET['name'], $_GET['id']);
+		$sameNameStatus = $pRecordManagerRead->checkSameName($name, $id);
+
 		$response = [
 			'success' => $sameNameStatus
 		];

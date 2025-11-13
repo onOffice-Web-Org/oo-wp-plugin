@@ -78,8 +78,13 @@ class AdminPageEstateListSettings
 	 */
 	public function handleNotificationError()
 	{
-		$pRecordManagerRead = new RecordManagerReadListViewEstate();
-		$sameNameStatus = $pRecordManagerRead->checkSameName($_GET['name'], $_GET['id']);
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- AJAX validation endpoint, no side effects
+		$name = isset($_GET['name']) ? sanitize_text_field(wp_unslash($_GET['name'])) : '';
+		$id = isset($_GET['id']) ? absint(wp_unslash($_GET['id'])) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		
+		$pRecordReadManager = new RecordManagerReadListViewEstate();
+		$sameNameStatus = $pRecordReadManager->checkSameName($name, $id);
 
 		$response = [
 			'success' => $sameNameStatus

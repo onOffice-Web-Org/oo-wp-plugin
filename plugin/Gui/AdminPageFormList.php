@@ -100,7 +100,9 @@ class AdminPageFormList
         $this->_pFormsTable->prepare_items();
         $page = 'onoffice-forms';
         $buttonSearch = __('Search Forms', 'onoffice-for-wp-websites');
-        $type = isset($_GET['type']) ? esc_html($_GET['type']) : '';
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter for filtering display, no form processing
+		$type = isset($_GET['type']) ? sanitize_key(wp_unslash($_GET['type'])) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
         $id = 'onoffice-form-search-form';
         $this->generateSearchForm($page,$buttonSearch,$type,null,$id);
         echo '<p>';
@@ -325,8 +327,11 @@ class AdminPageFormList
 
 				/* @var $pRecordManagerDuplicateListViewForm RecordManagerDuplicateListViewForm */
 				$pRecordManagerDuplicateListViewForm = $pDI->get(RecordManagerDuplicateListViewForm::class);
-				$listViewRootName = $_GET['form'];
-				$pRecordManagerDuplicateListViewForm->duplicateByName($listViewRootName);
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
+				$listViewRootName = isset($_GET['form']) ? sanitize_text_field(wp_unslash($_GET['form'])) : '';
+				if (!empty($listViewRootName)) {
+					$pRecordManagerDuplicateListViewForm->duplicateByName($listViewRootName);
+				}
 			}
 			return $redirectTo;
 		};

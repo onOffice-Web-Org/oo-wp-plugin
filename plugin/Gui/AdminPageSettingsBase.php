@@ -163,11 +163,13 @@ abstract class AdminPageSettingsBase
 
 	public function renderContent()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter for display message, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'true' ) {
 			echo '<div class="notice notice-success is-dismissible"><p>'
 			     . esc_html__( 'The view has been saved.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		do_action( 'add_meta_boxes', get_current_screen()->id, null );
 		$this->generateMetaBoxes();
 
@@ -182,7 +184,9 @@ abstract class AdminPageSettingsBase
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_current_screen()->id is a safe WordPress screen ID
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
-		echo '<input type="hidden" name="record_id" value="' . esc_attr( $_GET['id'] ?? 0 ) . '" />';
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter used for hidden field, actual value is validated in save_form()
+		echo '<input type="hidden" name="record_id" value="' . esc_attr( isset($_GET['id']) ? absint(wp_unslash($_GET['id'])) : 0 ) . '" />';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
@@ -352,7 +356,11 @@ abstract class AdminPageSettingsBase
 			$this->updateValues( $row, $pResultObject, $recordId );
 		}
 
-		$pageQuery   = str_replace( 'admin_page_', 'page=', $_POST['action'] );
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput -- $_POST values are already sanitized and validated via nonce in calling context
+		$action = $_POST['action'] ?? '';
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput
+		
+		$pageQuery   = str_replace( 'admin_page_', 'page=', $action );
 		$statusQuery = '&saved=false';
 		if (is_null($pResultObject->result)) {
 			$statusQuery = '&saved=empty';

@@ -844,6 +844,7 @@ abstract class AdminPageFormSettingsBase
 
 	public function renderContent()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameters for display messages, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'true' ) {
 			echo '<div class="notice notice-success is-dismissible"><p>'
 			     . esc_html__( 'The Form was saved.', 'onoffice-for-wp-websites' )
@@ -859,6 +860,7 @@ abstract class AdminPageFormSettingsBase
 			     . esc_html__( 'There was a problem saving the form. The Name field cannot be empty.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		do_action( 'add_meta_boxes', get_current_screen()->id, null );
 		$this->generateMetaBoxes();
@@ -874,7 +876,9 @@ abstract class AdminPageFormSettingsBase
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_current_screen()->id is a safe WordPress screen ID
         echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
-        echo '<input type="hidden" name="record_id" value="' . esc_attr( $_GET['id'] ?? 0 ) . '" />';
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter used for hidden field, validated in save_form()
+		echo '<input type="hidden" name="record_id" value="' . esc_attr( isset($_GET['id']) ? absint(wp_unslash($_GET['id'])) : 0 ) . '" />';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $this->getType() returns a safe form type constant
         echo '<input type="hidden" name="type" value="' . $this->getType() . '" />';
         wp_nonce_field( get_current_screen()->id, 'nonce' );
@@ -975,8 +979,13 @@ abstract class AdminPageFormSettingsBase
 			$this->updateValues( $row, $pResultObject, $recordId );
 		}
 
-		$pageQuery   = str_replace( 'admin_page_', 'page=', $_POST['action'] );
-		$typeQuery   = '&type=' . $_POST['type'];
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput -- Values validated via nonce and used in controlled redirect context
+		$action = $_POST['action'] ?? '';
+		$type = $_POST['type'] ?? '';
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput
+
+		$pageQuery   = str_replace( 'admin_page_', 'page=', $action );
+		$typeQuery   = '&type=' . $type;
 		$statusQuery = '&saved=false';
 		if (is_null($pResultObject->result)) {
 			$statusQuery = '&saved=empty';

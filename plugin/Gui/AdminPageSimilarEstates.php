@@ -107,6 +107,7 @@ class AdminPageSimilarEstates
 	 */
 	public function renderContent()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter for display message, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'true' ) {
 			echo '<div class="notice notice-success is-dismissible"><p>'
 			     . esc_html__( 'The similar estates view has been saved.', 'onoffice-for-wp-websites' )
@@ -118,6 +119,7 @@ class AdminPageSimilarEstates
 					'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		$pDataSimilarSettingsHandler = $this->getContainer()->get(DataSimilarEstatesSettingsHandler::class);
 		$pDataSimilarView = $pDataSimilarSettingsHandler->getDataSimilarEstatesSettings();
 		do_action('add_meta_boxes', get_current_screen()->id, null);

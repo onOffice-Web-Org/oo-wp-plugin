@@ -126,6 +126,7 @@ class AdminPageEstateDetail
 
 	public function renderContent()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameters for display messages, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'true' ) {
 			echo '<div class="notice notice-success is-dismissible"><p>'
 			     . esc_html__( 'The detail view has been saved.', 'onoffice-for-wp-websites' )
@@ -136,6 +137,7 @@ class AdminPageEstateDetail
 			     . esc_html__( 'There was a problem saving the detail view.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDataView = $pDataDetailViewHandler->getDetailView();
 		do_action('add_meta_boxes', get_current_screen()->id, null);
