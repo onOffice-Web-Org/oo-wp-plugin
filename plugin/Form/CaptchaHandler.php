@@ -87,6 +87,8 @@ class CaptchaHandler
 		return $returnVal;
 	} // @codeCoverageIgnoreEnd
 
+	
+
 
 	/**
 	 *

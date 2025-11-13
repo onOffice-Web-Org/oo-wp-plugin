@@ -28,6 +28,7 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\MapProvider;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use function __;
 use function admin_url;
 use function do_settings_sections;
@@ -441,8 +442,11 @@ class AdminPageApiSettings
 
     public function doExtraEnqueues()
     {
-        wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
-            ['jquery'], '', true);
+        wp_register_script('oo-unsaved-changes-message', 
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-unsaved-changes-message.min.js'), 
+			true);
         wp_enqueue_script('oo-unsaved-changes-message');
         wp_localize_script('oo-unsaved-changes-message', 'onOffice_unsaved_changes_message', [
             self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),

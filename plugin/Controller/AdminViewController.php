@@ -44,6 +44,7 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\Gui\AdminPageAddress;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use Parsedown;
 use HTMLPurifier_Config;
 use HTMLPurifier;
@@ -288,12 +289,12 @@ class AdminViewController
 		wp_register_script('oo-sort-by-user-selection',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-sort-by-user-selection.min.js', 
 			['jquery'], 
-			filemtime(ONOFFICE_PLUGIN_DIR.'/dist/onoffice-sort-by-user-selection.min.js'), 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR.'/dist/onoffice-sort-by-user-selection.min.js'), 
 			true);
 
 		wp_register_script('onoffice-ajax-settings',
 			plugins_url('/dist/ajax_settings.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection'],
-			filemtime(ONOFFICE_PLUGIN_DIR.'/dist/ajax_settings.min.js'), true);
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR.'/dist/ajax_settings.min.js'), true);
 		wp_enqueue_script('onoffice-ajax-settings');
 		wp_enqueue_script('onoffice-geofieldbox',
 			plugins_url('/dist/geofieldbox.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);
@@ -382,14 +383,16 @@ class AdminViewController
 			'notification' => __('Would you like to permanently delete the site key and the secret key?', 'onoffice-for-wp-websites'),
 		];
 		wp_register_script('handle-notification-actions', plugins_url('dist/onoffice-handle-notification-actions.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
-			array('jquery'));
+			array('jquery'), FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-handle-notification-actions.min.js'),
+			true);
 		wp_localize_script('handle-notification-actions', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_localize_script('handle-notification-actions', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_enqueue_script('handle-notification-actions');
 
 		if (__String::getNew($hook)->contains($this->_pageSlug.'-settings')) {
 			wp_register_script('handle-visibility-google-recaptcha-keys', plugins_url('dist/onoffice-handle-visibility-google-recaptcha-keys.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
-				array('jquery'));
+				array('jquery'), FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-handle-visibility-google-recaptcha-keys.min.js'),
+				true);
 			wp_localize_script('handle-notification-actions', 'delete_google_recaptcha_keys', ['ajaxurl' => admin_url('admin-ajax.php')]);
 			wp_localize_script('handle-notification-actions', 'confirm_dialog_google_recaptcha_keys', $confirmDialogGoogleRecaptcha);
 			wp_enqueue_script('handle-visibility-google-recaptcha-keys');

@@ -42,6 +42,7 @@ use onOffice\WPlugin\Language;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\API\ApiClientException;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 
 /**
  *
@@ -306,7 +307,8 @@ class AdminPageFormSettingsContact
 	{
 		parent::doExtraEnqueues();
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		wp_register_script('onoffice-handle-activity-config', plugins_url('/dist/onoffice-handle-activity-config.min.js', $pluginPath));
+		wp_register_script('onoffice-handle-activity-config', plugins_url('/dist/onoffice-handle-activity-config.min.js', $pluginPath), 
+		['jquery'], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-handle-activity-config.min.js'), true);
 		wp_enqueue_script('onoffice-handle-activity-config');
 	}
 

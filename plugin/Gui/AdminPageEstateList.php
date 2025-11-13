@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Gui\AdminPage;
 use onOffice\WPlugin\Gui\Table\EstateListTable;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
 use function add_filter;
@@ -102,7 +103,7 @@ class AdminPageEstateList
 		wp_register_script('onoffice-bulk-actions', 
 			plugins_url('/dist/onoffice-bulk-actions.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), 
 			array('jquery'), 
-			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-bulk-actions.min.js'), 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-bulk-actions.min.js'), 
 			true);
 
 		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
@@ -111,7 +112,7 @@ class AdminPageEstateList
 		wp_register_script('oo-copy-shortcode',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php') . '/dist/onoffice-copycode.min.js',
 			['jquery'], 
-			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-copycode.min.js'), 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-copycode.min.js'), 
 			true);
 		wp_enqueue_script('oo-copy-shortcode');
 	}

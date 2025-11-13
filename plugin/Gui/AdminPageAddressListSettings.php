@@ -52,6 +52,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 
 /**
  *
@@ -449,7 +450,7 @@ class AdminPageAddressListSettings
 		wp_register_script('onoffice-custom-form-label-js',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', 
 			['onoffice-multiselect'], 
-			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-form-label.min.js'), 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-form-label.min.js'), 
 			true);
 		wp_enqueue_script('onoffice-custom-form-label-js');
 
@@ -458,13 +459,13 @@ class AdminPageAddressListSettings
         wp_register_script('onoffice-multiselect', 
 			plugins_url('dist/onoffice-multiselect.min.js', $pluginPath),
 			['jquery'],
-			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-multiselect.min.js'),
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-multiselect.min.js'),
 			true);
 		
 		wp_register_style('onoffice-multiselect', 
 			plugins_url('css/onoffice-multiselect.css', $pluginPath),
 			[],
-			filemtime(ONOFFICE_PLUGIN_DIR . '/css/onoffice-multiselect.css'));
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/css/onoffice-multiselect.css'));
 		
         wp_enqueue_script('onoffice-multiselect');
         wp_enqueue_style('onoffice-multiselect');

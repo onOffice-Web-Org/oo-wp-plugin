@@ -57,6 +57,7 @@ use onOffice\WPlugin\Translation\ModuleTranslation;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use stdClass;
 use function __;
 use function esc_sql;
@@ -770,13 +771,13 @@ abstract class AdminPageFormSettingsBase
 		wp_register_script('onoffice-multiselect', 
 			plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath), 
 			['jquery'], 
-			filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-multiselect.min.js'), 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-multiselect.min.js'), 
 			true);
 
 		wp_register_style('onoffice-multiselect', 
 			plugins_url('/css/onoffice-multiselect.css', $pluginPath), 
 			[], 
-			filemtime(ONOFFICE_PLUGIN_DIR . '/css/onoffice-multiselect.css'));
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/css/onoffice-multiselect.css'));
 
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
@@ -790,22 +791,22 @@ abstract class AdminPageFormSettingsBase
 			wp_enqueue_script('select2', 
 				plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php') . 'vendor/select2/select2/dist/js/select2.min.js', 
 				['jquery'], 
-				filemtime(ONOFFICE_PLUGIN_DIR . '/vendor/select2/select2/dist/js/select2.min.js'), 
+				FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/vendor/select2/select2/dist/js/select2.min.js'), 
 				true);
 			
 			wp_enqueue_style('select2', 
 				plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php') . 'vendor/select2/select2/dist/css/select2.min.css', 
 				[], 
-				filemtime(ONOFFICE_PLUGIN_DIR . '/vendor/select2/select2/dist/css/select2.min.css'));
+				FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/vendor/select2/select2/dist/css/select2.min.css'));
 			wp_enqueue_script('onoffice-custom-select',  
 				plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath), 
 				['jquery', 'select2'], 
-				filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-select.min.js'), 
+				FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-select.min.js'), 
 				true);
 			wp_register_script('onoffice-custom-email-subject', 
 				plugins_url('/dist/onoffice-custom-email-subject.min.js', $pluginPath), 
 				['jquery'], 
-				filemtime(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-email-subject.min.js'), 
+				FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-email-subject.min.js'), 
 				true);
 			wp_enqueue_script('onoffice-custom-email-subject');
 		}
