@@ -43,6 +43,7 @@ jobs:
     - name: Composer install
       run: |
         composer install
+        composer update --lock
 
     - name: install svn
       run: sudo apt install subversion
