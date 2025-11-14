@@ -40,9 +40,12 @@ jobs:
     - name: Check PHP Version
       run: php -v
 
+    - name: Update Composer
+      run: composer self-update --2
+  
     - name: Composer install
       run: |
-        composer install
+        composer install --no-interaction --prefer-dist --no-scripts
         composer update --lock
 
     - name: install svn
