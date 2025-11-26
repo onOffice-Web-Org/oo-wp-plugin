@@ -43,7 +43,7 @@ class RenderHtmlHelperUsers
         $description = sprintf(__("The plugin couldn't find any %1\$s. Please make sure that you have published some %1\$s, as described in the %2\$s", 'onoffice-for-wp-websites'), $type, $linkDetail);
         $html = '<div class="oo-detailview-helper">';
         /* translators: 1: type (e.g., estate, address), 2: type (e.g., estate, address), 3: type (e.g., estate, address), 4: type (e.g., estate, address) */
-        $html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--default">' . sprintf(__("You have opened the detail page, but we do not know which %1\$s to show you, because there is no %2\$s ID in the URL. Please go to an %3\$s list and open an %4\$s from there.", 'onoffice-for-wp-websites'), $type, $type, $type, $type) . '</p>';
+        $html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--default">' . sprintf(__("You have opened the detail page, but we do not know which %1\$s to show you, because there is no %1\$s ID in the URL. Please go to an %1\$s list and open an %1\$s from there.", 'onoffice-for-wp-websites'), $type) . '</p>';
 
         if (!empty($pDataDetail)) {
             /* translators: 1: type (e.g., estate, address), 2: link to detail page */
