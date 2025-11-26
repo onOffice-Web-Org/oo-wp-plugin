@@ -248,8 +248,8 @@ class AdminPageEstate
 				/* @var $pRecordManagerDuplicateListViewEstate RecordManagerDuplicateListViewEstate */
 				$pRecordManagerDuplicateListViewEstate = $pDI->get(RecordManagerDuplicateListViewEstate::class);
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
-				$listViewRootId = isset($_GET['listVewId']) ? absint(wp_unslash($_GET['listVewId'])) : 0;
-				if ($listViewRootId > 0) {
+				if (isset($_GET['listVewId'])) {
+				    $listViewRootId = absint(wp_unslash($_GET['listVewId']));
 					$pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
 				}
 			}
