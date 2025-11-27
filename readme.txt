@@ -76,6 +76,15 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 6.8 (2025-11-27) =
+
+**Fixed**
+* General Security issues
+* Security issue related to query handling
+
+**Changed**
+* Select inputs now display all available options
+
 = 6.7 (2025-10-30) =
 
 **Fixed**
