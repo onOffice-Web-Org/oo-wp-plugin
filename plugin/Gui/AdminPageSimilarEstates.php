@@ -62,6 +62,7 @@ use const ONOFFICE_PLUGIN_DIR;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 
 /**
  *
@@ -106,6 +107,7 @@ class AdminPageSimilarEstates
 	 */
 	public function renderContent()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter for display message, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'true' ) {
 			echo '<div class="notice notice-success is-dismissible"><p>'
 			     . esc_html__( 'The similar estates view has been saved.', 'onoffice-for-wp-websites' )
@@ -117,6 +119,7 @@ class AdminPageSimilarEstates
 					'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		$pDataSimilarSettingsHandler = $this->getContainer()->get(DataSimilarEstatesSettingsHandler::class);
 		$pDataSimilarView = $pDataSimilarSettingsHandler->getDataSimilarEstatesSettings();
 		do_action('add_meta_boxes', get_current_screen()->id, null);
@@ -357,23 +360,23 @@ class AdminPageSimilarEstates
 	public function doExtraEnqueues()
 	{
 		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/admin.min.js',
-			array('jquery'), '', true);
+			array('jquery'), FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/admin.min.js'), true);
 
 		wp_enqueue_script('admin-js');
 		wp_enqueue_script('postbox');
 		wp_register_script('onoffice-custom-form-label-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', ['onoffice-multiselect'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', ['onoffice-multiselect'], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-form-label.min.js'), true);
 		wp_enqueue_script('onoffice-custom-form-label-js');
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		wp_register_script('onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath));
-		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
+		wp_register_script('onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath), ['jquery'], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-multiselect.min.js'), true);
+		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath), [], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/css/onoffice-multiselect.css'));
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
 
 		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
-			['jquery'], '', true);
+			['jquery'], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-unsaved-changes-message.min.js'), true);
 		wp_enqueue_script('oo-unsaved-changes-message');
-		wp_register_script('onoffice-bulk-actions-fields', plugins_url('/dist/onoffice-bulk-actions-fields.min.js', $pluginPath));
+		wp_register_script('onoffice-bulk-actions-fields', plugins_url('/dist/onoffice-bulk-actions-fields.min.js', $pluginPath), ['jquery'], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-bulk-actions-fields.min.js'), true);
 		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 
@@ -404,6 +407,7 @@ class AdminPageSimilarEstates
 			AdminPageEstate::PARAM_TAB => AdminPageEstate::PAGE_SIMILAR_ESTATES,
 			self::ENQUEUE_DATA_MERGE => array(AdminPageEstate::PARAM_TAB),
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
+			/* translators: %s will be replaced with the field name */
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),

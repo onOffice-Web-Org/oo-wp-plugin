@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Gui\Table\EstateUnitsTable;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use WP_List_Table;
 use function add_filter;
 use function admin_url;
@@ -50,7 +51,9 @@ class AdminPageEstateUnitList
 		$this->_pEstateUnitsTable->prepare_items();
 		$page = 'onoffice-estates';
 		$buttonSearch = __('Search Estate Views', 'onoffice-for-wp-websites');
-		$tab = isset($_GET['tab']) ? esc_html($_GET['tab']) : '';
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter for tab display filtering, no form processing
+		$tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		$id = 'onoffice-form-search-estate';
 		$this->generateSearchForm($page,$buttonSearch,null,$tab,$id);
 		echo '<p>';
@@ -110,9 +113,11 @@ class AdminPageEstateUnitList
 
 	public function doExtraEnqueues()
 	{
-		wp_register_script( 'oo-copy-shortcode',
-			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-copycode.min.js',
-			[ 'jquery' ], '', true );
+		wp_register_script('oo-copy-shortcode',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php') . '/dist/onoffice-copycode.min.js',
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-copycode.min.js'), 
+			true);
 		wp_enqueue_script( 'oo-copy-shortcode' );
 	}
 }

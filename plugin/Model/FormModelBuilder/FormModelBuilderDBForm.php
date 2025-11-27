@@ -375,6 +375,7 @@ class FormModelBuilderDBForm
 
 		$selectedValue = $this->getValue('default_recipient', true);
 		if (!$isDefaultEmailMissing) {
+			/* translators: %s will be replaced with the default email address in parentheses */
 			$labelDefaultData = sprintf(__('Use default email address %s', 'onoffice-for-wp-websites'), $addition);
 			$pInputModelFormDefaultData = $this->generateGenericCheckbox($labelDefaultData,
 				InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_RECIPIENT, $selectedValue);
@@ -584,6 +585,7 @@ class FormModelBuilderDBForm
 		$text = __( 'Markdown', 'onoffice-for-wp-websites' );
 		$linkMarkdown = sprintf( '<a href="' . __( 'https://wp-plugin.onoffice.com/en/advanced-features/markdown-labels',
 				'onoffice-for-wp-websites' ) . '">%s</a>', $text );
+		/* translators: %s will be replaced with a link to markdown documentation */
 		$label = sprintf( __( 'Label uses %s', 'onoffice-for-wp-websites' ), $linkMarkdown );
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_MARK_DOWN;
 		/* @var $pInputModel InputModelDB */
@@ -729,6 +731,7 @@ class FormModelBuilderDBForm
 			$pInputModel->setLabel(__('Page title:', 'onoffice-for-wp-websites'));
 		} else {
 			$languages = $this->getAvailableLanguageSelectValues();
+			/* translators: %s will be replaced with the language name */
 			$pInputModel->setLabel(sprintf(__('Page title: %s', 'onoffice-for-wp-websites'), $languages[$locale]));
 		}
 		$pInputModel->setValue($value);
@@ -778,7 +781,8 @@ class FormModelBuilderDBForm
 				break;
 			}
 		}
-		$moduleTranslated = __(ModuleTranslation::getLabelSingular($module ?? ''), 'onoffice-for-wp-websites');
+		$moduleTranslated = ModuleTranslation::getLabelSingular($module ?? '');
+		/* translators: %s will be replaced with the translated module name */
 		$label = sprintf(__('Module: %s', 'onoffice-for-wp-websites'), $moduleTranslated);
 		$pInputModel->setLabel($label);
 		$pInputModel->setValue($module);

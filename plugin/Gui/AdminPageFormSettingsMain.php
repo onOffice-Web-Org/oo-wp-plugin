@@ -197,8 +197,13 @@ class AdminPageFormSettingsMain
 	 */
 	public function handleNotificationError()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- AJAX validation endpoint, no side effects
+		$name = isset($_GET['name']) ? sanitize_text_field(wp_unslash($_GET['name'])) : '';
+		$id = isset($_GET['id']) ? absint(wp_unslash($_GET['id'])) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		
 		$pRecordManagerRead = new RecordManagerReadForm();
-		$sameNameStatus = $pRecordManagerRead->checkSameName($_GET['name'], $_GET['id']);
+		$sameNameStatus = $pRecordManagerRead->checkSameName($name, $id);
 
 		$response = [
 			'success' => $sameNameStatus

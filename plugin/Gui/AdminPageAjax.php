@@ -31,6 +31,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\HtmlIdGenerator;
 use function __;
+use function esc_html__;
 use function add_meta_box;
 use function get_current_screen;
 use function is_admin;
@@ -78,12 +79,12 @@ abstract class AdminPageAjax
 				$this->buildForms();
 			} catch (APIClientCredentialsException $pCredentialsException) {
 				$label = __('login credentials', 'onoffice-for-wp-websites');
-				$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
+				$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', esc_html($label));
+				
 				/* translators: %s will be replaced with the link to the login credentials page. */
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped string
-                wp_die(sprintf(__('It looks like you did not enter any valid API credentials. '
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $loginCredentialsLink contains safe HTML with escaped $label
-                    .'Please go back and review your %s.', 'onoffice-for-wp-websites'), $loginCredentialsLink), 'onOffice plugin');
+                wp_die( sprintf( esc_html__( 'It looks like you did not enter any valid API credentials. Please go back and review your %s.', 'onoffice-for-wp-websites' ), 
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $loginCredentialsLink is constructed with escaped content
+				$loginCredentialsLink ), 'onOffice plugin' );
 			} catch ( APIEmptyResultException $pEmptyResultException ) {
 				$label = __('The onOffice plugin has an unexpected problem when trying to reach the onOffice API.', 'onoffice-for-wp-websites');
 				$labelOnOfficeServerStatus = __( 'onOffice server status', 'onoffice-for-wp-websites' );
@@ -184,10 +185,13 @@ abstract class AdminPageAjax
 	{
 		$result = [];
 
+		
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- This method is called after nonce verification in save_form()
 		// WordPress escapes quotes (and backslashes) in $_POST. This is called "magic quotes", for details see https://core.trac.wordpress.org/ticket/18322.
 		// If we would save the strings with the backslashes, those would not be unescaped correctly later, so on the next save, we would keep adding backslashes.
 		// Therefore, we unescape all strings here.
 		$normalizedPost = wp_unslash($_POST);
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		foreach ( $normalizedPost as $index => $fields ) {
 			if ( strpos( $index, self::EXCLUDE_FIELD ) !== false || strpos( $index, 'filter_fields_order' ) !== false ) {

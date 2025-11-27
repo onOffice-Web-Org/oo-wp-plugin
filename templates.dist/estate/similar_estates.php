@@ -149,13 +149,15 @@ $dimensions = [
 							</div>
 							<div class="oo-detailslink">
                                 <?php if ($referenz === "1") { ?>
-                                    <?php if (!$pEstates->getViewRestrict()) { ?>
-                                        <a class="oo-details-btn" href="<?php echo esc_url($pEstates->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
+                                    <?php if (!$pEstates->getViewRestrict()) { 
+										/* translators: %d: real estate ID number */ ?>
+                                        <a class="oo-details-btn" href="<?php echo esc_url($pEstates->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'template', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
                                             <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
                                         </a>
                                     <?php } ?>
-                                <?php } else { ?>
-                                    <a class="oo-details-btn" href="<?php echo esc_url($pEstates->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
+                                <?php } else { 
+									/* translators: %d: real estate ID number */ ?>
+                                    <a class="oo-details-btn" href="<?php echo esc_url($pEstates->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'template', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
                                         <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
                                     </a>
                                 <?php } ?>

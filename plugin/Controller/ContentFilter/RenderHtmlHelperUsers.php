@@ -36,14 +36,18 @@ class RenderHtmlHelperUsers
      */
     public static function renderHtmlHelperUserIfEmptyId(string $type, string $documentationLink, string $linkDetail = null, array $pDataDetail): string
     {
+        /* translators: %s: type (e.g., estate, address) */
         $title       = sprintf(__("%s list documentation", 'onoffice-for-wp-websites'), ucfirst($type));
         $linkDetail  = !empty($pDataDetail) ? $linkDetail : '<a href=' . esc_url($documentationLink) . '>' . esc_html($title) . '</a>';
-        $description = sprintf(__("The plugin couldn't find any %s. Please make sure that you have published some %s, as described in the %s", 'onoffice-for-wp-websites'), $type, $type, $linkDetail);
+        /* translators: 1: type (e.g., estate, address), 2: type (e.g., estate, address), 3: link to documentation */
+        $description = sprintf(__("The plugin couldn't find any %1\$s. Please make sure that you have published some %1\$s, as described in the %2\$s", 'onoffice-for-wp-websites'), $type, $linkDetail);
         $html = '<div class="oo-detailview-helper">';
-        $html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--default">' . sprintf(__("You have opened the detail page, but we do not know which %s to show you, because there is no %s ID in the URL. Please go to an %s list and open an %s from there.", 'onoffice-for-wp-websites'), $type, $type, $type, $type) . '</p>';
+        /* translators: 1: type (e.g., estate, address), 2: type (e.g., estate, address), 3: type (e.g., estate, address), 4: type (e.g., estate, address) */
+        $html .= '<p class="oo-detailview-helper-text oo-detailview-helper-text--default">' . sprintf(__("You have opened the detail page, but we do not know which %1\$s to show you, because there is no %1\$s ID in the URL. Please go to an %1\$s list and open an %1\$s from there.", 'onoffice-for-wp-websites'), $type) . '</p>';
 
         if (!empty($pDataDetail)) {
-            $description = sprintf(__('Since you are logged in, here is a link to a random %s so that you can preview the detail page: %s', 'onoffice-for-wp-websites'), $type, $linkDetail);
+            /* translators: 1: type (e.g., estate, address), 2: link to detail page */
+            $description = sprintf(__('Since you are logged in, here is a link to a random %1$s so that you can preview the detail page: %2$s', 'onoffice-for-wp-websites'), $type, $linkDetail);
         }
 
         if (is_user_logged_in()) {

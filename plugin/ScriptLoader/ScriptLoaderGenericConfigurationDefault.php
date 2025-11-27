@@ -356,6 +356,7 @@ class ScriptLoaderGenericConfigurationDefault
 				wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
 					'amount_none' => __('0 matches', 'onoffice-for-wp-websites'),
 					'amount_one' => __('Show exact match', 'onoffice-for-wp-websites'),
+					/* translators: %s: number of matches */
 					'amount_other' => __('Show %s matches', 'onoffice-for-wp-websites'),
 					'nonce_estate' => wp_create_nonce('onoffice-estate-preview'),
 					'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),

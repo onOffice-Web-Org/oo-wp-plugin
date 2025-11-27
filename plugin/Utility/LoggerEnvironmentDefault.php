@@ -70,6 +70,7 @@ class LoggerEnvironmentDefault
 	public function log(string $string)
 	{
 		// @codeCoverageIgnoreStart
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- This is a logger class, error_log is the intended implementation.
 		error_log($string);
 	} // @codeCoverageIgnoreEnd
 }

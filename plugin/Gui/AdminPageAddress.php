@@ -241,8 +241,11 @@ class AdminPageAddress
 
 				/* @var $pRecordManagerDuplicateListViewAddress RecordManagerDuplicateListViewAddress */
 				$pRecordManagerDuplicateListViewAddress = $pDI->get(RecordManagerDuplicateListViewAddress::class);
-				$listViewRootId = $_GET['listViewId'];
-				$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
+				$listViewRootId = isset($_GET['listViewId']) ? absint(wp_unslash($_GET['listViewId'])) : 0;
+				if ($listViewRootId > 0) {
+					$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
+				}
 			}
 
 			return $redirectTo;

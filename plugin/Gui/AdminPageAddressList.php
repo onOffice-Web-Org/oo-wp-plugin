@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Gui\Table\AddressListTable;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use function __;
 use function add_filter;
 use function admin_url;
@@ -114,15 +115,20 @@ class AdminPageAddressList
 			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice-for-wp-websites'),
 		);
 
-		wp_register_script('onoffice-bulk-actions', plugins_url('/dist/onoffice-bulk-actions.min.js',
-			ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
+		wp_register_script('onoffice-bulk-actions', 
+			plugins_url('/dist/onoffice-bulk-actions.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), 
+			array('jquery'),
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-bulk-actions.min.js'),
+			true);
 
 		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
 		wp_enqueue_script('onoffice-bulk-actions');
 
-		wp_register_script( 'oo-copy-shortcode',
-			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-copycode.min.js',
-			[ 'jquery' ], '', true );
+		wp_register_script('oo-copy-shortcode',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php') . '/dist/onoffice-copycode.min.js',
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-copycode.min.js'), 
+			true);
 		wp_enqueue_script( 'oo-copy-shortcode');
 	}
 }

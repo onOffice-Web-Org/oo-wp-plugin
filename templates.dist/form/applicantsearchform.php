@@ -128,10 +128,9 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	$rangeFields = array_keys($pForm->getSearchcriteriaRangeInfos());
 	$umkreisFields = $pForm->getUmkreisFields();
 	$countResults = $pForm->getCountAbsolutResults();
-
 	echo '<br><span>'.esc_html(
+			/* translators: %s will be replaced with a number. */
 			sprintf(_n(
-				/* translators: %s will be replaced with a number. */
 				'%s Prospective Buyer', '%s Prospective Buyers', $countResults, 'onoffice-for-wp-websites'),
 					number_format_i18n($countResults))).'</span><br>';
 

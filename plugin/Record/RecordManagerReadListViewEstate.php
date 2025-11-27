@@ -84,33 +84,37 @@ class RecordManagerReadListViewEstate
      */
 
     public function getRecordsSortedAlphabetically():array
-    {
-        $prefix = $this->getTablePrefix();
-        $pWpDb = $this->getWpdb();
-        $columns = implode(', ', $this->getColumns());
-        $where = "(".implode(") AND (", $this->getWhere()).")";
-        if (!empty($_GET["search"]))
-        {
-            $where .= "AND (name LIKE '%".esc_sql($_GET['search'])."%' OR template LIKE '%".esc_sql($_GET['search'])."%')";
-        }
-        $orderBy = ( ! empty($_GET['orderby'])) ? $_GET['orderby'] : 'name';
-        $order = ( ! empty($_GET['order'])) ? $_GET['order'] : 'asc';
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$columns = implode(', ', $this->getColumns());
+		$where = "(".implode(") AND (", $this->getWhere()).")";
+		
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Admin table search/sort parameters, read-only operation
+		if (!empty($_GET["search"]))
+		{
+			$search = sanitize_text_field(wp_unslash($_GET['search']));
+			$where .= " AND (name LIKE '%".esc_sql($search)."%' OR template LIKE '%".esc_sql($search)."%')";
+		}
+		$orderBy = (!empty($_GET['orderby'])) ? sanitize_key(wp_unslash($_GET['orderby'])) : 'name';
+		$order = (!empty($_GET['order'])) ? sanitize_key(wp_unslash($_GET['order'])) : 'asc';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
 			FROM `{$prefix}oo_plugin_listviews`
 			WHERE {$where}
-			ORDER BY `listview_id` ASC
+			ORDER BY `{$orderBy}` {$order}
 			LIMIT %d, %d",
 			$this->getOffset(),
 			$this->getLimit()
 		);
 
-        $this->setFoundRows($pWpDb->get_results($sql, OBJECT));
-        $this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
+		$this->setFoundRows($pWpDb->get_results($sql, OBJECT));
+		$this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
 
-        return $this->getFoundRows();
-    }
+		return $this->getFoundRows();
+	}
 
 
 	/**

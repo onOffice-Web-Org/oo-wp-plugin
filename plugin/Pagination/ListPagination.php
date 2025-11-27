@@ -61,11 +61,13 @@ class ListPagination
 
     protected function determineCurrentPage()
     {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public pagination parameter, no side effects
         if ($this->parameter && isset($_GET[$this->parameter]) && is_numeric($_GET[$this->parameter])) {
             return (int) $_GET[$this->parameter];
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
     
-        // Fallback auf Standard-WordPress-Pagination
+        // Fallback to standard pagination query vars
         if (is_home() || is_front_page()) {
             return get_query_var('page') ?: 1;
         }
@@ -103,8 +105,10 @@ class ListPagination
             if ($this->page == $i) {
                 echo '<span class="current" aria-current="page">' . esc_html($i) . '</span>';
             } else {
+                /* translators: %d: page number */
                 echo '<a href="' . esc_url($this->getPagenumLink($i)) . '" aria-label="' . 
-                    esc_attr(sprintf(esc_html_x('Seite %d', 'template', 'onoffice-for-wp-websites'), $i)) . 
+                /* translators: %d: page number */
+                esc_attr(sprintf(esc_html_x('Page %d', 'template', 'onoffice-for-wp-websites'), $i)) . 
                 '"><span aria-hidden="true">' . esc_html($i) . '</span></a>';
             }
             echo '</li>';
