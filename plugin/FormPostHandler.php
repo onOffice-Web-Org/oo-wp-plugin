@@ -59,6 +59,7 @@ class FormPostHandler
 	static public function getInstance(string $type)
 	{
 		if (!isset(self::TYPE_MAPPING[$type])) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception parameter is for internal error handling
 			throw new UnknownFormException($type);
 		}
 

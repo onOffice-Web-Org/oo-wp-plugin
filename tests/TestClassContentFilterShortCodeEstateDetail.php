@@ -45,6 +45,9 @@ use onOffice\WPlugin\EstateList;
 class TestClassContentFilterShortCodeEstateDetail
 	extends \WP_UnitTestCase
 {
+
+	use HtmlNormalizerTrait;
+
 	/** @var Container */
 	private $_pContainer;
 
@@ -190,7 +193,7 @@ class TestClassContentFilterShortCodeEstateDetail
 		$this->_pContainer->set(EstateListFactory::class, $pEstateDetailFactory);
 		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
 		$expectedFile = __DIR__.'/resources/templates/TestClassContentFilterShortCodeEstateDetail_expected.txt';
-		$this->assertStringEqualsFile($expectedFile, $pSubject->render(['units' => 'test_units']));
+		$this->assertHtmlEqualsFile($expectedFile, $pSubject->render(['units' => 'test_units']));
 	}
 
 
@@ -214,7 +217,7 @@ class TestClassContentFilterShortCodeEstateDetail
 		->disableOriginalConstructor()
 		->getMock();
 
-		$this->assertEquals( '<div class="oo-detailview-helper"><p class="oo-detailview-helper-text oo-detailview-helper-text--default">You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</p></div>', $pEstateDetailFactory->renderHtmlHelperUserIfEmptyEstateId() );
+		$this->assertHtmlEquals( '<div class="oo-detailview-helper"><p class="oo-detailview-helper-text oo-detailview-helper-text--default">You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</p></div>', $pEstateDetailFactory->renderHtmlHelperUserIfEmptyEstateId() );
 	}
 
 
@@ -267,7 +270,7 @@ class TestClassContentFilterShortCodeEstateDetail
 		$pEstateDetailFactory->method( 'is_user_logged_in' )->willReturn( is_user_logged_in() );
 
 		$this->assertTrue( $pEstateDetailFactory->is_user_logged_in() );
-		$this->assertEquals( '<div class="oo-detailview-helper"><p class="oo-detailview-helper-text oo-detailview-helper-text--default">You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</p><p class="oo-detailview-helper-text oo-detailview-helper-text--admin">Since you are logged in, here is a link to a random estate so that you can preview the detail page: <a class="oo-detailview-helper-link" href=http://example.org/detail/123649/>abc</a></p></div>',
+		$this->assertHtmlEquals( '<div class="oo-detailview-helper"><p class="oo-detailview-helper-text oo-detailview-helper-text--default">You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</p><p class="oo-detailview-helper-text oo-detailview-helper-text--admin">Since you are logged in, here is a link to a random estate so that you can preview the detail page: <a class="oo-detailview-helper-link" href=http://example.org/detail/123649/>abc</a></p></div>',
 			$pEstateDetailFactory->renderHtmlHelperUserIfEmptyEstateId() );
 	}
 

@@ -149,7 +149,7 @@ class ContentFilterShortCodeAddressDetail {
 
 		$url = get_page_link();
 		$fullLink = $pLanguageSwitcher->createAddressDetailLink($url, $addressId, $addressTitle);
-		$fullLinkElements = parse_url($fullLink);
+		$fullLinkElements = wp_parse_url($fullLink);
 		if (empty($fullLinkElements['query'])) {
 			$fullLink .= '/';
 		}

@@ -5,30 +5,30 @@ use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\Types\FieldTypes;
 
 if (!function_exists('printRegion')) {
-	function printRegion(onOffice\WPlugin\Region\Region $pRegion, $selected = array(), $level = 0)
-	{
-		$prefix = str_repeat('-', $level);
-		$selectStr = (in_array($pRegion->getId(), $selected, false) ? ' selected' : '');
-		echo '<option value="' . esc_html($pRegion->getId()) . '" ' . $selectStr . '>'
-			. $prefix . ' ' . esc_html($pRegion->getName()) . '</option>';
-		foreach ($pRegion->getChildren() as $pRegionChild) {
-			printRegion($pRegionChild, $selected, $level + 1);
-		}
-	}
+    function printRegion(onOffice\WPlugin\Region\Region $pRegion, $selected = array(), $level = 0)
+    {
+        $prefix = str_repeat('-', $level);
+        $selectStr = (in_array($pRegion->getId(), $selected, false) ? ' selected' : '');
+        echo '<option value="' . esc_attr($pRegion->getId()) . '" ' . esc_attr($selectStr) . '>'
+            . esc_html($prefix) . ' ' . esc_html($pRegion->getName()) . '</option>';
+        foreach ($pRegion->getChildren() as $pRegionChild) {
+            printRegion($pRegionChild, $selected, $level + 1);
+        }
+    }
 }
 
 if (!function_exists('printCountry')) {
-	function printCountry($values, $selectedValue)
-	{
-		echo '<option value="">' . esc_html__('Choose country', 'onoffice-for-wp-websites') . '</option>';
-		foreach ($values as $key => $name) {
-			$selected = null;
-			if ($key == $selectedValue) {
-				$selected = 'selected';
-			}
-			echo '<option value="' . esc_attr($key) . '" ' . $selected . '>' . esc_html($name) . '</option>';
-		}
-	}
+    function printCountry($values, $selectedValue)
+    {
+        echo '<option value="">' . esc_html__('Choose country', 'onoffice-for-wp-websites') . '</option>';
+        foreach ($values as $key => $name) {
+            $selected = '';
+            if ($key == $selectedValue) {
+                $selected = ' selected';
+            }
+            echo '<option value="' . esc_attr($key) . '"' . esc_attr($selected) . '>' . esc_html($name) . '</option>';
+        }
+    }
 }
 
 if (!function_exists('renderFieldEstateSearch')) {
@@ -58,19 +58,20 @@ if (!function_exists('renderFieldEstateSearch')) {
 		}
 
 		if ($properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN) {
-			echo '<fieldset><legend>'.$fieldLabel.'</legend>
-		<input type="radio" id="' . esc_attr($inputName) . '_u" name="' . esc_attr($inputName) . '" value="u"
-			' . ($selectedValue === null ? ' checked' : '') . '>
-		<label for="' . esc_attr($inputName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
-		<input type="radio" id="' . esc_attr($inputName) . '_y" name="' . esc_attr($inputName) . '" value="y"
-			' . ($selectedValue === true  ? 'checked' : '') . '>
-		<label for="' . esc_attr($inputName) . '_y">' . esc_html__('Yes', 'onoffice-for-wp-websites') . '</label>
-		<input type="radio" id="' . esc_attr($inputName) . '_n" name="' . esc_attr($inputName) . '" value="n"
-			' . ($selectedValue === false ? 'checked' : '') . '>
-		<label for="' . esc_attr($inputName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
-	  </fieldset>';
+            echo '<fieldset><legend>' . esc_html($fieldLabel) . '</legend>
+        <input type="radio" id="' . esc_attr($inputName) . '_u" name="' . esc_attr($inputName) . '" value="u"
+            ' . ($selectedValue === null ? ' checked' : '') . '>
+        <label for="' . esc_attr($inputName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
+        <input type="radio" id="' . esc_attr($inputName) . '_y" name="' . esc_attr($inputName) . '" value="y"
+            ' . ($selectedValue === true  ? 'checked' : '') . '>
+        <label for="' . esc_attr($inputName) . '_y">' . esc_html__('Yes', 'onoffice-for-wp-websites') . '</label>
+        <input type="radio" id="' . esc_attr($inputName) . '_n" name="' . esc_attr($inputName) . '" value="n"
+            ' . ($selectedValue === false ? 'checked' : '') . '>
+        <label for="' . esc_attr($inputName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
+      </fieldset>';
 		} elseif (($inputName === 'ort' || $inputName === 'Ort') && !empty($properties['permittedvalues'])) {
-			echo renderCityField($inputName, $properties);
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped in renderCityField
+            echo renderCityField($inputName, $properties);
 		}  elseif (
 			in_array($properties['type'], $multiSelectableTypes) &&
 			$inputName !== 'regionaler_zusatz' &&
@@ -86,14 +87,16 @@ if (!function_exists('renderFieldEstateSearch')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$htmlSelect = '<label for="' . esc_html($inputName) . '-ts-control">'.$fieldLabel.'</label><select id="' . esc_html($inputName) . '" aria-hidden="true" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($inputName) . '[]" multiple="multiple">';
+			$htmlSelect = '<label for="' . esc_attr($inputName) . '-ts-control">' . esc_html($fieldLabel) . '</label><select id="' . esc_attr($inputName) . '" aria-hidden="true" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_attr($inputName) . '[]" multiple="multiple">';
 			$htmlSelect .= $htmlOptions;
 			$htmlSelect .= '</select>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- All components are already escaped
 			echo $htmlSelect;
 		} elseif ($inputName === 'regionaler_zusatz') {
-			echo '<label for="' . esc_html($inputName) . '[]-ts-control">'.$fieldLabel.'</label>'.renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], false, $properties['permittedvalues'] ?? null);
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped in renderRegionalAddition
+			echo '<label for="' . esc_attr($inputName) . '[]-ts-control">' . esc_html($fieldLabel) . '</label>' . renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], false, $properties['permittedvalues'] ?? null);
 		} elseif ($inputName === 'country') {
-			echo '<label for="' . esc_html($inputName) . '-ts-control">'.$fieldLabel.'</label><select id="' . esc_html($inputName) . '" aria-hidden="true" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_attr($inputName) . '">';
+			echo '<label for="' . esc_attr($inputName) . '-ts-control">' . esc_html($fieldLabel) . '</label><select id="' . esc_attr($inputName) . '" aria-hidden="true" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_attr($inputName) . '">';
 			printCountry($properties['permittedvalues'], $selectedValue);
 			echo '</select>';
 		} elseif (
@@ -102,19 +105,23 @@ if (!function_exists('renderFieldEstateSearch')) {
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']
 		) {
 			echo '<fieldset class="oo-searchrange">';
-			echo '<legend>'.$fieldLabel.'</legend>';
+			echo '<legend>' . esc_html($fieldLabel) . '</legend>';
 			echo '<label for="' . esc_attr($inputName) . '__von">';
 			esc_html_e('From: ', 'onoffice-for-wp-websites');
+			//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
 			echo '<input id="' . esc_attr($inputName) . '__von" name="' . esc_attr($inputName) . '__von" ' . $inputType;
 			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
 			echo '<label for="' . esc_attr($inputName) . '__bis">';
 			esc_html_e('Up to: ', 'onoffice-for-wp-websites');
+			//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
 			echo '<input id="' . esc_attr($inputName) . '__bis" name="' . esc_attr($inputName) . '__bis" ' . $inputType;
 			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label></fieldset>';
 		} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="' . esc_attr($properties['length']) . '"' : '';
-			echo '<label>'.$fieldLabel.'<input autocomplete="off" name="' . esc_attr($inputName) . '" ' . $inputType;
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is a controlled attribute string
+			echo '<label>' . esc_html($fieldLabel) . '<input autocomplete="off" name="' . esc_attr($inputName) . '" ' . $inputType;
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $lengthAttr is a controlled attribute string
 			echo 'value="' . esc_attr($selectedValue) . '"' . $lengthAttr . '></label>';
 		}
 	}
@@ -123,11 +130,11 @@ if (!function_exists('renderFieldEstateSearch')) {
 if (!function_exists('renderFormField')) {
 
 	function renderErrorHtml(?string $errorMessage, bool $shouldDisplay): string {
-		if (!empty($errorMessage) && $shouldDisplay) {
-			return "<div class='error' aria-hidden='true' role='alert' aria-atomic='true'><p>$errorMessage</p></div>";
-		}
-		return '';
-	}
+        if (!empty($errorMessage) && $shouldDisplay) {
+            return "<div class='error' aria-hidden='true' role='alert' aria-atomic='true'><p>" . esc_html($errorMessage) . "</p></div>";
+        }
+        return '';
+    }
 	function renderFormField(string $fieldName, onOffice\WPlugin\Form $pForm, bool $searchCriteriaRange = true): string
 	{
 		$output = '';
@@ -208,8 +215,9 @@ if (!function_exists('renderFormField')) {
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
 			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
-
+			/* translators: %s: field label */
 			$output .= '<select data-placeholder="' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '" id="'.$fieldName.'" aria-hidden="true" class="custom-single-select-tom" autocomplete="off" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
+			/* translators: %s: field label */
 			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {
@@ -245,7 +253,7 @@ if (!function_exists('renderFormField')) {
 				} else {
 					$isSelected = $selectedValue == $key;
 				}
-				$htmlOptions .= '<option value="' . esc_attr($key) . '".' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
+				$htmlOptions .= '<option value="' . esc_attr($key) . '"' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
 			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
@@ -295,7 +303,7 @@ if (!function_exists('renderFormField')) {
 			}
 
 			if ($isApplyThousandSeparatorField) {
-				$inputType = 'type="text" class="apply-thousand-separator-format""';
+				$inputType = 'type="text" class="apply-thousand-separator-format"';
 			}
 
 			if ($fieldName == 'Email') {
@@ -309,10 +317,11 @@ if (!function_exists('renderFormField')) {
 			) {
 				$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 				foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
-					$value = 'value="' . esc_attr($pForm->getFieldValue($key, true)) . '"';
-					$output .= '<label>' . esc_attr($rangeDescription) .' '. $addition .'<input autocomplete="off" ' . $inputType . $requiredAttribute . ' name="' . esc_attr($key) . '" '
-						. $value . ' placeholder="' . esc_attr($rangeDescription) . '">'.$errorHtml.'</label>';
-				}
+                    $value = 'value="' . esc_attr($pForm->getFieldValue($key, true)) . '"';
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType and $requiredAttribute are controlled attribute strings
+					$output .= '<label>' . esc_html($rangeDescription) . ' ' . wp_kses_post($addition) . '<input autocomplete="off" ' . $inputType . ' ' . $requiredAttribute . ' name="' . esc_attr($key) . '" '
+                        . $value . ' placeholder="' . esc_attr($rangeDescription) . '">' . $errorHtml . '</label>';
+                }
 			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
 				$output = '<fieldset>
 					<input type="radio" id="' . esc_attr($fieldName) . '_u" name="' . esc_attr($fieldName) . '" value=""
@@ -357,6 +366,7 @@ if (!function_exists('renderRegionalAddition')) {
 			$regions = $pRegionController->getRegions();
 		}
 		ob_start();
+		/* translators: %s: field label for regional addition dropdown */
 		echo '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 		foreach ($regions as $pRegion) {
 			/* @var $pRegion Region */
@@ -373,14 +383,14 @@ if (!function_exists('renderCityField')) {
 	{
 		$fieldLabel = $properties['label'];
 		$permittedValues = $properties['permittedvalues'];
-		$htmlSelect = '<label for="' . esc_html($inputName) . '-ts-control">'.$fieldLabel.'</label>';
+		$htmlSelect = '<label for="' . esc_attr($inputName) . '-ts-control">' . esc_html($fieldLabel) . '</label>';
 		$htmlSelect .= '<select aria-hidden="true" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_attr($inputName) . '[]" multiple="multiple" aria-label="' . esc_attr($inputName) .'">';
 		foreach ($permittedValues as $value) {
-			$selected = null;
+			$selected = '';
 			if (is_array($properties['value']) && in_array($value, $properties['value'])) {
 				$selected = 'selected';
 			}
-			$htmlSelect .='<option value="' . esc_attr($value) . '" ' . $selected . '>' . esc_attr($value) . '</option>';
+			$htmlSelect .='<option value="' . esc_attr($value) . '" ' . esc_attr($selected) . '>' . esc_attr($value) . '</option>';
 		}
 		$htmlSelect .= '</select>';
 

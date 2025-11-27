@@ -54,13 +54,14 @@ class InputFieldComplexSortableDetailListContentDefault
 	public function __construct()
 	{
 		try {
-			$pDIContainerBuilder = new ContainerBuilder();
-			$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-			$pContainer = $pDIContainerBuilder->build();
-			$this->inputModelRenderer = $pContainer->get(InputModelRenderer::class);
-		} catch (DependencyException | NotFoundException $e) {
-			throw new RuntimeException('Failed to initialize InputModelRenderer: ' . $e->getMessage(), 0, $e);
-		}
+            $pDIContainerBuilder = new ContainerBuilder();
+            $pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+            $pContainer = $pDIContainerBuilder->build();
+            $this->inputModelRenderer = $pContainer->get(InputModelRenderer::class);
+        } catch (DependencyException | NotFoundException $e) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in internal initialization
+            throw new RuntimeException('Failed to initialize InputModelRenderer: ' . $e->getMessage(), 0, $e);
+        }
 
 	}
 
@@ -124,7 +125,8 @@ class InputFieldComplexSortableDetailListContentDefault
 
 		$this->inputModelRenderer->buildForAjax($pFormModel);
 
-		echo '<a class="item-delete-link submitdelete oo-delete-button-'.$key.'">'.__('Delete', 'onoffice-for-wp-websites').'</a>';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_html() in concatenation, __() returns translated string
+        echo '<a class="item-delete-link submitdelete oo-delete-button-'.esc_attr($key).'">'.esc_html__('Delete', 'onoffice-for-wp-websites').'</a>';
 	}
 
 	/**
@@ -150,7 +152,8 @@ class InputFieldComplexSortableDetailListContentDefault
 		try {
 			$this->inputModelRenderer->buildForAjax($pFormModel);
 		} catch (Exception $e) {
-			throw new RuntimeException('Failed to render title for multipage form: ' . $e->getMessage(), 0, $e);
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in internal rendering
+            throw new RuntimeException('Failed to render title for multipage form: ' . $e->getMessage(), 0, $e);
 		}
 	}
 

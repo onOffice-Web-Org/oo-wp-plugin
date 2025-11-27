@@ -33,6 +33,9 @@ use WP_UnitTestCase;
 class TestTemplateEstateDefaultDetail
 	extends WP_UnitTestCase
 {
+
+	use HtmlNormalizerTrait;
+
 	/** @var EstateDetail */
 	private $_pEstate = null;
 
@@ -200,7 +203,7 @@ class TestTemplateEstateDefaultDetail
 			->withTemplateName('templates.dist/estate/default_detail.php')
 			->withEstateList($this->_pEstate);
 		$output = $pTemplate->render();
-		$this->assertStringEqualsFile
+		$this->assertHtmlEqualsFile
 			(__DIR__.'/resources/templates/output_default_detail.html', $output);
 	}
 }

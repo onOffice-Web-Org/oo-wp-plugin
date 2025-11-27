@@ -20,6 +20,7 @@ jQuery(document).ready(function ($) {
 
       let config = {
         hidePlaceholder: true,
+        maxOptions: null,
         sortField: {
           field: "text",
           direction: "asc"

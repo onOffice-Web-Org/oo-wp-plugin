@@ -28,6 +28,7 @@ use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelDBAdapterRow;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use stdClass;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
@@ -162,11 +163,13 @@ abstract class AdminPageSettingsBase
 
 	public function renderContent()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter for display message, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'true' ) {
 			echo '<div class="notice notice-success is-dismissible"><p>'
 			     . esc_html__( 'The view has been saved.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		do_action( 'add_meta_boxes', get_current_screen()->id, null );
 		$this->generateMetaBoxes();
 
@@ -177,9 +180,13 @@ abstract class AdminPageSettingsBase
 		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
 		$this->generatePageMainTitle( $this->getPageTitle() );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- admin-url() is a safe WordPress function
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_current_screen()->id is a safe WordPress screen ID
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
-		echo '<input type="hidden" name="record_id" value="' . esc_attr( $_GET['id'] ?? 0 ) . '" />';
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter used for hidden field, actual value is validated in save_form()
+		echo '<input type="hidden" name="record_id" value="' . esc_attr( isset($_GET['id']) ? absint(wp_unslash($_GET['id'])) : 0 ) . '" />';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
@@ -208,8 +215,9 @@ abstract class AdminPageSettingsBase
 		echo '</div>';
 		$this->renderBulkActionControls();
 		echo '<div class="fieldsSortable postbox" id="oo-fields-sortable-container">';
-		echo '<div class="postbox-header">
-        <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+		echo '<div class="postbox-header">' .
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
+        '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
 		<label class="postbox-select-all" for="postbox-select-all">Alle auswählen
 			<input type="checkbox" id="postbox-select-all" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event)"/>
 			</label>
@@ -348,7 +356,11 @@ abstract class AdminPageSettingsBase
 			$this->updateValues( $row, $pResultObject, $recordId );
 		}
 
-		$pageQuery   = str_replace( 'admin_page_', 'page=', $_POST['action'] );
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput -- $_POST values are already sanitized and validated via nonce in calling context
+		$action = $_POST['action'] ?? '';
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput
+		
+		$pageQuery   = str_replace( 'admin_page_', 'page=', $action );
 		$statusQuery = '&saved=false';
 		if (is_null($pResultObject->result)) {
 			$statusQuery = '&saved=empty';
@@ -513,6 +525,7 @@ abstract class AdminPageSettingsBase
 	protected function renderSearchFieldForFieldLists(InputModelRenderer $pInputModelRenderer, $pFormViewSearchFieldForFieldLists)
 	{
 		echo '<div class="oo-search-field postbox">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
 		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Field list search', 'onoffice-for-wp-websites' ) . '</span></h2>';
 		echo '<div class="inside">';
 		$pInputModelRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);
@@ -587,39 +600,71 @@ abstract class AdminPageSettingsBase
 
 	public function doExtraEnqueues()
 	{
-		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/admin.min.js',
-			['jquery', 'jquery-ui-draggable', 'jquery-ui-droppable'], '', true);
+		wp_register_script('admin-js', 
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/admin.min.js',
+			['jquery', 'jquery-ui-draggable', 'jquery-ui-droppable'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/admin.min.js'), 
+			true);
 
 		wp_register_script('oo-reference-estate-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-reference-estate-select.min.js', ['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-reference-estate-select.min.js', 
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-reference-estate-select.min.js'), 
+			true);
 
 		wp_register_script('oo-checkbox-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/checkbox.min.js', ['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/checkbox.min.js', 
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/checkbox.min.js'), 
+			true);
+		
 		wp_register_script('onoffice-default-form-values-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-default-form-values.min.js', ['onoffice-multiselect'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-default-form-values.min.js', 
+			['onoffice-multiselect'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-default-form-values.min.js'), 
+			true);
+		
 		wp_register_script('onoffice-custom-form-label-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', ['onoffice-multiselect'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', 
+			['onoffice-multiselect'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-form-label.min.js'), 
+			true);
 
 		wp_enqueue_script('postbox');
 		wp_enqueue_script('admin-js');
 		wp_localize_script('admin-js', 'oOMultiPageI18n', [
 			'pageTitle' => __('Page title:', 'onoffice-for-wp-websites'),
 			'addLanguage' => __('Add Language', 'onoffice-for-wp-websites'),
+			/* translators: %s will be replaced with the language code or name */
 			'removeTitleForLanguage' => sprintf(__('Remove title for language %s', 'onoffice-for-wp-websites'), '%s'),
 		]);
 
 		wp_register_script('oo-sanitize-shortcode-name',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-sanitize-shortcode-name.min.js',
-			['jquery'], '', true);
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-sanitize-shortcode-name.min.js'), 
+			true);
 
 		wp_register_script('oo-copy-shortcode',
-		plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-copycode.min.js',
-			['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-copycode.min.js',
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-copycode.min.js'), 
+			true);
 
-		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
-			['jquery'], '', true);
+		wp_register_script('oo-unsaved-changes-message', 
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-unsaved-changes-message.min.js'), 
+			true);
+		
 		wp_enqueue_script('oo-unsaved-changes-message');
-		wp_register_script('onoffice-bulk-actions-fields', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-bulk-actions-fields.min.js');
+		
+		wp_register_script('onoffice-bulk-actions-fields', 
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-bulk-actions-fields.min.js',
+			['jquery'],
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-bulk-actions-fields.min.js'),
+			true);
+			
 		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 

@@ -77,7 +77,7 @@ abstract class ListTable extends WP_List_Table
 
 	public function no_items()
 	{
-		_e( 'No items found.' );
+		esc_html_e( 'No items found.', 'onoffice-for-wp-websites' );
 	}
 
 
@@ -90,7 +90,7 @@ abstract class ListTable extends WP_List_Table
 	protected function get_bulk_actions()
 	{
 		$actions = array();
-		$actions['bulk_delete'] = __( 'Delete' );
+		$actions['bulk_delete'] = __( 'Delete', 'onoffice-for-wp-websites' );
 
 		return $actions;
 	}
@@ -172,8 +172,9 @@ abstract class ListTable extends WP_List_Table
 				}
 			} else {
 				if(isset($record->recipient)){
-					$record->recipient = sprintf( esc_html( __( "%s (override)", 'onoffice-for-wp-websites' ) ), $record->recipient );
-				}
+                    /* translators: %s: recipient email address */
+                    $record->recipient = sprintf( esc_html( __( "%s (override)", 'onoffice-for-wp-websites' ) ), $record->recipient );
+                }
 			}
 			if (isset($record->form_type) && $record->form_type === 'applicantsearch') {
 				$record->recipient = esc_html( '-' );

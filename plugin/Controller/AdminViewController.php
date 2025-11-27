@@ -44,6 +44,7 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\Gui\AdminPageAddress;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use Parsedown;
 use HTMLPurifier_Config;
 use HTMLPurifier;
@@ -178,6 +179,7 @@ class AdminViewController
 		// main page
 		add_menu_page( __( 'onOffice', 'onoffice-for-wp-websites' ), __( 'onOffice', 'onoffice-for-wp-websites' ),
 			$roleMainPage, $this->_pageSlug, function () use ( $pDI ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- MainPage::render() returns escaped HTML
 				echo $pDI->get( MainPage::class )->render();
 			}, 'none' );
 
@@ -285,13 +287,18 @@ class AdminViewController
 		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
 
 		wp_register_script('oo-sort-by-user-selection',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-sort-by-user-selection.min.js', ['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-sort-by-user-selection.min.js', 
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR.'/dist/onoffice-sort-by-user-selection.min.js'), 
+			true);
 
 		wp_register_script('onoffice-ajax-settings',
-			plugins_url('/dist/ajax_settings.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection']);
+			plugins_url('/dist/ajax_settings.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection'],
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR.'/dist/ajax_settings.min.js'), true);
 		wp_enqueue_script('onoffice-ajax-settings');
 		wp_enqueue_script('onoffice-geofieldbox',
-			plugins_url('/dist/geofieldbox.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);
+            plugins_url('/dist/geofieldbox.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [],
+            FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR.'/dist/geofieldbox.min.js'), true);
 
 		wp_localize_script('oo-sort-by-user-selection', 'onoffice_mapping_translations',
 			SortListTypes::getSortOrder());
@@ -310,6 +317,7 @@ class AdminViewController
 	{
 		foreach ( $this->_ajaxHooks as $hook => $pAdminPage ) {
 			if ( ! is_callable( array( $pAdminPage, 'save_form' ) ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message is for internal debugging only
 				throw new Exception( get_class( $pAdminPage ) . ' must be an instance of AdminPageAjax!' );
 			}
 
@@ -376,14 +384,16 @@ class AdminViewController
 			'notification' => __('Would you like to permanently delete the site key and the secret key?', 'onoffice-for-wp-websites'),
 		];
 		wp_register_script('handle-notification-actions', plugins_url('dist/onoffice-handle-notification-actions.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
-			array('jquery'));
+			array('jquery'), FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-handle-notification-actions.min.js'),
+			true);
 		wp_localize_script('handle-notification-actions', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_localize_script('handle-notification-actions', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_enqueue_script('handle-notification-actions');
 
 		if (__String::getNew($hook)->contains($this->_pageSlug.'-settings')) {
 			wp_register_script('handle-visibility-google-recaptcha-keys', plugins_url('dist/onoffice-handle-visibility-google-recaptcha-keys.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
-				array('jquery'));
+				array('jquery'), FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-handle-visibility-google-recaptcha-keys.min.js'),
+				true);
 			wp_localize_script('handle-notification-actions', 'delete_google_recaptcha_keys', ['ajaxurl' => admin_url('admin-ajax.php')]);
 			wp_localize_script('handle-notification-actions', 'confirm_dialog_google_recaptcha_keys', $confirmDialogGoogleRecaptcha);
 			wp_enqueue_script('handle-visibility-google-recaptcha-keys');
@@ -459,23 +469,24 @@ class AdminViewController
 		} catch (APIClientCredentialsException $pCredentialsException) {
 			$class = 'notice notice-error';
 			$label = __('API token and secret', 'onoffice-for-wp-websites');
-			$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
+			$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', esc_html($label));
 			/* translators: %s will be replaced with the translation of 'API token and secret'. */
-			$message = sprintf(esc_html(__('It looks like you did not enter any valid API '
-				.'credentials. Please consider reviewing your %s.', 'onoffice-for-wp-websites')), $loginCredentialsLink);
+			$message = sprintf(esc_html__('It looks like you did not enter any valid API credentials. Please consider reviewing your %s.', 'onoffice-for-wp-websites'), $loginCredentialsLink);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $message contains intentional HTML link
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		} catch ( APIEmptyResultException $pEmptyResultException ) {
 			$class = 'notice notice-error';
 			$label = __('The onOffice plugin has an unexpected problem when trying to reach the onOffice API.', 'onoffice-for-wp-websites');
 			$labelOnOfficeServerStatus = __( 'onOffice server status', 'onoffice-for-wp-websites' );
-			$onOfficeServerStatusLink  = sprintf( '<a href="' . __('https://status.onoffice.de/', 'onoffice-for-wp-websites') . '">%s</a>', $labelOnOfficeServerStatus );
+			$onOfficeServerStatusLink  = sprintf( '<a href="' . esc_url(__('https://status.onoffice.de/', 'onoffice-for-wp-websites')) . '">%s</a>', esc_html($labelOnOfficeServerStatus) );
 			$labelSupportFormLink      = __( 'support form', 'onoffice-for-wp-websites' );
-			$supportFormLink           = sprintf( '<a href="' . __('https://wp-plugin.onoffice.com/en/support/', 'onoffice-for-wp-websites') . '">%s</a>', $labelSupportFormLink );
+			$supportFormLink           = sprintf( '<a href="' . esc_url(__('https://wp-plugin.onoffice.com/en/support/', 'onoffice-for-wp-websites')) . '">%s</a>', esc_html($labelSupportFormLink) );
 			/* translators: %1$s is office server status page link, %2$s is support form page link */
 			$message                   = sprintf( esc_html( __( 'Please check the %1$s to see if there are known problems. Otherwise, report the problem using the %2$s.',
 				'onoffice-for-wp-websites' ) ), $onOfficeServerStatusLink, $supportFormLink );
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label and $message contain intentional HTML links
 			printf( '<div class="%1$s"><p>%2$s</p><p>%3$s</p></div>', esc_attr( $class ), $label, $message );
 		}
 	}
@@ -489,12 +500,10 @@ class AdminViewController
 	{
 		if ( get_option( 'onoffice-duplicate-check-warning', '' ) === "1" ) {
 			$class = 'notice notice-error duplicate-check-notify is-dismissible';
-			$message = esc_html(__("We have deactivated the plugin's duplicate check for all of your forms, "
-				. "because the duplicate check can unintentionally overwrite address records. This function will be removed "
-				. "in the future. The option has been deactivated for these forms: Contact, Interest, Owner",
-				'onoffice-for-wp-websites'));
+			$message = esc_html__("We have deactivated the plugin's duplicate check for all of your forms, because the duplicate check can unintentionally overwrite address records. This function will be removed in the future. The option has been deactivated for these forms: Contact, Interest, Owner", 'onoffice-for-wp-websites');
 
-			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+			// $message is already escaped with esc_html above, safe to output
+			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
 		}
 	}
 
@@ -516,8 +525,8 @@ class AdminViewController
 				&& get_current_screen()->id !== 'onoffice_page_onoffice-settings'
 				&& get_option('onoffice-settings-title-and-description') == 0) {
 				$class = 'notice notice-warning active-plugin-seo is-dismissible';
-				$message = sprintf(esc_html__('The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.
-								We recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
+				/* translators: 1: list of active SEO plugins, 2: link to onOffice plugin settings */
+                $message = sprintf(esc_html__('The onOffice plugin has detected an active SEO plugin: %1$s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin. We recommend that you go to the %2$s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
 				$messageParsedown = Parsedown::instance()
 					->setSafeMode(true)
 					->setUrlsLinked(false)
@@ -525,6 +534,7 @@ class AdminViewController
 						$message
 					);
 				$messageDecodeHTML = html_entity_decode($messageParsedown);
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML is generated by Parsedown with setSafeMode(true)
 				echo sprintf('<div class="%1$s">%2$s</div>', esc_attr($class), $messageDecodeHTML);
 			}
 		} else {
@@ -542,6 +552,7 @@ class AdminViewController
 			$message = sprintf(esc_html(__('The onOffice plugin is missing a default email address. You have forms that use the default email and they will currently not send emails. Please add a default email address in the %s to dismiss this warning.', 'onoffice-for-wp-websites')),
 				$defaultEmailAddressLink);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $message contains intentional HTML link
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		}
 	}

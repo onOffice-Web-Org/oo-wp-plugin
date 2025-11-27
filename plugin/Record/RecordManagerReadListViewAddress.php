@@ -84,10 +84,13 @@ class RecordManagerReadListViewAddress
         $pWpDb = $this->getWpdb();
         $columns = implode(', ', $this->getColumns());
         $where = "(".implode(") AND (", $this->getWhere()).")";
-        if (!empty($_GET["search"]))
-        {
-            $where .= "AND (name LIKE '%".esc_sql($_GET['search'])."%' OR template LIKE '%".esc_sql($_GET['search'])."%')";
-        }
+       // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Admin table search parameter, read-only operation
+		if (!empty($_GET["search"]))
+		{
+			$search = sanitize_text_field(wp_unslash($_GET['search']));
+			$where .= " AND (name LIKE '%".esc_sql($search)."%' OR template LIKE '%".esc_sql($search)."%')";
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
 			FROM `{$prefix}oo_plugin_listviews_address`
@@ -126,10 +129,11 @@ class RecordManagerReadListViewAddress
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 
-		if ($result === null)
-		{
-			throw new \Exception(__('unknown address list name', 'onoffice-for-wp-websites'));
-		}
+		 if ($result === null)
+        {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages with __() are for internal debugging
+            throw new \Exception(__('unknown address list name', 'onoffice-for-wp-websites'));
+        }
 
 		$resultFieldConfig = $this->getFieldconfigByListviewId($result[$this->getIdColumnMain()]);
 		$result['fields'] = array_column($resultFieldConfig, 'fieldname');

@@ -108,6 +108,7 @@ class InputModelOptionFactoryAddressDetailView
 	public function create(string $name, $label, bool $multi = false): InputModelOption
 	{
 		if (!isset($this->_inputConfig[$name])) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception parameter is for internal error handling
 			throw new ExceptionInputModelMissingField($name);
 		}
 

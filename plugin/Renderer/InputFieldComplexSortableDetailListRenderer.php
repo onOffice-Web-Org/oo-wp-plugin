@@ -89,17 +89,18 @@ class InputFieldComplexSortableDetailListRenderer
 		$allFields = $values[0] ?? [];
 
 		if ($this->_isMultiPage) {
-			$isOwnerLeadGeneratorForm = $this->isOwnerLeadGeneratorForm();
-			echo '<div id="single-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'none' : 'block') . ';">';
-			$this->renderSinglePage($allFields);
-			echo '</div>';
-			echo '<div id="multi-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'block' : 'none') . ';">';
-			$this->renderMultiPage($allFields);
-			echo '</div>';
-			echo '<p class="add-page-container"><button class="add-page-button" type="button" style="display: ' . ($isOwnerLeadGeneratorForm ? 'block' : 'none') . ';">' . __( 'Add Page', 'onoffice-for-wp-websites' ) . '</button><p>';
-		} else {
-			$this->renderSinglePage($allFields);
-		}
+            $isOwnerLeadGeneratorForm = $this->isOwnerLeadGeneratorForm();
+            echo '<div id="single-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'none' : 'block') . ';">';
+            $this->renderSinglePage($allFields);
+            echo '</div>';
+            echo '<div id="multi-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'block' : 'none') . ';">';
+            $this->renderMultiPage($allFields);
+            echo '</div>';
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
+            echo '<p class="add-page-container"><button class="add-page-button" type="button" style="display: ' . ($isOwnerLeadGeneratorForm ? 'block' : 'none') . ';">' . __( 'Add Page', 'onoffice-for-wp-websites' ) . '</button><p>';
+        } else {
+            $this->renderSinglePage($allFields);
+        }
 	}
 
 	private function renderSinglePage(array $allFields): void
@@ -140,12 +141,13 @@ class InputFieldComplexSortableDetailListRenderer
 		$page = 1;
 		foreach ($fieldsByPage as $fields) {
 			echo '<div class="list-fields-for-each-page">';
-			echo '<div class="multi-page-title" data-page="'.$page.'">';
-			echo '<span class="multi-page-counter">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</span>';
-			$this->_pContentRenderer->renderTitlesForMultiPage($titleInputModels, $this->getLocalizedTitlesPerPage($page));
-			echo '</div>';
-			echo '<ul class="filter-fields-list attachSortableFieldsList multi-page-list fieldsListPage-' . esc_attr($page) . ' sortableFieldsListForForm">';
-			$i = 1;
+            echo '<div class="multi-page-title" data-page="' . esc_attr($page) . '">';
+			/* translators: %s: page number */
+            echo '<span class="multi-page-counter">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), (int) $page).'</span>';
+            $this->_pContentRenderer->renderTitlesForMultiPage($titleInputModels, $this->getLocalizedTitlesPerPage($page));
+            echo '</div>';
+            echo '<ul class="filter-fields-list attachSortableFieldsList multi-page-list fieldsListPage-' . esc_attr($page) . ' sortableFieldsListForForm">';
+            $i = 1;
 
 			foreach ($fields as $key => $properties) {
 				$label = $properties['label'] ?? null;
@@ -209,29 +211,33 @@ class InputFieldComplexSortableDetailListRenderer
 			$type = InputModelBase::HTML_TYPE_TEXT;
 		}
 
-		echo '<li class="sortable-item item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
-			.'<div class="menu-item-bar">'
-				.'<div class="menu-item-handle ui-sortable-handle" style="display: flex; align-items: center; gap: 8px;">'
-					.'<span class="oo-sortable-checkbox-wrapper">'
-						.'<input type="checkbox" class="oo-sortable-checkbox" value="'.$key.'" onchange="ooHandleChildCheckboxChange(event)"/>'
-					.'</span>'
-					.'<span class="item-title oo-sortable-title" '.$deactivatedStyle.'>'
-						.($isHighlighted ? '★ ' : '')
-						.esc_html($label)
-						.esc_html($deactivatedInOnOffice)
-					.'</span>'
-					.'<span class="item-controls">'
-						.'<span class="item-type">'.esc_html($category).'</span>'
-						.'<a class="item-edit"><span class="screen-reader-text">'.esc_html__('Edit', 'onoffice-for-wp-websites').'</span></a>'
-					.'</span>'
-					.'<input type="hidden" name="filter_fields_order'.esc_html($iteration).'[id]" value="'.esc_html($iteration).'">'
-					.'<input type="hidden" name="filter_fields_order'.esc_html($iteration).'[name]" value="'.esc_html($label).'">'
-					.'<input type="hidden" name="filter_fields_order'.esc_html($iteration).'[slug]" value="'.esc_html($key).'">'
-					.'<input type="hidden" name="'.esc_attr($name).'[]" value="'.esc_html($key).'" '
-						.' '.$this->renderAdditionalAttributes().' '.$dummyText.'>'
-				.'</div>'
-			.'</div>'
-			.'<div class="menu-item-settings submitbox" style="display:none;">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $key is used in HTML attribute context
+        echo '<li class="sortable-item item' . ($this->_isMultiPage ? ' page-' . esc_attr($page) : '') . '" id="menu-item-' . esc_attr($key) . '" action-field-name="labelButtonHandleField-' . esc_attr($key) . '">'
+            .'<div class="menu-item-bar">'
+                .'<div class="menu-item-handle ui-sortable-handle" style="display: flex; align-items: center; gap: 8px;">'
+                    .'<span class="oo-sortable-checkbox-wrapper">'
+                        .'<input type="checkbox" class="oo-sortable-checkbox" value="'.esc_attr($key).'" onchange="ooHandleChildCheckboxChange(event)"/>'
+                    .'</span>'
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $deactivatedStyle is a safe inline CSS string
+                    .'<span class="item-title oo-sortable-title" '.$deactivatedStyle.'>'
+                        .($isHighlighted ? '★ ' : '')
+                        .esc_html($label)
+                        .esc_html($deactivatedInOnOffice)
+                    .'</span>'
+                    .'<span class="item-controls">'
+                        .'<span class="item-type">'.esc_html($category).'</span>'
+                        .'<a class="item-edit"><span class="screen-reader-text">'.esc_html__('Edit', 'onoffice-for-wp-websites').'</span></a>'
+                    .'</span>'
+                    .'<input type="hidden" name="filter_fields_order'.esc_attr($iteration).'[id]" value="'.esc_attr($iteration).'">'
+                    .'<input type="hidden" name="filter_fields_order'.esc_attr($iteration).'[name]" value="'.esc_attr($label).'">'
+                    .'<input type="hidden" name="filter_fields_order'.esc_attr($iteration).'[slug]" value="'.esc_attr($key).'">'
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
+                    .'<input type="hidden" name="'.esc_attr($name).'[]" value="'.esc_attr($key).'" '
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $dummyText is a safe data attribute
+                        .' '.$this->renderAdditionalAttributes().' '.$dummyText.'>'
+                .'</div>'
+            .'</div>'
+            .'<div class="menu-item-settings submitbox" style="display:none;">';
 
 			if ($this->_pContentRenderer !== null) {
 				$this->_pContentRenderer->render($key, $isDummy, $type, $extraInputModels, $this->_isMultiPage);

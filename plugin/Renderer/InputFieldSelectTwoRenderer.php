@@ -76,7 +76,8 @@ class InputFieldSelectTwoRenderer extends InputFieldSelectRenderer
 
 		$output .= '</select>';
 
-		echo $output;
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $output is built with escaped values above
+        echo $output;
 	}
 
 	/**

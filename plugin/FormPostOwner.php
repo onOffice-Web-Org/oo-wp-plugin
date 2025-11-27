@@ -169,6 +169,7 @@ class FormPostOwner
 			return $estateId;
 		}
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- ApiClientException is for internal API error handling
 		throw new ApiClientException($pApiClientAction);
 	}
 
@@ -235,6 +236,7 @@ class FormPostOwner
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
 
 		if ( ! $pAPIClientAction->getResultStatus() ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- ApiClientException is for internal API error handling
 			throw new ApiClientException( $pAPIClientAction );
 		}
 	}
@@ -263,6 +265,7 @@ class FormPostOwner
 		$pSDKWrapper->sendRequests();
 
 		if (!$pApiClientAction->getResultStatus()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- ApiClientException is for internal API error handling
 			throw new ApiClientException($pApiClientAction);
 		}
 	}
@@ -349,6 +352,7 @@ class FormPostOwner
 		$result = ($resultRecords[0]['elements']['success'] ?? '') === 'success';
 
 		if (!$result) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- ApiClientException is for internal API error handling
 			throw new ApiClientException($pApiClientAction);
 		}
 	}
