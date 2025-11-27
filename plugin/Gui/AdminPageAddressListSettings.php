@@ -52,6 +52,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 
 /**
  *
@@ -90,6 +91,7 @@ class AdminPageAddressListSettings
 
 	public function renderContent()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter for display message, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'empty' ) {
 			echo '<div class="notice notice-error is-dismissible"><p>'
 				. esc_html__( 'There was a problem saving the address. The Name field cannot be empty.', 'onoffice-for-wp-websites' )
@@ -97,11 +99,10 @@ class AdminPageAddressListSettings
 		}
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'false' ) {
 			echo '<div class="notice notice-error is-dismissible"><p>'
-			     . esc_html__( 'There was a problem saving the view. Please make '
-			                   . 'sure the name of the view is unique, even across all address list types.',
-					'onoffice-for-wp-websites' )
+			     . esc_html__( 'There was a problem saving the view. Please make sure the name of the view is unique, even across all address list types.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		parent::renderContent();
 	}
 
@@ -407,6 +408,7 @@ class AdminPageAddressListSettings
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
+			/* translators: %s will be replaced with the field name */
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			self::VIEW_SAVE_SAME_NAME_MESSAGE => __('There was a problem saving the list. The Name field has been exist.', 'onoffice-for-wp-websites'),
 			self::VIEW_SAVE_EMPTY_NAME_MESSAGE => __('There was a problem saving the list. The Name field must not be empty.', 'onoffice-for-wp-websites'),
@@ -420,8 +422,14 @@ class AdminPageAddressListSettings
 	 */
 	public function handleNotificationError()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- AJAX validation endpoint, no side effects
+		$name = isset($_GET['name']) ? sanitize_text_field(wp_unslash($_GET['name'])) : '';
+		$id = isset($_GET['id']) ? absint(wp_unslash($_GET['id'])) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		
 		$pRecordManagerRead = new RecordManagerReadListViewAddress();
-		$sameNameStatus = $pRecordManagerRead->checkSameName($_GET['name'], $_GET['id']);
+		$sameNameStatus = $pRecordManagerRead->checkSameName($name, $id);
+
 		$response = [
 			'success' => $sameNameStatus
 		];
@@ -448,11 +456,25 @@ class AdminPageAddressListSettings
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script( 'oo-copy-shortcode');
 		wp_register_script('onoffice-custom-form-label-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', ['onoffice-multiselect'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', 
+			['onoffice-multiselect'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-form-label.min.js'), 
+			true);
 		wp_enqueue_script('onoffice-custom-form-label-js');
+
         $pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-        wp_register_script('onoffice-multiselect', plugins_url('dist/onoffice-multiselect.min.js', $pluginPath));
-        wp_register_style('onoffice-multiselect', plugins_url('css/onoffice-multiselect.css', $pluginPath));
+
+        wp_register_script('onoffice-multiselect', 
+			plugins_url('dist/onoffice-multiselect.min.js', $pluginPath),
+			['jquery'],
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-multiselect.min.js'),
+			true);
+		
+		wp_register_style('onoffice-multiselect', 
+			plugins_url('css/onoffice-multiselect.css', $pluginPath),
+			[],
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/css/onoffice-multiselect.css'));
+		
         wp_enqueue_script('onoffice-multiselect');
         wp_enqueue_style('onoffice-multiselect');
 		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);

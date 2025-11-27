@@ -77,8 +77,8 @@ class FieldParkingLot{
 			/* translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type */
 			return sprintf(_n('%1$s, %2$s%3$s', '%1$s, %2$s %3$s', $count, 'onoffice-for-wp-websites'), $parkingName, $price, $marketingType);
 		}
-		/* translators: 1: Count and name of parking lot */
-		return sprintf(_n('%1$s', '%1$s', $count, 'onoffice-for-wp-websites'), $parkingName);
+		
+		return $parkingName;
 	}
 
 	/**

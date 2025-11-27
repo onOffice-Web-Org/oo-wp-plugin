@@ -784,6 +784,7 @@ class Form
 			// Fallback
 			$result[] = [
 				'page' => $pageNumber,
+				/* translators: %d: page number */
 				'value' => sprintf(__('Page %d', 'onoffice-for-wp-websites'), $pageNumber),
 				'locale' => $currentLocale
 			];

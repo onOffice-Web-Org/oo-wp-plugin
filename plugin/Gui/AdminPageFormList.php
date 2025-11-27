@@ -35,6 +35,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
@@ -99,7 +100,9 @@ class AdminPageFormList
         $this->_pFormsTable->prepare_items();
         $page = 'onoffice-forms';
         $buttonSearch = __('Search Forms', 'onoffice-for-wp-websites');
-        $type = isset($_GET['type']) ? esc_html($_GET['type']) : '';
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter for filtering display, no form processing
+		$type = isset($_GET['type']) ? sanitize_key(wp_unslash($_GET['type'])) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
         $id = 'onoffice-form-search-form';
         $this->generateSearchForm($page,$buttonSearch,$type,null,$id);
         echo '<p>';
@@ -151,15 +154,20 @@ class AdminPageFormList
 			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice-for-wp-websites'),
 		);
 
-		wp_register_script('onoffice-bulk-actions', plugins_url('/dist/onoffice-bulk-actions.min.js',
-			ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
+		wp_register_script('onoffice-bulk-actions', 
+			plugins_url('/dist/onoffice-bulk-actions.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), 
+			array('jquery'),
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-bulk-actions.min.js'),
+			true);
 
 		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
 		wp_enqueue_script('onoffice-bulk-actions');
 
-		wp_register_script( 'oo-copy-shortcode',
-			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-copycode.min.js',
-			[ 'jquery' ], '', true );
+		wp_register_script('oo-copy-shortcode',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php') . '/dist/onoffice-copycode.min.js',
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-copycode.min.js'), 
+			true);
 		wp_enqueue_script('oo-copy-shortcode');
 	}
 
@@ -319,8 +327,11 @@ class AdminPageFormList
 
 				/* @var $pRecordManagerDuplicateListViewForm RecordManagerDuplicateListViewForm */
 				$pRecordManagerDuplicateListViewForm = $pDI->get(RecordManagerDuplicateListViewForm::class);
-				$listViewRootName = $_GET['form'];
-				$pRecordManagerDuplicateListViewForm->duplicateByName($listViewRootName);
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
+				$listViewRootName = isset($_GET['form']) ? sanitize_text_field(wp_unslash($_GET['form'])) : '';
+				if (!empty($listViewRootName)) {
+					$pRecordManagerDuplicateListViewForm->duplicateByName($listViewRootName);
+				}
 			}
 			return $redirectTo;
 		};

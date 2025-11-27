@@ -57,6 +57,7 @@ use onOffice\WPlugin\Translation\ModuleTranslation;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use stdClass;
 use function __;
 use function esc_sql;
@@ -363,8 +364,7 @@ abstract class AdminPageFormSettingsBase
 		return [
 			self::GET_PARAM_TYPE => $this->getType(),
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Form was saved.', 'onoffice-for-wp-websites'),
-			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the form. Please make '
-				.'sure the name of the form is unique.', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the form. Please make sure the name of the form is unique.', 'onoffice-for-wp-websites'),
 			self::ENQUEUE_DATA_MERGE => [
 				AdminPageSettingsBase::POST_RECORD_ID,
 				self::GET_PARAM_TYPE,
@@ -380,6 +380,7 @@ abstract class AdminPageFormSettingsBase
 			'label_choose_language' => __('Choose Language', 'onoffice-for-wp-websites'),
 			/* translators: %s is the name of a language */
 			'label_default_value' => __('Default Value: %s', 'onoffice-for-wp-websites'),
+			/* translators: %s will be replaced with the field name */
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			'label_default_value_from' => __('Default Value From:', 'onoffice-for-wp-websites'),
 			'label_default_value_up_to' => __('Default Value Up To:', 'onoffice-for-wp-websites'),
@@ -767,8 +768,17 @@ abstract class AdminPageFormSettingsBase
 		wp_enqueue_script('onoffice-custom-form-label-js');
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 
-		wp_register_script('onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath));
-		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
+		wp_register_script('onoffice-multiselect', 
+			plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath), 
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-multiselect.min.js'), 
+			true);
+
+		wp_register_style('onoffice-multiselect', 
+			plugins_url('/css/onoffice-multiselect.css', $pluginPath), 
+			[], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/css/onoffice-multiselect.css'));
+
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
 
@@ -778,10 +788,26 @@ abstract class AdminPageFormSettingsBase
 		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);
 
 		if ($this->getType() !== Form::TYPE_APPLICANT_SEARCH) {
-			wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js');
-			wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css');
-			wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
-			wp_register_script('onoffice-custom-email-subject', plugins_url('/dist/onoffice-custom-email-subject.min.js', $pluginPath));
+			wp_enqueue_script('select2', 
+				plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php') . 'vendor/select2/select2/dist/js/select2.min.js', 
+				['jquery'], 
+				FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/vendor/select2/select2/dist/js/select2.min.js'), 
+				true);
+			
+			wp_enqueue_style('select2', 
+				plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php') . 'vendor/select2/select2/dist/css/select2.min.css', 
+				[], 
+				FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/vendor/select2/select2/dist/css/select2.min.css'));
+			wp_enqueue_script('onoffice-custom-select',  
+				plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath), 
+				['jquery', 'select2'], 
+				FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-select.min.js'), 
+				true);
+			wp_register_script('onoffice-custom-email-subject', 
+				plugins_url('/dist/onoffice-custom-email-subject.min.js', $pluginPath), 
+				['jquery'], 
+				FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-email-subject.min.js'), 
+				true);
 			wp_enqueue_script('onoffice-custom-email-subject');
 		}
 	}
@@ -818,6 +844,7 @@ abstract class AdminPageFormSettingsBase
 
 	public function renderContent()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameters for display messages, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'true' ) {
 			echo '<div class="notice notice-success is-dismissible"><p>'
 			     . esc_html__( 'The Form was saved.', 'onoffice-for-wp-websites' )
@@ -825,8 +852,7 @@ abstract class AdminPageFormSettingsBase
 		}
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'false' ) {
 			echo '<div class="notice notice-error is-dismissible"><p>'
-			     . esc_html__( 'There was a problem saving the form. Please make '
-			                   . 'sure the name of the form is unique.', 'onoffice-for-wp-websites' )
+			     . esc_html__( 'There was a problem saving the form. Please make sure the name of the form is unique.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'empty' ) {
@@ -834,6 +860,7 @@ abstract class AdminPageFormSettingsBase
 			     . esc_html__( 'There was a problem saving the form. The Name field cannot be empty.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		do_action( 'add_meta_boxes', get_current_screen()->id, null );
 		$this->generateMetaBoxes();
@@ -849,7 +876,9 @@ abstract class AdminPageFormSettingsBase
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_current_screen()->id is a safe WordPress screen ID
         echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
-        echo '<input type="hidden" name="record_id" value="' . esc_attr( $_GET['id'] ?? 0 ) . '" />';
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameter used for hidden field, validated in save_form()
+		echo '<input type="hidden" name="record_id" value="' . esc_attr( isset($_GET['id']) ? absint(wp_unslash($_GET['id'])) : 0 ) . '" />';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $this->getType() returns a safe form type constant
         echo '<input type="hidden" name="type" value="' . $this->getType() . '" />';
         wp_nonce_field( get_current_screen()->id, 'nonce' );
@@ -950,8 +979,13 @@ abstract class AdminPageFormSettingsBase
 			$this->updateValues( $row, $pResultObject, $recordId );
 		}
 
-		$pageQuery   = str_replace( 'admin_page_', 'page=', $_POST['action'] );
-		$typeQuery   = '&type=' . $_POST['type'];
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput -- Values validated via nonce and used in controlled redirect context
+		$action = $_POST['action'] ?? '';
+		$type = $_POST['type'] ?? '';
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput
+
+		$pageQuery   = str_replace( 'admin_page_', 'page=', $action );
+		$typeQuery   = '&type=' . $type;
 		$statusQuery = '&saved=false';
 		if (is_null($pResultObject->result)) {
 			$statusQuery = '&saved=empty';

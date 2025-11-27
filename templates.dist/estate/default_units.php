@@ -92,7 +92,7 @@ $rawValues = $pEstates->getRawValues();
                         }
 
                         echo '<th class="oo-units__data">';
-                        echo esc_html__('Details', 'oo_theme');
+                        echo esc_html__('Details', 'onoffice-for-wp-websites');
                         echo '</th>';
                         ?>
                     </tr>
@@ -138,14 +138,14 @@ $rawValues = $pEstates->getRawValues();
                         endforeach;
                     
                         echo '<td class="oo-units__data oo-unitslink" data-label="' .
-                            esc_html__('Details', 'oo_theme') .
+                            esc_html__('Details', 'onoffice-for-wp-websites') .
                             '">';
                         if (!empty($pEstates->getEstateLink())) {
-                            echo '<a class="oo-units-btn" title="'.esc_attr__('Zur Einheit', 'oo_theme').': '.esc_attr($current_property['objekttitel']).'" href="' .
+                            echo '<a class="oo-units-btn" title="'.esc_attr__('Zur Einheit', 'onoffice-for-wp-websites').': '.esc_attr($current_property['objekttitel']).'" href="' .
                                 esc_url($pEstates->getEstateLink()) .
                                 '">';
                         }
-                        echo esc_html__('Zur Einheit', 'oo_theme');
+                        echo esc_html__('Zur Einheit', 'onoffice-for-wp-websites');
                         echo '</a>';
                         echo '</td>';
                     

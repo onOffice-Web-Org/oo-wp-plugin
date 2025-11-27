@@ -39,6 +39,7 @@ class RequestVariablesSanitizer
 
 	public function getFilteredGet(string $name, int $filter = FILTER_DEFAULT, $option = null)
 	{
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Utility method for sanitized access, nonce verification is caller's responsibility.
 		return $this->getFiltered($_GET, $name, $filter, $option);
 	}
 
@@ -53,6 +54,7 @@ class RequestVariablesSanitizer
 
 	public function getFilteredPost(string $name, int $filter = FILTER_DEFAULT, $option = null)
 	{
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Utility method for sanitized access, nonce verification is caller's responsibility.
 		return $this->getFiltered($_POST, $name, $filter, $option);
 	}
 
@@ -99,7 +101,7 @@ class RequestVariablesSanitizer
 		$optionsDecode = ($noQuotes ? ENT_QUOTES : ENT_NOQUOTES) | ENT_SUBSTITUTE;
 
 		$value = stripslashes($value);
-		$value = strip_tags($value);
+		$value = wp_strip_all_tags($value);
 		$value = htmlspecialchars($value, $options);
 
 		// Fix that HTML entities are converted to entity numbers instead of entity name (e.g. ' -> &#34; and not ' -> &quote;)

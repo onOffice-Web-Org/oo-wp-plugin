@@ -140,11 +140,10 @@ class InputFieldComplexSortableDetailListRenderer
 
 		$page = 1;
 		foreach ($fieldsByPage as $fields) {
-			 echo '<div class="list-fields-for-each-page">';
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $page is a safe integer
-            echo '<div class="multi-page-title" data-page="'.$page.'">';
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $page is a safe integer, sprintf with esc_html__() returns escaped string
-            echo '<span class="multi-page-counter">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), $page).'</span>';
+			echo '<div class="list-fields-for-each-page">';
+            echo '<div class="multi-page-title" data-page="' . esc_attr($page) . '">';
+			/* translators: %s: page number */
+            echo '<span class="multi-page-counter">'.sprintf(esc_html__('Page %s', 'onoffice-for-wp-websites'), (int) $page).'</span>';
             $this->_pContentRenderer->renderTitlesForMultiPage($titleInputModels, $this->getLocalizedTitlesPerPage($page));
             echo '</div>';
             echo '<ul class="filter-fields-list attachSortableFieldsList multi-page-list fieldsListPage-' . esc_attr($page) . ' sortableFieldsListForForm">';
