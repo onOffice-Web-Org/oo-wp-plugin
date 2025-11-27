@@ -124,17 +124,14 @@ abstract class InputFieldRenderer
 	}
 
 	public function renderInactive()
-    {
-        $deactivatedInTheSoftware = ' ('.esc_html__('Disabled in onOffice', 'onoffice-for-wp-websites').')';
-        $disabledElement = <<<HTML
-            <span class="onoffice-field-inactive-text" style="color:red">
-                $deactivatedInTheSoftware
-            </span>
-HTML;
-
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $disabledElement contains escaped content from esc_html__()
-        echo $disabledElement;
-    }
+	{
+		$deactivatedInTheSoftware = esc_html__('Disabled in onOffice', 'onoffice-for-wp-websites');
+		
+		printf(
+			'<span class="onoffice-field-inactive-text" style="color:red"> (%s)</span>',
+			esc_html($deactivatedInTheSoftware)
+		);
+	}
 
 	/**
 	 *

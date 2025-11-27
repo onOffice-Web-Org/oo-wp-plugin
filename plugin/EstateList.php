@@ -994,7 +994,7 @@ class EstateList
 			$url      = get_page_link($pageId);
 			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estate, $title);
 
-			$fullLinkElements = parse_url($fullLink);
+			$fullLinkElements = wp_parse_url($fullLink);
 			if (empty($fullLinkElements['query'])) {
 				$fullLink .= '/';
 			}

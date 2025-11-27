@@ -110,7 +110,11 @@ class FormPostInterestConfigurationDefault
 	 */
 	public function getNewsletterAccepted(): bool
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Called within form submission pipeline, uses reCAPTCHA for verification
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Simple checkbox value 'y', no unslashing needed
 		return filter_var( $_POST['newsletter'] ?? null, FILTER_SANITIZE_FULL_SPECIAL_CHARS ) === 'y';
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 

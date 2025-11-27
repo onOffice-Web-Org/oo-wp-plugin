@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 6.7
+Version: 6.8
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -33,7 +33,7 @@ Domain Path: /languages
 */
 defined( 'ABSPATH' ) or die();
 
-const ONOFFICE_PLUGIN_VERSION = '6.7';
+const ONOFFICE_PLUGIN_VERSION = '6.8';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
 
 require __DIR__ . '/vendor/autoload.php';
@@ -156,28 +156,32 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 }, 500);
 
 add_action('admin_init', function () use ( $pDI ) {
-	if ( strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
-		$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
-		$timestamp = wp_next_scheduled('oo_cache_renew');
-		if ($timestamp) {
-			wp_unschedule_event($timestamp, 'oo_cache_renew');
-		}
+    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- strpos() doesn't execute or display the value, only checks string position.
+    if ( isset($_SERVER["REQUEST_URI"]) && strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
+        $onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
+        $timestamp = wp_next_scheduled('oo_cache_renew');
+        if ($timestamp) {
+            wp_unschedule_event($timestamp, 'oo_cache_renew');
+        }
 
-		wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
-		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
-		update_option('onoffice-notice-cache-was-cleared', true);
-		wp_safe_redirect($location);
-		exit();
-	}
+        wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_safe_redirect() validates and sanitizes the URL.
+        $location = ! empty($_SERVER['HTTP_REFERER']) ? wp_unslash($_SERVER['HTTP_REFERER']) : admin_url('admin.php?page=onoffice-settings');
+        update_option('onoffice-notice-cache-was-cleared', true);
+        wp_safe_redirect($location);
+        exit();
+    }
 });
 
-if (is_admin() && isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit') {
-	$post_id = $_GET['post'];
-	$post_type = get_post_type($post_id);
-	if ($post_type === 'page') {
-		return $pDI;
-	}
+// phpcs:disable WordPress.Security.NonceVerification.Recommended -- WordPress core edit action check, no side effects.
+if (is_admin() && isset($_GET['post']) && isset($_GET['action']) && sanitize_key(wp_unslash($_GET['action'])) === 'edit') {
+    $post_id = absint(wp_unslash($_GET['post']));
+    $post_type = get_post_type($post_id);
+    if ($post_type === 'page') {
+        return $pDI;
+    }
 }
+// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 $pDI->get(ScriptLoaderRegistrator::class)->generate();
 
@@ -327,7 +331,7 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 
         } catch (\Throwable $e) {
             // Fail safe: log error and return original title parts.
-            error_log('onoffice document_title_parts error: '.$e->getMessage());
+            error_log('onoffice document_title_parts error: '.$e->getMessage()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Fail-safe error logging for title generation.
             return $title;
         }
     }, 20, 1);
@@ -389,19 +393,19 @@ function custom_cron_schedules($schedules) {
 	if(!isset($schedules['ten_minutes'])) {
 		$schedules['ten_minutes'] = array(
 			'interval' => 60 * 10,
-			'display' => __('10 minutes')
+			'display' => __('10 minutes', 'onoffice-for-wp-websites')
 		);
 	}
 	if(!isset($schedules['thirty_minutes'])) {
 		$schedules['thirty_minutes'] = array(
 			'interval' => 60 * 30,
-			'display' => __('30 minutes')
+			'display' => __('30 minutes', 'onoffice-for-wp-websites')
 		);
 	}
 	if(!isset($schedules['six_hours'])) {
 		$schedules['six_hours'] = array(
 			'interval' => 60 * 60 * 6,
-			'display'  => __('6 hours')
+			'display'  => __('6 hours', 'onoffice-for-wp-websites')
 		);
 	}
 

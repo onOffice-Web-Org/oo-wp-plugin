@@ -22,7 +22,7 @@
 declare (strict_types=1);
 
 namespace onOffice\WPlugin\ScriptLoader;
-
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use Generator;
 use function wp_enqueue_script;
 use function wp_enqueue_style;
@@ -80,14 +80,36 @@ class ScriptLoaderGeneric
 	{
 		/* @var $pIncludeModel IncludeFileModel */
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_SCRIPT) as $pIncludeModel) {
+			$filePath = $this->urlToPath($pIncludeModel->getFilePath());
+			$version = FileVersionHelper::getFileVersion($filePath);
 			wp_register_script($pIncludeModel->getIdentifier(), $pIncludeModel->getFilePath(),
-				$pIncludeModel->getDependencies(), false, array('strategy' => $pIncludeModel->getLoadAsynchronous(), 'in_footer' => $pIncludeModel->getLoadInFooter()));
+				$pIncludeModel->getDependencies(), $version, array('strategy' => $pIncludeModel->getLoadAsynchronous(), 'in_footer' => $pIncludeModel->getLoadInFooter()));
 			$this->_pConfiguration->localizeScript($pIncludeModel->getIdentifier());
 		}
 		foreach ($this->getModelByType(IncludeFileModel::TYPE_STYLE) as $pIncludeModel) {
+			$filePath = $this->urlToPath($pIncludeModel->getFilePath());
+			$version = FileVersionHelper::getFileVersion($filePath);
 			wp_register_style($pIncludeModel->getIdentifier(), $pIncludeModel->getFilePath(),
-				$pIncludeModel->getDependencies(), false, $pIncludeModel->getLoadInFooter());
+				$pIncludeModel->getDependencies(), $version, $pIncludeModel->getLoadInFooter());
 		}
+	}
+
+	/**
+	 * Convert plugin URL to file system path
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	private function urlToPath(string $url): string
+	{
+		$pluginUrl = plugins_url('/', ONOFFICE_PLUGIN_DIR . '/index.php');
+		if (strpos($url, $pluginUrl) === 0) {
+			$relativePath = substr($url, strlen($pluginUrl));
+			return ONOFFICE_PLUGIN_DIR . '/' . $relativePath;
+		}
+		// For external URLs or URLs we can't convert, return as-is
+		// FileVersionHelper will handle the fallback
+		return $url;
 	}
 
 

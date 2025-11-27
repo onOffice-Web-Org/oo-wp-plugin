@@ -209,13 +209,15 @@ $dimensions = [
 					</div>
 					<div class="oo-detailslink">
 						<?php if ($referenz === "1") { ?>
-                            <?php if (!$pEstatesClone->getViewRestrict()) { ?>
-                                <a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
+                            <?php if (!$pEstatesClone->getViewRestrict()) { 
+								/* translators: %d: real estate ID number */ ?>
+                                <a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'template', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
                                     <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
                                 </a>
                             <?php } ?>
-                        <?php } else { ?>
-                            <a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
+                        <?php } else { 
+							/* translators: %d: real estate ID number */ ?>
+                            <a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'template', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
                                 <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
                             </a>
                         <?php } ?>
@@ -231,8 +233,8 @@ $dimensions = [
                                         );
                                     }
 
-                            ?>
-                            <button data-onoffice-estateid="<?php echo esc_attr($pEstatesClone->getCurrentMultiLangEstateMainId()); ?>" class="onoffice favorize" aria-label="<?php echo esc_attr($FavorizationLabel.' '.sprintf(esc_html_x('Real Estate No. %d', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
+                            /* translators: %d: real estate ID number */ ?>
+                            <button data-onoffice-estateid="<?php echo esc_attr($pEstatesClone->getCurrentMultiLangEstateMainId()); ?>" class="onoffice favorize" aria-label="<?php echo esc_attr($FavorizationLabel.' '.sprintf(esc_html_x('Real Estate No. %d', 'template', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
                                 <?php
                                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped above
                                     echo $FavorizationLabel;
