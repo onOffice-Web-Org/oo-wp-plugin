@@ -75,6 +75,8 @@ class TestClassFormPostInterest
 	public function prepare()
 	{
 
+		$_POST['onoffice_nonce'] = wp_create_nonce('onoffice_form_interestform');
+
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();

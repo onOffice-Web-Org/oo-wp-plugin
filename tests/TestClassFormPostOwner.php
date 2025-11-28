@@ -75,6 +75,9 @@ class TestClassFormPostOwner
 
 	public function prepare()
 	{
+
+		$_POST['onoffice_nonce'] = wp_create_nonce('onoffice_form_test');
+
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$this->prepareSDKWrapperForFieldsAddressEstate();
 

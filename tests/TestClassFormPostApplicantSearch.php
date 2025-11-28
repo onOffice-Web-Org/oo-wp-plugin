@@ -125,6 +125,7 @@ class TestClassFormPostApplicantSearch
 			'vermarktungsart' => 'kauf',
 			'kaufpreis' => '200000',
 			'wohnflaeche' => '800',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_applicantsearch'),
 		];
 
 		$this->setupDataFormConfiguration();
