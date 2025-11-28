@@ -61,7 +61,7 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
                 echo '<div class="oo-address-field-label">' . esc_html($pAddressList->getFieldLabel($field)) . '</div>';
                     echo '<div class="oo-address-field-value">';
                     if (in_array($field, $supportTypeLinkFields)) {
-                        echo '<a href="' . esc_url($value) . '" target="_blank" rel="nofollow noopener" aria-label="Link to ' . esc_attr($pAddressList->getFieldLabel($field)) . '">' . esc_html($value) . '</a>';
+                        echo '<a href="' . esc_url($value) . '" target="_blank" rel="noopener noreferrer" aria-label="Link to ' . esc_attr($pAddressList->getFieldLabel($field)) . '">' . esc_html($value) . '</a>';
                     } else {
                         echo is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value);
                     }

@@ -471,7 +471,7 @@ $dimensions = [
 							echo '</div>';
 						} else if (in_array($field, $supportTypeLinkFields)) {
 							echo '<div class="oo-field-label">'. esc_html($pEstates->getFieldLabel($field)) .'</div>';
-							echo '<div class="oo-aspinfo oo-contact-info"><a href="' . esc_url($contactData[$field]) . '" target="_blank" rel="nofollow noopener" aria-label="Link to ' . esc_attr($pEstates->getFieldLabel($field)) . '">' . esc_html($contactData[$field]) . '</a></div>';
+							echo '<div class="oo-aspinfo oo-contact-info"><a href="' . esc_url($contactData[$field]) . '" target="_blank" rel="noopener noreferrer" aria-label="Link to ' . esc_attr($pEstates->getFieldLabel($field)) . '">' . esc_html($contactData[$field]) . '</a></div>';
 						} else {
 							echo '<div class="oo-field-label">'. esc_html($pEstates->getFieldLabel($field)) .'</div>';
 							echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($contactData[$field]) . '</p></div>';
@@ -502,7 +502,7 @@ $dimensions = [
 			{
 				if ($title) {
 					return
-						'<a class="player-title" target="_blank" href="' . esc_attr($url) . '">
+						'<a class="player-title" target="_blank" rel="noopener noreferrer" href="' . esc_attr($url) . '">
 							' . esc_html($title) . '
 								<svg aria-hidden="true" focusable="false" width="0.7em" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
 									<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>

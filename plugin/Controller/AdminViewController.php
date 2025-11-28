@@ -515,7 +515,7 @@ class AdminViewController
 	public function generalAdminNoticeSEO() {
 		$urlOnofficeSetting = admin_url().'admin.php?page=onoffice-settings#notice-seo';
 		$nameOnofficeSetting = esc_html__('onOffice plugin settings','onoffice-for-wp-websites');
-		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
+		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener noreferrer'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
 
         $WPPluginChecker = new WPPluginChecker;
 		$activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
