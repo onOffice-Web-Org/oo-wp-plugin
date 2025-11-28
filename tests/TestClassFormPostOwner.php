@@ -266,6 +266,10 @@ class TestClassFormPostOwner
 
 	public function testInitialCheckMissingFields()
 	{
+		$_POST = [
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
+		];
+
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 3);
 
