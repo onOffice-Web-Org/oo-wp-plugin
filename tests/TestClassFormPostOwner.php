@@ -75,9 +75,6 @@ class TestClassFormPostOwner
 
 	public function prepare()
 	{
-
-		$_POST['onoffice_nonce'] = wp_create_nonce('onoffice_form_test');
-
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$this->prepareSDKWrapperForFieldsAddressEstate();
 
@@ -235,7 +232,8 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
-			'gdprcheckbox' => 'y'
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_ownerform'),
 		];
 
 		$this->prepareMockerForAddressCreationSuccess();
@@ -297,6 +295,7 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_ownerform'),
 		];
 
 		$this->prepareMockerForAddressCreationNoSuccess();
@@ -332,6 +331,7 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_ownerform'),
 		];
 
 		$this->prepareMockerForAddressCreationSuccess();
@@ -361,7 +361,8 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
-			'gdprcheckbox' => 'y'
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_ownerform'),
 		];
 		$this->prepareMockerForAddressCreationSuccess();
 		$this->prepareMockerForEstateCreationSuccess();
@@ -714,7 +715,8 @@ class TestClassFormPostOwner
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
 			'gdprcheckbox' => 'y',
-			'bad' => ['Bidet', 'Urinal', 'Bathtub']
+			'bad' => ['Bidet', 'Urinal', 'Bathtub'],
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_ownerform'),
 		];
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$this->prepareMockerForContactSuccessUsingArrayInputEstate();

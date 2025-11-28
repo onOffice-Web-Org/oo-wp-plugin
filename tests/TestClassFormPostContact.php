@@ -74,8 +74,6 @@ class TestClassFormPostContact
 
 	public function prepare()
 	{
-		$_POST['onoffice_nonce'] = wp_create_nonce('onoffice_form_contactForm');
-
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
@@ -374,6 +372,7 @@ class TestClassFormPostContact
 			'Id' => '1337',
 			'Anrede' => '',
 			'tmpField' => 'content',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
 		];
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
@@ -512,6 +511,7 @@ class TestClassFormPostContact
 
 		$_POST = [
 			'message' => 'content2',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
 		];
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
@@ -557,6 +557,7 @@ class TestClassFormPostContact
 			'Id' => '1337',
 			'Anrede' => '',
 			'tmpField' => 'content',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
 		];
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
@@ -603,6 +604,7 @@ class TestClassFormPostContact
 			'Id' => '1337',
 			'Anrede' => '',
 			'tmpField' => 'content',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
 		];
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
