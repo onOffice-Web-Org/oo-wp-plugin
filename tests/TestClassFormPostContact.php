@@ -420,6 +420,11 @@ class TestClassFormPostContact
 
 	public function testMissingFields()
 	{
+		$_POST = [
+        	'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
+		];
+    
+
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
