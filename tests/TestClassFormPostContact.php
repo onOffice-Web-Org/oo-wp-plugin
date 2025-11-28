@@ -82,6 +82,8 @@ class TestClassFormPostContact
 			->getMock();
 		add_option('onoffice-settings-honeypot', true);
 
+		$_POST['onoffice_nonce'] = wp_create_nonce('onoffice_form_contactForm');
+
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
 			->getMock();
 		$this->_pContainer = new Container;
@@ -699,6 +701,7 @@ class TestClassFormPostContact
 			'Anrede' => '',
 			'message' => 'content1',
 			'tmpField' => 'content2',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
 		];
 	}
 }
