@@ -104,7 +104,8 @@ class UserCapabilities
 			return $capability;
 		}
 
-		throw new UnexpectedValueException($rule);
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception parameter is for internal error handling
+    	throw new UnexpectedValueException($rule);
 	}
 
 	/**

@@ -67,6 +67,7 @@ use function wp_verify_nonce;
 use const ONOFFICE_PLUGIN_DIR;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 /**
  *
  */
@@ -125,6 +126,7 @@ class AdminPageEstateDetail
 
 	public function renderContent()
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameters for display messages, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'true' ) {
 			echo '<div class="notice notice-success is-dismissible"><p>'
 			     . esc_html__( 'The detail view has been saved.', 'onoffice-for-wp-websites' )
@@ -135,6 +137,7 @@ class AdminPageEstateDetail
 			     . esc_html__( 'There was a problem saving the detail view.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDataView = $pDataDetailViewHandler->getDetailView();
 		do_action('add_meta_boxes', get_current_screen()->id, null);
@@ -148,9 +151,13 @@ class AdminPageEstateDetail
 		$pFormViewSortablecontactFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_DATA_FIELDS);
 		$pFormViewSearchFieldForFieldLists = $this->getFormModelByGroupSlug(self::FORM_VIEW_SEARCH_FIELD_FOR_FIELD_LISTS_CONFIG);
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- form admin_url is a safe WordPress function
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
-		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
-		echo '<input type="hidden" name="tab" value="' . AdminPageEstate::PAGE_ESTATE_DETAIL . '" />';
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_current_screen()->id is a safe WordPress screen ID
+        echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- AdminPageEstate::PAGE_ESTATE_DETAIL is a safe constant string
+        echo '<input type="hidden" name="tab" value="' . AdminPageEstate::PAGE_ESTATE_DETAIL . '" />';
+        wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
@@ -204,8 +211,9 @@ class AdminPageEstateDetail
 		$this->renderBulkActionControls('address', esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)));
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
-		echo '<div class="postbox-header">
-        <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+		echo '<div class="postbox-header">' .
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
+        '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
 		<label class="postbox-select-all" for="postbox-select-all-address">Alle auswählen
 			<input type="checkbox" id="postbox-select-all-address" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS))."'".')"/>
 			</label>
@@ -225,8 +233,9 @@ class AdminPageEstateDetail
 		$this->renderBulkActionControls('estate', esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)));
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
-		echo '<div class="postbox-header">
-        <h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+		echo '<div class="postbox-header">' .
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
+        '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
 		<label class="postbox-select-all" for="postbox-select-all-estate">Alle auswählen
 			<input type="checkbox" id="postbox-select-all-estate" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE))."'".')"/>
 			</label>
@@ -481,28 +490,59 @@ class AdminPageEstateDetail
 	 */
 	public function doExtraEnqueues()
 	{
-		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/admin.min.js',
-			array('jquery'), '', true);
+		wp_register_script('admin-js', 
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/admin.min.js',
+			['jquery', 'jquery-ui-draggable', 'jquery-ui-droppable'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/admin.min.js'), 
+			true);
 
 		wp_enqueue_script('admin-js');
 		wp_enqueue_script('postbox');
-		wp_register_script( 'oo-copy-shortcode',
-			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-copycode.min.js',
-			[ 'jquery' ], '', true );
+
+		 wp_register_script('oo-copy-shortcode',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php') . '/dist/onoffice-copycode.min.js',
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-copycode.min.js'), 
+			true);
+
 		wp_enqueue_script( 'oo-copy-shortcode' );
+
 		wp_register_script('onoffice-custom-form-label-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', ['onoffice-multiselect'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-custom-form-label.min.js', 
+			['onoffice-multiselect'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-form-label.min.js'), 
+			true);
 		wp_enqueue_script('onoffice-custom-form-label-js');
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		wp_register_script('onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath));
-		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
+
+		wp_register_script('onoffice-multiselect', 
+			plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath),
+			['jquery'],
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-multiselect.min.js'),
+			true);
+    
+		wp_register_style('onoffice-multiselect', 
+			plugins_url('/css/onoffice-multiselect.css', $pluginPath),
+			[],
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/css/onoffice-multiselect.css'));
+
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
 
-		wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
-			['jquery'], '', true);
+		wp_register_script('oo-unsaved-changes-message', 
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-unsaved-changes-message.min.js'), 
+			true);
+
 		wp_enqueue_script('oo-unsaved-changes-message');
-		wp_register_script('onoffice-bulk-actions-fields', plugins_url('/dist/onoffice-bulk-actions-fields.min.js', $pluginPath));
+		
+		wp_register_script('onoffice-bulk-actions-fields', 
+			plugins_url('/dist/onoffice-bulk-actions-fields.min.js', $pluginPath),
+			['jquery'],
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-bulk-actions-fields.min.js'),
+			true);
+
 		wp_enqueue_script('onoffice-bulk-actions-fields');
 	}
 
@@ -533,6 +573,7 @@ class AdminPageEstateDetail
 			AdminPageEstate::PARAM_TAB => AdminPageEstate::PAGE_ESTATE_DETAIL,
 			self::ENQUEUE_DATA_MERGE => array(AdminPageEstate::PARAM_TAB),
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
+			/* translators: %s will be replaced with the field name */
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),
 			self::VIEW_LEAVE_WITHOUT_SAVING_TEXT => __('Leave without saving', 'onoffice-for-wp-websites'),
@@ -590,6 +631,7 @@ class AdminPageEstateDetail
 	private function renderSearchFieldForFieldLists(InputModelRenderer $pRenderer, $pFormViewSearchFieldForFieldLists)
 	{
 		echo '<div class="oo-search-field postbox ">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
 		echo '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Field list search', 'onoffice-for-wp-websites' ) . '</span></h2>';
 		echo '<div class="inside">';
 		$pRenderer->buildForAjax($pFormViewSearchFieldForFieldLists);

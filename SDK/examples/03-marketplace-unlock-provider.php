@@ -25,4 +25,5 @@ $handleUnlockProvider = $pSDK->callGeneric(
 
 $pSDK->sendRequests($apiUserToken, $apiUserSecret);
 
+// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- This is example code for developers
 var_export($pSDK->getResponseArray($handleUnlockProvider));

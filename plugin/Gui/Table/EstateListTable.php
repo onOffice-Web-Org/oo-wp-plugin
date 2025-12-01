@@ -268,7 +268,7 @@ class EstateListTable extends ListTable
 			admin_url('admin.php?page=onoffice-editlistview'));
 
 		$actions = [];
-		$actions['edit'] = '<a href="'.esc_attr($editLink).'">'.esc_html__('Edit').'</a>';
+		$actions['edit'] = '<a href="'.esc_attr($editLink).'">'.esc_html__('Edit', 'onoffice-for-wp-websites').'</a>';
 		$actions['duplicate'] = "<a class='button-duplicate' href='"
 			. esc_attr(wp_nonce_url(admin_url('admin.php') . '?page=onoffice-estates&action=bulk_duplicate&listVewId=' . $pItem->ID,
 				'bulk-estatelists'))
@@ -279,7 +279,7 @@ class EstateListTable extends ListTable
 			.esc_js(sprintf(
 			/* translators: %s is the name of the list view. */
 			__("You are about to delete the listview '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice-for-wp-websites'), $pItem->name))
-			."' ) ) { return true;}return false;\">" . esc_html__('Delete') . "</a>";
+			."' ) ) { return true;}return false;\">" . esc_html__('Delete', 'onoffice-for-wp-websites') . "</a>";
 		return $this->row_actions($actions);
 	}
 }

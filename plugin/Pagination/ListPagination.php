@@ -61,11 +61,13 @@ class ListPagination
 
     protected function determineCurrentPage()
     {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public pagination parameter, no side effects
         if ($this->parameter && isset($_GET[$this->parameter]) && is_numeric($_GET[$this->parameter])) {
             return (int) $_GET[$this->parameter];
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
     
-        // Fallback auf Standard-WordPress-Pagination
+        // Fallback to standard pagination query vars
         if (is_home() || is_front_page()) {
             return get_query_var('page') ?: 1;
         }
@@ -87,33 +89,34 @@ class ListPagination
     }
 
     public function render()
-    {
-        if ($this->numpages <= 1) {
-            return;
-        }
-
-        echo '<nav class="' . esc_attr($this->class) . ' ' .
-            ($this->type ? esc_attr($this->type) : '') .
-            '" aria-label="' . esc_attr(__('Post navigation', 'onoffice-for-wp-websites')) . '">';
-        echo '<ul>';
-     
-        for ($i = 1; $i <= $this->numpages; $i++) {
-            if (1 != $this->numpages 
-                   ) {
-                echo '<li>';
-                if ($this->page == $i) {
-                    echo '<span class="current" aria-current="page">' . $i . '</span>';
-                } else {
-                    echo '<a href="' . esc_url($this->getPagenumLink($i)) . '" aria-label="' . 
-                        sprintf(esc_html_x('Seite %d', 'template', 'onoffice-for-wp-websites'), $i) . 
-                    '"><span aria-hidden="true">' . $i . '</span></a>';
-                }
-                echo '</li>';
-            }
-        }
-
-        echo '</ul></nav>';
+{
+    if ($this->numpages <= 1) {
+        return;
     }
+
+    echo '<nav class="' . esc_attr($this->class) . ' ' .
+        ($this->type ? esc_attr($this->type) : '') .
+        '" aria-label="' . esc_attr(__('Post navigation', 'onoffice-for-wp-websites')) . '">';
+    echo '<ul>';
+ 
+    for ($i = 1; $i <= $this->numpages; $i++) {
+        if (1 != $this->numpages) {
+            echo '<li>';
+            if ($this->page == $i) {
+                echo '<span class="current" aria-current="page">' . esc_html($i) . '</span>';
+            } else {
+                /* translators: %d: page number */
+                echo '<a href="' . esc_url($this->getPagenumLink($i)) . '" aria-label="' . 
+                /* translators: %d: page number */
+                esc_attr(sprintf(esc_html_x('Page %d', 'template', 'onoffice-for-wp-websites'), $i)) . 
+                '"><span aria-hidden="true">' . esc_html($i) . '</span></a>';
+            }
+            echo '</li>';
+        }
+    }
+
+    echo '</ul></nav>';
+}
     protected function renderLink($pageNum, $icon, $label)
     {
         echo '<li>';

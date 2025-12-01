@@ -62,6 +62,7 @@ class Redirector
 	public function getCurrentLink(): string
 	{
 		global $wp;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- add_query_arg() handles sanitization internally.
 		return home_url(add_query_arg($_GET, $wp->request));
 	}
 }

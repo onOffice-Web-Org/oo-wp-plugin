@@ -17,13 +17,6 @@ msgstr ""
 msgid "A standard value of 1.5% and 0.5% is usually used to calculate notary and land registry costs."
 msgstr "Di norma, per calcolare i costi del notaio e del catasto si utilizzano valori standard rispettivamente del 1,5% e dello 0,5%."
 
-#. translators: 1: Count and name of parking lot
-msgid "%1$s"
-msgid_plural "%1$s"
-msgstr[0] "%1$s"
-msgstr[1] "%1$s"
-msgstr[2] "%1$s"
-
 msgid "Land Register Entry"
 msgstr "Iscrizione nel registro immobiliare"
 
@@ -66,6 +59,7 @@ msgstr "Messaggio dal modulo per i proprietari del tuo sito web"
 msgid "New newsletter registration"
 msgstr "Registrazione alle Newsletter"
 
+#. translators: %s: page number
 msgid "Page %s"
 msgstr "Pagina %s"
 
@@ -81,6 +75,7 @@ msgstr "Rimuovi pagina"
 msgid "Page"
 msgstr "Pagina"
 
+#. translators: %s: type (e.g., estate, address)
 msgid "%s list documentation"
 msgstr "%s lista documentazione"
 
@@ -357,6 +352,7 @@ msgstr "Seleziona opzioni"
 msgid "For information on how to use custom fields in your SEO plugin, please refer to its documentation."
 msgstr "Per informazioni su come utilizzare i campi personalizzati nel tuo plugin SEO, consulta la documentazione."
 
+#. translators: 1: line break HTML tag, 2-4: code examples of field variables
 msgid "An example of integration with the Yoast SEO plugin would be:%1$s %2$s or%1$s %3$s or%1$s %4$s"
 msgstr "Un esempio di integrazione con il plugin Yoast SEO potrebbe essere: %1$s %2$s oppure %1$s %3$s oppure %1$s %4$s"
 
@@ -372,6 +368,7 @@ msgstr "Ulteriori informazioni sui campi personalizzati"
 msgid "Social MetaData"
 msgstr "Metadati social"
 
+#. translators: %s: list of active SEO plugin names
 msgid "We have detected an active SEO plugin: %s. This option can lead to conflicts with the SocialMedia Data settings. Therefore they are disabled."
 msgstr "Abbiamo rilevato un plugin SEO attivo: %s. Questa opzione potrebbe causare conflitti con le impostazioni dei dati Social Media. Pertanto, sono state disabilitate."
 
@@ -542,6 +539,8 @@ msgstr[0] "%1$s, %2$s%3$s"
 msgstr[1] "%1$s, %2$s %3$s"
 msgstr[2] "%1$s, %2$s %3$s"
 
+#. translators: %s will be replaced with a link to learn more about estate filters
+#. translators: %s is a "Learn more" link
 msgid "Choose an estate filter from onOffice enterprise. %s"
 msgstr "Seleziona un filtro di immobile da onOffice enterprise. %s"
 
@@ -551,12 +550,10 @@ msgstr "Approfondisci."
 msgid "https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en"
 msgstr "https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en"
 
-msgid "The plugin couldn't find any %s. Please make sure that you have published some %s, as described in the %s"
-msgstr "Il plugin non ha trovato alcun immobile. Assicurati di aver pubblicato degli immobili, come descritto nella documentazione."
-
 msgid "https://wp-plugin.onoffice.com/en/first-steps/estate-lists/"
 msgstr "https://wp-plugin.onoffice.com/en/first-steps/estate-lists/"
 
+#. translators: %s will be replaced with a link to markdown documentation
 msgid "Label uses %s"
 msgstr "L'etichetta usa il %s"
 
@@ -569,14 +566,8 @@ msgstr "Markdown"
 msgid "GDPR (Checkbox)"
 msgstr "GDPR (casella di controllo)"
 
-msgid "Since you are logged in, here is a link to a random %s so that you can preview the detail page: %s"
-msgstr "Dato che sei loggato, ecco un link a un %s casuale così puoi visualizzare in anteprima la pagina di dettaglio: %s"
-
 msgid "Example estate"
 msgstr "Immobile di prova"
-
-msgid "You have opened the detail page, but we do not know which %s to show you, because there is no %s ID in the URL. Please go to an %s list and open an %s from there."
-msgstr "Hai aperto la pagina di dettaglio, ma non sappiamo quale %s mostrarti, perché nell’URL non è presente alcun ID %s. Ti preghiamo di andare a una lista %s e aprire un %s da lì."
 
 msgid "Applicant Search Form"
 msgstr "Modulo di ricerca interessati"
@@ -602,6 +593,7 @@ msgstr "Titolo e descrizione"
 msgid "This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin."
 msgstr "Il plugin compilerà titolo e descrizione con le informazioni dell'immobile mostrato. Questa opzione è consigliata se non si utilizza un plugin SEO."
 
+#. translators: %s: list of active SEO plugin names
 msgid ""
 "We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.\n"
 "\t\t\t\t\t\t\t\tWe recommend that you configure the onOffice plugin to not modify the title and description."
@@ -609,18 +601,12 @@ msgstr ""
 "Abbiamo rilevato un plugin SEO attivo: %s. Questa opzione può causarti problemi con il plugin SEO.\n"
 "\t\t\t\t\t\t\tTi consigliamo di configurare il plugin onOffice in modo da non modificare titolo e descrizione."
 
+#. translators: 1: HTML title tag, 2: HTML meta description tag
 msgid "The title and description of the detail page are set using the %1$s and %2$s tags. They make it possible to show a summary of the page when you share a link."
 msgstr "Il titolo e la descrizione della pagina dettagliata sono impostati con i tag %1$s e %2$s, con cui è possibile mostrare un sommario della pagina quando si condivide un link."
 
 msgid "This plugin will not modify the title and description. This enables other plugins to manage those tags."
 msgstr "Questo plugin non modificherà titolo e descrizione. Questa opzione consente ad altri plugin di lavorare con questi tag."
-
-msgid ""
-"The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.\n"
-"\t\t\t\t\t\t\t\tWe recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin."
-msgstr ""
-"Il plugin onOffice ha rilevato un plugin SEO attivo: %s. Attualmente il plugin onOffice è configurato per compilare il titolo e la descrizione della pagina dettagliata, fattore che può causarti problemi con il plugin SEO.\n"
-"\t\t\t\t\t\t\t\tTi consigliamo di andare su %s e configurare il plugin onOffice in modo che non modifichi il titolo e la descrizione. In questo modo puoi gestire il titolo e la descrizione con il plugin SEO attivo."
 
 msgid "onOffice plugin settings"
 msgstr "Impostazioni onOffice plugin"
@@ -692,12 +678,16 @@ msgstr "Mostra immobili di riferimento (insieme agli altri)"
 msgid "Hide reference estates"
 msgstr "Nascondi immobili di riferimento"
 
+#. translators: %s will be replaced with a link indicating the access restriction status
+#. translators: %s is a link to the detail page with restriction status
 msgid "Reference estates will link to their detail page, because the access is %s."
 msgstr "Gli immobili di riferimento saranno collegati alla loro pagina dettagliata, perchè l'accesso è %s."
 
 msgid "not restricted"
 msgstr "non limitato"
 
+#. translators: %s will be replaced with a link indicating the access restriction status
+#. translators: %s is a link to the detail page with restriction status
 msgid "Reference estates will not link to their detail page, because the access is %s."
 msgstr "Gli immobili di riferimento non saranno collegati alla loro pagina dettagliata, perchè l'accesso è %s."
 
@@ -738,9 +728,11 @@ msgstr "Sovrascrivi l'indirizzo email"
 msgid "Use default email address "
 msgstr "Usa indirizzo email predefinito "
 
+#. translators: %s will be replaced with the default email address in parentheses
 msgid "Use default email address %s"
 msgstr "Usa l'indirizzo email predefinito %s"
 
+#. translators: %s: recipient email address
 msgid "%s (override)"
 msgstr "%s (sovrascrivi)"
 
@@ -823,6 +815,7 @@ msgstr "Tutti"
 msgid "Popular"
 msgstr "Popolari"
 
+#. translators: %s will be replaced with a link to the Request Manager
 msgid "By default, no link is created to the estate when the plugin creates the address. If the contact form is on an detail page and you want to link the address and the requested estate, you can open the email in onOffice enterprise or use the %s."
 msgstr "Di default quando il plugin crea un contatto non viene creato un collegamento all'immobile. Se il modulo di contatto si trova su una pagina dettagliata e vuoi collegare il contatto al rispettivo immobile, puoi aprire l'email in onOffice enterprise o usare %s."
 
@@ -835,6 +828,7 @@ msgstr "Manager delle richieste"
 msgid "Sorting"
 msgstr "Ordinamento"
 
+#. translators: %s: folder path
 msgid "(in the folder \"%s\")"
 msgstr "(nella cartella \"%s\")"
 
@@ -919,6 +913,7 @@ msgstr "Etichetta personalizzata"
 msgid "Add custom label language"
 msgstr "Aggiungi l’etichetta personalizzata della lingua"
 
+#. translators: %s will be replaced with the field name
 msgid "Custom Label: %s"
 msgstr "Etichetta personalizzata: %s"
 
@@ -943,6 +938,7 @@ msgstr "La visualizzazione degli immobili simili è stata salvata."
 msgid "Similar Estates View"
 msgstr "Vedi immobili simili"
 
+#. translators: %s: number of matches
 msgid "Show %s matches"
 msgstr "Mostra %s corrispondenze"
 
@@ -1032,6 +1028,8 @@ msgstr "dal più basso"
 msgid "https://wpplugindoc.onoffice.de"
 msgstr "https://wpplugindoc.onoffice.de"
 
+#. translators: %s: field label
+#. translators: %s: field label for regional addition dropdown
 msgid "Choose %s"
 msgstr "Scegli %s"
 
@@ -1512,6 +1510,7 @@ msgid "View Name"
 msgstr "Nome della visualizzazione"
 
 #. translators: %s is a translated module name
+#. translators: %s will be replaced with the translated module name
 msgid "Module: %s"
 msgstr "Modulo: %s"
 
@@ -1658,12 +1657,10 @@ msgstr "Assicurati che non esista un'altra vista con questo nome, anche se di ti
 msgid "The Name field must not be empty. Do you want to leave the page without saving?"
 msgstr "Il campo Nome non può essere vuoto. Vuoi lasciare la pagina senza salvare?"
 
-msgid "Cache is being cleared in the background. This may take a few minutes."
-msgstr "La cache viene cancellata in background. L’operazione potrebbe richiedere alcuni minuti."
-
 msgid "Save changes"
 msgstr "Salva modifiche"
 
+#. translators: %d: page number
 msgid "Page %d"
 msgstr "Pagina %d"
 
@@ -1679,6 +1676,7 @@ msgstr "Applica"
 msgid "Page title:"
 msgstr "Titolo della pagina"
 
+#. translators: %s will be replaced with the language code or name
 msgid "Remove title for language %s"
 msgstr "Rimuovi il titolo per la lingua %s"
 
@@ -1700,6 +1698,7 @@ msgstr "Secret Sale"
 msgid "Commission free"
 msgstr "Commissione zero"
 
+#. translators: %s will be replaced with the language name
 msgid "Page title: %s"
 msgstr "Titolo della pagina: %s"
 
@@ -1712,17 +1711,10 @@ msgstr "Highlights"
 msgid "The From value cannot be greater than To value"
 msgstr "Il valore “Da” non può essere maggiore del valore “A”"
 
-msgid "The fields %s, %s and %s must be filled in onOffice enterprise so that output is possible."
-msgstr "I campi %s, %s e %s devono essere compilati in onOffice enterprise affinché sia possibile ottenere un output."
-
 msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
 msgstr "Un valore standard di 1,5% e 0,5% rispettivamente viene solitamente utilizzato per calcolare i costi notarili e di trascrizione catastale."
 
 msgid "Post navigation"
-msgstr ""
-
-msgctxt "template"
-msgid "Seite %d"
 msgstr ""
 
 msgid "Contact person image"
@@ -1786,4 +1778,60 @@ msgid "Straße der Immobilie"
 msgstr ""
 
 msgid "Hausnummer der Immobilie"
+msgstr ""
+
+#. translators: 1: list of active SEO plugins, 2: link to onOffice plugin settings
+msgid "The onOffice plugin has detected an active SEO plugin: %1$s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin. We recommend that you go to the %2$s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin."
+msgstr ""
+
+#. translators: 1: type (e.g., estate, address), 2: type (e.g., estate, address), 3: link to documentation
+msgid "The plugin couldn't find any %1$s. Please make sure that you have published some %1$s, as described in the %2$s"
+msgstr ""
+
+#. translators: 1: type (e.g., estate, address), 2: type (e.g., estate, address), 3: type (e.g., estate, address), 4: type (e.g., estate, address)
+msgid "You have opened the detail page, but we do not know which %1$s to show you, because there is no %1$s ID in the URL. Please go to an %1$s list and open an %1$s from there."
+msgstr ""
+
+#. translators: 1: type (e.g., estate, address), 2: link to detail page
+msgid "Since you are logged in, here is a link to a random %1$s so that you can preview the detail page: %2$s"
+msgstr ""
+
+msgid "No items found."
+msgstr ""
+
+msgid "Feld besonders hervorheben"
+msgstr ""
+
+#. translators: %1$s: field name 'kaufpreis', %2$s: field name 'aussen_courtage', %3$s: field name 'bundesland'
+msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible."
+msgstr ""
+
+#. translators: %d: page number
+msgctxt "template"
+msgid "Page %d"
+msgstr ""
+
+#. translators: %d: address ID number
+msgid "Show Details for Address No. %d"
+msgstr ""
+
+#. translators: %d: real estate ID number
+msgctxt "template"
+msgid "Show Details for Real Estate No. %d"
+msgstr ""
+
+#. translators: %d: real estate ID number
+msgctxt "template"
+msgid "Real Estate No. %d"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Zur Einheit"
+msgstr ""
+
+#. translators: %s: real estate ID number
+msgctxt "template"
+msgid "Show Details for Real Estate No. %s"
 msgstr ""

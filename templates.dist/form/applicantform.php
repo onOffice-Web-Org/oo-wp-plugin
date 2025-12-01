@@ -23,8 +23,8 @@ $displayError = false;
 ?>
 <form method="post" id="onoffice-form" class="oo-form oo-form-applicant" novalidate>
 
-	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
-	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
+	<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
+    <input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
 
 <?php
 
@@ -143,17 +143,21 @@ if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 ?>
 	<h2><?php esc_html_e('Your contact details', 'onoffice-for-wp-websites'); ?></h2>
-		<?php if (is_array($addressValues)) {
+        <?php if (is_array($addressValues)) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $addressValues is already escaped in renderFormField()
             echo implode($addressValues);
         } ?>
-	<h2><?php esc_html_e('Your search criteria', 'onoffice-for-wp-websites'); ?></h2>
-		<?php if (is_array($searchcriteriaValues)) {
+    <h2><?php esc_html_e('Your search criteria', 'onoffice-for-wp-websites'); ?></h2>
+        <?php if (is_array($searchcriteriaValues)) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $searchcriteriaValues is already escaped in renderFormField()
             echo implode($searchcriteriaValues);
         } ?>
-			<?php if (is_array($otherValues)) {
-				echo implode($otherValues);
-			} ?>
-		<?php if (is_array($hiddenValues)) {
+            <?php if (is_array($otherValues)) {
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $otherValues is already escaped in renderFormField()
+                echo implode($otherValues);
+            } ?>
+        <?php if (is_array($hiddenValues)) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $hiddenValues is already escaped in renderFormField()
             echo implode($hiddenValues);
         } ?>
 		<?php

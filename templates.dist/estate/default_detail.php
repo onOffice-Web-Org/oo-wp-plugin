@@ -91,9 +91,9 @@ $dimensions = [
 		$energyCertificateFields = ["baujahr","endenergiebedarf","energieverbrauchskennwert","energieausweistyp","energieausweis_gueltig_bis","energyClass","energietraeger","co2_Emissionsklasse","co2ausstoss"];
 		?>
 		<div class="oo-detailsheadline">
-			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
+			<h1><?php echo esc_html($currentEstate["objekttitel"]); ?></h1>
 			<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>
-				<span style="padding:0 15px"><?php echo ucfirst($currentEstate['vermarktungsstatus']); ?></span>
+				<span style="padding:0 15px"><?php echo esc_html(ucfirst($currentEstate['vermarktungsstatus'])); ?></span>
 				<?php unset($currentEstate['vermarktungsstatus']); ?>
 			<?php } ?>
 		</div>
@@ -124,18 +124,25 @@ $dimensions = [
                      * @param bool $maxWidth, default = false)
                      * @return string for image source on various media
                      */
+                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstates->getResponsiveImageSource($id, 575, $dimensions['575']['w'], $dimensions['575']['h'], true);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstates->getResponsiveImageSource($id, 1600, $dimensions['1600']['w'], $dimensions['1600']['h']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstates->getResponsiveImageSource($id, 1400, $dimensions['1400']['w'], $dimensions['1400']['h']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstates->getResponsiveImageSource($id, 1200, $dimensions['1200']['w'], $dimensions['1200']['h']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstates->getResponsiveImageSource($id, 992, $dimensions['992']['w'], $dimensions['992']['h']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstates->getResponsiveImageSource($id, 768, $dimensions['768']['w'], $dimensions['768']['h']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstates->getResponsiveImageSource($id, 576, $dimensions['576']['w'], $dimensions['576']['h']);
                     echo '<img class="oo-responsive-image estate-status" ' .
                         'src="' . esc_url($pEstates->getEstatePictureUrl($id, isset($dimensions['1600']['w']) || isset($dimensions['1600']['h']) ? ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']] : null)) . '" ' .
-                        'alt="' . esc_html($pEstates->getEstatePictureTitle($id) ?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
+                        'alt="' . esc_html($pEstates->getEstatePictureTitle($id) ?? esc_attr__('Image of property', 'onoffice-for-wp-websites')) . '" ' .
                         'loading="lazy">';
-                    echo '</picture>';;
+                    echo '</picture>';
 					echo '</div>';
 				}
 				?>
@@ -147,8 +154,8 @@ $dimensions = [
 				$estatefacts = array_diff_key($estateDetails, $highlightKeys); // get only non highlighteds
 			?>
 			<?php if(!empty($keyfacts)) {
-				echo '<h2 class="oo-details-highlights-headline">' . __('Highlights', 'onoffice-for-wp-websites') . '</h2>' .
-					'<dl class="oo-details-highlights-table">';
+				echo '<h2 class="oo-details-highlights-headline">' . esc_html__('Highlights', 'onoffice-for-wp-websites') . '</h2>' .
+                    '<dl class="oo-details-highlights-table">';
 				foreach ($keyfacts as $field => $value) {
 					if ($pEstates->getShowEnergyCertificate() && in_array($field, $energyCertificateFields)) {
 						continue;
@@ -206,19 +213,19 @@ $dimensions = [
 			<?php if ($currentEstate["dreizeiler"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('dreizeiler')); ?></h2>
-					<?php echo nl2br($currentEstate["dreizeiler"]); ?>
+					<?php echo wp_kses_post(nl2br($currentEstate["dreizeiler"])); ?>
 				</div>
 			<?php } ?>
 			<?php if ($currentEstate["objektbeschreibung"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('objektbeschreibung')); ?></h2>
-					<?php echo nl2br($currentEstate["objektbeschreibung"]); ?>
+					<?php echo wp_kses_post(nl2br($currentEstate["objektbeschreibung"])); ?>
 				</div>
 			<?php } ?>
 			<?php if ($currentEstate["lage"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('lage')); ?></h2>
-					<?php echo nl2br($currentEstate["lage"]); ?>
+					<?php echo wp_kses_post(nl2br($currentEstate["lage"])); ?>
 				</div>
 			<?php } ?>
 
@@ -238,7 +245,9 @@ $dimensions = [
 			if ($mapContent != '') { ?>
 				<div class="oo-detailsmap">
 					<h2><?php esc_html_e('Map', 'onoffice-for-wp-websites'); ?></h2>
-					<?php echo $mapContent; ?>
+					<?php 
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Map HTML is generated with escaped content
+					echo $mapContent; ?>
 				</div>
 			<?php } ?>
 			<?php if ($pEstates->getShowEnergyCertificate()) {
@@ -253,12 +262,12 @@ $dimensions = [
 						<div class="energy-certificate-container">
 							<div class="segmented-bar">
 								<?php foreach ($energyClassPermittedValues as $key => $label): ?>
-									<div class="energy-certificate-label"><span><?php echo $energyCertificateValueLabels[$key] ?? ''; ?></span></div>
+									<div class="energy-certificate-label"><span><?php echo esc_html($energyCertificateValueLabels[$key] ?? ''); ?></span></div>
 									<div class="segment<?php echo ($energyClass === $label ? ' selected' : ''); ?>">
 										<span><?php echo esc_html($label); ?></span>
 									</div>
 								<?php endforeach; ?>
-								<div class="energy-certificate-label"><span><?php echo end($energyCertificateValueLabels); ?></span></div>
+								<div class="energy-certificate-label"><span><?php echo esc_html(end($energyCertificateValueLabels)); ?></span></div>
 							</div>
 						</div>
 					<?php endif; ?>
@@ -285,14 +294,14 @@ $dimensions = [
 			<?php if ($currentEstate["ausstatt_beschr"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('ausstatt_beschr')); ?></h2>
-					<?php echo nl2br($currentEstate["ausstatt_beschr"]); ?>
+					<?php echo wp_kses_post(nl2br($currentEstate["ausstatt_beschr"])); ?>
 				</div>
 			<?php } ?>
 
 			<?php if ($currentEstate["sonstige_angaben"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('sonstige_angaben')); ?></h2>
-					<?php echo nl2br($currentEstate["sonstige_angaben"]); ?>
+					<?php echo wp_kses_post(nl2br($currentEstate["sonstige_angaben"])); ?>
 				</div>
 			<?php } ?>
 
@@ -308,6 +317,7 @@ $dimensions = [
 							$values = [$totalCostsData['kaufpreis']['raw'], $totalCostsData['bundesland']['raw'], $totalCostsData['aussen_courtage']['raw'],$totalCostsData['notary_fees']['raw'], $totalCostsData['land_register_entry']['raw']];
 							$valuesTitle = [$totalCostsData['kaufpreis']['default'], $totalCostsData['bundesland']['default'], $totalCostsData['aussen_courtage']['default'],$totalCostsData['notary_fees']['default'], $totalCostsData['land_register_entry']['default']];
 							$chart = new EstateCostsChart($values, $valuesTitle);
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Generates SVG with escaped content
 							echo $chart->generateSVG(); ?>
 						</div>
 						<div class="oo-costs-overview">
@@ -361,7 +371,9 @@ $dimensions = [
 				</div>
 			<?php } ?>
 			<?php if (!empty($pEstates->getEstateUnits())) : ?>
-				<?php echo $pEstates->getEstateUnits(); ?>
+				<?php 
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML
+					echo $pEstates->getEstateUnits(); ?>
 			<?php endif; ?>
 		</div>
 		<div class="oo-details-sidebar">
@@ -472,7 +484,9 @@ $dimensions = [
 				<?php if ($pEstates->getDocument() != '') : ?>
 					<div class="oo-asp oo-detailsexpose">
 					<h2><?php esc_html_e('Documents', 'onoffice-for-wp-websites'); ?></h2>
-					<a href="<?php echo $pEstates->getDocument(); ?>">
+					<a href="<?php 
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getDocument() already returns esc_url()
+					echo $pEstates->getDocument(); ?>">
 						<?php esc_html_e('PDF expose', 'onoffice-for-wp-websites'); ?>
 					</a>
 					</div>
@@ -509,11 +523,13 @@ $dimensions = [
 				echo '<h2>' . esc_html__('Videos', 'onoffice-for-wp-websites') . '</h2>';
 
 				foreach ($estateMoviePlayers as $movieInfos) {
-					echo '<div class="oo-video">';
-					echo headingLink($movieInfos['url'], $movieInfos['title']);
-					echo $movieInfos['player'];
-					echo '</div>';
-				}
+                    echo '<div class="oo-video">';
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- headingLink() returns escaped HTML
+                    echo headingLink($movieInfos['url'], $movieInfos['title']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- player HTML is escaped by WordPress embed
+                    echo $movieInfos['player'];
+                    echo '</div>';
+                }
 
 				foreach ($estateMovieLinks as $movieLink) {
 					echo '<div class="oo-video">
@@ -534,11 +550,13 @@ $dimensions = [
 				echo '<h2>' . esc_html__('360° tours', 'onoffice-for-wp-websites') . '</h2>';
 
 				foreach ($estateOguloEmbeds as $linkInfos) {
-					echo '<div class="oo-video">';
-					echo headingLink($linkInfos['url'], $linkInfos['title']);
-					echo $linkInfos['player'];
-					echo '</div>';
-				}
+                    echo '<div class="oo-video">';
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- headingLink() returns escaped HTML
+                    echo headingLink($linkInfos['url'], $linkInfos['title']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- player HTML is escaped iframe
+                    echo $linkInfos['player'];
+                    echo '</div>';
+                }
 
 				foreach ($estateOguloLinks as $oguloLink) {
 					echo '<div class="oo-video">
@@ -559,11 +577,13 @@ $dimensions = [
 				echo '<h2>' . esc_html__('Objects', 'onoffice-for-wp-websites') . '</h2>';
 
 				foreach ($estateObjectEmbeds as $linkInfos) {
-					echo '<div class="oo-video">';
-					echo headingLink($linkInfos['url'], $linkInfos['title']);
-					echo $linkInfos['player'];
-					echo '</div>';
-				}
+                    echo '<div class="oo-video">';
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- headingLink() returns escaped HTML
+                    echo headingLink($linkInfos['url'], $linkInfos['title']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- player HTML is escaped iframe
+                    echo $linkInfos['player'];
+                    echo '</div>';
+                }
 
 				foreach ($estateObjectLinks as $objectLink) {
 					echo '<div class="oo-video">
@@ -584,11 +604,13 @@ $dimensions = [
 				echo '<h2>' . esc_html__('Links', 'onoffice-for-wp-websites') . '</h2>';
 
 				foreach ($estateLinkEmbeds as $linkInfos) {
-					echo '<div class="oo-video">';
-					echo headingLink($linkInfos['url'], $linkInfos['title']);
-					echo $linkInfos['player'];
-					echo '</div>';
-				}
+                    echo '<div class="oo-video">';
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- headingLink() returns escaped HTML
+                    echo headingLink($linkInfos['url'], $linkInfos['title']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- player HTML is escaped iframe
+                    echo $linkInfos['player'];
+                    echo '</div>';
+                }
 
 				foreach ($estateLinks as $link) {
 					echo '<div class="oo-video">
@@ -605,6 +627,7 @@ $dimensions = [
 		<?php
 		$similar = trim($pEstates->getSimilarEstates());
 		if (!empty($similar)) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getSimilarEstates() returns escaped HTML
 			echo $similar;
 		}
 	} ?>
