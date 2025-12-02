@@ -70,18 +70,19 @@ class ScriptLoaderMapOsm
 	 */
 
 	public function register()
-	{
-		$this->_pWPScriptStyle->registerStyle('leaflet-style',
-			plugins_url('/third_party/leaflet/leaflet.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
+    {
+        $this->_pWPScriptStyle->registerStyle('leaflet-style',
+            plugins_url('/third_party/leaflet/leaflet.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
 
-		$this->_pWPScriptStyle->registerScript('leaflet-script',
-			plugins_url('/third_party/leaflet/leaflet.js', ONOFFICE_PLUGIN_DIR.'/index.php'));
+        $this->_pWPScriptStyle->registerScript('leaflet-script',
+            plugins_url('/third_party/leaflet/leaflet.js', ONOFFICE_PLUGIN_DIR.'/index.php'));
 
-		$this->_pWPScriptStyle->registerScript('leaflet-script-a11y',
-			plugins_url('/third_party/leaflet/leaflet-a11y.js', ONOFFICE_PLUGIN_DIR.'/index.php'));
+        $this->_pWPScriptStyle->registerScript('leaflet-script-a11y',
+            plugins_url('/third_party/leaflet/leaflet-a11y.js', ONOFFICE_PLUGIN_DIR.'/index.php'),
+            ['leaflet-script']); 
 
-		$this->_pWPScriptStyle->registerScript('leaflet-script-cluster',
-			plugins_url('/third_party/leaflet/leaflet-cluster.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'));
-
-	}
+        $this->_pWPScriptStyle->registerScript('leaflet-script-cluster',
+            plugins_url('/third_party/leaflet/leaflet-cluster.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'),
+            ['leaflet-script']); 
+    }
 }
