@@ -123,7 +123,6 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
 
 		if ($this->_showCreateAddress) {
-			$_additionalCategories = 
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS);
  			if (empty($pInputModelBuilder->getValues())) {
 				$pInputModel->setValue(true);
