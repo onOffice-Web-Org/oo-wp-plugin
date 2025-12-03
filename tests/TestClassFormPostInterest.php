@@ -74,7 +74,6 @@ class TestClassFormPostInterest
 
 	public function prepare()
 	{
-
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
@@ -237,7 +236,8 @@ class TestClassFormPostInterest
 			'krit_bemerkung_oeffentlich' => 'comment3',
 			'stp_anzahl__von' => '20.00',
 			'stp_anzahl__bis' => '40.00',
-			'gdprcheckbox' => 'y'
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_interestform'),
 		];
 
 		$pConfig = $this->getNewDataFormConfigurationInterest();
@@ -267,7 +267,8 @@ class TestClassFormPostInterest
 			'kaufpreis__von' => '200000.00',
 			'kaufpreis__bis' => '800000.00',
 			'stp_anzahl__von' => '20.00',
-			'stp_anzahl__bis' => '40.00'
+			'stp_anzahl__bis' => '40.00',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_interestform'),
 		];
 
 		$unsuccessfulCombinations = [
@@ -304,6 +305,7 @@ class TestClassFormPostInterest
 		$pConfig = $this->getNewDataFormConfigurationInterest();
 		$_POST = [
 			'Vorname' => 'John',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_interestform'),
 		];
 
 		$this->_pFormPostInterest->initialCheck($pConfig, 3);
@@ -329,7 +331,8 @@ class TestClassFormPostInterest
 			'krit_bemerkung_oeffentlich' => 'comment3',
 			'stp_anzahl__von' => '20.00',
 			'stp_anzahl__bis' => '40.00',
-			'gdprcheckbox' => 'y'
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_interestform'),
 		];
 		$pConfig = $this->getNewDataFormConfigurationInterest();
 		$this->addApiResponseCreateAddress(true);

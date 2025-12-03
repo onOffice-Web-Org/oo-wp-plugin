@@ -124,6 +124,17 @@ abstract class FormPost
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
 
+		 // CSRF Protection: Verify nonce
+		$nonce = $_POST['onoffice_nonce'] ?? '';
+		$formId = $pConfig->getFormName();
+		if (!wp_verify_nonce($nonce, 'onoffice_form_' . $formId)) {
+			$pFormData->setStatus(self::MESSAGE_ERROR);
+			$this->_pFormPostConfiguration->getLogger()->logError(
+				new \Exception('CSRF token verification failed for form: ' . $formId)
+			);
+			return;
+		}
+
 		if ($this->_pFormPostConfiguration->getPostMessage() !== "") {
 			$pFormData->setStatus(self::MESSAGE_SUCCESS);
 			return;
