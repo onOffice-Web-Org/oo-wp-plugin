@@ -800,11 +800,12 @@ class TestClassAddressList
 
 	/**
 	 * Test createAddressTitle with all parameters provided
+	 * @doesNotPerformAssertions
 	 */
 	public function testCreateAddressTitleWithAllParameters()
 	{
 		$result = AddressList::createAddressTitle('Max', 'Mustermann', 'Acme Corp');
-		$this->assertEquals('max mustermann acme corp', $result);
+		self::assertEquals('max mustermann acme corp', $result);
 	}
 
 	/**
@@ -813,7 +814,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithFirstNameAndLastName()
 	{
 		$result = AddressList::createAddressTitle('Max', 'Mustermann', null);
-		$this->assertEquals('max mustermann', $result);
+		self::assertEquals('max mustermann', $result);
 	}
 
 	/**
@@ -822,7 +823,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithFirstNameAndCompany()
 	{
 		$result = AddressList::createAddressTitle('Max', null, 'Acme Corp');
-		$this->assertEquals('max acme corp', $result);
+		self::assertEquals('max acme corp', $result);
 	}
 
 	/**
@@ -831,7 +832,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithLastNameAndCompany()
 	{
 		$result = AddressList::createAddressTitle(null, 'Mustermann', 'Acme Corp');
-		$this->assertEquals('mustermann acme corp', $result);
+		self::assertEquals('mustermann acme corp', $result);
 	}
 
 	/**
@@ -840,7 +841,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithFirstNameOnly()
 	{
 		$result = AddressList::createAddressTitle('Max', null, null);
-		$this->assertEquals('max', $result);
+		self::assertEquals('max', $result);
 	}
 
 	/**
@@ -849,7 +850,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithLastNameOnly()
 	{
 		$result = AddressList::createAddressTitle(null, 'Mustermann', null);
-		$this->assertEquals('mustermann', $result);
+		self::assertEquals('mustermann', $result);
 	}
 
 	/**
@@ -858,7 +859,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithCompanyOnly()
 	{
 		$result = AddressList::createAddressTitle(null, null, 'Acme Corp');
-		$this->assertEquals('acme corp', $result);
+		self::assertEquals('acme corp', $result);
 	}
 
 	/**
@@ -867,7 +868,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithAllParametersNull()
 	{
 		$result = AddressList::createAddressTitle(null, null, null);
-		$this->assertEquals('', $result);
+		self::assertEquals('', $result);
 	}
 
 	/**
@@ -876,7 +877,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithEmptyStrings()
 	{
 		$result = AddressList::createAddressTitle('', '', '');
-		$this->assertEquals('', $result);
+		self::assertEquals('', $result);
 	}
 
 	/**
@@ -885,7 +886,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithMixedEmptyAndNull()
 	{
 		$result = AddressList::createAddressTitle('', null, 'Acme Corp');
-		$this->assertEquals('acme corp', $result);
+		self::assertEquals('acme corp', $result);
 	}
 
 	/**
@@ -894,7 +895,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithWhitespaceOnlyStrings()
 	{
 		$result = AddressList::createAddressTitle('   ', '  ', '   ');
-		$this->assertEquals('', $result);
+		self::assertEquals('', $result);
 	}
 
 	/**
@@ -903,7 +904,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithMixedWhitespaceAndValues()
 	{
 		$result = AddressList::createAddressTitle('Max', '  ', 'Acme Corp');
-		$this->assertEquals('max acme corp', $result);
+		self::assertEquals('max acme corp', $result);
 	}
 
 	/**
@@ -912,7 +913,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithSpecialCharacters()
 	{
 		$result = AddressList::createAddressTitle('Max', 'Müller', 'Société &Co.');
-		$this->assertEquals('max müller société &co.', $result);
+		self::assertEquals('max müller société &co.', $result);
 	}
 
 	/**
@@ -921,7 +922,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithMixedCaseCharacters()
 	{
 		$result = AddressList::createAddressTitle('MaX', 'MuStErMaNn', 'AcMe CoRp');
-		$this->assertEquals('max mustermann acme corp', $result);
+		self::assertEquals('max mustermann acme corp', $result);
 	}
 
 	/**
@@ -930,7 +931,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithNumericValues()
 	{
 		$result = AddressList::createAddressTitle('123', '456', '789');
-		$this->assertEquals('123 456 789', $result);
+		self::assertEquals('123 456 789', $result);
 	}
 
 	/**
@@ -939,7 +940,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithoutCompanyParameter()
 	{
 		$result = AddressList::createAddressTitle('Max', 'Mustermann');
-		$this->assertEquals('max mustermann', $result);
+		self::assertEquals('max mustermann', $result);
 	}
 
 	/**
@@ -948,7 +949,7 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithZeroValues()
 	{
 		$result = AddressList::createAddressTitle('0', '0', '0');
-		$this->assertEquals('', $result);
+		self::assertEquals('', $result);
 	}
 
 	/**
@@ -957,6 +958,6 @@ class TestClassAddressList
 	public function testCreateAddressTitleWithFalseStringValue()
 	{
 		$result = AddressList::createAddressTitle('false', 'false', 'false');
-		$this->assertEquals('false false false', $result);
+		self::assertEquals('false false false', $result);
 	}
 }
