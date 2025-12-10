@@ -797,4 +797,166 @@ class TestClassAddressList
 
 		return json_decode($responseStr, true);
 	}
+
+	/**
+	 * Test createAddressTitle with all parameters provided
+	 */
+	public function testCreateAddressTitleWithAllParameters()
+	{
+		$result = AddressList::createAddressTitle('Max', 'Mustermann', 'Acme Corp');
+		$this->assertEquals('max mustermann acme corp', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with firstName and lastName only
+	 */
+	public function testCreateAddressTitleWithFirstNameAndLastName()
+	{
+		$result = AddressList::createAddressTitle('Max', 'Mustermann', null);
+		$this->assertEquals('max mustermann', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with firstName and company only
+	 */
+	public function testCreateAddressTitleWithFirstNameAndCompany()
+	{
+		$result = AddressList::createAddressTitle('Max', null, 'Acme Corp');
+		$this->assertEquals('max acme corp', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with lastName and company only
+	 */
+	public function testCreateAddressTitleWithLastNameAndCompany()
+	{
+		$result = AddressList::createAddressTitle(null, 'Mustermann', 'Acme Corp');
+		$this->assertEquals('mustermann acme corp', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with firstName only
+	 */
+	public function testCreateAddressTitleWithFirstNameOnly()
+	{
+		$result = AddressList::createAddressTitle('Max', null, null);
+		$this->assertEquals('max', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with lastName only
+	 */
+	public function testCreateAddressTitleWithLastNameOnly()
+	{
+		$result = AddressList::createAddressTitle(null, 'Mustermann', null);
+		$this->assertEquals('mustermann', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with company only
+	 */
+	public function testCreateAddressTitleWithCompanyOnly()
+	{
+		$result = AddressList::createAddressTitle(null, null, 'Acme Corp');
+		$this->assertEquals('acme corp', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with all parameters null
+	 */
+	public function testCreateAddressTitleWithAllParametersNull()
+	{
+		$result = AddressList::createAddressTitle(null, null, null);
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with empty strings
+	 */
+	public function testCreateAddressTitleWithEmptyStrings()
+	{
+		$result = AddressList::createAddressTitle('', '', '');
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with mixed empty and null values
+	 */
+	public function testCreateAddressTitleWithMixedEmptyAndNull()
+	{
+		$result = AddressList::createAddressTitle('', null, 'Acme Corp');
+		$this->assertEquals('acme corp', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with whitespace-only strings (should be treated as empty)
+	 */
+	public function testCreateAddressTitleWithWhitespaceOnlyStrings()
+	{
+		$result = AddressList::createAddressTitle('   ', '  ', '   ');
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with mixed whitespace and values
+	 */
+	public function testCreateAddressTitleWithMixedWhitespaceAndValues()
+	{
+		$result = AddressList::createAddressTitle('Max', '  ', 'Acme Corp');
+		$this->assertEquals('max acme corp', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with special characters
+	 */
+	public function testCreateAddressTitleWithSpecialCharacters()
+	{
+		$result = AddressList::createAddressTitle('Max', 'Müller', 'Société &Co.');
+		$this->assertEquals('max müller société &co.', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with mixed case characters
+	 */
+	public function testCreateAddressTitleWithMixedCaseCharacters()
+	{
+		$result = AddressList::createAddressTitle('MaX', 'MuStErMaNn', 'AcMe CoRp');
+		$this->assertEquals('max mustermann acme corp', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with numeric values as strings
+	 */
+	public function testCreateAddressTitleWithNumericValues()
+	{
+		$result = AddressList::createAddressTitle('123', '456', '789');
+		$this->assertEquals('123 456 789', $result);
+	}
+
+	/**
+	 * Test createAddressTitle without company parameter (backward compatibility)
+	 */
+	public function testCreateAddressTitleWithoutCompanyParameter()
+	{
+		$result = AddressList::createAddressTitle('Max', 'Mustermann');
+		$this->assertEquals('max mustermann', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with zero values
+	 */
+	public function testCreateAddressTitleWithZeroValues()
+	{
+		$result = AddressList::createAddressTitle('0', '0', '0');
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * Test createAddressTitle with false values (should be empty)
+	 */
+	public function testCreateAddressTitleWithFalseStringValue()
+	{
+		$result = AddressList::createAddressTitle('false', 'false', 'false');
+		$this->assertEquals('false false false', $result);
+	}
 }
