@@ -765,7 +765,7 @@ implements AddressListBase
 	 * @param string|null $company
 	 * @return string
 	 */
-	public static function createAddressTitle(string $firstName, string $lastName, string $company): string
+	public static function createAddressTitle(?string $firstName, ?string $lastName, ?string $company): string
 	{
 		$parts = [];
 		if (!empty($firstName)) {
