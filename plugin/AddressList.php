@@ -768,9 +768,9 @@ implements AddressListBase
 	public static function createAddressTitle(?string $firstName, ?string $lastName, ?string $company = null): string
 	{
 		$parts = [];
-		$firstName = $firstName !== null ? trim($firstName) : '';
-		$lastName = $lastName !== null ? trim($lastName) : '';
-		$company = $company !== null ? trim($company) : '';
+		$firstName = trim($firstName ?? '');
+		$lastName = trim($lastName ?? '');
+		$company = trim($company ?? '');
 		
 		if (!empty($firstName)) {
 			$parts[] = strtolower($firstName);
