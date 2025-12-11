@@ -1,0 +1,58 @@
+<script src="https://www.google.com/recaptcha/enterprise.js?render=%3$s"></script>
+<script>
+function onSubmitEnterprise() {
+    var url = %1$s;
+    var translations = %2$s;
+    var siteKey = %4$s;
+    var projectId = %5$s;
+    var resultdiv = document.getElementById('captcha-enterprise-result');
+    var button = document.getElementById('captcha-enterprise-test-btn');
+    
+    button.disabled = true;
+    resultdiv.textContent = '...';
+    
+    // Check if reCAPTCHA Enterprise script is loaded
+    if (typeof grecaptcha === 'undefined' || typeof grecaptcha.enterprise === 'undefined') {
+        resultdiv.textContent = translations['browser-error'] || 'reCAPTCHA Enterprise not loaded';
+        button.disabled = false;
+        return;
+    }
+    
+    grecaptcha.enterprise.ready(function() {
+        grecaptcha.enterprise.execute(siteKey, {action: 'test_keys'}).then(function(token) {
+            jQuery.post(
+                url, {
+                    'action': 'check_captcha_enterprise_data',
+                    'token': token,
+                    'projectId': projectId,
+                    'siteKey': siteKey
+                },
+                function(response) {
+                    button.disabled = false;
+                    var result = JSON.parse(response);
+
+                    console.log(result);
+
+                    if (result.success) {
+                        resultdiv.textContent = translations.response_ok + ' (Score: ' + result.score + ')';
+                    } else {
+                        resultdiv.textContent = translations.response_error + ' ';
+                        for (var i in result['error-codes']) {
+                            var error = result['error-codes'][i];
+                            if (error in translations) {
+                                resultdiv.textContent += translations[error];
+                                break;
+                            }
+                        }
+                    }
+                }
+            );
+        }).catch(function(error) {
+            button.disabled = false;
+            resultdiv.textContent = translations['browser-error'] || (translations.response_error + ' ' + error);
+        });
+    });
+}
+</script>
+<button type="button" id="captcha-enterprise-test-btn" class="button" onclick="onSubmitEnterprise()">Test Keys</button>
+<div id="captcha-enterprise-result"></div>

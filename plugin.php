@@ -55,6 +55,7 @@ use onOffice\WPlugin\DataView\DataDetailViewCheckAccessControl;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Field\EstateKindTypeReader;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
+use onOffice\WPlugin\Form\CaptchaEnterpriseDataChecker;
 use onOffice\WPlugin\Form\Preview\FormPreviewApplicantSearch;
 use onOffice\WPlugin\Form\Preview\FormPreviewEstate;
 use onOffice\WPlugin\FormPostHandler;
@@ -214,6 +215,7 @@ add_action('init', function() use ($pAdminViewController) {
 }, 11);
 add_action('admin_init', [$pAdminViewController, 'add_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
+add_action('admin_init', [CaptchaEnterpriseDataChecker::class, 'addHook']);
 add_action('admin_init', [$pDetailViewPostSaveController, 'getAllPost']);
 add_action('plugins_loaded', function() {
 	$mo_file = ONOFFICE_PLUGIN_DIR . '/languages/onoffice-for-wp-websites-'.get_locale().'.mo';
