@@ -1,57 +1,107 @@
-<script src="https://www.google.com/recaptcha/enterprise.js?render=%3$s"></script>
 <script>
-function onSubmitEnterprise() {
+async function onSubmitEnterprise() {
     var url = %1$s;
     var translations = %2$s;
-    var siteKey = %4$s;
-    var projectId = %5$s;
     var resultdiv = document.getElementById('captcha-enterprise-result');
     var button = document.getElementById('captcha-enterprise-test-btn');
     
-    button.disabled = true;
-    resultdiv.textContent = '...';
+    var siteKey = (document.querySelector('input[name="onoffice-settings-captcha-enterprise-sitekey"]')?.value || '').trim();
+    var projectId = (document.querySelector('input[name="onoffice-settings-captcha-enterprise-projectid"]')?.value || '').trim();
     
-    // Check if reCAPTCHA Enterprise script is loaded
-    if (typeof grecaptcha === 'undefined' || typeof grecaptcha.enterprise === 'undefined') {
-        resultdiv.textContent = translations['browser-error'] || 'reCAPTCHA Enterprise not loaded';
+    var errorHandled = false;
+    
+    function showResult(message, isSuccess) {
+        resultdiv.textContent = message;
+        resultdiv.style.color = isSuccess ? 'green' : 'red';
         button.disabled = false;
-        return;
+        errorHandled = true;
     }
     
-    grecaptcha.enterprise.ready(function() {
-        grecaptcha.enterprise.execute(siteKey, {action: 'test_keys'}).then(function(token) {
-            jQuery.post(
-                url, {
-                    'action': 'check_captcha_enterprise_data',
-                    'token': token,
-                    'projectId': projectId,
-                    'siteKey': siteKey
-                },
-                function(response) {
-                    button.disabled = false;
-                    var result = JSON.parse(response);
-
-                    console.log(result);
-
-                    if (result.success) {
-                        resultdiv.textContent = translations.response_ok + ' (Score: ' + result.score + ')';
-                    } else {
-                        resultdiv.textContent = translations.response_error + ' ';
-                        for (var i in result['error-codes']) {
-                            var error = result['error-codes'][i];
-                            if (error in translations) {
-                                resultdiv.textContent += translations[error];
-                                break;
-                            }
-                        }
-                    }
-                }
-            );
-        }).catch(function(error) {
-            button.disabled = false;
-            resultdiv.textContent = translations['browser-error'] || (translations.response_error + ' ' + error);
+    function showError(key, fallback) {
+        showResult(translations[key] || fallback, false);
+    }
+    
+    function rejectionHandler(event) {
+        var message = (event.reason?.message || event.reason?.toString()) || '';
+        if (message.indexOf('Invalid site key') !== -1) {
+            event.preventDefault();
+            if (!errorHandled) {
+                showError('invalid-site-key', 'The Site Key is invalid.');
+                window.removeEventListener('unhandledrejection', rejectionHandler);
+            }
+        }
+    }
+    
+    // Reset state
+    button.disabled = true;
+    resultdiv.textContent = '...';
+    resultdiv.style.color = '';
+    
+    // Validate inputs
+    if (!siteKey) return showError('missing-site-key', 'Site Key is required');
+    if (!projectId) return showError('missing-input-secret', 'Project ID is required');
+    
+    // Remove existing grecaptcha and script
+    if (typeof grecaptcha !== 'undefined') delete window.grecaptcha;
+    document.getElementById('recaptcha-enterprise-script')?.remove();
+    
+    window.addEventListener('unhandledrejection', rejectionHandler);
+    
+    try {
+        // Load script
+        await new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.id = 'recaptcha-enterprise-script';
+            script.src = 'https://www.google.com/recaptcha/enterprise.js?render=' + encodeURIComponent(siteKey);
+            script.onload = resolve;
+            script.onerror = function() { reject(new Error('browser-error')); };
+            document.head.appendChild(script);
         });
-    });
+        
+        // Wait for grecaptcha
+        await new Promise(function(resolve, reject) {
+            var attempts = 0;
+            var checkInterval = setInterval(function() {
+                if (errorHandled) { clearInterval(checkInterval); reject(new Error('handled')); }
+                else if (typeof grecaptcha?.enterprise !== 'undefined') { clearInterval(checkInterval); resolve(); }
+                else if (++attempts >= 50) { clearInterval(checkInterval); reject(new Error('invalid-site-key')); }
+            }, 100);
+        });
+        
+        if (errorHandled) return;
+        
+        // Execute reCAPTCHA
+        await new Promise(function(resolve) { grecaptcha.enterprise.ready(resolve); });
+        var token = await grecaptcha.enterprise.execute(siteKey, {action: 'test_keys'});
+        
+        if (errorHandled) return;
+        
+        // Validate with server
+        var result = await new Promise(function(resolve, reject) {
+            jQuery.post(url, {
+                'action': 'check_captcha_enterprise_data',
+                'token': token,
+                'projectId': projectId,
+                'siteKey': siteKey
+            }, function(response) {
+                resolve(JSON.parse(response));
+            }).fail(function() { reject(new Error('bad-request')); });
+        });
+        
+        if (result.success) {
+            showResult(translations.response_ok, true);
+        } else {
+            var errorKey = result['error-codes']?.find(function(e) { return e in translations; });
+            showError(errorKey || 'bad-request', translations.response_error);
+        }
+        
+    } catch (error) {
+        if (!errorHandled && error.message !== 'handled') {
+            showError(error.message, translations['browser-error'] || error.message);
+        }
+    } finally {
+        window.removeEventListener('unhandledrejection', rejectionHandler);
+    }
 }
 </script>
 <button type="button" id="captcha-enterprise-test-btn" class="button" onclick="onSubmitEnterprise()">Test Keys</button>
