@@ -453,7 +453,7 @@ class FormModelBuilderDBForm
         $labelRequiresCaptcha = sprintf(__('Requires Captcha %s', 'onoffice-for-wp-websites'), $addition);
         $selectedValue = $this->getValue('captcha', false);
         $pInputModelFormRequiresCaptcha = $this->generateGenericCheckbox($labelRequiresCaptcha,
-            InputModelDBFactoryConfigForm::INPUT_FORM_CAPTCHA, $selectedValue);
+            InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRES_CAPTCHA, $selectedValue);
 
         return $pInputModelFormRequiresCaptcha;
     }
