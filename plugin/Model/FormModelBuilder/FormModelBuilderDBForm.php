@@ -428,24 +428,35 @@ class FormModelBuilderDBForm
 	 * @return InputModelDB
 	 * @throws Exception
 	 */
-	public function createInputModelCaptchaRequired(): InputModelDB
-	{
-		$addition = '';
+    public function createInputModelCaptchaRequired(): InputModelDB
+    {
+        $addition = '';
 
-		if (get_option('onoffice-settings-captcha-sitekey', '') === '') {
-			$addition = __('(won\'t work until set up globally)', 'onoffice-for-wp-websites');
-		}
+        // Check if Enterprise reCAPTCHA is configured
+        $enterpriseSiteKey = get_option('onoffice-settings-captcha-enterprise-sitekey', '');
+        $enterpriseProjectId = get_option('onoffice-settings-captcha-enterprise-projectid', '');
+        $enterpriseApiKey = get_option('onoffice-settings-captcha-enterprise-apikey', '');
+        
+        $hasEnterprise = !empty($enterpriseSiteKey) && !empty($enterpriseProjectId) && !empty($enterpriseApiKey);
+        
+        // TODO: Remove classic check after Enterprise reCAPTCHA is fully rolled out
+        $hasClassic = get_option('onoffice-settings-captcha-sitekey', '') !== '';
+        
+        if (!$hasEnterprise && !$hasClassic) {
+            $addition = '<br><span style="color:red;">(' . 
+                esc_html__('No reCAPTCHA configured', 'onoffice-for-wp-websites') . 
+                ')</span>';
+        }
 
-		/* translators: %s will be replaced with the translation of
-			'(won't work until set up globally)', if captcha hasn't been set up appropriately yet,
-			or blank otherwise. */
-		$labelRequiresCaptcha = sprintf(__('Requires Captcha %s', 'onoffice-for-wp-websites'), $addition);
-		$selectedValue = $this->getValue('captcha', false);
-		$pInputModelFormRequiresCaptcha = $this->generateGenericCheckbox($labelRequiresCaptcha,
-			InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRES_CAPTCHA, $selectedValue);
+        /* translators: %s will be replaced with the translation of
+            or blank otherwise. */
+        $labelRequiresCaptcha = sprintf(__('Requires Captcha %s', 'onoffice-for-wp-websites'), $addition);
+        $selectedValue = $this->getValue('captcha', false);
+        $pInputModelFormRequiresCaptcha = $this->generateGenericCheckbox($labelRequiresCaptcha,
+            InputModelDBFactoryConfigForm::INPUT_FORM_CAPTCHA, $selectedValue);
 
-		return $pInputModelFormRequiresCaptcha;
-	}
+        return $pInputModelFormRequiresCaptcha;
+    }
 
 	/**
 	 * @return InputModelDB

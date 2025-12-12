@@ -163,32 +163,44 @@ class AdminPageApiSettings
 	}
 
 
-	    private function addFormModelGoogleCaptchaEnterprise()
+	private function addFormModelGoogleCaptchaEnterprise()
     {
         $labelProjectId = __('Project ID', 'onoffice-for-wp-websites');
         $labelSiteKey = __('Site Key', 'onoffice-for-wp-websites');
+        $labelApiKey = __('API Key', 'onoffice-for-wp-websites');
         
         $pInputModelCaptchaProjectId = new InputModelOption
             ('onoffice-settings', 'captcha-enterprise-projectid', $labelProjectId, 'string');
         $optionNameProjectId = $pInputModelCaptchaProjectId->getIdentifier();
         $pInputModelCaptchaProjectId->setValue(get_option($optionNameProjectId));
         $pInputModelCaptchaProjectId->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
-		$pInputModelCaptchaProjectId->setIsPassword(true);
+        $pInputModelCaptchaProjectId->setIsPassword(true);
         
         $pInputModelCaptchaSiteKey = new InputModelOption
             ('onoffice-settings', 'captcha-enterprise-sitekey', $labelSiteKey, 'string');
         $optionNameSiteKey = $pInputModelCaptchaSiteKey->getIdentifier();
         $pInputModelCaptchaSiteKey->setValue(get_option($optionNameSiteKey));
         $pInputModelCaptchaSiteKey->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
-		$pInputModelCaptchaSiteKey->setIsPassword(true);
+        $pInputModelCaptchaSiteKey->setIsPassword(true);
+
+        $pInputModelCaptchaApiKey = new InputModelOption
+            ('onoffice-settings', 'captcha-enterprise-apikey', $labelApiKey, 'string');
+        $optionNameApiKey = $pInputModelCaptchaApiKey->getIdentifier();
+        $pInputModelCaptchaApiKey->setValue(get_option($optionNameApiKey));
+        $pInputModelCaptchaApiKey->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
+        $pInputModelCaptchaApiKey->setIsPassword(true);
+        $pInputModelCaptchaApiKey->setSanitizeCallback(function($password) use ($optionNameApiKey) {
+            return $this->checkPassword($password, $optionNameApiKey);
+        });
 
         $pFormModel = new FormModel();
         $pFormModel->addInputModel($pInputModelCaptchaProjectId);
         $pFormModel->addInputModel($pInputModelCaptchaSiteKey);
+        $pFormModel->addInputModel($pInputModelCaptchaApiKey);
         $pFormModel->setGroupSlug('onoffice-google-recaptcha-enterprise');
         $pFormModel->setPageSlug($this->getPageSlug());
         $pFormModel->setLabel(__('Google reCAPTCHA Enterprise', 'onoffice-for-wp-websites'));
-		$pFormModel->setTextCallback(function() {
+        $pFormModel->setTextCallback(function() {
             $this->renderTestFormReCaptchaEnterprise();
         });
 
@@ -426,15 +438,20 @@ class AdminPageApiSettings
         $projectIdOption = get_option('onoffice-settings-captcha-enterprise-projectid', '');
         $siteKeyOption = get_option('onoffice-settings-captcha-enterprise-sitekey', '');
         $stringTranslations = [
-            'response_ok' => __('The keys are OK.', 'onoffice-for-wp-websites'),
-            'response_error' => __('There was an error:', 'onoffice-for-wp-websites'),
-            'missing-input-secret' => __('The Project ID is missing.', 'onoffice-for-wp-websites'),
-            'invalid-input-secret' => __('The Project ID is invalid or malformed.', 'onoffice-for-wp-websites'),
-            'missing-input-response' => __('The response parameter is missing.', 'onoffice-for-wp-websites'),
-            'invalid-input-response' => __('The response parameter is invalid or malformed.', 'onoffice-for-wp-websites'),
-            'bad-request' => __('The request is invalid or malformed.', 'onoffice-for-wp-websites'),
-            'browser-error' => __('Could not verify reCAPTCHA. Please check your Site Key.', 'onoffice-for-wp-websites'),
-        ];
+			'response_ok' => __('The keys are valid.', 'onoffice-for-wp-websites'),
+			'response_error' => __('Error:', 'onoffice-for-wp-websites'),
+			'missing-input-secret' => __('The Project ID is missing.', 'onoffice-for-wp-websites'),
+			'missing-input-response' => __('The reCAPTCHA token is missing.', 'onoffice-for-wp-websites'),
+			'missing-site-key' => __('The Site Key is missing.', 'onoffice-for-wp-websites'),
+			'missing-api-key' => __('The API Key is missing.', 'onoffice-for-wp-websites'),
+			'invalid-site-key' => __('The Site Key is invalid.', 'onoffice-for-wp-websites'),
+			'invalid-input-secret' => __('The Project ID is invalid or malformed.', 'onoffice-for-wp-websites'),
+			'bad-request' => __('The request is invalid or malformed.', 'onoffice-for-wp-websites'),
+			'timeout-or-duplicate' => __('The reCAPTCHA token has expired or has already been used.', 'onoffice-for-wp-websites'),
+			'browser-error' => __('An error occurred while loading reCAPTCHA.', 'onoffice-for-wp-websites'),
+			'api-error' => __('API request failed. Please check your API Key and Project ID.', 'onoffice-for-wp-websites'),
+			'connection-failed' => __('Connection to Google API failed.', 'onoffice-for-wp-websites'),
+		];
 
         if ($projectIdOption !== '' && $siteKeyOption !== '') {
             $template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'resource'
@@ -442,10 +459,8 @@ class AdminPageApiSettings
             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Template uses printf placeholders; values are escaped individually
             printf($template,
                 json_encode(admin_url('admin-ajax.php')),  // %1$s - AJAX URL
-                json_encode($stringTranslations),          // %2$s - Translations object
-                esc_attr($siteKeyOption),                  // %3$s - Site Key for script URL (no quotes)
-                json_encode($siteKeyOption),               // %4$s - Site Key for JS variable
-                json_encode($projectIdOption));            // %5$s - Project ID for JS variable
+                json_encode($stringTranslations)		   // %2$s - Translations object
+			);          
         } else {
             echo esc_html__('In order to use Google reCAPTCHA Enterprise, you need to provide your Project ID and Site Key. You\'re free to enable it in the form settings for later use.', 'onoffice-for-wp-websites');
         }

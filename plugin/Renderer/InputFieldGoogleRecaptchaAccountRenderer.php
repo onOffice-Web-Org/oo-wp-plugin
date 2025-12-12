@@ -38,6 +38,7 @@ class InputFieldGoogleRecaptchaAccountRenderer extends InputFieldRenderer
     const ENTERPRISE_FIELDS = [
         'onoffice-settings-captcha-enterprise-projectid',
         'onoffice-settings-captcha-enterprise-sitekey',
+        'onoffice-settings-captcha-enterprise-apikey',
     ];
 
     /**
@@ -69,6 +70,7 @@ class InputFieldGoogleRecaptchaAccountRenderer extends InputFieldRenderer
         $showDeleteEnterpriseKeysButton = false;
         $fieldName = $this->getName();
 
+        // TODO: remove later, when Enterprise reCAPTCHA is fully rolled out
         // Classic reCAPTCHA fields
         if ($fieldName === 'onoffice-settings-captcha-secretkey') {
             $iconShowPassword = '<button type="button" class="button" data-toggle="0">
@@ -88,6 +90,10 @@ class InputFieldGoogleRecaptchaAccountRenderer extends InputFieldRenderer
         } elseif ($fieldName === 'onoffice-settings-captcha-enterprise-sitekey') {
             $iconShowPassword = '<button type="button" class="button" data-toggle="0">
                     <span class="dashicons dashicons-visibility oo-icon-eye-enterprise-sitekey" aria-hidden="true"></span> 
+                    </button>';
+        } elseif ($fieldName === 'onoffice-settings-captcha-enterprise-apikey') {
+            $iconShowPassword = '<button type="button" class="button" data-toggle="0">
+                    <span class="dashicons dashicons-visibility oo-icon-eye-enterprise-apikey" aria-hidden="true"></span> 
                     </button>';
             $showDeleteEnterpriseKeysButton = true;
         }

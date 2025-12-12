@@ -62,10 +62,13 @@ class FormPostConfigurationDefault
 	 *
 	 */
 
-	public function getPostvarCaptchaToken(): string
-	{
-		return filter_input(INPUT_POST, CaptchaHandler::RECAPTCHA_RESPONSE_PARAM) ?? '';
-	}
+    public function getPostvarCaptchaToken(): string
+    {
+        $token = filter_input(INPUT_POST, CaptchaHandler::RECAPTCHA_RESPONSE_PARAM) ?? '';
+        error_log('getPostvarCaptchaToken called - Token length: ' . strlen($token));
+        error_log('getPostvarCaptchaToken - Token preview: ' . substr($token, 0, 30) . '...');
+        return $token;
+    }
 
 
 	/**

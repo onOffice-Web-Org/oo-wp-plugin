@@ -12,7 +12,8 @@ jQuery(document).ready(function ($) {
 		}
 	}
 
-	// Classic reCAPTCHA fields
+	// TODO: remove later, when Enterprise reCAPTCHA is fully rolled out
+    // Classic reCAPTCHA fields
     $('.oo-icon-eye-secret-key').on('click', function () {
         showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-secretkey"]', '.oo-icon-eye-secret-key');
     });
@@ -28,5 +29,8 @@ jQuery(document).ready(function ($) {
 
     $('.oo-icon-eye-enterprise-sitekey').on('click', function () {
         showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-enterprise-sitekey"]', '.oo-icon-eye-enterprise-sitekey');
+    });
+    $('.oo-icon-eye-enterprise-apikey').on('click', function () {
+        showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-enterprise-apikey"]', '.oo-icon-eye-enterprise-apikey');
     });
 });

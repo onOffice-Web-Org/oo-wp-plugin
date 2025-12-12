@@ -7,6 +7,7 @@ async function onSubmitEnterprise() {
     
     var siteKey = (document.querySelector('input[name="onoffice-settings-captcha-enterprise-sitekey"]')?.value || '').trim();
     var projectId = (document.querySelector('input[name="onoffice-settings-captcha-enterprise-projectid"]')?.value || '').trim();
+    var apiKey = (document.querySelector('input[name="onoffice-settings-captcha-enterprise-apikey"]')?.value || '').trim();
     
     var errorHandled = false;
     
@@ -40,6 +41,7 @@ async function onSubmitEnterprise() {
     // Validate inputs
     if (!siteKey) return showError('missing-site-key', 'Site Key is required');
     if (!projectId) return showError('missing-input-secret', 'Project ID is required');
+    if (!apiKey) return showError('missing-api-key', 'API Key is required');
     
     // Remove existing grecaptcha and script
     if (typeof grecaptcha !== 'undefined') delete window.grecaptcha;
@@ -76,20 +78,22 @@ async function onSubmitEnterprise() {
         
         if (errorHandled) return;
         
-        // Validate with server
+        // Validate with server (now includes API Key validation)
         var result = await new Promise(function(resolve, reject) {
             jQuery.post(url, {
                 'action': 'check_captcha_enterprise_data',
-                'token': token,
+                'g-recaptcha-response': token,
                 'projectId': projectId,
-                'siteKey': siteKey
+                'siteKey': siteKey,
+                'apiKey': apiKey
             }, function(response) {
                 resolve(JSON.parse(response));
             }).fail(function() { reject(new Error('bad-request')); });
         });
         
         if (result.success) {
-            showResult(translations.response_ok, true);
+            var scoreText = result.score !== undefined ? ' (Score: ' + result.score + ')' : '';
+            showResult(translations.response_ok + scoreText, true);
         } else {
             var errorKey = result['error-codes']?.find(function(e) { return e in translations; });
             showError(errorKey || 'bad-request', translations.response_error);

@@ -18,6 +18,7 @@ jQuery(document).ready(function ($) {
 		jQuery.post(warning_active_plugin_vars.ajaxurl, data);
 	});
 
+	// TODO: remove later, when Enterprise reCAPTCHA is fully rolled out
 	// Classic reCAPTCHA Delete Keys
     $(document).on('click', '.delete-google-recaptcha-keys-button', function (event) {
         let notification = confirm_dialog_google_recaptcha_keys.notification;
@@ -47,6 +48,7 @@ jQuery(document).ready(function ($) {
             jQuery.post(delete_google_recaptcha_keys.ajaxurl, data);
             $('input[name="onoffice-settings-captcha-enterprise-projectid"]').val('');
             $('input[name="onoffice-settings-captcha-enterprise-sitekey"]').val('');
+			$('input[name="onoffice-settings-captcha-enterprise-apikey"]').val('');
         } else {
             event.preventDefault();
         }
