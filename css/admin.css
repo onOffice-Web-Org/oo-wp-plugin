@@ -834,17 +834,20 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	cursor: pointer;
 }
 
-.delete-google-recaptcha-keys-button.button {
-	border: 1px solid #ff0000;
-	color: #ff0000;
-	margin-top: 20px;
+.delete-google-recaptcha-keys-button.button,
+.delete-google-recaptcha-enterprise-keys-button.button {
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    margin-top: 20px;
 }
 
 .delete-google-recaptcha-keys-button.button:hover,
-.delete-google-recaptcha-keys-button.button:focus {
-	border: 1px solid #ff0000;
-	color: #ffffff;
-	background-color: #ff0000;
+.delete-google-recaptcha-keys-button.button:focus,
+.delete-google-recaptcha-enterprise-keys-button.button:hover,
+.delete-google-recaptcha-enterprise-keys-button.button:focus {
+    border: 1px solid #ff0000;
+    color: #ffffff;
+    background-color: #ff0000;
 }
 
 .oo-google-recaptcha-key {
