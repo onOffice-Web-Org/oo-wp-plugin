@@ -10,28 +10,39 @@ async function onSubmitEnterprise() {
     var projectId = (document.querySelector('input[name="onoffice-settings-captcha-enterprise-projectid"]')?.value || '').trim();
     var apiKey = (document.querySelector('input[name="onoffice-settings-captcha-enterprise-apikey"]')?.value || '').trim();
     
-    var errorHandled = false;
-    
     function showResult(message, isSuccess) {
         resultdiv.textContent = message;
         resultdiv.style.color = isSuccess ? 'green' : 'red';
         button.disabled = false;
-        errorHandled = true;
     }
     
     function showError(key, fallback) {
         showResult(translations[key] || fallback, false);
     }
     
-    function rejectionHandler(event) {
-        var message = (event.reason?.message || event.reason?.toString()) || '';
-        if (message.indexOf('Invalid site key') !== -1) {
-            event.preventDefault();
-            if (!errorHandled) {
-                showError('invalid-site-key', 'The Site Key is invalid.');
-                window.removeEventListener('unhandledrejection', rejectionHandler);
-            }
+    /**
+     * Maps error messages to translation keys
+     */
+    function mapErrorToKey(errorMessage) {
+        var msg = errorMessage.toLowerCase();
+        
+        if (msg.indexOf('invalid site key') !== -1 || 
+            msg.indexOf('site key') !== -1 ||
+            msg.indexOf('invalid key') !== -1 ||
+            msg === 'invalid-site-key') {
+            return 'invalid-site-key';
         }
+        if (msg.indexOf('timeout') !== -1 || msg === 'timeout-or-duplicate') {
+            return 'timeout-or-duplicate';
+        }
+        if (msg === 'bad-request') {
+            return 'bad-request';
+        }
+        if (msg === 'browser-error') {
+            return 'browser-error';
+        }
+        
+        return 'browser-error';
     }
     
     // Reset state
@@ -48,8 +59,6 @@ async function onSubmitEnterprise() {
     if (typeof grecaptcha !== 'undefined') delete window.grecaptcha;
     document.getElementById('recaptcha-enterprise-script')?.remove();
     
-    window.addEventListener('unhandledrejection', rejectionHandler);
-    
     try {
         // Load script
         await new Promise(function(resolve, reject) {
@@ -65,19 +74,19 @@ async function onSubmitEnterprise() {
         await new Promise(function(resolve, reject) {
             var attempts = 0;
             var checkInterval = setInterval(function() {
-                if (errorHandled) { clearInterval(checkInterval); reject(new Error('handled')); }
-                else if (typeof grecaptcha?.enterprise !== 'undefined') { clearInterval(checkInterval); resolve(); }
-                else if (++attempts >= 50) { clearInterval(checkInterval); reject(new Error('invalid-site-key')); }
+                if (typeof grecaptcha?.enterprise !== 'undefined') { 
+                    clearInterval(checkInterval); 
+                    resolve(); 
+                } else if (++attempts >= 50) { 
+                    clearInterval(checkInterval); 
+                    reject(new Error('invalid-site-key')); 
+                }
             }, 100);
         });
-        
-        if (errorHandled) return;
         
         // Execute reCAPTCHA
         await new Promise(function(resolve) { grecaptcha.enterprise.ready(resolve); });
         var token = await grecaptcha.enterprise.execute(siteKey, {action: 'test_keys'});
-        
-        if (errorHandled) return;
         
         // Validate with server
         var result = await new Promise(function(resolve, reject) {
@@ -101,11 +110,8 @@ async function onSubmitEnterprise() {
         }
         
     } catch (error) {
-        if (!errorHandled && error.message !== 'handled') {
-            showError(error.message, translations['browser-error'] || error.message);
-        }
-    } finally {
-        window.removeEventListener('unhandledrejection', rejectionHandler);
+        var errorKey = mapErrorToKey(error.message);
+        showError(errorKey, translations[errorKey] || error.message);
     }
 }
 </script>

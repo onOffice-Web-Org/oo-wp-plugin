@@ -118,7 +118,7 @@ class CaptchaEnterpriseHandler
         $result = json_decode(wp_remote_retrieve_body($response), true);
 
         if ($responseCode !== 200) {
-            $this->_errorCodes = [$result['error']['message'] ?? 'api-error'];
+            $this->_errorCodes = $this->mapApiError($responseCode, $result);
             return false;
         }
 
@@ -131,24 +131,20 @@ class CaptchaEnterpriseHandler
      */
     private function evaluateResult(array $result): bool
     {
-        // Token gültig?
+        // Is token valid?
         if (($result['tokenProperties']['valid'] ?? false) !== true) {
             $this->_errorCodes = [$result['tokenProperties']['invalidReason'] ?? 'invalid-token'];
             return false;
         }
 
-        // Action stimmt?
+        // Is action valid?
         if (($result['tokenProperties']['action'] ?? '') !== $this->_action) {
             $this->_errorCodes = ['action-mismatch'];
             return false;
         }
 
-        // Score prüfen
+        // Check score
         $this->_score = $result['riskAnalysis']['score'] ?? 0;
-
-        error_log('Captcha Enterprise check result: ' . print_r($result, true));
-        error_log('Score: ' . $this->getScore());
-        error_log('Errors: ' . implode(', ', $this->getErrorCodes()));
 
         if ($this->_score < self::SCORE_THRESHOLD) {
             $this->_errorCodes = ['score-too-low'];
@@ -156,6 +152,88 @@ class CaptchaEnterpriseHandler
         }
 
         return true;
+    }
+
+        /**
+     * Maps Google API error responses to user-friendly error codes
+     * @see https://cloud.google.com/recaptcha-enterprise/docs/reference/rest/v1/projects.assessments/create
+     * 
+     * @param int $responseCode
+     * @param array|null $result
+     * @return array
+     */
+    private function mapApiError(int $responseCode, ?array $result): array
+    {
+        $errorMessage = $result['error']['message'] ?? '';
+        $errorStatus = $result['error']['status'] ?? '';
+
+        // HTTP Status Code based errors
+        switch ($responseCode) {
+            case 400:
+                // Bad Request - invalid parameters
+                if (stripos($errorMessage, 'API key not valid') !== false ||
+                    stripos($errorMessage, 'API key') !== false ||
+                    stripos($errorMessage, 'apikey') !== false) {
+                    return ['invalid-api-key'];
+                }
+                if (stripos($errorMessage, 'site key') !== false ||
+                    stripos($errorMessage, 'siteKey') !== false) {
+                    return ['invalid-site-key'];
+                }
+                if (stripos($errorMessage, 'token') !== false) {
+                    return ['invalid-input-response'];
+                }
+                if (stripos($errorMessage, 'project') !== false) {
+                    return ['invalid-project-id'];
+                }
+                if ($errorStatus === 'INVALID_ARGUMENT') {
+                    return ['bad-request'];
+                }
+                return ['bad-request'];
+
+            case 401:
+                // Unauthorized - API key missing or invalid
+                return ['invalid-api-key'];
+
+            case 403:
+                // Forbidden - API key doesn't have permission
+                if (stripos($errorMessage, 'API key not valid') !== false) {
+                    return ['invalid-api-key'];
+                }
+                // Check for project-related errors BEFORE generic permission errors
+                if (stripos($errorMessage, 'project') !== false || 
+                    stripos($errorMessage, 'Project') !== false) {
+                    return ['invalid-project-id'];
+                }
+                if (stripos($errorMessage, 'billing') !== false) {
+                    return ['billing-not-enabled'];
+                }
+                if (stripos($errorMessage, 'permission') !== false || $errorStatus === 'PERMISSION_DENIED') {
+                    return ['api-key-permission-denied'];
+                }
+                return ['forbidden'];
+
+            case 404:
+                // Not Found - Project ID doesn't exist
+                if (stripos($errorMessage, 'project') !== false || $errorStatus === 'NOT_FOUND') {
+                    return ['invalid-project-id'];
+                }
+                return ['not-found'];
+
+            case 429:
+                // Too Many Requests - Rate limit exceeded
+                return ['rate-limit-exceeded'];
+
+            case 500:
+            case 502:
+            case 503:
+            case 504:
+                // Server errors
+                return ['server-error'];
+
+            default:
+                return [$errorMessage ?: 'api-error'];
+        }
     }
 
     /**

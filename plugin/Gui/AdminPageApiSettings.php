@@ -437,21 +437,33 @@ class AdminPageApiSettings
     {
         $projectIdOption = get_option('onoffice-settings-captcha-enterprise-projectid', '');
         $siteKeyOption = get_option('onoffice-settings-captcha-enterprise-sitekey', '');
-        $stringTranslations = [
-			'response_ok' => __('The keys are valid.', 'onoffice-for-wp-websites'),
-			'response_error' => __('Error:', 'onoffice-for-wp-websites'),
-			'missing-input-secret' => __('The Project ID is missing.', 'onoffice-for-wp-websites'),
-			'missing-input-response' => __('The reCAPTCHA token is missing.', 'onoffice-for-wp-websites'),
-			'missing-site-key' => __('The Site Key is missing.', 'onoffice-for-wp-websites'),
-			'missing-api-key' => __('The API Key is missing.', 'onoffice-for-wp-websites'),
-			'invalid-site-key' => __('The Site Key is invalid.', 'onoffice-for-wp-websites'),
-			'invalid-input-secret' => __('The Project ID is invalid or malformed.', 'onoffice-for-wp-websites'),
-			'bad-request' => __('The request is invalid or malformed.', 'onoffice-for-wp-websites'),
-			'timeout-or-duplicate' => __('The reCAPTCHA token has expired or has already been used.', 'onoffice-for-wp-websites'),
-			'browser-error' => __('An error occurred while loading reCAPTCHA.', 'onoffice-for-wp-websites'),
-			'api-error' => __('API request failed. Please check your API Key and Project ID.', 'onoffice-for-wp-websites'),
-			'connection-failed' => __('Connection to Google API failed.', 'onoffice-for-wp-websites'),
-		];
+                $stringTranslations = [
+            // Success
+            'response_ok' => __('The keys are valid.', 'onoffice-for-wp-websites'),
+            'response_error' => __('Error:', 'onoffice-for-wp-websites'),     
+            // Missing input errors
+            'missing-api-key' => __('The API Key is missing.', 'onoffice-for-wp-websites'),
+            'missing-input-response' => __('The reCAPTCHA token is missing.', 'onoffice-for-wp-websites'),
+            'missing-input-secret' => __('The Project ID is missing.', 'onoffice-for-wp-websites'),
+            'missing-site-key' => __('The Site Key is missing.', 'onoffice-for-wp-websites'),
+            // Invalid input errors
+            'invalid-api-key' => __('The API Key is invalid.', 'onoffice-for-wp-websites'),
+            'invalid-input-secret' => __('The Project ID is invalid or malformed.', 'onoffice-for-wp-websites'),
+            'invalid-project-id' => __('The Project ID is invalid or does not exist.', 'onoffice-for-wp-websites'),
+            'invalid-site-key' => __('The Site Key is invalid.', 'onoffice-for-wp-websites'),
+            // Permission errors
+            'api-key-permission-denied' => __('The API Key does not have permission for reCAPTCHA Enterprise.', 'onoffice-for-wp-websites'),
+            'billing-not-enabled' => __('Billing is not enabled for this Google Cloud project.', 'onoffice-for-wp-websites'),
+            // Request errors
+            'bad-request' => __('Invalid request. Please check your credentials.', 'onoffice-for-wp-websites'),
+            'timeout-or-duplicate' => __('The reCAPTCHA token has expired or has already been used.', 'onoffice-for-wp-websites'),
+            // Connection/Server errors
+            'api-error' => __('API request failed. Please check your API Key and Project ID.', 'onoffice-for-wp-websites'),
+            'browser-error' => __('An error occurred while loading reCAPTCHA.', 'onoffice-for-wp-websites'),
+            'connection-failed' => __('Connection to Google reCAPTCHA failed. Please check your internet connection.', 'onoffice-for-wp-websites'),
+            'rate-limit-exceeded' => __('Too many requests. Please try again later.', 'onoffice-for-wp-websites'),
+            'server-error' => __('Google reCAPTCHA server error. Please try again later.', 'onoffice-for-wp-websites'),
+        ];
 
         if ($projectIdOption !== '' && $siteKeyOption !== '') {
             $template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'resource'
