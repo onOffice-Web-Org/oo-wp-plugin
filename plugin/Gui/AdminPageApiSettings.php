@@ -459,7 +459,8 @@ class AdminPageApiSettings
             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Template uses printf placeholders; values are escaped individually
             printf($template,
                 json_encode(admin_url('admin-ajax.php')),  // %1$s - AJAX URL
-                json_encode($stringTranslations)		   // %2$s - Translations object
+                json_encode($stringTranslations),		   // %2$s - Translations object
+				json_encode(wp_create_nonce('check_captcha_enterprise_data'))  // %3$s - Nonce
 			);          
         } else {
             echo esc_html__('In order to use Google reCAPTCHA Enterprise, you need to provide your Project ID and Site Key. You\'re free to enable it in the form settings for later use.', 'onoffice-for-wp-websites');

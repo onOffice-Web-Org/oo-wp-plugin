@@ -394,7 +394,14 @@ class AdminViewController
 			wp_register_script('handle-visibility-google-recaptcha-keys', plugins_url('dist/onoffice-handle-visibility-google-recaptcha-keys.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
 				array('jquery'), FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-handle-visibility-google-recaptcha-keys.min.js'),
 				true);
-			wp_localize_script('handle-notification-actions', 'delete_google_recaptcha_keys', ['ajaxurl' => admin_url('admin-ajax.php')]);
+			wp_localize_script('handle-notification-actions', 'delete_google_recaptcha_keys', [
+				'ajaxurl' => admin_url('admin-ajax.php'),
+				'nonce' => wp_create_nonce('delete_google_recaptcha_keys'),
+			]);
+			wp_localize_script('handle-notification-actions', 'delete_google_recaptcha_enterprise_keys', [
+				'ajaxurl' => admin_url('admin-ajax.php'),
+				'nonce' => wp_create_nonce('delete_google_recaptcha_enterprise_keys'),
+			]);
 			wp_localize_script('handle-notification-actions', 'confirm_dialog_google_recaptcha_keys', $confirmDialogGoogleRecaptcha);
 			wp_enqueue_script('handle-visibility-google-recaptcha-keys');
 		}

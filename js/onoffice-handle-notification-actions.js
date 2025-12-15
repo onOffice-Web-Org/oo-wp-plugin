@@ -25,7 +25,8 @@ jQuery(document).ready(function ($) {
         if (confirm(notification)) {
             event.preventDefault();
             const data = {
-                'action': 'delete_google_recaptcha_keys'
+                'action': 'delete_google_recaptcha_keys',
+				'nonce': delete_google_recaptcha_keys.nonce
             };
 
             jQuery.post(delete_google_recaptcha_keys.ajaxurl, data);
@@ -42,10 +43,11 @@ jQuery(document).ready(function ($) {
         if (confirm(notification)) {
             event.preventDefault();
             const data = {
-                'action': 'delete_google_recaptcha_enterprise_keys'
+                'action': 'delete_google_recaptcha_enterprise_keys',
+				'nonce': delete_google_recaptcha_enterprise_keys.nonce
             };
 
-            jQuery.post(delete_google_recaptcha_keys.ajaxurl, data);
+            jQuery.post(delete_google_recaptcha_enterprise_keys.ajaxurl, data);
             $('input[name="onoffice-settings-captcha-enterprise-projectid"]').val('');
             $('input[name="onoffice-settings-captcha-enterprise-sitekey"]').val('');
 			$('input[name="onoffice-settings-captcha-enterprise-apikey"]').val('');

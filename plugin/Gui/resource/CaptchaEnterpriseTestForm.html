@@ -2,6 +2,7 @@
 async function onSubmitEnterprise() {
     var url = %1$s;
     var translations = %2$s;
+    var nonce = %3$s;
     var resultdiv = document.getElementById('captcha-enterprise-result');
     var button = document.getElementById('captcha-enterprise-test-btn');
     
@@ -78,24 +79,24 @@ async function onSubmitEnterprise() {
         
         if (errorHandled) return;
         
-        // Validate with server (now includes API Key validation)
+        // Validate with server
         var result = await new Promise(function(resolve, reject) {
             jQuery.post(url, {
                 'action': 'check_captcha_enterprise_data',
+                'nonce': nonce,
                 'g-recaptcha-response': token,
                 'projectId': projectId,
                 'siteKey': siteKey,
                 'apiKey': apiKey
-            }, function(response) {
-                resolve(JSON.parse(response));
-            }).fail(function() { reject(new Error('bad-request')); });
+            }, resolve, 'json').fail(function() { reject(new Error('bad-request')); });
         });
         
         if (result.success) {
-            var scoreText = result.score !== undefined ? ' (Score: ' + result.score + ')' : '';
+            var scoreText = result.data.score !== undefined ? ' (Score: ' + result.data.score + ')' : '';
             showResult(translations.response_ok + scoreText, true);
         } else {
-            var errorKey = result['error-codes']?.find(function(e) { return e in translations; });
+            var errorCodes = result.data?.['error-codes'] || [];
+            var errorKey = errorCodes.find(function(e) { return e in translations; });
             showError(errorKey || 'bad-request', translations.response_error);
         }
         
