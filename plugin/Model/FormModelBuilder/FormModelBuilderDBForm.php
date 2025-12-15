@@ -448,8 +448,8 @@ class FormModelBuilderDBForm
                 ')</span>';
         }
 
-        /* translators: %s will be replaced with the translation of
-            or blank otherwise. */
+        /* translators: %s will be replaced with a warning message if no reCAPTCHA is configured,
+           or blank otherwise. */
         $labelRequiresCaptcha = sprintf(__('Requires Captcha %s', 'onoffice-for-wp-websites'), $addition);
         $selectedValue = $this->getValue('captcha', false);
         $pInputModelFormRequiresCaptcha = $this->generateGenericCheckbox($labelRequiresCaptcha,
