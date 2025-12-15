@@ -28,6 +28,7 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\MapProvider;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use function __;
 use function admin_url;
 use function do_settings_sections;
@@ -222,6 +223,7 @@ class AdminPageApiSettings
         $activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
         if ($WPPluginChecker->isSEOPluginActive()) {
             $listNamePluginSEO = implode(", ",$activeSEOPlugins);
+			/* translators: %s: list of active SEO plugin names */
             $messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SocialMedia Data settings. Therefore they are disabled.','onoffice-for-wp-websites'), $listNamePluginSEO);
             $descriptionNoticeSeo = sprintf('<p class="oo-description oo-description--notice">%s</p>', $messageNoticeSEO);
 
@@ -271,9 +273,11 @@ class AdminPageApiSettings
 		$descriptionDetailDoNotModify = esc_html__( 'With the help of an SEO plugin, it is possible to use individual fields to insert data directly from onOffice enterprise into the title and metadata of your website.', 'onoffice-for-wp-websites' );
 		$guideUseCustomFieldsDoNotModify = esc_html__( 'These custom fields allow you to insert specific information, such as the property title and property number from onOffice enterprise. The corresponding field names can be found in the field list on the detail page. Please note that only fields that are active for the detail page, for example, can be output.',
 			'onoffice-for-wp-websites' );
+		/* translators: 1: line break HTML tag, 2-4: code examples of field variables */
 		$snippetVariablesExampleDoNotModify = sprintf(esc_html__( 'An example of integration with the Yoast SEO plugin would be:%1$s %2$s or%1$s %3$s or%1$s %4$s',
 			'onoffice-for-wp-websites' ), '<br>', '<code>%%cf_onoffice_objekttitel%%</code>', '<code>%%cf_onoffice_objektnr_extern%%</code>', '<code>%%cf_onoffice_objektbeschreibung%%</code>');
 		$referUseCustomFieldsInSeoPluginDocsDoNotModify = esc_html__( 'For information on how to use custom fields in your SEO plugin, please refer to its documentation.', 'onoffice-for-wp-websites' );
+		/* translators: 1: HTML title tag, 2: HTML meta description tag */
 		$titleDescriptionDoNotModify = sprintf(esc_html__( 'The title and description of the detail page are set using the %1$s and %2$s tags. They make it possible to show a summary of the page when you share a link.',
 			'onoffice-for-wp-websites' ), '<code>&lt;title&gt;</code>', '<code>&lt;meta name="description&gt;</code>');
 		$descriptionDoNotModify = sprintf( '<div class="do-not-modify">
@@ -292,6 +296,7 @@ class AdminPageApiSettings
 							</div> <p>%7$s</p>', $titleDoNotModify, $summaryDetailDoNotModify,
 			$descriptionDetailDoNotModify, $guideUseCustomFieldsDoNotModify, $snippetVariablesExampleDoNotModify, $referUseCustomFieldsInSeoPluginDocsDoNotModify,
 			$titleDescriptionDoNotModify );
+		/* translators: %s: list of active SEO plugin names */
 		$messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.
 								We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites'), $listNamePluginSEO);
 		$messageNoticeSEO =  Parsedown::instance()
@@ -393,8 +398,7 @@ class AdminPageApiSettings
 				json_encode($stringTranslations),
 				esc_attr($tokenOptions));
 		} else {
-			echo esc_html__('In order to use Google reCAPTCHA, you need to provide your keys. '
-				.'You\'re free to enable it in the form settings for later use.', 'onoffice-for-wp-websites');
+			echo esc_html__('In order to use Google reCAPTCHA, you need to provide your keys. You\'re free to enable it in the form settings for later use.', 'onoffice-for-wp-websites');
 		}
 	}
 
@@ -438,8 +442,11 @@ class AdminPageApiSettings
 
     public function doExtraEnqueues()
     {
-        wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
-            ['jquery'], '', true);
+        wp_register_script('oo-unsaved-changes-message', 
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-unsaved-changes-message.min.js'), 
+			true);
         wp_enqueue_script('oo-unsaved-changes-message');
         wp_localize_script('oo-unsaved-changes-message', 'onOffice_unsaved_changes_message', [
             self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),

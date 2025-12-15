@@ -542,7 +542,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals($pInputModelDB->getValue(), '0');
 		$this->assertEquals($pInputModelDB->getValuesAvailable(), [""]);
 		$this->assertEquals('select', $pInputModelDB->getHtmlType());
-		$this->assertEquals('Choose an estate filter from onOffice enterprise. <a href="https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en" target="_blank">Learn more.</a>', $pInputModelDB->getHintHtml());
+		$this->assertEquals('Choose an estate filter from onOffice enterprise. <a href="https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en" target="_blank" rel="noopener noreferrer">Learn more.</a>', $pInputModelDB->getHintHtml());
 	}
 
 	/**

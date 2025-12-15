@@ -124,6 +124,17 @@ abstract class FormPost
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
 
+		 // CSRF Protection: Verify nonce
+		$nonce = $_POST['onoffice_nonce'] ?? '';
+		$formId = $pConfig->getFormName();
+		if (!wp_verify_nonce($nonce, 'onoffice_form_' . $formId)) {
+			$pFormData->setStatus(self::MESSAGE_ERROR);
+			$this->_pFormPostConfiguration->getLogger()->logError(
+				new \Exception('CSRF token verification failed for form: ' . $formId)
+			);
+			return;
+		}
+
 		if ($this->_pFormPostConfiguration->getPostMessage() !== "") {
 			$pFormData->setStatus(self::MESSAGE_SUCCESS);
 			return;
@@ -249,12 +260,17 @@ abstract class FormPost
 			$fields[] = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
 		}
 
-		foreach ($fields as $field) {
-			if ($field->getType() === FieldTypes::FIELD_TYPE_MULTISELECT && isset($_POST[$field->getName()]) && !empty($_POST[$field->getName()])
-				&& is_string($_POST[$field->getName()])) {
-				$_POST[$field->getName()] = explode(', ', $_POST[$field->getName()]);
-			}
-		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Called within form processing pipeline after nonce/reCAPTCHA verification in initialCheck().
+        foreach ($fields as $field) {
+            if ($field->getType() === FieldTypes::FIELD_TYPE_MULTISELECT && isset($_POST[$field->getName()]) && !empty($_POST[$field->getName()])
+                && is_string($_POST[$field->getName()])) {
+                $fieldName = $field->getName();
+                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Already validated with isset() and is_string() checks above, sanitized with array_map() and wp_unslash() below.
+                $rawValue = wp_unslash($_POST[$fieldName]);
+                $_POST[$fieldName] = array_map('sanitize_text_field', explode(', ', $rawValue));
+            }
+        }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 	/**
@@ -463,20 +479,22 @@ abstract class FormPost
 		if ( ! get_option( 'onoffice-settings-honeypot' ) ) {
 			return;
 		}
-		$honeypotValue = $this->_pFormPostConfiguration->getPostHoneypot();
-		if ( $honeypotValue !== '' ) {
-			if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
-				$_POST['message'] = $_POST['tmpField'];
-			} else {
-				unset( $_POST['message'] );
-			}
-			$_POST['tmpField'] = $honeypotValue;
-		} else {
-			if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
-				$_POST['message'] = $_POST['tmpField'];
-				unset( $_POST['tmpField'] );
-			}
-		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Internal form processing, called within form submission pipeline with reCAPTCHA verification.
+        $honeypotValue = $this->_pFormPostConfiguration->getPostHoneypot();
+        if ( $honeypotValue !== '' ) {
+            if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
+                $_POST['message'] = isset($_POST['tmpField']) ? sanitize_textarea_field(wp_unslash($_POST['tmpField'])) : '';
+            } else {
+                unset( $_POST['message'] );
+            }
+            $_POST['tmpField'] = sanitize_text_field($honeypotValue);
+        } else {
+            if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
+                $_POST['message'] = isset($_POST['tmpField']) ? sanitize_textarea_field(wp_unslash($_POST['tmpField'])) : '';
+                unset( $_POST['tmpField'] );
+            }
+        }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 	
 	/**

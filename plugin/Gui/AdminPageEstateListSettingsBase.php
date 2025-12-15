@@ -61,6 +61,7 @@ abstract class AdminPageEstateListSettingsBase
 	public function renderContent()
 	{
 		$this->validate($this->getListViewId());
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameters for display messages, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'empty' ) {
 			echo '<div class="notice notice-error is-dismissible"><p>'
 				. esc_html__( 'There was a problem saving the list. The Name field cannot be empty.', 'onoffice-for-wp-websites' )
@@ -68,11 +69,10 @@ abstract class AdminPageEstateListSettingsBase
 		}
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'false' ) {
 			echo '<div class="notice notice-error is-dismissible"><p>'
-			     . esc_html__( 'There was a problem saving the view. Please make '
-			                   . 'sure the name of the view is unique, even across all estate list types.',
-					'onoffice-for-wp-websites' )
+			     . esc_html__( 'There was a problem saving the view. Please make sure the name of the view is unique, even across all estate list types.', 'onoffice-for-wp-websites' )
 			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		parent::renderContent();
 	}
 
@@ -182,10 +182,10 @@ abstract class AdminPageEstateListSettingsBase
 	{
 		return array(
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The view has been saved.', 'onoffice-for-wp-websites'),
-			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view. Please make '
-				.'sure the name of the view is unique, even across all estate list types.', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view. Please make sure the name of the view is unique, even across all estate list types.', 'onoffice-for-wp-websites'),
 			self::ENQUEUE_DATA_MERGE => array(AdminPageSettingsBase::POST_RECORD_ID),
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
+			/* translators: %s will be replaced with the field name */
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 			self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),

@@ -460,7 +460,7 @@ class FormModelBuilderSimilarEstateSettings
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create(
 			InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHTED,
-			__('Feld besonders hervorheben', 'onoffice-for-wp-website'),
+			__('Feld besonders hervorheben', 'onoffice-for-wp-websites'),
 			true
 		);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
@@ -581,13 +581,15 @@ class FormModelBuilderSimilarEstateSettings
 		$pDataDetailView = $pDataDetailViewHandler->getDetailView();
 		$restrictAccessControl = $pDataDetailView->getViewRestrict();
 		if ($restrictAccessControl) {
-			$restrictedPageDetail = '<a href="' . esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')) . '" target="_blank">' . __('restricted',
+			$restrictedPageDetail = '<a href="' . esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')) . '" target="_blank" rel="noopener noreferrer">' . __('restricted',
 				'onoffice-for-wp-websites') . '</a>';
+			/* translators: %s is a link to the detail page with restriction status */
 			$pInputModelShowReferenceEstate->setHintHtml(sprintf(__('Reference estates will not link to their detail page, because the access is %s.',
 				'onoffice-for-wp-websites'), $restrictedPageDetail));
 		} else {
-			$restrictedPageDetail = '<a href="' . esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')) . '" target="_blank">' . __('not restricted',
+			$restrictedPageDetail = '<a href="' . esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')) . '" target="_blank" rel="noopener noreferrer">' . __('not restricted',
 				'onoffice-for-wp-websites') . '</a>';
+			/* translators: %s is a link to the detail page with restriction status */
 			$pInputModelShowReferenceEstate->setHintHtml(sprintf(__('Reference estates will link to their detail page, because the access is %s.',
 				'onoffice-for-wp-websites'), $restrictedPageDetail));
 		}
@@ -611,7 +613,8 @@ class FormModelBuilderSimilarEstateSettings
 		$pInputModelFilterName->setValuesAvailable($availableFilters);
 		$pInputModelFilterName->setValue($pDataViewSimilarEstates->getFilterId());
 		$linkUrl = __("https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en", "onoffice-for-wp-websites");
-		$linkLabel = '<a href="' . $linkUrl . '" target="_blank">' . __('Learn more.', 'onoffice-for-wp-websites') . '</a>';
+		$linkLabel = '<a href="' . $linkUrl . '" target="_blank" rel="noopener noreferrer">' . __('Learn more.', 'onoffice-for-wp-websites') . '</a>';
+		/* translators: %s is a "Learn more" link */
 		$pInputModelFilterName->setHintHtml(sprintf(__('Choose an estate filter from onOffice enterprise. %s',
 			'onoffice-for-wp-websites'), $linkLabel));
 

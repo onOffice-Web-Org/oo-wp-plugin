@@ -42,6 +42,7 @@ use onOffice\WPlugin\Language;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\API\ApiClientException;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 
 /**
  *
@@ -123,12 +124,13 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCreateAddress) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS);
-			if (empty($pInputModelBuilder->getValues())) {
+ 			if (empty($pInputModelBuilder->getValues())) {
 				$pInputModel->setValue(true);
 			}
 			$linkLabel = esc_html__('Request Manager', 'onoffice-for-wp-websites');
 			$linkUrl = esc_html__('https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en', 'onoffice-for-wp-websites');
-			$link = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $linkUrl, $linkLabel);
+			$link = sprintf("<a href='%s' target='_blank' rel='noopener noreferrer'>%s</a>", $linkUrl, $linkLabel);
+			/* translators: %s will be replaced with a link to the Request Manager */
 			$textWithoutLink = esc_html__("By default, no link is created to the estate when the plugin creates the address. If the contact form is on an detail page and you want to link the address and the requested estate, you can open the email in onOffice enterprise or use the %s.", 'onoffice-for-wp-websites');
 			$txtHint = sprintf($textWithoutLink, $link);
 			$pInputModel->setHintHtml($txtHint);
@@ -305,7 +307,8 @@ class AdminPageFormSettingsContact
 	{
 		parent::doExtraEnqueues();
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		wp_register_script('onoffice-handle-activity-config', plugins_url('/dist/onoffice-handle-activity-config.min.js', $pluginPath));
+		wp_register_script('onoffice-handle-activity-config', plugins_url('/dist/onoffice-handle-activity-config.min.js', $pluginPath), 
+		['jquery'], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-handle-activity-config.min.js'), true);
 		wp_enqueue_script('onoffice-handle-activity-config');
 	}
 

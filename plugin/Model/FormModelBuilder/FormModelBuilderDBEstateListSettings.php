@@ -202,7 +202,8 @@ class FormModelBuilderDBEstateListSettings
 		$filteridSelected = $this->getValue($pInputModelFiltername->getField());
 		$pInputModelFiltername->setValue($filteridSelected);
 		$linkUrl = __("https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en","onoffice-for-wp-websites");
-		$linkLabel = '<a href="' . $linkUrl . '" target="_blank">' . __( 'Learn more.', 'onoffice-for-wp-websites' ) . '</a>';
+		$linkLabel = '<a href="' . $linkUrl . '" target="_blank" rel="noopener noreferrer">' . __( 'Learn more.', 'onoffice-for-wp-websites' ) . '</a>';
+		/* translators: %s will be replaced with a link to learn more about estate filters */
 		$pInputModelFiltername->setHintHtml( sprintf( __( 'Choose an estate filter from onOffice enterprise. %s',
 			'onoffice-for-wp-websites' ), $linkLabel ) );
 
@@ -281,7 +282,7 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Feld besonders hervorheben', 'onoffice-for-wp-website');
+		$label = __('Feld besonders hervorheben', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHTED;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);

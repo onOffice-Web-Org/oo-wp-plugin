@@ -41,7 +41,12 @@ class FormPreviewApplicantSearch
 	 */
 	public function preview(string $formName): int
 	{
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Public form submission, uses reCAPTCHA instead of nonce
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- filter_var handles sanitization
 		$formNo = filter_var($_POST['oo_formno'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+		
 		try
 		{
 			$pDataFormConfiguration = $this->_pDataFormConfigurationFactory->loadByFormName($formName);

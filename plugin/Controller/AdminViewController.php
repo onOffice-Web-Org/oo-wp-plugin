@@ -44,6 +44,7 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\Gui\AdminPageAddress;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use Parsedown;
 use HTMLPurifier_Config;
 use HTMLPurifier;
@@ -286,13 +287,18 @@ class AdminViewController
 		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
 
 		wp_register_script('oo-sort-by-user-selection',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-sort-by-user-selection.min.js', ['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'dist/onoffice-sort-by-user-selection.min.js', 
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR.'/dist/onoffice-sort-by-user-selection.min.js'), 
+			true);
 
 		wp_register_script('onoffice-ajax-settings',
-			plugins_url('/dist/ajax_settings.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection']);
+			plugins_url('/dist/ajax_settings.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection'],
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR.'/dist/ajax_settings.min.js'), true);
 		wp_enqueue_script('onoffice-ajax-settings');
 		wp_enqueue_script('onoffice-geofieldbox',
-			plugins_url('/dist/geofieldbox.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);
+            plugins_url('/dist/geofieldbox.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [],
+            FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR.'/dist/geofieldbox.min.js'), true);
 
 		wp_localize_script('oo-sort-by-user-selection', 'onoffice_mapping_translations',
 			SortListTypes::getSortOrder());
@@ -378,14 +384,16 @@ class AdminViewController
 			'notification' => __('Would you like to permanently delete the site key and the secret key?', 'onoffice-for-wp-websites'),
 		];
 		wp_register_script('handle-notification-actions', plugins_url('dist/onoffice-handle-notification-actions.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
-			array('jquery'));
+			array('jquery'), FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-handle-notification-actions.min.js'),
+			true);
 		wp_localize_script('handle-notification-actions', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_localize_script('handle-notification-actions', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_enqueue_script('handle-notification-actions');
 
 		if (__String::getNew($hook)->contains($this->_pageSlug.'-settings')) {
 			wp_register_script('handle-visibility-google-recaptcha-keys', plugins_url('dist/onoffice-handle-visibility-google-recaptcha-keys.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
-				array('jquery'));
+				array('jquery'), FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-handle-visibility-google-recaptcha-keys.min.js'),
+				true);
 			wp_localize_script('handle-notification-actions', 'delete_google_recaptcha_keys', ['ajaxurl' => admin_url('admin-ajax.php')]);
 			wp_localize_script('handle-notification-actions', 'confirm_dialog_google_recaptcha_keys', $confirmDialogGoogleRecaptcha);
 			wp_enqueue_script('handle-visibility-google-recaptcha-keys');
@@ -463,8 +471,7 @@ class AdminViewController
 			$label = __('API token and secret', 'onoffice-for-wp-websites');
 			$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', esc_html($label));
 			/* translators: %s will be replaced with the translation of 'API token and secret'. */
-			$message = sprintf(esc_html(__('It looks like you did not enter any valid API '
-				.'credentials. Please consider reviewing your %s.', 'onoffice-for-wp-websites')), $loginCredentialsLink);
+			$message = sprintf(esc_html__('It looks like you did not enter any valid API credentials. Please consider reviewing your %s.', 'onoffice-for-wp-websites'), $loginCredentialsLink);
 
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $message contains intentional HTML link
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
@@ -493,10 +500,7 @@ class AdminViewController
 	{
 		if ( get_option( 'onoffice-duplicate-check-warning', '' ) === "1" ) {
 			$class = 'notice notice-error duplicate-check-notify is-dismissible';
-			$message = esc_html(__("We have deactivated the plugin's duplicate check for all of your forms, "
-				. "because the duplicate check can unintentionally overwrite address records. This function will be removed "
-				. "in the future. The option has been deactivated for these forms: Contact, Interest, Owner",
-				'onoffice-for-wp-websites'));
+			$message = esc_html__("We have deactivated the plugin's duplicate check for all of your forms, because the duplicate check can unintentionally overwrite address records. This function will be removed in the future. The option has been deactivated for these forms: Contact, Interest, Owner", 'onoffice-for-wp-websites');
 
 			// $message is already escaped with esc_html above, safe to output
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
@@ -511,7 +515,7 @@ class AdminViewController
 	public function generalAdminNoticeSEO() {
 		$urlOnofficeSetting = admin_url().'admin.php?page=onoffice-settings#notice-seo';
 		$nameOnofficeSetting = esc_html__('onOffice plugin settings','onoffice-for-wp-websites');
-		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
+		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener noreferrer'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
 
         $WPPluginChecker = new WPPluginChecker;
 		$activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
@@ -521,8 +525,8 @@ class AdminViewController
 				&& get_current_screen()->id !== 'onoffice_page_onoffice-settings'
 				&& get_option('onoffice-settings-title-and-description') == 0) {
 				$class = 'notice notice-warning active-plugin-seo is-dismissible';
-				$message = sprintf(esc_html__('The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.
-								We recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
+				/* translators: 1: list of active SEO plugins, 2: link to onOffice plugin settings */
+                $message = sprintf(esc_html__('The onOffice plugin has detected an active SEO plugin: %1$s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin. We recommend that you go to the %2$s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
 				$messageParsedown = Parsedown::instance()
 					->setSafeMode(true)
 					->setUrlsLinked(false)

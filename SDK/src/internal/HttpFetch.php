@@ -10,6 +10,7 @@ use onOffice\SDK\Exception\HttpFetchNoResultException;
 /**
  * @internal
  */
+// phpcs:disable WordPress.WP.AlternativeFunctions -- SDK requires direct cURL usage for compatibility
 class HttpFetch
 {
 	/** @var string */
@@ -88,3 +89,4 @@ class HttpFetch
 		return $result;
 	}
 }
+// phpcs:enable WordPress.WP.AlternativeFunctions

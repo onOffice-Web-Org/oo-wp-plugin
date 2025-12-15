@@ -42,6 +42,7 @@ use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Record\RecordManager;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use stdClass;
 use function __;
 use function wp_enqueue_script;
@@ -77,8 +78,13 @@ class AdminPageEstateListSettings
 	 */
 	public function handleNotificationError()
 	{
-		$pRecordManagerRead = new RecordManagerReadListViewEstate();
-		$sameNameStatus = $pRecordManagerRead->checkSameName($_GET['name'], $_GET['id']);
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- AJAX validation endpoint, no side effects
+		$name = isset($_GET['name']) ? sanitize_text_field(wp_unslash($_GET['name'])) : '';
+		$id = isset($_GET['id']) ? absint(wp_unslash($_GET['id'])) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		
+		$pRecordReadManager = new RecordManagerReadListViewEstate();
+		$sameNameStatus = $pRecordReadManager->checkSameName($name, $id);
 
 		$response = [
 			'success' => $sameNameStatus
@@ -123,13 +129,15 @@ class AdminPageEstateListSettings
 		$pDataDetailView = $pDataDetailViewHandler->getDetailView();
 		$restrictAccessControl     = $pDataDetailView->getViewRestrict();
 		if ( $restrictAccessControl ) {
-			$restrictedPageDetail = '<a href="' . esc_attr( admin_url( 'admin.php?page=onoffice-estates&tab=detail' ) ) . '" target="_blank">' . __( 'restricted',
+			$restrictedPageDetail = '<a href="' . esc_attr( admin_url( 'admin.php?page=onoffice-estates&tab=detail' ) ) . '" target="_blank" rel="noopener noreferrer">' . __( 'restricted',
 					'onoffice-for-wp-websites' ) . '</a>';
+			/* translators: %s will be replaced with a link indicating the access restriction status */
 			$pInputModelListReferenceEstates->setHintHtml( sprintf( __( 'Reference estates will not link to their detail page, because the access is %s.',
 				'onoffice-for-wp-websites' ), $restrictedPageDetail ) );
 		} else {
-			$restrictedPageDetail = '<a href="' . esc_attr( admin_url( 'admin.php?page=onoffice-estates&tab=detail' ) ) . '" target="_blank">' . __( 'not restricted',
+			$restrictedPageDetail = '<a href="' . esc_attr( admin_url( 'admin.php?page=onoffice-estates&tab=detail' ) ) . '" target="_blank" rel="noopener noreferrer">' . __( 'not restricted',
 					'onoffice-for-wp-websites' ) . '</a>';
+			/* translators: %s will be replaced with a link indicating the access restriction status */
 			$pInputModelListReferenceEstates->setHintHtml( sprintf( __( 'Reference estates will link to their detail page, because the access is %s.',
 				'onoffice-for-wp-websites' ), $restrictedPageDetail ) );
 		}
@@ -329,15 +337,16 @@ class AdminPageEstateListSettings
 		wp_enqueue_script('oo-reference-estate-js');
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviews-name']);
-		wp_register_script('onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath));
-		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
+		wp_register_script('onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath), ['jquery'], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-multiselect.min.js'), true);
+		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath), [], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/css/onoffice-multiselect.css'));
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
-		wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js');
-		wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css');
-		wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath));
+		wp_enqueue_script('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/js/select2.min.js', ['jquery'], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/vendor/select2/select2/dist/js/select2.min.js'), true);
+		wp_enqueue_style('select2',  plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'vendor/select2/select2/dist/css/select2.min.css', [], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/vendor/select2/select2/dist/css/select2.min.css'));
+		wp_enqueue_script('onoffice-custom-select',  plugins_url('/dist/onoffice-custom-select.min.js', $pluginPath), ['jquery'],
+            FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-custom-select.min.js'), true);
 		wp_localize_script('onoffice-custom-select', 'custom_select2_translation', $translation);
 		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);
 	}
