@@ -32,6 +32,7 @@ use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Form\CaptchaHandler;
+use onOffice\WPlugin\Form\CaptchaEnterpriseHandler;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -195,19 +196,35 @@ abstract class FormPost
 	 */
 
 	private function checkCaptcha(DataFormConfiguration $pConfig): bool
-	{
-		$pWPOptionsWrapper = $this->_pFormPostConfiguration->getWPOptionsWrapper();
-		$isCaptchaSetup = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-sitekey', '') !== '';
+    {
+        if (!$pConfig->getCaptcha()) {
+            return true;
+        }
 
-		if ($pConfig->getCaptcha() && $isCaptchaSetup) {
-			$token = $this->_pFormPostConfiguration->getPostvarCaptchaToken();
-			$secret = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-secretkey', '');
-			$pCaptchaHandler = new CaptchaHandler($token, $secret);
-			return $pCaptchaHandler->checkCaptcha();
-		} else {
-			return true;
-		}
-	}
+        $pWPOptionsWrapper = $this->_pFormPostConfiguration->getWPOptionsWrapper();
+        $token = $this->_pFormPostConfiguration->getPostvarCaptchaToken();
+
+        // Enterprise reCAPTCHA
+        $enterpriseSiteKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-enterprise-sitekey', '');
+        $enterpriseProjectId = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-enterprise-projectid', '');
+        $enterpriseApiKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-enterprise-apikey', '');
+
+        if (!empty($enterpriseSiteKey) && !empty($enterpriseProjectId) && !empty($enterpriseApiKey)) {
+            $pHandler = new CaptchaEnterpriseHandler($token, $enterpriseProjectId, $enterpriseSiteKey, $enterpriseApiKey);
+            return $pHandler->checkCaptcha();
+        }
+
+        // TODO: Classic reCAPTCHA - Remove this later, when Enterprise reCAPTCHA is fully rolled out
+        $classicSiteKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-sitekey', '');
+        $classicSecretKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-secretkey', '');
+
+        if (!empty($classicSiteKey) && !empty($classicSecretKey)) {
+            $pHandler = new CaptchaHandler($token, $classicSecretKey);
+            return $pHandler->checkCaptcha();
+        }
+
+        return true;
+    }
 
 	/**
 	 *
