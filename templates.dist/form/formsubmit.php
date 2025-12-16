@@ -36,18 +36,13 @@ if ($pForm->needsReCaptcha() && ($hasEnterprise || $hasClassic)) {
 
     // Enterprise reCAPTCHA (has priority)
     if ($hasEnterprise) {
-        $captchaError = esc_html__('Captcha verification failed. Please try again.', 'onoffice-for-wp-websites');
 ?>
     <input type="hidden" name="g-recaptcha-response" id="recaptcha-token-<?php echo esc_attr($pFormNo); ?>" value="">
-    <div id="recaptcha-error-<?php echo esc_attr($pFormNo); ?>" style="display:none;color:red;margin-bottom:10px;"></div>
     <button type="submit" class="submit_button"><?php echo $buttonLabel; ?></button>
     <script>
         (function() {
             var formNo = <?php echo json_encode($pFormNo); ?>;
             var siteKey = <?php echo json_encode($enterpriseSiteKey); ?>;
-            var errorMsg = <?php echo json_encode($captchaError); ?>;
-            var errorDiv = document.getElementById('recaptcha-error-' + formNo);
-            
             var form = document.querySelector('form[id^="onoffice-form"] input[name="oo_formno"][value="' + formNo + '"]')?.closest('form, #onoffice-form, .oo-form, #leadgeneratorform');
             var btn = form?.querySelector('.submit_button');
             var tokenInput = document.getElementById('recaptcha-token-' + formNo);
@@ -86,8 +81,6 @@ if ($pForm->needsReCaptcha() && ($hasEnterprise || $hasClassic)) {
                     
                 } catch(error) {
                     console.error('reCAPTCHA Enterprise error:', error);
-                    errorDiv.textContent = errorMsg;
-                    errorDiv.style.display = 'block';
                     btn.disabled = false;
                     btn.classList.remove('onoffice-unclickable-form');
                 }
