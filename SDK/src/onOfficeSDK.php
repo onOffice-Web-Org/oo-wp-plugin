@@ -135,9 +135,9 @@ class onOfficeSDK
 	 *
 	 * @throws Exception\HttpFetchNoResultException
 	 */
-	public function sendRequests($token, $secret, bool $saveToCache = true)
+	public function sendRequests($token, $secret, bool $saveToCache = true, $claim = null)
 	{
-		$this->apiCall->sendRequests($token, $secret, null, $saveToCache);
+		$this->apiCall->sendRequests($token, $secret, null, $saveToCache, $claim);
 	}
 
 	/**
