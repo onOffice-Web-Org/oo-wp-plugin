@@ -76,6 +76,19 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 6.9 (2025-12-19) =
+
+**Fixed**
+* Security improvements
+* Translation of geo fields
+* Fatal error on the address detail page
+
+**Added**
+* Google reCAPTCHA Enterprise support
+
+**Changed**
+* Translation workflow
+
 = 6.8 (2025-11-27) =
 
 **Fixed**
