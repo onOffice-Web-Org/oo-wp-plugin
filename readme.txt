@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 6.8
+Stable tag: 6.9
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,19 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.9 (2025-12-19) =
+
+**Fixed**
+* Security improvements
+* Translation of geo fields
+* Fatal error on the address detail page
+
+**Added**
+* Google reCAPTCHA Enterprise support
+
+**Changed**
+* Translation workflow
 
 = 6.8 (2025-11-27) =
 
