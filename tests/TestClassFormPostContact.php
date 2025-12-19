@@ -372,6 +372,7 @@ class TestClassFormPostContact
 			'Id' => '1337',
 			'Anrede' => '',
 			'tmpField' => 'content',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
 		];
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
@@ -419,6 +420,11 @@ class TestClassFormPostContact
 
 	public function testMissingFields()
 	{
+		$_POST = [
+        	'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
+		];
+    
+
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
@@ -510,6 +516,7 @@ class TestClassFormPostContact
 
 		$_POST = [
 			'message' => 'content2',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
 		];
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
@@ -555,6 +562,7 @@ class TestClassFormPostContact
 			'Id' => '1337',
 			'Anrede' => '',
 			'tmpField' => 'content',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
 		];
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
@@ -601,6 +609,7 @@ class TestClassFormPostContact
 			'Id' => '1337',
 			'Anrede' => '',
 			'tmpField' => 'content',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
 		];
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
@@ -699,6 +708,7 @@ class TestClassFormPostContact
 			'Anrede' => '',
 			'message' => 'content1',
 			'tmpField' => 'content2',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_contactForm'),
 		];
 	}
 }

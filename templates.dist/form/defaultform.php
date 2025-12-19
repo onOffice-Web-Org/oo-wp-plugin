@@ -36,6 +36,7 @@ $displayError = false;
 <form method="post" id="onoffice-form" class="oo-form oo-form-default" novalidate>
 	<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
+	<?php wp_nonce_field('onoffice_form_' . esc_attr($pForm->getFormId()), 'onoffice_nonce', false); ?>
 	<?php if ( isset( $estateId ) ) : ?>
 	<input type="hidden" name="Id" value="<?php echo esc_attr($estateId); ?>">
 	<?php endif; ?>

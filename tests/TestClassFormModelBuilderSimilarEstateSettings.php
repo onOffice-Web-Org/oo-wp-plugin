@@ -419,6 +419,6 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$this->assertInstanceOf(InputModelOption::class, $pInputModelOption);
 		$this->assertNotEmpty($pInputModelOption->getValuesAvailable());
 		$this->assertEquals($pInputModelOption->getHtmlType(), 'select');
-		$this->assertEquals('Choose an estate filter from onOffice enterprise. <a href="https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en" target="_blank">Learn more.</a>', $pInputModelOption->getHintHtml());
+		$this->assertEquals('Choose an estate filter from onOffice enterprise. <a href="https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en" target="_blank" rel="noopener noreferrer">Learn more.</a>', $pInputModelOption->getHintHtml());
 	}
 }
