@@ -6,4 +6,5 @@ build/
 node_modules/
 SDK/vendor
 .phpunit.result.cache
-dist/
+dist/*
+!dist/.gitkeep
