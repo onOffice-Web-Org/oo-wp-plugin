@@ -88,9 +88,9 @@ class ApiCall
 	 * @throws HttpFetchNoResultException
 	 */
 
-	public function sendRequests($token, $secret, HttpFetch $httpFetch = null, bool $saveToCache = true)
+	public function sendRequests($token, $secret, HttpFetch $httpFetch = null, bool $saveToCache = true, $claim = null)
 	{
-		$this->collectOrGatherRequests($token, $secret, $httpFetch, $saveToCache);
+		$this->collectOrGatherRequests($token, $secret, $httpFetch, $saveToCache, $claim);
 	}
 
 	/**
@@ -153,7 +153,7 @@ class ApiCall
 	 * @throws HttpFetchNoResultException
 	 */
 
-	private function collectOrGatherRequests($token, $secret, HttpFetch $httpFetch = null, bool $saveToCache = true)
+	private function collectOrGatherRequests($token, $secret, HttpFetch $httpFetch = null, bool $saveToCache = true, $claim = null)
 	{
 		$actionParameters = array();
 		$actionParametersOrder = array();
@@ -167,6 +167,13 @@ class ApiCall
 			if ($cachedResponse === null)
 			{
 				$parametersThisAction = $pRequest->createRequest($token, $secret);
+				
+				if($claim){
+					if(!isset($parametersThisAction['parameters'])){
+						$parametersThisAction['parameters'] = array();
+					}
+					$parametersThisAction['parameters']['extendedclaim'] = $claim;
+				}
 
 				$actionParameters[] = $parametersThisAction;
 				$actionParametersOrder[] = $pRequest;
