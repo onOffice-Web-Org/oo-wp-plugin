@@ -1242,9 +1242,6 @@ msgstr "Die Keys sind OK."
 msgid "Google Maps Key"
 msgstr "Google Maps-Key"
 
-msgid "Google reCAPTCHA"
-msgstr "Google reCAPTCHA"
-
 msgid "Secret Key"
 msgstr "Geheimer Schlüssel"
 
@@ -1504,12 +1501,9 @@ msgstr "Erforderlich"
 msgid "Result Limit"
 msgstr "Maximale Ergebnisanzahl"
 
-#. translators: %s will be replaced with the translation of '(won't work until set up globally)', if captcha hasn't been set up appropriately yet, or blank otherwise.
+#. translators: %s will be replaced with a warning message if no reCAPTCHA is configured, or blank otherwise.
 msgid "Requires Captcha %s"
 msgstr "Benötigt Captcha %s"
-
-msgid "(won't work until set up globally)"
-msgstr "(funktioniert erst nach der Einrichtung)"
 
 msgid "Form Name"
 msgstr "Formularname"
@@ -1815,4 +1809,92 @@ msgstr ""
 #. translators: %s: real estate ID number
 msgctxt "template"
 msgid "Show Details for Real Estate No. %s"
+msgstr ""
+
+msgid "Radius (km)"
+msgstr ""
+
+msgid "Project ID"
+msgstr ""
+
+msgid "API Key"
+msgstr ""
+
+msgid "Google reCAPTCHA Enterprise"
+msgstr ""
+
+msgid "Google reCAPTCHA Classic"
+msgstr ""
+
+#. translators: %s: URL to the migration guide
+msgid "Important Notice: Google will discontinue reCAPTCHA v2/v3 (Classic) on December 31, 2025. Please migrate your projects to reCAPTCHA Enterprise in time to ensure uninterrupted protection. More information at: %s"
+msgstr ""
+
+msgid "Migration Guide"
+msgstr ""
+
+msgid "Warning"
+msgstr ""
+
+msgid "The keys are valid."
+msgstr ""
+
+msgid "Error:"
+msgstr ""
+
+msgid "The API Key is missing."
+msgstr ""
+
+msgid "The reCAPTCHA token is missing."
+msgstr ""
+
+msgid "The Project ID is missing."
+msgstr ""
+
+msgid "The Site Key is missing."
+msgstr ""
+
+msgid "The API Key is invalid."
+msgstr ""
+
+msgid "The Project ID is invalid or malformed."
+msgstr ""
+
+msgid "The Project ID is invalid or does not exist."
+msgstr ""
+
+msgid "The Site Key is invalid."
+msgstr ""
+
+msgid "The API Key does not have permission for reCAPTCHA Enterprise."
+msgstr ""
+
+msgid "Billing is not enabled for this Google Cloud project."
+msgstr ""
+
+msgid "Invalid request. Please check your credentials."
+msgstr ""
+
+msgid "The reCAPTCHA token has expired or has already been used."
+msgstr ""
+
+msgid "API request failed. Please check your API Key and Project ID."
+msgstr ""
+
+msgid "An error occurred while loading reCAPTCHA."
+msgstr ""
+
+msgid "Connection to Google reCAPTCHA failed. Please check your internet connection."
+msgstr ""
+
+msgid "Too many requests. Please try again later."
+msgstr ""
+
+msgid "Google reCAPTCHA server error. Please try again later."
+msgstr ""
+
+msgid "In order to use Google reCAPTCHA Enterprise, you need to provide your Project ID and Site Key. You're free to enable it in the form settings for later use."
+msgstr ""
+
+msgid "No reCAPTCHA configured"
 msgstr ""
