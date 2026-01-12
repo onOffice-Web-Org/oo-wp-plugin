@@ -120,7 +120,21 @@ class APIClientActionGeneric
 	public function getErrorCode(): int
 	{
 		$resultApi = $this->getResult();
-		return $resultApi['status']['errorcode'] ?? 500;
+		$errorCode = $resultApi['status']['errorcode'] ?? 500;
+		
+		// Debug logging - remove after testing
+		if (is_array($errorCode)) {
+			error_log('DEBUG APIClientActionGeneric: errorcode is array: ' . print_r($errorCode, true));
+			error_log('DEBUG APIClientActionGeneric: full status: ' . print_r($resultApi['status'] ?? 'N/A', true));
+		}
+		
+		// Handle case where errorcode is unexpectedly an array
+		if (is_array($errorCode)) {
+			// If it's an array, try to get the first element or return 500
+			return !empty($errorCode) ? (int)reset($errorCode) : 500;
+		}
+		
+		return (int)$errorCode;
 	}
 
 	/**
