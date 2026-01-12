@@ -122,16 +122,23 @@ class APIClientActionGeneric
 		$resultApi = $this->getResult();
 		$errorCode = $resultApi['status']['errorcode'] ?? 500;
 		
-		// Debug logging - remove after testing
+		// Handle case where errorcode is an array (multiple API requests)
 		if (is_array($errorCode)) {
-			error_log('DEBUG APIClientActionGeneric: errorcode is array: ' . print_r($errorCode, true));
-			error_log('DEBUG APIClientActionGeneric: full status: ' . print_r($resultApi['status'] ?? 'N/A', true));
-		}
-		
-		// Handle case where errorcode is unexpectedly an array
-		if (is_array($errorCode)) {
-			// If it's an array, try to get the first element or return 500
-			return !empty($errorCode) ? (int)reset($errorCode) : 500;
+			// If array is empty, return 500
+			if (empty($errorCode)) {
+				return 500;
+			}
+			
+			// Return the first non-zero error code, or 0 if all are successful
+			foreach ($errorCode as $code) {
+				$intCode = (int)$code;
+				if ($intCode !== 0) {
+					return $intCode;
+				}
+			}
+			
+			// All codes are 0 (success)
+			return 0;
 		}
 		
 		return (int)$errorCode;
