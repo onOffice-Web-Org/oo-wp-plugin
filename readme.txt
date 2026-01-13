@@ -1,9 +1,9 @@
 === onOffice for WP-Websites ===
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
-Requires at least: 4.6
-Tested up to: 6.8
-Requires PHP: 7.4
+Requires at least: 6.1
+Tested up to: 6.9
+Requires PHP: 8.0
 Stable tag: 6.9
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
