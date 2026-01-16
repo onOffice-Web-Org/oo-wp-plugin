@@ -76,6 +76,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 6.9.1 (2025-01-16) =
+
+**Fixed**
+* Form submission issues
+* API error handling
+* Property search language handling
+* Large property list pagination
+
 = 6.9 (2025-12-19) =
 
 **Fixed**
