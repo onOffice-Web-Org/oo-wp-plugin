@@ -120,7 +120,28 @@ class APIClientActionGeneric
 	public function getErrorCode(): int
 	{
 		$resultApi = $this->getResult();
-		return $resultApi['status']['errorcode'] ?? 500;
+		$errorCode = $resultApi['status']['errorcode'] ?? 500;
+		
+		// Handle case where errorcode is an array (multiple API requests)
+		if (is_array($errorCode)) {
+			// If array is empty, return 500
+			if (empty($errorCode)) {
+				return 500;
+			}
+			
+			// Return the first non-zero error code, or 0 if all are successful
+			foreach ($errorCode as $code) {
+				$intCode = (int)$code;
+				if ($intCode !== 0) {
+					return $intCode;
+				}
+			}
+			
+			// All codes are 0 (success)
+			return 0;
+		}
+		
+		return (int)$errorCode;
 	}
 
 	/**
