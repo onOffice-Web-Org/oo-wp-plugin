@@ -350,7 +350,7 @@ class AdminViewController
 	public function enqueue_css()
 	{
 		wp_enqueue_style('onoffice-admin-css',
-			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), 'v6.4');
+			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), 'v6.9');
 	}
 
 	public function role_styles()  {
@@ -394,7 +394,14 @@ class AdminViewController
 			wp_register_script('handle-visibility-google-recaptcha-keys', plugins_url('dist/onoffice-handle-visibility-google-recaptcha-keys.min.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
 				array('jquery'), FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-handle-visibility-google-recaptcha-keys.min.js'),
 				true);
-			wp_localize_script('handle-notification-actions', 'delete_google_recaptcha_keys', ['ajaxurl' => admin_url('admin-ajax.php')]);
+			wp_localize_script('handle-notification-actions', 'delete_google_recaptcha_keys', [
+				'ajaxurl' => admin_url('admin-ajax.php'),
+				'nonce' => wp_create_nonce('delete_google_recaptcha_keys'),
+			]);
+			wp_localize_script('handle-notification-actions', 'delete_google_recaptcha_enterprise_keys', [
+				'ajaxurl' => admin_url('admin-ajax.php'),
+				'nonce' => wp_create_nonce('delete_google_recaptcha_enterprise_keys'),
+			]);
 			wp_localize_script('handle-notification-actions', 'confirm_dialog_google_recaptcha_keys', $confirmDialogGoogleRecaptcha);
 			wp_enqueue_script('handle-visibility-google-recaptcha-keys');
 		}
@@ -515,7 +522,7 @@ class AdminViewController
 	public function generalAdminNoticeSEO() {
 		$urlOnofficeSetting = admin_url().'admin.php?page=onoffice-settings#notice-seo';
 		$nameOnofficeSetting = esc_html__('onOffice plugin settings','onoffice-for-wp-websites');
-		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
+		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener noreferrer'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
 
         $WPPluginChecker = new WPPluginChecker;
 		$activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();

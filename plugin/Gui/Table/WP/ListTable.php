@@ -157,7 +157,7 @@ abstract class ListTable extends WP_List_Table
 				$listPageID = explode( ',', $record->page_shortcode );
 				$listPage   = [];
 				foreach ( $listPageID as $pageID ) {
-					$listPage[] = "<a href='" . esc_attr( get_edit_post_link( (int) $pageID ) ) . "' target='_blank'>" . esc_html( get_the_title( (int) $pageID ) ) . "</a>";
+					$listPage[] = "<a href='" . esc_attr( get_edit_post_link( (int) $pageID ) ) . "' target='_blank' rel='noopener noreferrer'>" . esc_html( get_the_title( (int) $pageID ) ) . "</a>";
 				}
 				$pages                  = implode( ',', $listPage );
 				$record->page_shortcode = $pages;

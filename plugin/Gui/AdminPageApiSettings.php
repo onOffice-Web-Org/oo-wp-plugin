@@ -73,6 +73,7 @@ class AdminPageApiSettings
 		$this->addFormModelCache();
 		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleMapsKey();
+		$this->addFormModelGoogleCaptchaEnterprise();
 		$this->addFormModelGoogleCaptcha();
 		$this->addFormModelHoneypot();
 		$this->addFormModelFavorites($pageSlug);
@@ -161,6 +162,52 @@ class AdminPageApiSettings
 		$this->addFormModel($pFormModel);
 	}
 
+
+	private function addFormModelGoogleCaptchaEnterprise()
+    {
+        $labelProjectId = __('Project ID', 'onoffice-for-wp-websites');
+        $labelSiteKey = __('Site Key', 'onoffice-for-wp-websites');
+        $labelApiKey = __('API Key', 'onoffice-for-wp-websites');
+        
+        $pInputModelCaptchaProjectId = new InputModelOption
+            ('onoffice-settings', 'captcha-enterprise-projectid', $labelProjectId, 'string');
+        $optionNameProjectId = $pInputModelCaptchaProjectId->getIdentifier();
+        $pInputModelCaptchaProjectId->setValue(get_option($optionNameProjectId));
+        $pInputModelCaptchaProjectId->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
+        $pInputModelCaptchaProjectId->setIsPassword(true);
+        
+        $pInputModelCaptchaSiteKey = new InputModelOption
+            ('onoffice-settings', 'captcha-enterprise-sitekey', $labelSiteKey, 'string');
+        $optionNameSiteKey = $pInputModelCaptchaSiteKey->getIdentifier();
+        $pInputModelCaptchaSiteKey->setValue(get_option($optionNameSiteKey));
+        $pInputModelCaptchaSiteKey->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
+        $pInputModelCaptchaSiteKey->setIsPassword(true);
+
+        $pInputModelCaptchaApiKey = new InputModelOption
+            ('onoffice-settings', 'captcha-enterprise-apikey', $labelApiKey, 'string');
+        $optionNameApiKey = $pInputModelCaptchaApiKey->getIdentifier();
+        $pInputModelCaptchaApiKey->setValue(get_option($optionNameApiKey));
+        $pInputModelCaptchaApiKey->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
+        $pInputModelCaptchaApiKey->setIsPassword(true);
+        $pInputModelCaptchaApiKey->setSanitizeCallback(function($password) use ($optionNameApiKey) {
+            return $this->checkPassword($password, $optionNameApiKey);
+        });
+
+        $pFormModel = new FormModel();
+        $pFormModel->addInputModel($pInputModelCaptchaProjectId);
+        $pFormModel->addInputModel($pInputModelCaptchaSiteKey);
+        $pFormModel->addInputModel($pInputModelCaptchaApiKey);
+        $pFormModel->setGroupSlug('onoffice-google-recaptcha-enterprise');
+        $pFormModel->setPageSlug($this->getPageSlug());
+        $pFormModel->setLabel(__('Google reCAPTCHA Enterprise', 'onoffice-for-wp-websites'));
+        $pFormModel->setTextCallback(function() {
+            $this->renderTestFormReCaptchaEnterprise();
+        });
+
+        $this->addFormModel($pFormModel);
+    }
+
+
 	/**
 	 *
 	 */
@@ -191,8 +238,9 @@ class AdminPageApiSettings
 		$pFormModel->addInputModel($pInputModelCaptchaPageSecret);
 		$pFormModel->setGroupSlug('onoffice-google-recaptcha');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		$pFormModel->setLabel(__('Google reCAPTCHA', 'onoffice-for-wp-websites'));
+		$pFormModel->setLabel(__('Google reCAPTCHA Classic', 'onoffice-for-wp-websites'));
 		$pFormModel->setTextCallback(function() {
+			$this->renderDeprecationNoticeReCaptcha();
 			$this->renderTestFormReCaptcha();
 		});
 
@@ -241,6 +289,20 @@ class AdminPageApiSettings
 
 		$this->addFormModel($pFormModel);
 	}
+
+	public function renderDeprecationNoticeReCaptcha()
+    {
+        $migrationGuideUrl = 'https://cloud.google.com/recaptcha/docs/migrate-recaptcha';
+        $message = sprintf(
+            /* translators: %s: URL to the migration guide */
+            __('Important Notice: Google will discontinue reCAPTCHA v2/v3 (Classic) on December 31, 2025. Please migrate your projects to reCAPTCHA Enterprise in time to ensure uninterrupted protection. More information at: %s', 'onoffice-for-wp-websites'),
+            '<a href="' . esc_url($migrationGuideUrl) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Migration Guide', 'onoffice-for-wp-websites') . '</a>'
+        );
+        
+        echo '<div class="notice notice-warning inline" style="margin: 10px 0; padding: 10px;">';
+        echo '<p><strong>' . esc_html__('Warning', 'onoffice-for-wp-websites') . ':</strong> ' . wp_kses($message, ['a' => ['href' => [], 'target' => [], 'rel' => []]]) . '</p>';
+        echo '</div>';
+    }
 
 	/**
 	 *
@@ -369,6 +431,53 @@ class AdminPageApiSettings
 		}
 		return $password;
 	}
+
+
+	public function renderTestFormReCaptchaEnterprise()
+    {
+        $projectIdOption = get_option('onoffice-settings-captcha-enterprise-projectid', '');
+        $siteKeyOption = get_option('onoffice-settings-captcha-enterprise-sitekey', '');
+                $stringTranslations = [
+            // Success
+            'response_ok' => __('The keys are valid.', 'onoffice-for-wp-websites'),
+            'response_error' => __('Error:', 'onoffice-for-wp-websites'),     
+            // Missing input errors
+            'missing-api-key' => __('The API Key is missing.', 'onoffice-for-wp-websites'),
+            'missing-input-response' => __('The reCAPTCHA token is missing.', 'onoffice-for-wp-websites'),
+            'missing-input-secret' => __('The Project ID is missing.', 'onoffice-for-wp-websites'),
+            'missing-site-key' => __('The Site Key is missing.', 'onoffice-for-wp-websites'),
+            // Invalid input errors
+            'invalid-api-key' => __('The API Key is invalid.', 'onoffice-for-wp-websites'),
+            'invalid-input-secret' => __('The Project ID is invalid or malformed.', 'onoffice-for-wp-websites'),
+            'invalid-project-id' => __('The Project ID is invalid or does not exist.', 'onoffice-for-wp-websites'),
+            'invalid-site-key' => __('The Site Key is invalid.', 'onoffice-for-wp-websites'),
+            // Permission errors
+            'api-key-permission-denied' => __('The API Key does not have permission for reCAPTCHA Enterprise.', 'onoffice-for-wp-websites'),
+            'billing-not-enabled' => __('Billing is not enabled for this Google Cloud project.', 'onoffice-for-wp-websites'),
+            // Request errors
+            'bad-request' => __('Invalid request. Please check your credentials.', 'onoffice-for-wp-websites'),
+            'timeout-or-duplicate' => __('The reCAPTCHA token has expired or has already been used.', 'onoffice-for-wp-websites'),
+            // Connection/Server errors
+            'api-error' => __('API request failed. Please check your API Key and Project ID.', 'onoffice-for-wp-websites'),
+            'browser-error' => __('An error occurred while loading reCAPTCHA.', 'onoffice-for-wp-websites'),
+            'connection-failed' => __('Connection to Google reCAPTCHA failed. Please check your internet connection.', 'onoffice-for-wp-websites'),
+            'rate-limit-exceeded' => __('Too many requests. Please try again later.', 'onoffice-for-wp-websites'),
+            'server-error' => __('Google reCAPTCHA server error. Please try again later.', 'onoffice-for-wp-websites'),
+        ];
+
+        if ($projectIdOption !== '' && $siteKeyOption !== '') {
+            $template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'resource'
+                .DIRECTORY_SEPARATOR.'CaptchaEnterpriseTestForm.html');
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Template uses printf placeholders; values are escaped individually
+            printf($template,
+                json_encode(admin_url('admin-ajax.php')),  // %1$s - AJAX URL
+                json_encode($stringTranslations),		   // %2$s - Translations object
+				json_encode(wp_create_nonce('check_captcha_enterprise_data'))  // %3$s - Nonce
+			);          
+        } else {
+            echo esc_html__('In order to use Google reCAPTCHA Enterprise, you need to provide your Project ID and Site Key. You\'re free to enable it in the form settings for later use.', 'onoffice-for-wp-websites');
+        }
+    }
 
 
 	/**
