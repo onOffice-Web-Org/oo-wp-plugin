@@ -698,8 +698,8 @@ class FormModelBuilderEstateDetailSettings
 
 		/* translators: %1$s: field name 'kaufpreis', %2$s: field name 'aussen_courtage', %3$s: field name 'bundesland' */
 		$textHint = sprintf(esc_html__(
-			'The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible.', 'onoffice-for-wp-websites'),
-			'<code>'.$result['kaufpreis'].'</code>', '<code>'.$result['aussen_courtage'].'</code>', '<code>'.$result['bundesland'].'</code>') .
+			'The fields %1$s and %2$s must be filled in onOffice enterprise so that output is possible.', 'onoffice-for-wp-websites'),
+			'<code>'.$result['kaufpreis'].'</code>', '<code>'.$result['bundesland'].'</code>') .
 			'<br><br>' .
 			esc_html__('A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs.', 'onoffice-for-wp-websites') .
 			'<br><br>' .
