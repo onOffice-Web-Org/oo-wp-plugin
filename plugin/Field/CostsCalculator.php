@@ -74,21 +74,20 @@ class CostsCalculator
 	{
 		$purchasePriceRaw = $recordRaw['kaufpreis'];
 
-	    $otherCosts = [
+	    $othersCosts = [
 			'bundesland' => $propertyTransferTax[$recordRaw['bundesland']],
 			'notary_fees' => DataDetailView::NOTARY_FEES,
 			'land_register_entry' => DataDetailView::LAND_REGISTER_ENTRY
 		];
 
 		if (!empty($externalCommission)) {
-			$otherCosts['aussen_courtage'] = $externalCommission;
+			$othersCosts['aussen_courtage'] = $externalCommission;
 		}
-
 
 		$rawAllCosts = ['kaufpreis' => ['raw' => $purchasePriceRaw]];
 		$totals = 0;
 
-		foreach ($otherCosts as $key => $value) {
+		foreach ($othersCosts as $key => $value) {
 			$calculatePrice = $this->calculatePrice($purchasePriceRaw, $value);
 			$rawAllCosts[$key] = ['raw' => $calculatePrice];
 			$totals += $calculatePrice;
