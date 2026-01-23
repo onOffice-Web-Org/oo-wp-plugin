@@ -74,7 +74,7 @@ class CostsCalculator
 	{
 		$purchasePriceRaw = $recordRaw['kaufpreis'];
 
-	    $othersCosts = [
+		$othersCosts = [
 			'bundesland' => $propertyTransferTax[$recordRaw['bundesland']],
 			'notary_fees' => DataDetailView::NOTARY_FEES,
 			'land_register_entry' => DataDetailView::LAND_REGISTER_ENTRY
