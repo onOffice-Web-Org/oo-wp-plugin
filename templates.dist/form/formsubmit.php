@@ -38,7 +38,7 @@ if ($pForm->needsReCaptcha() && ($hasEnterprise || $hasClassic)) {
     if ($hasEnterprise) {
 ?>
     <input type="hidden" name="g-recaptcha-response" id="recaptcha-token-<?php echo esc_attr($pFormNo); ?>" value="">
-    <button type="submit" class="submit_button"><?php echo $buttonLabel; ?></button>
+    <button type="submit" class="submit_button"><?php echo esc_html($buttonLabel); ?></button>
     <script>
         (function() {
             var formNo = <?php echo json_encode($pFormNo); ?>;
@@ -107,7 +107,7 @@ if ($pForm->needsReCaptcha() && ($hasEnterprise || $hasClassic)) {
         data-sitekey="<?php echo esc_attr($classicSiteKey); ?>" 
         data-callback="submitForm<?php echo esc_js($pFormNo); ?>" data-size="invisible">
     </div>
-    <button class="submit_button"><?php echo $buttonLabel; ?></button>
+    <button class="submit_button"><?php echo esc_html($buttonLabel); ?></button>
     <script>
         (function() {
             const selectorFormById = `form[id^="onoffice-form"] input[name="oo_formno"][value="<?php echo esc_js($pFormNo); ?>"]`;
