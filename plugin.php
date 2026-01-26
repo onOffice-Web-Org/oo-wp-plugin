@@ -37,6 +37,7 @@ const ONOFFICE_PLUGIN_VERSION = '6.10';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
 
 require __DIR__ . '/vendor/autoload.php';
+require plugin_dir_path( __FILE__ ) . 'oo-updater.php';
 
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
