@@ -20,6 +20,8 @@
 
 namespace onOffice\WPlugin\Form;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class CaptchaEnterpriseDataChecker
 {
     /**

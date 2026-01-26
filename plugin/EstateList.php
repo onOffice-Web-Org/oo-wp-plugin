@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;

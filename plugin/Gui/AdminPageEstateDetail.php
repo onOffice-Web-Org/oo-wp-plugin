@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;

@@ -147,7 +147,8 @@ class TemplateCall
 				} else if ($key === self::TEMPLATE_FOLDER_PLUGIN) {
 					$formattedPath = __String::getNew( $path )->replace( plugin_dir_path( ONOFFICE_PLUGIN_DIR ), '' );
 				} else {
-					$formattedPath = substr( $path, strpos( $path, $pluginDirName ) );
+					$position = strpos( $path, $pluginDirName );
+					$formattedPath = $position !== false ? substr( $path, $position ) : $path;
 				}
 				$templateInfo['path'][ $formattedPath ] = substr( strrchr( $path, "/" ), 1 );
 			}

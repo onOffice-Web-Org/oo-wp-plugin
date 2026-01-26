@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use onOffice\WPlugin\Region\Region;
 use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\Types\FieldTypes;

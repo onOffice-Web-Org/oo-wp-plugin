@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use DateTimeImmutable;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
