@@ -804,9 +804,13 @@ class EstateList
 		if ($this->getShowTotalCostsCalculator()) {
 			$externalCommission = $this->getExternalCommission($recordRaw['aussen_courtage'] ?? '');
 			$propertyTransferTax = $this->_pDataView->getPropertyTransferTax();
-			if (!empty((float) $recordRaw['kaufpreis']) && !empty($recordRaw['bundesland']) && $externalCommission !== null) {
+		
+			if (!empty((float) $recordRaw['kaufpreis']) && !empty($recordRaw['bundesland'])) {
 				$costsCalculator = $this->_pEnvironment->getContainer()->get(CostsCalculator::class);
+		
+				
 				$this->_totalCostsData = $costsCalculator->getTotalCosts($recordRaw, $propertyTransferTax, $externalCommission);
+				
 			}
 		}
 
