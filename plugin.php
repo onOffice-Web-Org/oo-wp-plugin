@@ -31,7 +31,7 @@ License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
 Domain Path: /languages
 */
-defined( 'ABSPATH' ) or die();
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 const ONOFFICE_PLUGIN_VERSION = '6.9.1';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
