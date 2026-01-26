@@ -20,7 +20,9 @@
  */
 
 namespace onOffice\WPlugin\Gui;
-defined( 'ABSPATH' ) or exit;
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use onOffice\WPlugin\Gui\Table\EstateUnitsTable;
 use onOffice\WPlugin\Utility\FileVersionHelper;
 use WP_List_Table;

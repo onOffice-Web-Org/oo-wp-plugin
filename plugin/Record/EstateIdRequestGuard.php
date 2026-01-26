@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
-defined( 'ABSPATH' ) or exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 use DI\Container;
 use DI\ContainerBuilder;

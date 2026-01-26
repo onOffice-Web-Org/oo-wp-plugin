@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\ScriptLoader;
 
-defined( 'ABSPATH' ) or exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  *

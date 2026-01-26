@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\Controller;
 
-defined( 'ABSPATH' ) or exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 use DI\ContainerBuilder;
 use Exception;

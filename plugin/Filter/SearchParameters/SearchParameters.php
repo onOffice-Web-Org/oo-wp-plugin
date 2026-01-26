@@ -22,7 +22,7 @@
 
 namespace onOffice\WPlugin\Filter\SearchParameters;
 
-defined( 'ABSPATH' ) or exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 use DI\DependencyException;
 use DI\NotFoundException;

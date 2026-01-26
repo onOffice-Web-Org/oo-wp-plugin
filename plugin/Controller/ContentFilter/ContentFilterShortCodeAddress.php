@@ -24,7 +24,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
-defined( 'ABSPATH' ) or exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 use DI\DependencyException;
 use DI\NotFoundException;

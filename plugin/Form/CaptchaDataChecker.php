@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\Form;
 
-defined( 'ABSPATH' ) or exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  *
