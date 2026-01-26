@@ -39,10 +39,10 @@ class CostsCalculator
 	/**
 	 * @param array $recordRaw
 	 * @param array $propertyTransferTax
-	 * @param float $externalCommission
+	 * @param float|null $externalCommission 
 	 * @return array
 	 */
-	public function getTotalCosts(array $recordRaw, array $propertyTransferTax, float $externalCommission): array
+	public function getTotalCosts(array $recordRaw, array $propertyTransferTax,  ?float $externalCommission = null): array
 	{
 		try {
 			$totalCostsData = $this->calculateRawCosts($recordRaw, $propertyTransferTax, $externalCommission);
@@ -67,19 +67,22 @@ class CostsCalculator
 	/**
 	 * @param array $recordRaw
 	 * @param array $propertyTransferTax
-	 * @param float $externalCommission
+	 * @param float|null $externalCommission 
 	 * @return array
 	 */
-	private function calculateRawCosts(array $recordRaw, array $propertyTransferTax, float $externalCommission): array
+	private function calculateRawCosts(array $recordRaw, array $propertyTransferTax, ?float $externalCommission = null): array
 	{
 		$purchasePriceRaw = $recordRaw['kaufpreis'];
 
 		$othersCosts = [
 			'bundesland' => $propertyTransferTax[$recordRaw['bundesland']],
-			'aussen_courtage' => $externalCommission,
 			'notary_fees' => DataDetailView::NOTARY_FEES,
 			'land_register_entry' => DataDetailView::LAND_REGISTER_ENTRY
 		];
+
+		if (!empty($externalCommission)) {
+			$othersCosts['aussen_courtage'] = $externalCommission;
+		}
 
 		$rawAllCosts = ['kaufpreis' => ['raw' => $purchasePriceRaw]];
 		$totals = 0;

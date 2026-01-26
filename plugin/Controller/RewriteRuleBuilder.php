@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\WP\WPPageWrapper;
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;

@@ -1,15 +1,15 @@
-# Copyright (C) 2025 onOffice GmbH
+# Copyright (C) 2026 onOffice GmbH
 # This file is distributed under the AGPL 3+.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice for WP-Websites 6.8\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
+"Project-Id-Version: onOffice for WP-Websites 6.9.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-websites\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-19T10:38:53+00:00\n"
+"POT-Creation-Date: 2026-01-26T12:48:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -1450,7 +1450,7 @@ msgid "Show total price calculator"
 msgstr ""
 
 #. translators: %1$s: field name 'kaufpreis', %2$s: field name 'aussen_courtage', %3$s: field name 'bundesland'
-msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible."
+msgid "The fields %1$s and %2$s must be filled in onOffice enterprise so that output is possible."
 msgstr ""
 
 msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
@@ -1724,7 +1724,7 @@ msgstr ""
 msgid "Property transfer tax"
 msgstr ""
 
-msgid "Broker commission"
+msgid "Buyers commission"
 msgstr ""
 
 msgid "Notary Fees"

@@ -25,15 +25,15 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 6.9.1
+Version: 6.10
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
 Domain Path: /languages
 */
-defined( 'ABSPATH' ) or die();
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-const ONOFFICE_PLUGIN_VERSION = '6.9.1';
+const ONOFFICE_PLUGIN_VERSION = '6.10';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
 
 require __DIR__ . '/vendor/autoload.php';
@@ -218,24 +218,17 @@ add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 add_action('admin_init', [CaptchaEnterpriseDataChecker::class, 'addHook']);
 add_action('admin_init', [$pDetailViewPostSaveController, 'getAllPost']);
 add_action('plugins_loaded', function() {
-	$mo_file = ONOFFICE_PLUGIN_DIR . '/languages/onoffice-for-wp-websites-'.get_locale().'.mo';
-	if (file_exists($mo_file)) {
-		load_textdomain('onoffice-for-wp-websites', $mo_file);
-	} else {
-		load_plugin_textdomain('onoffice-for-wp-websites', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
-	}
-	// Check 'onoffice-personalized' Folder exists
+	// WordPress automatically loads translations for 'onoffice-for-wp-websites' domain since WP 4.6+
+	
+	// Load custom 'onoffice' domain translations from personalized/theme folders
 	$onofficePersonalizedFolderLanguages = plugin_dir_path(__DIR__) . 'onoffice-personalized/languages';
-	$onofficePersonalizedFolder = plugin_dir_path(__DIR__) . 'onoffice-personalized';
 	$onofficeThemeFolderLanguages = get_stylesheet_directory() . '/onoffice-theme/languages';
 
 	if (is_dir($onofficeThemeFolderLanguages)) {
 		load_textdomain('onoffice', $onofficeThemeFolderLanguages . '/onoffice-'.get_locale().'.mo');
 	} elseif (is_dir($onofficePersonalizedFolderLanguages)) {
-		load_plugin_textdomain('onoffice', false, basename($onofficePersonalizedFolder) . '/languages');
-	} else {
-		load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
-	}
+		load_textdomain('onoffice', $onofficePersonalizedFolderLanguages . '/onoffice-'.get_locale().'.mo');
+	} 
 });
 
 // "Settings" link in plugins list
