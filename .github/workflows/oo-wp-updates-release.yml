@@ -1,9 +1,11 @@
 name: onOffice WP-Updates Release
 
 on:
-  push:
-    tags:
-    - 'v*'
+  workflow_dispatch:
+  # Deactivated automatic trigger on tags
+  # push:
+  #   tags:
+  #   - 'v*'
 
 jobs:
   get-version:

@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 6.1
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 6.9.1
+Stable tag: 6.10
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -76,7 +76,15 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-= 6.9.1 (2025-01-16) =
+= 6.10 (2026-01-26) =
+
+**Fixed**
+* WordPress Plugin Directory requirements
+
+**Changed**
+* Commission display in the total price calculator
+
+= 6.9.1 (2026-01-16) =
 
 **Fixed**
 * Form submission issues
