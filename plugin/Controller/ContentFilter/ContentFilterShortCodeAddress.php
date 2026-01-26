@@ -1,6 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  *
@@ -24,6 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
+
+defined( 'ABSPATH' ) or exit;
 
 use DI\DependencyException;
 use DI\NotFoundException;

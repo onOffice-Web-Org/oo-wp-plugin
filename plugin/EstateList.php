@@ -1,7 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
 /**
  *
  *    Copyright (C) 2016-2020 onOffice GmbH
@@ -22,6 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 
 namespace onOffice\WPlugin;
+
+defined( 'ABSPATH' ) or exit;
 
 use DI\ContainerBuilder;
 use DI\DependencyException;

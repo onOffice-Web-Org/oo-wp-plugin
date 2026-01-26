@@ -1,7 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
 /**
  *
  *    Copyright (C) 2024 onOffice GmbH
@@ -24,6 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
+
+defined( 'ABSPATH' ) or exit;
 
 use DI\Container;
 use DI\ContainerBuilder;

@@ -1,7 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
 /**
  *
  *    Copyright (C) 2017-2019 onOffice GmbH
@@ -22,6 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 
 namespace onOffice\WPlugin\Gui;
+
+defined( 'ABSPATH' ) or exit;
 
 use onOffice\WPlugin\Gui\AdminPage;
 use onOffice\WPlugin\Gui\Table\EstateListTable;

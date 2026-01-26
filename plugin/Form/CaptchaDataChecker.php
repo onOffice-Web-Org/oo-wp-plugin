@@ -1,7 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
 /**
  *
  *    Copyright (C) 2018 onOffice GmbH
@@ -22,6 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 
 namespace onOffice\WPlugin\Form;
+
+defined( 'ABSPATH' ) or exit;
 
 /**
  *

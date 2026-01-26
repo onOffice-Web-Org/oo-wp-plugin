@@ -1,7 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
 /**
  *
  *    Copyright (C) 2019 onOffice GmbH
@@ -23,6 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 namespace onOffice\WPlugin\Filter\SearchParameters;
+
+defined( 'ABSPATH' ) or exit;
 
 use DI\DependencyException;
 use DI\NotFoundException;

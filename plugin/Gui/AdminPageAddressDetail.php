@@ -1,7 +1,5 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
 /**
  *
  *    Copyright (C) 2024 onOffice GmbH
@@ -22,6 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 
 namespace onOffice\WPlugin\Gui;
+
+defined( 'ABSPATH' ) or exit;
 
 use DI\DependencyException;
 use DI\NotFoundException;
