@@ -314,8 +314,19 @@ $dimensions = [
 					<div class="oo-costs-container">
 						<div class="oo-donut-chart">
 						<?php
-							$values = [$totalCostsData['kaufpreis']['raw'], $totalCostsData['bundesland']['raw'], $totalCostsData['aussen_courtage']['raw'],$totalCostsData['notary_fees']['raw'], $totalCostsData['land_register_entry']['raw']];
-							$valuesTitle = [$totalCostsData['kaufpreis']['default'], $totalCostsData['bundesland']['default'], $totalCostsData['aussen_courtage']['default'],$totalCostsData['notary_fees']['default'], $totalCostsData['land_register_entry']['default']];
+							$values = [$totalCostsData['kaufpreis']['raw'], $totalCostsData['bundesland']['raw']];
+							$valuesTitle = [$totalCostsData['kaufpreis']['default'], $totalCostsData['bundesland']['default']];
+							
+							if (!empty($totalCostsData['aussen_courtage']['raw'])) {
+								$values[] = $totalCostsData['aussen_courtage']['raw'];
+								$valuesTitle[] = $totalCostsData['aussen_courtage']['default'];
+							}
+							
+							$values[] = $totalCostsData['notary_fees']['raw'];
+							$values[] = $totalCostsData['land_register_entry']['raw'];
+							
+							$valuesTitle[] = $totalCostsData['notary_fees']['default'];
+							$valuesTitle[] = $totalCostsData['land_register_entry']['default'];
 							$chart = new EstateCostsChart($values, $valuesTitle);
 							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Generates SVG with escaped content
 							echo $chart->generateSVG(); ?>
@@ -336,13 +347,15 @@ $dimensions = [
 									<div><?php echo esc_html($totalCostsData['bundesland']['default']); ?></div>
 								</div>
 							</div>
+							<?php if (!empty($totalCostsData['aussen_courtage']['default'])): ?>
 							<div class="oo-costs-item">
 								<span class="color-indicator oo-donut-chart-color2"></span>
 								<div class="oo-price-label">
-									<div><?php esc_html_e('Broker commission', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php esc_html_e('Buyers commission', 'onoffice-for-wp-websites'); ?></div>
 									<div><?php echo esc_html($totalCostsData['aussen_courtage']['default']); ?></div>
 								</div>
 							</div>
+							<?php endif; ?>
 							<div class="oo-costs-item">
 								<span class="color-indicator oo-donut-chart-color3"></span>
 								<div class="oo-price-label">
