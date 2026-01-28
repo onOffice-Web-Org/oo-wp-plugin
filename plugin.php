@@ -218,8 +218,12 @@ add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 add_action('admin_init', [CaptchaEnterpriseDataChecker::class, 'addHook']);
 add_action('admin_init', [$pDetailViewPostSaveController, 'getAllPost']);
 add_action('plugins_loaded', function() {
+	$mo_file = ONOFFICE_PLUGIN_DIR . '/languages/onoffice-for-wp-websites-'.get_locale().'.mo';
+	if (file_exists($mo_file)) {
+		load_textdomain('onoffice-for-wp-websites', $mo_file);
+	}
 	// WordPress automatically loads translations for 'onoffice-for-wp-websites' domain since WP 4.6+
-	
+
 	// Load custom 'onoffice' domain translations from personalized/theme folders
 	$onofficePersonalizedFolderLanguages = plugin_dir_path(__DIR__) . 'onoffice-personalized/languages';
 	$onofficeThemeFolderLanguages = get_stylesheet_directory() . '/onoffice-theme/languages';
@@ -228,7 +232,7 @@ add_action('plugins_loaded', function() {
 		load_textdomain('onoffice', $onofficeThemeFolderLanguages . '/onoffice-'.get_locale().'.mo');
 	} elseif (is_dir($onofficePersonalizedFolderLanguages)) {
 		load_textdomain('onoffice', $onofficePersonalizedFolderLanguages . '/onoffice-'.get_locale().'.mo');
-	} 
+	}
 });
 
 // "Settings" link in plugins list
