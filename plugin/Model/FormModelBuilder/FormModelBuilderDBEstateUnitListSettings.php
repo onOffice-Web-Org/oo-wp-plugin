@@ -87,6 +87,7 @@ class FormModelBuilderDBEstateUnitListSettings
 		} else {
 			$this->setValues(array(
 				DataListView::FIELDS => self::$_defaultFields,
+				'show_status' => self::DEFAULT_RECORDS_SHOW_STATUS,
 				'pictures' => [ImageTypes::TITLE],
 			));
 		}
