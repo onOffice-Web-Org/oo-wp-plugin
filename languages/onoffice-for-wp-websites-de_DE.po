@@ -7,8 +7,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-10-30T09:21:14+00:00\n"
-"PO-Revision-Date: 2025-10-30T09:21:14+00:00\n"
+"POT-Creation-Date: 2026-01-26T12:48:52+00:00\n"
+"PO-Revision-Date: 2026-01-26T12:48:52+00:00\n"
 "Language: de\n"
 "X-Generator: POEditor.com\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -22,9 +22,6 @@ msgstr "Grundbucheintrag"
 
 msgid "Notary Fees"
 msgstr "Notargebühren"
-
-msgid "Broker commission"
-msgstr "Maklerprovision"
 
 msgid "Property transfer tax"
 msgstr "Grunderwerbsteuer"
@@ -1305,6 +1302,9 @@ msgstr ""
 "Du bist dabei, die Listenansicht „%s“ zu löschen.\n"
 "Bitte wähle „Abbrechen“ zum Beenden oder „OK“ zum Bestätigen."
 
+msgid "No items found."
+msgstr "Keine Elemente gefunden."
+
 #. translators: %s is the name of the form.
 msgid ""
 "You are about to delete the form '%s'\n"
@@ -1689,72 +1689,6 @@ msgstr "Der Wert „Von“ darf nicht größer sein als der Wert „Bis“."
 msgid "A standard value of 1.5% and 0.5% respectively is typically used to calculate the notary and land registry entry costs."
 msgstr "Zur Berechnung der Notar- und Grundbucheintragungskosten werden in der Regel Standardwerte von 1,5 % bzw. 0,5 % verwendet."
 
-msgid "Post navigation"
-msgstr ""
-
-msgid "Contact person image"
-msgstr ""
-
-msgid "Map with real estate agents"
-msgstr ""
-
-msgid "Real Estate No."
-msgstr ""
-
-msgid "Map with properties"
-msgstr ""
-
-msgid "Pflichtfeld"
-msgstr ""
-
-msgid "Postal code of the property"
-msgstr ""
-
-msgid "Postal code"
-msgstr ""
-
-msgid "Please select at least one option."
-msgstr ""
-
-msgid "Please enter a text."
-msgstr ""
-
-msgid "Please agree to the terms and conditions."
-msgstr ""
-
-msgid "Please select this option."
-msgstr ""
-
-msgid "Please enter a valid e-mail address."
-msgstr ""
-
-msgid "Thank you for your inquiry. We will get back to you as soon as possible."
-msgstr ""
-
-msgid "An error has occurred. Please check your details."
-msgstr ""
-
-msgid "Not all mandatory fields have been filled out. Please check your entries."
-msgstr ""
-
-msgid "Spam recognized!"
-msgstr ""
-
-msgid "* Mandatory fields"
-msgstr ""
-
-msgid "Ort der Immobilie"
-msgstr ""
-
-msgid "PLZ der Immobilie"
-msgstr ""
-
-msgid "Straße der Immobilie"
-msgstr ""
-
-msgid "Hausnummer der Immobilie"
-msgstr ""
-
 #. translators: 1: list of active SEO plugins, 2: link to onOffice plugin settings
 msgid "The onOffice plugin has detected an active SEO plugin: %1$s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin. We recommend that you go to the %2$s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin."
 msgstr ""
@@ -1769,46 +1703,6 @@ msgstr ""
 
 #. translators: 1: type (e.g., estate, address), 2: link to detail page
 msgid "Since you are logged in, here is a link to a random %1$s so that you can preview the detail page: %2$s"
-msgstr ""
-
-msgid "No items found."
-msgstr ""
-
-msgid "Feld besonders hervorheben"
-msgstr ""
-
-#. translators: %1$s: field name 'kaufpreis', %2$s: field name 'aussen_courtage', %3$s: field name 'bundesland'
-msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible."
-msgstr ""
-
-#. translators: %d: page number
-msgctxt "template"
-msgid "Page %d"
-msgstr ""
-
-#. translators: %d: address ID number
-msgid "Show Details for Address No. %d"
-msgstr ""
-
-#. translators: %d: real estate ID number
-msgctxt "template"
-msgid "Show Details for Real Estate No. %d"
-msgstr ""
-
-#. translators: %d: real estate ID number
-msgctxt "template"
-msgid "Real Estate No. %d"
-msgstr ""
-
-msgid "Details"
-msgstr ""
-
-msgid "Zur Einheit"
-msgstr ""
-
-#. translators: %s: real estate ID number
-msgctxt "template"
-msgid "Show Details for Real Estate No. %s"
 msgstr ""
 
 msgid "Radius (km)"
@@ -1896,5 +1790,111 @@ msgstr ""
 msgid "In order to use Google reCAPTCHA Enterprise, you need to provide your Project ID and Site Key. You're free to enable it in the form settings for later use."
 msgstr ""
 
+msgid "Feld besonders hervorheben"
+msgstr ""
+
 msgid "No reCAPTCHA configured"
+msgstr ""
+
+msgid "Post navigation"
+msgstr ""
+
+#. translators: %d: page number
+msgctxt "template"
+msgid "Page %d"
+msgstr ""
+
+msgid "Contact person image"
+msgstr ""
+
+#. translators: %d: address ID number
+msgid "Show Details for Address No. %d"
+msgstr ""
+
+msgid "Map with real estate agents"
+msgstr ""
+
+#. translators: %d: real estate ID number
+msgctxt "template"
+msgid "Show Details for Real Estate No. %d"
+msgstr ""
+
+#. translators: %d: real estate ID number
+msgctxt "template"
+msgid "Real Estate No. %d"
+msgstr ""
+
+msgid "Real Estate No."
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Zur Einheit"
+msgstr ""
+
+#. translators: %s: real estate ID number
+msgctxt "template"
+msgid "Show Details for Real Estate No. %s"
+msgstr ""
+
+msgid "Map with properties"
+msgstr ""
+
+msgid "Pflichtfeld"
+msgstr ""
+
+msgid "Postal code of the property"
+msgstr ""
+
+msgid "Postal code"
+msgstr ""
+
+msgid "Please select at least one option."
+msgstr ""
+
+msgid "Please enter a text."
+msgstr ""
+
+msgid "Please agree to the terms and conditions."
+msgstr ""
+
+msgid "Please select this option."
+msgstr ""
+
+msgid "Please enter a valid e-mail address."
+msgstr ""
+
+msgid "Thank you for your inquiry. We will get back to you as soon as possible."
+msgstr ""
+
+msgid "An error has occurred. Please check your details."
+msgstr ""
+
+msgid "Not all mandatory fields have been filled out. Please check your entries."
+msgstr ""
+
+msgid "Spam recognized!"
+msgstr ""
+
+msgid "* Mandatory fields"
+msgstr ""
+
+msgid "Ort der Immobilie"
+msgstr ""
+
+msgid "PLZ der Immobilie"
+msgstr ""
+
+msgid "Straße der Immobilie"
+msgstr ""
+
+msgid "Hausnummer der Immobilie"
+msgstr ""
+
+#. translators: %1$s: field name 'kaufpreis', %2$s: field name 'aussen_courtage', %3$s: field name 'bundesland'
+msgid "The fields %1$s and %2$s must be filled in onOffice enterprise so that output is possible."
+msgstr ""
+
+msgid "Buyers commission"
 msgstr ""

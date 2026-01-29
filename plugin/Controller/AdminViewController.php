@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Controller;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\API\APIClientCredentialsException;

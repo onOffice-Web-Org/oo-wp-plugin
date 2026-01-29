@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 include __DIR__ . '/../vendor/autoload.php';
 
 use onOffice\SDK\onOfficeSDK;

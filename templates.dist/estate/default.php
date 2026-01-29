@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2016  onOffice Software AG

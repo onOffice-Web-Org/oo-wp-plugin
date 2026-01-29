@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  *
  *    Copyright (C) 2019 onOffice GmbH
@@ -22,6 +23,8 @@
 declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
+
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 use DI\DependencyException;
 use DI\NotFoundException;
