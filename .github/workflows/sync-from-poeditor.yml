@@ -50,7 +50,7 @@ jobs:
       - name: Pull translations from POEditor (PO, MO, POT)
         env:
           POEDITOR_READONLY_API_KEY: ${{ secrets.POEDITOR_READONLY_API_KEY }}
-          POEDITOR_PROJECT_ID: 778936
+          POEDITOR_PROJECT_ID: ${{ secrets.POEDITOR_PROJECT_ID }}
         shell: bash
         run: |
           set -euo pipefail
