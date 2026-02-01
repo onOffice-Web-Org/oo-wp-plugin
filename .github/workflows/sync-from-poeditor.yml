@@ -2,9 +2,9 @@ name: Sync from POEditor (oo-wp-plugin)
 
 on:
   workflow_dispatch:
-  schedule:
+  # schedule:
     # daily at 03:40 UTC
-    - cron: "40 3 * * *"
+    # - cron: "40 3 * * *"
   repository_dispatch:
     types: [poeditor_sync]
 
