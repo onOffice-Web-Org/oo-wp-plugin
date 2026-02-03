@@ -1,0 +1,54 @@
+name: guard-languages
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  guard-languages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect forbidden language changes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+          echo "Base: $BASE_SHA"
+          echo "Head: $HEAD_SHA"
+
+          CHANGED="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")"
+
+          echo "Changed files:"
+          printf "%s\n" "$CHANGED"
+
+          # Only care about languages/onoffice-for-wp-websites-*.* changes
+          TARGET_CHANGED="$(printf "%s\n" "$CHANGED" | grep -E '^languages/onoffice-for-wp-websites-[^/]+\.[^/]+$' || true)"
+
+          if [ -z "$TARGET_CHANGED" ]; then
+            echo "No changes in languages/onoffice-for-wp-websites-*.*, ok."
+            exit 0
+          fi
+
+          # Allow only languages/onoffice-for-wp-websites-de_DE.po
+          FORBIDDEN="$(printf "%s\n" "$TARGET_CHANGED" | grep -vE '^languages/onoffice-for-wp-websites-de_DE\.po$' || true)"
+
+          if [ -n "$FORBIDDEN" ]; then
+            echo "Forbidden changes detected in languages/onoffice-for-wp-websites-*.*:"
+            printf "%s\n" "$FORBIDDEN"
+            echo
+            echo "Allowed only: languages/onoffice-for-wp-websites-de_DE.po"
+            exit 1
+          fi
+
+          echo "Only allowed language change detected, ok."
