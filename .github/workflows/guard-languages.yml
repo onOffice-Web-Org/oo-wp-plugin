@@ -2,13 +2,15 @@ name: guard-languages
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - master
 
 permissions:
   contents: read
 
 jobs:
   guard-languages:
+    if: "!startsWith(github.head_ref, 'release')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
