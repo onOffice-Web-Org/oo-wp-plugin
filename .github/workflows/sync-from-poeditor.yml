@@ -78,7 +78,6 @@ jobs:
           echo "$RAW_LANGS"
 
           declare -A WP_LOCALES=(
-            [de]="de_DE"
             [de-at]="de_AT"
             [de-ch]="de_CH"
             [de_formal]="de_DE_formal"
@@ -131,6 +130,12 @@ jobs:
           while IFS= read -r RAW; do
             [ -z "$RAW" ] && continue
 
+            # Skip source language
+            if [ "$RAW" = "de" ]; then
+              echo "Skipping source language: $RAW"
+              continue
+            fi
+            
             RAW_KEY="${RAW,,}"
             RAW_KEY="${RAW_KEY//_/-}"
 
