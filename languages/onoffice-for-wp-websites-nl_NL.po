@@ -56,7 +56,7 @@ msgstr "(werkt pas na globale instelling)"
 
 #: 
 msgid "* Mandatory fields"
-msgstr ""
+msgstr "*Verplichte velden"
 
 #: 
 msgid "## Connect your website to onOffice enterprise\n"
@@ -347,7 +347,7 @@ msgstr "Aantal objecten"
 
 #: 
 msgid "An error has occurred. Please check your details."
-msgstr ""
+msgstr "Er is een fout opgetreden. Controleer uw gegevens."
 
 #: 
 msgid "An error occured:"
@@ -355,7 +355,7 @@ msgstr "Er is een fout opgetreden:"
 
 #: 
 msgid "An error occurred while loading reCAPTCHA."
-msgstr ""
+msgstr "Er is een fout opgetreden bij het laden van reCAPTCHA."
 
 #. translators: 1: line break HTML tag, 2-4: code examples of field variables
 #: 
@@ -364,11 +364,11 @@ msgstr "Een voorbeeld van integratie met de Yoast SEO-plugin zou zijn: %1$s %2$s
 
 #: 
 msgid "API Key"
-msgstr ""
+msgstr "Api-sleutel"
 
 #: 
 msgid "API request failed. Please check your API Key and Project ID."
-msgstr ""
+msgstr "API-verzoek mislukt. Controleer uw API-sleutel en project-ID."
 
 #: 
 msgid "API secret"
@@ -457,7 +457,7 @@ msgstr "Wees ervan bewust dat bij activering de dubbelcontrole adresrecords kan 
 
 #: 
 msgid "Billing is not enabled for this Google Cloud project."
-msgstr ""
+msgstr "Facturering is niet ingeschakeld voor dit Google Cloud-project."
 
 #: 
 msgid "Broker commission"
@@ -569,7 +569,7 @@ msgstr "Voltooid"
 
 #: 
 msgid "Connection to Google reCAPTCHA failed. Please check your internet connection."
-msgstr ""
+msgstr "Verbinding met Google reCAPTCHA mislukt. Controleer uw internetverbinding."
 
 #: 
 msgid "Contact Form"
@@ -600,7 +600,7 @@ msgstr "Contactpersoonvelden"
 
 #: 
 msgid "Contact person image"
-msgstr ""
+msgstr "Afbeelding contactpersoon"
 
 #: 
 msgid "Contact Type of New Address"
@@ -727,7 +727,7 @@ msgstr "Detailweergave URL's"
 
 #: 
 msgid "Details"
-msgstr ""
+msgstr "Details"
 
 #: 
 msgid "Direct download for PDF exposé"
@@ -832,7 +832,7 @@ msgstr "Voorzieningen"
 
 #: 
 msgid "Error:"
-msgstr ""
+msgstr "Fout:"
 
 #: 
 msgid "ERROR!"
@@ -895,7 +895,7 @@ msgstr "Favorietenlijst"
 
 #: 
 msgid "Feld besonders hervorheben"
-msgstr ""
+msgstr "Veld extra accentueren"
 
 #: 
 msgid "Field list search"
@@ -1018,15 +1018,15 @@ msgstr "Google reCAPTCHA"
 
 #: 
 msgid "Google reCAPTCHA Classic"
-msgstr ""
+msgstr "Google reCAPTCHA Classic"
 
 #: 
 msgid "Google reCAPTCHA Enterprise"
-msgstr ""
+msgstr "Google reCAPTCHA Enterprise"
 
 #: 
 msgid "Google reCAPTCHA server error. Please try again later."
-msgstr ""
+msgstr "Google reCAPTCHA-serverfout. Probeer het later opnieuw."
 
 #: 
 msgid "Ground Plan"
@@ -1034,7 +1034,7 @@ msgstr "Plattegrond"
 
 #: 
 msgid "Hausnummer der Immobilie"
-msgstr ""
+msgstr "Huisnummer van het object"
 
 #: 
 msgid "Hidden"
@@ -1141,11 +1141,11 @@ msgstr "Afbeelding website"
 #. translators: %s: URL to the migration guide
 #: 
 msgid "Important Notice: Google will discontinue reCAPTCHA v2/v3 (Classic) on December 31, 2025. Please migrate your projects to reCAPTCHA Enterprise in time to ensure uninterrupted protection. More information at: %s"
-msgstr ""
+msgstr "Belangrijke mededeling: Google is op 31 december 2025 gestopt met de ondersteuning van reCAPTCHA v2/v3 (Classic). Migreer uw projecten tijdig naar reCAPTCHA Enterprise om ononderbroken bescherming te garanderen. Meer informatie op: %s"
 
 #: 
 msgid "In order to use Google reCAPTCHA Enterprise, you need to provide your Project ID and Site Key. You're free to enable it in the form settings for later use."
-msgstr ""
+msgstr "Om Google reCAPTCHA Enterprise te gebruiken, moet u uw project-ID en site-sleutel opgeven. U kunt dit in de formulierinstellingen inschakelen voor later gebruik."
 
 #: 
 msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
@@ -1180,7 +1180,7 @@ msgstr[1] "Interesseformulieren"
 
 #: 
 msgid "Invalid request. Please check your credentials."
-msgstr ""
+msgstr "Ongeldig verzoek. Controleer uw inloggegevens."
 
 #. translators: %s will be replaced with the translation of 'API token and
 #. secret'.
@@ -1285,11 +1285,11 @@ msgstr "Kaartprovider"
 
 #: 
 msgid "Map with properties"
-msgstr ""
+msgstr "Kaart met objecten"
 
 #: 
 msgid "Map with real estate agents"
-msgstr ""
+msgstr "Kaart met makelaars"
 
 #: 
 msgid "Maps"
@@ -1321,7 +1321,7 @@ msgstr "Bericht van het eigenaarsformulier van uw website"
 
 #: 
 msgid "Migration Guide"
-msgstr ""
+msgstr "Migratiehandleiding"
 
 #: 
 msgid "Miscellaneous"
@@ -1410,11 +1410,11 @@ msgstr "Geen markering"
 
 #: 
 msgid "No reCAPTCHA configured"
-msgstr ""
+msgstr "Geen reCAPTCHA geconfigureerd"
 
 #: 
 msgid "Not all mandatory fields have been filled out. Please check your entries."
-msgstr ""
+msgstr "Niet alle verplichte velden zijn ingevuld. Controleer uw invoer."
 
 #: 
 msgid "not restricted"
@@ -1492,7 +1492,7 @@ msgstr "Herkomst contact"
 
 #: 
 msgid "Ort der Immobilie"
-msgstr ""
+msgstr "Plaats van het object"
 
 #: templates.dist/estate/default_detail.php:108
 msgid "Other Information"
@@ -1538,7 +1538,7 @@ msgstr "Pagina %d"
 #: 
 msgctxt "template"
 msgid "Page %d"
-msgstr ""
+msgstr "Pagina %d"
 
 #. translators: %s: page number
 #: 
@@ -1589,7 +1589,7 @@ msgstr "Gepersonaliseerd (Thema)"
 
 #: 
 msgid "Pflichtfeld"
-msgstr ""
+msgstr "Verplicht veld"
 
 #: 
 msgid "Photo"
@@ -1613,7 +1613,7 @@ msgstr "Speler"
 
 #: 
 msgid "Please agree to the terms and conditions."
-msgstr ""
+msgstr "Ga akkoord met de algemene voorwaarden."
 
 #. translators: %1$s is office server status page link, %2$s is support form
 #. page link
@@ -1631,11 +1631,11 @@ msgstr "Configureer eerst uw onOffice API-referenties!"
 
 #: 
 msgid "Please enter a text."
-msgstr ""
+msgstr "Voer een tekst in."
 
 #: 
 msgid "Please enter a valid e-mail address."
-msgstr ""
+msgstr "Voer een geldig e-mailadres in."
 
 #. translators: %s will be replaced with a translated field name.
 #: 
@@ -1660,11 +1660,11 @@ msgstr "Geef een e-mailadres op!"
 
 #: 
 msgid "Please select at least one option."
-msgstr ""
+msgstr "Selecteer ten minste één optie."
 
 #: 
 msgid "Please select this option."
-msgstr ""
+msgstr "Selecteer deze optie."
 
 #: 
 msgid "plugin settings"
@@ -1672,7 +1672,7 @@ msgstr "plugin instellingen"
 
 #: 
 msgid "PLZ der Immobilie"
-msgstr ""
+msgstr "Postcode van het object"
 
 #: 
 msgid "Popular"
@@ -1680,7 +1680,7 @@ msgstr "Populair"
 
 #: 
 msgid "Post navigation"
-msgstr ""
+msgstr "Berichtnavigatie"
 
 #: 
 msgid "Postal Code"
@@ -1688,11 +1688,11 @@ msgstr "Postcode"
 
 #: 
 msgid "Postal code"
-msgstr ""
+msgstr "Postcode"
 
 #: 
 msgid "Postal code of the property"
-msgstr ""
+msgstr "Postcode van het object"
 
 #: 
 msgid "Price on request"
@@ -1712,7 +1712,7 @@ msgstr "Verwerker"
 
 #: 
 msgid "Project ID"
-msgstr ""
+msgstr "Project-ID"
 
 #: 
 msgid "Property of the day"
@@ -1736,7 +1736,7 @@ msgstr "Straal"
 
 #: 
 msgid "Radius (km)"
-msgstr ""
+msgstr "Straal (km)"
 
 #: 
 msgid "Random order"
@@ -1752,13 +1752,13 @@ msgstr "Objectvelden"
 
 #: 
 msgid "Real Estate No."
-msgstr ""
+msgstr "Object nr."
 
 #. translators: %d: real estate ID number
 #: 
 msgctxt "template"
 msgid "Real Estate No. %d"
-msgstr ""
+msgstr "Object nr. %d"
 
 #: 
 msgid "Recipient e-mail address"
@@ -2012,19 +2012,19 @@ msgstr "Details weergeven"
 #. translators: %d: address ID number
 #: 
 msgid "Show Details for Address No. %d"
-msgstr ""
+msgstr "Toon details voor adres nr. %d"
 
 #. translators: %d: real estate ID number
 #: 
 msgctxt "template"
 msgid "Show Details for Real Estate No. %d"
-msgstr ""
+msgstr "oon details voor object nr. %d"
 
 #. translators: %s: real estate ID number
 #: 
 msgctxt "template"
 msgid "Show Details for Real Estate No. %s"
-msgstr ""
+msgstr "Toon details voor object nr. %s"
 
 #: 
 msgid "Show energy certificate with a scale"
@@ -2097,7 +2097,7 @@ msgstr "Weergave \"Vergelijkbare Objecten\""
 #. translators: 1: type (e.g., estate, address), 2: link to detail page
 #: 
 msgid "Since you are logged in, here is a link to a random %1$s so that you can preview the detail page: %2$s"
-msgstr ""
+msgstr "Aangezien u bent ingelogd, vindt u hier een link naar een willekeurige %1$s, zodat u een voorbeeld van de detailpagina kunt bekijken: %2$s"
 
 #: 
 msgid "Since you are logged in, here is a link to a random %s so that you can preview the detail page: %s"
@@ -2145,7 +2145,7 @@ msgstr "Spam gedetecteerd!"
 
 #: 
 msgid "Spam recognized!"
-msgstr ""
+msgstr "Spam herkend!"
 
 #: 
 msgid "Special Fields"
@@ -2165,7 +2165,7 @@ msgstr "Status"
 
 #: 
 msgid "Straße der Immobilie"
-msgstr ""
+msgstr "Straat van het object"
 
 #: 
 msgid "Street"
@@ -2205,7 +2205,7 @@ msgstr "Sjabloon"
 
 #: 
 msgid "Thank you for your inquiry. We will get back to you as soon as possible."
-msgstr ""
+msgstr "Bedankt voor uw aanvraag. We nemen zo snel mogelijk contact met u op."
 
 #: 
 msgid "The address detail view has been saved."
@@ -2217,15 +2217,15 @@ msgstr "De adreslijst is opgeslagen."
 
 #: 
 msgid "The API Key does not have permission for reCAPTCHA Enterprise."
-msgstr ""
+msgstr "De API-sleutel heeft geen rechten voor reCAPTCHA Enterprise."
 
 #: 
 msgid "The API Key is invalid."
-msgstr ""
+msgstr "De API-sleutel is ongeldig."
 
 #: 
 msgid "The API Key is missing."
-msgstr ""
+msgstr "De API-sleutel ontbreekt."
 
 #: 
 msgid "The Cache duration value determines the period of time after which the plugin cache of your page is refreshed. This value is set to 1 hour by default."
@@ -2250,7 +2250,7 @@ msgstr "De dubbelcontrole identificeert bestaande duplicaten van adresgegevensre
 #. translators: %1$s: field name 'kaufpreis', %2$s: field name 'aussen_courtage', %3$s: field name 'bundesland'
 #: 
 msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible."
-msgstr ""
+msgstr "De velden %1$s, %2$s en %3$s moeten worden ingevuld in onOffice enterprise om uitvoer mogelijk te maken."
 
 #: 
 msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs."
@@ -2286,7 +2286,7 @@ msgstr "De sleutels zijn in orde."
 
 #: 
 msgid "The keys are valid."
-msgstr ""
+msgstr "De sleutels zijn geldig."
 
 #: 
 msgid "The main contact person is the address data record of the broker type, which is stored in the first place in onOffice enterprise."
@@ -2303,7 +2303,7 @@ msgstr "De onOffice plugin heeft een onverwacht probleem bij het bereiken van de
 #. translators: 1: list of active SEO plugins, 2: link to onOffice plugin settings
 #: 
 msgid "The onOffice plugin has detected an active SEO plugin: %1$s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin. We recommend that you go to the %2$s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin."
-msgstr ""
+msgstr "De onOffice plugin heeft een actieve SEO-plugin gedetecteerd: %1$s. U hebt momenteel de onOffice plugin geconfigureerd om de titel en omschrijving van de detailpagina in te vullen, wat tot conflicten met de SEO-plugin kan leiden. Wij raden u aan om naar de %2$s te gaan en de onOffice plugin zo te configureren dat deze de titel en omschrijving nicht wijzigt. Hiermee kunt u de titel en omschrijving beheren met uw actieve SEO-plugin."
 
 #: 
 msgid "The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.\n"
@@ -2319,7 +2319,7 @@ msgstr "De onOffice plugin mist een standaard e-mailadres. U heeft formulieren d
 #. translators: 1: type (e.g., estate, address), 2: type (e.g., estate, address), 3: link to documentation
 #: 
 msgid "The plugin couldn't find any %1$s. Please make sure that you have published some %1$s, as described in the %2$s"
-msgstr ""
+msgstr "De plugin kon geen %1$s vinden. Zorg ervoor dat u enkele %1$s hebt gepubliceerd, zoals beschreven in de %2$s."
 
 #: 
 msgid "The plugin couldn't find any %s. Please make sure that you have published some %s, as described in the %s"
@@ -2327,23 +2327,23 @@ msgstr "De plugin kon geen %s vinden. Zorg ervoor dat u enkele %s heeft gepublic
 
 #: 
 msgid "The Project ID is invalid or does not exist."
-msgstr ""
+msgstr "De project-ID is ongeldig of bestaat niet."
 
 #: 
 msgid "The Project ID is invalid or malformed."
-msgstr ""
+msgstr "De project-ID is ongeldig of onjuist geformatteerd."
 
 #: 
 msgid "The Project ID is missing."
-msgstr ""
+msgstr "De Project-ID ontbreekt."
 
 #: 
 msgid "The reCAPTCHA token has expired or has already been used."
-msgstr ""
+msgstr "Het reCAPTCHA-token is verlopen of is al gebruikt."
 
 #: 
 msgid "The reCAPTCHA token is missing."
-msgstr ""
+msgstr "Het reCAPTCHA-token ontbreekt."
 
 #: 
 msgid "The request is invalid or malformed."
@@ -2375,11 +2375,11 @@ msgstr "De weergave 'vergelijkbare objecten' is opgeslagen."
 
 #: 
 msgid "The Site Key is invalid."
-msgstr ""
+msgstr "De site-sleutel is ongeldig."
 
 #: 
 msgid "The Site Key is missing."
-msgstr ""
+msgstr "De site-sleutel ontbreekt."
 
 #. translators: 1: HTML title tag, 2: HTML meta description tag
 #: 
@@ -2472,7 +2472,7 @@ msgstr "Titel en beschrijving"
 
 #: 
 msgid "Too many requests. Please try again later."
-msgstr ""
+msgstr "Te veel aanvragen. Probeer het later opnieuw."
 
 #: 
 msgid "Top offer"
@@ -2549,7 +2549,7 @@ msgstr "Naam van weergave"
 
 #: 
 msgid "Warning"
-msgstr ""
+msgstr "Waarschuwing"
 
 #: 
 msgid "Watchlist"
@@ -2623,7 +2623,7 @@ msgstr "U kunt maximaal 500 per pagina weergeven."
 #. translators: 1: type (e.g., estate, address), 2: type (e.g., estate, address), 3: type (e.g., estate, address), 4: type (e.g., estate, address)
 #: 
 msgid "You have opened the detail page, but we do not know which %1$s to show you, because there is no %1$s ID in the URL. Please go to an %1$s list and open an %1$s from there."
-msgstr ""
+msgstr "U hebt de detailpagina geopend, maar we weten niet welke %1$s we u moeten tonen, omdat er geen %1$s-ID in de URL staat. Ga naar een %1$s-lijst en open daar een %1$s."
 
 #: 
 msgid "You have opened the detail page, but we do not know which %s to show you, because there is no %s ID in the URL. Please go to an %s list and open an %s from there."
@@ -2653,5 +2653,5 @@ msgstr "Uw zoekcriteria"
 
 #: 
 msgid "Zur Einheit"
-msgstr ""
+msgstr "Naar de eenheid"
 
