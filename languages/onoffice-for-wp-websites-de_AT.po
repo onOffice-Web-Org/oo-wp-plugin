@@ -56,7 +56,7 @@ msgstr "(funktioniert erst nach der Einrichtung)"
 
 #: 
 msgid "* Mandatory fields"
-msgstr ""
+msgstr "* Pflichtfelder"
 
 #: 
 msgid "## Connect your website to onOffice enterprise\n"
@@ -348,7 +348,7 @@ msgstr "Anzahl Immobilien"
 
 #: 
 msgid "An error has occurred. Please check your details."
-msgstr ""
+msgstr "Es ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Angaben."
 
 #: 
 msgid "An error occured:"
@@ -356,7 +356,7 @@ msgstr "Ein Fehler ist aufgetreten:"
 
 #: 
 msgid "An error occurred while loading reCAPTCHA."
-msgstr ""
+msgstr "Beim Laden von reCAPTCHA ist ein Fehler aufgetreten."
 
 #. translators: 1: line break HTML tag, 2-4: code examples of field variables
 #: 
@@ -365,11 +365,11 @@ msgstr "Ein Beispiel für die Integration mit dem Yoast SEO Plugin wäre: %1$s %
 
 #: 
 msgid "API Key"
-msgstr ""
+msgstr "API Key"
 
 #: 
 msgid "API request failed. Please check your API Key and Project ID."
-msgstr ""
+msgstr "Die API-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie Ihren API-Key und Ihre Projekt-ID."
 
 #: 
 msgid "API secret"
@@ -458,7 +458,7 @@ msgstr "Beachten Sie, dass bei Aktivierung Adressdatensätze überschrieben werd
 
 #: 
 msgid "Billing is not enabled for this Google Cloud project."
-msgstr ""
+msgstr "Die Abrechnung ist für dieses Google Cloud-Projekt nicht aktiviert."
 
 #: 
 msgid "Broker commission"
@@ -570,7 +570,7 @@ msgstr "Erledigt"
 
 #: 
 msgid "Connection to Google reCAPTCHA failed. Please check your internet connection."
-msgstr ""
+msgstr "Die Verbindung zu Google reCAPTCHA ist fehlgeschlagen. Bitte überprüfen Sie Ihre Internetverbindung."
 
 #: 
 msgid "Contact Form"
@@ -601,7 +601,7 @@ msgstr "Ansprechpartnerdaten"
 
 #: 
 msgid "Contact person image"
-msgstr ""
+msgstr "Bild der Kontaktperson"
 
 #: 
 msgid "Contact Type of New Address"
@@ -728,7 +728,7 @@ msgstr "Detailansicht-URLs"
 
 #: 
 msgid "Details"
-msgstr ""
+msgstr "Details"
 
 #: 
 msgid "Direct download for PDF exposé"
@@ -833,7 +833,7 @@ msgstr "Ausstattung"
 
 #: 
 msgid "Error:"
-msgstr ""
+msgstr "Fehler:"
 
 #: 
 msgid "ERROR!"
@@ -896,7 +896,7 @@ msgstr "Favoritenliste"
 
 #: 
 msgid "Feld besonders hervorheben"
-msgstr ""
+msgstr "Feld besonders hervorheben"
 
 #: 
 msgid "Field list search"
@@ -1019,15 +1019,15 @@ msgstr "Google reCAPTCHA"
 
 #: 
 msgid "Google reCAPTCHA Classic"
-msgstr ""
+msgstr "Google reCAPTCHA Classic"
 
 #: 
 msgid "Google reCAPTCHA Enterprise"
-msgstr ""
+msgstr "Google reCAPTCHA Enterprise"
 
 #: 
 msgid "Google reCAPTCHA server error. Please try again later."
-msgstr ""
+msgstr "Serverfehler bei Google reCAPTCHA. Bitte versuchen Sie es später erneut."
 
 #: 
 msgid "Ground Plan"
@@ -1035,7 +1035,7 @@ msgstr "Grundriss"
 
 #: 
 msgid "Hausnummer der Immobilie"
-msgstr ""
+msgstr "Hausnummer der Immobilie"
 
 #: 
 msgid "Hidden"
@@ -1142,11 +1142,11 @@ msgstr "Bild Website"
 #. translators: %s: URL to the migration guide
 #: 
 msgid "Important Notice: Google will discontinue reCAPTCHA v2/v3 (Classic) on December 31, 2025. Please migrate your projects to reCAPTCHA Enterprise in time to ensure uninterrupted protection. More information at: %s"
-msgstr ""
+msgstr "Wichtiger Hinweis: Google wird reCAPTCHA v2/v3 (Classic) am 31. Dezember 2025 einstellen. Bitte übertragen Sie Ihre Projekte rechtzeitig zu reCAPTCHA Enterprise, um einen unterbrechungsfreien Schutz zu gewährleisten. Weitere Informationen finden Sie unter: %s"
 
 #: 
 msgid "In order to use Google reCAPTCHA Enterprise, you need to provide your Project ID and Site Key. You're free to enable it in the form settings for later use."
-msgstr ""
+msgstr "Um Google reCAPTCHA Enterprise zu verwenden, müssen Sie Ihre Projekt-ID und den Site-Key angeben. Sie können es auch später in den Formulareinstellungen aktivieren."
 
 #: 
 msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
@@ -1181,7 +1181,7 @@ msgstr[1] "Interessentenformulare"
 
 #: 
 msgid "Invalid request. Please check your credentials."
-msgstr ""
+msgstr "Ungültige Anfrage. Bitte überprüfen Sie Ihre Zugangsdaten."
 
 #. translators: %s will be replaced with the translation of 'API token and
 #. secret'.
@@ -1286,11 +1286,11 @@ msgstr "Kartenanbieter"
 
 #: 
 msgid "Map with properties"
-msgstr ""
+msgstr "Karte mit Immobilien"
 
 #: 
 msgid "Map with real estate agents"
-msgstr ""
+msgstr "Karte mit Immobilienmaklern"
 
 #: 
 msgid "Maps"
@@ -1322,7 +1322,7 @@ msgstr "Nachricht vom Eigentümerformular auf Ihrer Website"
 
 #: 
 msgid "Migration Guide"
-msgstr ""
+msgstr "Migrationsleitfaden"
 
 #: 
 msgid "Miscellaneous"
@@ -1411,11 +1411,11 @@ msgstr "Ohne Markierung"
 
 #: 
 msgid "No reCAPTCHA configured"
-msgstr ""
+msgstr "Kein reCAPTCHA konfiguriert"
 
 #: 
 msgid "Not all mandatory fields have been filled out. Please check your entries."
-msgstr ""
+msgstr "Nicht alle Pflichtfelder wurden ausgefüllt. Bitte überprüfen Sie Ihre Angaben."
 
 #: 
 msgid "not restricted"
@@ -1493,7 +1493,7 @@ msgstr "Herkunft Kontakt"
 
 #: 
 msgid "Ort der Immobilie"
-msgstr ""
+msgstr "Ort der Immobilie"
 
 #: templates.dist/estate/default_detail.php:108
 msgid "Other Information"
@@ -1539,7 +1539,7 @@ msgstr "Seite %d"
 #: 
 msgctxt "template"
 msgid "Page %d"
-msgstr ""
+msgstr "Seite %d"
 
 #. translators: %s: page number
 #: 
@@ -1590,7 +1590,7 @@ msgstr "Individualisiert (Theme)"
 
 #: 
 msgid "Pflichtfeld"
-msgstr ""
+msgstr "Pflichtfeld"
 
 #: 
 msgid "Photo"
@@ -1614,7 +1614,7 @@ msgstr "Player"
 
 #: 
 msgid "Please agree to the terms and conditions."
-msgstr ""
+msgstr "Bitte stimmen Sie den Allgemeinen Geschäftsbedingungen zu."
 
 #. translators: %1$s is office server status page link, %2$s is support form
 #. page link
@@ -1632,11 +1632,11 @@ msgstr "Bitte konfiguriere zuerst deinen API-Zugang!"
 
 #: 
 msgid "Please enter a text."
-msgstr ""
+msgstr "Bitte geben Sie einen Text ein."
 
 #: 
 msgid "Please enter a valid e-mail address."
-msgstr ""
+msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein."
 
 #. translators: %s will be replaced with a translated field name.
 #: 
@@ -1661,11 +1661,11 @@ msgstr "Bitte gib deine E-Mail-Adresse an!"
 
 #: 
 msgid "Please select at least one option."
-msgstr ""
+msgstr "Bitte wählen Sie mindestens eine Option aus."
 
 #: 
 msgid "Please select this option."
-msgstr ""
+msgstr "Bitte wählen Sie diese Option aus."
 
 #: 
 msgid "plugin settings"
@@ -1673,7 +1673,7 @@ msgstr "Plugin-Einstellungen"
 
 #: 
 msgid "PLZ der Immobilie"
-msgstr ""
+msgstr "PLZ der Immobilie"
 
 #: 
 msgid "Popular"
@@ -1681,7 +1681,7 @@ msgstr "Häufig verwendet"
 
 #: 
 msgid "Post navigation"
-msgstr ""
+msgstr "Seitennavigation"
 
 #: 
 msgid "Postal Code"
@@ -1689,11 +1689,11 @@ msgstr "Postleitzahl"
 
 #: 
 msgid "Postal code"
-msgstr ""
+msgstr "Postleitzahl"
 
 #: 
 msgid "Postal code of the property"
-msgstr ""
+msgstr "Postleitzahl der Immobilie"
 
 #: 
 msgid "Price on request"
@@ -1713,7 +1713,7 @@ msgstr "Bearbeiter"
 
 #: 
 msgid "Project ID"
-msgstr ""
+msgstr "Projekt-ID"
 
 #: 
 msgid "Property of the day"
@@ -1737,7 +1737,7 @@ msgstr "Umkreis"
 
 #: 
 msgid "Radius (km)"
-msgstr ""
+msgstr "Radius (km)"
 
 #: 
 msgid "Random order"
@@ -1753,13 +1753,13 @@ msgstr "Immobiliendaten"
 
 #: 
 msgid "Real Estate No."
-msgstr ""
+msgstr "Immobilie Nr."
 
 #. translators: %d: real estate ID number
 #: 
 msgctxt "template"
 msgid "Real Estate No. %d"
-msgstr ""
+msgstr "Immobilie Nr. %d"
 
 #: 
 msgid "Recipient e-mail address"
@@ -2013,19 +2013,19 @@ msgstr "Details anzeigen"
 #. translators: %d: address ID number
 #: 
 msgid "Show Details for Address No. %d"
-msgstr ""
+msgstr "Details zu Adresse Nr. %d anzeigen"
 
 #. translators: %d: real estate ID number
 #: 
 msgctxt "template"
 msgid "Show Details for Real Estate No. %d"
-msgstr ""
+msgstr "Details zu Immobilie Nr. %d anzeigen"
 
 #. translators: %s: real estate ID number
 #: 
 msgctxt "template"
 msgid "Show Details for Real Estate No. %s"
-msgstr ""
+msgstr "Details zu Immobilie Nr. %s anzeigen"
 
 #: 
 msgid "Show energy certificate with a scale"
@@ -2098,7 +2098,7 @@ msgstr "\"Ähnliche Immobilien\"-Ansicht"
 #. translators: 1: type (e.g., estate, address), 2: link to detail page
 #: 
 msgid "Since you are logged in, here is a link to a random %1$s so that you can preview the detail page: %2$s"
-msgstr ""
+msgstr "Da Sie angemeldet sind, finden Sie hier einen Link zu einem zufälligen %1$s, damit Sie die Detailseite ansehen können: %2$s"
 
 #: 
 msgid "Since you are logged in, here is a link to a random %s so that you can preview the detail page: %s"
@@ -2146,7 +2146,7 @@ msgstr "Spam erkannt!"
 
 #: 
 msgid "Spam recognized!"
-msgstr ""
+msgstr "Spam erkannt!"
 
 #: 
 msgid "Special Fields"
@@ -2166,7 +2166,7 @@ msgstr "Status"
 
 #: 
 msgid "Straße der Immobilie"
-msgstr ""
+msgstr "Straße der Immobilie"
 
 #: 
 msgid "Street"
@@ -2206,7 +2206,7 @@ msgstr "Template"
 
 #: 
 msgid "Thank you for your inquiry. We will get back to you as soon as possible."
-msgstr ""
+msgstr "Vielen Dank für Ihre Anfrage. Wir werden uns so bald wie möglich bei Ihnen zurückmelden."
 
 #: 
 msgid "The address detail view has been saved."
@@ -2218,15 +2218,15 @@ msgstr "Die Adressliste wurde gespeichert."
 
 #: 
 msgid "The API Key does not have permission for reCAPTCHA Enterprise."
-msgstr ""
+msgstr "Der API-Key hat keine Berechtigung für reCAPTCHA Enterprise."
 
 #: 
 msgid "The API Key is invalid."
-msgstr ""
+msgstr "Der API-Schlüssel ist ungültig."
 
 #: 
 msgid "The API Key is missing."
-msgstr ""
+msgstr "Der API-Schlüssel fehlt."
 
 #: 
 msgid "The Cache duration value determines the period of time after which the plugin cache of your page is refreshed. This value is set to 1 hour by default."
@@ -2251,7 +2251,7 @@ msgstr "Die Dublettenprüfung identifiziert vorhandene Dubletten von Adressdaten
 #. translators: %1$s: field name 'kaufpreis', %2$s: field name 'aussen_courtage', %3$s: field name 'bundesland'
 #: 
 msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible."
-msgstr ""
+msgstr "Die Felder %1$s, %2$s und %3$s müssen in onOffice enterprise ausgefüllt werden, damit eine Ausgabe möglich ist."
 
 #: 
 msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs."
@@ -2287,7 +2287,7 @@ msgstr "Die Keys sind OK."
 
 #: 
 msgid "The keys are valid."
-msgstr ""
+msgstr "Die Schlüssel sind gültig."
 
 #: 
 msgid "The main contact person is the address data record of the broker type, which is stored in the first place in onOffice enterprise."
@@ -2304,7 +2304,8 @@ msgstr "Das onOffice-Plugin hatte ein unerwartetes Problem beim Aufruf der onOff
 #. translators: 1: list of active SEO plugins, 2: link to onOffice plugin settings
 #: 
 msgid "The onOffice plugin has detected an active SEO plugin: %1$s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin. We recommend that you go to the %2$s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin."
-msgstr ""
+msgstr "Das onOffice-Plugin hat ein aktives SEO-Plugin erkannt: %1$s.\n"
+"Derzeit ist das onOffice-Plugin so konfiguriert, dass der Titel und die Beschreibung der Detailseite automatisch ausgefüllt werden. Dies kann zu Konflikten mit dem SEO-Plugin führen. Wir empfehlen Ihnen, die %2$s aufzurufen und das onOffice-Plugin so zu konfigurieren, dass Titel und Beschreibung nicht mehr geändert werden. Dadurch können Titel und Beschreibung über Ihr aktives SEO-Plugin verwaltet werden."
 
 #: 
 msgid "The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.\n"
@@ -2320,7 +2321,7 @@ msgstr "Im onOffice-Plugin fehlt eine Standard-E-Mail-Adresse. Sie haben Formula
 #. translators: 1: type (e.g., estate, address), 2: type (e.g., estate, address), 3: link to documentation
 #: 
 msgid "The plugin couldn't find any %1$s. Please make sure that you have published some %1$s, as described in the %2$s"
-msgstr ""
+msgstr "Das Plugin konnte keine %1$s finden. Bitte stellen Sie sicher, dass Sie einige %1$s veröffentlicht haben, wie in der %2$s beschrieben."
 
 #: 
 msgid "The plugin couldn't find any %s. Please make sure that you have published some %s, as described in the %s"
@@ -2328,23 +2329,23 @@ msgstr "Das Plugin konnte keine Immobilien finden. Bitte stellen Sie sicher, das
 
 #: 
 msgid "The Project ID is invalid or does not exist."
-msgstr ""
+msgstr "Die Projekt-ID ist ungültig oder existiert nicht."
 
 #: 
 msgid "The Project ID is invalid or malformed."
-msgstr ""
+msgstr "Die Projekt-ID ist ungültig oder fehlerhaft formatiert."
 
 #: 
 msgid "The Project ID is missing."
-msgstr ""
+msgstr "Die Projekt-ID fehlt."
 
 #: 
 msgid "The reCAPTCHA token has expired or has already been used."
-msgstr ""
+msgstr "Das reCAPTCHA-Token ist abgelaufen oder wurde bereits verwendet."
 
 #: 
 msgid "The reCAPTCHA token is missing."
-msgstr ""
+msgstr "Das reCAPTCHA-Token fehlt."
 
 #: 
 msgid "The request is invalid or malformed."
@@ -2376,11 +2377,11 @@ msgstr "Die \"Ähnliche Immobilien\"-Ansicht wurde gespeichert."
 
 #: 
 msgid "The Site Key is invalid."
-msgstr ""
+msgstr "Der Site-Key ist ungültig."
 
 #: 
 msgid "The Site Key is missing."
-msgstr ""
+msgstr "Der Site-Schlüssel fehlt."
 
 #. translators: 1: HTML title tag, 2: HTML meta description tag
 #: 
@@ -2473,7 +2474,7 @@ msgstr "Titel und Beschreibung"
 
 #: 
 msgid "Too many requests. Please try again later."
-msgstr ""
+msgstr "Zu viele Anfragen. Bitte versuchen Sie es später erneut."
 
 #: 
 msgid "Top offer"
@@ -2550,7 +2551,7 @@ msgstr "Name der Ansicht"
 
 #: 
 msgid "Warning"
-msgstr ""
+msgstr "Warnung"
 
 #: 
 msgid "Watchlist"
@@ -2624,7 +2625,8 @@ msgstr "Sie können bis zu 500 pro Seite anzeigen."
 #. translators: 1: type (e.g., estate, address), 2: type (e.g., estate, address), 3: type (e.g., estate, address), 4: type (e.g., estate, address)
 #: 
 msgid "You have opened the detail page, but we do not know which %1$s to show you, because there is no %1$s ID in the URL. Please go to an %1$s list and open an %1$s from there."
-msgstr ""
+msgstr "Sie haben die Detailseite geöffnet, jedoch ist nicht ersichtlich, welches %1$s angezeigt werden soll, da sich keine %1$s ID in der URL befindet.\n"
+"Bitte wechseln Sie zu einer %1$s Liste und öffnen Sie von dort ein %1$s."
 
 #: 
 msgid "You have opened the detail page, but we do not know which %s to show you, because there is no %s ID in the URL. Please go to an %s list and open an %s from there."
@@ -2654,5 +2656,5 @@ msgstr "Deine Suchkriterien"
 
 #: 
 msgid "Zur Einheit"
-msgstr ""
+msgstr "Zur Einheit"
 
