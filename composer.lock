@@ -202,16 +202,16 @@
         },
         {
             "name": "orchidjs/tom-select",
-            "version": "v2.4.3",
+            "version": "v2.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchidjs/tom-select.git",
-                "reference": "2efbaab0abac19532bd38900f13b99762df601b4"
+                "reference": "03a85d53c5348b58089af308dbf63773577ec0e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchidjs/tom-select/zipball/2efbaab0abac19532bd38900f13b99762df601b4",
-                "reference": "2efbaab0abac19532bd38900f13b99762df601b4",
+                "url": "https://api.github.com/repos/orchidjs/tom-select/zipball/03a85d53c5348b58089af308dbf63773577ec0e9",
+                "reference": "03a85d53c5348b58089af308dbf63773577ec0e9",
                 "shasum": ""
             },
             "type": "component",
@@ -237,7 +237,7 @@
             "homepage": "https://tom-select.js.org/",
             "support": {
                 "issues": "https://github.com/orchidjs/tom-select/issues",
-                "source": "https://github.com/orchidjs/tom-select/tree/v2.4.3"
+                "source": "https://github.com/orchidjs/tom-select/tree/v2.4.6"
             },
             "funding": [
                 {
@@ -245,7 +245,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-02-12T17:10:02+00:00"
+            "time": "2026-02-06T23:10:21+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -5120,7 +5120,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
