@@ -684,7 +684,7 @@ jQuery(document).ready(function($){
 	if ($('#multi-page-container').length) {
 		var cbAdmin = new onOffice.checkboxAdmin();
 		$('input[name="oopluginforms-template"]').change(function () {
-			if ($(this).is(':checked') && ($(this).val().includes('ownerleadgeneratorform.php') || $(this).val().includes('applicantformmultipage.php'))) {
+			if ($(this).is(':checked') && ($(this).val().includes('ownerleadgeneratorform.php') || $(this).val().includes('applicantformwizard.php'))) {
 				isMultiplePages = true;
 				$('#single-page-container').hide().find('input, select, textarea').prop('disabled', true);
 				$('#multi-page-container').show();

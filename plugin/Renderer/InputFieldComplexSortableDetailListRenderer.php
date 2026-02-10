@@ -83,7 +83,7 @@ class InputFieldComplexSortableDetailListRenderer
 	}
 	private function isApplicantMultipageForm(): bool
 	{
-    	return strpos($this->_template, 'applicantformmultipage.php') !== false;
+    	return strpos($this->_template, 'applicantformwizard.php') !== false;
 	}
 
 	public function render()
