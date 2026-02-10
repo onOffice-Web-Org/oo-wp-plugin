@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 6.10.1
+Version: 6.10.3
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -33,7 +33,7 @@ Domain Path: /languages
 */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-const ONOFFICE_PLUGIN_VERSION = '6.10.1';
+const ONOFFICE_PLUGIN_VERSION = '6.10.3';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
 
 require __DIR__ . '/vendor/autoload.php';
