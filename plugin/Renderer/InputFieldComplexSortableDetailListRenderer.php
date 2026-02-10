@@ -81,6 +81,10 @@ class InputFieldComplexSortableDetailListRenderer
 	{
     	return strpos($this->_template, 'ownerleadgeneratorform.php') !== false;
 	}
+	private function isApplicantMultipageForm(): bool
+	{
+    	return strpos($this->_template, 'applicantformmultipage.php') !== false;
+	}
 
 	public function render()
 	{
@@ -89,15 +93,15 @@ class InputFieldComplexSortableDetailListRenderer
 		$allFields = $values[0] ?? [];
 
 		if ($this->_isMultiPage) {
-            $isOwnerLeadGeneratorForm = $this->isOwnerLeadGeneratorForm();
-            echo '<div id="single-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'none' : 'block') . ';">';
+			$useMultiPageLayout = $this->isOwnerLeadGeneratorForm() || $this->isApplicantMultipageForm();
+			echo '<div id="single-page-container" style="display: ' . ($useMultiPageLayout ? 'none' : 'block') . ';">';
             $this->renderSinglePage($allFields);
             echo '</div>';
-            echo '<div id="multi-page-container" style="display: ' . ($isOwnerLeadGeneratorForm ? 'block' : 'none') . ';">';
+            echo '<div id="multi-page-container" style="display: ' . ($useMultiPageLayout ? 'block' : 'none') . ';">';
             $this->renderMultiPage($allFields);
             echo '</div>';
             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
-            echo '<p class="add-page-container"><button class="add-page-button" type="button" style="display: ' . ($isOwnerLeadGeneratorForm ? 'block' : 'none') . ';">' . __( 'Add Page', 'onoffice-for-wp-websites' ) . '</button><p>';
+            echo '<p class="add-page-container"><button class="add-page-button" type="button" style="display: ' . ($useMultiPageLayout ? 'block' : 'none') . ';">' . __( 'Add Page', 'onoffice-for-wp-websites' ) . '</button><p>';
         } else {
             $this->renderSinglePage($allFields);
         }
