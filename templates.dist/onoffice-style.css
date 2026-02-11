@@ -124,7 +124,7 @@ span.oo-searchrange {
     border-color: #3d7bb1;
 }
 
-.oo-form input[type='submit'], .oo-searchformfield input[type='submit'] {
+.oo-form input[type='submit'], .oo-searchformfield input[type='submit'], .leadform-back, .leadform-forward {
     text-align: center;
     color: #ffffff !important;
     padding: 5px;

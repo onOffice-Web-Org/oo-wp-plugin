@@ -26,14 +26,10 @@ use onOffice\WPlugin\FormPost;
 
 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 $displayError = false;
-add_thickbox();
 
 $addressValues = array();
-$miscValues = array();
 $hiddenValues = array();
 $pageTitles = $pForm->getPageTitlesByCurrentLanguage();
-
-$showFormAsModal = $pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS;
 
 if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 	echo '<p role="status">'.esc_html__('Thank you for your inquiry. We will get back to you as soon as possible.', 'onoffice-for-wp-websites').'</p>';
@@ -46,8 +42,6 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 	} elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
 		echo '<p role="status">'.esc_html__('Spam recognized!', 'onoffice-for-wp-websites').'</p>';
 	}
-
-
 
 
 	/* @var $pForm Form */
@@ -65,27 +59,25 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			echo esc_html(sprintf(__('Please enter a value for %s.', 'onoffice-for-wp-websites'), $pForm->getFieldLabel( $input ))).'<br>';
 		}
 
-		switch ($input) {
-			case "ort": $fieldLabel = esc_html__('Ort der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "plz": $fieldLabel = esc_html__('PLZ der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "strasse": $fieldLabel = esc_html__('Straße der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "hausnummer": $fieldLabel = esc_html__('Hausnummer der Immobilie', 'onoffice-for-wp-websites'); break;
-			default: $fieldLabel = $pForm->getFieldLabel($input);
-		}
+		$fieldLabel = $pForm->getFieldLabel($input);
 
 		$isRequired = $pForm->isRequiredField($input);
 		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 		$isHiddenField = $pForm->isHiddenField($input);
 		$label = $fieldLabel.' '.wp_kses_post($addition);
 
-		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
-
-			$line = '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>';
-			$line .=  renderFormField($input, $pForm).'</div>';	
-
-		} else {
-			$line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label;
-			$line .= renderFormField($input, $pForm).'</span></label>';		
+		if ( in_array( $input, array( 'kaufpreis','kaltmiete','wohnflaeche','anzahl_zimmer' ) ) ) {
+			$line = '<div class="oo-input-wrapper">';
+			$line .= renderFormField($input, $pForm).'</div>';
+		} 
+		else {
+			if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
+				$line =	 !$isHiddenField ? '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
+			} else {
+				$line = '<label>'.$label;
+				$line .= renderFormField($input, $pForm).'</span></label>';
+			}
+	
 		}
 
 	
@@ -106,7 +98,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 	});
 </script>
 
-<div id="onoffice-lead-<?php echo esc_attr(sanitize_title($pForm->getFormId())); ?>" <?php echo $showFormAsModal ? 'style="display:none;"' : ''; ?>>
+<div id="onoffice-lead-<?php echo esc_attr(sanitize_title($pForm->getFormId())); ?>">
 		<form name="leadgenerator" action="" method="post" id="leadgeneratorform-<?php echo esc_attr(sanitize_title($pForm->getFormId())); ?>"  class="oo-form" novalidate>
 			<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
 			<input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
