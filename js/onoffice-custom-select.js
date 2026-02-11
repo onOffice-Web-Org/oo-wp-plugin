@@ -87,24 +87,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
   forms.forEach(function (form) {
     form.setAttribute('novalidate', '');
+    
     const inputs = form.querySelectorAll('input, textarea');
     const selects = form.querySelectorAll('select');
     const submitInput = form.querySelector('input[type=submit]');
     const forwardLinks = form.querySelectorAll('.leadform-forward');
+
     const showError = (input) => {
-      const errorDiv = input.closest('.validated') || form.classList.contains('validated')
-        ? input.closest('label')?.querySelector('.error') 
-        : null;
+      const errorDiv = input.parentElement.querySelector('.error') || input.closest('label')?.querySelector('.error');
+  
       if (errorDiv) {
-        $(errorDiv).css('display', 'block');
+        errorDiv.style.display = 'block';
+        errorDiv.setAttribute('aria-hidden', 'false'); 
         errorDiv.setAttribute('aria-live', 'polite');
+        errorDiv.setAttribute('role', 'alert');
+        input.setAttribute('aria-invalid', 'true');
+        
       }
     };
+    
     const hideError = (input) => {
-      const errorDiv = input.closest('label')?.querySelector('.error');
+      const errorDiv = input.parentElement.querySelector('.error') || input.closest('label')?.querySelector('.error');
+                       
       if (errorDiv) {
+        errorDiv.style.display = 'none';
+        errorDiv.setAttribute('aria-hidden', 'true');
         errorDiv.removeAttribute('aria-live');
-        $(errorDiv).css('display', 'none');
+        
+        input.setAttribute('aria-invalid', 'false');
       }
     };
     const inputHandleBlur = (input) => {

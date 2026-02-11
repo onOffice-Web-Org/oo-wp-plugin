@@ -51,8 +51,6 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			continue;
 		}
 
-		
-	
 		if ( $pForm->isMissingField( $input )  &&
 			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 			/* translators: %s will be replaced with a translated field name. */
@@ -77,9 +75,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				$line = '<label>'.$label;
 				$line .= renderFormField($input, $pForm).'</span></label>';
 			}
-	
 		}
-
 	
 		$pageNumber = $pForm->getPagePerForm($input);
 		if (!isset($addressValues[$pageNumber])) {
@@ -134,13 +130,11 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
                 foreach ($addressValues as $pageNumber => $fields): $pageIndex++?>
                     <div class="lead-lightbox lead-page-<?php echo esc_attr($pageNumber); ?>">
                         <?php if($totalPages > 1): ?>
-                            <span><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></span>
+                            <h2><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></h2>
                         <?php endif; ?>
-                        <p>
                             <?php 
 							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $fields contains escaped HTML from renderFormField
 							echo implode('', $fields); ?>
-                        </p>
                         <?php if ($pageIndex === $totalPages): ?>
                             <p>
                             <div style="float:right">
@@ -155,13 +149,13 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				<?php
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $hiddenValues contains escaped HTML from renderFormField
 				echo implode($hiddenValues); ?>
-				<span class="leadform-back" style="float:left; cursor:pointer;" role="button">
+				<button class="leadform-back" style="float:left; cursor:pointer;" type="button">
 					<?php echo esc_html__('Back', 'onoffice-for-wp-websites'); ?>
-				</span>
+				</button>
 				<?php if ($totalPages !== 1): ?>
-				<span class="leadform-forward" style="float:right; cursor:pointer;" role="button">
+				<button class="leadform-forward" style="float:right; cursor:pointer;" type="button">
 					<?php echo esc_html__('Next', 'onoffice-for-wp-websites'); ?>
-				</span>
+				</button>
 				<?php endif; ?>
 			</div>
 		</form>

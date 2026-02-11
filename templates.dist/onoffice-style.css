@@ -119,7 +119,7 @@ span.oo-searchrange {
     display: none;
 }
 
-.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus, .oo-searchformfield input:focus, .ts-wrapper.focus, .ts-wrapper:focus-visible, .ts-wrapper.single.focus, .ts-wrapper.single:focus-visible, .ts-wrapper.multi.focus, .ts-wrapper.multi:focus-visible, .oo-post-nav-links a:focus {
+.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus, .oo-searchformfield input:focus, .ts-wrapper.focus, .ts-wrapper:focus-visible, .ts-wrapper.single.focus, .ts-wrapper.single:focus-visible, .ts-wrapper.multi.focus, .ts-wrapper.multi:focus-visible, .oo-post-nav-links a:focus, .leadform-back:focus, .leadform-forward:focus {
     outline: #3d7bb1 solid 2px;
     border-color: #3d7bb1;
 }
