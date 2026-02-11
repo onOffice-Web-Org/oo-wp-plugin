@@ -136,8 +136,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $fields contains escaped HTML from renderFormField
 							echo implode('', $fields); ?>
                         <?php if ($pageIndex === $totalPages): ?>
-                            <p>
-                            <div style="float:right">
+                            <div class="leadform-submit">
                                 <?php
                                 $pForm->setGenericSetting('formId', 'leadgeneratorform-' . sanitize_title($pForm->getFormId()));
                                 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
@@ -149,11 +148,11 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				<?php
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $hiddenValues contains escaped HTML from renderFormField
 				echo implode($hiddenValues); ?>
-				<button class="leadform-back" style="float:left; cursor:pointer;" type="button">
+				<button class="leadform-back" type="button">
 					<?php echo esc_html__('Back', 'onoffice-for-wp-websites'); ?>
 				</button>
 				<?php if ($totalPages !== 1): ?>
-				<button class="leadform-forward" style="float:right; cursor:pointer;" type="button">
+				<button class="leadform-forward" type="button">
 					<?php echo esc_html__('Next', 'onoffice-for-wp-websites'); ?>
 				</button>
 				<?php endif; ?>

@@ -56,7 +56,7 @@ msgstr "(neće raditi dok se ne postavi globalno)"
 
 #: 
 msgid "* Mandatory fields"
-msgstr ""
+msgstr "* Obavezna polja"
 
 #: 
 msgid "## Connect your website to onOffice enterprise\n"
@@ -362,7 +362,7 @@ msgstr "Broj nekretnina"
 
 #: 
 msgid "An error has occurred. Please check your details."
-msgstr ""
+msgstr "Došlo je do pogreške. Molimo provijerite detalje."
 
 #: 
 msgid "An error occured:"
@@ -370,7 +370,7 @@ msgstr "Došlo je do greške:"
 
 #: 
 msgid "An error occurred while loading reCAPTCHA."
-msgstr ""
+msgstr "Došlo je do pogreške prilikom učitavanja reCAPTCHA."
 
 #. translators: 1: line break HTML tag, 2-4: code examples of field variables
 #: 
@@ -379,11 +379,11 @@ msgstr "Primjer za integraciju s Yoast Seo dodatkom bio bi: %1$s %2$s ili%1$s %3
 
 #: 
 msgid "API Key"
-msgstr ""
+msgstr "API Key"
 
 #: 
 msgid "API request failed. Please check your API Key and Project ID."
-msgstr ""
+msgstr "API zahtjev nije uspio. Molimo provjerite svoj API Key i ID projekta."
 
 #: 
 msgid "API secret"
@@ -473,7 +473,7 @@ msgstr "Imajte na umu da se aktivacijom ove funkcije kontakti u bazi podataka mo
 
 #: 
 msgid "Billing is not enabled for this Google Cloud project."
-msgstr ""
+msgstr "Naplata nije omogućena za ovaj Google Cloud projekt."
 
 #: 
 msgid "Broker commission"
@@ -585,7 +585,7 @@ msgstr "Završeno"
 
 #: 
 msgid "Connection to Google reCAPTCHA failed. Please check your internet connection."
-msgstr ""
+msgstr "Spajanje s Google reCAPTCHA nije uspjelo. Molimo provjerite svoju vezu s internetom."
 
 #: 
 msgid "Contact Form"
@@ -617,7 +617,7 @@ msgstr "Polja agenta za kontakt"
 
 #: 
 msgid "Contact person image"
-msgstr ""
+msgstr "Slika kontakt osobe"
 
 #: 
 msgid "Contact Type of New Address"
@@ -744,7 +744,7 @@ msgstr "URL-ovi detaljnog prikaza"
 
 #: 
 msgid "Details"
-msgstr ""
+msgstr "Detalji"
 
 #: 
 msgid "Direct download for PDF exposé"
@@ -849,7 +849,7 @@ msgstr "Osnovni detalji"
 
 #: 
 msgid "Error:"
-msgstr ""
+msgstr "Greška:"
 
 #: 
 msgid "ERROR!"
@@ -913,7 +913,7 @@ msgstr "Popis favorita"
 
 #: 
 msgid "Feld besonders hervorheben"
-msgstr ""
+msgstr "Polje posebno istaknuti"
 
 #: 
 msgid "Field list search"
@@ -1036,15 +1036,15 @@ msgstr "Google reCAPTCHA"
 
 #: 
 msgid "Google reCAPTCHA Classic"
-msgstr ""
+msgstr "Google reCAPTCHA Classic"
 
 #: 
 msgid "Google reCAPTCHA Enterprise"
-msgstr ""
+msgstr "Google reCAPTCHA Enterprise"
 
 #: 
 msgid "Google reCAPTCHA server error. Please try again later."
-msgstr ""
+msgstr "Greška Google reCAPTCA servera. Pokušajte ponovno kasnije."
 
 #: 
 msgid "Ground Plan"
@@ -1052,7 +1052,7 @@ msgstr "Tlocrt"
 
 #: 
 msgid "Hausnummer der Immobilie"
-msgstr ""
+msgstr "Kućni broj nekretnine"
 
 #: 
 msgid "Hidden"
@@ -1159,11 +1159,11 @@ msgstr "Slika web stranice"
 #. translators: %s: URL to the migration guide
 #: 
 msgid "Important Notice: Google will discontinue reCAPTCHA v2/v3 (Classic) on December 31, 2025. Please migrate your projects to reCAPTCHA Enterprise in time to ensure uninterrupted protection. More information at: %s"
-msgstr ""
+msgstr "Važna obavijest: Google će 31. prosinca 2025. prestati podržavati reCAPTCHA v2/v3 (Classic). Molimo vas da pravovremeno premjestite svoje projekte na reCAPTCHA Enterprise kako biste osigurali neprekidnu zaštitu. Više informacija na: %s"
 
 #: 
 msgid "In order to use Google reCAPTCHA Enterprise, you need to provide your Project ID and Site Key. You're free to enable it in the form settings for later use."
-msgstr ""
+msgstr "Kako biste koristili Google reCAPTCHA Enterprise, potrebno je navesti ID projekta i Key stranice. Možete ga slobodno omogućiti u postavkama obrasca za kasniju upotrebu."
 
 #: 
 msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
@@ -1199,7 +1199,7 @@ msgstr[2] "Obrazaca potencijalnog kupca"
 
 #: 
 msgid "Invalid request. Please check your credentials."
-msgstr ""
+msgstr "Neispravan zahtjev. Provjerite svoje vjerodajnice."
 
 #. translators: %s will be replaced with the translation of 'API token and
 #. secret'.
@@ -1304,11 +1304,11 @@ msgstr "Pružatelj karte"
 
 #: 
 msgid "Map with properties"
-msgstr ""
+msgstr "Karta za nekretnine"
 
 #: 
 msgid "Map with real estate agents"
-msgstr ""
+msgstr "Karta s agentima za nekretnine"
 
 #: 
 msgid "Maps"
@@ -1340,7 +1340,7 @@ msgstr "Poruka iz obrasca za vlasnike vaše web stranice."
 
 #: 
 msgid "Migration Guide"
-msgstr ""
+msgstr "Migration Guide"
 
 #: 
 msgid "Miscellaneous"
@@ -1429,11 +1429,11 @@ msgstr "Bez oznake"
 
 #: 
 msgid "No reCAPTCHA configured"
-msgstr ""
+msgstr "Nema konfiguriranog reCAPTCHA"
 
 #: 
 msgid "Not all mandatory fields have been filled out. Please check your entries."
-msgstr ""
+msgstr "Nisu sva obavezna polja ispunjena. Molimo provijerite svoje unose."
 
 #: 
 msgid "not restricted"
@@ -1511,7 +1511,7 @@ msgstr "Podrijetlo kontakta"
 
 #: 
 msgid "Ort der Immobilie"
-msgstr ""
+msgstr "Mjesto nekretnine"
 
 #: templates.dist/estate/default_detail.php:108
 msgid "Other Information"
@@ -1558,7 +1558,7 @@ msgstr "Stranica %d"
 #: 
 msgctxt "template"
 msgid "Page %d"
-msgstr ""
+msgstr "Stranica %d"
 
 #. translators: %s: page number
 #: 
@@ -1609,7 +1609,7 @@ msgstr "Prilagođeno (Tema)"
 
 #: 
 msgid "Pflichtfeld"
-msgstr ""
+msgstr "Obavezno polje"
 
 #: 
 msgid "Photo"
@@ -1633,7 +1633,7 @@ msgstr "Player"
 
 #: 
 msgid "Please agree to the terms and conditions."
-msgstr ""
+msgstr "Molimo potvrdite opće uvjete poslovanja."
 
 #. translators: %1$s is office server status page link, %2$s is support form
 #. page link
@@ -1651,11 +1651,11 @@ msgstr "Molimo Vas da prvo konfigurirate svoje onOffice API pristupne podatke!"
 
 #: 
 msgid "Please enter a text."
-msgstr ""
+msgstr "Molimo unesite tekst."
 
 #: 
 msgid "Please enter a valid e-mail address."
-msgstr ""
+msgstr "Molimo unesite valjanu e-mail adresu."
 
 #. translators: %s will be replaced with a translated field name.
 #: 
@@ -1680,11 +1680,11 @@ msgstr "Molimo Vas da unesete ispravnu E-Mail adresu!"
 
 #: 
 msgid "Please select at least one option."
-msgstr ""
+msgstr "Molimo odaberite najmanje jednu opciju."
 
 #: 
 msgid "Please select this option."
-msgstr ""
+msgstr "Molimo odaberite opciju."
 
 #: 
 msgid "plugin settings"
@@ -1692,7 +1692,7 @@ msgstr "postavke plugin-a"
 
 #: 
 msgid "PLZ der Immobilie"
-msgstr ""
+msgstr "Poštanski broj nekretnine"
 
 #: 
 msgid "Popular"
@@ -1700,7 +1700,7 @@ msgstr "Popularno"
 
 #: 
 msgid "Post navigation"
-msgstr ""
+msgstr "Navigacija objava"
 
 #: 
 msgid "Postal Code"
@@ -1708,11 +1708,11 @@ msgstr "Poštanski broj"
 
 #: 
 msgid "Postal code"
-msgstr ""
+msgstr "Poštanski broj"
 
 #: 
 msgid "Postal code of the property"
-msgstr ""
+msgstr "Poštanski broj nekretnine"
 
 #: 
 msgid "Price on request"
@@ -1732,7 +1732,7 @@ msgstr "Procesor"
 
 #: 
 msgid "Project ID"
-msgstr ""
+msgstr "ID projekta"
 
 #: 
 msgid "Property of the day"
@@ -1756,7 +1756,7 @@ msgstr "Radijus"
 
 #: 
 msgid "Radius (km)"
-msgstr ""
+msgstr "Radijus (km)"
 
 #: 
 msgid "Random order"
@@ -1772,13 +1772,13 @@ msgstr "Polja nekretnine"
 
 #: 
 msgid "Real Estate No."
-msgstr ""
+msgstr "ID nekretnine"
 
 #. translators: %d: real estate ID number
 #: 
 msgctxt "template"
 msgid "Real Estate No. %d"
-msgstr ""
+msgstr "ID nekretnine %d"
 
 #: 
 msgid "Recipient e-mail address"
@@ -2033,19 +2033,19 @@ msgstr "Prikaži detalje"
 #. translators: %d: address ID number
 #: 
 msgid "Show Details for Address No. %d"
-msgstr ""
+msgstr "Prikaži detalje za Kontakt ID %d"
 
 #. translators: %d: real estate ID number
 #: 
 msgctxt "template"
 msgid "Show Details for Real Estate No. %d"
-msgstr ""
+msgstr "Prikaži detalje za nekretninu s ID-jem %d"
 
 #. translators: %s: real estate ID number
 #: 
 msgctxt "template"
 msgid "Show Details for Real Estate No. %s"
-msgstr ""
+msgstr "Prikaži detalje za ID nekretnine %s"
 
 #: 
 msgid "Show energy certificate with a scale"
@@ -2118,7 +2118,7 @@ msgstr "Sličan prikaz nekretnine"
 #. translators: 1: type (e.g., estate, address), 2: link to detail page
 #: 
 msgid "Since you are logged in, here is a link to a random %1$s so that you can preview the detail page: %2$s"
-msgstr ""
+msgstr "Budući da ste prijavljeni, evo poveznice na nasumični %1$s kako biste mogli pregledati stranicu s detaljima: %2$s"
 
 #: 
 msgid "Since you are logged in, here is a link to a random %s so that you can preview the detail page: %s"
@@ -2166,7 +2166,7 @@ msgstr "Pronađen Spam!"
 
 #: 
 msgid "Spam recognized!"
-msgstr ""
+msgstr "Prepoznata je neželjena pošta!"
 
 #: 
 msgid "Special Fields"
@@ -2186,7 +2186,7 @@ msgstr "Status"
 
 #: 
 msgid "Straße der Immobilie"
-msgstr ""
+msgstr "Ulica nekretnine"
 
 #: 
 msgid "Street"
@@ -2226,7 +2226,7 @@ msgstr "Model"
 
 #: 
 msgid "Thank you for your inquiry. We will get back to you as soon as possible."
-msgstr ""
+msgstr "Hvala vam na upitu. JAvit čemo vam se što prije moguće."
 
 #: 
 msgid "The address detail view has been saved."
@@ -2238,15 +2238,15 @@ msgstr "Popis kontakta je spremljen."
 
 #: 
 msgid "The API Key does not have permission for reCAPTCHA Enterprise."
-msgstr ""
+msgstr "API Key nema dopuštenje za reCAPTCHA Enterprise."
 
 #: 
 msgid "The API Key is invalid."
-msgstr ""
+msgstr "API Key nije valjan."
 
 #: 
 msgid "The API Key is missing."
-msgstr ""
+msgstr "Nedostaje API Key"
 
 #: 
 msgid "The Cache duration value determines the period of time after which the plugin cache of your page is refreshed. This value is set to 1 hour by default."
@@ -2271,7 +2271,7 @@ msgstr "Provjera duplikata identificira postojeće duplikate zapisa kontakta i p
 #. translators: %1$s: field name 'kaufpreis', %2$s: field name 'aussen_courtage', %3$s: field name 'bundesland'
 #: 
 msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible."
-msgstr ""
+msgstr "Polja %1$s, %2$s i %3$s moraju biti popunjena u onOffice enterpriseu kako bi prikaz bio moguć."
 
 #: 
 msgid "The fields %1$s, %2$s and %3$s must be filled in onOffice enterprise so that output is possible. %4$s %4$s A standard value of 1.5%% and 0.5%% respectively is typically used to calculate the notary and land registry entry costs."
@@ -2307,7 +2307,7 @@ msgstr "Ključevi su ispravni."
 
 #: 
 msgid "The keys are valid."
-msgstr ""
+msgstr "Keys su valjani."
 
 #: 
 msgid "The main contact person is the address data record of the broker type, which is stored in the first place in onOffice enterprise."
@@ -2324,7 +2324,7 @@ msgstr "Plugin onOffice-a ima neočekivani problem kod uspostava veze sa onOffic
 #. translators: 1: list of active SEO plugins, 2: link to onOffice plugin settings
 #: 
 msgid "The onOffice plugin has detected an active SEO plugin: %1$s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin. We recommend that you go to the %2$s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin."
-msgstr ""
+msgstr "onOffice dodatak otkrio je aktivni SEO dodatak: %1$s. Trenutno ste konfigurirali onOffice dodatak da popunjava naslov i opis stranice s detaljima, što može dovesti do sukoba sa SEO dodatkom. Preporučujemo da odete u %2$s i konfigurirate onOffice dodatak tako da ne mijenja naslov i opis. To će vam omogućiti upravljanje naslovom i opisom putem vašeg aktivnog SEO dodatka."
 
 #: 
 msgid "The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.\n"
@@ -2340,7 +2340,7 @@ msgstr "Plugin onOffice-a nema zadanu E-Mail adresu. Imate obrasce koji koriste 
 #. translators: 1: type (e.g., estate, address), 2: type (e.g., estate, address), 3: link to documentation
 #: 
 msgid "The plugin couldn't find any %1$s. Please make sure that you have published some %1$s, as described in the %2$s"
-msgstr ""
+msgstr "Dodatak nije uspio pronaći nijedan %1$s. Provjerite jeste li objavili %1$s, kao što je opisano u %2$s."
 
 #: 
 msgid "The plugin couldn't find any %s. Please make sure that you have published some %s, as described in the %s"
@@ -2348,23 +2348,23 @@ msgstr "Plugin nije mogao pronaći %s. Molimo Vas da provjerite jeste li objavil
 
 #: 
 msgid "The Project ID is invalid or does not exist."
-msgstr ""
+msgstr "ID projekta nije valjan ili ne postoji."
 
 #: 
 msgid "The Project ID is invalid or malformed."
-msgstr ""
+msgstr "ID projekta nije valjan ili je neispravan."
 
 #: 
 msgid "The Project ID is missing."
-msgstr ""
+msgstr "Nedostaje ID projekta."
 
 #: 
 msgid "The reCAPTCHA token has expired or has already been used."
-msgstr ""
+msgstr "reCAPTCHA token je istekao ili je već korišten."
 
 #: 
 msgid "The reCAPTCHA token is missing."
-msgstr ""
+msgstr "Nedostaje reCAPTCHA token."
 
 #: 
 msgid "The request is invalid or malformed."
@@ -2396,11 +2396,11 @@ msgstr "Sličan pregled nekretnina je spremljen."
 
 #: 
 msgid "The Site Key is invalid."
-msgstr ""
+msgstr "Key stranice nije valjan."
 
 #: 
 msgid "The Site Key is missing."
-msgstr ""
+msgstr "Nedostaje Key stranice."
 
 #. translators: 1: HTML title tag, 2: HTML meta description tag
 #: 
@@ -2493,7 +2493,7 @@ msgstr "Naslov i opis"
 
 #: 
 msgid "Too many requests. Please try again later."
-msgstr ""
+msgstr "Previše zahtjeva. Pokušajte ponovno kasnije."
 
 #: 
 msgid "Top offer"
@@ -2570,7 +2570,7 @@ msgstr "Naziv prikaza"
 
 #: 
 msgid "Warning"
-msgstr ""
+msgstr "Oprez"
 
 #: 
 msgid "Watchlist"
@@ -2644,7 +2644,7 @@ msgstr "Možete prikazati do 500 po stranici."
 #. translators: 1: type (e.g., estate, address), 2: type (e.g., estate, address), 3: type (e.g., estate, address), 4: type (e.g., estate, address)
 #: 
 msgid "You have opened the detail page, but we do not know which %1$s to show you, because there is no %1$s ID in the URL. Please go to an %1$s list and open an %1$s from there."
-msgstr ""
+msgstr "Otvorili ste stranicu s detaljima, ali ne znamo koji %1$s vam treba prikazati jer u URL-u nedostaje ID za %1$s. Molimo idite na popis za %1$s i od tamo otvorite željeni %1$s.\""
 
 #: 
 msgid "You have opened the detail page, but we do not know which %s to show you, because there is no %s ID in the URL. Please go to an %s list and open an %s from there."
@@ -2674,5 +2674,5 @@ msgstr "Vaš kriterij pretrage"
 
 #: 
 msgid "Zur Einheit"
-msgstr ""
+msgstr "Na jedinicu"
 
