@@ -622,12 +622,15 @@ jQuery(document).ready(function($){
 			let draggedOriginalItem = null;
 			let isMultiDrag = false;
 			const $list = $('.filter-fields-list');
-			$list.sortable('destroy');
+			if ($list.data('ui-sortable')) {
+				$list.sortable('destroy');
+			}
 
 			$list.sortable({
 				axis: 'y',
 				connectWith: '.filter-fields-list',
-				revert: 'invalid',
+				items: '> li.sortable-item:visible',
+				revert: false,
 				helper: function (event, item) {
 					const $selected = $('#multi-page-container .selected');
 					isMultiDrag = item.hasClass('selected') && $selected.length > 1;
@@ -635,11 +638,11 @@ jQuery(document).ready(function($){
 					if (isMultiDrag) {
 						multiDragSelectedOrdered = $selected.toArray();
 						draggedOriginalItem = item[0];
-						return $('<li class="multi-drag-helper"/>').append($selected.clone());
+						return $('<li class="multi-drag-helper" style="pointer-events:none;"/>').append($selected.clone());
 					} else {
 						multiDragSelectedOrdered = [item[0]];
 						draggedOriginalItem = item[0];
-						return item.clone();
+						return item.clone().css('pointer-events', 'none');
 					}
 				},
 				start: function (event, ui) {
@@ -647,18 +650,16 @@ jQuery(document).ready(function($){
 					ui.item.data('origParent', ui.item.parent());
 				},
 				stop: function (event, ui) {
-					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
-					const validDrop = droppedOver && droppedOver.closest('.list-fields-for-each-page');
-
-					if (!validDrop) {
-						$(this).sortable('cancel');
-						return;
-					}
-
 					const $droppedItem = ui.item;
 
 					if (isMultiDrag) {
 						const targetList = $droppedItem.closest('.filter-fields-list');
+
+						if (!targetList.length) {
+							$(this).sortable('cancel');
+							return;
+						}
+
 						const dropIndex = $droppedItem.index();
 
 						$droppedItem.detach();
@@ -753,6 +754,7 @@ jQuery(document).ready(function($){
 			document.dispatchEvent(new CustomEvent('fieldListUpdated'));
 			if ($('#multi-page-container').length) {
 				FormMultiPageManager.reorderPages()
+				FormMultiPageManager.multiSortable();
 			}
 		} else {
 			var valElName = $(btn).attr('value');
@@ -851,7 +853,12 @@ jQuery(document).ready(function($){
 				dummyKey = $('#menu-item-dummy_key');
 			}
 		}
-		var clonedElement = dummyKey.clone(true, true);
+		var clonedElement = dummyKey.clone(true, false);
+		clonedElement.removeData();
+		clonedElement.removeClass('ui-sortable-handle');
+
+		var uniqueSuffix = Math.floor(Math.random() * 10000);
+		clonedElement.attr('id', 'menu-item-' + fieldName + '-' + uniqueSuffix);
 
 		clonedElement.attr('id', 'menu-item-' + fieldName);
 		clonedElement.attr('action-field-name', actionFieldName);
@@ -919,6 +926,7 @@ jQuery(document).ready(function($){
 		}
 		clonedElement.show();
 		dummyKey.parent().append(clonedElement);
+		//FormMultiPageManager.multiSortable()
 		return clonedElement[0];
 	};
 });
