@@ -926,7 +926,6 @@ jQuery(document).ready(function($){
 		}
 		clonedElement.show();
 		dummyKey.parent().append(clonedElement);
-		//FormMultiPageManager.multiSortable()
 		return clonedElement[0];
 	};
 });
