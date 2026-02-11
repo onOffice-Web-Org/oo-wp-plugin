@@ -194,6 +194,13 @@ class DataFormConfigurationFactory
 			}
 		}
 
+		if ($this->_type === Form::TYPE_INTEREST) {
+			$rowTitlePerMultipageConfig = $this->_pRecordManagerRead->readTitlePerMultipageByFormId($formId);
+			if (!empty($rowTitlePerMultipageConfig)) {
+				$this->configureTitlePerMultipageByRow($rowTitlePerMultipageConfig, $pConfig);
+			}
+		}
+		
 		foreach ($rowFields as $fieldRow) {
 			$this->configureFieldsByRow($fieldRow, $pConfig);
 		}
@@ -428,6 +435,7 @@ class DataFormConfigurationFactory
 		$pConfig->setRecipient($row['recipient']);
 		$pConfig->setDefaultRecipient($row['default_recipient']);
 		$pConfig->setSubject($row['subject']);
+		$pConfig->setPages($row['pages']);
 		$pConfig->setCreateInterest((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
 		$pConfig->setContactTypeField($row['contact_type'] ?? []);
