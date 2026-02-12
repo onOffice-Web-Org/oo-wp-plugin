@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f05a841babe182f9b7b2a66131393e02",
+    "content-hash": "5429cbb50235a701d320340175332423",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -202,16 +202,16 @@
         },
         {
             "name": "orchidjs/tom-select",
-            "version": "v2.4.3",
+            "version": "v2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchidjs/tom-select.git",
-                "reference": "2efbaab0abac19532bd38900f13b99762df601b4"
+                "reference": "81eda24435d5931607dd27d8f17a91da53f64d88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchidjs/tom-select/zipball/2efbaab0abac19532bd38900f13b99762df601b4",
-                "reference": "2efbaab0abac19532bd38900f13b99762df601b4",
+                "url": "https://api.github.com/repos/orchidjs/tom-select/zipball/81eda24435d5931607dd27d8f17a91da53f64d88",
+                "reference": "81eda24435d5931607dd27d8f17a91da53f64d88",
                 "shasum": ""
             },
             "type": "component",
@@ -237,7 +237,7 @@
             "homepage": "https://tom-select.js.org/",
             "support": {
                 "issues": "https://github.com/orchidjs/tom-select/issues",
-                "source": "https://github.com/orchidjs/tom-select/tree/v2.4.3"
+                "source": "https://github.com/orchidjs/tom-select/tree/v2.5.1"
             },
             "funding": [
                 {
@@ -245,7 +245,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-02-12T17:10:02+00:00"
+            "time": "2026-02-11T12:23:29+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -5120,7 +5120,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
