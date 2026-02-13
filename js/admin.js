@@ -449,6 +449,7 @@ jQuery(document).ready(function($){
 				const newPageNumber = index + 1;
 				$(this).find('.page-title').text(`${onOffice_loc_settings.page_title} ${newPageNumber}`);
 				FormMultiPageManager.updatePageClassAndId($(this), newPageNumber);
+				FormMultiPageManager.updateMultiPageTitleAttributes($(this), newPageNumber);
 			});
 			this.checkSortableFieldsList();
 		},
@@ -474,6 +475,22 @@ jQuery(document).ready(function($){
 			ulElement.removeClass(function(index, className) {
 				return (className.match(/(^|\s)fieldsListPage-\S+/g) || []).join(' ');
 			}).addClass(`fieldsListPage-${pageNumber}`);
+		},
+
+		updateMultiPageTitleAttributes: function(page, pageNumber) {
+			// Update data-page attribute on .multi-page-title element
+			const multiPageTitle = page.find('.multi-page-title');
+			if (multiPageTitle.length) {
+				multiPageTitle.attr('data-page', pageNumber);
+				
+				// Update all title input names to reflect the new page number
+				multiPageTitle.find('input[name^="oopluginformmultipagetitle"]').each(function() {
+					const currentName = $(this).attr('name');
+					// Replace [X] with [newPageNumber] in the name attribute
+					const newName = currentName.replace(/\[\d+\]/, `[${pageNumber}]`);
+					$(this).attr('name', newName);
+				});
+			}
 		},
 
 		draggablePages: function () {
