@@ -20,7 +20,7 @@ jobs:
     name: Unittest on ${{ matrix.operating-system }} with PHP version ${{ matrix.php-versions }}
     steps:
     - name: Set up MySQL
-      uses: mirromutth/mysql-action@v1.1
+      uses: TryGhost/mysql-action@92dafb5ac9477ffe337b8ce2f762f0c38ca908ac
       with:
         mysql version: '5.7'
         mysql root password: 'testMySQLPassword123'
