@@ -24,6 +24,7 @@ jobs:
       with:
         mysql version: '5.7'
         mysql root password: 'testMySQLPassword123'
+        collaction server: 'utf8mb4_general_ci'
 
     - name: Checkout from GIT
       uses: actions/checkout@v4
