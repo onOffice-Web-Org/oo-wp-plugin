@@ -482,7 +482,10 @@ jQuery(document).ready(function($){
 			const multiPageTitle = page.find('.multi-page-title');
 			if (multiPageTitle.length) {
 				multiPageTitle.attr('data-page', pageNumber);
-				
+				const multiPageCounter = multiPageTitle.find('.multi-page-counter');
+				if (multiPageCounter.length) {
+					multiPageCounter.text(multiPageCounter.text().replace(/\d+/, pageNumber));
+				}
 				// Update all title input names to reflect the new page number
 				multiPageTitle.find('input[name^="oopluginformmultipagetitle"]').each(function() {
 					const currentName = $(this).attr('name');
