@@ -857,9 +857,6 @@ jQuery(document).ready(function($){
 		clonedElement.removeData();
 		clonedElement.removeClass('ui-sortable-handle');
 
-		var uniqueSuffix = Math.floor(Math.random() * 10000);
-		clonedElement.attr('id', 'menu-item-' + fieldName + '-' + uniqueSuffix);
-
 		clonedElement.attr('id', 'menu-item-' + fieldName);
 		clonedElement.attr('action-field-name', actionFieldName);
 		clonedElement.find('span.item-title:contains("dummy_label")').text(fieldLabel);
