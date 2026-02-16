@@ -167,12 +167,12 @@ jQuery(document).ready(function($){
 			paragraph.appendChild(input);
 			container.appendChild(span);
 			container.appendChild(paragraph);
-			container.appendChild(this.addMultiPageLanguageSelect(container, pageNumber));
+			container.appendChild(this.addMultiPageLanguageSelect(container));
 
 			return container;
 		},
 
-		addMultiPageLanguageSelect: function(multiPageTitleSection, page) {
+		addMultiPageLanguageSelect: function(multiPageTitleSection) {
 			const paragraph = document.createElement('p');
 			const label = document.createElement('label');
 			const select = document.createElement('select');
@@ -193,7 +193,7 @@ jQuery(document).ready(function($){
 				select.options.add(new Option(v, k));
 			});
 			select.options.selectedIndex = 0;
-			this.addMultiPageLanguageSelectEventListeners(select, multiPageTitleSection, page);
+			this.addMultiPageLanguageSelectEventListeners(select, multiPageTitleSection);
 
 			paragraph.appendChild(label);
 			paragraph.appendChild(select);
@@ -201,10 +201,11 @@ jQuery(document).ready(function($){
 			return paragraph;
 		},
 
-		addMultiPageLanguageSelectEventListeners: function(localeSelect, multiPageTitleSection, page) {
+		addMultiPageLanguageSelectEventListeners: function(localeSelect, multiPageTitleSection) {
 			const self = this;
 
 			localeSelect.addEventListener('change', function () {
+				const page = $(this).closest('.multi-page-title').attr('data-page');
 				const selectedLocale = this.value;
 				const selectedOption = this.options[localeSelect.selectedIndex];
 				const selectedLocaleText = selectedOption.text;
