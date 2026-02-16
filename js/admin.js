@@ -494,6 +494,13 @@ jQuery(document).ready(function($){
 					const newName = currentName.replace(/\[\d+\]/, `[${pageNumber}]`);
 					$(this).attr('name', newName);
 				});
+				// Update delete button IDs to reflect the new page number
+				multiPageTitle.find('.multi-page-title-delete').each(function() {
+					const currentId = $(this).attr('id');
+					// Replace deletePageTitle[X][langCode] with deletePageTitle[newPageNumber][langCode]
+					const newId = currentId.replace(/deletePageTitle\[\d+\]/, `deletePageTitle[${pageNumber}]`);
+					$(this).attr('id', newId);
+				});
 			}
 		},
 
