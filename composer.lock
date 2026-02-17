@@ -8,24 +8,24 @@
     "packages": [
         {
             "name": "erusev/parsedown",
-            "version": "1.7.4",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown.git",
-                "reference": "cb17b6477dfff935958ba01325f2e8a2bfa6dab3"
+                "reference": "96baaad00f71ba04d76e45b4620f54d3beabd6f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown/zipball/cb17b6477dfff935958ba01325f2e8a2bfa6dab3",
-                "reference": "cb17b6477dfff935958ba01325f2e8a2bfa6dab3",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/96baaad00f71ba04d76e45b4620f54d3beabd6f7",
+                "reference": "96baaad00f71ba04d76e45b4620f54d3beabd6f7",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": ">=5.3.0"
+                "php": ">=7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35"
+                "phpunit/phpunit": "^7.5|^8.5|^9.6"
             },
             "type": "library",
             "autoload": {
@@ -52,9 +52,15 @@
             ],
             "support": {
                 "issues": "https://github.com/erusev/parsedown/issues",
-                "source": "https://github.com/erusev/parsedown/tree/1.7.x"
+                "source": "https://github.com/erusev/parsedown/tree/1.8.0"
             },
-            "time": "2019-12-30T22:54:17+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/erusev",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-02-16T11:41:01+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -202,16 +208,16 @@
         },
         {
             "name": "orchidjs/tom-select",
-            "version": "v2.4.3",
+            "version": "v2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchidjs/tom-select.git",
-                "reference": "2efbaab0abac19532bd38900f13b99762df601b4"
+                "reference": "81eda24435d5931607dd27d8f17a91da53f64d88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchidjs/tom-select/zipball/2efbaab0abac19532bd38900f13b99762df601b4",
-                "reference": "2efbaab0abac19532bd38900f13b99762df601b4",
+                "url": "https://api.github.com/repos/orchidjs/tom-select/zipball/81eda24435d5931607dd27d8f17a91da53f64d88",
+                "reference": "81eda24435d5931607dd27d8f17a91da53f64d88",
                 "shasum": ""
             },
             "type": "component",
@@ -237,7 +243,7 @@
             "homepage": "https://tom-select.js.org/",
             "support": {
                 "issues": "https://github.com/orchidjs/tom-select/issues",
-                "source": "https://github.com/orchidjs/tom-select/tree/v2.4.3"
+                "source": "https://github.com/orchidjs/tom-select/tree/v2.5.1"
             },
             "funding": [
                 {
@@ -245,7 +251,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-02-12T17:10:02+00:00"
+            "time": "2026-02-11T12:23:29+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -1553,11 +1559,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.37",
+            "version": "2.1.39",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/28cd424c5ea984128c95cfa7ea658808e8954e49",
-                "reference": "28cd424c5ea984128c95cfa7ea658808e8954e49",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c6f73a2af4cbcd99c931d0fb8f08548cc0fa8224",
+                "reference": "c6f73a2af4cbcd99c931d0fb8f08548cc0fa8224",
                 "shasum": ""
             },
             "require": {
@@ -1602,7 +1608,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-24T08:21:55+00:00"
+            "time": "2026-02-11T14:48:56+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1925,16 +1931,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.32",
+            "version": "9.6.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "492ee10a8369a1c1ac390a3b46e0c846e384c5a4"
+                "reference": "b36f02317466907a230d3aa1d34467041271ef4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/492ee10a8369a1c1ac390a3b46e0c846e384c5a4",
-                "reference": "492ee10a8369a1c1ac390a3b46e0c846e384c5a4",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b36f02317466907a230d3aa1d34467041271ef4a",
+                "reference": "b36f02317466907a230d3aa1d34467041271ef4a",
                 "shasum": ""
             },
             "require": {
@@ -2008,7 +2014,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.32"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.34"
             },
             "funding": [
                 {
@@ -2032,7 +2038,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-24T16:04:20+00:00"
+            "time": "2026-01-27T05:45:00+00:00"
         },
         {
             "name": "psr/http-client",
@@ -4334,16 +4340,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.4.47",
+            "version": "v5.4.51",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "5d1662fb32ebc94f17ddb8d635454a776066733d"
+                "reference": "467bfc56f18f5ef6d5ccb09324d7e988c1c0a98f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/5d1662fb32ebc94f17ddb8d635454a776066733d",
-                "reference": "5d1662fb32ebc94f17ddb8d635454a776066733d",
+                "url": "https://api.github.com/repos/symfony/process/zipball/467bfc56f18f5ef6d5ccb09324d7e988c1c0a98f",
+                "reference": "467bfc56f18f5ef6d5ccb09324d7e988c1c0a98f",
                 "shasum": ""
             },
             "require": {
@@ -4376,7 +4382,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.4.47"
+                "source": "https://github.com/symfony/process/tree/v5.4.51"
             },
             "funding": [
                 {
@@ -4388,11 +4394,15 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-06T11:36:42+00:00"
+            "time": "2026-01-26T15:53:37+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -5120,7 +5130,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
