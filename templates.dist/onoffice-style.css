@@ -59,7 +59,6 @@
    background-position: right 15px center;
    border: 1px solid green;
    background-size: 1.25rem;
-   
  }
  
  .oo-form.validated .oo-single-select .required.has-items.ts-wrapper, .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated .oo-multi-select .is-invalid, .oo-form.validated input:required:valid[type="date"], .oo-form.validated input:required:valid[type="number"], .oo-form.validated input:invalid[type="number"] {
