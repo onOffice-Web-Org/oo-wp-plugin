@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
       }
     };
-    
+
     const hideError = (input) => {
       const errorDiv = input.parentElement.querySelector('.error') || input.closest('label')?.querySelector('.error');
                        
@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hideError(select);
       }
     };
+
     const jumpToFirstInvalidInput = (form) => {
       const firstInvalid = Array.from(form.querySelectorAll(':invalid'))
         .find(el => el.offsetWidth > 0 || el.offsetHeight > 0);
@@ -144,13 +145,13 @@ document.addEventListener('DOMContentLoaded', function () {
         firstInvalid.focus({ preventScroll: true });
       }
     };
-  
+
     const toggleSubmitButton = () => {
       if (submitInput && form.classList.contains('validated')) {
         submitInput.disabled = !form.checkValidity();
       }
     };
-  
+
     forwardLinks.forEach(link => {
       link.addEventListener('click', function (event) {
         form.classList.add('validated');
@@ -197,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleSubmitButton();
       });
     });
-    
+
     if (submitInput) submitInput.disabled = false;
     form.addEventListener('submit', function (event) {
       if (!form.checkValidity()) {
