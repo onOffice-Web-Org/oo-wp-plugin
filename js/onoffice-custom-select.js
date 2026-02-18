@@ -87,7 +87,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   forms.forEach(function (form) {
     form.setAttribute('novalidate', '');
-    
     const inputs = form.querySelectorAll('input, textarea');
     const selects = form.querySelectorAll('select');
     const submitInput = form.querySelector('input[type=submit]');
@@ -117,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
         input.setAttribute('aria-invalid', 'false');
       }
     };
+
     const inputHandleBlur = (input) => {
       if (!input.checkValidity()) {
         showError(input);
@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hideError(input);
       }
     };
+
     const selectHandleChange = (select) => {
       const tomSelectControl = select.nextElementSibling;
       if (!select.checkValidity()) {
@@ -196,6 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleSubmitButton();
       });
     });
+    
     if (submitInput) submitInput.disabled = false;
     form.addEventListener('submit', function (event) {
       if (!form.checkValidity()) {
