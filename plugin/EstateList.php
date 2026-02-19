@@ -570,21 +570,34 @@ class EstateList
 			$filter['Id'] = [["op" => "IN", "val" => $estateIds]];
 		}
 
-//		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
-//		if ( isset( $_GET['geo_search'] ) ) {
-//			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
-//			$geoCoords = explode( ',', $geoSearch );
-//			if ( count( $geoCoords ) === 2 ) {
-//				$filter['geo']= [['loc' => $geoSearch]];
-//			}
-//		}
-
 		$numRecordsPerPage = $this->getRecordsPerPage();
 
 		$pFieldModifierHandler = new ViewFieldModifierHandler(
 			$pListView->getFields(),
 			onOfficeSDK::MODULE_ESTATE
 		);
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
+		if (isset($filter['geo']) && isset( $_GET['geo_search'] ) ) {
+			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
+			$geoCoords = explode( ',', $geoSearch );
+			if ( count( $geoCoords ) === 2 ) {
+				$range = sprintf("%d", $filter['geo'][0]['val']) ?? "300";
+				var_dump($filter);
+				if ( isset($filter['geo'][0]['max']) ) {
+					$numRecordsPerPage = min($numRecordsPerPage, $filter['geo'][0]['max']);
+				}
+				unset($filter['geo']);
+				$longitude = substr($geoCoords[0], 2); // this always starts with 0- for some reason
+				$latitude = $geoCoords[1];
+
+				$requestParams['georangesearch'] = [
+					'longitude' => $longitude,
+					'latitude' => $latitude,
+					'radius' => $range
+				];
+			}
+		}
 
 		$requestParams = [
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
@@ -682,23 +695,6 @@ class EstateList
 
 			if ($geoRangeSearchParameters !== []) {
 				$requestParams['georangesearch'] = $geoRangeSearchParameters;
-			}
-		}
-
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
-		if ( isset( $_GET['geo_search'] ) ) {
-			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
-			$geoCoords = explode( ',', $geoSearch );
-			if ( count( $geoCoords ) === 2 ) {
-				var_dump($geoSearch);
-				$range = "400";
-				$longitude = $pos = strpos($geoCoords[0], '-') ? substr($geoCoords[0], $pos+1) : $geoCoords[0];
-				$latitude = $pos = strpos($geoCoords[1], '-') ? substr($geoCoords[1], $pos+1) : $geoCoords[1];
-				$requestParams['georangesearch'] = [
-					'longitude' => $longitude,
-					'latitude' => $latitude,
-					'radius' => $range
-				];
 			}
 		}
 

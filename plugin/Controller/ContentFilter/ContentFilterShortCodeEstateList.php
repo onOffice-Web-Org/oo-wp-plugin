@@ -132,8 +132,8 @@ class ContentFilterShortCodeEstateList
 				if(json_last_error() != JSON_ERROR_NONE || is_string($geoObj) || is_integer($geoObj))
 					$geoObj = json_decode('{ "km": '.$geo.' }');
 
-//				$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
-//				$pListViewFilterBuilder->setFilterGeoSearch($geoObj);
+				$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
+				$pListViewFilterBuilder->setFilterGeoSearch($geoObj);
 				$pEstateList->setGeoFilter($geoObj);
 			}
 
