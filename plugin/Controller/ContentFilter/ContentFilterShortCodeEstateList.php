@@ -126,6 +126,17 @@ class ContentFilterShortCodeEstateList
 			$pGeoSearchBuilder->setViewProperty($pListViewWithSortParams);
 
 			$pEstateList = $this->_pEstateDetailFactory->createEstateList($pListViewWithSortParams);
+//			if($geo = $attributes['geo'])
+//			{
+//				$geoObj = json_decode($geo);
+//				if(json_last_error() != JSON_ERROR_NONE || is_string($geoObj) || is_integer($geoObj))
+//					$geoObj = json_decode('{ "km": '.$geo.' }');
+//
+//				$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
+//				$pListViewFilterBuilder->setFilterGeoSearch($geoObj);
+//				$pEstateList->setGeoFilter($geoObj);
+//			}
+
 			$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
 			$pEstateList->setUnitsViewName($attributes['units']);
 			$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);

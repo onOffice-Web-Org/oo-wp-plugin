@@ -44,6 +44,8 @@ class DefaultFilterBuilderListView
 	/** @var FieldsCollectionBuilderShort  */
 	private $_pFieldsCollectionBuilderShort;
 
+	private $_geofilter = null;
+
 	/** @var array */
 	private $_defaultFilter = [
 		'veroeffentlichen' => [
@@ -83,7 +85,7 @@ class DefaultFilterBuilderListView
 
 		$filterableFields = $this->filterActiveFilterableFields($filterableFields);
 		$fieldFilter = $this->_pEnvironment->getFilterBuilderInputVariables()->getPostFieldsFilter($filterableFields);
-		$filter = array_merge($this->_defaultFilter, $fieldFilter);
+		$filter = array_merge($this->_defaultFilter, $fieldFilter, $this->_geofilter ?? []);
 
 		switch ($this->_pDataListView->getListType()) {
 			case DataListView::LISTVIEW_TYPE_FAVORITES:
@@ -201,5 +203,13 @@ class DefaultFilterBuilderListView
 		];
 
 		return $filter;
+	}
+	public function setFilterGeoSearch(object $geo)
+	{
+		$this->_geofilter = [
+			'geo' => [
+				['op' => 'geo', 'val' => $geo->km, 'min' => $geo->min ?? null, 'max' => $geo->max ?? null, 'country' => $geo->country ?? null]
+			]
+		];
 	}
 }

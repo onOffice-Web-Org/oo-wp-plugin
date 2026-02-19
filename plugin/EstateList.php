@@ -128,6 +128,8 @@ class EstateList
 	/** @var string */
 	private $_energyCertificate = '';
 
+	private $_geoFilter = null;
+
 
 	/**
 	 * @param DataView $pDataView
@@ -247,6 +249,7 @@ class EstateList
 	private function loadRecords(int $currentPage)
 	{
 		$estateParameters = $this->getEstateParameters($currentPage, $this->_formatOutput);
+		var_dump($estateParameters);
 		$this->_pApiClientAction->setParameters($estateParameters);
 		$this->_pApiClientAction->addRequestToQueue();
 
@@ -567,6 +570,15 @@ class EstateList
 			$filter['Id'] = [["op" => "IN", "val" => $estateIds]];
 		}
 
+//		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
+//		if ( isset( $_GET['geo_search'] ) ) {
+//			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
+//			$geoCoords = explode( ',', $geoSearch );
+//			if ( count( $geoCoords ) === 2 ) {
+//				$filter['geo']= [['loc' => $geoSearch]];
+//			}
+//		}
+
 		$numRecordsPerPage = $this->getRecordsPerPage();
 
 		$pFieldModifierHandler = new ViewFieldModifierHandler(
@@ -673,12 +685,33 @@ class EstateList
 			}
 		}
 
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
+		if ( isset( $_GET['geo_search'] ) ) {
+			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
+			$geoCoords = explode( ',', $geoSearch );
+			if ( count( $geoCoords ) === 2 ) {
+				var_dump($geoSearch);
+				$range = "400";
+				$longitude = $pos = strpos($geoCoords[0], '-') ? substr($geoCoords[0], $pos+1) : $geoCoords[0];
+				$latitude = $pos = strpos($geoCoords[1], '-') ? substr($geoCoords[1], $pos+1) : $geoCoords[1];
+//				$longitude = $geoCoords[0][0] === '0' ? substr($geoCoords[0], 2) : $geoCoords[0];
+//				$latitude = $geoCoords[1][0] === '0' ? substr($geoCoords[1], 2) : $geoCoords[1];
+				$requestParams['georangesearch'] = [
+					'longitude' => $longitude,
+					'latitude' => $latitude,
+					'radius' => $range
+				];
+			}
+		}
+
 		if(in_array($requestParams['sortby'], $pListView->getListFieldsShowPriceOnRequest())){
 			$sortKey = $requestParams['sortby'];
 			$sortOrder = $requestParams['sortorder'];
 
 			$requestParams['sortby'] = ['preisAufAnfrage' => 'ASC', $sortKey => $sortOrder];
 		}
+
+		var_dump($requestParams);
 
 		return $requestParams;
 	}
@@ -1602,5 +1635,25 @@ class EstateList
 	public function getHighlightedFields() : array
 	{
 		return $this->getDataView()->getHighlightedFields();
+	}
+
+	/** @param array $geoFilter */
+	public function setGeoFilter($geoFilter)
+	{
+		$this->_geoFilter = $geoFilter;
+	}
+	/**
+	 * @return bool
+	 */
+	public function hasGeoFilter(): bool
+	{
+		return ($this->_geoFilter != null);
+	}
+	/**
+	 * @return object
+	 */
+	public function getGeoFilter(): object
+	{
+		return $this->_geoFilter;
 	}
 }
