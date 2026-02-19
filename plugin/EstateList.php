@@ -694,8 +694,6 @@ class EstateList
 				$range = "400";
 				$longitude = $pos = strpos($geoCoords[0], '-') ? substr($geoCoords[0], $pos+1) : $geoCoords[0];
 				$latitude = $pos = strpos($geoCoords[1], '-') ? substr($geoCoords[1], $pos+1) : $geoCoords[1];
-//				$longitude = $geoCoords[0][0] === '0' ? substr($geoCoords[0], 2) : $geoCoords[0];
-//				$latitude = $geoCoords[1][0] === '0' ? substr($geoCoords[1], 2) : $geoCoords[1];
 				$requestParams['georangesearch'] = [
 					'longitude' => $longitude,
 					'latitude' => $latitude,
