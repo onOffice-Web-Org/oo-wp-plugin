@@ -577,26 +577,8 @@ class EstateList
 			onOfficeSDK::MODULE_ESTATE
 		);
 
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
 		if (isset($filter['geo']) && isset( $_GET['geo_search'] ) ) {
-			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
-			$geoCoords = explode( ',', $geoSearch );
-			if ( count( $geoCoords ) === 2 ) {
-				$range = sprintf("%d", $filter['geo'][0]['val']) ?? "300";
-				var_dump($filter);
-				if ( isset($filter['geo'][0]['max']) ) {
-					$numRecordsPerPage = min($numRecordsPerPage, $filter['geo'][0]['max']);
-				}
-				unset($filter['geo']);
-				$longitude = substr($geoCoords[0], 2); // this always starts with 0- for some reason
-				$latitude = $geoCoords[1];
-
-				$requestParams['georangesearch'] = [
-					'longitude' => $longitude,
-					'latitude' => $latitude,
-					'radius' => $range
-				];
-			}
+			unset($filter['geo']);
 		}
 
 		$requestParams = [
@@ -659,6 +641,7 @@ class EstateList
 	{
 		$pListView = $this->_pDataView;
 		$requestParams = [];
+		$filter = $this->getDefaultFilterBuilder()->buildFilter();
 
 		if ($pListView->getSortby() !== '' && !$this->_pDataView->getRandom()) {
 			$requestParams['sortby'] =  $pListView->getSortBy();
@@ -704,6 +687,25 @@ class EstateList
 
 			$requestParams['sortby'] = ['preisAufAnfrage' => 'ASC', $sortKey => $sortOrder];
 		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
+		if (isset($filter['geo']) && isset( $_GET['geo_search'] ) ) {
+			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
+			$geoCoords = explode( ',', $geoSearch );
+			if ( count( $geoCoords ) === 2 ) {
+				$range = sprintf("%d", $filter['geo'][0]['val']) ?? "300";
+				unset($filter['geo']);
+				$longitude = substr($geoCoords[0], 2); // this always starts with 0- for some reason
+				$latitude = $geoCoords[1];
+
+				$requestParams['georangesearch'] = [
+					'longitude' => $longitude,
+					'latitude' => $latitude,
+					'radius' => $range
+				];
+			}
+		}
+
 
 		var_dump($requestParams);
 
