@@ -93,4 +93,8 @@ class DataFormConfigurationInterest
 	/** @param string $subject */
 	public function setSubject($subject)
 		{ $this->_subject = $subject; }
+
+	/** @param bool $pages */
+	public function setPages($pages)
+		{ $this->_pages = $pages; }
 }

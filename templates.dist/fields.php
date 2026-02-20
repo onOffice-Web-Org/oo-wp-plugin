@@ -133,7 +133,7 @@ if (!function_exists('renderFormField')) {
 
 	function renderErrorHtml(?string $errorMessage, bool $shouldDisplay): string {
         if (!empty($errorMessage) && $shouldDisplay) {
-            return "<div class='error' aria-hidden='true' role='alert' aria-atomic='true'><p>" . esc_html($errorMessage) . "</p></div>";
+            return "<span class='error' aria-hidden='true' aria-atomic='true'><p>" . esc_html($errorMessage) . "</p></span>";
         }
         return '';
     }

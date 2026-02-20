@@ -90,24 +90,30 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputs = form.querySelectorAll('input, textarea');
     const selects = form.querySelectorAll('select');
     const submitInput = form.querySelector('input[type=submit]');
+    const forwardLinks = form.querySelectorAll('.leadform-forward');
 
     const showError = (input) => {
-      const errorDiv = input.closest('.validated') 
-      ? input.closest('label')?.querySelector('.error') 
-      : null;
+      const errorDiv = input.parentElement.querySelector('.error') || input.closest('label')?.querySelector('.error');
+  
       if (errorDiv) {
-        $(errorDiv).css('display', 'block');
+        errorDiv.style.display = 'block';
+        errorDiv.setAttribute('aria-hidden', 'false'); 
         errorDiv.setAttribute('aria-live', 'polite');
+        errorDiv.setAttribute('role', 'alert');
+        input.setAttribute('aria-invalid', 'true');
+        
       }
     };
 
     const hideError = (input) => {
-      const errorDiv = input.closest('.validated') 
-  ? input.closest('label')?.querySelector('.error') 
-  : null;
+      const errorDiv = input.parentElement.querySelector('.error') || input.closest('label')?.querySelector('.error');
+                       
       if (errorDiv) {
+        errorDiv.style.display = 'none';
+        errorDiv.setAttribute('aria-hidden', 'true');
         errorDiv.removeAttribute('aria-live');
-        $(errorDiv).css('display', 'none');
+        
+        input.setAttribute('aria-invalid', 'false');
       }
     };
 
@@ -122,16 +128,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectHandleChange = (select) => {
       const tomSelectControl = select.nextElementSibling;
       if (!select.checkValidity()) {
-        tomSelectControl.classList.add('is-invalid');
+        if (tomSelectControl) tomSelectControl.classList.add('is-invalid');
         showError(select);
       } else {
-        tomSelectControl.classList.remove('is-invalid');
+        if (tomSelectControl) tomSelectControl.classList.remove('is-invalid');
         hideError(select);
       }
     };
 
     const jumpToFirstInvalidInput = (form) => {
-      const firstInvalid = form.querySelector(':invalid');
+      const firstInvalid = Array.from(form.querySelectorAll(':invalid'))
+        .find(el => el.offsetWidth > 0 || el.offsetHeight > 0);
+      
       if (firstInvalid) {
         firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
         firstInvalid.focus({ preventScroll: true });
@@ -144,6 +152,32 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     };
 
+    forwardLinks.forEach(link => {
+      link.addEventListener('click', function (event) {
+        form.classList.add('validated');
+        const visibleFields = Array.from(form.querySelectorAll('input, textarea, select'))
+          .filter(el => el.offsetWidth > 0 || el.offsetHeight > 0);
+  
+        let stepIsValid = true;
+        visibleFields.forEach(field => {
+          if (!field.checkValidity()) {
+            stepIsValid = false;
+            if (field.tagName === 'SELECT') {
+              selectHandleChange(field);
+            } else {
+              inputHandleBlur(field);
+            }
+          }
+        });
+  
+        if (!stepIsValid) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          jumpToFirstInvalidInput(form);
+        }
+      });
+    });
+  
     inputs.forEach(function (input) {
       input.addEventListener('blur', function () {
         inputHandleBlur(input);
@@ -166,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     if (submitInput) submitInput.disabled = false;
-
     form.addEventListener('submit', function (event) {
       if (!form.checkValidity()) {
         event.preventDefault();
