@@ -1,9 +1,10 @@
 name: onOffice WP-Updates Release
 
 on:
+  workflow_dispatch:
   push:
     tags:
-    - 'v*'
+      - 'v*'
 
 jobs:
   get-version:

@@ -16,14 +16,15 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php-versions: ['7.4', '8.0']
+        php-versions: ['8.0']
     name: Unittest on ${{ matrix.operating-system }} with PHP version ${{ matrix.php-versions }}
     steps:
     - name: Set up MySQL
-      uses: mirromutth/mysql-action@v1.1
+      uses: TryGhost/mysql-action@92dafb5ac9477ffe337b8ce2f762f0c38ca908ac
       with:
         mysql version: '5.7'
         mysql root password: 'testMySQLPassword123'
+        collation server: 'utf8mb4_general_ci'
 
     - name: Checkout from GIT
       uses: actions/checkout@v4
