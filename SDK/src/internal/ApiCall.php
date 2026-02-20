@@ -473,6 +473,9 @@ class ApiCall
 						$max = $value[0]["max"];
 
 						$loc = $value[0]["loc"] ?? '';
+						if(str_starts_with($loc, "0-")) {
+							$loc = substr($loc, 2);
+						}
 						if($loc != '' && $min != null && intval($min) > 0)
 							$isGeoAndMin = $min;
 						if($loc != '' && $max != null && intval($max) > 0)
@@ -486,9 +489,11 @@ class ApiCall
 							unset($filteredArray[$index]);
 							break;
 						}
+						$longitude = floatval($selectedCoordinates[0]) ?? 0;
+						$laditude = floatval($selectedCoordinates[1]) ?? 0;
 
 						$coordinate1 = new Coordinate($item["elements"]['laengengrad'], $item["elements"]['breitengrad']);
-						$coordinate2 = new Coordinate($selectedCoordinates[0], $selectedCoordinates[1]);
+						$coordinate2 = new Coordinate($longitude, $laditude);
 						$distance = $calculator->getDistance($coordinate1, $coordinate2);
 
 						if(intval($distance/1000) > $km){
