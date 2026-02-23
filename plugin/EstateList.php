@@ -249,7 +249,6 @@ class EstateList
 	private function loadRecords(int $currentPage)
 	{
 		$estateParameters = $this->getEstateParameters($currentPage, $this->_formatOutput);
-		var_dump($estateParameters);
 		$this->_pApiClientAction->setParameters($estateParameters);
 		$this->_pApiClientAction->addRequestToQueue();
 
@@ -705,9 +704,6 @@ class EstateList
 				];
 			}
 		}
-
-
-		var_dump($requestParams);
 
 		return $requestParams;
 	}
@@ -1613,43 +1609,45 @@ class EstateList
 		return false;
 	}
 
-	/**
-	 * checks whether or not a given value is highlighted
-	 * @param string $value
-	 * @return bool
-	 */
-	public function isHighlightedField(string $value) : bool
-	{
-		return in_array($value, $this->getDataView()->getHighlightedFields());
-	}
+/**
+ * checks whether or not a given value is highlighted
+ * @param string $value
+ * @return bool
+ */
+public function isHighlightedField(string $value) : bool
+{
+	return in_array($value, $this->getDataView()->getHighlightedFields());
+}
 
-	/**
-	 * checks whether or not a given value is highlighted
-	 * @param string $value
-	 * @return bool
-	 */
-	public function getHighlightedFields() : array
-	{
-		return $this->getDataView()->getHighlightedFields();
-	}
+/**
+ * checks whether or not a given value is highlighted
+ * @param string $value
+ * @return bool
+ */
+public function getHighlightedFields() : array
+{
+	return $this->getDataView()->getHighlightedFields();
+}
 
-	/** @param array $geoFilter */
-	public function setGeoFilter($geoFilter)
-	{
-		$this->_geoFilter = $geoFilter;
-	}
-	/**
-	 * @return bool
-	 */
-	public function hasGeoFilter(): bool
-	{
-		return ($this->_geoFilter != null);
-	}
-	/**
-	 * @return object
-	 */
-	public function getGeoFilter(): object
-	{
-		return $this->_geoFilter;
-	}
+/** @param array $geoFilter */
+public function setGeoFilter($geoFilter)
+{
+	$this->_geoFilter = $geoFilter;
+}
+
+/**
+ * @return bool
+ */
+public function hasGeoFilter(): bool
+{
+	return ($this->_geoFilter != null);
+}
+
+/**
+ * @return object
+ */
+public function getGeoFilter(): object
+{
+	return $this->_geoFilter;
+}
 }

@@ -259,7 +259,6 @@ implements AddressListBase
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-		var_dump($filter);
 		$parameters = array(
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
 			'listoffset' => $offset,
