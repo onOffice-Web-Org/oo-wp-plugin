@@ -1609,45 +1609,45 @@ class EstateList
 		return false;
 	}
 
-/**
- * checks whether or not a given value is highlighted
- * @param string $value
- * @return bool
- */
-public function isHighlightedField(string $value) : bool
-{
-	return in_array($value, $this->getDataView()->getHighlightedFields());
-}
+	/** @param array $geoFilter */
+	public function setGeoFilter($geoFilter)
+	{
+		$this->_geoFilter = $geoFilter;
+	}
 
-/**
- * checks whether or not a given value is highlighted
- * @param string $value
- * @return bool
- */
-public function getHighlightedFields() : array
-{
-	return $this->getDataView()->getHighlightedFields();
-}
+	/**
+	 * @return bool
+	 */
+	public function hasGeoFilter(): bool
+	{
+		return ($this->_geoFilter != null);
+	}
 
-/** @param array $geoFilter */
-public function setGeoFilter($geoFilter)
-{
-	$this->_geoFilter = $geoFilter;
-}
+	/**
+	 * @return object
+	 */
+	public function getGeoFilter(): object
+	{
+		return $this->_geoFilter;
+	}
 
-/**
- * @return bool
- */
-public function hasGeoFilter(): bool
-{
-	return ($this->_geoFilter != null);
-}
+	/**
+	 * checks whether or not a given value is highlighted
+	 * @param string $value
+	 * @return bool
+	 */
+	public function isHighlightedField(string $value) : bool
+	{
+		return in_array($value, $this->getDataView()->getHighlightedFields());
+	}
 
-/**
- * @return object
- */
-public function getGeoFilter(): object
-{
-	return $this->_geoFilter;
-}
+	/**
+	 * checks whether or not a given value is highlighted
+	 * @param string $value
+	 * @return bool
+	 */
+	public function getHighlightedFields() : array
+	{
+		return $this->getDataView()->getHighlightedFields();
+	}
 }
