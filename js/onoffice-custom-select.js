@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
 
-    if (submitInput) submitInput.disabled = !form.checkValidity();
+    if (submitInput) submitInput.disabled = false;
 
     form.addEventListener('submit', function (event) {
       if (!form.checkValidity()) {

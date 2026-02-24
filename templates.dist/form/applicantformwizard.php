@@ -61,7 +61,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		$fieldLabel = $pForm->getFieldLabel($input);
 
 		$isRequired = $pForm->isRequiredField($input);
-		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
+		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Required', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 		$isHiddenField = $pForm->isHiddenField($input);
 		$label = $fieldLabel.' '.wp_kses_post($addition);
 
@@ -123,6 +123,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				$pageIndex = 0;
 
 				foreach ($addressValues as $pageNumber => $fields) :
+					$pageIndex ++;
 					?>
 					<div class="lead-lightbox lead-page-<?php echo esc_attr($pageNumber); ?>">
 					<?php
