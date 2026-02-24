@@ -29,6 +29,7 @@ $displayError = false;
 
 $addressValues = array();
 $hiddenValues = array();
+$pageHasRequired = array();
 $pageTitles = $pForm->getPageTitlesByCurrentLanguage();
 
 if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
@@ -85,6 +86,10 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			$addressValues[$pageNumber] = array();
 		}
 		$addressValues[$pageNumber][] = $line;
+
+		if ($isRequired && !$pForm->isHiddenField($input)) {
+			$pageHasRequired[$pageNumber] = true;
+		}
 	}
 }
 ?>
@@ -117,27 +122,12 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
                 $totalPages = max(1, count($addressValues));
 				$pageIndex = 0;
 
-				$allRequiredFields = [];
-
 				foreach ($addressValues as $pageNumber => $fields) :
-					$hasRequiredFieldsOnThisPage = false;
-				
-					foreach ($fields as $htmlString) {
-						if (preg_match('/name=["\']([^"\']+)["\']/', $htmlString, $matches)) {
-							$inputName = $matches[1]; 
-							$cleanName = str_replace('[]', '', $inputName);
-				
-							if ($pForm->isRequiredField($cleanName)) {
-								$allRequiredFields[] = $cleanName;
-								$hasRequiredFieldsOnThisPage = true;
-							}
-						}
-					}
 					?>
 					<div class="lead-lightbox lead-page-<?php echo esc_attr($pageNumber); ?>">
 					<?php
 
-					if ($hasRequiredFieldsOnThisPage) {
+					if (!empty($pageHasRequired[$pageNumber])) {
 						echo '<div class="oo-form-required" aria-hidden="true">' . esc_html__('* Mandatory fields', 'onoffice-for-wp-websites') . '</div>';
 					}
                          if($totalPages > 1): ?>
