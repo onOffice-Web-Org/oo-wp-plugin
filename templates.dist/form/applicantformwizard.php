@@ -120,6 +120,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				$allRequiredFields = [];
 
 				foreach ($addressValues as $pageNumber => $fields) :
+					$pageIndex++;
 					$hasRequiredFieldsOnThisPage = false;
 				
 					foreach ($fields as $htmlString) {
@@ -146,7 +147,8 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
                             <?php 
 							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $fields contains escaped HTML from renderFormField
 							echo implode('', $fields); ?>
-                        <?php if ($pageIndex === $totalPages): ?>
+                        <?php
+						if ($pageIndex === $totalPages): ?>
                             <div class="leadform-submit">
                                 <?php
                                 $pForm->setGenericSetting('formId', 'leadgeneratorform-' . sanitize_title($pForm->getFormId()));

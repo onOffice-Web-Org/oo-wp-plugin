@@ -90,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputs = form.querySelectorAll('input, textarea');
     const selects = form.querySelectorAll('select');
     const submitInput = form.querySelector('input[type=submit]');
-    const forwardLinks = form.querySelectorAll('.leadform-forward');
 
     const showError = (input) => {
       const errorDiv = input.parentElement.querySelector('.error') || input.closest('label')?.querySelector('.error');
@@ -147,35 +146,63 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const toggleSubmitButton = () => {
-      if (submitInput && form.classList.contains('validated')) {
+      if (submitInput) {
         submitInput.disabled = !form.checkValidity();
       }
     };
 
-    forwardLinks.forEach(link => {
-      link.addEventListener('click', function (event) {
-        form.classList.add('validated');
-        const visibleFields = Array.from(form.querySelectorAll('input, textarea, select'))
-          .filter(el => el.offsetWidth > 0 || el.offsetHeight > 0);
-  
-        let stepIsValid = true;
-        visibleFields.forEach(field => {
-          if (!field.checkValidity()) {
-            stepIsValid = false;
-            if (field.tagName === 'SELECT') {
-              selectHandleChange(field);
+      form.querySelectorAll('.leadform-forward').forEach(button => {
+        button.addEventListener('click', function(event) {
+            const visibleInputs = Array.from(inputs).filter(input => {
+                return input.offsetParent !== null;
+            });
+            const visibleSelects = Array.from(selects).filter(select => {
+                return select.offsetParent !== null;
+            });
+
+            let allValid = true;
+            
+            visibleInputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    inputHandleBlur(input);
+                    allValid = false;
+                }
+            });
+
+            visibleSelects.forEach(select => {
+                if (!select.checkValidity()) {
+                    selectHandleChange(select);
+                    allValid = false;
+                }
+            });
+
+            if (!allValid) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                form.classList.add('validated');
+                
+                const allInvalidFields = form.querySelectorAll(':invalid');
+                const firstInvalidVisible = Array.from(allInvalidFields).find(field => field.offsetParent !== null);
+                if (firstInvalidVisible) {
+                    firstInvalidVisible.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstInvalidVisible.focus({ preventScroll: true });
+                }
             } else {
-              inputHandleBlur(field);
+                form.classList.remove('validated');
+                setTimeout(() => {
+                  toggleSubmitButton();
+              }, 100);
+
+
             }
-          }
+        }, true);
+    });
+
+    form.querySelectorAll('.leadform-back').forEach(button => {
+        button.addEventListener('click', function() {
+            form.classList.remove('validated');
+            setTimeout(toggleSubmitButton, 100);
         });
-  
-        if (!stepIsValid) {
-          event.preventDefault();
-          event.stopImmediatePropagation();
-          jumpToFirstInvalidInput(form);
-        }
-      });
     });
   
     inputs.forEach(function (input) {
@@ -199,7 +226,8 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
 
-    if (submitInput) submitInput.disabled = false;
+    if (submitInput) submitInput.disabled = !form.checkValidity();
+
     form.addEventListener('submit', function (event) {
       if (!form.checkValidity()) {
         event.preventDefault();
@@ -207,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
         inputs.forEach(input => inputHandleBlur(input));
         selects.forEach(select => selectHandleChange(select));
         jumpToFirstInvalidInput(form);
+        
       } else {
         if (submitInput) {
           submitInput.disabled = true;
