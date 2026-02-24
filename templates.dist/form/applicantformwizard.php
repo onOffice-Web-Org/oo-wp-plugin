@@ -105,20 +105,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
 			<?php 
 			$firstRequired = false;
-			$hasRequiredFields = false;
-
-			foreach ($pForm->getInputFields() as $input => $table) {
-				if (
-					$pForm->isRequiredField($input)
-				) {
-					$hasRequiredFields = true;
-					break;
-				}
-			}
-
-			if ($hasRequiredFields) {
-				echo '<div class="oo-form-required" aria-hidden="true">' . esc_html__('* Mandatory fields', 'onoffice-for-wp-websites') . '</div>';
-			} ?>
+			?>
 			<div id="leadform-<?php echo esc_attr(sanitize_title($pForm->getFormId())); ?>">
 				<?php
 					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
@@ -130,9 +117,56 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
                 $totalPages = max(1, count($addressValues));
 				$pageIndex = 0;
 
-                foreach ($addressValues as $pageNumber => $fields): $pageIndex++?>
+
+    // Wir holen uns die Liste ALLER Pflichtfelder des gesamten Formulars
+    $allRequiredFields = [];
+    foreach ($pForm->getInputFields() as $inputName => $table) {
+        if ($pForm->isRequiredField($inputName)) {
+            $allRequiredFields[] = $inputName;
+        }
+    }
+	var_dump( $allRequiredFields);
+
+                foreach ($addressValues as $pageNumber => $fields): $pageIndex++;
+				$currentFieldsOnPage = $fields;
+				$hasRequiredFieldsOnThisPage = false;
+				
+			
+			
+
+			
+				
+				?>
+
+
                     <div class="lead-lightbox lead-page-<?php echo esc_attr($pageNumber); ?>">
-                        <?php if($totalPages > 1): ?>
+
+
+
+
+					<?php
+
+
+
+
+
+    // Jetzt prüfen wir, ob einer dieser Namen in den Keys der aktuellen Seite vorkommt
+    foreach (array_keys($currentFieldsOnPage) as $fieldName) {
+		echo 'test';
+        if (in_array($fieldName, $allRequiredFields)) {
+			echo 'pflicht';
+            $hasRequiredFieldsOnThisPage = true;
+            break;
+        }
+    }
+
+
+        if ($hasRequiredFieldsOnThisPage) {
+            echo '<div class="oo-form-required" aria-hidden="true">' . esc_html__('* Mandatory fields', 'onoffice-for-wp-websites') . '</div>';
+        }
+
+
+                         if($totalPages > 1): ?>
                             <h2><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></h2>
                         <?php endif; ?>
                             <?php 

@@ -27,6 +27,9 @@
     margin: 0;
     padding: 0;
 }
+.oo-form label {
+    width: 100%;
+}
 
 .oo-form label, .oo-single-select, .oo-multi-select {
     margin-bottom: 20px;
@@ -149,12 +152,15 @@ span.oo-searchrange {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
+    gap: 20px;
 }
 
-.oo-form .oo-input-wrapper label:nth-child(2){
-    margin-left: 20px;
+.oo-form input::placeholder, .oo-form input::-webkit-input-placeholder, .oo-form input:-moz-placeholder {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 20px;  
 }
 /* estate map */
 .oo-estate-map {
