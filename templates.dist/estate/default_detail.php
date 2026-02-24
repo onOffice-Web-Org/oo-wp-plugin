@@ -513,19 +513,21 @@ $dimensions = [
 			/**
 			 * The heading above an embed that links directly to the embedded page.
 			 */
-			function headingLink($url, $title)
-			{
-				if ($title) {
-					return
-						'<a class="player-title" target="_blank" rel="noopener noreferrer" href="' . esc_attr($url) . '">
-							' . esc_html($title) . '
-								<svg aria-hidden="true" focusable="false" width="0.7em" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
-									<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>
-									<path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/>
-								</svg>
-						</a>';
-				} else {
-					return '';
+			if (!function_exists('headingLink')) {
+				function headingLink($url, $title)
+				{
+					if ($title) {
+						return
+							'<a class="player-title" target="_blank" rel="noopener noreferrer" href="' . esc_attr($url) . '">
+								' . esc_html($title) . '
+									<svg aria-hidden="true" focusable="false" width="0.7em" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
+										<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>
+										<path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/>
+									</svg>
+							</a>';
+					} else {
+						return '';
+					}
 				}
 			}
 
