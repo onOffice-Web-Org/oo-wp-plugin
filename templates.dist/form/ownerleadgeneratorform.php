@@ -66,10 +66,10 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		}
 
 		switch ($input) {
-			case "ort": $fieldLabel = esc_html__('Ort der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "plz": $fieldLabel = esc_html__('PLZ der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "strasse": $fieldLabel = esc_html__('Straße der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "hausnummer": $fieldLabel = esc_html__('Hausnummer der Immobilie', 'onoffice-for-wp-websites'); break;
+			case "ort": $fieldLabel = esc_html__('Property Location', 'onoffice-for-wp-websites'); break;
+			case "plz": $fieldLabel = esc_html__('Property ZIP Cod', 'onoffice-for-wp-websites'); break;
+			case "strasse": $fieldLabel = esc_html__('Property Street', 'onoffice-for-wp-websites'); break;
+			case "hausnummer": $fieldLabel = esc_html__('Property House Number', 'onoffice-for-wp-websites'); break;
 			default: $fieldLabel = $pForm->getFieldLabel($input);
 		}
 
