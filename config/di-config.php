@@ -41,8 +41,13 @@ use onOffice\WPlugin\Form\FormPostInterestConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueRead;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
+use onOffice\WPlugin\Record\RecordManagerDuplicateListViewAddress;
+use onOffice\WPlugin\Record\RecordManagerDuplicateListViewEstate;
+use onOffice\WPlugin\Record\RecordManagerDuplicateListViewForm;
 use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfig;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
@@ -59,6 +64,7 @@ use onOffice\WPlugin\WP\WPScreenWrapper;
 use onOffice\WPlugin\WP\WPScreenWrapperDefault;
 use onOffice\WPlugin\WP\WPScriptStyleBase;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
 use wpdb;
 use function DI\autowire;
@@ -80,14 +86,24 @@ return [
 	ScriptLoaderBuilderConfig::class => autowire(ScriptLoaderBuilderConfigDefault::class),
 	ScriptLoaderGenericConfiguration::class => autowire(ScriptLoaderGenericConfigurationDefault::class),
 	Filesystem::class => autowire(FilesystemDirect::class),
-	wpdb::class => static function() {
-		global $wpdb;
-		return $wpdb;
+	wpdb::class => static function () {
+		return WpdbReadCacheProxy::getWpdb();
 	},
 	WPNonceWrapper::class => autowire(WPNonceWrapperDefault::class),
 	WPScreenWrapper::class => autowire(WPScreenWrapperDefault::class),
 	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
-	DatabaseChangesInterface::class => autowire(DatabaseChanges::class),
+	CustomLabelRead::class => autowire()
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+	DefaultValueRead::class => autowire()
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+	DatabaseChangesInterface::class => autowire(DatabaseChanges::class)
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+	RecordManagerDuplicateListViewForm::class => autowire()
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+	RecordManagerDuplicateListViewAddress::class => autowire()
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+	RecordManagerDuplicateListViewEstate::class => autowire()
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
 	AddressListEnvironment::class => autowire(AddressListEnvironmentDefault::class),
 	HTTPHeaders::class => autowire(HTTPHeadersGeneric::class),
 	SymmetricEncryption::class => autowire(SymmetricEncryptionDefault::class)

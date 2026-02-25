@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\CustomLabel;
 
 use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 use const OBJECT;
 use function esc_sql;
@@ -36,14 +37,14 @@ use function esc_sql;
  */
 class CustomLabelRead
 {
-	/** @var wpdb */
+	/** @var wpdb|WpdbReadCacheProxy */
 	private $_pWPDB;
 
 
 	/**
-	 * @param wpdb $pWPDB
+	 * @param wpdb|WpdbReadCacheProxy $pWPDB
 	 */
-	public function __construct(wpdb $pWPDB)
+	public function __construct(wpdb|WpdbReadCacheProxy $pWPDB)
 	{
 		$this->_pWPDB = $pWPDB;
 	}
