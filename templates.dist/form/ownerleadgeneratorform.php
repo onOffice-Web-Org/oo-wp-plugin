@@ -31,6 +31,7 @@ add_thickbox();
 $addressValues = array();
 $miscValues = array();
 $hiddenValues = array();
+$pageHasRequired = array();
 $pageTitles = $pForm->getPageTitlesByCurrentLanguage();
 
 $showFormAsModal = $pForm->getShowFormAsModal() || $pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS;
@@ -47,9 +48,6 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		echo '<p role="status">'.esc_html__('Spam recognized!', 'onoffice-for-wp-websites').'</p>';
 	}
 
-
-
-
 	/* @var $pForm Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		if ($pForm->isHiddenField($input)) {
@@ -57,8 +55,6 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			continue;
 		}
 
-		
-	
 		if ( $pForm->isMissingField( $input )  &&
 			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 			/* translators: %s will be replaced with a translated field name. */
@@ -88,11 +84,15 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			$line .= renderFormField($input, $pForm).'</span></label>';		
 		}
 
-	
 		$pageNumber = $pForm->getPagePerForm($input);
 		if (!isset($addressValues[$pageNumber])) {
 			$addressValues[$pageNumber] = array();
 		}
+
+		if ($isRequired && !$pForm->isHiddenField($input)) {
+			$pageHasRequired[$pageNumber] = true;
+		}
+
 		$addressValues[$pageNumber][] = $line;
 	}
 }
@@ -123,12 +123,9 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 					$hasRequiredFields = true;
 					break;
 				}
-			}
-
-			if ($hasRequiredFields) {
-				echo '<div class="oo-form-required" aria-hidden="true">' . esc_html__('* Mandatory fields', 'onoffice-for-wp-websites') . '</div>';
 			} ?>
 			<div id="leadform-<?php echo esc_attr(sanitize_title($pForm->getFormId())); ?>">
+			
 				<?php
 					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
 						echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
@@ -141,6 +138,11 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
                 foreach ($addressValues as $pageNumber => $fields): $pageIndex++?>
                     <div class="lead-lightbox lead-page-<?php echo esc_attr($pageNumber); ?>">
+					<?php
+						if (!empty($pageHasRequired[$pageNumber])) {
+							echo '<div class="oo-form-required" aria-hidden="true">' . esc_html__('* Mandatory fields', 'onoffice-for-wp-websites') . '</div>';
+						} ?>
+
                         <?php if($totalPages > 1): ?>
                             <h2><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></h2>
                         <?php endif; ?>
