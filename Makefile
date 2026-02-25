@@ -6,7 +6,7 @@ ifeq ($(OO_PLUGIN_VERSION),)
 	OO_PLUGIN_VERSION := $(shell git describe --tags --always)
 endif
 
-.PHONY: clean-target clean release copy-files-release composer-install-nodev build
+.PHONY: clean-target clean release copy-files-release composer-install-nodev build test-docker
 
 copy-files-release:
 	install -d $(PREFIX)
@@ -28,5 +28,8 @@ build:
 
 clean-target:
 	rm -rf $(PREFIX)
+
+test-docker:
+	docker compose -f docker-compose.test.yml run --rm test $(ARGS)
 
 clean: clean-target

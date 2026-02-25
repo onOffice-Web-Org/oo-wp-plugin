@@ -1,0 +1,16 @@
+FROM php:8.0-cli
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    subversion \
+    unzip \
+    default-mysql-client \
+    libzip-dev \
+    libicu-dev \
+    $PHPIZE_DEPS \
+    && docker-php-ext-install -j$(nproc) mysqli pdo_mysql intl zip \
+    && pecl install xdebug-3.1.6 \
+    && docker-php-ext-enable xdebug \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
