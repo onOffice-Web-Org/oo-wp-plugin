@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 use function esc_sql;
 
@@ -35,17 +36,13 @@ class RecordManagerDeleteForm
 	extends RecordManager
 	implements RecordManagerDelete
 {
-	/** @var wpdb */
+	/** @var wpdb|WpdbReadCacheProxy */
 	private $_pWPDB;
 
-
 	/**
-	 *
-	 * @param wpdb $pWPDB
-	 *
+	 * @param wpdb|WpdbReadCacheProxy $pWPDB
 	 */
-
-	public function __construct(wpdb $pWPDB)
+	public function __construct(wpdb|WpdbReadCacheProxy $pWPDB)
 	{
 		$this->_pWPDB = $pWPDB;
 	}

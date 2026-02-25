@@ -45,6 +45,9 @@ use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueRead;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
+use onOffice\WPlugin\Record\RecordManagerDeleteForm;
+use onOffice\WPlugin\Record\RecordManagerDeleteListViewAddress;
+use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewAddress;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewForm;
@@ -103,6 +106,12 @@ return [
 	RecordManagerDuplicateListViewAddress::class => autowire()
 		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
 	RecordManagerDuplicateListViewEstate::class => autowire()
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+	RecordManagerDeleteListViewAddress::class => autowire()
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+	RecordManagerDeleteListViewEstate::class => autowire()
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+	RecordManagerDeleteForm::class => autowire()
 		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
 	AddressListEnvironment::class => autowire(AddressListEnvironmentDefault::class),
 	HTTPHeaders::class => autowire(HTTPHeadersGeneric::class),

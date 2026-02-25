@@ -30,6 +30,9 @@ clean-target:
 	rm -rf $(PREFIX)
 
 test-docker:
-	docker compose -f docker-compose.test.yml run --rm test $(ARGS)
+	docker compose -f docker-compose.test.yml run --rm test $(filter-out $@,$(MAKECMDGOALS))
+
+%:
+	@:
 
 clean: clean-target
