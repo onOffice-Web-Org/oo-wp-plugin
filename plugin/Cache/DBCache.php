@@ -28,6 +28,7 @@
 namespace onOffice\WPlugin\Cache;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 
 /**
@@ -51,10 +52,9 @@ class DBCache
 	 *
 	 */
 
-	public function __construct(array $options)
+	public function __construct(array $options, $pWpdb = null)
 	{
-		global $wpdb;
-		$this->_pWpdb = $wpdb;
+		$this->_pWpdb = $pWpdb ?? WpdbReadCacheProxy::getWpdb();
 		$this->_options = $options;
 	}
 

@@ -67,7 +67,6 @@ use onOffice\WPlugin\PDF\PdfDownload;
 use onOffice\WPlugin\PDF\PdfDownloadException;
 use onOffice\WPlugin\Record\EstateIdRequestGuard;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
-use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
@@ -79,6 +78,9 @@ use onOffice\WPlugin\Controller\AddressDetailUrl;
 const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
 
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
+
+// enable per-request db caching (experimental) - this will cache selects in memory for the current request, prevents multiple database queries for the same data
+const OO_DB_REQUEST_CACHE = true;
 
 $pDIBuilder = new ContainerBuilder();
 $pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
