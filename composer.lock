@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "feafb76187321681e429074198a70005",
+    "content-hash": "1109552e0ea4644778b5fee2d4e22a8d",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -208,16 +208,16 @@
         },
         {
             "name": "orchidjs/tom-select",
-            "version": "v2.5.1",
+            "version": "2.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchidjs/tom-select.git",
-                "reference": "81eda24435d5931607dd27d8f17a91da53f64d88"
+                "reference": "dad965ca5047054b8ff5203e9a8d8432be2dde6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchidjs/tom-select/zipball/81eda24435d5931607dd27d8f17a91da53f64d88",
-                "reference": "81eda24435d5931607dd27d8f17a91da53f64d88",
+                "url": "https://api.github.com/repos/orchidjs/tom-select/zipball/dad965ca5047054b8ff5203e9a8d8432be2dde6a",
+                "reference": "dad965ca5047054b8ff5203e9a8d8432be2dde6a",
                 "shasum": ""
             },
             "type": "component",
@@ -243,7 +243,7 @@
             "homepage": "https://tom-select.js.org/",
             "support": {
                 "issues": "https://github.com/orchidjs/tom-select/issues",
-                "source": "https://github.com/orchidjs/tom-select/tree/v2.5.1"
+                "source": "https://github.com/orchidjs/tom-select/tree/2.5.2"
             },
             "funding": [
                 {
@@ -251,7 +251,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-02-11T12:23:29+00:00"
+            "time": "2026-02-23T12:17:50+00:00"
         },
         {
             "name": "php-di/invoker",
