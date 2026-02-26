@@ -1163,7 +1163,7 @@ msgid "Player"
 msgstr "Player"
 
 msgid "Please agree to the terms and conditions."
-msgstr ""
+msgstr "Bitte stimmen Sie den Bedingungen zu."
 
 #. translators: %1$s is office server status page link, %2$s is support form page link
 msgid "Please check the %1$s to see if there are known problems. Otherwise, report the problem using the %2$s."
@@ -1176,10 +1176,10 @@ msgid "Please configure your onOffice API credentials first!"
 msgstr "Bitte konfiguriere zuerst deinen API-Zugang!"
 
 msgid "Please enter a text."
-msgstr ""
+msgstr "Bitte geben Sie einen Text ein."
 
 msgid "Please enter a valid e-mail address."
-msgstr ""
+msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein."
 
 #. translators: %s will be replaced with a translated field name.
 msgid "Please enter a value for %s."
@@ -1564,7 +1564,7 @@ msgid "Template"
 msgstr "Template"
 
 msgid "Thank you for your inquiry. We will get back to you as soon as possible."
-msgstr ""
+msgstr "Vielen Dank für Ihre Anfrage. Wir werden uns so schnell wie möglich bei Ihnen melden."
 
 msgid "The address detail view has been saved."
 msgstr "Die Detailansicht der Adresse wurde gespeichert."
@@ -1885,7 +1885,7 @@ msgid "The fields %1$s and %2$s must be filled in onOffice enterprise so that ou
 msgstr ""
 
 msgid "Buyers commission"
-msgstr ""
+msgstr "Käuferprovision"
 
 msgid "Property Location"
 msgstr "Ort der Immobilie"
