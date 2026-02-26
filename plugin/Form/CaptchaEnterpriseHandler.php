@@ -117,6 +117,9 @@ class CaptchaEnterpriseHandler
         $responseCode = wp_remote_retrieve_response_code($response);
         $result = json_decode(wp_remote_retrieve_body($response), true);
 
+
+        error_log(print_r($result, true)); // Nur zum Debuggen!
+
         if ($responseCode !== 200) {
             $this->_errorCodes = $this->mapApiError($responseCode, $result);
             return false;
@@ -211,6 +214,12 @@ class CaptchaEnterpriseHandler
                 if (stripos($errorMessage, 'permission') !== false || $errorStatus === 'PERMISSION_DENIED') {
                     return ['api-key-permission-denied'];
                 }
+                
+                    // Ergänze dies in deinem switch-case 403
+            if (stripos($errorMessage, 'domain') !== false) {
+                return ['domain-not-allowed']; 
+            }
+
                 return ['forbidden'];
 
             case 404:
