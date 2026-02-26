@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\CustomLabel;
 
 use onOffice\WPlugin\Field\CustomLabel\Exception\CustomLabelDeleteException;
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 
 
@@ -32,13 +33,13 @@ use wpdb;
  */
 class CustomLabelDelete
 {
-	/** @var wpdb */
+	/** @var wpdb|WpdbReadCacheProxy */
 	private $_pWPDB;
 
 	/**
-	 * @param wpdb $pWPDB
+	 * @param wpdb|WpdbReadCacheProxy $pWPDB
 	 */
-	public function __construct(wpdb $pWPDB)
+	public function __construct(wpdb|WpdbReadCacheProxy $pWPDB)
 	{
 		$this->_pWPDB = $pWPDB;
 	}

@@ -41,8 +41,11 @@ use onOffice\WPlugin\Form\FormPostInterestConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelDelete;
 use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueDelete;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueRead;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueUpdate;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
 use onOffice\WPlugin\Record\RecordManagerDeleteForm;
@@ -97,7 +100,13 @@ return [
 	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
 	CustomLabelRead::class => autowire()
 		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+	CustomLabelDelete::class => autowire()
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
 	DefaultValueRead::class => autowire()
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+	DefaultValueDelete::class => autowire()
+		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+	DefaultValueUpdate::class => autowire()
 		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
 	DatabaseChangesInterface::class => autowire(DatabaseChanges::class)
 		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
