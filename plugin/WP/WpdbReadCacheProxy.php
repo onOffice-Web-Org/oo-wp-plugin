@@ -43,11 +43,7 @@ class WpdbReadCacheProxy
 
 	private function shouldCache(string $query): bool
 	{
-		/*
-		 * here we can skip caching for some queries.
-		 * For example if the quey contains a dynamic part, we should not cache it.
-		*/
-		return true; //TODO: we will check everything for now. More tests needed!
+		return true; //TODO: we will cache everything for now. More tests needed!
 		//return stripos($query, 'FOUND_ROWS') === false;  // critical (?) but overused FOUND_ROWS
 	}
 
