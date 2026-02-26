@@ -99,6 +99,7 @@ class CaptchaEnterpriseHandler
 
         $response = wp_remote_post($apiUrl, [
             'headers' => ['Content-Type' => 'application/json'],
+            'Referer'      => get_site_url(),
             'body' => json_encode([
                 'event' => [
                     'token' => $this->_token,
