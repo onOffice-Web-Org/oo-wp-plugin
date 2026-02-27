@@ -322,16 +322,16 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
 
-		$label = __('Anzeigemodus Preis', 'onoffice-for-wp-websites'); 
+		$label = __('Display', 'onoffice-for-wp-websites'); 
 		$type = \onOffice\WPlugin\Model\InputModel\InputModelDBFactoryFilterableFields::INPUT_RANGE_DISPLAY_MODE;
 
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_RADIO);
 
 		$pInputModel->setValuesAvailable([
-			'range'    => __('Bereich', 'onoffice-for-wp-websites'),
-			'fromOnly' => __('Nur "Ab"', 'onoffice-for-wp-websites'),
-			'toOnly'   => __('Nur "Bis"', 'onoffice-for-wp-websites'),
+			'range'    => __('Both', 'onoffice-for-wp-websites'),
+			'fromOnly' => __('From', 'onoffice-for-wp-websites'),
+			'toOnly'   => __('To"', 'onoffice-for-wp-websites'),
 		]);
 
 		$pInputModel->setValueCallback([$this, 'callbackValueInputModelRangeFieldDisplayMode']);
