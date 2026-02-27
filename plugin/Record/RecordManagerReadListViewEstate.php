@@ -152,6 +152,7 @@ class RecordManagerReadListViewEstate
 			$result['highlighted'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'highlighted');
 			$result['availableOptions'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'availableOptions');
 			$result['convertTextToSelectForCityField'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'convertTextToSelectForCityField');
+			$result['rangeFieldDisplayModes'] = $this->getStringFieldValuesByFieldRow($fieldRows, 'rangeFieldDisplayMode');
 		}
 
 		return $result;
@@ -178,6 +179,24 @@ class RecordManagerReadListViewEstate
 		$tmpFilterable = array_combine($fields, $resultBooleanField);
 		$filterableFields = array_keys(array_filter($tmpFilterable));
 		return $filterableFields;
+	}
+
+
+	/**
+	 *
+	 * @param array  $fieldRows The array containing rows from oo_plugin_fieldconfig
+	 * @param string $column    The name of the database column (e.g., 'rangeFieldDisplayMode')
+	 * @return array
+	 */
+	private function getStringFieldValuesByFieldRow(array $fieldRows, string $column = 'rangeFieldDisplayMode'): array
+	{
+		$result = [];
+		foreach ($fieldRows as $row) {
+			if (isset($row['fieldname'])) {
+				$result[$row['fieldname']] = $row[$column] ?? 'range';
+			}
+		}
+		return $result;
 	}
 
 
@@ -221,7 +240,7 @@ class RecordManagerReadListViewEstate
 			$result['highlighted'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'highlighted');
 			$result['availableOptions'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'availableOptions');
 			$result['convertTextToSelectForCityField'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'convertTextToSelectForCityField');
-
+			$result['rangeFieldDisplayModes'] = $this->getStringFieldValuesByFieldRow($fieldRows, 'rangeFieldDisplayMode');
 		}
 
 		return $result;

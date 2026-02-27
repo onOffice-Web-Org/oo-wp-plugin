@@ -281,14 +281,18 @@ class AdminPageEstateListSettings
 
 	protected function prepareValues(stdClass $pValues)
 	{
-		$pBoolToFieldList = new BooleanValueToFieldList(new InputModelDBFactoryConfigEstate, $pValues);
-		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE);
-		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_HIDDEN);
-		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHTED);
-		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_AVAILABLE_OPTIONS);
-		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_CONVERT_TEXT_TO_SELECT_FOR_CITY_FIELD);
-	}
+		$pInputModelFactoryConfig = new \onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate();
 
+		$pBoolToFieldList = new \onOffice\WPlugin\Record\BooleanValueToFieldList($pInputModelFactoryConfig, $pValues);
+		$pBoolToFieldList->fillCheckboxValues(\onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE);
+		$pBoolToFieldList->fillCheckboxValues(\onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate::INPUT_FIELD_HIDDEN);
+		$pBoolToFieldList->fillCheckboxValues(\onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHTED);
+		$pBoolToFieldList->fillCheckboxValues(\onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate::INPUT_FIELD_AVAILABLE_OPTIONS);
+		$pBoolToFieldList->fillCheckboxValues(\onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate::INPUT_FIELD_CONVERT_TEXT_TO_SELECT_FOR_CITY_FIELD);
+
+		$pStringToFieldList = new \onOffice\WPlugin\Record\StringValueToFieldList($pInputModelFactoryConfig, $pValues);
+		$pStringToFieldList->fillStringValues(\onOffice\WPlugin\Model\InputModel\InputModelDBFactoryFilterableFields::INPUT_RANGE_DISPLAY_MODE,'range');
+	}
 
 	/**
 	 *

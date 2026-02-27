@@ -313,6 +313,33 @@ class FormModelBuilderDBEstateListSettings
 	}
 
 	/**
+	 * Creates radio buttons for the range field display mode.
+	 *
+	 * @return InputModelDB
+	 */
+	public function getInputModelRangeFieldDisplayMode()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+
+		$label = __('Anzeigemodus Preis', 'onoffice-for-wp-websites'); 
+		$type = \onOffice\WPlugin\Model\InputModel\InputModelDBFactoryFilterableFields::INPUT_RANGE_DISPLAY_MODE;
+
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_RADIO);
+
+		$pInputModel->setValuesAvailable([
+			'range'    => __('Bereich', 'onoffice-for-wp-websites'),
+			'fromOnly' => __('Nur "Ab"', 'onoffice-for-wp-websites'),
+			'toOnly'   => __('Nur "Bis"', 'onoffice-for-wp-websites'),
+		]);
+
+		$pInputModel->setValueCallback([$this, 'callbackValueInputModelRangeFieldDisplayMode']);
+
+		return $pInputModel;
+	}
+
+	/**
 	 *
 	 * @param InputModelBase $pInputModel
 	 * @param string $key Name of input
@@ -395,6 +422,54 @@ class FormModelBuilderDBEstateListSettings
 	}
 
 	/**
+	 * Callback to retrieve the stored display mode value for a specific field.
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key The field name (e.g., 'kaufpreis')
+	 */
+	public function callbackValueInputModelRangeFieldDisplayMode($pInputModel, string $key)
+	{
+		if ($pInputModel instanceof \onOffice\WPlugin\Model\InputModelDB) {
+			$pInputModel->setField("rangeFieldDisplayMode[$key]");
+		}
+	
+		$activeModes = $this->getValue('rangeFieldDisplayModes');
+		$currentValue = (is_array($activeModes) && isset($activeModes[$key])) ? $activeModes[$key] : 'range';
+		
+		$pInputModel->setValue($currentValue);
+	}
+	// public function callbackValueInputModelRangeFieldDisplayMode($pInputModel, string $key)
+    // {
+    //     // 1. Daten holen
+    //     $activeFields = $this->getValue('rangeFieldDisplayModes');
+        
+    //     if (!is_array($activeFields)) {
+    //         $activeFields = [];
+    //     }
+
+    //     // 2. DEBUG: Wir wollen jetzt endlich sehen, was hier ankommt!
+    //     // Wir loggen es für JEDES Feld, damit wir sehen, ob das Array überhaupt gefüllt ist.
+    //     error_log("--- DEBUG CHECKBOX FRONTEND (Field: $key) ---");
+    //     error_log(print_r($activeFields, true));
+
+    //     // 3. Wert setzen
+    //     $value = in_array($key, $activeFields);
+        
+    //     // Da wir wissen, dass $pInputModel ein Objekt ist, rufen wir die Methoden einfach auf
+    //     $pInputModel->setValue($value);
+    //     $pInputModel->setValuesAvailable($key);
+    // }
+	// public function callbackValueInputModelRangeFieldDisplayMode(InputModelBase $pInputModel, string $key)
+	// {
+	// 	$valueFromConfig = $this->getValue('rangeFieldDisplayMode');
+	// 	$rangeDisplayModes = is_array($valueFromConfig) ? $valueFromConfig : array();
+		
+	// 	// Default to 'range' for backward compatibility
+	// 	$value = isset($rangeDisplayModes[$key]) ? $rangeDisplayModes[$key] : 'range';
+	// 	$pInputModel->setValue($value);
+	// }
+
+	/**
 	 *
 	 * @param string $module
 	 * @param string $htmlType
@@ -437,6 +512,7 @@ class FormModelBuilderDBEstateListSettings
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelIsHidden());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelisHighlight());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelConvertInputTextToSelectCityField());
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelRangeFieldDisplayMode());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelAvailableOptions());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
