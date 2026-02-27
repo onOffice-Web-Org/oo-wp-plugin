@@ -71,17 +71,18 @@ class FieldModuleCollectionDecoratorCustomLabelAddress
 		}
 
 		$fieldsByFormIds = $recordManagerReadAddress->getFieldconfigByListviewId(intval($results['listview_address_id']));
-
-		foreach ($fieldsByFormIds as $fieldsByFormId) {
-			$lang = $this->_pContainer->get(Language::class);
-			$customLabelRead = $this->_pContainer->get(CustomLabelRead::class);
-			$query = $customLabelRead->readCustomLabelByFormIdAndFieldName(intval($results['listview_address_id']),
-				$fieldsByFormId['fieldname'], $lang->getLocale(), 
-				RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS);
-			if (empty($query[0]->value)) {
-				continue;
-			}
-			$this->_fieldCustomLabels[onOfficeSDK::MODULE_ADDRESS][$fieldsByFormId['fieldname']] = $query[0]->value;
+		$fieldNames = array_column($fieldsByFormIds, 'fieldname');
+		$customLabelRead = $this->_pContainer->get(CustomLabelRead::class);
+		$lang = $this->_pContainer->get(Language::class);
+		$labelsByField = $customLabelRead->readCustomLabelsByFormIdAndFieldNames(
+			intval($results['listview_address_id']),
+			$fieldNames,
+			$lang->getLocale(),
+			RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_CUSTOMS_LABELS,
+			RecordManager::TABLENAME_FIELDCONFIG_ADDRESS_TRANSLATED_LABELS
+		);
+		foreach ($labelsByField as $fieldname => $value) {
+			$this->_fieldCustomLabels[onOfficeSDK::MODULE_ADDRESS][$fieldname] = $value;
 		}
 	}
 

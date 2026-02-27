@@ -28,6 +28,7 @@
 namespace onOffice\WPlugin\Cache;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 
 /**
@@ -51,10 +52,9 @@ class DBCache
 	 *
 	 */
 
-	public function __construct(array $options)
+	public function __construct(array $options, $pWpdb = null)
 	{
-		global $wpdb;
-		$this->_pWpdb = $wpdb;
+		$this->_pWpdb = $pWpdb ?? WpdbReadCacheProxy::getWpdb();
 		$this->_options = $options;
 	}
 
@@ -73,7 +73,8 @@ class DBCache
 			$interval = wp_get_schedules()[$onofficeSettingsCache]["interval"];
 		}
 
-		return time() - $interval;
+		$now = $_SERVER['REQUEST_TIME'] ?? time();
+		return $now - $interval;
 	}
 
 

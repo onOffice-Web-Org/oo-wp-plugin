@@ -8,3 +8,4 @@ SDK/vendor
 .phpunit.result.cache
 dist/*
 !dist/.gitkeep
+onoffice-for-wp-websites.zip

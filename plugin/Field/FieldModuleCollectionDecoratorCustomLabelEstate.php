@@ -68,17 +68,18 @@ class FieldModuleCollectionDecoratorCustomLabelEstate
 			return;
 		}
 		$fieldsByFormIds = $recordManagerReadForm->getFieldconfigByListviewId(intval($results['listview_id']));
-
-		foreach ($fieldsByFormIds as $fieldsByFormId) {
-			$lang = $this->_pContainer->get(Language::class);
-			$customLabelRead = $this->_pContainer->get(CustomLabelRead::class);
-			$query = $customLabelRead->readCustomLabelByFormIdAndFieldName(intval($results['listview_id']),
-				$fieldsByFormId['fieldname'],
-				$lang->getLocale(),RecordManager::TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS);
-			if (empty($query[0]->value)) {
-				continue;
-			}
-			$this->_fieldCustomLabels[onOfficeSDK::MODULE_ESTATE][$fieldsByFormId['fieldname']] = $query[0]->value;
+		$fieldNames = array_column($fieldsByFormIds, 'fieldname');
+		$customLabelRead = $this->_pContainer->get(CustomLabelRead::class);
+		$lang = $this->_pContainer->get(Language::class);
+		$labelsByField = $customLabelRead->readCustomLabelsByFormIdAndFieldNames(
+			intval($results['listview_id']),
+			$fieldNames,
+			$lang->getLocale(),
+			RecordManager::TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS,
+			RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS
+		);
+		foreach ($labelsByField as $fieldname => $value) {
+			$this->_fieldCustomLabels[onOfficeSDK::MODULE_ESTATE][$fieldname] = $value;
 		}
 	}
 

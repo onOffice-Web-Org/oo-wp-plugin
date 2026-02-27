@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Field\DefaultValue;
 
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 use const OBJECT;
 use function esc_sql;
@@ -36,14 +37,14 @@ use function esc_sql;
 
 class DefaultValueRead
 {
-	/** @var wpdb */
+	/** @var wpdb|WpdbReadCacheProxy */
 	private $_pWPDB;
 
 
 	/**
-	 * @param wpdb $pWPDB
+	 * @param wpdb|WpdbReadCacheProxy $pWPDB
 	 */
-	public function __construct(wpdb $pWPDB)
+	public function __construct(wpdb|WpdbReadCacheProxy $pWPDB)
 	{
 		$this->_pWPDB = $pWPDB;
 	}
