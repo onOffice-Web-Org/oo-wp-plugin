@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const toggleSubmitButton = () => {
-      if (submitInput && form.classList.contains('validated')) {
+      if (submitInput) {
         submitInput.disabled = !form.checkValidity();
       }
     };
@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (input.checkValidity()) {
           hideError(input);
         }
-        toggleSubmitButton();
+       toggleSubmitButton();
       });
     });
 
@@ -240,3 +240,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
+
