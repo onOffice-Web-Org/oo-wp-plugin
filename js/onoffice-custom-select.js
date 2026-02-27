@@ -146,8 +146,13 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const toggleSubmitButton = () => {
+      const isLightboxMode = form.querySelector('.lead-lightbox') !== null;
       if (submitInput) {
-        submitInput.disabled = !form.checkValidity();
+        if (isLightboxMode) {
+          submitInput.disabled = false;
+        } else {
+          submitInput.disabled = !form.checkValidity();
+        }
       }
     };
 
@@ -240,4 +245,3 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
-
