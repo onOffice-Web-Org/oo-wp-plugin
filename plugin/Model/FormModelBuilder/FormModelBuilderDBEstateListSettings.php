@@ -331,7 +331,7 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel->setValuesAvailable([
 			'range'    => __('Both', 'onoffice-for-wp-websites'),
 			'fromOnly' => __('From', 'onoffice-for-wp-websites'),
-			'toOnly'   => __('To"', 'onoffice-for-wp-websites'),
+			'toOnly'   => __('To', 'onoffice-for-wp-websites'),
 		]);
 
 		$pInputModel->setValueCallback([$this, 'callbackValueInputModelRangeFieldDisplayMode']);
