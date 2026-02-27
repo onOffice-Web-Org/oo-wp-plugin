@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const toggleSubmitButton = () => {
-      if (submitInput) {
+      if (submitInput && form.classList.contains('validated')) {
         submitInput.disabled = !form.checkValidity();
       }
     };
@@ -189,20 +189,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } else {
                 form.classList.remove('validated');
-                setTimeout(() => {
-                  toggleSubmitButton();
-              }, 100);
-
-
             }
-        }, true);
+      }, true);
     });
 
     form.querySelectorAll('.leadform-back').forEach(button => {
         button.addEventListener('click', function() {
-            form.classList.remove('validated');
-            setTimeout(toggleSubmitButton, 100);
-        });
+            form.classList.remove('validated'); 
+          });
     });
   
     inputs.forEach(function (input) {
