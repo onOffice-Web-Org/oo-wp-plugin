@@ -422,7 +422,6 @@ class FormModelBuilderDBEstateListSettings
 	}
 
 	/**
-	 * Callback to retrieve the stored display mode value for a specific field.
 	 *
 	 * @param InputModelBase $pInputModel
 	 * @param string $key The field name (e.g., 'kaufpreis')
@@ -438,36 +437,6 @@ class FormModelBuilderDBEstateListSettings
 		
 		$pInputModel->setValue($currentValue);
 	}
-	// public function callbackValueInputModelRangeFieldDisplayMode($pInputModel, string $key)
-    // {
-    //     // 1. Daten holen
-    //     $activeFields = $this->getValue('rangeFieldDisplayModes');
-        
-    //     if (!is_array($activeFields)) {
-    //         $activeFields = [];
-    //     }
-
-    //     // 2. DEBUG: Wir wollen jetzt endlich sehen, was hier ankommt!
-    //     // Wir loggen es für JEDES Feld, damit wir sehen, ob das Array überhaupt gefüllt ist.
-    //     error_log("--- DEBUG CHECKBOX FRONTEND (Field: $key) ---");
-    //     error_log(print_r($activeFields, true));
-
-    //     // 3. Wert setzen
-    //     $value = in_array($key, $activeFields);
-        
-    //     // Da wir wissen, dass $pInputModel ein Objekt ist, rufen wir die Methoden einfach auf
-    //     $pInputModel->setValue($value);
-    //     $pInputModel->setValuesAvailable($key);
-    // }
-	// public function callbackValueInputModelRangeFieldDisplayMode(InputModelBase $pInputModel, string $key)
-	// {
-	// 	$valueFromConfig = $this->getValue('rangeFieldDisplayMode');
-	// 	$rangeDisplayModes = is_array($valueFromConfig) ? $valueFromConfig : array();
-		
-	// 	// Default to 'range' for backward compatibility
-	// 	$value = isset($rangeDisplayModes[$key]) ? $rangeDisplayModes[$key] : 'range';
-	// 	$pInputModel->setValue($value);
-	// }
 
 	/**
 	 *
