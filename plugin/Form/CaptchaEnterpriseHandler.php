@@ -214,12 +214,6 @@ class CaptchaEnterpriseHandler
                 if (stripos($errorMessage, 'permission') !== false || $errorStatus === 'PERMISSION_DENIED') {
                     return ['api-key-permission-denied'];
                 }
-                
-                    // Ergänze dies in deinem switch-case 403
-            if (stripos($errorMessage, 'domain') !== false) {
-                return ['domain-not-allowed']; 
-            }
-
                 return ['forbidden'];
 
             case 404:
