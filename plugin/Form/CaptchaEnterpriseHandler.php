@@ -98,8 +98,10 @@ class CaptchaEnterpriseHandler
         $apiUrl = sprintf(self::API_URL, urlencode($this->_projectId), urlencode($this->_apiKey));
 
         $response = wp_remote_post($apiUrl, [
-            'headers' => ['Content-Type' => 'application/json'],
-            'Referer'      => get_site_url(),
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Referer' => site_url('/'),
+            ],
             'body' => json_encode([
                 'event' => [
                     'token' => $this->_token,
