@@ -174,6 +174,17 @@ class FormModelBuilderDBForm
 			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitlePage);
 			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitleLanguage);
 		}
+		if($this->getFormType() === Form::TYPE_INTEREST){
+			$pInputModelFieldsConfig->setIsMultiPage(true);
+			$pInputModelFieldsConfig->setTemplate($this->getValue('template'));
+
+			$pInputModelMultiPageTitle = $this->createInputModelMultiPageTitle();
+			$pInputModelMultiPageTitlePage = $this->createInputModelMultiPageTitlePage();
+			$pInputModelMultiPageTitleLanguage = $this->createInputModelMultiPageTitleLanguageSwitch();
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitle);
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitlePage);
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitleLanguage);
+		}
 
 		return $pInputModelFieldsConfig;
 	}

@@ -92,22 +92,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const submitInput = form.querySelector('input[type=submit]');
 
     const showError = (input) => {
-      const errorDiv = input.closest('.validated') 
-      ? input.closest('label')?.querySelector('.error') 
-      : null;
+      const errorDiv = input.parentElement.querySelector('.error') || input.closest('label')?.querySelector('.error');
+  
       if (errorDiv) {
-        $(errorDiv).css('display', 'block');
+        errorDiv.style.display = 'block';
+        errorDiv.setAttribute('aria-hidden', 'false'); 
         errorDiv.setAttribute('aria-live', 'polite');
+        errorDiv.setAttribute('role', 'alert');
+        input.setAttribute('aria-invalid', 'true');
+        
       }
     };
 
     const hideError = (input) => {
-      const errorDiv = input.closest('.validated') 
-  ? input.closest('label')?.querySelector('.error') 
-  : null;
+      const errorDiv = input.parentElement.querySelector('.error') || input.closest('label')?.querySelector('.error');
+                       
       if (errorDiv) {
+        errorDiv.style.display = 'none';
+        errorDiv.setAttribute('aria-hidden', 'true');
         errorDiv.removeAttribute('aria-live');
-        $(errorDiv).css('display', 'none');
+        
+        input.setAttribute('aria-invalid', 'false');
       }
     };
 
@@ -122,16 +127,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectHandleChange = (select) => {
       const tomSelectControl = select.nextElementSibling;
       if (!select.checkValidity()) {
-        tomSelectControl.classList.add('is-invalid');
+        if (tomSelectControl) tomSelectControl.classList.add('is-invalid');
         showError(select);
       } else {
-        tomSelectControl.classList.remove('is-invalid');
+        if (tomSelectControl) tomSelectControl.classList.remove('is-invalid');
         hideError(select);
       }
     };
 
     const jumpToFirstInvalidInput = (form) => {
-      const firstInvalid = form.querySelector(':invalid');
+      const firstInvalid = Array.from(form.querySelectorAll(':invalid'))
+        .find(el => el.offsetWidth > 0 || el.offsetHeight > 0);
+      
       if (firstInvalid) {
         firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
         firstInvalid.focus({ preventScroll: true });
@@ -139,11 +146,64 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const toggleSubmitButton = () => {
-      if (submitInput && form.classList.contains('validated')) {
-        submitInput.disabled = !form.checkValidity();
+      const isLightboxMode = form.querySelector('.lead-lightbox') !== null;
+      if (submitInput) {
+        if (isLightboxMode) {
+          submitInput.disabled = false;
+        } else {
+          submitInput.disabled = !form.checkValidity();
+        }
       }
     };
 
+      form.querySelectorAll('.leadform-forward').forEach(button => {
+        button.addEventListener('click', function(event) {
+            const visibleInputs = Array.from(inputs).filter(input => {
+                return input.offsetParent !== null;
+            });
+            const visibleSelects = Array.from(selects).filter(select => {
+                return select.offsetParent !== null;
+            });
+
+            let allValid = true;
+            
+            visibleInputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    inputHandleBlur(input);
+                    allValid = false;
+                }
+            });
+
+            visibleSelects.forEach(select => {
+                if (!select.checkValidity()) {
+                    selectHandleChange(select);
+                    allValid = false;
+                }
+            });
+
+            if (!allValid) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                form.classList.add('validated');
+                
+                const allInvalidFields = form.querySelectorAll(':invalid');
+                const firstInvalidVisible = Array.from(allInvalidFields).find(field => field.offsetParent !== null);
+                if (firstInvalidVisible) {
+                    firstInvalidVisible.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstInvalidVisible.focus({ preventScroll: true });
+                }
+            } else {
+                form.classList.remove('validated');
+            }
+      }, true);
+    });
+
+    form.querySelectorAll('.leadform-back').forEach(button => {
+        button.addEventListener('click', function() {
+            form.classList.remove('validated'); 
+          });
+    });
+  
     inputs.forEach(function (input) {
       input.addEventListener('blur', function () {
         inputHandleBlur(input);
@@ -154,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (input.checkValidity()) {
           hideError(input);
         }
-        toggleSubmitButton();
+       toggleSubmitButton();
       });
     });
 
@@ -174,6 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
         inputs.forEach(input => inputHandleBlur(input));
         selects.forEach(select => selectHandleChange(select));
         jumpToFirstInvalidInput(form);
+        
       } else {
         if (submitInput) {
           submitInput.disabled = true;
