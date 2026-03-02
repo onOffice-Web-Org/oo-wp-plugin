@@ -47,4 +47,7 @@ interface InputModelDBFactoryFilterableFields
 
 	/** */
 	const INPUT_FIELD_CONVERT_INPUT_TEXT_TO_SELECT_FOR_FIELD = 'convertInputTextToSelectForField';
+
+	/** */
+	const INPUT_RANGE_DISPLAY_MODE = 'inputrangeFieldDisplayMode';
 }

@@ -178,6 +178,9 @@ class DataListView
 	/** @var string[] */
 	private $_convertTextToSelectForCityField = [];
 
+	/** @var array */
+	private $_rangeFieldDisplayModes = [];
+
 	/** @var string[] */
 	private $_priceFields = [
 		'kaufpreis',
@@ -495,4 +498,14 @@ class DataListView
 	/** @param array $convertTextToSelectForCityField */
 	public function setConvertTextToSelectForCityField(array $convertTextToSelectForCityField)
 		{ $this->_convertTextToSelectForCityField = $convertTextToSelectForCityField; }
+
+	/** @return array */
+	public function getRangeFieldDisplayModes(): array {
+		return $this->_rangeFieldDisplayModes;
+	}
+
+	/** @param array $rangeFieldDisplayModes */
+	public function setRangeFieldDisplayModes(array $modes) {
+		$this->_rangeFieldDisplayModes = $modes;
+	}
 }
