@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
         errorDiv.style.display = 'none';
         errorDiv.setAttribute('aria-hidden', 'true');
         errorDiv.removeAttribute('aria-live');
-        
         input.setAttribute('aria-invalid', 'false');
       }
     };
@@ -147,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const toggleSubmitButton = () => {
       const isLightboxMode = form.querySelector('.lead-lightbox') !== null;
-      if (submitInput) {
+      if (submitInput && form.classList.contains('validated')) {
         if (isLightboxMode) {
           submitInput.disabled = false;
         } else {
@@ -214,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (input.checkValidity()) {
           hideError(input);
         }
-       toggleSubmitButton();
+        toggleSubmitButton();
       });
     });
 
