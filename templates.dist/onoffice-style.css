@@ -72,7 +72,7 @@
     margin: 0;
 }
 
-.oo-form.oo-validated .error, .oo-form input:invalid~.oo-form.oo-validated .error{
+.oo-form.validated .error, .oo-form input:invalid~.oo-form.validated .error{
     display: block;
 }
 
