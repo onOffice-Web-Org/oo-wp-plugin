@@ -84,7 +84,6 @@ class AdminPageApiSettings
 		$this->addFormModelSocialMetaData();
     }
 
-
 	/**
 	 *
 	 */
