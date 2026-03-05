@@ -29,6 +29,7 @@
 }
 .oo-form label {
     width: 100%;
+    display: block;
 }
 
 .oo-form label, .oo-single-select, .oo-multi-select {
@@ -37,6 +38,16 @@
 
 .oo-single-select label, .oo-multi-select label {
     margin: 0;
+}
+
+.oo-form input, .oo-form textarea {
+    display: block;
+    padding: 8px 8px;
+    width: 100%;
+}
+
+.oo-form input[type=number] {
+    min-width: 200px;
 }
 
 .oo-form.validated input:invalid, .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated .oo-multi-select .is-invalid, .oo-form.validated textarea:invalid, .required.invalid:has(+ div[aria-hidden='false']), .oo-form input[aria-invalid='true'], .oo-form textarea[aria-invalid='true'], .oo-form .is-invalid {
@@ -867,6 +878,7 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus, .oo-form i
 .ts-dropdown, .ts-control, .ts-control input {
     font-size: inherit;
     color: inherit;
+    border-color: #767676;
 }
 
 .oo-post-nav-links {
