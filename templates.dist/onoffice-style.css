@@ -40,7 +40,7 @@
     margin: 0;
 }
 
-.oo-form input, .oo-form textarea {
+.oo-form input:not(.tomselect-checkbox):not([type="checkbox"]), .oo-form textarea {
     display: block;
     padding: 8px 8px;
     width: 100%;
