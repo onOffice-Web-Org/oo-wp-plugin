@@ -73,8 +73,7 @@ class DBCache
 			$interval = wp_get_schedules()[$onofficeSettingsCache]["interval"];
 		}
 
-		$now = $_SERVER['REQUEST_TIME'] ?? time();
-		return $now - $interval;
+		return time() - $interval;
 	}
 
 
