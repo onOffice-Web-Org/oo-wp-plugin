@@ -313,7 +313,6 @@ class FormModelBuilderDBEstateListSettings
 	}
 
 	/**
-	 * Creates radio buttons for the range field display mode.
 	 *
 	 * @return InputModelDB
 	 */
@@ -321,20 +320,17 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-
 		$label = __('Display', 'onoffice-for-wp-websites'); 
-		$type = \onOffice\WPlugin\Model\InputModel\InputModelDBFactoryFilterableFields::INPUT_RANGE_DISPLAY_MODE;
-
+		$type = InputModelDBFactoryConfigEstate::INPUT_RANGE_DISPLAY_MODE;
+		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_RADIO);
-
 		$pInputModel->setValuesAvailable([
 			'range'    => __('Both', 'onoffice-for-wp-websites'),
 			'fromOnly' => __('From', 'onoffice-for-wp-websites'),
 			'toOnly'   => __('To', 'onoffice-for-wp-websites'),
 		]);
-
-		$pInputModel->setValueCallback([$this, 'callbackValueInputModelRangeFieldDisplayMode']);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelRangeFieldDisplayMode'));
 
 		return $pInputModel;
 	}
@@ -426,15 +422,12 @@ class FormModelBuilderDBEstateListSettings
 	 * @param InputModelBase $pInputModel
 	 * @param string $key The field name (e.g., 'kaufpreis')
 	 */
-	public function callbackValueInputModelRangeFieldDisplayMode($pInputModel, string $key)
+	public function callbackValueInputModelRangeFieldDisplayMode(InputModelBase $pInputModel, string $key)
 	{
-		if ($pInputModel instanceof \onOffice\WPlugin\Model\InputModelDB) {
-			$pInputModel->setField("rangeFieldDisplayMode[$key]");
-		}
+		$pInputModel->setField("rangeFieldDisplayMode[$key]");
 	
 		$activeModes = $this->getValue('rangeFieldDisplayModes');
 		$currentValue = (is_array($activeModes) && isset($activeModes[$key])) ? $activeModes[$key] : 'range';
-		
 		$pInputModel->setValue($currentValue);
 	}
 
