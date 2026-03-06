@@ -79,6 +79,9 @@ class FieldModuleCollectionDecoratorCustomLabelEstate
 			RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS
 		);
 		foreach ($labelsByField as $fieldname => $value) {
+			if(empty($value)){
+				continue;
+			}
 			$this->_fieldCustomLabels[onOfficeSDK::MODULE_ESTATE][$fieldname] = $value;
 		}
 	}
