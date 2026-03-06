@@ -260,7 +260,7 @@ if (!function_exists('renderFormField')) {
 			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 
-			$output = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
+			$output = '<select aria-hidden="true" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
 			$output .= $htmlOptions;
 			$output .= '</select>'.$errorHtml;
 		} else {

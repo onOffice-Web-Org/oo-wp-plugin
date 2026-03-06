@@ -75,7 +75,7 @@
    background-size: 1.25rem;
  }
  
- .oo-form.validated .oo-single-select .required.has-items.ts-wrapper, .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated .oo-multi-select .is-invalid, .oo-form.validated input:required:valid[type="date"], .oo-form.validated input:required:valid[type="number"], .oo-form.validated input:invalid[type="number"] {
+ .oo-form.validated .oo-single-select .required.has-items.ts-wrapper, .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated .oo-multi-select .required.has-items.ts-wrapper, .oo-form.validated .oo-multi-select .is-invalid, .oo-form.validated input:required:valid[type="date"], .oo-form.validated input:required:valid[type="number"], .oo-form.validated input:invalid[type="number"] {
     background-position: right 30px center;
 }
 
