@@ -694,7 +694,7 @@ class EstateList
 			if ( count( $geoCoords ) === 2 ) {
 				$range = sprintf("%d", $filter['geo'][0]['val']) ?? "300";
 				unset($filter['geo']);
-				$longitude = substr($geoCoords[0], 2); // this always starts with 0- for some reason
+				$longitude = $geoCoords[0];
 				$latitude = $geoCoords[1];
 
 				$requestParams['georangesearch'] = [
