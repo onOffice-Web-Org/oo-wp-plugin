@@ -325,11 +325,6 @@ class FormModelBuilderDBEstateListSettings
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_RADIO);
-		$pInputModel->setValuesAvailable([
-			'range'    => __('Both', 'onoffice-for-wp-websites'),
-			'fromOnly' => __('From', 'onoffice-for-wp-websites'),
-			'toOnly'   => __('To', 'onoffice-for-wp-websites'),
-		]);
 		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelRangeFieldDisplayMode'));
 
 		return $pInputModel;
@@ -425,10 +420,15 @@ class FormModelBuilderDBEstateListSettings
 	public function callbackValueInputModelRangeFieldDisplayMode(InputModelBase $pInputModel, string $key)
 	{
 		$pInputModel->setField("rangeFieldDisplayMode[$key]");
-	
+		$pInputModel->setValuesAvailable([
+			"$key:range"    => __('Both', 'onoffice-for-wp-websites'),
+			"$key:fromOnly" => __('From', 'onoffice-for-wp-websites'),
+			"$key:toOnly"   => __('To', 'onoffice-for-wp-websites'),
+		]);
+
 		$activeModes = $this->getValue('rangeFieldDisplayModes');
 		$currentValue = (is_array($activeModes) && isset($activeModes[$key])) ? $activeModes[$key] : 'range';
-		$pInputModel->setValue($currentValue);
+		$pInputModel->setValue("$key:$currentValue");
 	}
 
 	/**

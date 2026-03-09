@@ -89,15 +89,21 @@ class StringValueToFieldList
 		if (property_exists($this->_pValues, $identifier))
 		{
 			$rawPostData = (array)$this->_pValues->$identifier;
-			$newFieldList = [];
 
+			// Parse composite "key:mode" values (e.g. "wohnflaeche_von:fromOnly")
+			// The real field key is embedded in the value to avoid truncation by getIdentifier()
+			$modesByRealKey = [];
+			foreach ($rawPostData as $compositeValue) {
+				$parts = explode(':', (string)$compositeValue, 2);
+				if (count($parts) === 2) {
+					$modesByRealKey[$parts[0]] = $parts[1];
+				}
+			}
+
+			$newFieldList = [];
 			foreach ($fieldsArray as $index => $fieldName)
 			{
-				if (isset($rawPostData[$fieldName])) {
-					$newFieldList[$index] = $rawPostData[$fieldName];
-				} else {
-					$newFieldList[$index] = $default;
-				}
+				$newFieldList[$index] = $modesByRealKey[$fieldName] ?? $default;
 			}
 			$this->_pValues->$identifier = $newFieldList;
 		}
