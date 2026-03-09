@@ -167,12 +167,12 @@ jQuery(document).ready(function($){
 			paragraph.appendChild(input);
 			container.appendChild(span);
 			container.appendChild(paragraph);
-			container.appendChild(this.addMultiPageLanguageSelect(container, pageNumber));
+			container.appendChild(this.addMultiPageLanguageSelect(container));
 
 			return container;
 		},
 
-		addMultiPageLanguageSelect: function(multiPageTitleSection, page) {
+		addMultiPageLanguageSelect: function(multiPageTitleSection) {
 			const paragraph = document.createElement('p');
 			const label = document.createElement('label');
 			const select = document.createElement('select');
@@ -193,7 +193,7 @@ jQuery(document).ready(function($){
 				select.options.add(new Option(v, k));
 			});
 			select.options.selectedIndex = 0;
-			this.addMultiPageLanguageSelectEventListeners(select, multiPageTitleSection, page);
+			this.addMultiPageLanguageSelectEventListeners(select, multiPageTitleSection);
 
 			paragraph.appendChild(label);
 			paragraph.appendChild(select);
@@ -201,10 +201,11 @@ jQuery(document).ready(function($){
 			return paragraph;
 		},
 
-		addMultiPageLanguageSelectEventListeners: function(localeSelect, multiPageTitleSection, page) {
+		addMultiPageLanguageSelectEventListeners: function(localeSelect, multiPageTitleSection) {
 			const self = this;
 
 			localeSelect.addEventListener('change', function () {
+				const page = $(this).closest('.multi-page-title').attr('data-page');
 				const selectedLocale = this.value;
 				const selectedOption = this.options[localeSelect.selectedIndex];
 				const selectedLocaleText = selectedOption.text;
@@ -449,6 +450,7 @@ jQuery(document).ready(function($){
 				const newPageNumber = index + 1;
 				$(this).find('.page-title').text(`${onOffice_loc_settings.page_title} ${newPageNumber}`);
 				FormMultiPageManager.updatePageClassAndId($(this), newPageNumber);
+				FormMultiPageManager.updateMultiPageTitleAttributes($(this), newPageNumber);
 			});
 			this.checkSortableFieldsList();
 		},
@@ -474,6 +476,32 @@ jQuery(document).ready(function($){
 			ulElement.removeClass(function(index, className) {
 				return (className.match(/(^|\s)fieldsListPage-\S+/g) || []).join(' ');
 			}).addClass(`fieldsListPage-${pageNumber}`);
+		},
+
+		updateMultiPageTitleAttributes: function(page, pageNumber) {
+			// Update data-page attribute on .multi-page-title element
+			const multiPageTitle = page.find('.multi-page-title');
+			if (multiPageTitle.length) {
+				multiPageTitle.attr('data-page', pageNumber);
+				const multiPageCounter = multiPageTitle.find('.multi-page-counter');
+				if (multiPageCounter.length) {
+					multiPageCounter.text(multiPageCounter.text().replace(/\d+/, pageNumber));
+				}
+				// Update all title input names to reflect the new page number
+				multiPageTitle.find('input[name^="oopluginformmultipagetitle"]').each(function() {
+					const currentName = $(this).attr('name');
+					// Replace [X] with [newPageNumber] in the name attribute
+					const newName = currentName.replace(/\[\d+\]/, `[${pageNumber}]`);
+					$(this).attr('name', newName);
+				});
+				// Update delete button IDs to reflect the new page number
+				multiPageTitle.find('.multi-page-title-delete').each(function() {
+					const currentId = $(this).attr('id');
+					// Replace deletePageTitle[X][langCode] with deletePageTitle[newPageNumber][langCode]
+					const newId = currentId.replace(/deletePageTitle\[\d+\]/, `deletePageTitle[${pageNumber}]`);
+					$(this).attr('id', newId);
+				});
+			}
 		},
 
 		draggablePages: function () {
@@ -622,12 +650,15 @@ jQuery(document).ready(function($){
 			let draggedOriginalItem = null;
 			let isMultiDrag = false;
 			const $list = $('.filter-fields-list');
-			$list.sortable('destroy');
+			if ($list.data('ui-sortable')) {
+				$list.sortable('destroy');
+			}
 
 			$list.sortable({
 				axis: 'y',
 				connectWith: '.filter-fields-list',
-				revert: 'invalid',
+				items: '> li.sortable-item:visible',
+				revert: false,
 				helper: function (event, item) {
 					const $selected = $('#multi-page-container .selected');
 					isMultiDrag = item.hasClass('selected') && $selected.length > 1;
@@ -635,11 +666,11 @@ jQuery(document).ready(function($){
 					if (isMultiDrag) {
 						multiDragSelectedOrdered = $selected.toArray();
 						draggedOriginalItem = item[0];
-						return $('<li class="multi-drag-helper"/>').append($selected.clone());
+						return $('<li class="multi-drag-helper" style="pointer-events:none;"/>').append($selected.clone());
 					} else {
 						multiDragSelectedOrdered = [item[0]];
 						draggedOriginalItem = item[0];
-						return item.clone();
+						return item.clone().css('pointer-events', 'none');
 					}
 				},
 				start: function (event, ui) {
@@ -647,18 +678,16 @@ jQuery(document).ready(function($){
 					ui.item.data('origParent', ui.item.parent());
 				},
 				stop: function (event, ui) {
-					const droppedOver = document.elementFromPoint(event.clientX, event.clientY);
-					const validDrop = droppedOver && droppedOver.closest('.list-fields-for-each-page');
-
-					if (!validDrop) {
-						$(this).sortable('cancel');
-						return;
-					}
-
 					const $droppedItem = ui.item;
 
 					if (isMultiDrag) {
 						const targetList = $droppedItem.closest('.filter-fields-list');
+
+						if (!targetList.length) {
+							$(this).sortable('cancel');
+							return;
+						}
+
 						const dropIndex = $droppedItem.index();
 
 						$droppedItem.detach();
@@ -753,6 +782,7 @@ jQuery(document).ready(function($){
 			document.dispatchEvent(new CustomEvent('fieldListUpdated'));
 			if ($('#multi-page-container').length) {
 				FormMultiPageManager.reorderPages()
+				FormMultiPageManager.multiSortable();
 			}
 		} else {
 			var valElName = $(btn).attr('value');
@@ -851,7 +881,9 @@ jQuery(document).ready(function($){
 				dummyKey = $('#menu-item-dummy_key');
 			}
 		}
-		var clonedElement = dummyKey.clone(true, true);
+		var clonedElement = dummyKey.clone(true, false);
+		clonedElement.removeData();
+		clonedElement.removeClass('ui-sortable-handle');
 
 		clonedElement.attr('id', 'menu-item-' + fieldName);
 		clonedElement.attr('action-field-name', actionFieldName);
