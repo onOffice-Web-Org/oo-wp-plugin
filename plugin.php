@@ -67,7 +67,6 @@ use onOffice\WPlugin\PDF\PdfDownload;
 use onOffice\WPlugin\PDF\PdfDownloadException;
 use onOffice\WPlugin\Record\EstateIdRequestGuard;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
-use onOffice\WPlugin\Superchat\SuperchatWidgetInjector;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
@@ -187,7 +186,6 @@ if (is_admin() && isset($_GET['post']) && isset($_GET['action']) && sanitize_key
 
 $pDI->get(ScriptLoaderRegistrator::class)->generate();
 
-SuperchatWidgetInjector::bootstrap();
 
 add_action('plugins_loaded', function() use ($pDI) {
 	$pDI->get(DatabaseChangesInterface::class)->install();
