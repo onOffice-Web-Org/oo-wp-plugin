@@ -106,18 +106,24 @@ if (!function_exists('renderFieldEstateSearch')) {
 			FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']
 		) {
+			$displayMode = $properties['rangeFieldDisplayMode'] ?? 'range';
 			echo '<fieldset class="oo-searchrange">';
 			echo '<legend>' . esc_html($fieldLabel) . '</legend>';
-			echo '<label for="' . esc_attr($inputName) . '__von">';
-			esc_html_e('From: ', 'onoffice-for-wp-websites');
-			//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
-			echo '<input id="' . esc_attr($inputName) . '__von" name="' . esc_attr($inputName) . '__von" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
-			echo '<label for="' . esc_attr($inputName) . '__bis">';
-			esc_html_e('Up to: ', 'onoffice-for-wp-websites');
-			//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
-			echo '<input id="' . esc_attr($inputName) . '__bis" name="' . esc_attr($inputName) . '__bis" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label></fieldset>';
+			if ($displayMode === 'range' || $displayMode === 'fromOnly') {
+				echo '<label for="' . esc_attr($inputName) . '__von">';
+				esc_html_e('From: ', 'onoffice-for-wp-websites');
+				//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
+				echo '<input id="' . esc_attr($inputName) . '__von" name="' . esc_attr($inputName) . '__von" ' . $inputType;
+				echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
+			}
+			if ($displayMode === 'range' || $displayMode === 'toOnly') {
+				echo '<label for="' . esc_attr($inputName) . '__bis">';
+				esc_html_e('Up to: ', 'onoffice-for-wp-websites');
+				//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
+				echo '<input id="' . esc_attr($inputName) . '__bis" name="' . esc_attr($inputName) . '__bis" ' . $inputType;
+				echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label>';
+			}
+			echo '</fieldset>';
 		} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="' . esc_attr($properties['length']) . '"' : '';
