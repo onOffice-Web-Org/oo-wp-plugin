@@ -79,10 +79,10 @@ class ScriptLoaderMapOsm
 
         $this->_pWPScriptStyle->registerScript('leaflet-script-a11y',
             plugins_url('/third_party/leaflet/leaflet-a11y.js', ONOFFICE_PLUGIN_DIR.'/index.php'),
-            ['leaflet-script']); 
+            ['leaflet-script']);
 
         $this->_pWPScriptStyle->registerScript('leaflet-script-cluster',
             plugins_url('/third_party/leaflet/leaflet-cluster.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'),
-            ['leaflet-script']); 
+            ['leaflet-script']);
     }
 }

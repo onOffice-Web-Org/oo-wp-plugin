@@ -42,6 +42,9 @@ class ScriptLoaderMap
 	/** @var MapProvider */
 	private $_pMapProvider = null;
 
+	/** @var bool */
+	private static $_mapMaybeNeeded = false;
+
 
 	/**
 	 *
@@ -56,12 +59,9 @@ class ScriptLoaderMap
 	{
 		$this->_pMapProvider = $pMapProvider;
 		$this->_pScriptLoaderMapFactory = $pFactory;
+		add_action('wp', [$this, 'markMapMaybeNeeded']);
 	}
 
-
-	/**
-	 *
-	 */
 
 	public function enqueue()
 	{
@@ -69,13 +69,29 @@ class ScriptLoaderMap
 	}
 
 
-	/**
-	 *
-	 */
-
 	public function register()
 	{
 		$this->getSpecificMapLoader()->register();
+		add_action('wp_enqueue_scripts', [$this, 'enqueueIfNeeded'], 20);
+	}
+
+	public function markMapMaybeNeeded()
+	{
+		if (get_query_var('estate_id') !== '' || get_query_var('address_id') !== '') {
+			self::$_mapMaybeNeeded = true;
+			return;
+		}
+		$post = get_queried_object();
+		if ($post instanceof \WP_Post && (has_shortcode($post->post_content, 'oo_estate') || has_shortcode($post->post_content, 'oo_address'))) {
+			self::$_mapMaybeNeeded = true;
+		}
+	}
+
+	public function enqueueIfNeeded()
+	{
+		if (self::$_mapMaybeNeeded) {
+			$this->enqueue();
+		}
 	}
 
 

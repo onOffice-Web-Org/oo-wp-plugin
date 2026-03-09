@@ -36,6 +36,7 @@ use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPPluginChecker;
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 use function dbDelta;
 use function esc_sql;
@@ -50,7 +51,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
 
-	/** @var wpdb */
+	/** @var wpdb|WpdbReadCacheProxy */
 	private $_pWPDB;
 
 	/** @var Container */
@@ -58,11 +59,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	/**
 	 * @param WPOptionWrapperBase $pWpOption
-	 * @param wpdb $pWPDB
+	 * @param wpdb|WpdbReadCacheProxy $pWPDB
 	 *
 	 * @throws Exception
 	 */
-	public function __construct(WPOptionWrapperBase $pWpOption, wpdb $pWPDB)
+	public function __construct(WPOptionWrapperBase $pWpOption, wpdb|WpdbReadCacheProxy $pWPDB)
 	{
 		$this->_pWpOption = $pWpOption;
 		$this->_pWPDB = $pWPDB;
