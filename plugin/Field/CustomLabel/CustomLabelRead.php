@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\CustomLabel;
 
 use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 use const OBJECT;
 use function esc_sql;
@@ -36,14 +37,14 @@ use function esc_sql;
  */
 class CustomLabelRead
 {
-	/** @var wpdb */
+	/** @var wpdb|WpdbReadCacheProxy */
 	private $_pWPDB;
 
 
 	/**
-	 * @param wpdb $pWPDB
+	 * @param wpdb|WpdbReadCacheProxy $pWPDB
 	 */
-	public function __construct(wpdb $pWPDB)
+	public function __construct(wpdb|WpdbReadCacheProxy $pWPDB)
 	{
 		$this->_pWPDB = $pWPDB;
 	}
@@ -138,6 +139,26 @@ class CustomLabelRead
 		return $this->_pWPDB->get_results($query, OBJECT);
 	}
 
+	/**
+	 * Fetches custom labels for multiple fields in a single query.
+	 * @return array fieldname => value
+	 */
+	public function readCustomLabelsByFormIdAndFieldNames(int $formId, array $fieldNames, string $currentLang, string $pCustomsLabelConfigurationField, string $pTranslateLabelConfigurationField): array
+	{
+		if (empty($fieldNames)) {
+			return [];
+		}
+		$query = $this->createCustomsLabelsByFormIdAndFieldNamesQuery($formId, $fieldNames, $currentLang, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
+		$rows = $this->_pWPDB->get_results($query, OBJECT);
+		$result = [];
+		foreach ($rows as $row) {
+			if (!isset($result[$row->fieldname])) {
+				$result[$row->fieldname] = $row->value;
+			}
+		}
+		return $result;
+	}
+
 
 	/**
 	 * @param int $formId
@@ -189,5 +210,23 @@ class CustomLabelRead
 			. "{$prefix}$pTranslateLabelConfigurationField.locale = '" . esc_sql($current_lang) . "' AND\n"
 			. " {$prefix}$pCustomsLabelConfigurationField.form_id = " . esc_sql($formId);
 		return $queryByFormId;
+	}
+
+	private function createCustomsLabelsByFormIdAndFieldNamesQuery(int $formId, array $fieldNames, string $currentLang, string $pCustomsLabelConfigurationField, string $pTranslateLabelConfigurationField): string
+	{
+		$prefix = $this->_pWPDB->prefix;
+		$names = array_map(function ($item) {
+			return "'" . esc_sql($item) . "'";
+		}, $fieldNames);
+		$names = implode(',', $names);
+		return "SELECT {$prefix}$pCustomsLabelConfigurationField.fieldname, "
+			. "{$prefix}$pTranslateLabelConfigurationField.value\n"
+			. "FROM {$prefix}$pCustomsLabelConfigurationField\n"
+			. "INNER JOIN {$prefix}$pTranslateLabelConfigurationField\n"
+			. "ON {$prefix}$pCustomsLabelConfigurationField.customs_labels_id = "
+			. " {$prefix}$pTranslateLabelConfigurationField.input_id\n"
+			. "WHERE {$prefix}$pCustomsLabelConfigurationField.fieldname IN (" . $names . ") AND\n"
+			. " {$prefix}$pTranslateLabelConfigurationField.locale = '" . esc_sql($currentLang) . "' AND\n"
+			. " {$prefix}$pCustomsLabelConfigurationField.form_id = " . esc_sql($formId);
 	}
 }
