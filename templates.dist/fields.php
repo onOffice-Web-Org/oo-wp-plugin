@@ -109,14 +109,14 @@ if (!function_exists('renderFieldEstateSearch')) {
 			$displayMode = $properties['rangeFieldDisplayMode'] ?? 'range';
 			echo '<fieldset class="oo-searchrange">';
 			echo '<legend>' . esc_html($fieldLabel) . '</legend>';
-			if ($displayMode === 'range' || $displayMode === 'fromOnly') {
+			if ($displayMode !== 'toOnly') {
 				echo '<label for="' . esc_attr($inputName) . '__von">';
 				esc_html_e('From: ', 'onoffice-for-wp-websites');
 				//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
 				echo '<input id="' . esc_attr($inputName) . '__von" name="' . esc_attr($inputName) . '__von" ' . $inputType;
 				echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
 			}
-			if ($displayMode === 'range' || $displayMode === 'toOnly') {
+			if ($displayMode !== 'fromOnly') {
 				echo '<label for="' . esc_attr($inputName) . '__bis">';
 				esc_html_e('Up to: ', 'onoffice-for-wp-websites');
 				//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
