@@ -91,6 +91,9 @@ class ScriptLoaderRegistrator
 	{
 		/* @var $pScriptLoader ScriptLoader */
 		foreach ($this->_scriptLoader as $pScriptLoader) {
+			if ($pScriptLoader instanceof ScriptLoaderMap) {
+				continue;
+			}
 			$pScriptLoader->enqueue();
 		}
 	}
