@@ -71,7 +71,8 @@ class TestClassContentFilterShortCodeEstate
 		$input = [
 			'view' => 'default_view',
 			'units' => 'test_units',
-			'address' => null
+			'address' => null,
+			'geo' => null,
 		];
 		$pContentFilterDetail = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
 		$pContentFilterDetail->expects($this->once())
@@ -82,7 +83,7 @@ class TestClassContentFilterShortCodeEstate
 		$pContentFilterList = $this->_pContainer->get(ContentFilterShortCodeEstateList::class);
 		$pContentFilterList->expects($this->once())
 			->method('render')
-			->with(['view' => 'other', 'units' => null, 'address' => null])
+			->with(['view' => 'other', 'units' => null, 'address' => null, 'geo' => null])
 			->will($this->returnValue('rendered list'));
 
 		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstate::class);

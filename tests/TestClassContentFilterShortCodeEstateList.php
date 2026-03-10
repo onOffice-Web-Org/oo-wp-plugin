@@ -159,7 +159,7 @@ class TestClassContentFilterShortCodeEstateList
 	public function testRender()
 	{
 		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstateList::class);
-		$result = $pSubject->render(['view' => 'test_view_list', 'units' => '']);
+		$result = $pSubject->render(['view' => 'test_view_list', 'units' => '', 'geo' => null]);
 		$expectedFile = __DIR__.'/resources/templates/TestClassContentFilterShortCodeEstateList_expected.txt';
 		$this->assertHtmlEqualsFile($expectedFile, $result);
 	}
