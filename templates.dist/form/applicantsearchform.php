@@ -188,10 +188,13 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			} else if ($name === 'regionaler_zusatz') {
 				$pRegionController = new \onOffice\WPlugin\Region\RegionController();
 
+				$value = (array) $value;
 				$pRegion = $pRegionController->getRegionByKey(array_pop($value));
 				/* @var $pRegion \onOffice\WPlugin\Region\Region */
 				if ($pRegion !== null) {
 					$value = esc_html($pRegion->getName());
+				} else {
+					$value = '';
 				}
 			}
 
