@@ -185,15 +185,15 @@ class RecordManagerReadListViewEstate
 	/**
 	 *
 	 * @param array  $fieldRows The array containing rows from oo_plugin_fieldconfig
-	 * @param string $column    The name of the database column (e.g., 'rangeFieldDisplayMode')
+	 * @param string $column    The name of the database column
 	 * @return array
 	 */
-	private function getStringFieldValuesByFieldRow(array $fieldRows, string $column = 'rangeFieldDisplayMode'): array
+	private function getStringFieldValuesByFieldRow(array $fieldRows, string $column): array
 	{
 		$result = [];
 		foreach ($fieldRows as $row) {
 			if (isset($row['fieldname'])) {
-				$result[$row['fieldname']] = $row[$column] ?? 'range';
+				$result[$row['fieldname']] = $row[$column] ?? '';
 			}
 		}
 		return $result;

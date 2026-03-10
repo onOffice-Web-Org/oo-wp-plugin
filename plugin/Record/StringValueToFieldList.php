@@ -78,7 +78,7 @@ class StringValueToFieldList
 	 * @param string $type The constant from InputModelDBFactoryFilterableFields
 	 * @param string $default Default value if nothing was selected
 	 */
-	public function fillStringValues(string $type, string $default = 'range')
+	public function fillStringValues(string $type, string $default = '')
 	{
 		$fieldsArray = $this->readFieldsArray();
 		$pInputModel = $this->_pInputModelFactory->create($type, '', true);
@@ -90,7 +90,7 @@ class StringValueToFieldList
 		{
 			$rawPostData = (array)$this->_pValues->$identifier;
 
-			// Parse composite "key:mode" values (e.g. "wohnflaeche_von:fromOnly")
+			// Parse composite "key:mode" values
 			// The real field key is embedded in the value to avoid truncation by getIdentifier()
 			$modesByRealKey = [];
 			foreach ($rawPostData as $compositeValue) {
