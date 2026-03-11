@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 
 /**
@@ -38,18 +39,18 @@ class RecordManagerInsertGeneric
 	/** @var string */
 	private $_mainTableName = null;
 
-	/** @var wpdb */
+	/** @var wpdb|WpdbReadCacheProxy */
 	private $_pWPDB = null;
 
 
 	/**
 	 *
 	 * @param string $mainTableName
-	 * @param \onOffice\WPlugin\Record\wpdb $pWPDB
+	 * @param wpdb|WpdbReadCacheProxy|null $pWPDB
 	 *
 	 */
 
-	public function __construct(string $mainTableName, wpdb $pWPDB = null)
+	public function __construct(string $mainTableName, wpdb|WpdbReadCacheProxy $pWPDB = null)
 	{
 		$this->_mainTableName = $mainTableName;
 		$this->_pWPDB = $pWPDB ?? $this->getWpdb();

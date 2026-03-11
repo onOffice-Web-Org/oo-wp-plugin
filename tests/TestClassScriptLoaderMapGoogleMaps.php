@@ -113,7 +113,7 @@ class TestClassScriptLoaderMapGoogleMaps
 	{
 		$this->_pSubject->register();
 		$this->_pSubject->enqueue();
-		$this->assertEquals(['gmapsinit', 'google-maps-cluster'], $this->_pWPScriptStyle->getEnqueuedScripts());
+		$this->assertEquals(['google-maps', 'gmapsinit', 'google-maps-cluster'], $this->_pWPScriptStyle->getEnqueuedScripts());
 		$this->assertEquals([], $this->_pWPScriptStyle->getEnqueuedStyles());
 	}
 }
