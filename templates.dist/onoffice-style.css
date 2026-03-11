@@ -27,13 +27,20 @@
     margin: 0;
     padding: 0;
 }
+.oo-form, .lead-lightbox {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 20px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
 .oo-form label {
     width: 100%;
     display: block;
-}
-
-.oo-form label, .oo-single-select, .oo-multi-select {
-    margin-bottom: 20px;
 }
 
 .oo-single-select label, .oo-multi-select label {
@@ -44,6 +51,12 @@
     display: block;
     padding: 8px 8px;
     width: 100%;
+}
+
+input[type="radio"], input[type="checkbox"] {
+    margin-left:10px;
+    height: 20px;
+    width: 20px;
 }
 
 .oo-form input[type=number] {
@@ -132,7 +145,7 @@ span.oo-searchrange {
     display: none;
 }
 
-.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus, .oo-searchformfield input:focus, .ts-wrapper.focus, .ts-wrapper:focus-visible, .ts-wrapper.single.focus, .ts-wrapper.single:focus-visible, .ts-wrapper.multi.focus, .ts-wrapper.multi:focus-visible, .oo-post-nav-links a:focus, .leadform-back:focus, .leadform-forward:focus {
+.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus, .oo-searchformfield input:focus, .ts-wrapper.focus, .ts-wrapper:focus-visible, .ts-wrapper.single.focus, .ts-wrapper.single:focus-visible, .ts-wrapper.multi.focus, .ts-wrapper.multi:focus-visible, .oo-post-nav-links a:focus, .leadform-back:focus, .leadform-forward:focus, input[type="checkbox"]:focus, input[type="radio"]:focus {
     outline: #3d7bb1 solid 2px;
     border-color: #3d7bb1;
 }
@@ -144,6 +157,7 @@ span.oo-searchrange {
 .leadform-back {
     float:left
 }
+
 .oo-form input[type='submit'], .oo-searchformfield input[type='submit'], .leadform-back, .leadform-forward {
     text-align: center;
     color: #ffffff !important;
