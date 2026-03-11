@@ -319,6 +319,10 @@ class DataFormConfigurationFactory
 				'individual_fieldname' => 0,
 			];
 
+			if (array_key_exists('page_per_form', $row)) {
+				$geoPositionField['page_per_form'] = $row['page_per_form'];
+			}
+
 			$geoPositionFields []= $geoPositionField;
 		}
 
