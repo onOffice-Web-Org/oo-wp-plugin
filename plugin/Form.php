@@ -216,21 +216,7 @@ class Form
 	 */
 	public function getPagePerForm(string $field): int
 	{
-		$pagePerForm = $this->getDataFormConfiguration()->getPagePerForm();
-		if (isset($pagePerForm[$field])) {
-			return $pagePerForm[$field];
-		}
-
-		/** @var CompoundFieldsFilter $pCompoundFieldsFilter */
-		$pCompoundFieldsFilter = $this->_pContainer->get(CompoundFieldsFilter::class);
-		$compoundFields = $pCompoundFieldsFilter->buildCompoundFields($this->_pFieldsCollection);
-		foreach ($compoundFields as $compoundName => $subFields) {
-			if (in_array($field, $subFields) && isset($pagePerForm[$compoundName])) {
-				return $pagePerForm[$compoundName];
-			}
-		}
-
-		return 1;
+		return $this->getDataFormConfiguration()->getPagePerForm()[$field] ?? 1;
 	}
 
 	/**
