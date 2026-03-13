@@ -1704,19 +1704,19 @@ msgid "Postal code"
 msgstr ""
 
 msgid "Please select at least one option."
-msgstr ""
+msgstr "Bitte wählen Sie eine Option aus."
 
 msgid "Please enter a text."
-msgstr ""
+msgstr "Bitte geben Sie einen Text ein."
 
 msgid "Please agree to the terms and conditions."
-msgstr ""
+msgstr "Bitte stimmen Sie den Bedingungen zu."
 
 msgid "Please select this option."
-msgstr ""
+msgstr "Bitte wählen Sie diese Option aus."
 
 msgid "Please enter a valid e-mail address."
-msgstr ""
+msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein."
 
 msgid "Thank you for your inquiry. We will get back to you as soon as possible."
 msgstr ""
@@ -1731,7 +1731,7 @@ msgid "Spam recognized!"
 msgstr ""
 
 msgid "* Mandatory fields"
-msgstr ""
+msgstr "* Pflichtfelder"
 
 msgid "Ort der Immobilie"
 msgstr ""

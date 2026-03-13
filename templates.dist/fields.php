@@ -139,7 +139,7 @@ if (!function_exists('renderFormField')) {
 
 	function renderErrorHtml(?string $errorMessage, bool $shouldDisplay): string {
         if (!empty($errorMessage) && $shouldDisplay) {
-            return "<div class='error' aria-hidden='true' role='alert' aria-atomic='true'><p>" . esc_html($errorMessage) . "</p></div>";
+            return "<span class='error' aria-hidden='true' aria-atomic='true'><p>" . esc_html($errorMessage) . "</p></span>";
         }
         return '';
     }
@@ -266,7 +266,7 @@ if (!function_exists('renderFormField')) {
 			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 
-			$output = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
+			$output = '<select aria-hidden="true" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
 			$output .= $htmlOptions;
 			$output .= '</select>'.$errorHtml;
 		} else {

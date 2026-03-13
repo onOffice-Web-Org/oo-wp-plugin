@@ -27,16 +27,40 @@
     margin: 0;
     padding: 0;
 }
-
 .oo-form label, .oo-single-select, .oo-multi-select {
     margin-bottom: 20px;
+}
+
+.oo-form label {
+    width: 100%;
+    display: block;
 }
 
 .oo-single-select label, .oo-multi-select label {
     margin: 0;
 }
 
-.oo-form.validated input:invalid, .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated textarea:invalid, .required.invalid:has(+ div[aria-hidden='false']) {
+.oo-form input:not(.tomselect-checkbox):not([type="checkbox"]):not([type="radio"]), .oo-form textarea {
+    display: block;
+    padding: 8px 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.oo-form input[type="checkbox"] {
+    margin-left:10px;
+    height: 20px;
+    width: 20px;
+}
+.oo-form input[type="radio"] {
+    width: auto;
+}
+
+.oo-form input[type=number] {
+    min-width: 200px;
+}
+
+.oo-form.validated input:invalid, .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated .oo-multi-select .is-invalid, .oo-form.validated textarea:invalid, .required.invalid:has(+ div[aria-hidden='false']), .oo-form input[aria-invalid='true'], .oo-form textarea[aria-invalid='true'], .oo-form .is-invalid {
     border: 2px solid #DC2625;
     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23DC2625" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>');    
     background-repeat: no-repeat;
@@ -53,16 +77,15 @@
  }
 
  .oo-form.validated textarea:required:valid,
- .oo-form.validated input:required:valid, .oo-form.validated .oo-single-select .required.has-items.ts-wrapper  {
+ .oo-form.validated input:required:valid, .oo-form.validated .oo-single-select .required.has-items.ts-wrapper, .oo-form.validated .oo-multi-select .required.has-items.ts-wrapper  {
    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%2328a745' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/></svg>");
    background-repeat: no-repeat;
    background-position: right 15px center;
    border: 1px solid green;
    background-size: 1.25rem;
-   
  }
  
- .oo-form.validated .oo-single-select .required.has-items.ts-wrapper,  .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated input:required:valid[type="date"], .oo-form.validated input:required:valid[type="number"], .oo-form.validated input:invalid[type="number"] {
+ .oo-form.validated .oo-single-select .required.has-items.ts-wrapper, .oo-form.validated .oo-single-select .is-invalid, .oo-form.validated .oo-multi-select .required.has-items.ts-wrapper, .oo-form.validated .oo-multi-select .is-invalid, .oo-form.validated input:required:valid[type="date"], .oo-form.validated input:required:valid[type="number"], .oo-form.validated input:invalid[type="number"] {
     background-position: right 30px center;
 }
 
@@ -70,7 +93,7 @@
     margin: 0;
 }
 
-.oo-form.oo-validated .error, .oo-form input:invalid~.oo-form.oo-validated .error{
+.oo-form input:invalid~.oo-form.validated .error{
     display: block;
 }
 
@@ -119,12 +142,30 @@ span.oo-searchrange {
     display: none;
 }
 
-.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus, .oo-searchformfield input:focus, .ts-wrapper.focus, .ts-wrapper:focus-visible, .ts-wrapper.single.focus, .ts-wrapper.single:focus-visible, .ts-wrapper.multi.focus, .ts-wrapper.multi:focus-visible, .oo-post-nav-links a:focus {
+.oo-form input:focus, .oo-form textarea:focus, .oo-form select:focus, .oo-detailview a:focus, .oo-searchformfield input:focus, .ts-wrapper.focus, .ts-wrapper:focus-visible, .ts-wrapper.single.focus, .ts-wrapper.single:focus-visible, .ts-wrapper.multi.focus, .ts-wrapper.multi:focus-visible, .oo-post-nav-links a:focus, .leadform-back:focus, .leadform-forward:focus, input[type="checkbox"]:focus, input[type="radio"]:focus {
     outline: #3d7bb1 solid 2px;
     border-color: #3d7bb1;
 }
 
-.oo-form input[type='submit'], .oo-searchformfield input[type='submit'] {
+.leadform-forward {
+    float:right;
+}
+
+.leadform-submit {
+    margin-bottom: 20px;
+    float: right;
+}
+
+.leadform-back {
+    float:left
+}
+
+.lead-title {
+    margin: 0 0 20px;
+    padding: 20px 0 0;
+}
+
+.oo-form input[type='submit'], .oo-searchformfield input[type='submit'], .leadform-back, .leadform-forward {
     text-align: center;
     color: #ffffff !important;
     padding: 5px;
@@ -143,12 +184,15 @@ span.oo-searchrange {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
+    gap: 20px;
 }
 
-.oo-form .oo-input-wrapper label:nth-child(2){
-    margin-left: 20px;
+.oo-form input::placeholder, .oo-form input::-webkit-input-placeholder, .oo-form input:-moz-placeholder {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 20px;  
 }
 /* estate map */
 .oo-estate-map {
@@ -855,6 +899,7 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus, .oo-form i
 .ts-dropdown, .ts-control, .ts-control input {
     font-size: inherit;
     color: inherit;
+    border-color: #767676;
 }
 
 .oo-post-nav-links {
