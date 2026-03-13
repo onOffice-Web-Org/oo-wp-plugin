@@ -37,4 +37,4 @@ function oo_plugin_updater( $transient ){
 	return $transient;
 
 }
-add_filter( 'site_transient_update_plugins', 'oo_plugin_updater' );
+add_filter( 'pre_set_site_transient_update_plugins', 'oo_plugin_updater' );

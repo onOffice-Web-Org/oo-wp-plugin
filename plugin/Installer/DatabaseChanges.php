@@ -46,7 +46,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 62;
+	const MAX_VERSION = 63;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -180,6 +180,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->updateValueGeoFieldsForForms();
 			case $dbversion <= 61:
 				$this->migrateMarkedPropertiesSort();
+			case $dbversion <= 62:
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
@@ -350,6 +351,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`hidden` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
 			`convertTextToSelectForCityField` tinyint(1) NOT NULL DEFAULT '0',
+			`rangeFieldDisplayMode` varchar(20) DEFAULT 'range',
 			PRIMARY KEY (`fieldconfig_id`)
 		) $charsetCollate;";
 

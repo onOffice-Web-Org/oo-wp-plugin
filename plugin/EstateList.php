@@ -1282,11 +1282,11 @@ class EstateList
 				$pFieldsCollection,
 				new GeoPositionFieldHandler
 			);
-
 		if (array_key_exists("radius", $fieldsValues)) {
 			$geoFields = $pDataView->getGeoFields();
 			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
 		}
+		$allDisplayModes = $pDataView->getRangeFieldDisplayModes();
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
@@ -1294,6 +1294,7 @@ class EstateList
 			$result[$field]['name'] = $field;
 			$result[$field]['value'] = $value;
 			$result[$field]['label'] = $this->getFieldLabel($field);
+			$result[$field]['rangeFieldDisplayMode'] = $allDisplayModes[$field] ?? 'range';
 			if (
 				in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS) &&
 				!empty(get_option('onoffice-settings-thousand-separator'))
