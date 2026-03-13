@@ -44,6 +44,7 @@
     display: block;
     padding: 8px 8px;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .oo-form input[type="checkbox"] {
