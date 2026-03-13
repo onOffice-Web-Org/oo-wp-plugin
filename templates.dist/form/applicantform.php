@@ -105,8 +105,8 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
     }
 
 	if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-		$line = '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.renderFormField( 'gdprcheckbox', $pForm );
-		$line .= $pForm->getFieldLabel( 'gdprcheckbox' ) .' </span>'. $addition.'</label>';
+		$line = '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">';
+		$line .= $pForm->getFieldLabel( 'gdprcheckbox' ) .' </span>'. $addition.renderFormField( 'gdprcheckbox', $pForm ).'</label>';
 	}
 
 	if ( in_array( $input, array( 'message' )) ) {
