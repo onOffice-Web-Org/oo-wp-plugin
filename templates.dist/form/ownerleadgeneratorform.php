@@ -144,7 +144,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 						} ?>
 
                         <?php if($totalPages > 1): ?>
-                            <h2><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></h2>
+                            <h2 class="lead-title"><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></h2>
                         <?php endif; ?>
                             <?php 
 							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $fields contains escaped HTML from renderFormField

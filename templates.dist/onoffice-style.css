@@ -27,15 +27,8 @@
     margin: 0;
     padding: 0;
 }
-.oo-form, .lead-lightbox {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    gap: 20px;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+.oo-form label, .oo-single-select, .oo-multi-select {
+    margin-bottom: 20px;
 }
 
 .oo-form label {
@@ -159,10 +152,16 @@ span.oo-searchrange {
 
 .leadform-submit {
     margin-bottom: 20px;
+    float: right;
 }
 
 .leadform-back {
     float:left
+}
+
+.lead-title {
+    margin: 0 0 20px;
+    padding: 20px 0 0;
 }
 
 .oo-form input[type='submit'], .oo-searchformfield input[type='submit'], .leadform-back, .leadform-forward {
