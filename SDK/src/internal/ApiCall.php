@@ -489,11 +489,11 @@ class ApiCall
 							unset($filteredArray[$index]);
 							break;
 						}
-						$longitude = floatval($selectedCoordinates[0]) ?? 0;
-						$laditude = floatval($selectedCoordinates[1]) ?? 0;
+						$longitude = floatval($selectedCoordinates[0]);
+						$latitude = floatval($selectedCoordinates[1]);
 
 						$coordinate1 = new Coordinate($item["elements"]['laengengrad'], $item["elements"]['breitengrad']);
-						$coordinate2 = new Coordinate($longitude, $laditude);
+						$coordinate2 = new Coordinate($longitude, $latitude);
 						$distance = $calculator->getDistance($coordinate1, $coordinate2);
 
 						if(intval($distance/1000) > $km){

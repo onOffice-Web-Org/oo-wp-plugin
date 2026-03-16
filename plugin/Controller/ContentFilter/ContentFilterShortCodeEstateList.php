@@ -130,7 +130,7 @@ class ContentFilterShortCodeEstateList
 			{
 				$geoObj = json_decode($geo);
 				if(json_last_error() != JSON_ERROR_NONE || is_string($geoObj) || is_integer($geoObj))
-					$geoObj = json_decode('{ "km": '.$geo.' }');
+					$geoObj = (object) ['km' => intval($geo)];
 
 				$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
 				$pListViewFilterBuilder->setFilterGeoSearch($geoObj);

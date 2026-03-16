@@ -692,16 +692,17 @@ class EstateList
 			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
 			$geoCoords = explode( ',', $geoSearch );
 			if ( count( $geoCoords ) === 2 ) {
-				$range = sprintf("%d", $filter['geo'][0]['val']) ?? "300";
 				unset($filter['geo']);
-				$longitude = $geoCoords[0];
-				$latitude = $geoCoords[1];
+				$longitude = floatval($geoCoords[0]);
+				$latitude = floatval($geoCoords[1]);
 
-				$requestParams['georangesearch'] = [
-					'longitude' => $longitude,
-					'latitude' => $latitude,
-					'radius' => $range
-				];
+				if ($longitude < -180 || $longitude > 180 || $latitude < -90 || $latitude > 90) {
+					$requestParams['georangesearch'] = [
+						'longitude' => $longitude,
+						'latitude' => $latitude,
+						'radius' => intval(filter['geo']80}['val']) ?: 300,
+					];
+				}
 			}
 		}
 
