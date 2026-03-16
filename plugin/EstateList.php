@@ -700,7 +700,7 @@ class EstateList
 					$requestParams['georangesearch'] = [
 						'longitude' => $longitude,
 						'latitude' => $latitude,
-						'radius' => intval(filter['geo']80}['val']) ?: 300,
+						'radius' => intval(filter['geo'][0]['val']) ?: 300,
 					];
 				}
 			}
