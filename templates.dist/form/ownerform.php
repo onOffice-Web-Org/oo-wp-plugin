@@ -69,10 +69,10 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		}
 		
 		switch ($input) {
-			case "ort": $fieldLabel = esc_html__('Ort der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "plz": $fieldLabel = esc_html__('PLZ der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "strasse": $fieldLabel = esc_html__('Straße der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "hausnummer": $fieldLabel = esc_html__('Hausnummer der Immobilie', 'onoffice-for-wp-websites'); break;
+			case "ort": $fieldLabel = esc_html__('Property Location', 'onoffice-for-wp-websites'); break;
+			case "plz": $fieldLabel = esc_html__('Property ZIP Cod', 'onoffice-for-wp-websites'); break;
+			case "strasse": $fieldLabel = esc_html__('Property Street', 'onoffice-for-wp-websites'); break;
+			case "hausnummer": $fieldLabel = esc_html__('Property House Number', 'onoffice-for-wp-websites'); break;
 			default: $fieldLabel = $pForm->getFieldLabel($input);
 		}
 
@@ -99,8 +99,8 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderFormField returns escaped HTML
-            $line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.renderFormField( 'gdprcheckbox', $pForm );
-			$line .= esc_html($pForm->getFieldLabel( 'gdprcheckbox' )) .' '. wp_kses_post($addition).'</span></label>';
+            $line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">';
+			$line .= esc_html($pForm->getFieldLabel( 'gdprcheckbox' )) .' '. wp_kses_post($addition).renderFormField( 'gdprcheckbox', $pForm ).'</span></label>';
 		}
 		if ( in_array( $input, array( 'message' )) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );

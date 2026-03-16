@@ -503,6 +503,10 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	max-width: 16px;
 }
 
+.oo-poststuff .custom-input-field input[name*=rangeFieldDisplayMode] + label {
+	width: auto;
+}
+
 .oo-poststuff .custom-input-field.custom-from-to-input {
 	flex-wrap: wrap;
 }
