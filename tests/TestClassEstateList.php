@@ -704,7 +704,8 @@ class TestClassEstateList
 				'compoundFields' => [],
 				'labelOnlyValues' => [],
 				'tablename' => '',
-				'dependencies' => Array ()
+				'dependencies' => Array (),
+				'rangeFieldDisplayMode' => 'range'
 			],
 			'objekttyp' => [
 				'name' => 'objekttyp',
@@ -721,7 +722,8 @@ class TestClassEstateList
 				'compoundFields' => [],
 				'labelOnlyValues' => [],
 				'tablename' => '',
-				'dependencies' => Array ()
+				'dependencies' => Array (),
+				'rangeFieldDisplayMode' => 'range'
 			],
 		];
 
