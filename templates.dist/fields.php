@@ -376,9 +376,10 @@ if (!function_exists('renderRegionalAddition')) {
 		ob_start();
 		/* translators: %s: field label for regional addition dropdown */
 		echo '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
+		$selectedValue = (array) ($selectedValue ?? []);
 		foreach ($regions as $pRegion) {
 			/* @var $pRegion Region */
-			printRegion($pRegion, $selectedValue ?? []);
+			printRegion($pRegion, $selectedValue);
 		}
 		$output .= ob_get_clean();
 		$output .= '</select>';
