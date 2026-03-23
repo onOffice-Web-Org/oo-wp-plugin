@@ -67,6 +67,8 @@ class ContentFilterShortCodeEstate
 	{
 		try {
 			return $this->buildReplacementString($attributesInput);
+		} catch (UnknownViewException $e) {
+			throw $e;
 		} catch (Exception $pException) {
 			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
