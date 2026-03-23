@@ -29,6 +29,7 @@ use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstate;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstateDetail;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstateList;
+use onOffice\WPlugin\DataView\UnknownViewException;
 
 class TestClassContentFilterShortCodeEstate
 	extends \WP_UnitTestCase
@@ -64,6 +65,15 @@ class TestClassContentFilterShortCodeEstate
 	{
 		$result = $this->_pContainer->get(ContentFilterShortCodeEstate::class)->getTag();
 		$this->assertSame('oo_estate', $result);
+	}
+
+	public function testReplaceShortCodesRethrowsUnknownViewException()
+	{
+		$pContentFilterList = $this->_pContainer->get(ContentFilterShortCodeEstateList::class);
+		$pContentFilterList->method('render')->willThrowException(new UnknownViewException('missing'));
+
+		$this->expectException(UnknownViewException::class);
+		$this->_pContainer->get(ContentFilterShortCodeEstate::class)->replaceShortCodes(['view' => 'missing']);
 	}
 
 	public function testReplaceShortCodesForDetail()
