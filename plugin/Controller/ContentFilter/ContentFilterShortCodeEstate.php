@@ -67,9 +67,32 @@ class ContentFilterShortCodeEstate
 	{
 		try {
 			return $this->buildReplacementString($attributesInput);
+		} catch (UnknownViewException) {
+			return $this->buildShortcodeStringForDisplay($attributesInput);
 		} catch (Exception $pException) {
 			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
+	}
+
+	/**
+	 * @param array $attributesInput
+	 * @return string
+	 */
+	private function buildShortcodeStringForDisplay(array $attributesInput): string
+	{
+		$tag = $this->getTag();
+		$parts = [];
+		foreach ($attributesInput as $name => $value) {
+			if (!is_string($name) || $name === '') {
+				continue;
+			}
+			if ($value === null || $value === '') {
+				continue;
+			}
+			$parts[] = esc_html($name) . '="' . esc_html((string) $value) . '"';
+		}
+		$inner = $parts === [] ? '' : ' ' . implode(' ', $parts);
+		return '[' . esc_html($tag) . $inner . ']';
 	}
 
 	/**
