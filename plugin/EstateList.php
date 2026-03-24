@@ -693,19 +693,27 @@ class EstateList
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
 		if (isset($filter['geo']) && isset( $_GET['geo_search'] ) ) {
 			$geoRadius = intval($filter['geo'][0]['val'] ?? 300);
+			$geoCountry = $filter['geo'][0]['country'] ?? null;
 			unset($filter['geo']);
 			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
-			$geoCoords = explode( ',', $geoSearch );
+			// JS sends coordinates as "lng|lat" (pipe-separated)
+			$geoCoords = explode( '|', $geoSearch );
 			if ( count( $geoCoords ) === 2 ) {
 				$longitude = floatval($geoCoords[0]);
 				$latitude = floatval($geoCoords[1]);
 
-				if ($longitude >= -180 && $longitude <= 180 && $latitude >= -90 && $latitude <= 90) {
-					$requestParams['georangesearch'] = [
-						'longitude' => $longitude,
-						'latitude' => $latitude,
-						'radius' => $geoRadius ?: 300,
+				if ($longitude >= -180 && $longitude <= 180 && $latitude >= -90 && $latitude <= 90
+					&& ($longitude != 0.0 || $latitude != 0.0)) {
+					$georange = [
+						'longitude' => strval($longitude),
+						'latitude' => strval($latitude),
+						'radius' => strval($geoRadius ?: 300),
 					];
+					if (!empty($geoCountry)) {
+						$georange['country'] = $geoCountry;
+					}
+
+					$requestParams['georangesearch'] = $georange;
 				}
 			}
 		}
