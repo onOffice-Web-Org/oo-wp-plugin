@@ -353,6 +353,9 @@ class EstateList
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
 
+		// Always remove 'geo' from filter — it's internal metadata, not a valid API filter operator --- IGNORE ---
+		unset($filter['geo']);
+
 		$numRecordsPerPage = 500;
 
 		$pFieldModifierHandler = new ViewFieldModifierHandler(
@@ -575,10 +578,10 @@ class EstateList
 			$pListView->getFields(),
 			onOfficeSDK::MODULE_ESTATE
 		);
-
-		if (isset($filter['geo']) && isset( $_GET['geo_search'] ) ) {
-			unset($filter['geo']);
-		}
+		
+		// Always remove 'geo' from filter — it's internal metadata, not a valid API filter operator --- IGNORE ---
+		unset($filter['geo']);
+		
 
 		$requestParams = [
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
@@ -689,18 +692,19 @@ class EstateList
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
 		if (isset($filter['geo']) && isset( $_GET['geo_search'] ) ) {
+			$geoRadius = intval($filter['geo'][0]['val'] ?? 300);
+			unset($filter['geo']);
 			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
 			$geoCoords = explode( ',', $geoSearch );
 			if ( count( $geoCoords ) === 2 ) {
-				unset($filter['geo']);
 				$longitude = floatval($geoCoords[0]);
 				$latitude = floatval($geoCoords[1]);
 
-				if ($longitude < -180 || $longitude > 180 || $latitude < -90 || $latitude > 90) {
+				if ($longitude >= -180 && $longitude <= 180 && $latitude >= -90 && $latitude <= 90) {
 					$requestParams['georangesearch'] = [
 						'longitude' => $longitude,
 						'latitude' => $latitude,
-						'radius' => intval(filter['geo'][0]['val']) ?: 300,
+						'radius' => $geoRadius ?: 300,
 					];
 				}
 			}
