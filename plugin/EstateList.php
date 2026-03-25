@@ -443,6 +443,7 @@ class EstateList
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
 		foreach ($inputs->getFields() as $name) {
@@ -468,6 +469,7 @@ class EstateList
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
 		foreach ($inputs->getFilterableFields() as $name) {

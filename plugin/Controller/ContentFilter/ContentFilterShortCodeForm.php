@@ -26,6 +26,7 @@ namespace onOffice\WPlugin\Controller\ContentFilter;
 use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form\FormBuilder;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
@@ -81,6 +82,8 @@ class ContentFilterShortCodeForm
 			$pTemplate = $this->_pTemplate->withTemplateName($template);
 			$pForm = $this->_pFormBuilder->build($attributes['form'], $pFormConfig->getFormType());
 			return $pTemplate->withForm($pForm)->render();
+		} catch (UnknownFormException $e) {
+			throw $e;
 		} catch (Exception $pException) {
 			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
