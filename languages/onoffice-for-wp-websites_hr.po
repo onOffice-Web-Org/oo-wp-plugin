@@ -160,7 +160,7 @@ msgstr[2] "%s višekatnih garaža"
 msgid "%s other parking lot"
 msgid_plural "%s other parking lots"
 msgstr[0] "%s ostalo parkirno mjesto"
-msgstr[1] "%s ostala parkirna mjesta"
+msgstr[1] "%s ostalih parkirnih mjesta"
 msgstr[2] "%s ostalih parkirnih mjesta"
 
 #. translators: %s is the amount of parking spaces
@@ -1004,7 +1004,7 @@ msgstr "GDPR (potvrdni okvir)"
 
 #: 
 msgid "Geo Fields"
-msgstr "Geo polja"
+msgstr "Polja radijusa"
 
 #: 
 msgid "Geo Position"
@@ -1012,7 +1012,7 @@ msgstr "Geo lokacija"
 
 #: 
 msgid "Geo Range Search"
-msgstr "Pretraga geografskog područja"
+msgstr "Pretraga područja radijusa"
 
 #: 
 msgid "Getting started"
@@ -1344,7 +1344,7 @@ msgstr "Migration Guide"
 
 #: 
 msgid "Miscellaneous"
-msgstr "Razno"
+msgstr "Ostalo"
 
 #: 
 msgid "missing"
