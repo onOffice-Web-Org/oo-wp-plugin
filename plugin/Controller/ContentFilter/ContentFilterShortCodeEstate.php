@@ -88,6 +88,7 @@ class ContentFilterShortCodeEstate
 	{
 		$attributes = shortcode_atts([
 			'view' => null,
+			'geo' => null,
 			'units' => null,
 			'address' => null,
 		], $attributesInput);

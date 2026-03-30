@@ -70,6 +70,9 @@ class DataFormConfigurationInterest
 	/** @var bool */
 	private $_defaultRecipient = false;
 
+	/** @var bool */
+	private $_pages = false;
+
 	/** @return bool */
 	public function getCheckDuplicateOnCreateAddress()
 		{ return $this->_checkDuplicateOnCreateAddress; }

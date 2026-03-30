@@ -229,7 +229,8 @@ class ApiCall
 		if(isset($sortby))
 		{
 			$compareRecords = function ($a, $b, $sortBy, $sortOrder, $fieldTypes) {
-				if(in_array($fieldTypes[$sortBy], ['boolean', 'date', 'datetime', 'float', 'integer'])){
+				$fieldType = $fieldTypes[$sortBy] ?? null;
+				if(in_array($fieldType, ['boolean', 'date', 'datetime', 'float', 'integer'])){
 					$sortA = isset($a['elementsRaw'][$sortBy]) ? $a['elementsRaw'][$sortBy]
 						: (isset($a['elements'][$sortBy]) ? $a['elements'][$sortBy] : '');
 					$sortB = isset($b['elementsRaw'][$sortBy]) ? $b['elementsRaw'][$sortBy]
@@ -239,18 +240,17 @@ class ApiCall
 					$sortA = isset($a['elements'][$sortBy]) ? $a['elements'][$sortBy] : '';
 					$sortB = isset($b['elements'][$sortBy]) ? $b['elements'][$sortBy] : '';
 				}
-				if((array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "integer")
-					|| (array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "float"))
+				if($fieldType === "integer" || $fieldType === "float")
 				{
 					$sortA = $this->tofloat($sortA ?? "");
 					$sortB = $this->tofloat($sortB ?? "");
 				}
-				if(array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "date")
+				if($fieldType === "date")
 				{
 					$sortA = strtotime($sortA);
 					$sortB = strtotime($sortB);
 				}
-				if(array_key_exists($sortBy,$fieldTypes) && $fieldTypes[$sortBy] === "boolean")
+				if($fieldType === "boolean")
 				{
 					$sortA = $sortA === "" ? "0" : $sortA;
 					$sortB = $sortB === "" ? "0" : $sortB;
@@ -323,13 +323,13 @@ class ApiCall
 						if(!array_key_exists($fieldName,$item["elements"]))
 						{
 							unset($filteredArray[$index]);
-							break;
+							break 2;
 						}
 						if(is_array($val))
 						{
 							if(!in_array($item["elements"][$fieldName],$val)){
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 
 						} else {
@@ -338,28 +338,28 @@ class ApiCall
 								&& intval($itemRaw["elements"][$fieldName]) != intval($val))
 							{
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 							//float compare
 							if($fieldTypes[$fieldName] === "float"
 								&& floatval($itemRaw["elements"][$fieldName]) != floatval($val))
 							{
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 							//boolean compare
 							if($fieldTypes[$fieldName] === "boolean"
 								&& (intval($itemRaw["elements"][$fieldName]) != intval($val)))
 							{
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 
 							//string compare
 							if(($fieldTypes[$fieldName] === "varchar" || $fieldTypes[$fieldName] === "varchar")
 								&& mb_strtolower($item["elements"][$fieldName]) != mb_strtolower($val)){
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 						}
 					}
@@ -369,7 +369,7 @@ class ApiCall
 						{
 							if(!in_array($item["elements"][$fieldName],$val)){
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 
 						} else {
@@ -378,27 +378,27 @@ class ApiCall
 								&& intval($itemRaw["elements"][$fieldName]) == intval($val))
 							{
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 							//float compare
 							if($fieldTypes[$fieldName] === "float"
 								&& floatval($itemRaw["elements"][$fieldName]) == floatval($val))
 							{
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 							//boolean compare
 							if($fieldTypes[$fieldName] === "boolean"
 								&& boolval($itemRaw["elements"][$fieldName]) == boolval($val))
 							{
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 
 							//string compare
 							if(mb_strtolower($item["elements"][$fieldName]) == mb_strtolower($val)){
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 						}
 					}
@@ -418,11 +418,11 @@ class ApiCall
 
 							if (!$hasValidParkingLot) {
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 						} elseif(!array_key_exists($fieldName,$itemRaw["elements"]) || stripos($itemRaw["elements"][$fieldName], $val) === false){
 							unset($filteredArray[$index]);
-							break;
+							break 2;
 						}
 					}
 					elseif (strtolower($op) === 'in')
@@ -443,11 +443,11 @@ class ApiCall
 						if(is_array($elVal)) {
 							if (empty($elVal) || count(array_intersect(array_map('strtolower', $elVal), $lowerVal)) === 0) {
 								unset($filteredArray[$index]);
-								break;
+								break 2;
 							}
 						}elseif(!in_array(mb_strtolower($elVal ?? ''), $lowerVal)){
 							unset($filteredArray[$index]);
-							break;
+							break 2;
 						}
 					}
 					elseif ($op === '<=')
@@ -455,7 +455,7 @@ class ApiCall
 						if(!array_key_exists($fieldName,$itemRaw["elements"])
 							|| $this->isBigger($val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
 							unset($filteredArray[$index]);
-							break;
+							break 2;
 						}
 					}
 					elseif ($op === '>=')
@@ -463,7 +463,7 @@ class ApiCall
 						if(!array_key_exists($fieldName,$itemRaw["elements"])
 							|| $this->isSmaller($val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
 							unset($filteredArray[$index]);
-							break;
+							break 2;
 						}
 					}
 					elseif (strtolower($op) === 'geo')
@@ -473,6 +473,9 @@ class ApiCall
 						$max = $value[0]["max"];
 
 						$loc = $value[0]["loc"] ?? '';
+						if(str_starts_with($loc, "0-")) {
+							$loc = substr($loc, 2);
+						}
 						if($loc != '' && $min != null && intval($min) > 0)
 							$isGeoAndMin = $min;
 						if($loc != '' && $max != null && intval($max) > 0)
@@ -484,16 +487,18 @@ class ApiCall
 							continue;
 						if($item["elements"]['laengengrad'] == null || $item["elements"]['breitengrad'] == null){
 							unset($filteredArray[$index]);
-							break;
+							break 2;
 						}
+						$longitude = floatval($selectedCoordinates[0]);
+						$latitude = floatval($selectedCoordinates[1]);
 
 						$coordinate1 = new Coordinate($item["elements"]['laengengrad'], $item["elements"]['breitengrad']);
-						$coordinate2 = new Coordinate($selectedCoordinates[0], $selectedCoordinates[1]);
+						$coordinate2 = new Coordinate($longitude, $latitude);
 						$distance = $calculator->getDistance($coordinate1, $coordinate2);
 
 						if(intval($distance/1000) > $km){
 							unset($filteredArray[$index]);
-							break;
+							break 2;
 						} else {
 							$filteredArray[$index]["elements"]['geo_distance'] = intval($distance);
 							$filteredArrayRaw[$k]["elements"]['geo_distance'] = intval($distance);
