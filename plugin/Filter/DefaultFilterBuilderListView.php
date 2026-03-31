@@ -119,6 +119,8 @@ class DefaultFilterBuilderListView
 		foreach ($filterableFields as $field) {
 			if ($pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $field)) {
 				$activeFilterableFields []= $field;
+			} else {
+				$activeFilterableFields []= $field;
 			}
 		}
 
