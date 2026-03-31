@@ -66,14 +66,21 @@ class DefaultFilterBuilderListView
 		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 	}
 
+	public function setDataListView(DataListView $pDataListView): void
+	{
+		$this->_pDataListView = $pDataListView;
+	}
+
 	/**
+	 * @param DataListView|null $pDataListViewOverride optional override for DataListView
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function buildFilter(): array
+	public function buildFilter(?DataListView $pDataListViewOverride = null): array
 	{
-		$filterableFields = $this->_pDataListView->getFilterableFields();
+		$useDataListView = $pDataListViewOverride ?? $this->_pDataListView;
+		$filterableFields = $useDataListView->getFilterableFields();
 
 		// Geo position will be done later
 		if (in_array(GeoPosition::FIELD_GEO_POSITION, $filterableFields)) {
@@ -85,13 +92,13 @@ class DefaultFilterBuilderListView
 		$fieldFilter = $this->_pEnvironment->getFilterBuilderInputVariables()->getPostFieldsFilter($filterableFields);
 		$filter = array_merge($this->_defaultFilter, $fieldFilter);
 
-		switch ($this->_pDataListView->getListType()) {
+		switch ($useDataListView->getListType()) {
 			case DataListView::LISTVIEW_TYPE_FAVORITES:
 				$filter = $this->getFavoritesFilter();
 				break;
 		}
 
-		$priceFields = $this->_pDataListView->getListFieldsShowPriceOnRequest();
+		$priceFields = $useDataListView->getListFieldsShowPriceOnRequest();
 		$filterKeys = array_keys($filter);
 
 		if (count(array_intersect($priceFields, $filterKeys)) > 0) {

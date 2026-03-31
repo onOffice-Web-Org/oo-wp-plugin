@@ -138,6 +138,10 @@ class InputVariableReaderParser
 			return null;
 		}
 
+		if ($boolString === '0' || $boolString === 'n') {
+			return false;
+		}
+
 		return $boolString === '1' || $boolString === 'y';
 	}
 

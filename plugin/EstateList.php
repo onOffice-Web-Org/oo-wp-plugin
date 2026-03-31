@@ -462,12 +462,16 @@ class EstateList
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
-		foreach ($inputs->getFilterableFields() as $name) {
+		$inputFields = $inputs->getFilterableFields();
+		file_put_contents('/var/www/wordpress/wp-content/filter_debug.log', "filterActiveInputFilterableFields: BEFORE filter - filterableFields=" . implode(", ", $inputFields) . "\n", FILE_APPEND);
+
+		foreach ($inputFields as $name) {
 			if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
 				$activeInputs[] = $name;
 			}
 		}
 		$inputs->setFilterableFields($activeInputs);
+		file_put_contents('/var/www/wordpress/wp-content/filter_debug.log', "filterActiveInputFilterableFields: AFTER filter - filterableFields=" . implode(", ", $activeInputs) . "\n", FILE_APPEND);
 		return $inputs;
 	}
 
@@ -504,7 +508,12 @@ class EstateList
 
 		$lang = $lang ?? Language::getDefault();
 
-		$filter = $this->getDefaultFilterBuilder()->getDefaultFilter();
+		$pDefaultFilterBuilder = $this->getDefaultFilterBuilder();
+		if ($pDefaultFilterBuilder instanceof \onOffice\WPlugin\Filter\DefaultFilterBuilderListView) {
+			$filter = $pDefaultFilterBuilder->buildFilter($this->_pDataView);
+		} else {
+			$filter = $pDefaultFilterBuilder->getDefaultFilter();
+		}
 		$fields = $pFieldModifierHandler->getAllAPIFields();
 
 		if($formatOutput === false) {
@@ -556,7 +565,14 @@ class EstateList
 	{
 		$language = Language::getDefault();
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
-		$filter = $this->getDefaultFilterBuilder()->buildFilter();
+		
+		// Pass the correct DataListView to buildFilter
+		$pDefaultFilterBuilder = $this->getDefaultFilterBuilder();
+		if ($pDefaultFilterBuilder instanceof \onOffice\WPlugin\Filter\DefaultFilterBuilderListView) {
+			$filter = $pDefaultFilterBuilder->buildFilter($this->_pDataView);
+		} else {
+			$filter = $pDefaultFilterBuilder->buildFilter();
+		}
 
 		if ($this->_filterAddressId != 0) {
 			$addressList = $this->_pEnvironment->getAddressList();
