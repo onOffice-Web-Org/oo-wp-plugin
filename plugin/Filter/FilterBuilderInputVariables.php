@@ -93,7 +93,12 @@ class FilterBuilderInputVariables
 					continue;
 				}
 
-				$fieldFilter = $this->getFieldFilter($value, 'text');
+				if ($value === '0' || $value === '1' || $value === 0 || $value === 1 || $value === true || $value === false) {
+					$boolValue = ($value === '1' || $value === 1 || $value === true) ? 1 : 0;
+					$fieldFilter = $this->getFieldFilter($boolValue, FieldTypes::FIELD_TYPE_INTEGER);
+				} else {
+					$fieldFilter = $this->getFieldFilter($value, 'text');
+				}
 				$filter[$fieldInput] = $fieldFilter;
 			}
 		}
