@@ -80,6 +80,8 @@ class FilterBuilderInputVariables
 				$type = $pEstateInputVars->getFieldType($fieldInput);
 				$value = $pEstateInputVars->getFieldValue($fieldInput);
 
+				error_log("FilterBuilder: field=$fieldInput, type=$type, value=" . var_export($value, true));
+
 				if (is_null($value) || (is_string($value) && __String::getNew($value)->isEmpty())) {
 					continue;
 				}
@@ -87,6 +89,7 @@ class FilterBuilderInputVariables
 				$fieldFilter = $this->getFieldFilter($value, $type);
 				$filter[$fieldInput] = $fieldFilter;
 			} catch (\Exception $e) {
+				error_log("FilterBuilder EXCEPTION for field $fieldInput: " . $e->getMessage());
 				$value = $pEstateInputVars->getFieldValue($fieldInput);
 
 				if (is_null($value) || (is_string($value) && __String::getNew($value)->isEmpty())) {
@@ -95,6 +98,7 @@ class FilterBuilderInputVariables
 
 				if ($value === '0' || $value === '1' || $value === 0 || $value === 1 || $value === true || $value === false) {
 					$boolValue = ($value === '1' || $value === 1 || $value === true) ? 1 : 0;
+					error_log("FilterBuilder: fallback boolean for $fieldInput, value=$boolValue");
 					$fieldFilter = $this->getFieldFilter($boolValue, FieldTypes::FIELD_TYPE_INTEGER);
 				} else {
 					$fieldFilter = $this->getFieldFilter($value, 'text');
