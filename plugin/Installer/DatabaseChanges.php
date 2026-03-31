@@ -36,6 +36,7 @@ use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPPluginChecker;
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 use function dbDelta;
 use function esc_sql;
@@ -45,12 +46,12 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 62;
+	const MAX_VERSION = 63;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
 
-	/** @var wpdb */
+	/** @var wpdb|WpdbReadCacheProxy */
 	private $_pWPDB;
 
 	/** @var Container */
@@ -58,11 +59,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	/**
 	 * @param WPOptionWrapperBase $pWpOption
-	 * @param wpdb $pWPDB
+	 * @param wpdb|WpdbReadCacheProxy $pWPDB
 	 *
 	 * @throws Exception
 	 */
-	public function __construct(WPOptionWrapperBase $pWpOption, wpdb $pWPDB)
+	public function __construct(WPOptionWrapperBase $pWpOption, wpdb|WpdbReadCacheProxy $pWPDB)
 	{
 		$this->_pWpOption = $pWpOption;
 		$this->_pWPDB = $pWPDB;
@@ -179,6 +180,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->updateValueGeoFieldsForForms();
 			case $dbversion <= 61:
 				$this->migrateMarkedPropertiesSort();
+			case $dbversion <= 62:
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
@@ -349,6 +351,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`hidden` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
 			`convertTextToSelectForCityField` tinyint(1) NOT NULL DEFAULT '0',
+			`rangeFieldDisplayMode` varchar(20) DEFAULT 'range',
 			PRIMARY KEY (`fieldconfig_id`)
 		) $charsetCollate;";
 

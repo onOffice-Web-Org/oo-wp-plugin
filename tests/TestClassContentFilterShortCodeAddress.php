@@ -30,6 +30,7 @@ use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
+use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Factory\AddressListFactory;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
@@ -139,6 +140,19 @@ class TestClassContentFilterShortCodeAddress
 	/**
 	 *
 	 */
+
+	public function testReplaceShortCodesRethrowsUnknownViewException()
+	{
+		$pMock = $this->getMockBuilder(DataListViewFactoryAddress::class)
+			->onlyMethods(['getListViewByName'])
+			->disableOriginalConstructor()
+			->getMock();
+		$pMock->method('getListViewByName')->willThrowException(new UnknownViewException('missing'));
+		$this->_pContainer->set(DataListViewFactoryAddress::class, $pMock);
+
+		$this->expectException(UnknownViewException::class);
+		$this->_pContainer->get(ContentFilterShortCodeAddress::class)->replaceShortCodes(['view' => 'missing']);
+	}
 
 	public function testReplaceShortCodesException()
 	{

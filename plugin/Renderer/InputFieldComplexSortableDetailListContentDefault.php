@@ -96,6 +96,9 @@ class InputFieldComplexSortableDetailListContentDefault
 			if ($key !== 'Ort' && $pInputModel->getField() == 'convertInputTextToSelectForField' && !$isDummy) {
 				continue;
 			}
+			if (($type === null || !(FieldTypes::isNumericType($type) || in_array($type, [FieldTypes::FIELD_TYPE_DATETIME, FieldTypes::FIELD_TYPE_DATE]))) && $pInputModel->getField() === 'rangeFieldDisplayMode' && !$isDummy) {
+				continue;
+			}
 			if ($pInputModel->getTable() === 'oo_plugin_form_multipage_title') {
 				continue;
 			}

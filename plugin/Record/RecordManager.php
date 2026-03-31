@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 
 /**
@@ -119,8 +120,7 @@ abstract class RecordManager
 
 	public function getWpdb()
 	{
-		global $wpdb;
-		return $wpdb;
+		return WpdbReadCacheProxy::getWpdb();
 	}
 
 

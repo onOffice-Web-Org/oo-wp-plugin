@@ -1461,7 +1461,7 @@ msgstr "Enlaces a propiedades"
 
 #: 
 msgid "Objects"
-msgstr "Objetos"
+msgstr "Inmuebles"
 
 #: 
 msgid "Ogulo-Links"

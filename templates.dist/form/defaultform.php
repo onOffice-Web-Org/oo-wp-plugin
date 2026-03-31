@@ -84,8 +84,8 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		}
 		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderFormField returns escaped HTML
-            echo '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.renderFormField( 'gdprcheckbox', $pForm );
-            echo esc_html($pForm->getFieldLabel( 'gdprcheckbox' )) .' '. wp_kses_post($addition).'</span></label>';
+            echo '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">';
+            echo esc_html($pForm->getFieldLabel( 'gdprcheckbox' )) .' '. wp_kses_post($addition).renderFormField( 'gdprcheckbox', $pForm ).'</span></label>';
             continue;
         }
 		if ( in_array( $input, array( 'message' ) ) ) {

@@ -128,6 +128,8 @@ class EstateList
 	/** @var string */
 	private $_energyCertificate = '';
 
+	private $_geoFilter = null;
+
 
 	/**
 	 * @param DataView $pDataView
@@ -212,8 +214,12 @@ class EstateList
 			$this->getEstateContactPerson($estateIds);
 
 			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles();
-			$this->_pEstateFiles->getAllFiles($fileCategories, $estateIds, $this->_pEnvironment->getSDKWrapper());
-			$this->_pEstateFiles->getFilesByEstateIds($estateIds, $this->_pEnvironment->getSDKWrapper());
+			try {
+				$this->_pEstateFiles->getAllFiles($fileCategories, $estateIds, $this->_pEnvironment->getSDKWrapper());
+				$this->_pEstateFiles->getFilesByEstateIds($estateIds, $this->_pEnvironment->getSDKWrapper());
+			} catch (\onOffice\SDK\Exception\HttpFetchNoResultException $e) {
+				// Estate files could not be fetched — continue without images
+			}
 		}
 
 		if ($pDataListView->getRandom()) {
@@ -437,6 +443,7 @@ class EstateList
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
 		foreach ($inputs->getFields() as $name) {
@@ -462,6 +469,7 @@ class EstateList
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
 		foreach ($inputs->getFilterableFields() as $name) {
@@ -573,6 +581,16 @@ class EstateList
 			$pListView->getFields(),
 			onOfficeSDK::MODULE_ESTATE
 		);
+		
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
+		if ( isset( $_GET['geo_search'] ) ) {
+			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
+			$geoCoords = explode( ',', $geoSearch );
+			if ( count( $geoCoords ) === 2 ) {
+				$filter['geo'][0]['loc'] = $geoSearch;
+			}
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$requestParams = [
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
@@ -634,6 +652,7 @@ class EstateList
 	{
 		$pListView = $this->_pDataView;
 		$requestParams = [];
+		$filter = $this->getDefaultFilterBuilder()->buildFilter();
 
 		if ($pListView->getSortby() !== '' && !$this->_pDataView->getRandom()) {
 			$requestParams['sortby'] =  $pListView->getSortBy();
@@ -1282,11 +1301,11 @@ class EstateList
 				$pFieldsCollection,
 				new GeoPositionFieldHandler
 			);
-
 		if (array_key_exists("radius", $fieldsValues)) {
 			$geoFields = $pDataView->getGeoFields();
 			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
 		}
+		$allDisplayModes = $pDataView->getRangeFieldDisplayModes();
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
@@ -1294,6 +1313,7 @@ class EstateList
 			$result[$field]['name'] = $field;
 			$result[$field]['value'] = $value;
 			$result[$field]['label'] = $this->getFieldLabel($field);
+			$result[$field]['rangeFieldDisplayMode'] = $allDisplayModes[$field] ?? 'range';
 			if (
 				in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS) &&
 				!empty(get_option('onoffice-settings-thousand-separator'))
@@ -1582,6 +1602,28 @@ class EstateList
 		}
 
 		return false;
+	}
+
+	/** @param array $geoFilter */
+	public function setGeoFilter($geoFilter)
+	{
+		$this->_geoFilter = $geoFilter;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function hasGeoFilter(): bool
+	{
+		return ($this->_geoFilter != null);
+	}
+
+	/**
+	 * @return object
+	 */
+	public function getGeoFilter(): object
+	{
+		return $this->_geoFilter;
 	}
 
 	/**

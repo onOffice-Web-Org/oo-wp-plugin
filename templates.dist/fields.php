@@ -106,18 +106,24 @@ if (!function_exists('renderFieldEstateSearch')) {
 			FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']
 		) {
+			$displayMode = $properties['rangeFieldDisplayMode'] ?? 'range';
 			echo '<fieldset class="oo-searchrange">';
 			echo '<legend>' . esc_html($fieldLabel) . '</legend>';
-			echo '<label for="' . esc_attr($inputName) . '__von">';
-			esc_html_e('From: ', 'onoffice-for-wp-websites');
-			//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
-			echo '<input id="' . esc_attr($inputName) . '__von" name="' . esc_attr($inputName) . '__von" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
-			echo '<label for="' . esc_attr($inputName) . '__bis">';
-			esc_html_e('Up to: ', 'onoffice-for-wp-websites');
-			//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
-			echo '<input id="' . esc_attr($inputName) . '__bis" name="' . esc_attr($inputName) . '__bis" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label></fieldset>';
+			if ($displayMode !== 'toOnly') {
+				echo '<label for="' . esc_attr($inputName) . '__von">';
+				esc_html_e('From: ', 'onoffice-for-wp-websites');
+				//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
+				echo '<input id="' . esc_attr($inputName) . '__von" name="' . esc_attr($inputName) . '__von" ' . $inputType;
+				echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
+			}
+			if ($displayMode !== 'fromOnly') {
+				echo '<label for="' . esc_attr($inputName) . '__bis">';
+				esc_html_e('Up to: ', 'onoffice-for-wp-websites');
+				//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
+				echo '<input id="' . esc_attr($inputName) . '__bis" name="' . esc_attr($inputName) . '__bis" ' . $inputType;
+				echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label>';
+			}
+			echo '</fieldset>';
 		} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="' . esc_attr($properties['length']) . '"' : '';
@@ -133,7 +139,7 @@ if (!function_exists('renderFormField')) {
 
 	function renderErrorHtml(?string $errorMessage, bool $shouldDisplay): string {
         if (!empty($errorMessage) && $shouldDisplay) {
-            return "<div class='error' aria-hidden='true' role='alert' aria-atomic='true'><p>" . esc_html($errorMessage) . "</p></div>";
+            return "<span class='error' aria-hidden='true' aria-atomic='true'><p>" . esc_html($errorMessage) . "</p></span>";
         }
         return '';
     }
@@ -260,7 +266,7 @@ if (!function_exists('renderFormField')) {
 			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 
-			$output = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
+			$output = '<select aria-hidden="true" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
 			$output .= $htmlOptions;
 			$output .= '</select>'.$errorHtml;
 		} else {
@@ -370,9 +376,10 @@ if (!function_exists('renderRegionalAddition')) {
 		ob_start();
 		/* translators: %s: field label for regional addition dropdown */
 		echo '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
+		$selectedValue = (array) ($selectedValue ?? []);
 		foreach ($regions as $pRegion) {
 			/* @var $pRegion Region */
-			printRegion($pRegion, $selectedValue ?? []);
+			printRegion($pRegion, $selectedValue);
 		}
 		$output .= ob_get_clean();
 		$output .= '</select>';

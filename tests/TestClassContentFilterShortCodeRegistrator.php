@@ -28,6 +28,8 @@ use Generator;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCode;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeBuilder;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\DataView\UnknownViewException;
 use WP_UnitTestCase;
 
 /**
@@ -86,6 +88,44 @@ class TestClassContentFilterShortCodeRegistrator
 		$this->assertArrayHasKey('test1', $diff);
 		$this->assertArrayHasKey('test2', $diff);
 		$this->assertEquals('testText1 / testText2', do_shortcode('[test1] / [test2 a=b]'));
+	}
+
+	public function testRegisterFallsBackToShortcodeTextOnUnknownViewException()
+	{
+		$this->_pSubject->register();
+		do_shortcode('[test1] / [test2 a=b]'); // satisfy prepare() mock expectations
+
+		$pSubject = $this->createSubjectThrowing(new UnknownViewException('missing'), 'oo_estate_test');
+		$pSubject->register();
+
+		$this->assertSame('[oo_estate_test view="missing"]', do_shortcode('[oo_estate_test view="missing"]'));
+	}
+
+	public function testRegisterFallsBackToShortcodeTextOnUnknownFormException()
+	{
+		$this->_pSubject->register();
+		do_shortcode('[test1] / [test2 a=b]'); // satisfy prepare() mock expectations
+
+		$pSubject = $this->createSubjectThrowing(new UnknownFormException(), 'oo_form_test');
+		$pSubject->register();
+
+		$this->assertSame('[oo_form_test form="unknown"]', do_shortcode('[oo_form_test form="unknown"]'));
+	}
+
+	private function createSubjectThrowing(\Exception $exception, string $tag): ContentFilterShortCodeRegistrator
+	{
+		$pBuilder = $this->getMockBuilder(ContentFilterShortCodeBuilder::class)
+			->onlyMethods(['buildAllContentFilterShortCodes'])
+			->setConstructorArgs([new Container])
+			->getMock();
+		$pBuilder->method('buildAllContentFilterShortCodes')
+			->will($this->returnCallback(function() use ($exception, $tag): Generator {
+				$pShortCode = $this->getMockBuilder(ContentFilterShortCode::class)->getMock();
+				$pShortCode->method('getTag')->willReturn($tag);
+				$pShortCode->method('replaceShortCodes')->willThrowException($exception);
+				yield $pShortCode;
+			}));
+		return new ContentFilterShortCodeRegistrator($pBuilder);
 	}
 
 
