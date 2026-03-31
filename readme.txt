@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 6.1
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 6.11.1
+Stable tag: 6.12
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,22 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.12 (2026-03-31) =
+
+**Added**
+* Extended GEO radius search for properties
+* Multi-page form wizard for applicant form
+* Added "from-to" search option
+
+**Changed**
+* Performance improvements across the plugin
+
+**Fixed**
+* Critical shortcode error
+* Cache integration for "regionaler_zusatz"
+* Filtering properties by "No" values (e.g., without balcony)
+* reCAPTCHA Enterprise "Test Keys"
 
 = 6.11.1 (2026-02-24) =
 
