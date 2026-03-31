@@ -62,10 +62,10 @@ if (!function_exists('renderFieldEstateSearch')) {
 			' . ($selectedValue === null || $selectedValue === '' ? ' checked' : '') . '>
 		<label for="' . esc_attr($inputName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
 		<input type="radio" id="' . esc_attr($inputName) . '_y" name="' . esc_attr($inputName) . '" value="1"
-			' . ($selectedValue === '1' || $selectedValue === 1  ? 'checked' : '') . '>
+			' . ($selectedValue === '1' || $selectedValue === 1 || $selectedValue === true ? 'checked' : '') . '>
 		<label for="' . esc_attr($inputName) . '_y">' . esc_html__('Yes', 'onoffice-for-wp-websites') . '</label>
 		<input type="radio" id="' . esc_attr($inputName) . '_n" name="' . esc_attr($inputName) . '" value="0"
-			' . ($selectedValue === '0' || $selectedValue === 0 ? 'checked' : '') . '>
+			' . ($selectedValue === '0' || $selectedValue === 0 || $selectedValue === false ? 'checked' : '') . '>
 		<label for="' . esc_attr($inputName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
 	  </fieldset>';
 		} elseif (($inputName === 'ort' || $inputName === 'Ort') && !empty($properties['permittedvalues'])) {
