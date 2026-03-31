@@ -1,10 +1,10 @@
 === onOffice for WP-Websites ===
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
-Requires at least: 4.6
-Tested up to: 6.6.1
-Requires PHP: 7.4
-Stable tag: 6.4
+Requires at least: 6.1
+Tested up to: 6.9
+Requires PHP: 8.0
+Stable tag: 6.12
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,155 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.12 (2026-03-31) =
+
+**Added**
+* Extended GEO radius search for properties
+* Multi-page form wizard for applicant form
+* Added "from-to" search option
+
+**Changed**
+* Performance improvements across the plugin
+
+**Fixed**
+* Critical shortcode error
+* Cache integration for "regionaler_zusatz"
+* Filtering properties by "No" values (e.g., without balcony)
+* reCAPTCHA Enterprise "Test Keys"
+
+= 6.11.1 (2026-02-24) =
+
+**Fixed**
+* WordPress Plugin Directory requirements
+
+= 6.11 (2026-02-24) =
+
+**Fixed**
+* Broken links and 404 page errors
+* Drag & drop sorting issues in the form builder
+* Critical error caused by a duplicate PHP function
+
+**Changed**
+* Automated the handling of translation files
+
+= 6.10.3 (2026-01-29) =
+
+**Fixed**
+* WordPress Plugin Directory requirements
+
+= 6.10.2 (2026-01-29) =
+
+**Fixed**
+* language translation bug
+
+= 6.10.1 (2026-01-27) =
+
+**Added**
+* oo-updater
+
+= 6.10 (2026-01-26) =
+
+**Fixed**
+* WordPress Plugin Directory requirements
+
+**Changed**
+* Commission display in the total price calculator
+
+= 6.9.1 (2026-01-16) =
+
+**Fixed**
+* Form submission issues
+* API error handling
+* Property search language handling
+* Large property list pagination
+
+= 6.9 (2025-12-19) =
+
+**Fixed**
+* Security improvements
+* Translation of geo fields
+* Fatal error on the address detail page
+
+**Added**
+* Google reCAPTCHA Enterprise support
+
+**Changed**
+* Translation workflow
+
+= 6.8 (2025-11-27) =
+
+**Fixed**
+* General Security issues
+* Security issue related to query handling
+
+**Changed**
+* Select inputs now display all available options
+
+= 6.7 (2025-10-30) =
+
+**Fixed**
+
+* Ensure BFSG-compliant accessibility
+* Transfer of apostrophes to Enterprise
+* Display of the property detail page on mobile devices
+* Error in the applicant contact form
+* Configuration errors in forms
+* Raw values for an address list
+* Display of all energy certificate fields
+
+= 6.6 (2025-09-30) =
+
+**Fixed**
+
+* Critical error on detail page settings.
+* Critical error in the Total Price Calculator
+
+= 6.5.2 (2025-09-15) =
+
+**Added**
+
+* Support for custom min/max values in slider fields for applicant forms
+
+**Fixed**
+
+* Property list sorting functionality
+
+= 6.5.1 (2025-09-11) =
+
+**Fixed**
+
+* Title and description tags not loading correctly on multilingual sites when using Yoast tags on both language versions
+* Critical error (UnknownFieldException) when using currency field on property detail pages
+* Browser share functionality on mobile devices (iPhone and Android)
+* Duplicate HTML IDs in backend for "Select All" checkboxes
+
+= 6.5 (2025-08-28) =
+
+**Added**
+
+* Key Facts feature for property lists and detail pages - highlight important fields like price, plot size, or number of rooms to draw visitors attention
+* Multi-field management - select and remove multiple fields at once in field lists for improved efficiency
+* Custom naming for individual pages in multi-page leadgenerator forms for better navigation
+* Info text for total price calculator indicating availability only for Germany due to country-specific requirements
+* Updated accessible-slick slider for improved accessibility including keyboard navigation and ARIA compatibility
+
+**Changed**
+
+* Energy certificate scale values adjusted with unified scale for consumption and demand certificates in residential buildings
+* Improved database migration process for better performance
+* Enhanced test coverage and workflow automation
+* Updated Building.md documentation for development setup
+* Code refactoring for better maintainability, quality and performance across multiple components
+* Improved leadgenerator form with optional API dependencies
+
+**Fixed**
+
+* Forms showing error message despite successful submission
+* Sorting of properties with "price on request" - these are now correctly placed at the end of the list
+* Critical error when "Contact Category Origin" field is deactivated in onOffice enterprise
+* Property status sorting now correctly reflects the configured order in backend settings
+* Added missing property status values to sorting logic
 
 = 6.4 (2025-07-24) =
 

@@ -194,7 +194,7 @@ class SDKWrapper
 		{
 			for ($curPage = 2; $curPage < $numpages+1; $curPage++)
 			{
-				$parameters['offset'] = (500 * ($curPage -1));
+				$parameters['listoffset'] = (500 * ($curPage -1));
 				$tmpRecords = $this->createCacheForList($parameters, $module, $curPage);
 				$records = array_merge_recursive($records, $tmpRecords);
 			}

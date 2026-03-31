@@ -21,7 +21,10 @@
 
 namespace onOffice\WPlugin\Gui;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use onOffice\WPlugin\Gui\Table\AddressListTable;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use function __;
 use function add_filter;
 use function admin_url;
@@ -55,6 +58,7 @@ class AdminPageAddressList
 		$this->generateSearchForm($page,$buttonSearch, null,null,$id);
 		echo '<p>';
 		echo '<form method="post">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- views() returns escaped HTML
 		echo $this->_pAddressListTable->views();
 		$this->_pAddressListTable->display();
 		echo '</form>';
@@ -81,7 +85,8 @@ class AdminPageAddressList
 		$newLink = admin_url('admin.php?page=onoffice-editlistviewaddress');
 
 		echo '</h1>';
-		echo '<a href="'.$newLink.'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $newLink is escaped by admin_url()
+		echo '<a href="'.esc_url($newLink).'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
 
@@ -112,15 +117,20 @@ class AdminPageAddressList
 			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice-for-wp-websites'),
 		);
 
-		wp_register_script('onoffice-bulk-actions', plugins_url('/dist/onoffice-bulk-actions.min.js',
-			ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
+		wp_register_script('onoffice-bulk-actions', 
+			plugins_url('/dist/onoffice-bulk-actions.min.js', ONOFFICE_PLUGIN_DIR.'/index.php'), 
+			array('jquery'),
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-bulk-actions.min.js'),
+			true);
 
 		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
 		wp_enqueue_script('onoffice-bulk-actions');
 
-		wp_register_script( 'oo-copy-shortcode',
-			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/dist/onoffice-copycode.min.js',
-			[ 'jquery' ], '', true );
+		wp_register_script('oo-copy-shortcode',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR . '/index.php') . '/dist/onoffice-copycode.min.js',
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-copycode.min.js'), 
+			true);
 		wp_enqueue_script( 'oo-copy-shortcode');
 	}
 }

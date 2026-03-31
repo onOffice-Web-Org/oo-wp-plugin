@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2018  onOffice Software AG
@@ -29,8 +32,8 @@ if (count($visible) === 0) {
 			<?php
 			foreach ($visible as $inputName => $properties) :
 				echo '<div class="oo-searchformfield">';
-				echo '<label>'.esc_html($properties['label']).':</label>';
-				renderFieldEstateSearch($inputName, $properties);
+				//echo '<label for="' . esc_html($inputName) . '">'.esc_html($properties['label']);
+				renderFieldEstateSearch($inputName, $properties).'</label>';
 				echo '</div>';
 			endforeach;
 			?>		

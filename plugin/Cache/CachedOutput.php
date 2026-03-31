@@ -50,10 +50,11 @@ class CachedOutput
 		$this->_pHTTPHeaders->addHeader('ETag: '.$eTag);
 		$this->_pHTTPHeaders->addHeader('Expires: '.$pDateTime->format(DateTime::RFC7231));
 		if ($eTag === $this->_pHTTPHeaders->getRequestHeaderValue('If-None-Match')) {
-			$this->_pHTTPHeaders->setHttpResponseCode(304);
-			return;
-		}
-		echo $content;
+            $this->_pHTTPHeaders->setHttpResponseCode(304);
+            return;
+        }
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Cached content already validated
+        echo $content;
 	}
 
 	/**

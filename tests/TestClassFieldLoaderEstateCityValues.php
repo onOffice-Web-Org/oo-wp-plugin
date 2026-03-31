@@ -132,6 +132,7 @@ class TestClassFieldLoaderEstateCityValues
 		$estateParameters = [
 			'data' => ['ort'],
 			'listlimit' => 500,
+			'estatelanguage' => Language::getDefault(),
 			'filter' => [
 				'referenz' => [['op' => '=', 'val' => 1]],
 				'veroeffentlichen' => [['op' => '=', 'val' => 1]]

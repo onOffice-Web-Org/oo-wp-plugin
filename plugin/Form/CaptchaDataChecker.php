@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Form;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  * @url http://www.onoffice.de

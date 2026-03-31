@@ -1,0 +1,119 @@
+<script>
+async function onSubmitEnterprise() {
+    var url = %1$s;
+    var translations = %2$s;
+    var nonce = %3$s;
+    var resultdiv = document.getElementById('captcha-enterprise-result');
+    var button = document.getElementById('captcha-enterprise-test-btn');
+    
+    var siteKey = (document.querySelector('input[name="onoffice-settings-captcha-enterprise-sitekey"]')?.value || '').trim();
+    var projectId = (document.querySelector('input[name="onoffice-settings-captcha-enterprise-projectid"]')?.value || '').trim();
+    var apiKey = (document.querySelector('input[name="onoffice-settings-captcha-enterprise-apikey"]')?.value || '').trim();
+    
+    function showResult(message, isSuccess) {
+        resultdiv.textContent = message;
+        resultdiv.style.color = isSuccess ? 'green' : 'red';
+        button.disabled = false;
+    }
+    
+    function showError(key, fallback) {
+        showResult(translations[key] || fallback, false);
+    }
+    
+    /**
+     * Maps error messages to translation keys
+     */
+    function mapErrorToKey(errorMessage) {
+        var msg = errorMessage.toLowerCase();
+        
+        if (msg.indexOf('invalid site key') !== -1 || 
+            msg.indexOf('site key') !== -1 ||
+            msg.indexOf('invalid key') !== -1 ||
+            msg === 'invalid-site-key') {
+            return 'invalid-site-key';
+        }
+        if (msg.indexOf('timeout') !== -1 || msg === 'timeout-or-duplicate') {
+            return 'timeout-or-duplicate';
+        }
+        if (msg === 'bad-request') {
+            return 'bad-request';
+        }
+        if (msg === 'browser-error') {
+            return 'browser-error';
+        }
+        
+        return 'browser-error';
+    }
+    
+    // Reset state
+    button.disabled = true;
+    resultdiv.textContent = '...';
+    resultdiv.style.color = '';
+    
+    // Validate inputs
+    if (!siteKey) return showError('missing-site-key', 'Site Key is required');
+    if (!projectId) return showError('missing-input-secret', 'Project ID is required');
+    if (!apiKey) return showError('missing-api-key', 'API Key is required');
+    
+    // Remove existing grecaptcha and script
+    if (typeof grecaptcha !== 'undefined') delete window.grecaptcha;
+    document.getElementById('recaptcha-enterprise-script')?.remove();
+    
+    try {
+        // Load script
+        await new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.id = 'recaptcha-enterprise-script';
+            script.src = 'https://www.google.com/recaptcha/enterprise.js?render=' + encodeURIComponent(siteKey);
+            script.onload = resolve;
+            script.onerror = function() { reject(new Error('browser-error')); };
+            document.head.appendChild(script);
+        });
+        
+        // Wait for grecaptcha
+        await new Promise(function(resolve, reject) {
+            var attempts = 0;
+            var checkInterval = setInterval(function() {
+                if (typeof grecaptcha?.enterprise !== 'undefined') { 
+                    clearInterval(checkInterval); 
+                    resolve(); 
+                } else if (++attempts >= 50) { 
+                    clearInterval(checkInterval); 
+                    reject(new Error('invalid-site-key')); 
+                }
+            }, 100);
+        });
+        
+        // Execute reCAPTCHA
+        await new Promise(function(resolve) { grecaptcha.enterprise.ready(resolve); });
+        var token = await grecaptcha.enterprise.execute(siteKey, {action: 'test_keys'});
+        
+        // Validate with server
+        var result = await new Promise(function(resolve, reject) {
+            jQuery.post(url, {
+                'action': 'check_captcha_enterprise_data',
+                'nonce': nonce,
+                'g-recaptcha-response': token,
+                'projectId': projectId,
+                'siteKey': siteKey,
+                'apiKey': apiKey
+            }, resolve, 'json').fail(function() { reject(new Error('bad-request')); });
+        });
+        
+        if (result.success) {
+            var scoreText = result.data.score !== undefined ? ' (Score: ' + result.data.score + ')' : '';
+            showResult(translations.response_ok + scoreText, true);
+        } else {
+            var errorCodes = result.data?.['error-codes'] || [];
+            var errorKey = errorCodes.find(function(e) { return e in translations; });
+            showError(errorKey || 'bad-request', translations.response_error);
+        }
+        
+    } catch (error) {
+        var errorKey = mapErrorToKey(error.message);
+        showError(errorKey, translations[errorKey] || error.message);
+    }
+}
+</script>
+<button type="button" id="captcha-enterprise-test-btn" class="button" onclick="onSubmitEnterprise()">Test Keys</button>
+<div id="captcha-enterprise-result"></div>

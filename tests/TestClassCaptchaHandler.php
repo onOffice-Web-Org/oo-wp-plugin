@@ -24,7 +24,6 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Form\CaptchaHandler;
-use ReflectionMethod;
 use WP_UnitTestCase;
 use function json_encode;
 
@@ -38,23 +37,6 @@ use function json_encode;
 class TestClassCaptchaHandler
 	extends WP_UnitTestCase
 {
-	/**
-	 *
-	 */
-
-	public function testBuildFullUrl()
-	{
-		$pCaptchaHandler = new CaptchaHandler('asdfasdf2', 'abcdefghijklmn');
-		$pReflectionMethod = new ReflectionMethod($pCaptchaHandler, 'buildFullUrl');
-		$pReflectionMethod->setAccessible(true);
-		$fullUrl = $pReflectionMethod->invoke($pCaptchaHandler);
-		$expected = 'https://www.google.com/recaptcha/api/siteverify?'
-			.'secret=abcdefghijklmn&response=asdfasdf2';
-
-		$this->assertEquals($expected, $fullUrl);
-	}
-
-
 	/**
 	 *
 	 */

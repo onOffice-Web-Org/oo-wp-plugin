@@ -107,6 +107,9 @@ abstract class InputModelBase
 	/** @var bool */
 	private $_deactivate = false;
 
+	/** @var bool */
+	private $_field_inactive = false;
+
 	/** @var string */
 	private $_label = null;
 
@@ -164,11 +167,17 @@ abstract class InputModelBase
 	/** @var array */
 	private $_perPageForm = array();
 
+	/** @var array */
+	private $_titlePerMultipageForm = array();
+
 	/** @var bool */
 	private $_isMultiPage = false;
 
 	/** @var string */
 	private $_template = '';
+
+	/** @var string */
+	private $_language = '';
 
 	/**
 	 *
@@ -222,9 +231,16 @@ abstract class InputModelBase
 	public function setDeactivate($deactivate)
 		{ $this->_deactivate = $deactivate; }
 
+	/** @param bool $fieldInactive */
+	public function setFieldInactive($fieldInactive)
+	{ $this->_field_inactive = $fieldInactive; }
+
 	/** @return bool */
 	public function isDeactivate()
 		{ return $this->_deactivate; }
+
+	public function isFieldInactive()
+	{ return $this->_field_inactive; }
 
 	/** @return array */
 	public function getValuesAvailable()
@@ -351,9 +367,17 @@ abstract class InputModelBase
 	public function getPerPageForm()
 		{ return $this->_perPageForm; }
 
+	/** @return array */
+	public function getTitlePerMultipageForm()
+		{ return $this->_titlePerMultipageForm; }
+
 	/** @param array $perPageForm */
 	public function setPerPageForm(array $perPageForm)
 		{ $this->_perPageForm = $perPageForm; }
+
+	/** @param array $perTitlePageForm */
+	public function setTitlePerMultipageForm(array $perTitleMultipageForm)
+		{ $this->_titlePerMultipageForm = $perTitleMultipageForm; }
 
 	/** @param bool $isMultiPage */
 	public function setIsMultiPage(bool $isMultiPage)
@@ -370,4 +394,12 @@ abstract class InputModelBase
 	/** @return string */
 	public function getTemplate()
 		{ return $this->_template; }
+
+	/** @param string $language */
+	public function setLanguage($language)
+	{ $this->_language = $language; }
+
+	/** @return string */
+	public function getLanguage()
+	{ return $this->_language; }
 }

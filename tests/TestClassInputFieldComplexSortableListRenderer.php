@@ -34,6 +34,9 @@ use onOffice\WPlugin\Types\FieldsCollection;
  */
 class TestClassInputFieldComplexSortableListRenderer
 	extends \WP_UnitTestCase {
+
+	use HtmlNormalizerTrait;
+
 	/**
 	 *
 	 */
@@ -42,7 +45,7 @@ class TestClassInputFieldComplexSortableListRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals( '<ul class="filter-fields-list"></ul>', $output );
+		$this->assertHtmlEquals( '<ul class="filter-fields-list"></ul>', $output );
 	}
 
 	/**
@@ -55,7 +58,7 @@ class TestClassInputFieldComplexSortableListRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals( '<ul class="filter-fields-list"><li class="sortable-item" >'
+		$this->assertHtmlEquals( '<ul class="filter-fields-list"><li class="sortable-item" >'
 		                     . '<input type="checkbox" name="testRenderer[]" value="johndoe" checked="checked"  id="labelcheckbox_1bjohndoe">'
 		                     . 'John Doe<input type="hidden" name="filter_fields_order1[id]" value="1">'
 		                     . '<input type="hidden" name="filter_fields_order1[name]" value="John Doe">'
@@ -92,7 +95,7 @@ class TestClassInputFieldComplexSortableListRenderer
 		$pInputFieldComplexSortableListRenderer->render();
 		$output = ob_get_clean();
 
-		$this->assertEquals( '<ul class="filter-fields-list"></ul>', $output );
+		$this->assertHtmlEquals( '<ul class="filter-fields-list"></ul>', $output );
 	}
 
 	/**
@@ -130,7 +133,7 @@ class TestClassInputFieldComplexSortableListRenderer
 		$pInputFieldComplexSortableListRenderer->render();
 		$output = ob_get_clean();
 
-		$this->assertEquals( '<ul class="filter-fields-list"><li class="sortable-item"  style="color:red;" >' .
+		$this->assertHtmlEquals( '<ul class="filter-fields-list"><li class="sortable-item"  style="color:red;" >' .
 		                     '<input type="checkbox" name="testRenderer[]" value="johndoe" checked="checked"  ' .
 		                     'id="labelcheckbox_1bjohndoe">test1 (Disabled in onOffice)<input type="hidden" ' .
 		                     'name="filter_fields_order1[id]" value="1"><input type="hidden" ' .

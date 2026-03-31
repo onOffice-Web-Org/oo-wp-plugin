@@ -65,26 +65,27 @@ class InputModelRenderer
 	 */
 
 	public function buildForAjax(FormModel $pFormModel)
-	{
-		if ($pFormModel->getIsInvisibleForm()) {
-			return;
-		}
+    {
+        if ($pFormModel->getIsInvisibleForm()) {
+            return;
+        }
 
-		foreach ($pFormModel->getInputModel() as $pInputModel) {
-			$pInputField = $this->createInputField($pInputModel, $pFormModel);
-			$italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
-			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_SORTABLE_TAGS && $pInputModel->getHtmlType() !== InputModelBase::HTML_VERTICAL_RADIO ) {
-				echo '<p id="" class="wp-clearfix custom-input-field">';
-				echo '<label class="howto custom-label" for="'. esc_html($pInputField->getGuiId()).'">';
-				echo $pInputModel->getLabel(). $italicText;
-				echo '</label>';
-				$pInputField->render();
-				echo '</p>';
-			} else {
-				$pInputField->render();
-			}
-		}
-	}
+        foreach ($pFormModel->getInputModel() as $pInputModel) {
+            $pInputField = $this->createInputField($pInputModel, $pFormModel);
+            $italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
+            if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_SORTABLE_TAGS && $pInputModel->getHtmlType() !== InputModelBase::HTML_VERTICAL_RADIO ) {
+                echo '<p id="" class="wp-clearfix custom-input-field">';
+                echo '<label class="howto custom-label" for="'. esc_html($pInputField->getGuiId()).'">';
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $pInputModel->getLabel() returns safe label text
+                echo $pInputModel->getLabel(). $italicText;
+                echo '</label>';
+                $pInputField->render();
+                echo '</p>';
+            } else {
+                $pInputField->render();
+            }
+        }
+    }
 
 
 	/**
@@ -159,6 +160,7 @@ class InputModelRenderer
 				$pInstance->setAllFields($pInputModel->getValuesAvailable());
 				$pInstance->setIsMultiPage($pInputModel->getIsMultiPage());
 				$pInstance->setTemplate($pInputModel->getTemplate());
+				$pInstance->setTitlesPerMultipage($pInputModel->getTitlePerMultipageForm());
 				break;
 
 			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
@@ -207,6 +209,11 @@ class InputModelRenderer
 				if ( $pInputModel->isDeactivate() ) {
 					$pInstance->addAdditionalAttribute( 'disabled', true );
 				}
+				if (!empty($pInputModel->getLanguage())) {
+					$langCode = $pInputModel->getLanguage();
+					$pInstance->addAdditionalAttribute('data-localized', $langCode);
+					$pInstance->addAdditionalAttribute('lang', explode('_', $langCode)[0]); //e.g. "es_ES" → "es"
+				}
 
 				break;
 			case InputModelOption::HTML_TYPE_HIDDEN:
@@ -238,7 +245,11 @@ class InputModelRenderer
                 }
                 $pInstance->addAdditionalAttribute('class', $cssClasses);
                 $pInstance->setMultiple($isMultiple);
-				$pInstance->setSelectedValue($pInputModel->getValue());
+				$pInstance->setIsFieldInactive($pInputModel->isFieldInactive());
+
+				if(!$pInputModel->isFieldInactive()){
+					$pInstance->setSelectedValue($pInputModel->getValue());
+				}
 				break;
 
 			case InputModelOption::HTML_TYPE_NUMBER:

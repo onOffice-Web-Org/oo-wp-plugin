@@ -129,4 +129,18 @@ class RecordManagerUpdateForm
 
 		return $result && $pWpDb->insert($pWpDb->prefix.'oo_plugin_form_taskconfig', $row);
 	}
+
+	public function updateMultiPageTitleByRow(array $titles): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$pWpDb->delete($prefix.self::TABLENAME_MULTIPAGE_TITLE_FORMS, ['form_id' => $this->getRecordId()]);
+
+		$result = true;
+
+		foreach ($titles as $row) {
+			$result = $result && $pWpDb->insert($prefix.self::TABLENAME_MULTIPAGE_TITLE_FORMS, $row);
+		}
+		return $result;
+	}
 }

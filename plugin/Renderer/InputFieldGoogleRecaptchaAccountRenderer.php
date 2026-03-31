@@ -28,51 +28,93 @@ use Exception;
  */
 class InputFieldGoogleRecaptchaAccountRenderer extends InputFieldRenderer
 {
-	/**
-	 *
-	 * @param string $type
-	 * @param string $name
-	 * @param string $value
-	 *
-	 * @throws Exception
-	 */
+    /** @var array Classic reCAPTCHA field names */
+    const CLASSIC_FIELDS = [
+        'onoffice-settings-captcha-sitekey',
+        'onoffice-settings-captcha-secretkey',
+    ];
 
-	public function __construct($type, $name, $value = null)
-	{
-		if (!in_array($type, array('googleRecaptchaAccount'))) {
-			throw new Exception('wrong type!');
-		}
-		parent::__construct($type, $name, $value);
-	}
+    /** @var array Enterprise reCAPTCHA field names */
+    const ENTERPRISE_FIELDS = [
+        'onoffice-settings-captcha-enterprise-projectid',
+        'onoffice-settings-captcha-enterprise-sitekey',
+        'onoffice-settings-captcha-enterprise-apikey',
+    ];
+
+    /**
+     *
+     * @param string $type
+     * @param string $name
+     * @param string $value
+     *
+     * @throws Exception
+     */
+
+    public function __construct($type, $name, $value = null)
+    {
+        if (!in_array($type, array('googleRecaptchaAccount'))) {
+            throw new Exception('wrong type!');
+        }
+        parent::__construct($type, $name, $value);
+    }
 
 
-	/**
-	 *
-	 */
+    /**
+     *
+     */
 
-	public function render()
-	{
-		$iconShowPassword = '';
-		$showDeleteGoogleRecaptchaKeysButton = false;
-		if ($this->getName() === 'onoffice-settings-captcha-secretkey') {
-			$iconShowPassword = '<button type="button" class="button" data-toggle="0">
-				<span class="dashicons dashicons-visibility oo-icon-eye-secret-key" aria-hidden="true"></span> 
-				</button>';
-			$showDeleteGoogleRecaptchaKeysButton = true;
-		} elseif ($this->getName() === 'onoffice-settings-captcha-sitekey') {
-			$iconShowPassword = '<button type="button" class="button" data-toggle="0">
-				<span class="dashicons dashicons-visibility oo-icon-eye-site-key" aria-hidden="true"></span> 
-				</button>';
-		}
-		echo '<div class="oo-google-recaptcha-key">';
-		echo '<input type="password" name="' . esc_html($this->getName())
-			. '" value="' . esc_html($this->getValue()) . '" id="' . esc_html($this->getGuiId()) . '"'
-			. ' ' . $this->renderAdditionalAttributes()
-			. '>' . $iconShowPassword;
-		echo '</div>';
+    public function render()
+    {
+        $iconShowPassword = '';
+        $showDeleteGoogleRecaptchaKeysButton = false;
+        $showDeleteEnterpriseKeysButton = false;
+        $fieldName = $this->getName();
 
-		if ($showDeleteGoogleRecaptchaKeysButton) {
-			echo '<button class="button delete-google-recaptcha-keys-button">'. __('Delete Keys', 'onoffice-for-wp-websites') .'</button>';
-		}
-	}
+        // TODO: remove later, when Enterprise reCAPTCHA is fully rolled out
+        // Classic reCAPTCHA fields
+        if ($fieldName === 'onoffice-settings-captcha-secretkey') {
+            $iconShowPassword = '<button type="button" class="button" data-toggle="0">
+                    <span class="dashicons dashicons-visibility oo-icon-eye-secret-key" aria-hidden="true"></span> 
+                    </button>';
+            $showDeleteGoogleRecaptchaKeysButton = true;
+        } elseif ($fieldName === 'onoffice-settings-captcha-sitekey') {
+            $iconShowPassword = '<button type="button" class="button" data-toggle="0">
+                    <span class="dashicons dashicons-visibility oo-icon-eye-site-key" aria-hidden="true"></span> 
+                    </button>';
+        }
+        // Enterprise reCAPTCHA fields
+        elseif ($fieldName === 'onoffice-settings-captcha-enterprise-projectid') {
+            $iconShowPassword = '<button type="button" class="button" data-toggle="0">
+                    <span class="dashicons dashicons-visibility oo-icon-eye-enterprise-projectid" aria-hidden="true"></span> 
+                    </button>';
+        } elseif ($fieldName === 'onoffice-settings-captcha-enterprise-sitekey') {
+            $iconShowPassword = '<button type="button" class="button" data-toggle="0">
+                    <span class="dashicons dashicons-visibility oo-icon-eye-enterprise-sitekey" aria-hidden="true"></span> 
+                    </button>';
+        } elseif ($fieldName === 'onoffice-settings-captcha-enterprise-apikey') {
+            $iconShowPassword = '<button type="button" class="button" data-toggle="0">
+                    <span class="dashicons dashicons-visibility oo-icon-eye-enterprise-apikey" aria-hidden="true"></span> 
+                    </button>';
+            $showDeleteEnterpriseKeysButton = true;
+        }
+
+        echo '<div class="oo-google-recaptcha-key">';
+        echo '<input type="password" name="' . esc_html($fieldName)
+            . '" value="' . esc_html($this->getValue()) . '" id="' . esc_html($this->getGuiId()) . '"'
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
+            . ' ' . $this->renderAdditionalAttributes()
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $iconShowPassword is a safe HTML string constructed above
+            . '>' . $iconShowPassword;
+        echo '</div>';
+
+        if ($showDeleteGoogleRecaptchaKeysButton) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
+            echo '<button class="button delete-google-recaptcha-keys-button">' . __('Delete Keys', 'onoffice-for-wp-websites') . '</button>';
+        }
+
+        if ($showDeleteEnterpriseKeysButton) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
+            echo '<button class="button delete-google-recaptcha-enterprise-keys-button">' . __('Delete Keys', 'onoffice-for-wp-websites') . '</button>';
+        }
+    }
 }

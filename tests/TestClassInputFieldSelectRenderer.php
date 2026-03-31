@@ -33,6 +33,8 @@ use onOffice\WPlugin\Renderer\InputFieldSelectRenderer;
 class TestClassInputFieldSelectRenderer
 	extends \WP_UnitTestCase
 {
+
+	use HtmlNormalizerTrait;
 	/**
 	 *
 	 */
@@ -42,7 +44,7 @@ class TestClassInputFieldSelectRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer"  id="select_1"></select>', $output);
+		$this->assertHtmlEquals('<select name="testRenderer"  id="select_1"></select>', $output);
 	}
 
 	/**
@@ -55,7 +57,7 @@ class TestClassInputFieldSelectRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer"  id="select_1">'
+		$this->assertHtmlEquals('<select name="testRenderer"  id="select_1">'
 			.'<option value="johndoe" >John Doe</option><option value="konradzuse" >'
 			.'Konrad Zuse</option></select>', $output);
 	}
@@ -71,7 +73,7 @@ class TestClassInputFieldSelectRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer"  id="select_1">'
+		$this->assertHtmlEquals('<select name="testRenderer"  id="select_1">'
 			.'<optgroup label="John Doe" ></optgroup><option value="konradzuse" >'
 			.'Konrad Zuse</option></select>', $output);
 	}
@@ -88,7 +90,7 @@ class TestClassInputFieldSelectRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer"  id="select_1">'
+		$this->assertHtmlEquals('<select name="testRenderer"  id="select_1">'
 			.'<optgroup label="John Doe" ></optgroup><option value="konradzuse"  selected="selected" >'
 			.'Konrad Zuse</option></select>', $output);
 	}
@@ -105,7 +107,7 @@ class TestClassInputFieldSelectRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer"  id="select_1">'
+		$this->assertHtmlEquals('<select name="testRenderer"  id="select_1">'
 			.'<option value="johndoe" >John Doe</option><option value="konradzuse" >Konrad Zuse</option>'
 			.'</select><div>test</div>', $output);
 	}
@@ -120,7 +122,7 @@ class TestClassInputFieldSelectRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<script>if (jQuery("select[name=oopluginlistviews-showreferenceestate").val() === "0") {jQuery(".memssageReference").hide();}</script>'
+		$this->assertHtmlEquals('<script>if (jQuery("select[name=oopluginlistviews-showreferenceestate").val() === "0") {jQuery(".memssageReference").hide();}</script>'
 			.'<select name="oopluginlistviews-showreferenceestate"  id="select_1">'
 			.'<option value="johndoe" >John Doe</option><option value="konradzuse" >Konrad Zuse</option>'
 			.'</select><div class="memssageReference">test</div>', $output);

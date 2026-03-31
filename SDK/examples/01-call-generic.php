@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -40,4 +42,5 @@ $handleReadEstate = $sdk->callGeneric(onOfficeSDK::ACTION_ID_READ, 'estate', $pa
 
 $sdk->sendRequests('put the token here', 'and secret here');
 
+// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- This is example code for developers
 var_export($sdk->getResponseArray($handleReadEstate));

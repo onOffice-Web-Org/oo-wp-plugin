@@ -24,6 +24,7 @@ class HTTPHeadersGeneric
 	{
 		$key = 'HTTP_'.strtoupper(str_replace('-', '_', $headerName));
 		// stripslashes()? See https://developer.wordpress.org/reference/functions/stripslashes_deep/#more-information
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- $_SERVER HTTP headers are validated by web server, stripslashes applied per WP docs.
 		return stripslashes($_SERVER[$key] ?? '');
 	}
 

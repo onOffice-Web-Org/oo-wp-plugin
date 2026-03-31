@@ -21,12 +21,14 @@ class SymmetricEncryptionDefault implements SymmetricEncryption
 	public function encrypt(string $plainText, string $key, string $cipher = 'AES-128-CBC'): string
 	{
 		if (!extension_loaded('openssl')) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message is for internal debugging only
 			throw new \RuntimeException(self::OPEN_SSL_ERROR_MESSAGE);
 		}
 
 		$ivlen = openssl_cipher_iv_length($cipher);
 		$iv = openssl_random_pseudo_bytes($ivlen);
 		if ($iv === false) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message is for internal debugging only
 			throw new \RuntimeException(self::IV_ERROR_MESSAGE);
 		}
 		$cipherText = openssl_encrypt($plainText, $cipher, $key, OPENSSL_RAW_DATA, $iv);
@@ -44,6 +46,7 @@ class SymmetricEncryptionDefault implements SymmetricEncryption
 	{
 		$hmacSha256Len = 32;
 		if (!extension_loaded('openssl')) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message is for internal debugging only
 			throw new \RuntimeException(self::OPEN_SSL_ERROR_MESSAGE);
 		}
 		$decodeText = base64_decode($cipherText);
@@ -52,13 +55,15 @@ class SymmetricEncryptionDefault implements SymmetricEncryption
 		$hmac = substr($decodeText, $ivlen, $hmacSha256Len);
 		$cipherTextRaw = substr($decodeText, $ivlen + $hmacSha256Len);
 		$plainText = openssl_decrypt($cipherTextRaw, $cipher, $key, OPENSSL_RAW_DATA, $iv);
-		if ($plainText === false)
+		 if ($plainText === false)
 		{
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message is for internal debugging only
 			throw new \RuntimeException(self::DECRYPTION_ERROR_MESSAGE);
 		}
 
 		$calcmac = hash_hmac('sha256',$iv. $cipherTextRaw, $key,  true);
 		if (!hash_equals($hmac, $calcmac)) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message is for internal debugging only
 			throw new \RuntimeException(self::DECRYPTION_ERROR_MESSAGE);
 		}
 		return $plainText;

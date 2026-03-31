@@ -129,12 +129,14 @@ class InputFieldTemplateListRenderer
 				}
 				$inputId = 'label' . $this->getGuiId() . 'b' . $key;
 				echo '<input type="' . esc_html($this->getType()) . '" name="' . esc_html($this->getName())
-					. '" value="' . esc_html($key) . '"'
-					. ($checked ? ' checked="checked" ' : '')
-					. $this->renderAdditionalAttributes()
-					. ' id="' . esc_html($inputId) . '">'
-					. '<label for="' . esc_html($inputId) . '">' . esc_html($label) . '</label><br>';
+                    . '" value="' . esc_html($key) . '"'
+                    . ($checked ? ' checked="checked" ' : '')
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
+                    . $this->renderAdditionalAttributes()
+                    . ' id="' . esc_html($inputId) . '">'
+                    . '<label for="' . esc_html($inputId) . '">' . esc_html($label) . '</label><br>';
 			}
+			/* translators: %s: folder path */
 			echo '<p class="oo-template-folder-path">'. esc_html(sprintf(__('(in the folder "%s")', 'onoffice-for-wp-websites'), $templateValue['folder'])) ."</p>";
 			echo (count($this->getValue()) > 1) ? '</details>' : '';
 		}
@@ -173,27 +175,38 @@ class InputFieldTemplateListRenderer
 	 *
 	 */
 	public function setDefaultCheckedValue()
-	{
-		$page = $_GET['page'];
-		switch ($page) {
-			case 'onoffice-estates':
-				$tab = $_GET['tab'];
-				$this->setCheckedValue(self::TEMPLATE_DEFAULT_LIST[$page][$tab]);
-				break;
-			case 'onoffice-editform':
-				$type = $_GET['type'];
-				if (!empty($_GET['id'])) {
-					$id = (int)$_GET['id'];
-					$pDataFormConfigFactory = new DataFormConfigurationFactory();
-					$pDataFormConfigFactory->setIsAdminInterface(true);
-					$pFormConfiguration = $pDataFormConfigFactory->loadByFormId($id);
-					$type = $pFormConfiguration->getFormType();
-				}
-				$this->setCheckedValue(self::TEMPLATE_DEFAULT_LIST[$page][$type]);
-				break;
-			default:
-				$this->setCheckedValue(self::TEMPLATE_DEFAULT_LIST[$page]);
-				break;
-		}
-	}
+    {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Admin display logic, no side effects.
+        if (!isset($_GET['page'])) {
+            return;
+        }
+        $page = sanitize_key(wp_unslash($_GET['page']));
+        switch ($page) {
+            case 'onoffice-estates':
+                $tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : '';
+                if (isset(self::TEMPLATE_DEFAULT_LIST[$page][$tab])) {
+                    $this->setCheckedValue(self::TEMPLATE_DEFAULT_LIST[$page][$tab]);
+                }
+                break;
+            case 'onoffice-editform':
+                $type = isset($_GET['type']) ? sanitize_key(wp_unslash($_GET['type'])) : '';
+                if (!empty($_GET['id'])) {
+                    $id = absint(wp_unslash($_GET['id']));
+                    $pDataFormConfigFactory = new DataFormConfigurationFactory();
+                    $pDataFormConfigFactory->setIsAdminInterface(true);
+                    $pFormConfiguration = $pDataFormConfigFactory->loadByFormId($id);
+                    $type = $pFormConfiguration->getFormType();
+                }
+                if (isset(self::TEMPLATE_DEFAULT_LIST[$page][$type])) {
+                    $this->setCheckedValue(self::TEMPLATE_DEFAULT_LIST[$page][$type]);
+                }
+                break;
+            default:
+                if (isset(self::TEMPLATE_DEFAULT_LIST[$page])) {
+                    $this->setCheckedValue(self::TEMPLATE_DEFAULT_LIST[$page]);
+                }
+                break;
+        }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
+    }
 }

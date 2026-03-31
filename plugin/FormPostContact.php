@@ -183,8 +183,9 @@ class FormPostContact
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
 
 		if (!$pAPIClientAction->getResultStatus()) {
-			throw new ApiClientException($pAPIClientAction);
-		}
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception with API client object
+            throw new ApiClientException($pAPIClientAction);
+        }
 	}
 
 	/**
@@ -255,8 +256,9 @@ class FormPostContact
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
 		$pAPIClientAction->setParameters($requestParams);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
-		if (!$pAPIClientAction->getResultStatus()) {
-			throw new ApiClientException($pAPIClientAction);
-		}
+        if (!$pAPIClientAction->getResultStatus()) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception with API client object
+            throw new ApiClientException($pAPIClientAction);
+        }
 	}
 }

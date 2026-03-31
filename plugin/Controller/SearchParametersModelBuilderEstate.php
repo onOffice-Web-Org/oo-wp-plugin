@@ -112,6 +112,7 @@ class SearchParametersModelBuilderEstate
 	{
 		$pageParameters = [];
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public pagination parameters, no side effects
 		foreach ($_GET as $key => $value) {
 			if (strpos($key, 'page_of_id_') === 0) {
 				$pageParameters[] = $key;

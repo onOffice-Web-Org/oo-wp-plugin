@@ -14,7 +14,10 @@ jQuery(document).ready(function($) {
             editableElement.html(newValue);
         }
 
-        editableElement.on('paste', handlePaste)
+        editableElement.on('paste', function(e) {
+            handlePaste(e);
+            $(this).trigger('input');
+        })
                        .on('input click', () => handleInputAndClick(editableElement, suggestionsElement, outputElement));
 
         suggestionsElement.on('click', '.oo-suggestion-item', function() {

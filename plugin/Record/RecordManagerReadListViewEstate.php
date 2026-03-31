@@ -84,33 +84,37 @@ class RecordManagerReadListViewEstate
      */
 
     public function getRecordsSortedAlphabetically():array
-    {
-        $prefix = $this->getTablePrefix();
-        $pWpDb = $this->getWpdb();
-        $columns = implode(', ', $this->getColumns());
-        $where = "(".implode(") AND (", $this->getWhere()).")";
-        if (!empty($_GET["search"]))
-        {
-            $where .= "AND (name LIKE '%".esc_sql($_GET['search'])."%' OR template LIKE '%".esc_sql($_GET['search'])."%')";
-        }
-        $orderBy = ( ! empty($_GET['orderby'])) ? $_GET['orderby'] : 'name';
-        $order = ( ! empty($_GET['order'])) ? $_GET['order'] : 'asc';
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$columns = implode(', ', $this->getColumns());
+		$where = "(".implode(") AND (", $this->getWhere()).")";
+		
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Admin table search/sort parameters, read-only operation
+		if (!empty($_GET["search"]))
+		{
+			$search = sanitize_text_field(wp_unslash($_GET['search']));
+			$where .= " AND (name LIKE '%".esc_sql($search)."%' OR template LIKE '%".esc_sql($search)."%')";
+		}
+		$orderBy = (!empty($_GET['orderby'])) ? sanitize_key(wp_unslash($_GET['orderby'])) : 'name';
+		$order = (!empty($_GET['order'])) ? sanitize_key(wp_unslash($_GET['order'])) : 'asc';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
 			FROM `{$prefix}oo_plugin_listviews`
 			WHERE {$where}
-			ORDER BY `listview_id` ASC
+			ORDER BY `{$orderBy}` {$order}
 			LIMIT %d, %d",
 			$this->getOffset(),
 			$this->getLimit()
 		);
 
-        $this->setFoundRows($pWpDb->get_results($sql, OBJECT));
-        $this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
+		$this->setFoundRows($pWpDb->get_results($sql, OBJECT));
+		$this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
 
-        return $this->getFoundRows();
-    }
+		return $this->getFoundRows();
+	}
 
 
 	/**
@@ -148,6 +152,7 @@ class RecordManagerReadListViewEstate
 			$result['highlighted'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'highlighted');
 			$result['availableOptions'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'availableOptions');
 			$result['convertTextToSelectForCityField'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'convertTextToSelectForCityField');
+			$result['rangeFieldDisplayModes'] = $this->getStringFieldValuesByFieldRow($fieldRows, 'rangeFieldDisplayMode');
 		}
 
 		return $result;
@@ -174,6 +179,24 @@ class RecordManagerReadListViewEstate
 		$tmpFilterable = array_combine($fields, $resultBooleanField);
 		$filterableFields = array_keys(array_filter($tmpFilterable));
 		return $filterableFields;
+	}
+
+
+	/**
+	 *
+	 * @param array  $fieldRows The array containing rows from oo_plugin_fieldconfig
+	 * @param string $column    The name of the database column
+	 * @return array
+	 */
+	private function getStringFieldValuesByFieldRow(array $fieldRows, string $column): array
+	{
+		$result = [];
+		foreach ($fieldRows as $row) {
+			if (isset($row['fieldname'])) {
+				$result[$row['fieldname']] = $row[$column] ?? '';
+			}
+		}
+		return $result;
 	}
 
 
@@ -217,7 +240,7 @@ class RecordManagerReadListViewEstate
 			$result['highlighted'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'highlighted');
 			$result['availableOptions'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'availableOptions');
 			$result['convertTextToSelectForCityField'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'convertTextToSelectForCityField');
-
+			$result['rangeFieldDisplayModes'] = $this->getStringFieldValuesByFieldRow($fieldRows, 'rangeFieldDisplayMode');
 		}
 
 		return $result;

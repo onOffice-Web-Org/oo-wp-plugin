@@ -32,6 +32,7 @@ use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Form\CaptchaHandler;
+use onOffice\WPlugin\Form\CaptchaEnterpriseHandler;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -124,6 +125,17 @@ abstract class FormPost
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
 
+		 // CSRF Protection: Verify nonce
+		$nonce = $_POST['onoffice_nonce'] ?? '';
+		$formId = $pConfig->getFormName();
+		if (!wp_verify_nonce($nonce, 'onoffice_form_' . $formId)) {
+			$pFormData->setStatus(self::MESSAGE_ERROR);
+			$this->_pFormPostConfiguration->getLogger()->logError(
+				new \Exception('CSRF token verification failed for form: ' . $formId)
+			);
+			return;
+		}
+
 		if ($this->_pFormPostConfiguration->getPostMessage() !== "") {
 			$pFormData->setStatus(self::MESSAGE_SUCCESS);
 			return;
@@ -184,19 +196,35 @@ abstract class FormPost
 	 */
 
 	private function checkCaptcha(DataFormConfiguration $pConfig): bool
-	{
-		$pWPOptionsWrapper = $this->_pFormPostConfiguration->getWPOptionsWrapper();
-		$isCaptchaSetup = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-sitekey', '') !== '';
+    {
+        if (!$pConfig->getCaptcha()) {
+            return true;
+        }
 
-		if ($pConfig->getCaptcha() && $isCaptchaSetup) {
-			$token = $this->_pFormPostConfiguration->getPostvarCaptchaToken();
-			$secret = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-secretkey', '');
-			$pCaptchaHandler = new CaptchaHandler($token, $secret);
-			return $pCaptchaHandler->checkCaptcha();
-		} else {
-			return true;
-		}
-	}
+        $pWPOptionsWrapper = $this->_pFormPostConfiguration->getWPOptionsWrapper();
+        $token = $this->_pFormPostConfiguration->getPostvarCaptchaToken();
+
+        // Enterprise reCAPTCHA
+        $enterpriseSiteKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-enterprise-sitekey', '');
+        $enterpriseProjectId = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-enterprise-projectid', '');
+        $enterpriseApiKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-enterprise-apikey', '');
+
+        if (!empty($enterpriseSiteKey) && !empty($enterpriseProjectId) && !empty($enterpriseApiKey)) {
+            $pHandler = new CaptchaEnterpriseHandler($token, $enterpriseProjectId, $enterpriseSiteKey, $enterpriseApiKey);
+            return $pHandler->checkCaptcha();
+        }
+
+        // TODO: Classic reCAPTCHA - Remove this later, when Enterprise reCAPTCHA is fully rolled out
+        $classicSiteKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-sitekey', '');
+        $classicSecretKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-secretkey', '');
+
+        if (!empty($classicSiteKey) && !empty($classicSecretKey)) {
+            $pHandler = new CaptchaHandler($token, $classicSecretKey);
+            return $pHandler->checkCaptcha();
+        }
+
+        return true;
+    }
 
 	/**
 	 *
@@ -249,12 +277,17 @@ abstract class FormPost
 			$fields[] = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
 		}
 
-		foreach ($fields as $field) {
-			if ($field->getType() === FieldTypes::FIELD_TYPE_MULTISELECT && isset($_POST[$field->getName()]) && !empty($_POST[$field->getName()])
-				&& is_string($_POST[$field->getName()])) {
-				$_POST[$field->getName()] = explode(', ', $_POST[$field->getName()]);
-			}
-		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Called within form processing pipeline after nonce/reCAPTCHA verification in initialCheck().
+        foreach ($fields as $field) {
+            if ($field->getType() === FieldTypes::FIELD_TYPE_MULTISELECT && isset($_POST[$field->getName()]) && !empty($_POST[$field->getName()])
+                && is_string($_POST[$field->getName()])) {
+                $fieldName = $field->getName();
+                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Already validated with isset() and is_string() checks above, sanitized with array_map() and wp_unslash() below.
+                $rawValue = wp_unslash($_POST[$fieldName]);
+                $_POST[$fieldName] = array_map('sanitize_text_field', explode(', ', $rawValue));
+            }
+        }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 
 	/**
@@ -463,20 +496,22 @@ abstract class FormPost
 		if ( ! get_option( 'onoffice-settings-honeypot' ) ) {
 			return;
 		}
-		$honeypotValue = $this->_pFormPostConfiguration->getPostHoneypot();
-		if ( $honeypotValue !== '' ) {
-			if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
-				$_POST['message'] = $_POST['tmpField'];
-			} else {
-				unset( $_POST['message'] );
-			}
-			$_POST['tmpField'] = $honeypotValue;
-		} else {
-			if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
-				$_POST['message'] = $_POST['tmpField'];
-				unset( $_POST['tmpField'] );
-			}
-		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Internal form processing, called within form submission pipeline with reCAPTCHA verification.
+        $honeypotValue = $this->_pFormPostConfiguration->getPostHoneypot();
+        if ( $honeypotValue !== '' ) {
+            if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
+                $_POST['message'] = isset($_POST['tmpField']) ? sanitize_textarea_field(wp_unslash($_POST['tmpField'])) : '';
+            } else {
+                unset( $_POST['message'] );
+            }
+            $_POST['tmpField'] = sanitize_text_field($honeypotValue);
+        } else {
+            if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
+                $_POST['message'] = isset($_POST['tmpField']) ? sanitize_textarea_field(wp_unslash($_POST['tmpField'])) : '';
+                unset( $_POST['tmpField'] );
+            }
+        }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
 	}
 	
 	/**

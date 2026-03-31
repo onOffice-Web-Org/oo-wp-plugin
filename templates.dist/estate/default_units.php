@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2016  onOffice Software AG
@@ -24,6 +26,9 @@
  */
 
 /* @var $pEstates onOffice\WPlugin\EstateList */
+use onOffice\WPlugin\Pagination\ListPagination;
+// Listing ID for pagination query parameter
+$list_id = $pEstates->getDataView()->getId();
 
 $dont_echo = ['vermarktungsstatus','objekttitel'];
 
@@ -83,13 +88,13 @@ $rawValues = $pEstates->getRawValues();
                                 }
 
                                 echo '<th class="oo-units__data">';
-                                echo $pEstates->getFieldLabel($field);
+                                echo esc_html($pEstates->getFieldLabel($field));
                                 echo '</th>';
                             }
                         }
 
                         echo '<th class="oo-units__data">';
-                        echo esc_html__('Details', 'oo_theme');
+                        echo esc_html__('Details', 'onoffice-for-wp-websites');
                         echo '</th>';
                         ?>
                     </tr>
@@ -114,9 +119,9 @@ $rawValues = $pEstates->getRawValues();
                                 $value == '0.00' ||
                                 $value == '' ||
                                 empty($value) ||
-								(is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0") // skip negative boolean fields
-								(($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
-									in_array($field,['innen_courtage', 'aussen_courtage'],true))
+                                (is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0") || // skip negative boolean fields
+                                (($rawValues->getValueRaw($estateId)['elements']['provisionsfrei'] ?? null) === "1" &&
+                                    in_array($field,['innen_courtage', 'aussen_courtage'],true))
                             ) {
                                 $value = '-';
                                 $class = ' --empty';
@@ -126,23 +131,23 @@ $rawValues = $pEstates->getRawValues();
                             }
                         
                             echo '<td class="oo-units__data' .
-                                $class.
+                                esc_attr($class).
                                 '" data-label="' .
-                                $pEstates->getFieldLabel($field) .
+                                esc_attr($pEstates->getFieldLabel($field)) .
                                 '">';
-                            echo $value;
+                            echo is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value);
                             echo '</td>';
                         endforeach;
                     
                         echo '<td class="oo-units__data oo-unitslink" data-label="' .
-                            esc_html__('Details', 'oo_theme') .
+                            esc_html__('Details', 'onoffice-for-wp-websites') .
                             '">';
                         if (!empty($pEstates->getEstateLink())) {
-                            echo '<a class="oo-units-btn" title="'.esc_html__('Zur Einheit', 'oo_theme').': '.$current_property['objekttitel'].'" href="' .
+                            echo '<a class="oo-units-btn" title="'.esc_attr__('Zur Einheit', 'onoffice-for-wp-websites').': '.esc_attr($current_property['objekttitel']).'" href="' .
                                 esc_url($pEstates->getEstateLink()) .
                                 '">';
                         }
-                        echo esc_html__('Zur Einheit', 'oo_theme');
+                        echo esc_html__('Zur Einheit', 'onoffice-for-wp-websites');
                         echo '</a>';
                         echo '</td>';
                     
@@ -154,11 +159,24 @@ $rawValues = $pEstates->getRawValues();
         </div>
     </div>
     <?php
-	if (get_option('onoffice-pagination-paginationbyonoffice')) {
-        echo "<div>";
-		wp_link_pages();
-        echo "</div>";
-	}    
+if (get_option('onoffice-pagination-paginationbyonoffice')) {
+	?>
+	<div class="oo-listpagination">
+		<?php
+	
+		$ListPagination = new ListPagination([
+			'class' => 'oo-post-nav-links',
+			'type' => 'property',
+			'anchor' => 'oo-listheadline',
+			'list_id' => $list_id
+		]);
+		
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render() method outputs escaped HTML
+        echo $ListPagination->render();
+		?>
+	</div>
+<?php
+} 
 } ?>
 
 	

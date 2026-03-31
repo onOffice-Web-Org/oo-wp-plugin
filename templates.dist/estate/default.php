@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2016  onOffice Software AG
@@ -24,9 +27,14 @@
  */
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Pagination\ListPagination;
+
 // display search form
 require 'SearchForm.php';
 /* @var $pEstates onOffice\WPlugin\EstateList */
+
+// Listing ID for pagination query parameter
+$list_id = $pEstates->getDataView()->getId();
 
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress", "dreizeiler");
 
@@ -80,11 +88,6 @@ $dimensions = [
 ?>
 
 <style>
-	.oo-details-btn:focus {
-		opacity: 0.8;
-		text-decoration: none !important;
-		background: #80acd3 !important;
-	}
 	.oo-listinfotableview {
 		display: flex;
 		flex-wrap: wrap;
@@ -97,17 +100,19 @@ $dimensions = [
 <div class="oo-estate-map">
     <?php require('map/map.php'); ?>
 </div>
-<div class="oo-listheadline">
+<div class="oo-listheadline" id="oo-listheadline-<?php echo esc_attr($list_id);?>">
 	<h1><?php esc_html_e('Overview of Estates', 'onoffice-for-wp-websites'); ?></h1>
 	<p>
 		
 		<?php /* translators: %d will be replaced with a number. */
-		echo sprintf(esc_html_x('Found %d estates over all.', 'template', 'onoffice-for-wp-websites'), $pEstates->getEstateOverallCount());
+		echo sprintf(esc_html_x('Found %d estates over all.', 'template', 'onoffice-for-wp-websites'), (int)$pEstates->getEstateOverallCount());
 		?>
 	</p>
 </div>
 <div class="oo-estate-sort">
-	<?php echo '<div class="col-lg-12">'.$generateSortDropDown().'</div>'; ?>
+	<?php 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- generateSortDropDown() returns escaped HTML
+	echo '<div class="col-lg-12">'.$generateSortDropDown().'</div>'; ?>
 </div>
 <div class="oo-listframe">
 	<?php
@@ -142,17 +147,24 @@ $dimensions = [
                      * @param bool $maxWidth, default = false)
                      * @return string for image source on various media
                      */
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstatesClone->getResponsiveImageSource($id, 575, $dimensions['575']['w'], $dimensions['575']['h'], true);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstatesClone->getResponsiveImageSource($id, 1600, $dimensions['1600']['w'], $dimensions['1600']['h']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstatesClone->getResponsiveImageSource($id, 1400, $dimensions['1400']['w'], $dimensions['1400']['h']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstatesClone->getResponsiveImageSource($id, 1200, $dimensions['1200']['w'], $dimensions['1200']['h']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstatesClone->getResponsiveImageSource($id, 992, $dimensions['992']['w'], $dimensions['992']['h']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstatesClone->getResponsiveImageSource($id, 768, $dimensions['768']['w'], $dimensions['768']['h']);
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns escaped HTML source tags
                     echo $pEstatesClone->getResponsiveImageSource($id, 576, $dimensions['576']['w'], $dimensions['576']['h']);
                     echo '<img class="oo-responsive-image estate-status" ' .
                         'src="' . esc_url($pEstatesClone->getEstatePictureUrl($id, isset($dimensions['1600']['w']) || isset($dimensions['1600']['h']) ? ['width'=> $dimensions['1600']['w'], 'height'=>$dimensions['1600']['h']] : null)) . '" ' .
-                        'alt="' . esc_html($pEstatesClone->getEstatePictureTitle($id)?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
-                        'loading="lazy"/>';
+                        'alt="' . esc_attr($pEstatesClone->getEstatePictureTitle($id)?? __('Image of property', 'onoffice-for-wp-websites')) . '" ' .
+                        'loading="lazy">';
                     echo '</picture>';
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
@@ -161,7 +173,7 @@ $dimensions = [
 				} ?>
 				<div class="oo-listinfo">
 					<div class="oo-listtitle">
-						<?php echo $currentEstate["objekttitel"]; ?>
+						<?php echo esc_html($currentEstate["objekttitel"]); ?>
 					</div>
 					<div class="oo-listinfotable oo-listinfotableview">
 						<?php
@@ -194,36 +206,42 @@ $dimensions = [
 							}
 
 							$class = 'oo-listtd'. ($pEstates->isHighlightedField($field) ? ' --highlight' : '');
-							echo '<div class="'.$class.'">'.esc_html($pEstatesClone->getFieldLabel( $field )).'</div>'.
-								'<div class="'.$class.'">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
+                            echo '<div class="'.esc_attr($class).'">'.esc_html($pEstatesClone->getFieldLabel( $field )).'</div>'.
+                                '<div class="'.esc_attr($class).'">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 						} ?>
 					</div>
 					<div class="oo-detailslink">
 						<?php if ($referenz === "1") { ?>
-							<?php if (!$pEstatesClone->getViewRestrict()) { ?>
-								<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
-									<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
-								</a>
-							<?php } ?>
-						<?php } else { ?>
-							<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
+                            <?php if (!$pEstatesClone->getViewRestrict()) { 
+								/* translators: %d: real estate ID number */ ?>
+                                <a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'template', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
+                                    <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
+                                </a>
+                            <?php } ?>
+                        <?php } else { 
+							/* translators: %d: real estate ID number */ ?>
+                            <a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>" aria-label="<?php echo esc_attr(sprintf(esc_html_x('Show Details for Real Estate No. %d', 'template', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
                                 <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
                             </a>
                         <?php } ?>
-                        <?php if (Favorites::isFavorizationEnabled()): ?>
-                            <button data-onoffice-estateid="<?php echo $pEstatesClone->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
+                        <?php if (Favorites::isFavorizationEnabled()): 
+                                    $setting = Favorites::getFavorizationLabel();
+                                    if ($setting == 'Watchlist') {
+                                        $FavorizationLabel = esc_html(
+                                            __('Add to watchlist', 'onoffice-for-wp-websites')
+                                        );
+                                    } else if ($setting == 'Favorites') {
+                                        $FavorizationLabel = esc_html(
+                                            __('Add to favorites', 'onoffice-for-wp-websites')
+                                        );
+                                    }
+
+                            /* translators: %d: real estate ID number */ ?>
+                            <button data-onoffice-estateid="<?php echo esc_attr($pEstatesClone->getCurrentMultiLangEstateMainId()); ?>" class="onoffice favorize" aria-label="<?php echo esc_attr($FavorizationLabel.' '.sprintf(esc_html_x('Real Estate No. %d', 'template', 'onoffice-for-wp-websites'), (int)$estateId)); ?>">
                                 <?php
-									$setting = Favorites::getFavorizationLabel();
-									if ($setting == 'Watchlist') {
-										esc_html_e(
-											__('Add to watchlist', 'onoffice-for-wp-websites')
-										);
-									} else if ($setting == 'Favorites') {
-										esc_html_e(
-											__('Add to favorites', 'onoffice-for-wp-websites')
-										);
-									}
-								?>
+                                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped above
+                                    echo $FavorizationLabel;
+                                ?>
                             </button>
                         <?php endif ?>
 					</div>
@@ -234,80 +252,20 @@ $dimensions = [
 </div>
 <?php
 if (get_option('onoffice-pagination-paginationbyonoffice')) {
-	
-	global $onoffice_instance_counter;
-
-	if (!isset($onoffice_instance_counter)) {
-		$onoffice_instance_counter = 0;
-	}
-
-	$onoffice_instance_counter++;
-
-	// Generate a unique instance ID for the pagination with a counter
-	$current_instance_id = 'oo-listpagination-instance-' . $onoffice_instance_counter;
-
-	$listViewId = $pEstates->getListViewId();
-
-	$paginationKeys = ['page_of_id_' . $listViewId, 'paged', 'page'];
-	$cleanedParams = [];
-
-	foreach ($_GET as $key => $value) {
-		$sanitized_key = sanitize_key($key);
-		
-		// Skip pagination keys
-		// This prevents the pagination from being included in the query parameters
-		if (in_array($sanitized_key, $paginationKeys)) {
-			continue;
-		}
-		
-		if (is_array($value)) {
-			foreach ($value as $k => $v) {
-				$cleanedParams[] = [
-					'key' => $sanitized_key . '[' . sanitize_key($k) . ']',
-					'value' => sanitize_text_field($v)
-				];
-			}
-		} else {
-			$cleanedParams[] = [
-				'key' => $sanitized_key, 
-				'value' => sanitize_text_field($value)
-			];
-		}
-	}
-
 	?>
-
-	<div id="<?php echo esc_attr($current_instance_id); ?>" class="oo-listpagination">
+	<div class="oo-listpagination">
 		<?php
-		// Create pagination links
-		wp_link_pages();
+	
+		$ListPagination = new ListPagination([
+			'class' => 'oo-post-nav-links',
+			'type' => 'property',
+			'anchor' => 'oo-listheadline-'.$list_id ,
+			'list_id' => $list_id
+		]);
+		
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render() method outputs escaped HTML
+        echo $ListPagination->render();
 		?>
-		<script>
-			jQuery(document).ready(function($) {
-
-				var $currentPagination = $('#<?php echo esc_js($current_instance_id); ?>');
-
-				if ($currentPagination.length === 0) {
-					return; // Exit if the container isn't found
-				}
-
-				var queryParams = <?php echo json_encode($cleanedParams); ?>;
-
-				$currentPagination.find('.post-nav-links a').each(function() {
-					var link = $(this);
-					// Create a new URL object based on the link's href and the current origin
-					var url = new URL(link.attr('href'), window.location.origin);
-
-					queryParams.forEach(function(param) {
-						// Set or update the search parameter
-						url.searchParams.set(param.key, param.value);
-					});
-
-					// Update the link's href with the new URL and search parameters
-					link.attr('href', url.toString());
-				});
-			});
-		</script>
 	</div>
 <?php
 }
@@ -319,6 +277,7 @@ if (get_option('onoffice-pagination-paginationbyonoffice')) {
 		onofficeFavorites = new onOffice.favorites(<?php echo json_encode(Favorites::COOKIE_NAME); ?>);
 		onOffice.addFavoriteButtonLabel = function(i, element) {
 			var estateId = $(element).attr('data-onoffice-estateid');
+			var estateLabel = '<?php echo esc_js(__('Real Estate No.', 'onoffice-for-wp-websites')); ?> ' + estateId;
 			if (!onofficeFavorites.favoriteExists(estateId)) {
 				$(element).text('<?php
 						$setting = Favorites::getFavorizationLabel();
@@ -332,6 +291,7 @@ if (get_option('onoffice-pagination-paginationbyonoffice')) {
 							);
 						}
 					?>');
+				$(element).attr('aria-label', $(element).text() + ' ' + estateLabel);
 				$(element).on('click', function() {
 					onofficeFavorites.add(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);
@@ -349,6 +309,7 @@ if (get_option('onoffice-pagination-paginationbyonoffice')) {
 							);
 						}
 					?>');
+				$(element).attr('aria-label', $(element).text() + ' ' + estateLabel);
 				$(element).on('click', function() {
 					onofficeFavorites.remove(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);

@@ -125,6 +125,7 @@ class TestClassFormPostApplicantSearch
 			'vermarktungsart' => 'kauf',
 			'kaufpreis' => '200000',
 			'wohnflaeche' => '800',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_applicantsearch'),
 		];
 
 		$this->setupDataFormConfiguration();
@@ -250,6 +251,7 @@ class TestClassFormPostApplicantSearch
 			'vermarktungsart' => 'kauf',
 			'kaufpreis' => '200000',
 			'wohnflaeche' => '800',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_applicantsearch'),
 		];
 
 		$this->_pFormPostApplicantSearch->initialCheck($this->_pDataFormConfiguration, 2);
@@ -271,6 +273,7 @@ class TestClassFormPostApplicantSearch
 			'vermarktungsart' => 'kauf',
 			'kaufpreis' => '200000',
 			'wohnflaeche' => '800',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_applicantsearch'),
 		];
 
 		$this->_pFormPostApplicantSearch->initialCheck($this->_pDataFormConfiguration, 2);
@@ -304,6 +307,7 @@ class TestClassFormPostApplicantSearch
 	{
 		$_POST = [
 			'vermarktungsart' => 'kauf',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_applicantsearch'),
 		];
 
 		$this->_pFormPostApplicantSearch->initialCheck($this->_pDataFormConfiguration, 2);

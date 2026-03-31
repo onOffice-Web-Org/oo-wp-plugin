@@ -105,7 +105,7 @@ class Form
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
-			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstate($pFieldsCollection, true)
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsFormFrontend($pFieldsCollection)
 			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName)
@@ -509,7 +509,34 @@ class Form
 		if (!$raw) {
 			$result = $this->escapePermittedValues($result);
 		}
+
 		return $result;
+	}
+
+	/**
+	 * Returns the dependencies for a given form field.
+	 *
+	 * @param string $field
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+	public function getFieldDependencies(string $field): array
+	{
+		$module = $this->getModuleOfField($field);
+		if (!$module) {
+			return [];
+		}
+		
+		$fieldObject = $this->_pFieldsCollection->getFieldByModuleAndName($module, $field);
+		
+		// Check if getDependencies method exists and return dependencies if available
+		if (method_exists($fieldObject, 'getDependencies')) {
+			return $fieldObject->getDependencies() ?? [];
+		}
+		
+		return [];
 	}
 
 	/**
@@ -720,4 +747,51 @@ class Form
 	/** @return bool */
 	public function getShowFormAsModal(): bool
 		{ return $this->_pFormData->getDataFormConfiguration()->getShowFormAsModal(); }
+
+	/** @return array */
+	public function getPageTitlesByCurrentLanguage()
+	{
+		$pageTitles = $this->getDataFormConfiguration()->getTitlePerMultipage();
+		$currentLocale = get_locale();
+		$uniquePages = array_unique(array_column($pageTitles, 'page'));
+		sort($uniquePages);
+
+		$result = [];
+
+		foreach ($uniquePages as $pageNumber) {
+			$currentLocaleTitles = array_filter($pageTitles, function($title) use ($pageNumber, $currentLocale) {
+				return $title['page'] == $pageNumber &&
+					$title['locale'] === $currentLocale &&
+					!empty($title['value']);
+			});
+
+			if (!empty($currentLocaleTitles)) {
+				$result[] = reset($currentLocaleTitles);
+				continue;
+			}
+
+			$nativeTitles = array_filter($pageTitles, function($title) use ($pageNumber) {
+				return $title['page'] == $pageNumber &&
+					$title['locale'] === 'native' &&
+					!empty($title['value']);
+			});
+
+			if (!empty($nativeTitles)) {
+				$result[] = reset($nativeTitles);
+				continue;
+			}
+
+			// Fallback
+			$result[] = [
+				'page' => $pageNumber,
+				/* translators: %d: page number */
+				'value' => sprintf(__('Page %d', 'onoffice-for-wp-websites'), $pageNumber),
+				'locale' => $currentLocale
+			];
+		}
+
+		return $result;
+	}
+
+
 }

@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 use function esc_sql;
 
@@ -35,17 +36,13 @@ class RecordManagerDeleteForm
 	extends RecordManager
 	implements RecordManagerDelete
 {
-	/** @var wpdb */
+	/** @var wpdb|WpdbReadCacheProxy */
 	private $_pWPDB;
 
-
 	/**
-	 *
-	 * @param wpdb $pWPDB
-	 *
+	 * @param wpdb|WpdbReadCacheProxy $pWPDB
 	 */
-
-	public function __construct(wpdb $pWPDB)
+	public function __construct(wpdb|WpdbReadCacheProxy $pWPDB)
 	{
 		$this->_pWPDB = $pWPDB;
 	}
@@ -65,6 +62,8 @@ class RecordManagerDeleteForm
 		foreach ($ids as $id) {
 			$pWpdb->delete($prefix.'oo_plugin_forms', ['form_id' => $id]);
 			$pWpdb->delete($prefix.'oo_plugin_form_fieldconfig', ['form_id' => $id]);
+			$pWpdb->delete($prefix.'oo_plugin_form_multipage_title', ['form_id' => $id]);
+
 			$defaultIds = $pWpdb->get_col(
 				"SELECT defaults_id "
 				."FROM {$prefix}oo_plugin_fieldconfig_form_defaults "

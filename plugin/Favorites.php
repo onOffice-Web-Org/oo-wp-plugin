@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin;
 
 use Exception;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 
 /**
  *
@@ -110,10 +111,14 @@ class Favorites
 	 */
 
 	static public function registerScripts() {
-		if (self::isFavorizationEnabled()) {
-			wp_register_script( 'onoffice-favorites', plugins_url( '/dist/favorites.min.js', ONOFFICE_PLUGIN_DIR ) );
-		}
-	}
+        if (self::isFavorizationEnabled()) {
+            wp_register_script('onoffice-favorites', 
+                plugins_url('/dist/favorites.min.js', ONOFFICE_PLUGIN_DIR),
+                ['jquery'],
+                FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/favorites.min.js'),
+                true);
+        }
+    }
 
 
 	/**

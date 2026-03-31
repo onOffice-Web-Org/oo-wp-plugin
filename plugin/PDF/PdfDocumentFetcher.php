@@ -60,12 +60,15 @@ class PdfDocumentFetcher
 			str_replace('urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:', '', $pModel->getTemplate()),
 			$pModel->getEstateIdExternal());
 		header('Content-Disposition: attachment; filename="'.$filename.'"');
+
+        // phpcs:disable WordPress.WP.AlternativeFunctions -- cURL required for efficient streaming of large PDF files directly to output. WordPress HTTP API doesn't support streaming to php://output with callbacks reliably.
 		$curl = curl_init($url);
 		$pCallbackHeader = function($ch, $data): int {
 			return $this->setHeaders($data);
 		};
 
 		$writeCallback = function($ch, $data): int {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Binary PDF data passed through from API
 			echo $data;
 			return strlen($data);
 		};
@@ -82,6 +85,7 @@ class PdfDocumentFetcher
 			throw new PdfDownloadException;
 		}
 		curl_close($curl);
+         // phpcs:enable WordPress.WP.AlternativeFunctions
 	}
 
 	/**

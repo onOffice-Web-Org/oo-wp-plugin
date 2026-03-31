@@ -26,6 +26,8 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use WP_UnitTestCase;
+use wpdb;
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 
 use const ONOFFICE_DI_CONFIG_PATH;
 
@@ -43,7 +45,13 @@ class TestClassDiConfig
 		foreach ($mapping as $className => $inst)
 		{
 			$pInstance = $pContainer->get($className);
-			$this->assertInstanceOf($className, $pInstance);
+			if ($className === wpdb::class) {
+				$this->assertTrue(
+					$pInstance instanceof wpdb || $pInstance instanceof WpdbReadCacheProxy
+				);
+			} else {
+				$this->assertInstanceOf($className, $pInstance);
+			}
 		}
 	}
 }

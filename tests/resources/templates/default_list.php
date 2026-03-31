@@ -29,15 +29,17 @@ use onOffice\WPlugin\EstateList;
 (function (EstateList $pEstates) {
 	$pEstates->resetEstateIterator();
 	while ($currentEstate = $pEstates->estateIterator()) {
-		unset($currentEstate['vermarktungsstatus']);
-		echo $pEstates->getEstateLink() . ': ' . esc_html('Show Details', 'onoffice-for-wp-websites')."\n";
+        unset($currentEstate['vermarktungsstatus']);
+        echo esc_url($pEstates->getEstateLink()) . ': ' . esc_html('Show Details', 'onoffice-for-wp-websites')."\n";
 		foreach ($currentEstate as $field => $value) {
 			echo esc_html($pEstates->getFieldLabel($field)) . ': '
 				. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)) . "\n";
 		}
-		echo $pEstates->getEstateUnits();
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getEstateUnits() returns escaped HTML
+        echo $pEstates->getEstateUnits();
 		if ($pEstates->getDocument() !== '') {
-			echo $pEstates->getDocument();
-		}
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getDocument() returns esc_url()
+            echo $pEstates->getDocument();
+        }
 	}
 })($pEstates);

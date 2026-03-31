@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -126,6 +128,8 @@ class EstateList
 	/** @var string */
 	private $_energyCertificate = '';
 
+	private $_geoFilter = null;
+
 
 	/**
 	 * @param DataView $pDataView
@@ -210,8 +214,12 @@ class EstateList
 			$this->getEstateContactPerson($estateIds);
 
 			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles();
-			$this->_pEstateFiles->getAllFiles($fileCategories, $estateIds, $this->_pEnvironment->getSDKWrapper());
-			$this->_pEstateFiles->getFilesByEstateIds($estateIds, $this->_pEnvironment->getSDKWrapper());
+			try {
+				$this->_pEstateFiles->getAllFiles($fileCategories, $estateIds, $this->_pEnvironment->getSDKWrapper());
+				$this->_pEstateFiles->getFilesByEstateIds($estateIds, $this->_pEnvironment->getSDKWrapper());
+			} catch (\onOffice\SDK\Exception\HttpFetchNoResultException $e) {
+				// Estate files could not be fetched — continue without images
+			}
 		}
 
 		if ($pDataListView->getRandom()) {
@@ -435,6 +443,7 @@ class EstateList
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
 		foreach ($inputs->getFields() as $name) {
@@ -460,6 +469,7 @@ class EstateList
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
 		$inputFields = $inputs->getFilterableFields();
@@ -587,6 +597,16 @@ class EstateList
 			$pListView->getFields(),
 			onOfficeSDK::MODULE_ESTATE
 		);
+		
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
+		if ( isset( $_GET['geo_search'] ) ) {
+			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
+			$geoCoords = explode( ',', $geoSearch );
+			if ( count( $geoCoords ) === 2 ) {
+				$filter['geo'][0]['loc'] = $geoSearch;
+			}
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$requestParams = [
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
@@ -648,6 +668,7 @@ class EstateList
 	{
 		$pListView = $this->_pDataView;
 		$requestParams = [];
+		$filter = $this->getDefaultFilterBuilder()->buildFilter();
 
 		if ($pListView->getSortby() !== '' && !$this->_pDataView->getRandom()) {
 			$requestParams['sortby'] =  $pListView->getSortBy();
@@ -808,11 +829,6 @@ class EstateList
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
-
-		$fieldWaehrung = $this->_pEnvironment->getFieldnames()->getFieldInformation('waehrung', onOfficeSDK::MODULE_ESTATE);
-		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung'])) {
-			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung['permittedvalues']);
-		}
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'] ?? [];
 
 		if ($this->getShowEstateMarketingStatus()) {
@@ -823,9 +839,13 @@ class EstateList
 		if ($this->getShowTotalCostsCalculator()) {
 			$externalCommission = $this->getExternalCommission($recordRaw['aussen_courtage'] ?? '');
 			$propertyTransferTax = $this->_pDataView->getPropertyTransferTax();
-			if (!empty((float) $recordRaw['kaufpreis']) && !empty($recordRaw['bundesland']) && $externalCommission !== null) {
+		
+			if (!empty((float) $recordRaw['kaufpreis']) && !empty($recordRaw['bundesland'])) {
 				$costsCalculator = $this->_pEnvironment->getContainer()->get(CostsCalculator::class);
+		
+				
 				$this->_totalCostsData = $costsCalculator->getTotalCosts($recordRaw, $propertyTransferTax, $externalCommission);
+				
 			}
 		}
 
@@ -1015,7 +1035,7 @@ class EstateList
 			$url      = get_page_link($pageId);
 			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estate, $title);
 
-			$fullLinkElements = parse_url($fullLink);
+			$fullLinkElements = wp_parse_url($fullLink);
 			if (empty($fullLinkElements['query'])) {
 				$fullLink .= '/';
 			}
@@ -1297,11 +1317,11 @@ class EstateList
 				$pFieldsCollection,
 				new GeoPositionFieldHandler
 			);
-
 		if (array_key_exists("radius", $fieldsValues)) {
 			$geoFields = $pDataView->getGeoFields();
 			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
 		}
+		$allDisplayModes = $pDataView->getRangeFieldDisplayModes();
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
@@ -1309,6 +1329,7 @@ class EstateList
 			$result[$field]['name'] = $field;
 			$result[$field]['value'] = $value;
 			$result[$field]['label'] = $this->getFieldLabel($field);
+			$result[$field]['rangeFieldDisplayMode'] = $allDisplayModes[$field] ?? 'range';
 			if (
 				in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS) &&
 				!empty(get_option('onoffice-settings-thousand-separator'))
@@ -1365,8 +1386,10 @@ class EstateList
 		add_action('wp_head', function () use ($metaData, $keySocial) {
 			foreach ($metaData as $metaKey => $metaValue) {
 				if ($keySocial === GenerateMetaDataSocial::TWITTER_KEY) {
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- TWITTER_KEY is a safe class constant
 					echo '<meta name="' . GenerateMetaDataSocial::TWITTER_KEY . ':' . esc_html($metaKey) . '" content="' . esc_attr($metaValue) . '">';
 				} elseif ($keySocial === GenerateMetaDataSocial::OPEN_GRAPH_KEY) {
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- OPEN_GRAPH_KEY is a safe class constant
 					echo '<meta property="' . GenerateMetaDataSocial::OPEN_GRAPH_KEY . ':' . esc_html($metaKey) . '" content="' . esc_attr($metaValue) . '">';
 				}
 			}
@@ -1595,6 +1618,28 @@ class EstateList
 		}
 
 		return false;
+	}
+
+	/** @param array $geoFilter */
+	public function setGeoFilter($geoFilter)
+	{
+		$this->_geoFilter = $geoFilter;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function hasGeoFilter(): bool
+	{
+		return ($this->_geoFilter != null);
+	}
+
+	/**
+	 * @return object
+	 */
+	public function getGeoFilter(): object
+	{
+		return $this->_geoFilter;
 	}
 
 	/**

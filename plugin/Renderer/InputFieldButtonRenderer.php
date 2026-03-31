@@ -54,6 +54,7 @@ class InputFieldButtonRenderer
 	{
 		echo '<input type="button" class="button button-copy" data-clipboard-text="' . esc_html( $this->getValue() ) . '" value="' . esc_html__( 'Copy',
 				'onoffice-for-wp-websites' ) . '" '
+			 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
 		     . $this->renderAdditionalAttributes() . '><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>';
 	}
 }

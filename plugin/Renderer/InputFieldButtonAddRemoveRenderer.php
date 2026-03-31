@@ -103,32 +103,37 @@ class InputFieldButtonAddRemoveRenderer
 	 */
 
 	public function render()
-	{
-		$textHtml = ! empty( $this->getHint() ) ? '<p class="hint-text">' . $this->getHint() . '</p>' : "";
-		$pFieldsCollection = $this->buildFieldsCollection();
-		if ( is_array( $this->getValue() ) ) {
-			foreach ( $this->getValue() as $key => $label ) {
-				$module = empty($this->getOoModule()) ? $this->getModule($key, $pFieldsCollection) : $this->getOoModule();
-				if (!__String::getNew($module)->isEmpty()) {
-					$this->addAdditionalAttribute('data-onoffice-module', $module);
-				}
-				$inputId                 = 'label' . $this->getGuiId() . 'b' . $key;
-				$actionFieldName         = 'labelButtonHandleField' . '-' . $key;
-				$checkDataField          = is_array( $this->getCheckedValues() ) && in_array( $key,
-						$this->getCheckedValues() );
-				$onofficeSelect          = $checkDataField ? 'class="dashicons dashicons-remove" typeField="2"' : 'class="dashicons dashicons-insert" typeField="1"';
-				$handleLabelButtonChange = $checkDataField ? "opacity: 0.5;" : "opacity: 1;";
-				echo '<span class="inputFieldButton ' . $actionFieldName . '"'
-				     . '' . 'name="' . esc_html( $this->getName() ) . '"'
-				     . '' . $this->renderAdditionalAttributes()
-				     . 'value="' . esc_html( $key ) . '"'
-				     . 'data-onoffice-category="' . esc_attr( $this->getLabel() ) . '"'
-				     . 'data-onoffice-label="' . esc_attr($label) . '"'
-				     . 'id="' . esc_html( $inputId ) . '">';
-				echo '<span ' . $onofficeSelect . '></span>';
-				echo '<label class="field-item-detail" style="' . $handleLabelButtonChange . '">' . esc_html( $label ) . '</label></span><br>'
-				     . $textHtml;
-			}
-		}
-	}
+    {
+        $textHtml = ! empty( $this->getHint() ) ? '<p class="hint-text">' . $this->getHint() . '</p>' : "";
+        $pFieldsCollection = $this->buildFieldsCollection();
+        if ( is_array( $this->getValue() ) ) {
+            foreach ( $this->getValue() as $key => $label ) {
+                $module = empty($this->getOoModule()) ? $this->getModule($key, $pFieldsCollection) : $this->getOoModule();
+                if (!__String::getNew($module)->isEmpty()) {
+                    $this->addAdditionalAttribute('data-onoffice-module', $module);
+                }
+                $inputId                 = 'label' . $this->getGuiId() . 'b' . $key;
+                $actionFieldName         = 'labelButtonHandleField' . '-' . $key;
+                $checkDataField          = is_array( $this->getCheckedValues() ) && in_array( $key,
+                        $this->getCheckedValues() );
+                $onofficeSelect          = $checkDataField ? 'class="dashicons dashicons-remove" typeField="2"' : 'class="dashicons dashicons-insert" typeField="1"';
+                $handleLabelButtonChange = $checkDataField ? "opacity: 0.5;" : "opacity: 1;";
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $actionFieldName is a safe string constructed from sanitized values
+                echo '<span class="inputFieldButton ' . $actionFieldName . '"'
+                     . '' . 'name="' . esc_html( $this->getName() ) . '"'
+                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
+                     . '' . $this->renderAdditionalAttributes()
+                     . 'value="' . esc_html( $key ) . '"'
+                     . 'data-onoffice-category="' . esc_attr( $this->getLabel() ) . '"'
+                     . 'data-onoffice-label="' . esc_attr($label) . '"'
+                     . 'id="' . esc_html( $inputId ) . '">';
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $onofficeSelect is a safe string of HTML attributes
+                echo '<span ' . $onofficeSelect . '></span>';
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $handleLabelButtonChange is a safe inline CSS string
+                echo '<label class="field-item-detail" style="' . $handleLabelButtonChange . '">' . esc_html( $label ) . '</label></span><br>'
+                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $textHtml is escaped or empty string
+                     . $textHtml;
+            }
+        }
+    }
 }

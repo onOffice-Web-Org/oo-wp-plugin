@@ -70,33 +70,24 @@ class CaptchaHandler
 	public function checkCaptcha(): bool
 	{
 		// @codeCoverageIgnoreStart
-		$url = $this->buildFullUrl();
-		$curlResource = curl_init($url);
-		curl_setopt($curlResource, CURLOPT_RETURNTRANSFER, true);
-		$response = curl_exec($curlResource);
-		$returnVal = $this->getResult($response);
+		$response = wp_remote_post(self::SITE_VERIFY_URL, [
+			'body' => [
+				'secret' => $this->_secret,
+				'response' => $this->_captchaResponse,
+			],
+		]);
+
+		if (is_wp_error($response)) {
+			return false;
+		}
+
+		$responseBody = wp_remote_retrieve_body($response);
+		$returnVal = $this->getResult($responseBody);
 
 		return $returnVal;
 	} // @codeCoverageIgnoreEnd
 
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	private function buildFullUrl(): string
-	{
-		$parameters = http_build_query([
-			'secret' => $this->_secret,
-			'response' => $this->_captchaResponse,
-		]);
-
-		$url = self::SITE_VERIFY_URL.'?'.$parameters;
-
-		return $url;
-	}
+	
 
 
 	/**

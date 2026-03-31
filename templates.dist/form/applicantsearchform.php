@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2016  onOffice Software AG
@@ -20,12 +23,13 @@
 
 $pathComponents = [ONOFFICE_PLUGIN_DIR, 'templates.dist', 'fields.php'];
 require(implode(DIRECTORY_SEPARATOR, $pathComponents));
-
+$displayError = false;
 ?>
-<form method="post" id="onoffice-form" class="oo-form oo-form-applicantsearch" data-applicant-form-id="<?php echo esc_attr($pForm->getFormId()); ?>">
+<form method="post" id="onoffice-form" class="oo-form oo-form-applicantsearch" data-applicant-form-id="<?php echo esc_attr($pForm->getFormId()); ?>" novalidate>
 
-	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
-	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
+	<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
+    <input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
+	<?php wp_nonce_field('onoffice_form_' . esc_attr($pForm->getFormId()), 'onoffice_nonce', false); ?>
 	<?php if ( isset( $currentEstate ) ) : ?>
 	<input type="hidden" name="Id" value="<?php echo esc_attr($currentEstate['Id']); ?>">
 	<?php endif; ?>
@@ -38,9 +42,12 @@ $selectTypes = array(
 	);
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-	echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
+	echo '<p role="status">'.esc_html__('An error has occurred. Please check your details.', 'onoffice-for-wp-websites').'</p>';
+} elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
+	echo '<p role="status">'.esc_html__('Not all mandatory fields have been filled out. Please check your entries.', 'onoffice-for-wp-websites').'</p>';
+	$displayError = true;
 } elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
-	echo esc_html__('Spam detected!', 'onoffice-for-wp-websites');
+	echo '<p role="status">'.esc_html__('Spam recognized!', 'onoffice-for-wp-websites').'</p>';
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */
@@ -49,29 +56,23 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		continue;
 	}
 
-	if ( $pForm->isMissingField( $input ) ) {
-		echo '<span class="onoffice-pleasefill">'.esc_html__('Please fill in!', 'onoffice-for-wp-websites').'</span>';
-	}
-
 	$isRequired = $pForm->isRequiredField( $input );
-	$addition = $isRequired ? '*' : '';
+	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 	$inputAddition = $isRequired ? ' required' : '';
-	echo esc_html($pForm->getFieldLabel( $input )).$addition.': <br>';
-
+	$label = esc_html($pForm->getFieldLabel($input)) . ' ' . wp_kses_post($addition);
+	
 	$permittedValues = $pForm->getPermittedValues( $input, true );
 
 	if ($input === 'Umkreis') {
-		echo '<br>'
-			.'<fieldset>'
+		echo '<fieldset>'
 			.'<legend>'.esc_html__('search within distance of:', 'onoffice-for-wp-websites').'</legend>';
 
 		foreach ($pForm->getUmkreisFields() as $key => $values) {
-			echo esc_html($values['label']).':<br>';
 
 			if (in_array($values['type'], $selectTypes)) {
 				$permittedValues = $values['permittedvalues'];
 
-				echo '<select class="custom-single-select" size="1" name="'.$key.'">';
+				echo '<select class="custom-single-select" size="1" name="'.esc_attr($key).'">';
 				echo '<option value="">'.esc_html('not specified').'</option>';
 
 				foreach ( $permittedValues as $countryCode => $countryName ) {
@@ -79,10 +80,12 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 						.esc_html($countryName).'</option>';
 				}
 
-				echo '</select><br>';
+				echo '</select>';
 			} else {
-				echo '<input type="text" name="'.esc_html($key).'" value="'
-					.esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'> <br>';
+				
+				echo '<input type="text" name="'.esc_attr($key).'" value="'
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputAddition contains safe attribute string
+                    .esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'>';
 			}
 		}
 
@@ -91,7 +94,8 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ($input === 'regionaler_zusatz') {
-		echo '<select class="custom-single-select" size="1" name="'.esc_html($input).'">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label contains escaped HTML
+		 echo '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'<select class="custom-single-select" size="1" name="'.esc_attr($input).'">';
 		$pRegionController = new \onOffice\WPlugin\Region\RegionController();
 		if ($permittedValues === null) {
 			$regions = $pRegionController->getRegions();
@@ -103,12 +107,17 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 			/* @var $pRegion Region */
 			printRegion( $pRegion, [$selectedValue] );
 		}
-		echo '</select><br>';
+		echo '</select></label>';
 	} else {
-		echo renderFormField($input, $pForm, false);
-	}
 
-	echo '<br>';
+		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label contains escaped HTML and renderFormField returns escaped HTML
+            echo '<div class="oo-single-select"><label for="'.esc_attr($input).'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>'.renderFormField($input, $pForm).'</div>';
+		} else {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label contains escaped HTML and renderFormField returns escaped HTML
+			echo '<div class="oo-single-select"><label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.renderFormField($input, $pForm, false).'</span></label></div>';
+		}
+	}
 }
 
 $pForm->setGenericSetting('submitButtonLabel', esc_html__('Search for Prospective Buyers', 'onoffice-for-wp-websites'));
@@ -122,11 +131,9 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	$rangeFields = array_keys($pForm->getSearchcriteriaRangeInfos());
 	$umkreisFields = $pForm->getUmkreisFields();
 	$countResults = $pForm->getCountAbsolutResults();
-
-	echo '<p>';
 	echo '<br><span>'.esc_html(
+			/* translators: %s will be replaced with a number. */
 			sprintf(_n(
-				/* translators: %s will be replaced with a number. */
 				'%s Prospective Buyer', '%s Prospective Buyers', $countResults, 'onoffice-for-wp-websites'),
 					number_format_i18n($countResults))).'</span><br>';
 
@@ -143,11 +150,11 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 				if (is_array($value)) {
 					if ($value[0] > 0) {
-						echo $realName.' min. '.$value[0].'<br>';
+						echo esc_html($realName).' min. '.esc_html($value[0]).'<br>';
 					}
 
 					if ($value[1] > 0) {
-						echo $realName.' max. '.$value[1];
+						echo esc_html($realName).' max. '.esc_html($value[1]);
 					}
 					echo '<br>';
 					continue;
@@ -181,21 +188,23 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			} else if ($name === 'regionaler_zusatz') {
 				$pRegionController = new \onOffice\WPlugin\Region\RegionController();
 
+				$value = (array) $value;
 				$pRegion = $pRegionController->getRegionByKey(array_pop($value));
 				/* @var $pRegion \onOffice\WPlugin\Region\Region */
 				if ($pRegion !== null) {
 					$value = esc_html($pRegion->getName());
+				} else {
+					$value = '';
 				}
 			}
 
-			echo '<span>'.esc_html($realName).': '.(is_array($value) ? implode(', ', $value) : $value).'</span><br>';
+			echo '<span>'.esc_html($realName).': '.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</span><br>';
 		}
 
 		if (count($umkreis) > 0) {
-			echo '<span><i>'.implode(' ', array_values($umkreis)).'</i></span><br>';
+			echo '<span><i>'.esc_html(implode(' ', array_values($umkreis))).'</i></span><br>';
 		}
 	}
-	echo '</p>';
 }
 
 ?>

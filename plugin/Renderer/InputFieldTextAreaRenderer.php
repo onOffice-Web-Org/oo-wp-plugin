@@ -53,8 +53,9 @@ class InputFieldTextAreaRenderer
 	 */
 
 	public function render()
-	{
-		echo '<textarea name="'.esc_html($this->getName()).'" id="'.esc_html($this->getGuiId()).'"'
-			.' '.$this->renderAdditionalAttributes().'>'.esc_html($this->getValue()).'</textarea>';
-	}
+    {
+        echo '<textarea name="'.esc_html($this->getName()).'" id="'.esc_html($this->getGuiId()).'"'
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped attributes
+            .' '.$this->renderAdditionalAttributes().'>'.esc_html($this->getValue()).'</textarea>';
+    }
 }

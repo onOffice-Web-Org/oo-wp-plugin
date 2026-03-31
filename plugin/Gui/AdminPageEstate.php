@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
@@ -115,11 +117,13 @@ class AdminPageEstate
 		{
 			$newAdminUrl = ($index != $defaultTab) ? add_query_arg('tab', $index, $adminUrl) : $adminUrl;
 			$class = ($index === $selectedTab) ? ' nav-tab-active' : '';
-			echo '<a href="'.$newAdminUrl.'" class="nav-tab oo-admin-tab'.$class.'">'.esc_html($label).'</a>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $newAdminUrl is escaped by add_query_arg() and admin_url(), $class is a safe CSS class string
+            echo '<a href="'.esc_url($newAdminUrl).'" class="nav-tab oo-admin-tab'.$class.'">'.esc_html($label).'</a>';
 		}
 		echo '</h2>';
 
-		echo $this->_pSelectedTab->renderContent();
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderContent() returns escaped HTML content
+        echo $this->_pSelectedTab->renderContent();
 	}
 
 
@@ -188,7 +192,8 @@ class AdminPageEstate
 		if ($itemsDeleted !== null && $itemsDeleted !== false) {
 			add_action('admin_notices', function() use ($itemsDeleted) {
 				$pHandler = new AdminNoticeHandlerListViewDeletion();
-				echo $pHandler->handleListView($itemsDeleted);
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- handleListView() returns escaped HTML
+                echo $pHandler->handleListView($itemsDeleted);
 			});
 		}
 	}
@@ -244,8 +249,11 @@ class AdminPageEstate
 
 				/* @var $pRecordManagerDuplicateListViewEstate RecordManagerDuplicateListViewEstate */
 				$pRecordManagerDuplicateListViewEstate = $pDI->get(RecordManagerDuplicateListViewEstate::class);
-				$listViewRootId = $_GET['listVewId'];
-				$pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
+				if (isset($_GET['listVewId'])) {
+				    $listViewRootId = absint(wp_unslash($_GET['listVewId']));
+					$pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
+				}
 			}
 			return $redirectTo;
 		};

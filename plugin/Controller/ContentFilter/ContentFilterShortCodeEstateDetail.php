@@ -177,7 +177,7 @@ class ContentFilterShortCodeEstateDetail
 			$title            = $pEstateListDetail['elements']['objekttitel'] ?? '';
 			$url              = $this->getPageLink();
 			$fullLink         = $pLanguageSwitcher->createEstateDetailLink( $url, (int) $estate, $title );
-			$fullLinkElements = parse_url( $fullLink );
+			$fullLinkElements = wp_parse_url($fullLink);
 			if ( empty( $fullLinkElements['query'] ) ) {
 				$fullLink .= '/';
 			}

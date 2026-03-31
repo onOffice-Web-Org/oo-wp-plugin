@@ -161,6 +161,7 @@ class FormPostInterest
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
 
 		if (!$pAPIClientAction->getResultStatus()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is for internal API error handling, not user-facing output
 			throw new ApiClientException($pAPIClientAction);
 		}
 	}
@@ -213,6 +214,7 @@ class FormPostInterest
 		$pAPIClientAction->setParameters($requestParams);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
 		if (!$pAPIClientAction->getResultStatus()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is for internal API error handling, not user-facing output
 			throw new ApiClientException($pAPIClientAction);
 		}
 	}
@@ -241,8 +243,20 @@ class FormPostInterest
 	 */
 	private function createSearchcriteria(FormData $pFormData, int $addressId)
 	{
+		$searchData = $pFormData->getSearchcriteriaData();
+		
+		// Clean up German number format for range fields
+		foreach ($searchData as $key => $value) {
+			if (str_ends_with($key, '__von') || str_ends_with($key, '__bis')) {
+				if (is_string($value) && !empty($value)) {
+					// Remove dots and commas that are thousand separators (followed by exactly 3 digits)
+					$searchData[$key] = preg_replace('/[.,](?=\d{3}(?:\D|$))/', '', $value);
+				}
+			}
+		}
+
 		$requestParams = [
-			'data' => $pFormData->getSearchcriteriaData(),
+			'data' => $searchData,
 			'addressid' => $addressId,
 		];
 
@@ -255,6 +269,7 @@ class FormPostInterest
 		$pSDKWrapper->sendRequests();
 
 		if (!$pApiClientAction->getResultStatus()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is for internal API error handling, not user-facing output
 			throw new ApiClientException($pApiClientAction);
 		}
 	}

@@ -32,6 +32,8 @@ use WP_UnitTestCase;
  */
 class TestClassInputFieldVerticalRadioRenderer extends WP_UnitTestCase
 {
+
+	use HtmlNormalizerTrait;
 	/**
 	 *
 	 */
@@ -51,7 +53,7 @@ class TestClassInputFieldVerticalRadioRenderer extends WP_UnitTestCase
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="oo-vertical-radio"></div>', $output);
+		$this->assertHtmlEquals('<div class="oo-vertical-radio"></div>', $output);
 	}
 
 	/**
@@ -66,7 +68,7 @@ class TestClassInputFieldVerticalRadioRenderer extends WP_UnitTestCase
 		$pSubject->render();
 		$output = ob_get_clean();
 		$this->assertEquals('1', $pSubject->getCheckedValue());
-		$this->assertEquals('<div class="oo-vertical-radio"><input type="radio" name="testRenderer" value="0" id="labelradio_1b0testRenderer"><label for="labelradio_1b0testRenderer">Show all contact persons</label><br><input type="radio" name="testRenderer" value="1" checked="checked"  id="labelradio_1b1testRenderer"><label for="labelradio_1b1testRenderer">Show main contact person only</label><br></div>', $output);
+		$this->assertHtmlEquals('<div class="oo-vertical-radio"><input type="radio" name="testRenderer" value="0" id="labelradio_1b0testRenderer"><label for="labelradio_1b0testRenderer">Show all contact persons</label><br><input type="radio" name="testRenderer" value="1" checked="checked"  id="labelradio_1b1testRenderer"><label for="labelradio_1b1testRenderer">Show main contact person only</label><br></div>', $output);
 	}
 
 	/**
@@ -82,6 +84,6 @@ class TestClassInputFieldVerticalRadioRenderer extends WP_UnitTestCase
 		$pSubject->render();
 		$output = ob_get_clean();
 		$this->assertEquals('1', $pSubject->getCheckedValue());
-		$this->assertEquals('<div class="oo-vertical-radio"><input type="radio" name="testRenderer" value="0" id="labelradio_1b0testRenderer"><label for="labelradio_1b0testRenderer">Show all contact persons</label><br><input type="radio" name="testRenderer" value="1" checked="checked"  id="labelradio_1b1testRenderer"><label for="labelradio_1b1testRenderer">Show main contact person only</label><br><p class="oo-information-text">Test information text</p></div>', $output);
+		$this->assertHtmlEquals('<div class="oo-vertical-radio"><input type="radio" name="testRenderer" value="0" id="labelradio_1b0testRenderer"><label for="labelradio_1b0testRenderer">Show all contact persons</label><br><input type="radio" name="testRenderer" value="1" checked="checked"  id="labelradio_1b1testRenderer"><label for="labelradio_1b1testRenderer">Show main contact person only</label><br><p class="oo-information-text">Test information text</p></div>', $output);
 	}
 }

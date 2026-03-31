@@ -36,6 +36,8 @@ use WP_UnitTestCase;
 class TestClassInputFieldGoogleRecaptchaAccountRenderer
 	extends WP_UnitTestCase
 {
+	use HtmlNormalizerTrait;
+
 	/**
 	 *
 	 */
@@ -45,9 +47,11 @@ class TestClassInputFieldGoogleRecaptchaAccountRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-secretkey" value="" id="googleRecaptchaAccount_4" ><button type="button" class="button" data-toggle="0">
-				<span class="dashicons dashicons-visibility oo-icon-eye-secret-key" aria-hidden="true"></span> 
-				</button></div><button class="button delete-google-recaptcha-keys-button">Delete Keys</button>', $output);
+		$expected = '<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-secretkey" value="" id="googleRecaptchaAccount_4" ><button type="button" class="button" data-toggle="0">
+                <span class="dashicons dashicons-visibility oo-icon-eye-secret-key" aria-hidden="true"></span> 
+                </button></div><button class="button delete-google-recaptcha-keys-button">Delete Keys</button>';
+
+		$this->assertHtmlEquals($expected, $output);
 	}
 
 	/**
@@ -59,8 +63,10 @@ class TestClassInputFieldGoogleRecaptchaAccountRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-sitekey" value="" id="googleRecaptchaAccount_5" ><button type="button" class="button" data-toggle="0">
-				<span class="dashicons dashicons-visibility oo-icon-eye-site-key" aria-hidden="true"></span> 
-				</button></div>', $output);
+		$expected = '<div class="oo-google-recaptcha-key"><input type="password" name="onoffice-settings-captcha-sitekey" value="" id="googleRecaptchaAccount_5" ><button type="button" class="button" data-toggle="0">
+                <span class="dashicons dashicons-visibility oo-icon-eye-site-key" aria-hidden="true"></span> 
+                </button></div>';
+
+		$this->assertHtmlEquals($expected, $output);
 	}
 }

@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2018  onOffice GmbH
@@ -21,6 +23,7 @@
 
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Pagination\ListPagination;
 
 // display search form
 require 'SearchFormAddress.php';
@@ -47,13 +50,14 @@ require 'SearchFormAddress.php';
 			<div class="oo-listobjectwrap">
 				<?php
 				if (!empty($imageUrl)) {
-					$imageAlt = $pAddressList->generateImageAlt($addressId);
-					echo  '<img src="' . esc_url($imageUrl) . '" class="oo-address-image" alt="' . esc_html($imageAlt) . '" loading="lazy">';
+					$altText = $pAddressList->generateImageAlt($addressId);
+					$imageAlt = !empty($altText) ? $altText : esc_html__('Contact person image', 'onoffice-for-wp-websites');					
+					echo  '<img src="' . esc_url($imageUrl) . '" class="oo-address-image" alt="' . esc_attr($imageAlt) . '" loading="lazy">';
 				}
 				?>
 				<div class="oo-listinfo">
 					<div class="oo-listinfotable oo-listinfotableview">
-						<?php echo "<span>ID: ".$addressId."</span>";
+						<?php
 						foreach ($escapedValues as $field => $value) {
 							if ($pAddressList->getFieldType($field) === FieldTypes::FIELD_TYPE_BLOB) {
 								continue;
@@ -64,14 +68,16 @@ require 'SearchFormAddress.php';
 							}
 
 							$fieldLabel = $pAddressList->getFieldLabel($field);
-							echo '<div class="oo-listtd">' . esc_html($fieldLabel) . '</div><div class="oo-listtd">' . (is_array($value) ? implode(', ', array_filter($value)) : $value) . '</div>';
+							echo '<div class="oo-listtd">' . esc_html($fieldLabel) . '</div><div class="oo-listtd">' . 
+                                (is_array($value) ? esc_html(implode(', ', array_filter($value))) : esc_html($value)) . '</div>';
 						}
 						?>
 					</div>
 					<div class="oo-detailslink">
-						<a class="oo-details-btn" href="<?php echo esc_url($pAddressList->getAddressLink($addressId)) ?>">
-								<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
-						</a>
+						<?php /* translators: %d: address ID number */ ?>
+						<a class="oo-details-btn" href="<?php echo esc_url($pAddressList->getAddressLink($addressId)) ?>" aria-label="<?php echo sprintf(esc_attr__('Show Details for Address No. %d', 'onoffice-for-wp-websites'), (int)$addressId); ?>">
+                                <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
+                        </a>
 					</div>
 				</div>
 			</div>
@@ -81,7 +87,21 @@ require 'SearchFormAddress.php';
 <div>
 	<?php
 	if (get_option('onoffice-pagination-paginationbyonoffice')) {
-		wp_link_pages();
+		?>
+		<div class="oo-listpagination">
+			<?php
+		
+			$ListPagination = new ListPagination([
+				'class' => 'oo-post-nav-links',
+				'type' => 'address',
+				'anchor' => 'oo-listheadline',
+			]);
+			
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- ListPagination::render() returns escaped HTML
+			echo $ListPagination->render();
+			?>
+		</div>
+	<?php
 	}
 	?>
 </div>

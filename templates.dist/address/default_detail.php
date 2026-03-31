@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2024  onOffice GmbH
@@ -36,17 +38,18 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
         foreach ($addressName as $namePart) {
             $fullName .= !empty($escapedValues[$namePart]) ? $escapedValues[$namePart]. ' ' : '';
         }
-        echo substr_replace($fullName, '', -1);
+        echo esc_html(trim($fullName)); 
         ?>
     </h2>
     <?php
         if (!empty($imageUrl)) {
-            $imageAlt = $pAddressList->generateImageAlt($addressId);
+            $altText = $pAddressList->generateImageAlt($addressId);
+			$imageAlt = !empty($altText) ? $altText : esc_html__('Contact person image', 'onoffice-for-wp-websites');			
             echo '<picture class="oo-picture oo-address-picture">';
             echo '<img class="oo-responsive-image" ' .
                 'src="' . esc_url($imageUrl) . '" ' .
                 'alt="' . esc_html($imageAlt) . '" ' .
-                'loading="lazy"/>';
+                'loading="lazy">';
             echo '</picture>';
         }
     ?>
@@ -60,7 +63,7 @@ foreach ($currentAddressArr as $addressId => $escapedValues) {
                 echo '<div class="oo-address-field-label">' . esc_html($pAddressList->getFieldLabel($field)) . '</div>';
                     echo '<div class="oo-address-field-value">';
                     if (in_array($field, $supportTypeLinkFields)) {
-                        echo '<a href="' . esc_url($value) . '" target="_blank" rel="nofollow noopener" aria-label="Link to ' . esc_attr($pAddressList->getFieldLabel($field)) . '">' . esc_html($value) . '</a>';
+                        echo '<a href="' . esc_url($value) . '" target="_blank" rel="nofollow noopener noreferrer" aria-label="Link to ' . esc_attr($pAddressList->getFieldLabel($field)) . '">' . esc_html($value) . '</a>';
                     } else {
                         echo is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value);
                     }

@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -23,4 +25,5 @@ $handleSearchEstate = $sdk->call(onOfficeSDK::ACTION_ID_GET, 'estate', '', 'sear
 
 $sdk->sendRequests('put the token here', 'and secret here');
 
+// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- This is example code for developers
 var_export($sdk->getResponseArray($handleSearchEstate));

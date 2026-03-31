@@ -47,7 +47,7 @@ class AddressDetailUrl
 		$slashChar = '';
 
 		if ($addressId !== 0) {
-			$urlElements = parse_url($url);
+			$urlElements = wp_parse_url($url);
 			$getParameters = [];
 
 			if (!empty($urlElements['query'])) {
@@ -55,7 +55,7 @@ class AddressDetailUrl
 			}
 
 			if (!is_null($oldUrl)) {
-				$oldUrlElements = parse_url($oldUrl);
+				$oldUrlElements = wp_parse_url($oldUrl);
 				$oldUrlPathArr = explode('/', $oldUrlElements['path']);
 				if (empty(end($oldUrlPathArr)) || $flag) {
 					$slashChar = '/';
@@ -114,7 +114,7 @@ class AddressDetailUrl
 	public function getUrlWithAddressTitle(int $addressId, string $title = null, string $oldUrl = null, bool $isUrlHaveTitle = false, bool $pAddressRedirection = false): string
 	{
 		$getParameters = [];
-		$urlElements = parse_url($oldUrl);
+		$urlElements = wp_parse_url($oldUrl);
 		$urlTemp = $addressId;
 
 		if (!empty($title) && $this->isOptionShowTitleUrl()) {

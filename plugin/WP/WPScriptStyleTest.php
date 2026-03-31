@@ -63,8 +63,9 @@ class WPScriptStyleTest
 		bool $inFooter = false)
 	{
 		if (!isset($this->_registeredScripts[$handle])) {
-			throw new Exception('Script '.$handle.' not registered');
-		}
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test helper class
+            throw new Exception('Script '.$handle.' not registered');
+        }
 
 		$this->_enqueuedScripts []= $handle;
 	}
@@ -85,8 +86,9 @@ class WPScriptStyleTest
 		string $media = 'all')
 	{
 		if (!isset($this->_registeredStyles[$handle])) {
-			throw new Exception('Style '.$handle.' not registered');
-		}
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test helper class
+            throw new Exception('Style '.$handle.' not registered');
+        }
 
 		$this->_enqueuedStyles []= $handle;
 	}
@@ -108,8 +110,9 @@ class WPScriptStyleTest
 		bool $inFooter = false): bool
 	{
 		if (isset($this->_registeredScripts[$handle])) {
-			throw new Exception('Script '.$handle.' already registered');
-		}
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test helper class
+            throw new Exception('Script '.$handle.' already registered');
+        }
 		$this->_registeredScripts[$handle] = $this->getNewScriptArray($src, $deps, $ver, $inFooter);
 		return true;
 	}
@@ -131,8 +134,9 @@ class WPScriptStyleTest
 		string $media = 'all'): bool
 	{
 		if (isset($this->_registeredStyles[$handle])) {
-			throw new Exception('Style '.$handle.' already registered');
-		}
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test helper class
+            throw new Exception('Style '.$handle.' already registered');
+        }
 		$this->_registeredStyles[$handle] = $this->getNewStyleArray($src, $deps, $ver, $media);
 		return true;
 	}
@@ -241,8 +245,9 @@ class WPScriptStyleTest
 	public function localizeScript(string $handle, string $name, array $data): bool
 	{
 		if (!isset($this->_registeredScripts[$handle])) {
-			throw new Exception('Script '.$handle.' not registered');
-		}
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test helper class
+            throw new Exception('Script '.$handle.' not registered');
+        }
 
 		$this->_localizedScripts[$handle] = ['name' => $name, 'data' => $data];
 		return true;

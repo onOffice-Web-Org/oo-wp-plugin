@@ -121,8 +121,9 @@ class InputSearchFieldForFieldListsRenderer
 			}
 		
 			$html .= '</ul>';
-			$html .= '</div>';
-			echo $html;
+            $html .= '</div>';
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $html is built with escaped values
+            echo $html;
 		}
 	}
 

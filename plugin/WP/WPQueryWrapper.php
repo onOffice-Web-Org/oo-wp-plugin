@@ -45,8 +45,10 @@ class WPQueryWrapper
 		$wpquery = clone $wp_query;
 
 		$pageParameter = 'page_of_id_' . $pListViewId;
-		if (isset($_GET[$pageParameter]) && is_numeric($_GET[$pageParameter])) {
-			$paged = (int) $_GET[$pageParameter];
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public pagination parameter, validated with is_numeric() and cast to int.
+        if (isset($_GET[$pageParameter]) && is_numeric($_GET[$pageParameter])) {
+            $paged = (int) $_GET[$pageParameter];
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 		} elseif (get_query_var( 'paged' )) {
 			$paged = get_query_var('paged');
 		}

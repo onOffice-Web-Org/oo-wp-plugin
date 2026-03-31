@@ -35,6 +35,9 @@ use onOffice\WPlugin\Renderer\InputFieldTextAreaRenderer;
 class TestClassInputFieldTextAreaRenderer
 	extends WP_UnitTestCase
 {
+
+	use HtmlNormalizerTrait;
+
 	/**
 	 * @before
 	 */
@@ -56,7 +59,7 @@ class TestClassInputFieldTextAreaRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<textarea name="testRenderer" id="textarea_1" ></textarea>', $output);
+		$this->assertHtmlEquals('<textarea name="testRenderer" id="textarea_1" ></textarea>', $output);
 	}
 	
 	/**
@@ -69,6 +72,6 @@ class TestClassInputFieldTextAreaRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<textarea name="testRenderer" id="textarea_1" >test1</textarea>', $output);
+		$this->assertHtmlEquals('<textarea name="testRenderer" id="textarea_1" >test1</textarea>', $output);
 	}
 }

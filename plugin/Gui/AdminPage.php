@@ -56,11 +56,14 @@ abstract class AdminPage
 		{
 			$inputTab = "<input type='hidden' id='fname' name='tab' value='".esc_html($tab)."'>";
 		}
+		
 		echo "<form action='".esc_attr(admin_url('admin.php'))."' method='get' id='".esc_html($id)."'>
-			<input type='hidden' id='fname' name='page' value='".esc_html($page)."'>
-			".$inputType."
-			".$inputTab."
-			<input type='text' id='fname' name='search'>
+			<input type='hidden' id='fname' name='page' value='".esc_html($page)."'>" .
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is already escaped above
+			".$inputType." .
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputTab is already escaped above
+			".$inputTab." .
+			"<input type='text' id='fname' name='search'>
 			<input type='submit' class='button action' value='".esc_attr($button)."'>
 			</form>";
 	}

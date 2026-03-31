@@ -67,27 +67,30 @@ class InputFieldRadioRenderer
 	 */
 
 	public function render()
-	{
-		if (is_array($this->getValue()))
-		{
-			foreach ($this->getValue() as $key => $label)
-			{
-				$inputId = 'label'.$this->getGuiId().'b'.$key.$this->getName();
-				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
-					.'" value="'.esc_html($key).'"'
-					.($key == $this->getCheckedValue() ? ' checked="checked" ' : '')
-					.$this->renderAdditionalAttributes()
-					.' id="'.esc_html($inputId).'">'
-					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label> '
-					.( isset($this->_descriptionTextHtmls[$key]) ? '<p class="description">'.$this->_descriptionTextHtmls[$key].'</p><br>' : '');
-			}
-		}
-		else
-		{
-			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
-				.'" value="'.esc_html($this->getValue()).'"'
-				.$this->renderAdditionalAttributes()
-				.'>';
-		}
-	}
+    {
+        if (is_array($this->getValue()))
+        {
+            foreach ($this->getValue() as $key => $label)
+            {
+                $inputId = 'label'.$this->getGuiId().'b'.$key.$this->getName();
+                echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
+                    .'" value="'.esc_html($key).'"'
+                    .($key == $this->getCheckedValue() ? ' checked="checked" ' : '')
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
+                    .$this->renderAdditionalAttributes()
+                    .' id="'.esc_html($inputId).'">'
+                    .'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label> '
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $this->_descriptionTextHtmls contains safe HTML description
+                    .( isset($this->_descriptionTextHtmls[$key]) ? '<p class="description">'.$this->_descriptionTextHtmls[$key].'</p><br>' : '');
+            }
+        }
+        else
+        {
+            echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
+                .'" value="'.esc_html($this->getValue()).'"'
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
+                .$this->renderAdditionalAttributes()
+                .'>';
+        }
+    }
 }

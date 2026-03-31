@@ -38,6 +38,9 @@ use WP_UnitTestCase;
 class TestClassInputFieldLabelRenderer
 	extends WP_UnitTestCase
 {
+
+	use HtmlNormalizerTrait;
+
 	/**
 	 *
 	 */
@@ -65,6 +68,6 @@ class TestClassInputFieldLabelRenderer
         ob_start();
         $pRenderer->render();
         $output = ob_get_clean();
-        $this->assertEquals('<span class="viewusage" id="_2" ><span class="italic">John Doe</span></span>', $output);
+        $this->assertHtmlEquals('<span class="viewusage" id="_2" ><span class="italic">John Doe</span></span>', $output);
     }
 }

@@ -28,6 +28,7 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\MapProvider;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 use function __;
 use function admin_url;
 use function do_settings_sections;
@@ -72,6 +73,7 @@ class AdminPageApiSettings
 		$this->addFormModelCache();
 		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleMapsKey();
+		$this->addFormModelGoogleCaptchaEnterprise();
 		$this->addFormModelGoogleCaptcha();
 		$this->addFormModelHoneypot();
 		$this->addFormModelFavorites($pageSlug);
@@ -160,6 +162,52 @@ class AdminPageApiSettings
 		$this->addFormModel($pFormModel);
 	}
 
+
+	private function addFormModelGoogleCaptchaEnterprise()
+    {
+        $labelProjectId = __('Project ID', 'onoffice-for-wp-websites');
+        $labelSiteKey = __('Site Key', 'onoffice-for-wp-websites');
+        $labelApiKey = __('API Key', 'onoffice-for-wp-websites');
+        
+        $pInputModelCaptchaProjectId = new InputModelOption
+            ('onoffice-settings', 'captcha-enterprise-projectid', $labelProjectId, 'string');
+        $optionNameProjectId = $pInputModelCaptchaProjectId->getIdentifier();
+        $pInputModelCaptchaProjectId->setValue(get_option($optionNameProjectId));
+        $pInputModelCaptchaProjectId->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
+        $pInputModelCaptchaProjectId->setIsPassword(true);
+        
+        $pInputModelCaptchaSiteKey = new InputModelOption
+            ('onoffice-settings', 'captcha-enterprise-sitekey', $labelSiteKey, 'string');
+        $optionNameSiteKey = $pInputModelCaptchaSiteKey->getIdentifier();
+        $pInputModelCaptchaSiteKey->setValue(get_option($optionNameSiteKey));
+        $pInputModelCaptchaSiteKey->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
+        $pInputModelCaptchaSiteKey->setIsPassword(true);
+
+        $pInputModelCaptchaApiKey = new InputModelOption
+            ('onoffice-settings', 'captcha-enterprise-apikey', $labelApiKey, 'string');
+        $optionNameApiKey = $pInputModelCaptchaApiKey->getIdentifier();
+        $pInputModelCaptchaApiKey->setValue(get_option($optionNameApiKey));
+        $pInputModelCaptchaApiKey->setHtmlType(InputModelOption::HTML_GOOGLE_RECAPTCHA_ACCOUNT);
+        $pInputModelCaptchaApiKey->setIsPassword(true);
+        $pInputModelCaptchaApiKey->setSanitizeCallback(function($password) use ($optionNameApiKey) {
+            return $this->checkPassword($password, $optionNameApiKey);
+        });
+
+        $pFormModel = new FormModel();
+        $pFormModel->addInputModel($pInputModelCaptchaProjectId);
+        $pFormModel->addInputModel($pInputModelCaptchaSiteKey);
+        $pFormModel->addInputModel($pInputModelCaptchaApiKey);
+        $pFormModel->setGroupSlug('onoffice-google-recaptcha-enterprise');
+        $pFormModel->setPageSlug($this->getPageSlug());
+        $pFormModel->setLabel(__('Google reCAPTCHA Enterprise', 'onoffice-for-wp-websites'));
+        $pFormModel->setTextCallback(function() {
+            $this->renderTestFormReCaptchaEnterprise();
+        });
+
+        $this->addFormModel($pFormModel);
+    }
+
+
 	/**
 	 *
 	 */
@@ -190,8 +238,9 @@ class AdminPageApiSettings
 		$pFormModel->addInputModel($pInputModelCaptchaPageSecret);
 		$pFormModel->setGroupSlug('onoffice-google-recaptcha');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		$pFormModel->setLabel(__('Google reCAPTCHA', 'onoffice-for-wp-websites'));
+		$pFormModel->setLabel(__('Google reCAPTCHA Classic', 'onoffice-for-wp-websites'));
 		$pFormModel->setTextCallback(function() {
+			$this->renderDeprecationNoticeReCaptcha();
 			$this->renderTestFormReCaptcha();
 		});
 
@@ -222,6 +271,7 @@ class AdminPageApiSettings
         $activeSEOPlugins = $WPPluginChecker->getActiveSEOPlugins();
         if ($WPPluginChecker->isSEOPluginActive()) {
             $listNamePluginSEO = implode(", ",$activeSEOPlugins);
+			/* translators: %s: list of active SEO plugin names */
             $messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SocialMedia Data settings. Therefore they are disabled.','onoffice-for-wp-websites'), $listNamePluginSEO);
             $descriptionNoticeSeo = sprintf('<p class="oo-description oo-description--notice">%s</p>', $messageNoticeSEO);
 
@@ -239,6 +289,20 @@ class AdminPageApiSettings
 
 		$this->addFormModel($pFormModel);
 	}
+
+	public function renderDeprecationNoticeReCaptcha()
+    {
+        $migrationGuideUrl = 'https://cloud.google.com/recaptcha/docs/migrate-recaptcha';
+        $message = sprintf(
+            /* translators: %s: URL to the migration guide */
+            __('Important Notice: Google will discontinue reCAPTCHA v2/v3 (Classic) on December 31, 2025. Please migrate your projects to reCAPTCHA Enterprise in time to ensure uninterrupted protection. More information at: %s', 'onoffice-for-wp-websites'),
+            '<a href="' . esc_url($migrationGuideUrl) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Migration Guide', 'onoffice-for-wp-websites') . '</a>'
+        );
+        
+        echo '<div class="notice notice-warning inline" style="margin: 10px 0; padding: 10px;">';
+        echo '<p><strong>' . esc_html__('Warning', 'onoffice-for-wp-websites') . ':</strong> ' . wp_kses($message, ['a' => ['href' => [], 'target' => [], 'rel' => []]]) . '</p>';
+        echo '</div>';
+    }
 
 	/**
 	 *
@@ -271,9 +335,11 @@ class AdminPageApiSettings
 		$descriptionDetailDoNotModify = esc_html__( 'With the help of an SEO plugin, it is possible to use individual fields to insert data directly from onOffice enterprise into the title and metadata of your website.', 'onoffice-for-wp-websites' );
 		$guideUseCustomFieldsDoNotModify = esc_html__( 'These custom fields allow you to insert specific information, such as the property title and property number from onOffice enterprise. The corresponding field names can be found in the field list on the detail page. Please note that only fields that are active for the detail page, for example, can be output.',
 			'onoffice-for-wp-websites' );
+		/* translators: 1: line break HTML tag, 2-4: code examples of field variables */
 		$snippetVariablesExampleDoNotModify = sprintf(esc_html__( 'An example of integration with the Yoast SEO plugin would be:%1$s %2$s or%1$s %3$s or%1$s %4$s',
 			'onoffice-for-wp-websites' ), '<br>', '<code>%%cf_onoffice_objekttitel%%</code>', '<code>%%cf_onoffice_objektnr_extern%%</code>', '<code>%%cf_onoffice_objektbeschreibung%%</code>');
 		$referUseCustomFieldsInSeoPluginDocsDoNotModify = esc_html__( 'For information on how to use custom fields in your SEO plugin, please refer to its documentation.', 'onoffice-for-wp-websites' );
+		/* translators: 1: HTML title tag, 2: HTML meta description tag */
 		$titleDescriptionDoNotModify = sprintf(esc_html__( 'The title and description of the detail page are set using the %1$s and %2$s tags. They make it possible to show a summary of the page when you share a link.',
 			'onoffice-for-wp-websites' ), '<code>&lt;title&gt;</code>', '<code>&lt;meta name="description&gt;</code>');
 		$descriptionDoNotModify = sprintf( '<div class="do-not-modify">
@@ -292,6 +358,7 @@ class AdminPageApiSettings
 							</div> <p>%7$s</p>', $titleDoNotModify, $summaryDetailDoNotModify,
 			$descriptionDetailDoNotModify, $guideUseCustomFieldsDoNotModify, $snippetVariablesExampleDoNotModify, $referUseCustomFieldsInSeoPluginDocsDoNotModify,
 			$titleDescriptionDoNotModify );
+		/* translators: %s: list of active SEO plugin names */
 		$messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.
 								We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites'), $listNamePluginSEO);
 		$messageNoticeSEO =  Parsedown::instance()
@@ -366,6 +433,53 @@ class AdminPageApiSettings
 	}
 
 
+	public function renderTestFormReCaptchaEnterprise()
+    {
+        $projectIdOption = get_option('onoffice-settings-captcha-enterprise-projectid', '');
+        $siteKeyOption = get_option('onoffice-settings-captcha-enterprise-sitekey', '');
+                $stringTranslations = [
+            // Success
+            'response_ok' => __('The keys are valid.', 'onoffice-for-wp-websites'),
+            'response_error' => __('Error:', 'onoffice-for-wp-websites'),     
+            // Missing input errors
+            'missing-api-key' => __('The API Key is missing.', 'onoffice-for-wp-websites'),
+            'missing-input-response' => __('The reCAPTCHA token is missing.', 'onoffice-for-wp-websites'),
+            'missing-input-secret' => __('The Project ID is missing.', 'onoffice-for-wp-websites'),
+            'missing-site-key' => __('The Site Key is missing.', 'onoffice-for-wp-websites'),
+            // Invalid input errors
+            'invalid-api-key' => __('The API Key is invalid.', 'onoffice-for-wp-websites'),
+            'invalid-input-secret' => __('The Project ID is invalid or malformed.', 'onoffice-for-wp-websites'),
+            'invalid-project-id' => __('The Project ID is invalid or does not exist.', 'onoffice-for-wp-websites'),
+            'invalid-site-key' => __('The Site Key is invalid.', 'onoffice-for-wp-websites'),
+            // Permission errors
+            'api-key-permission-denied' => __('The API Key does not have permission for reCAPTCHA Enterprise.', 'onoffice-for-wp-websites'),
+            'billing-not-enabled' => __('Billing is not enabled for this Google Cloud project.', 'onoffice-for-wp-websites'),
+            // Request errors
+            'bad-request' => __('Invalid request. Please check your credentials.', 'onoffice-for-wp-websites'),
+            'timeout-or-duplicate' => __('The reCAPTCHA token has expired or has already been used.', 'onoffice-for-wp-websites'),
+            // Connection/Server errors
+            'api-error' => __('API request failed. Please check your API Key and Project ID.', 'onoffice-for-wp-websites'),
+            'browser-error' => __('An error occurred while loading reCAPTCHA.', 'onoffice-for-wp-websites'),
+            'connection-failed' => __('Connection to Google reCAPTCHA failed. Please check your internet connection.', 'onoffice-for-wp-websites'),
+            'rate-limit-exceeded' => __('Too many requests. Please try again later.', 'onoffice-for-wp-websites'),
+            'server-error' => __('Google reCAPTCHA server error. Please try again later.', 'onoffice-for-wp-websites'),
+        ];
+
+        if ($projectIdOption !== '' && $siteKeyOption !== '') {
+            $template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'resource'
+                .DIRECTORY_SEPARATOR.'CaptchaEnterpriseTestForm.html');
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Template uses printf placeholders; values are escaped individually
+            printf($template,
+                json_encode(admin_url('admin-ajax.php')),  // %1$s - AJAX URL
+                json_encode($stringTranslations),		   // %2$s - Translations object
+				json_encode(wp_create_nonce('check_captcha_enterprise_data'))  // %3$s - Nonce
+			);          
+        } else {
+            echo esc_html__('In order to use Google reCAPTCHA Enterprise, you need to provide your Project ID and Site Key. You\'re free to enable it in the form settings for later use.', 'onoffice-for-wp-websites');
+        }
+    }
+
+
 	/**
 	 *
 	 */
@@ -387,13 +501,13 @@ class AdminPageApiSettings
 		if ($tokenOptions !== '' && $secretOptions !== '') {
 			$template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'resource'
 				.DIRECTORY_SEPARATOR.'CaptchaTestForm.html');
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Template uses printf placeholders; values are escaped individually
 			printf($template,
 				json_encode(admin_url('admin-ajax.php')),
 				json_encode($stringTranslations),
-				esc_html($tokenOptions));
+				esc_attr($tokenOptions));
 		} else {
-			echo __('In order to use Google reCAPTCHA, you need to provide your keys. '
-				.'You\'re free to enable it in the form settings for later use.', 'onoffice-for-wp-websites');
+			echo esc_html__('In order to use Google reCAPTCHA, you need to provide your keys. You\'re free to enable it in the form settings for later use.', 'onoffice-for-wp-websites');
 		}
 	}
 
@@ -437,8 +551,11 @@ class AdminPageApiSettings
 
     public function doExtraEnqueues()
     {
-        wp_register_script('oo-unsaved-changes-message', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
-            ['jquery'], '', true);
+        wp_register_script('oo-unsaved-changes-message', 
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-unsaved-changes-message.min.js',
+			['jquery'], 
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-unsaved-changes-message.min.js'), 
+			true);
         wp_enqueue_script('oo-unsaved-changes-message');
         wp_localize_script('oo-unsaved-changes-message', 'onOffice_unsaved_changes_message', [
             self::VIEW_UNSAVED_CHANGES_MESSAGE => __('Your changes have not been saved yet! Do you want to leave the page without saving?', 'onoffice-for-wp-websites'),

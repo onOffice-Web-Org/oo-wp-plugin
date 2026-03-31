@@ -202,7 +202,8 @@ class FormModelBuilderDBEstateListSettings
 		$filteridSelected = $this->getValue($pInputModelFiltername->getField());
 		$pInputModelFiltername->setValue($filteridSelected);
 		$linkUrl = __("https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en","onoffice-for-wp-websites");
-		$linkLabel = '<a href="' . $linkUrl . '" target="_blank">' . __( 'Learn more.', 'onoffice-for-wp-websites' ) . '</a>';
+		$linkLabel = '<a href="' . $linkUrl . '" target="_blank" rel="noopener noreferrer">' . __( 'Learn more.', 'onoffice-for-wp-websites' ) . '</a>';
+		/* translators: %s will be replaced with a link to learn more about estate filters */
 		$pInputModelFiltername->setHintHtml( sprintf( __( 'Choose an estate filter from onOffice enterprise. %s',
 			'onoffice-for-wp-websites' ), $linkLabel ) );
 
@@ -281,7 +282,7 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Feld besonders hervorheben', 'onoffice-for-wp-website');
+		$label = __('Feld besonders hervorheben', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_HIGHLIGHTED;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
@@ -307,6 +308,24 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
 		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelConvertInputTextToSelectCityField'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 */
+	public function getInputModelRangeFieldDisplayMode()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Display', 'onoffice-for-wp-websites'); 
+		$type = InputModelDBFactoryConfigEstate::INPUT_RANGE_DISPLAY_MODE;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_RADIO);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelRangeFieldDisplayMode'));
 
 		return $pInputModel;
 	}
@@ -395,6 +414,25 @@ class FormModelBuilderDBEstateListSettings
 
 	/**
 	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key The field name (e.g., 'kaufpreis')
+	 */
+	public function callbackValueInputModelRangeFieldDisplayMode(InputModelBase $pInputModel, string $key)
+	{
+		$pInputModel->setField("rangeFieldDisplayMode[$key]");
+		$pInputModel->setValuesAvailable([
+			"$key:range"    => __('Both', 'onoffice-for-wp-websites'),
+			"$key:fromOnly" => __('From', 'onoffice-for-wp-websites'),
+			"$key:toOnly"   => __('To', 'onoffice-for-wp-websites'),
+		]);
+
+		$activeModes = $this->getValue('rangeFieldDisplayModes');
+		$currentValue = (is_array($activeModes) && isset($activeModes[$key])) ? $activeModes[$key] : 'range';
+		$pInputModel->setValue("$key:$currentValue");
+	}
+
+	/**
+	 *
 	 * @param string $module
 	 * @param string $htmlType
 	 * @param bool $isShow
@@ -436,6 +474,7 @@ class FormModelBuilderDBEstateListSettings
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelIsHidden());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelisHighlight());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelConvertInputTextToSelectCityField());
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelRangeFieldDisplayMode());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelAvailableOptions());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
@@ -700,7 +739,7 @@ class FormModelBuilderDBEstateListSettings
 	 * @return array
 	 */
 
-	public function getDefaultDataOfMarkedPropertiesSort() {
+	private function getDefaultDataOfMarkedPropertiesSort() {
 		return [
 			'neu' => __('New', 'onoffice-for-wp-websites'),
 			'top_angebot' => __('Top offer', 'onoffice-for-wp-websites'),
@@ -709,6 +748,12 @@ class FormModelBuilderDBEstateListSettings
 			'miete' => __('Rented', 'onoffice-for-wp-websites'),
 			'reserviert' => __('Reserved', 'onoffice-for-wp-websites'),
 			'referenz' => __('Reference', 'onoffice-for-wp-websites'),
+			'exclusive' => __('Exklusive', 'onoffice-for-wp-websites'),
+			'preisreduktion' => __('Price reduction', 'onoffice-for-wp-websites'),
+			'objekt_des_tages' => __('Property of the day', 'onoffice-for-wp-websites'),
+			'objekt_der_woche' => __('Property of the week', 'onoffice-for-wp-websites'),
+			'secret_sale' => __('Secret sale', 'onoffice-for-wp-websites'),
+			'courtage_frei' => __('Commission free', 'onoffice-for-wp-websites'),
 		];
 	}
 

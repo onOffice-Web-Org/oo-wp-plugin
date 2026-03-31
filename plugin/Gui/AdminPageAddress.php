@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
@@ -143,10 +145,12 @@ class AdminPageAddress
 		{
 			$newAdminUrl = ($index != $defaultTab) ? add_query_arg('tab', $index, $adminUrl) : $adminUrl;
 			$class = ($index === $selectedTab) ? ' nav-tab-active' : '';
-			echo '<a href="'.$newAdminUrl.'" class="nav-tab'.$class.'">'.esc_html($label).'</a>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $newAdminUrl is escaped by add_query_arg() and admin_url(), $class is a safe CSS class string
+            echo '<a href="'.esc_url($newAdminUrl).'" class="nav-tab'.$class.'">'.esc_html($label).'</a>';
 		}
 		echo '</h2>';
-		echo $this->_pSelectedTab->renderContent();
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderContent() returns escaped HTML content
+        echo $this->_pSelectedTab->renderContent();
 	}
 
 	/**
@@ -176,8 +180,10 @@ class AdminPageAddress
 
 		echo '</h1>';
 
-		$newLink = admin_url('admin.php?page=onoffice-editlistviewaddress');
-		echo '<a href="'.$newLink.'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $newLink is escaped by admin_url()
+        echo '<a href="'.esc_url($newLink).'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $newLink is escaped by admin_url()
+		echo '<a href="'.esc_url($newLink).'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
 
@@ -193,7 +199,8 @@ class AdminPageAddress
 		if ($itemsDeleted !== null && $itemsDeleted !== false) {
 			add_action('admin_notices', function() use ($itemsDeleted) {
 				$pHandler = new AdminNoticeHandlerListViewDeletion();
-				echo $pHandler->handleListView($itemsDeleted);
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- handleListView() returns escaped HTML
+                echo $pHandler->handleListView($itemsDeleted);
 			});
 		}
 	}
@@ -236,8 +243,11 @@ class AdminPageAddress
 
 				/* @var $pRecordManagerDuplicateListViewAddress RecordManagerDuplicateListViewAddress */
 				$pRecordManagerDuplicateListViewAddress = $pDI->get(RecordManagerDuplicateListViewAddress::class);
-				$listViewRootId = $_GET['listViewId'];
-				$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
+				$listViewRootId = isset($_GET['listViewId']) ? absint(wp_unslash($_GET['listViewId'])) : 0;
+				if ($listViewRootId > 0) {
+					$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
+				}
 			}
 
 			return $redirectTo;

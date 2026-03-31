@@ -99,31 +99,32 @@ class RecordManagerFactory
 	 */
 
 	public static function createByTypeAndAction(
-		string $type, string $action, int $recordId = null): RecordManager
-	{
-		$pInstance = null;
-		$className = self::$_mapping[$type][$action] ?? null;
+        string $type, string $action, int $recordId = null): RecordManager
+    {
+        $pInstance = null;
+        $className = self::$_mapping[$type][$action] ?? null;
 
-		if ($className === null) {
-			throw new Exception('Class not found in mapping. type='.$type.', action='.$action);
-		}
+        if ($className === null) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages are for internal debugging, not user-facing output
+            throw new Exception('Class not found in mapping. type='.$type.', action='.$action);
+        }
 
-		if (__String::getNew($className)->endsWith('Generic')) {
-			$mainTable = self::$_genericClassTables[$type];
-			$pInstance = new $className($mainTable);
-		} else {
-			if ($recordId !== null) {
-				$pInstance = new $className($recordId);
-			} else {
-				$pDIBuilder = new ContainerBuilder();
-				$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-				$pDI = $pDIBuilder->build();
-				$pInstance = $pDI->get($className);
-			}
-		}
+        if (__String::getNew($className)->endsWith('Generic')) {
+            $mainTable = self::$_genericClassTables[$type];
+            $pInstance = new $className($mainTable);
+        } else {
+            if ($recordId !== null) {
+                $pInstance = new $className($recordId);
+            } else {
+                $pDIBuilder = new ContainerBuilder();
+                $pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+                $pDI = $pDIBuilder->build();
+                $pInstance = $pDI->get($className);
+            }
+        }
 
-		return $pInstance;
-	}
+        return $pInstance;
+    }
 
 
 	/**

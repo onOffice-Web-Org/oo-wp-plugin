@@ -42,22 +42,23 @@ class InputFieldVerticalRadioRenderer extends InputFieldRenderer
 	 *
 	 */
 	public function render() {
-		$textHtml = '';
-		if (!empty($this->getHint())) {
-			$textHtml = '<p class="oo-information-text">' . esc_html($this->getHint()) . '</p>';
-		}
-		echo '<div class="oo-vertical-radio">';
-		foreach ($this->getValue() as $key => $label)
-		{
-			$inputId = 'label'.$this->getGuiId().'b'.$key.$this->getName();
-			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
-				 .'" value="'.esc_html($key).'"'
-				 .($key == $this->getCheckedValue() ? ' checked="checked" ' : '')
-				 .' id="'.esc_html($inputId).'">'
-				 .'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
-		}
-		echo $textHtml .'</div>';
-	}
+        $textHtml = '';
+        if (!empty($this->getHint())) {
+            $textHtml = '<p class="oo-information-text">' . esc_html($this->getHint()) . '</p>';
+        }
+        echo '<div class="oo-vertical-radio">';
+        foreach ($this->getValue() as $key => $label)
+        {
+            $inputId = 'label'.$this->getGuiId().'b'.$key.$this->getName();
+            echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
+                 .'" value="'.esc_html($key).'"'
+                 .($key == $this->getCheckedValue() ? ' checked="checked" ' : '')
+                 .' id="'.esc_html($inputId).'">'
+                 .'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
+        }
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $textHtml is already escaped above
+        echo $textHtml .'</div>';
+    }
 
 	/** @param string $checkedValue */
 	public function setCheckedValue(string $checkedValue)

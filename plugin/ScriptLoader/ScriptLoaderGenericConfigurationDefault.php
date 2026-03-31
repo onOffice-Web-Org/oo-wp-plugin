@@ -85,10 +85,16 @@ class ScriptLoaderGenericConfigurationDefault
 				->setLoadInFooter(true)
                 ->setLoadBeforeRenderingTemplate(true)
 				->setLoadAsynchronous($defer),
+			(new IncludeFileModel($script, 'tom-select', plugins_url('/third_party/tom-select/tom-select.complete.min.js', $pluginPath)))
+				->setLoadInFooter(true)
+                ->setLoadBeforeRenderingTemplate(true)
+				->setLoadAsynchronous($defer),
             (new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true),
             (new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true),
             (new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true),
-            (new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true)
+            (new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true),
+			(new IncludeFileModel($style, 'tom-select', plugins_url('/third_party/tom-select/tom-select.css', $pluginPath)))->setLoadBeforeRenderingTemplate(true)
+
 		];
 		$values []= (new IncludeFileModel($style, 'onoffice_style', $this->getStyleUriByVersion()))->setLoadBeforeRenderingTemplate(true);
 		$values = array_merge($values, $this->registerScriptAndStyles($pluginPath, $script, $style, $async, $defer));
@@ -195,9 +201,6 @@ class ScriptLoaderGenericConfigurationDefault
 			(new IncludeFileModel($script, 'onoffice-leadform', plugins_url('/dist/onoffice-leadform.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-prevent-double-form-submission', plugins_url('/dist/onoffice-prevent-double-form-submission.min.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'onoffice-apply-thousand-separator', plugins_url('dist/onoffice-apply-thousand-separator.min.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
@@ -254,7 +257,6 @@ class ScriptLoaderGenericConfigurationDefault
 			'onoffice-multiselect', 
 			'onoffice-estatetype', 
 			'onoffice-leadform', 
-			'onoffice-prevent-double-form-submission', 
 			'onoffice-apply-thousand-separator'
 		];
 
@@ -354,6 +356,7 @@ class ScriptLoaderGenericConfigurationDefault
 				wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
 					'amount_none' => __('0 matches', 'onoffice-for-wp-websites'),
 					'amount_one' => __('Show exact match', 'onoffice-for-wp-websites'),
+					/* translators: %s: number of matches */
 					'amount_other' => __('Show %s matches', 'onoffice-for-wp-websites'),
 					'nonce_estate' => wp_create_nonce('onoffice-estate-preview'),
 					'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),
@@ -364,8 +367,7 @@ class ScriptLoaderGenericConfigurationDefault
 					'thousand_separator_format' => get_option('onoffice-settings-thousand-separator')
 				]);
 				break;
-		}
-	}
+	}}
 
     /**
      * @return string

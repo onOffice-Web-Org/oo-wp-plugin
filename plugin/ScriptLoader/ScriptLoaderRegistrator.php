@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\ScriptLoader;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  */
@@ -89,6 +91,9 @@ class ScriptLoaderRegistrator
 	{
 		/* @var $pScriptLoader ScriptLoader */
 		foreach ($this->_scriptLoader as $pScriptLoader) {
+			if ($pScriptLoader instanceof ScriptLoaderMap) {
+				continue;
+			}
 			$pScriptLoader->enqueue();
 		}
 	}

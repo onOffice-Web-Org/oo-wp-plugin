@@ -41,13 +41,14 @@ class WPPageWrapper
 	 */
 
 	public function getPageByPath(string $path): WP_Post
-	{
-		$pPost = get_page_by_path($path);
-		if ($pPost === null) {
-			throw new UnknownPageException($path);
-		}
-		return $pPost;
-	}
+    {
+        $pPost = get_page_by_path($path);
+        if ($pPost === null) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in internal code
+            throw new UnknownPageException($path);
+        }
+        return $pPost;
+    }
 
 
 	/**

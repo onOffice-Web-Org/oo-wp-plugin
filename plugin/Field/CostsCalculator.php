@@ -39,47 +39,50 @@ class CostsCalculator
 	/**
 	 * @param array $recordRaw
 	 * @param array $propertyTransferTax
-	 * @param float $externalCommission
+	 * @param float|null $externalCommission 
 	 * @return array
 	 */
-	public function getTotalCosts(array $recordRaw, array $propertyTransferTax, float $externalCommission): array
+	public function getTotalCosts(array $recordRaw, array $propertyTransferTax,  ?float $externalCommission = null): array
 	{
-		$totalCostsData = $this->calculateRawCosts($recordRaw, $propertyTransferTax, $externalCommission);
-		$currencySymbol = $this->getCurrencySymbol();
-
-		if (empty($currencySymbol)) {
+		try {
+			$totalCostsData = $this->calculateRawCosts($recordRaw, $propertyTransferTax, $externalCommission);
+			$currencySymbol = $this->getCurrencySymbol();
+			if (empty($currencySymbol)) {
+				return [];
+			}
+			if (!isset($recordRaw['waehrung'])) {
+				return [];
+			}
+			if (!isset($currencySymbol[$recordRaw['waehrung']])) {
+				return [];
+			}
+			$currency = $currencySymbol[$recordRaw['waehrung']];
+			return $this->formatPrice($totalCostsData, $currency);
+		} catch (\Throwable  $e) {
+			error_log("Error calculating total costs: " . $e->getMessage()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Needed for debugging calculation errors in production.
 			return [];
 		}
-
-		if (!isset($recordRaw['waehrung'])) {
-			return [];
-		}
-
-		if (!isset($currencySymbol[$recordRaw['waehrung']])) {
-			return [];
-		}
-
-		$currency = $currencySymbol[$recordRaw['waehrung']];
-
-		return $this->formatPrice($totalCostsData, $currency);
 	}
 
 	/**
 	 * @param array $recordRaw
 	 * @param array $propertyTransferTax
-	 * @param float $externalCommission
+	 * @param float|null $externalCommission 
 	 * @return array
 	 */
-	private function calculateRawCosts(array $recordRaw, array $propertyTransferTax, float $externalCommission): array
+	private function calculateRawCosts(array $recordRaw, array $propertyTransferTax, ?float $externalCommission = null): array
 	{
 		$purchasePriceRaw = $recordRaw['kaufpreis'];
 
 		$othersCosts = [
 			'bundesland' => $propertyTransferTax[$recordRaw['bundesland']],
-			'aussen_courtage' => $externalCommission,
 			'notary_fees' => DataDetailView::NOTARY_FEES,
 			'land_register_entry' => DataDetailView::LAND_REGISTER_ENTRY
 		];
+
+		if (!empty($externalCommission)) {
+			$othersCosts['aussen_courtage'] = $externalCommission;
+		}
 
 		$rawAllCosts = ['kaufpreis' => ['raw' => $purchasePriceRaw]];
 		$totals = 0;

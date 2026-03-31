@@ -48,18 +48,20 @@ class InputFieldLabelRenderer
 	 */
 
 	public function render()
-	{
-		$additional = '';
-		if ($this->getValue() !== null) {
-			$enclosure = $this->_enclosureConfig[$this->_valueEnclosure];
-			$additional = sprintf($enclosure, esc_html($this->getValue()));
-		}
+    {
+        $additional = '';
+        if ($this->getValue() !== null) {
+            $enclosure = $this->_enclosureConfig[$this->_valueEnclosure];
+            $additional = sprintf($enclosure, esc_html($this->getValue()));
+        }
 
-		echo '<span class="viewusage" id="'.esc_html($this->getGuiId()).'" '
-				.$this->renderAdditionalAttributes().'>'
-				.esc_html($this->getLabel()).$additional
-			.'</span>';
-	}
+        echo '<span class="viewusage" id="'.esc_html($this->getGuiId()).'" '
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
+                .$this->renderAdditionalAttributes().'>'
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $additional is already escaped above
+                .esc_html($this->getLabel()).$additional
+            .'</span>';
+    }
 
 
 	/** @return string */

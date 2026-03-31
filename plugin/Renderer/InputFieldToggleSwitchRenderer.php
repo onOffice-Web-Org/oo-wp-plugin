@@ -38,9 +38,10 @@ class InputFieldToggleSwitchRenderer extends InputFieldRenderer
 	public function render()
 	{
 		echo '<label class="oo-toggle-switch"><input type="checkbox"'
-			.' value="'.esc_html($this->getValue()).'"'.($this->getValue() == $this->getCheckedValues() ? ' checked="checked" ' : '')
-			.' name="'.esc_html($this->getName()).'"'.($this->getIsDisabled() ? ' disabled' : '').'>'
-			.'<span class="slider round"></span></label>'
+            .' value="'.esc_html($this->getValue()).'"'.($this->getValue() == $this->getCheckedValues() ? ' checked="checked" ' : '')
+            .' name="'.esc_html($this->getName()).'"'.($this->getIsDisabled() ? ' disabled' : '').'>'
+            .'<span class="slider round"></span></label>'
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getHint() returns escaped hint text
             . $this->getHint();
 	}
 }

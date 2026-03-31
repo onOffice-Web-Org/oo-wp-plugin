@@ -57,11 +57,14 @@ class InputFieldSubjectForFormRenderer
 		if (!empty($this->getHint())) {
 			$textHtml = '<p class="hint-text">' . esc_html($this->getHint()) . '</p>';
 		}
-		echo '<div class="oo-email-subject-container">'
-        	. '<button class="oo-insert-variable-button">'.__('Insert variable', 'onoffice-for-wp-websites').'</button>'
-			. '<div class="oo-email-subject-title" contenteditable="true"></div>'
-			. '<div class="oo-email-subject-suggestions"></div>'
-			. '<input type="hidden" class="oo-email-subject-output" name="' . esc_html($this->getName()) . '" value="' . esc_html($this->getValue()) . '">'
-			. '</div>'.$textHtml;
+		 
+        echo '<div class="oo-email-subject-container">'
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
+            . '<button class="oo-insert-variable-button">'.__('Insert variable', 'onoffice-for-wp-websites').'</button>'
+            . '<div class="oo-email-subject-title" contenteditable="true"></div>'
+            . '<div class="oo-email-subject-suggestions"></div>'
+            . '<input type="hidden" class="oo-email-subject-output" name="' . esc_html($this->getName()) . '" value="' . esc_html($this->getValue()) . '">'
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $textHtml is already escaped above
+            . '</div>'.$textHtml;
 	}
 }

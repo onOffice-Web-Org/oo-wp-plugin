@@ -39,7 +39,7 @@ class SDKIntegrationTest extends \PHPUnit\Framework\TestCase
         $ncat->setIdleTimeout(5);
 
         $ncat->start();
-
+        // phpcs:ignore Squiz.PHP.Heredoc.NotAllowed -- Required for test script definition
         $script = <<<'EOS'
         require_once 'vendor/autoload.php';
         $sdk = new \onOffice\SDK\onOfficeSDK();

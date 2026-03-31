@@ -281,7 +281,7 @@ class FormsTable
 		$editLink = add_query_arg($formIdParam, $pItem->ID, admin_url('admin.php?page=onoffice-editform'));
 
 		$actions = [];
-		$actions['edit'] = '<a href="'.esc_attr($editLink).'">'.esc_html__('Edit').'</a>';
+		$actions['edit'] = '<a href="'.esc_attr($editLink).'">'.esc_html__('Edit', 'onoffice-for-wp-websites').'</a>';
 		$actions['duplicate'] = "<a class='button-duplicate' href='"
 			. esc_attr(wp_nonce_url(admin_url('admin.php') . '?page=onoffice-forms&action=bulk_duplicate&form=' . $pItem->name,
 				'bulk-forms'))
@@ -292,7 +292,7 @@ class FormsTable
 			.esc_js(sprintf(
 			/* translators: %s is the name of the form. */
 			__("You are about to delete the form '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice-for-wp-websites'), $pItem->name))
-			."' ) ) { return true;}return false;\">" . __('Delete') . "</a>";
+			."' ) ) { return true;}return false;\">" . esc_html__('Delete', 'onoffice-for-wp-websites') . "</a>";
 		return $this->row_actions( $actions );
 	}
 

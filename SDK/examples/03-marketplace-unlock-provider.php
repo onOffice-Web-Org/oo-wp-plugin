@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 include __DIR__ . '/../vendor/autoload.php';
 
 use onOffice\SDK\onOfficeSDK;
@@ -25,4 +27,5 @@ $handleUnlockProvider = $pSDK->callGeneric(
 
 $pSDK->sendRequests($apiUserToken, $apiUserSecret);
 
+// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- This is example code for developers
 var_export($pSDK->getResponseArray($handleUnlockProvider));

@@ -62,7 +62,7 @@ class TestClassScriptLoaderGenericConfigurationDefault
 
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$config = $pScriptLoaderGenericConfigurationDefault->getScriptLoaderGenericConfiguration();
-		$this->assertCount(22, $config);
+		$this->assertCount(23, $config);
 		/* @var $pFileModel IncludeFileModel */
 		foreach ($config as $pFileModel) {
 			$this->assertInstanceOf(IncludeFileModel::class, $pFileModel);
@@ -97,11 +97,12 @@ class TestClassScriptLoaderGenericConfigurationDefault
 		$this->assertNotEmpty(get_stylesheet_directory());
 		$templatePath = get_stylesheet_directory().'/onoffice-theme/';
 		if (!is_dir($templatePath) &&
-			!mkdir($templatePath . '/templates/', 755, true) &&
-			!is_dir($templatePath . '/templates/'))
-		{
-			throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . '/templates/'));
-		}
+            !mkdir($templatePath . '/templates/', 755, true) &&
+            !is_dir($templatePath . '/templates/'))
+        {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in test code
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $templatePath . '/templates/'));
+        }
 		$styleFilePath = get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css';
 		if (!file_exists($styleFilePath)) {
 			file_put_contents(get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css', 'onoffice-style.css');

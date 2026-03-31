@@ -318,6 +318,11 @@
 	}
 }
 
+@media only screen and (max-width: 768px) {
+	.oo-details-fact__label, .oo-details-fact__value {
+        width: 50%;
+    }
+}
 @media only screen and (max-width: 575px) {
 	.oo-listobject, .oo-searchformfield, .oo-details-sidebar {
 		width: 100%;

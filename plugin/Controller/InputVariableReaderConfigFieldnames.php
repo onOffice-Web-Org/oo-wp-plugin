@@ -127,7 +127,7 @@ class InputVariableReaderConfigFieldnames
 			if ($sanitizer !== FILTER_DEFAULT) {
 				if ($sanitizer === FILTER_SANITIZE_FULL_SPECIAL_CHARS) {
 					// This preserves special characters like quotes while ensuring security
-					$value = strip_tags($value);
+					$value = wp_strip_all_tags($value);
 				} else {
 					// Apply the original sanitizer for other filter types
 					$value = filter_var($value, $sanitizer);
@@ -150,6 +150,7 @@ class InputVariableReaderConfigFieldnames
 
 	public function getIsRequestVarArray(string $name): bool
 	{
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public search parameter check, no side effects
 		return is_array($_REQUEST[$name] ?? null);
 	}
 }

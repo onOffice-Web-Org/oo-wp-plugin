@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 
 /**
@@ -92,6 +93,8 @@ abstract class RecordManager
 	/** */
 	const TABLENAME_TASKCONFIG_FORMS = 'oo_plugin_form_taskconfig';
 
+	const TABLENAME_MULTIPAGE_TITLE_FORMS = 'oo_plugin_form_multipage_title';
+
 	/**
 	 *
 	 * @deprecated get wpdb via DI
@@ -117,8 +120,7 @@ abstract class RecordManager
 
 	public function getWpdb()
 	{
-		global $wpdb;
-		return $wpdb;
+		return WpdbReadCacheProxy::getWpdb();
 	}
 
 

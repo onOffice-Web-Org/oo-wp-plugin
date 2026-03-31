@@ -28,7 +28,8 @@ a.estate-status > span, div.estate-status > span {
 }
 
 input[type=submit].match {
-    background-color: #559955;
+    background-color: #3d7bb1;
+    color: #ffffff;
 }
 
 div.multiselect[data-values="[]"] > input[type=button],
@@ -86,4 +87,23 @@ form[data-applicant-form-id] #spinner {
     height: 100%;
     object-fit: cover;
     object-position: center center;
+}
+
+.oo-visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+  
+.oo-form .error {
+    display: none;
+    color: #DC2625;
+    font-weight: normal;
+    margin-top: 5px;
 }

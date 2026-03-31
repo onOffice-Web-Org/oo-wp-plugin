@@ -232,7 +232,8 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
-			'gdprcheckbox' => 'y'
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
 		];
 
 		$this->prepareMockerForAddressCreationSuccess();
@@ -265,6 +266,10 @@ class TestClassFormPostOwner
 
 	public function testInitialCheckMissingFields()
 	{
+		$_POST = [
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
+		];
+
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 3);
 
@@ -294,6 +299,7 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
 		];
 
 		$this->prepareMockerForAddressCreationNoSuccess();
@@ -329,6 +335,7 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
 		];
 
 		$this->prepareMockerForAddressCreationSuccess();
@@ -358,7 +365,8 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
-			'gdprcheckbox' => 'y'
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
 		];
 		$this->prepareMockerForAddressCreationSuccess();
 		$this->prepareMockerForEstateCreationSuccess();
@@ -711,7 +719,8 @@ class TestClassFormPostOwner
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
 			'gdprcheckbox' => 'y',
-			'bad' => ['Bidet', 'Urinal', 'Bathtub']
+			'bad' => ['Bidet', 'Urinal', 'Bathtub'],
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
 		];
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$this->prepareMockerForContactSuccessUsingArrayInputEstate();

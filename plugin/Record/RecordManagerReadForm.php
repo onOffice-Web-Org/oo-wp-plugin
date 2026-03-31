@@ -87,10 +87,15 @@ class RecordManagerReadForm
         $pWpDb = $this->getWpdb();
         $columns = implode(', ', $this->getColumns());
         $where = "(".implode(") AND (", $this->getWhere()).")";
-        if (!empty($_GET["search"]))
-        {
-            $where .= "AND (name LIKE '%".esc_sql($_GET['search'])."%' OR template LIKE '%".esc_sql($_GET['search'])."%' OR recipient LIKE '%".esc_sql($_GET['search'])."%' OR subject LIKE '%".esc_sql($_GET['search'])."%')";
-        }
+
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Admin table search parameter, read-only operation
+		if (!empty($_GET["search"]))
+		{
+			$search = sanitize_text_field(wp_unslash($_GET['search']));
+			$where .= " AND (name LIKE '%".esc_sql($search)."%' OR form_type LIKE '%".esc_sql($search)."%' OR template LIKE '%".esc_sql($search)."%' OR subject LIKE '%".esc_sql($search)."%')";
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		
 		$sql = $pWpDb->prepare(
 			"SELECT SQL_CALC_FOUND_ROWS {$columns}
 			FROM `{$prefix}oo_plugin_forms`
@@ -201,10 +206,12 @@ class RecordManagerReadForm
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 
-		if ($result === null) {
-			throw new UnknownFormException($formName);
-		}
-
+		
+        if ($result === null) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages are for internal debugging, not user-facing output
+            throw new UnknownFormException($formName);
+        }
+		
 		$resultFieldConfig = $this->readFieldconfigByFormId($result[$this->getIdColumnMain()]);
 		$result['fields'] = array_column($resultFieldConfig, 'fieldname');
 		$result['filterable'] = array_keys(array_filter(array_column($resultFieldConfig, 'filterable', 'fieldname')));
@@ -290,6 +297,27 @@ class RecordManagerReadForm
 		return $result;
 	}
 
+	/**
+	 * Reads all multilingual page titles for a specific form
+	 *
+	 * @param int $formId The ID of the form to read titles for
+	 * @return array Array of title records with page and language information
+	 */
+	public function readTitlePerMultipageByFormId(int $formId): array
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlTitlePerPages = $pWpDb->prepare(
+			"SELECT *
+                FROM `{$prefix}oo_plugin_form_multipage_title`
+                WHERE `form_id` = %d",
+			$formId
+		);
+
+		return $pWpDb->get_results($sqlTitlePerPages, ARRAY_A) ?: [];
+	}
+
 
 	/**
 	 *
@@ -304,7 +332,7 @@ class RecordManagerReadForm
 
 		$sql = $pWpDb->prepare(
 			"SELECT `form_type`, COUNT(`form_id`) as count
-			FROM `{$prefix}{oo_plugin_forms}`
+			FROM `{$prefix}oo_plugin_forms`
 			GROUP BY `form_type`"
 		);
 

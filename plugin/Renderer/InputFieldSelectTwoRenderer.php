@@ -31,6 +31,12 @@ class InputFieldSelectTwoRenderer extends InputFieldSelectRenderer
 	 */
 	public function render()
 	{
+
+		if($this->getIsFieldInactive()){
+			$this->renderInactive();
+			return;
+		}
+
 		$name = $this->getMultiple() ? $this->getName() . '[]' : $this->getName();
 		$output = '<select name="'.esc_html($name).'"'
 					.$this->renderAdditionalAttributes()
@@ -70,7 +76,8 @@ class InputFieldSelectTwoRenderer extends InputFieldSelectRenderer
 
 		$output .= '</select>';
 
-		echo $output;
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $output is built with escaped values above
+        echo $output;
 	}
 
 	/**

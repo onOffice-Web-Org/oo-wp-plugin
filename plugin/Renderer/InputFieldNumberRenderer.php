@@ -64,9 +64,11 @@ class InputFieldNumberRenderer
 		if ( $this->getMinValue() !== null ) {
 			$min = ' min="' . esc_html( $this->getMinValue() ) . '"';
 		}
-		echo '<input type="' . esc_html( $this->getType() ) . '" name="' . esc_html( $this->getName() )
-		     . '" value="' . esc_html( $this->getValue() ) . '" id="' . esc_html( $this->getGuiId() ) . '"'
-		     . ' ' . $this->renderAdditionalAttributes() . $max . $min
-		     . '>' . $textHtml;
+        echo '<input type="' . esc_html( $this->getType() ) . '" name="' . esc_html( $this->getName() )
+             . '" value="' . esc_html( $this->getValue() ) . '" id="' . esc_html( $this->getGuiId() ) . '"'
+			 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped attributes, $max and $min are escaped above
+             . ' ' . $this->renderAdditionalAttributes() . $max . $min
+             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $textHtml contains escaped hint text
+             . '>' . $textHtml;
 	}
 }

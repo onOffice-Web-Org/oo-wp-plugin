@@ -28,6 +28,8 @@ use WP_UnitTestCase;
 
 class TestClassInputFieldToggleSwitchRenderer extends WP_UnitTestCase
 {
+
+	use HtmlNormalizerTrait;
 	/**
 	 *
 	 */
@@ -37,7 +39,7 @@ class TestClassInputFieldToggleSwitchRenderer extends WP_UnitTestCase
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<label class="oo-toggle-switch"><input type="checkbox"'
+		$this->assertHtmlEquals('<label class="oo-toggle-switch"><input type="checkbox"'
 			. ' value="" name="onoffice-settings-opengraph"><span class="slider round"></span></label>', $output);
 	}
 
@@ -50,7 +52,7 @@ class TestClassInputFieldToggleSwitchRenderer extends WP_UnitTestCase
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<label class="oo-toggle-switch"><input type="checkbox"'
+		$this->assertHtmlEquals('<label class="oo-toggle-switch"><input type="checkbox"'
 			. ' value="" name="onoffice-settings-twittercards"><span class="slider round"></span></label>', $output);
 	}
 }

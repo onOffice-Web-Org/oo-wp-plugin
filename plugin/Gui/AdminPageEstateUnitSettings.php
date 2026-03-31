@@ -29,6 +29,7 @@ use onOffice\WPlugin\Model;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Utility\FileVersionHelper;
 
 
 /**
@@ -199,8 +200,8 @@ class AdminPageEstateUnitSettings
 		wp_enqueue_script('oo-copy-shortcode');
 		wp_enqueue_script('onoffice-custom-form-label-js');
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		wp_register_script('onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath));
-		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
+		wp_register_script('onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath), ['jquery'], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-multiselect.min.js'), true);
+		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath), [], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/css/onoffice-multiselect.css'));
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
 		wp_localize_script('handle-notification-actions', 'screen_data_handle_notification', $screenData);

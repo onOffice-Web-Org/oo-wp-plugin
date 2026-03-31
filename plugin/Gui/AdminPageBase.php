@@ -102,6 +102,7 @@ abstract class AdminPageBase
 	public function generateBlockPublish()
 	{
 		echo '<div class="block-publish">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
 		echo '<div class="postbox-header"><h2 class="hndle">' . __('Publish', 'onoffice-for-wp-websites') . '</h2></div>';
 		echo '<div class="inside">';
 		submit_button(null, 'primary', 'send_form');

@@ -703,7 +703,9 @@ class TestClassEstateList
 				'additionalTranslations' => [],
 				'compoundFields' => [],
 				'labelOnlyValues' => [],
-				'tablename' => ''
+				'tablename' => '',
+				'dependencies' => Array (),
+				'rangeFieldDisplayMode' => 'range'
 			],
 			'objekttyp' => [
 				'name' => 'objekttyp',
@@ -719,7 +721,9 @@ class TestClassEstateList
 				'additionalTranslations' => [],
 				'compoundFields' => [],
 				'labelOnlyValues' => [],
-				'tablename' => ''
+				'tablename' => '',
+				'dependencies' => Array (),
+				'rangeFieldDisplayMode' => 'range'
 			],
 		];
 
@@ -1120,6 +1124,14 @@ class TestClassEstateList
 				$pFieldsCollectionOut->merge($pFieldsCollection);
 				return $pFieldsCollectionBuilderShort;
 			});
+
+		$pFieldsCollectionBuilderShort->method('addFieldsAddressEstateWithRegionValues')
+			->willReturnCallback(function (FieldsCollection $pFieldsCollectionOut)
+			use ($pFieldsCollection, $pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
+			{
+				$pFieldsCollectionOut->merge($pFieldsCollection);
+				return $pFieldsCollectionBuilderShort;
+			});
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
 
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
@@ -1195,6 +1207,14 @@ class TestClassEstateList
 		return $pDataView;
 	}
 
+	public function testGetEstateListParametersForCacheIncludesRegionalerZusatz()
+	{
+		$this->_pEstateList->getDataView()->setFields(['Id', 'objektart', 'regionaler_zusatz']);
+		$params = $this->_pEstateList->getEstateListParametersForCache(true);
+		
+		$this->assertContains('regionaler_zusatz', $params['data']);
+	}
+
 	/**
 	 *
 	 * @return FieldsCollection
@@ -1233,6 +1253,7 @@ class TestClassEstateList
 			'plz',
 			'land',
 			'energyClass',
+			'regionaler_zusatz',
 		];
 		foreach ($fieldNames as $fieldName) {
 			$field = new Field($fieldName, 'estate', 'testLabel');

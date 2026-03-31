@@ -206,7 +206,14 @@ implements AddressListBase
 		];
 		$parametersRaw = [
 				'recordids' => $addressIds,
-				'data' => $this->_addressParametersForImageAlt,
+				'data' => array_values(
+							array_unique(
+								array_merge(
+									$fields,                           // whatever the view asked for (formatted)
+									$this->_addressParametersForImageAlt // still keep alt deps
+								)
+							)
+						),
 				'outputlanguage' => Language::getDefault(),
 				'filter' => $filter,
 				'formatoutput' => false,
@@ -242,9 +249,15 @@ implements AddressListBase
 			$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
 		}
 
-		if(isset($_GET['geo_search']) && count(explode(',',$_GET['geo_search'])) == 2 ) {
-			$filter['geo'][0]['loc'] = $_GET['geo_search'];
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
+		if ( isset( $_GET['geo_search'] ) ) {
+			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
+			$geoCoords = explode( ',', $geoSearch );
+			if ( count( $geoCoords ) === 2 ) {
+				$filter['geo'][0]['loc'] = $geoSearch;
+			}
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$parameters = array(
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
@@ -524,6 +537,26 @@ implements AddressListBase
 	}
 
 	/**
+	 * Return the full raw address records (unformatted).
+	 * @return array<int, array{id:int, elements:array<string, mixed>}>
+	 */
+	public function getRawRecords(): array
+	{
+		return $this->_recordsRaw;
+	}
+
+	/**
+	 * Return the raw (unformatted) elements for a single address ID.
+	 *
+	 * @param int $id Address record ID.
+	 * @return array<string, mixed> Raw field values for the record (empty if missing).
+	 */
+	public function getRawById(int $id): array
+	{
+		return $this->_recordsRaw[$id]['elements'] ?? [];
+	}
+
+	/**
 	 * @param bool $raw
 	 * @param array $row
 	 * @return ArrayContainerEscape
@@ -732,9 +765,13 @@ implements AddressListBase
 	 * @param string|null $company
 	 * @return string
 	 */
-	public static function createAddressTitle(string $firstName, string $lastName, string $company): string
+	public static function createAddressTitle(?string $firstName, ?string $lastName, ?string $company = null): string
 	{
 		$parts = [];
+		$firstName = trim($firstName ?? '');
+		$lastName = trim($lastName ?? '');
+		$company = trim($company ?? '');
+		
 		if (!empty($firstName)) {
 			$parts[] = strtolower($firstName);
 		}
@@ -778,7 +815,7 @@ implements AddressListBase
 		$url      = get_page_link( $pageId );
 		$fullLink = $this->_pLanguageSwitcher->createAddressDetailLink( $url, $addressId, $addressTitle );
 
-		$fullLinkElements = parse_url( $fullLink );
+		$fullLinkElements = wp_parse_url( $fullLink );
 		if ( empty( $fullLinkElements['query'] ) ) {
 				$fullLink .= '/';
 		}

@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2018  onOffice Software AG
@@ -28,20 +30,20 @@ if (count($visible) === 0) {
 }
 
 ?>
-
+<div class="oo-searchform">
 <form method="get">
-
+<div class="oo-searchformfieldwrap">
 <?php
-
 foreach ($visible as $inputName => $properties) :
-	echo '<p>';
-	echo esc_html($properties['label']).': ';
-	echo '<br>';
+	echo '<div class="oo-searchformfield">';
 	renderFieldEstateSearch($inputName, $properties);
-	echo '</p>';
+	echo '</div>';
 endforeach;
 ?>
-
-	<input type="submit" value="<?php echo esc_attr__('Send', 'onoffice-for-wp-websites'); ?>">
+	<div class="oo-searchformfield">
+		<input type="submit" value="<?php echo esc_attr__('Send', 'onoffice-for-wp-websites'); ?>">
+	</div>
+	</div>
 </form>
+
 <br>

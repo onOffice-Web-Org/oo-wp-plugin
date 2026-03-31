@@ -60,11 +60,12 @@ class InputFieldCheckboxButtonRenderer
 
 		$id = HtmlIdGenerator::generateByString($this->_id);
 		echo '<p>'
-			.'<input type="button" class="inputFieldCheckboxButton button" name="'
-				.esc_attr($id).'" value="'.esc_html__('Add to List >>', 'onoffice-for-wp-websites').'" '
-				.'data-onoffice-category="'.esc_attr($this->getLabel()).'"'
-				. $this->renderAdditionalAttributes().'>'
-			.'</p>';
+            .'<input type="button" class="inputFieldCheckboxButton button" name="'
+                .esc_attr($id).'" value="'.esc_html__('Add to List >>', 'onoffice-for-wp-websites').'" '
+                .'data-onoffice-category="'.esc_attr($this->getLabel()).'"'
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped attributes
+                . $this->renderAdditionalAttributes().'>'
+            .'</p>';
 	}
 
 

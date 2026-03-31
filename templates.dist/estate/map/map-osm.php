@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2018-2020 onOffice GmbH
@@ -84,7 +86,8 @@ return (function(EstateList $pEstatesClone) {
                 'address' => $address,
                 'link' => $link,
                 'visible' => $visible,
-                'showInfoWindow' => $showInfoWindow 
+                'showInfoWindow' => $showInfoWindow,
+                'id' => $estateId
             ];
         }
     }
@@ -93,46 +96,62 @@ return (function(EstateList $pEstatesClone) {
         return;
     }
     ?>
-    <div class="oo-map" id="<?php echo esc_attr($mapId) ?>" style="width: 100%; height: 100%;"></div>
+    <div class="oo-map" role="region" id="<?php echo esc_attr($mapId) ?>" style="width: 100%; height: 100%;" aria-label="<?php echo esc_html__(
+    'Map with properties','onoffice-for-wp-websites'); ?>"></div>
     <script>
-    (function() {
-        var estateMarkers = <?php echo json_encode($estateData); ?>;
-        let mapId = <?php echo esc_js($mapId); ?>;
-        var map = L.map(mapId, {
-            center: [50.8, 10.0],
-            zoom: 5
-        });
-        L.tileLayer('https://tiles.onoffice.de/tiles/{z}/{x}/{y}.png').addTo(map);
+(function() {
+    var estateMarkers = <?php echo json_encode($estateData); ?>;
+    let mapId = <?php echo esc_js($mapId); ?>;
 
-        var group = new L.featureGroup();
+    var map = L.map(mapId, {
+        a11yPlugin: true,
+        center: [50.8, 10.0],
+        zoom: 5
+    });
 
-        for (i in estateMarkers) {
-            var estate = estateMarkers[i];
-            var marker = L.marker(estate.position, estate.title);
+    L.tileLayer('https://tiles.onoffice.de/tiles/{z}/{x}/{y}.png').addTo(map);
 
-            if (!estate.showInfoWindow) {
-                const popupContent = `
-                    <div class="oo-infowindow">
-                        <p class="oo-infowindowtitle">${estate.title}</p>
-                        ${estate.address ? `<p class="oo-infowindowaddress">${estate.address}</p>` : ''}
-                        ${estate.link ? `<div class="oo-detailslink"><a class="oo-details-btn" href="${estate.link}"><?php echo esc_html__('Show Details', 'onoffice-for-wp-websites'); ?></a></div>` : ''}
-                    </div>
-                `;
-                var popup = L.popup({
-                    content: popupContent,
-                    minWidth: 250,
-                    maxWidth: 350,
-                });
-                marker.bindPopup(popup);
-            }
+    var markers = L.markerClusterGroup();
 
-            group.addLayer(marker);
-            if (estate.visible) {
-                marker.addTo(map);
-            }
+    const translations = {
+        ariaLabelTemplate: "<?php 
+            /* translators: %s: real estate ID number */
+            echo esc_js(esc_html_x('Show Details for Real Estate No. %s', 'template', 'onoffice-for-wp-websites')); ?>"
+    };
+
+    for (let i in estateMarkers) {
+        var estate = estateMarkers[i];
+        var marker = L.marker(estate.position, { title: estate.title });
+        var id = estate.id;
+
+        const ariaLabel = translations.ariaLabelTemplate.replace('%s', estate.id);
+
+        if (!estate.showInfoWindow) {
+            const popupContent = `
+                <div class="oo-infowindow">
+                    <p class="oo-infowindowtitle">${estate.title}</p>
+                    ${estate.address ? `<p class="oo-infowindowaddress">${estate.address}</p>` : ''}
+                    ${estate.link ? `<div class="oo-detailslink"><a class="oo-details-btn" href="${estate.link}" aria-label="${ariaLabel}"><?php echo esc_html__('Show Details', 'onoffice-for-wp-websites'); ?></a></div>` : ''}
+                </div>
+            `;
+
+            var popup = L.popup({
+                content: popupContent,
+                minWidth: 250,
+                maxWidth: 350,
+            });
+            marker.bindPopup(popup);
         }
-        map.fitBounds(group.getBounds());
-    })();
-    </script>
+
+        if (estate.visible) {
+            markers.addLayer(marker);
+        }
+    }
+
+    map.addLayer(markers);
+
+    map.fitBounds(markers.getBounds());
+})();
+</script>
 <?php
 });
