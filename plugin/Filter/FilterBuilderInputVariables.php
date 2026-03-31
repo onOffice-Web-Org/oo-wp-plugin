@@ -137,7 +137,7 @@ class FilterBuilderInputVariables
 			$type === FieldTypes::FIELD_TYPE_SINGLESELECT) {
 			$fieldFilter []= ['op' => 'in', 'val' => $fieldValue];
 		} elseif ($type === FieldTypes::FIELD_TYPE_BOOLEAN) {
-			$boolValue = $fieldValue === true || $fieldValue === '1' || $fieldValue === 1 ? 1 : 0;
+			$boolValue = ($fieldValue === true || $fieldValue === '1' || $fieldValue === 1) ? 1 : 0;
 			$fieldFilter []= ['op' => '=', 'val' => $boolValue];
 		} elseif ($type === FieldTypes::FIELD_TYPE_TEXT ||
 			($type === FieldTypes::FIELD_TYPE_VARCHAR && $this->_fuzzySearch) && !is_array($fieldValue)) {
