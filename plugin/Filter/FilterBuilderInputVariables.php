@@ -76,15 +76,26 @@ class FilterBuilderInputVariables
 		$pEstateInputVars = new InputVariableReader($this->_module, $this->_pInputVariableReaderConf);
 
 		foreach ($filterableFields as $fieldInput) {
-			$type = $pEstateInputVars->getFieldType($fieldInput);
-			$value = $pEstateInputVars->getFieldValue($fieldInput);
+			try {
+				$type = $pEstateInputVars->getFieldType($fieldInput);
+				$value = $pEstateInputVars->getFieldValue($fieldInput);
 
-			if (is_null($value) || (is_string($value) && __String::getNew($value)->isEmpty())) {
-				continue;
+				if (is_null($value) || (is_string($value) && __String::getNew($value)->isEmpty())) {
+					continue;
+				}
+
+				$fieldFilter = $this->getFieldFilter($value, $type);
+				$filter[$fieldInput] = $fieldFilter;
+			} catch (\Exception $e) {
+				$value = $pEstateInputVars->getFieldValue($fieldInput);
+
+				if (is_null($value) || (is_string($value) && __String::getNew($value)->isEmpty())) {
+					continue;
+				}
+
+				$fieldFilter = $this->getFieldFilter($value, 'text');
+				$filter[$fieldInput] = $fieldFilter;
 			}
-
-			$fieldFilter = $this->getFieldFilter($value, $type);
-			$filter[$fieldInput] = $fieldFilter;
 		}
 
 		return $filter;
