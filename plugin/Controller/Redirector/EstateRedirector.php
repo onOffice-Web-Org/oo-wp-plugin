@@ -46,7 +46,8 @@ class EstateRedirector
 		}
 
 		$oldUrl = $this->_redirector->getCurrentLink();
-		$sanitizeTitle = $this->_wpEstateDetailUrl->getSanitizeTitle($estateTitle);
+		// $sanitizeTitle = $this->_wpEstateDetailUrl->getSanitizeTitle($estateTitle);
+		$sanitizeTitle = $this->_wpEstateDetailUrl->getSanitizeTitle($estateTitle) ?? '';
 		$isUrlHaveTitle = strpos($oldUrl, $sanitizeTitle) !== false;
 		$newUrl = $this->_wpEstateDetailUrl->getUrlWithEstateTitle($estateId, $estateTitle, $oldUrl, $isUrlHaveTitle, $pEstateRedirection);
 
