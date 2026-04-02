@@ -502,6 +502,18 @@ class EstateList
 		$this->collectEstateContactPerson($pAPIClientAction->getResultRecords(), $estateIds);
 	}
 
+	private function getCurrentFilter()
+	{
+		$pDefaultFilterBuilder = $this->getDefaultFilterBuilder();
+		if ($pDefaultFilterBuilder instanceof \onOffice\WPlugin\Filter\DefaultFilterBuilderListView) {
+			$filter = $pDefaultFilterBuilder->buildFilter($this->_pDataView);
+		} else {
+			$filter = $pDefaultFilterBuilder->getDefaultFilter();
+		}
+
+		return $filter;
+	}
+
 	/**
 	 * @param string $lang
 	 * @param bool $formatOutput
@@ -515,12 +527,14 @@ class EstateList
 
 		$lang = $lang ?? Language::getDefault();
 
-		$pDefaultFilterBuilder = $this->getDefaultFilterBuilder();
-		if ($pDefaultFilterBuilder instanceof \onOffice\WPlugin\Filter\DefaultFilterBuilderListView) {
-			$filter = $pDefaultFilterBuilder->buildFilter($this->_pDataView);
-		} else {
-			$filter = $pDefaultFilterBuilder->getDefaultFilter();
-		}
+		// $pDefaultFilterBuilder = $this->getDefaultFilterBuilder();
+		// if ($pDefaultFilterBuilder instanceof \onOffice\WPlugin\Filter\DefaultFilterBuilderListView) {
+		// 	$filter = $pDefaultFilterBuilder->buildFilter($this->_pDataView);
+		// } else {
+		// 	$filter = $pDefaultFilterBuilder->getDefaultFilter();
+		// }
+
+		$filter = $this->getCurrentFilter();
 
 		$fields = $pFieldModifierHandler->getAllAPIFields();
 
@@ -575,12 +589,14 @@ class EstateList
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		
 		// Pass the correct DataListView to buildFilter
-		$pDefaultFilterBuilder = $this->getDefaultFilterBuilder();
-		if ($pDefaultFilterBuilder instanceof \onOffice\WPlugin\Filter\DefaultFilterBuilderListView) {
-			$filter = $pDefaultFilterBuilder->buildFilter($this->_pDataView);
-		} else {
-			$filter = $pDefaultFilterBuilder->buildFilter();
-		}
+		// $pDefaultFilterBuilder = $this->getDefaultFilterBuilder();
+		// if ($pDefaultFilterBuilder instanceof \onOffice\WPlugin\Filter\DefaultFilterBuilderListView) {
+		// 	$filter = $pDefaultFilterBuilder->buildFilter($this->_pDataView);
+		// } else {
+		// 	$filter = $pDefaultFilterBuilder->buildFilter();
+		// }
+
+		$filter = $this->getCurrentFilter();
 
 		if ($this->_filterAddressId != 0) {
 			$addressList = $this->_pEnvironment->getAddressList();
