@@ -526,16 +526,7 @@ class EstateList
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
 
 		$lang = $lang ?? Language::getDefault();
-
-		// $pDefaultFilterBuilder = $this->getDefaultFilterBuilder();
-		// if ($pDefaultFilterBuilder instanceof \onOffice\WPlugin\Filter\DefaultFilterBuilderListView) {
-		// 	$filter = $pDefaultFilterBuilder->buildFilter($this->_pDataView);
-		// } else {
-		// 	$filter = $pDefaultFilterBuilder->getDefaultFilter();
-		// }
-
 		$filter = $this->getCurrentFilter();
-
 		$fields = $pFieldModifierHandler->getAllAPIFields();
 
 		if($formatOutput === false) {
@@ -587,15 +578,6 @@ class EstateList
 	{
 		$language = Language::getDefault();
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
-		
-		// Pass the correct DataListView to buildFilter
-		// $pDefaultFilterBuilder = $this->getDefaultFilterBuilder();
-		// if ($pDefaultFilterBuilder instanceof \onOffice\WPlugin\Filter\DefaultFilterBuilderListView) {
-		// 	$filter = $pDefaultFilterBuilder->buildFilter($this->_pDataView);
-		// } else {
-		// 	$filter = $pDefaultFilterBuilder->buildFilter();
-		// }
-
 		$filter = $this->getCurrentFilter();
 
 		if ($this->_filterAddressId != 0) {
