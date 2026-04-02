@@ -86,16 +86,16 @@ class FilterBuilderInputVariables
 
 				$fieldFilter = $this->getFieldFilter($value, $type);
 				$filter[$fieldInput] = $fieldFilter;
-			} catch (\Exception $e) {
+			} catch (\UnknownFieldException $e) {
 				$value = $pEstateInputVars->getFieldValue($fieldInput);
 
 				if (is_null($value) || (is_string($value) && __String::getNew($value)->isEmpty())) {
 					continue;
 				}
 
-				if ($value === '0' || $value === '1' || $value === 0 || $value === 1 || $value === true || $value === false || $value === 'y' || $value === 'n') {
-					$boolValue = ($value === '1' || $value === 1 || $value === true || $value === 'y') ? 1 : 0;
-					$fieldFilter = $this->getFieldFilter($boolValue, FieldTypes::FIELD_TYPE_INTEGER);
+				if ($value === '0' || $value === '1' || $value === 0 || $value === 1 || $value === true || $value === false) {
+					$boolValue = ($value === '1' || $value === 1 || $value === true) ? 1 : 0;
+					$fieldFilter = $this->getFieldFilter($boolValue, FieldTypes::FIELD_TYPE_BOOLEAN);
 				} else {
 					$fieldFilter = $this->getFieldFilter($value, 'text');
 				}
@@ -137,14 +137,15 @@ class FilterBuilderInputVariables
 			$type === FieldTypes::FIELD_TYPE_SINGLESELECT) {
 			$fieldFilter []= ['op' => 'in', 'val' => $fieldValue];
 		} elseif ($type === FieldTypes::FIELD_TYPE_BOOLEAN) {
-			$boolValue = ($fieldValue === true || $fieldValue === '1' || $fieldValue === 1 || $fieldValue === 'y') ? 1 : 0;
-			$fieldFilter []= ['op' => '=', 'val' => $boolValue];
+			$isTrue = in_array($fieldValue, [1, true, '1'], true);
+			if ($isTrue) {
+				$fieldFilter[] = ['op' => '=', 'val' => 1];
+			} else {
+				$fieldFilter[] = ['op' => 'in', 'val' => [0, '']];
+			}
 		} elseif ($type === FieldTypes::FIELD_TYPE_TEXT ||
 			($type === FieldTypes::FIELD_TYPE_VARCHAR && $this->_fuzzySearch) && !is_array($fieldValue)) {
 			$fieldFilter []= ['op' => 'like', 'val' => '%'.$fieldValue.'%'];
-		} elseif ($type === FieldTypes::FIELD_TYPE_BOOLEAN) {
-			$isTrue = in_array($fieldValue, [1, true, '1'], true);
-			$fieldFilter[] = $isTrue ? ['op' => '=', 'val' => 1] : ['op' => 'in', 'val' => [0, '']];
 		} else {
 			$fieldFilter []= ['op' => '=', 'val' => $fieldValue];
 		}

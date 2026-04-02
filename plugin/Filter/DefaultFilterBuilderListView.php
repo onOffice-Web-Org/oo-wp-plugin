@@ -68,9 +68,18 @@ class DefaultFilterBuilderListView
 		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 	}
 
-	public function setDataListView(DataListView $pDataListView): void
+	/**
+     * Resolves the DataListView to be used.
+     * * Returns the provided override if it is not null; otherwise, falls back 
+     * to the internal default DataListView instance.
+     *
+     * @param DataListView|null $pDataListViewOverride Optional override instance.
+     * @return DataListView The resolved DataListView instance.
+     * @throws \TypeError If no override is provided and the internal instance is not initialized.
+     */
+	public function getDataListView(?DataListView $pDataListViewOverride = null): DataListView
 	{
-		$this->_pDataListView = $pDataListView;
+		return $pDataListViewOverride ?? $this->_pDataListView;
 	}
 
 	/**
@@ -79,9 +88,9 @@ class DefaultFilterBuilderListView
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function buildFilter(?DataListView $pDataListViewOverride = null): array
+	public function buildFilter(): array
 	{
-		$useDataListView = $pDataListViewOverride ?? $this->_pDataListView;
+		$useDataListView = $this->getDataListView();
 		$filterableFields = $useDataListView->getFilterableFields();
 
 		// Geo position will be done later
@@ -127,8 +136,6 @@ class DefaultFilterBuilderListView
 
 		foreach ($filterableFields as $field) {
 			if ($pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $field)) {
-				$activeFilterableFields []= $field;
-			} else {
 				$activeFilterableFields []= $field;
 			}
 		}

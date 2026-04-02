@@ -61,7 +61,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 
 		if ($properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN) {
 			echo '<br>';
-			echo '<fieldset>
+			echo '<fieldset><legend>' . esc_html($fieldLabel) . '</legend>
 		<input type="radio" id="' . esc_attr($inputName) . '_u" name="' . esc_attr($inputName) . '" value="u"
 			' . ($selectedValue === null || $selectedValue === '' ? ' checked' : '') . '>
 		<label for="' . esc_attr($inputName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>

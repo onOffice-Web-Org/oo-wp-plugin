@@ -62,7 +62,7 @@ class InputVariableReader
 	{
 		try {
 			$type = $this->getFieldType($field);
-		} catch (\Exception $e) {
+		} catch (\UnknownFieldException $e) {
 			$type = FieldTypes::FIELD_TYPE_TEXT;
 		}
 		
