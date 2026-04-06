@@ -194,7 +194,11 @@ class SDKWrapper
 		$records = $pApiClientAction->getResult();
 		$resultMeta = $pApiClientAction->getResultMeta();
 
-		$numpages = ceil($resultMeta['cntabsolute']/500);
+		$cntAbsolute = $resultMeta['cntabsolute'] ?? 0;
+		if (is_array($cntAbsolute)) {
+			$cntAbsolute = $cntAbsolute[0] ?? 0;
+		}
+		$numpages = ceil(intval($cntAbsolute) / 500);
 		//2 loop over other pages
 		if($page == 1 && $numpages > 1)
 		{

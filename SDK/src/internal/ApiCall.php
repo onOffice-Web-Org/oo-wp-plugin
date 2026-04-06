@@ -219,16 +219,20 @@ class ApiCall
 		$this->sendHttpRequests($token, $actionParameters, $actionParametersOrder, $httpFetch, $saveToCache);
 
 		// Store HTTP responses in in-memory cache for deduplication
-		foreach ($actionParametersOrder as $idx => $pRequest)
-		{
-			$reqId = $pRequest->getRequestId();
-			if (isset($this->_responses[$reqId]))
+		// Only cache when saveToCache is true — renewCache() passes false and its
+		// intermediate results (individual pages) should not pollute the cache.
+		if ($saveToCache) {
+			foreach ($actionParametersOrder as $idx => $pRequest)
 			{
-				$pResponse = $this->_responses[$reqId];
-				$responseData = $pResponse->getResponseData();
-				$usedParams = $pRequest->getApiAction()->getActionParameters();
-				$key = $this->getInMemoryCacheKey($usedParams);
-				self::$_inMemoryCache[$key] = $responseData;
+				$reqId = $pRequest->getRequestId();
+				if (isset($this->_responses[$reqId]))
+				{
+					$pResponse = $this->_responses[$reqId];
+					$responseData = $pResponse->getResponseData();
+					$usedParams = $pRequest->getApiAction()->getActionParameters();
+					$key = $this->getInMemoryCacheKey($usedParams);
+					self::$_inMemoryCache[$key] = $responseData;
+				}
 			}
 		}
 
