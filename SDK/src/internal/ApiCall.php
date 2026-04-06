@@ -37,6 +37,14 @@ class ApiCall
 	/** @var array */
 	private $_curlOptions = array();
 
+	/**
+	 * In-memory cache for API responses within a single PHP request.
+	 * Prevents duplicate identical API calls (e.g. fields, idsfromrelation)
+	 * from hitting the network multiple times per page load.
+	 * @var array<string, array>
+	 */
+	private static $_inMemoryCache = array();
+
 
 	/**
 	 * @param string $actionId
@@ -161,8 +169,24 @@ class ApiCall
 		foreach ($this->_requestQueue as $requestId => $pRequest)
 		{
 			$usedParameters = $pRequest->getApiAction()->getActionParameters();
-			$cachedResponse = $this->getFromCache($usedParameters);
 			$params = $usedParameters["parameters"];
+
+			// 1. Check in-memory cache first (catches ALL duplicate calls within this PHP request)
+			$inMemoryKey = $this->getInMemoryCacheKey($usedParameters);
+			if (isset(self::$_inMemoryCache[$inMemoryKey]))
+			{
+				$inMemoryResponse = self::$_inMemoryCache[$inMemoryKey];
+				// Apply list-specific filtering/sorting if needed (same logic as DB cache hit)
+				if (isset($params['listname']))
+				{
+					$inMemoryResponse = $this->applyListCacheFiltering($inMemoryResponse, $params);
+				}
+				$this->_responses[$requestId] = new Response($pRequest, $inMemoryResponse);
+				continue;
+			}
+
+			// 2. Check DB cache (existing logic for list-based caching)
+			$cachedResponse = $this->getFromCache($usedParameters);
 
 			if ($cachedResponse === null)
 			{
@@ -180,18 +204,12 @@ class ApiCall
 			}
 			else
 			{
+				// Store in in-memory cache for subsequent identical calls
+				self::$_inMemoryCache[$inMemoryKey] = $cachedResponse;
+
 				if($cachedResponse != null && isset($params['listname']))
 				{
-					if($params["formatoutput"] == true)
-					{
-						$this->filterRecords($cachedResponse, $params["filter"]);
-						if(in_array("sortby", $params) && $params["sortby"] != null)
-							$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse, $params["filter"], $params["sortby"], $params["sortorder"] ?? 'ASC');
-						$cachedResponse["data"]["meta"]["cntabsolute"] = count($cachedResponse["data"]["records"]);
-
-						$cachedResponse["data"]["records"] =
-							$this->recordsPerPage($cachedResponse["data"]["records"], intval($params["listlimit"] ?? 20), intval($params["listoffset"] ?? 0));
-					}
+					$cachedResponse = $this->applyListCacheFiltering($cachedResponse, $params);
 				}
 				$this->_responses[$requestId] = new Response($pRequest, $cachedResponse);
 				$saveToCache = false;
@@ -199,7 +217,63 @@ class ApiCall
 		}
 
 		$this->sendHttpRequests($token, $actionParameters, $actionParametersOrder, $httpFetch, $saveToCache);
+
+		// Store HTTP responses in in-memory cache for deduplication
+		foreach ($actionParametersOrder as $idx => $pRequest)
+		{
+			$reqId = $pRequest->getRequestId();
+			if (isset($this->_responses[$reqId]))
+			{
+				$pResponse = $this->_responses[$reqId];
+				$responseData = $pResponse->getResponseData();
+				$usedParams = $pRequest->getApiAction()->getActionParameters();
+				$key = $this->getInMemoryCacheKey($usedParams);
+				self::$_inMemoryCache[$key] = $responseData;
+			}
+		}
+
 		$this->_requestQueue = array();
+	}
+
+	/**
+	 * Apply list-specific filtering, sorting and pagination to a cached response.
+	 * Extracted from collectOrGatherRequests to be reusable for both DB and in-memory cache hits.
+	 *
+	 * @param array $cachedResponse
+	 * @param array $params
+	 * @return array
+	 */
+	private function applyListCacheFiltering(array $cachedResponse, array $params): array
+	{
+		if ($params["formatoutput"] == true)
+		{
+			$this->filterRecords($cachedResponse, $params["filter"]);
+			if(in_array("sortby", $params) && $params["sortby"] != null)
+				$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse, $params["filter"], $params["sortby"], $params["sortorder"] ?? 'ASC');
+			$cachedResponse["data"]["meta"]["cntabsolute"] = count($cachedResponse["data"]["records"]);
+
+			$cachedResponse["data"]["records"] =
+				$this->recordsPerPage($cachedResponse["data"]["records"], intval($params["listlimit"] ?? 20), intval($params["listoffset"] ?? 0));
+		}
+		return $cachedResponse;
+	}
+
+	/**
+	 * Generate a cache key for the in-memory cache.
+	 * Excludes timestamp to ensure identical logical calls produce the same key.
+	 *
+	 * @param array $actionParameters
+	 * @return string
+	 */
+	private function getInMemoryCacheKey(array $actionParameters): string
+	{
+		$keyData = $actionParameters;
+		unset($keyData['timestamp']); // timestamp varies per call, not relevant for dedup
+		ksort($keyData);
+		if (isset($keyData['parameters'])) {
+			ksort($keyData['parameters']);
+		}
+		return md5(serialize($keyData));
 	}
 	private function tofloat (string $num)
 	{

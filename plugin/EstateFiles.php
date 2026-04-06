@@ -170,6 +170,23 @@ class EstateFiles
 	 *
 	 */
 
+	/**
+	 * Public wrapper to allow batched processing of pre-fetched estate picture records.
+	 * Used by EstateList::loadEstates() for request batching.
+	 *
+	 * @param array $responseArrayEstatePictures
+	 */
+	public function collectEstateFilesFromRecords(array $responseArrayEstatePictures)
+	{
+		$this->collectEstateFiles($responseArrayEstatePictures);
+	}
+
+	/**
+	 *
+	 * @param array $responseArrayEstatePictures
+	 *
+	 */
+
 	private function collectEstateFiles($responseArrayEstatePictures)
 	{
 		foreach ($responseArrayEstatePictures as $fileEntry) {

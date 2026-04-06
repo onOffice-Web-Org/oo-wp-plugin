@@ -83,6 +83,9 @@ class SDKWrapper
 	 *
 	 */
 
+	/** @var \DI\Container Shared container instance to avoid rebuilding */
+	private static $_pSharedContainer = null;
+
 	public function __construct(
 		onOfficeSDK $pSDK = null,
 		WPOptionWrapperBase $pWPOptionWrapper = null)
@@ -94,9 +97,12 @@ class SDKWrapper
 			new DBCache(['ttl' => 3600]),
 		];
 
-		$pDIContainerBuilder = new ContainerBuilder();
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$this->_pContainer = $pDIContainerBuilder->build();
+		if (self::$_pSharedContainer === null) {
+			$pDIContainerBuilder = new ContainerBuilder();
+			$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+			self::$_pSharedContainer = $pDIContainerBuilder->build();
+		}
+		$this->_pContainer = self::$_pSharedContainer;
 		$this->_encrypter = $this->_pContainer->make(SymmetricEncryption::class);
 		$this->_pSDK->setCaches($this->_caches);
 		$this->_pSDK->setApiServer('https://api.onoffice.de/api/');
