@@ -75,6 +75,7 @@ class AdminPageApiSettings
 		$this->addFormModelGoogleMapsKey();
 		$this->addFormModelGoogleCaptchaEnterprise();
 		$this->addFormModelGoogleCaptcha();
+		$this->addFormModelAltcha();
 		$this->addFormModelHoneypot();
 		$this->addFormModelFavorites($pageSlug);
         $this->addFormModelDetailView($pageSlug);
@@ -630,6 +631,47 @@ class AdminPageApiSettings
 	/**
 	 *
 	 */
+
+	private function addFormModelAltcha()
+	{
+		$labelServerUrl = __('ALTCHA Server URL', 'onoffice-for-wp-websites');
+		$pInputModelServerUrl = new InputModelOption
+			('onoffice-settings', 'altcha-server-url', $labelServerUrl, 'string');
+		$optionServerUrl = $pInputModelServerUrl->getIdentifier();
+		$pInputModelServerUrl->setValue(get_option($optionServerUrl, 'https://altcha.onofficeweb.com'));
+		$pInputModelServerUrl->setDescriptionTextHTML(__('URL of the self-hosted ALTCHA challenge server.', 'onoffice-for-wp-websites'));
+
+		$labelHmacKey = __('HMAC Key', 'onoffice-for-wp-websites');
+		$pInputModelHmacKey = new InputModelOption
+			('onoffice-settings', 'altcha-hmac-key', $labelHmacKey, 'string');
+		$pInputModelHmacKey->setIsPassword(true);
+		$optionHmacKey = $pInputModelHmacKey->getIdentifier();
+		$pInputModelHmacKey->setSanitizeCallback(function($password) use ($optionHmacKey) {
+			return $this->checkPassword($password, $optionHmacKey);
+		});
+		$pInputModelHmacKey->setValue(get_option($optionHmacKey, $pInputModelHmacKey->getDefault()));
+		$pInputModelHmacKey->setDescriptionTextHTML(__('Shared HMAC secret between ALTCHA server and this site. Can also be set via OO_ALTCHA_HMAC_KEY constant.', 'onoffice-for-wp-websites'));
+
+		$labelComplexity = __('Complexity', 'onoffice-for-wp-websites');
+		$pInputModelComplexity = new InputModelOption
+			('onoffice-settings', 'altcha-complexity', $labelComplexity, 'string');
+		$optionComplexity = $pInputModelComplexity->getIdentifier();
+		$pInputModelComplexity->setValue(get_option($optionComplexity, '50000'));
+		$pInputModelComplexity->setDescriptionTextHTML(__('Maximum number for the proof-of-work challenge (default: 50000).', 'onoffice-for-wp-websites'));
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelServerUrl);
+		$pFormModel->addInputModel($pInputModelHmacKey);
+		$pFormModel->addInputModel($pInputModelComplexity);
+		$pFormModel->setGroupSlug('onoffice-altcha');
+		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setLabel(__('ALTCHA Anti-Spam', 'onoffice-for-wp-websites'));
+		$pFormModel->setTextCallback(function() {
+			echo '<p class="description">' . esc_html__('ALTCHA is activated automatically when no reCAPTCHA keys are configured and a supported onOffice theme is active.', 'onoffice-for-wp-websites') . '</p>';
+		});
+
+		$this->addFormModel($pFormModel);
+	}
 
 	private function addFormModelHoneypot()
 	{

@@ -2,6 +2,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+use onOffice\WPlugin\Form\AltchaHandler;
+
 /**
  *
  *    Copyright (C) 2018  onOffice GmbH
@@ -124,9 +126,78 @@ if ($pForm->needsReCaptcha() && ($hasEnterprise || $hasClassic)) {
 <?php
     }
 } else {
+    // Check if ALTCHA should be used as fallback
+    $altchaActive = AltchaHandler::isAltchaActive();
+    if ($altchaActive) {
+        $altchaServerUrl = AltchaHandler::getServerUrl();
+        $pFormNo = $pForm->getFormNo();
+        $buttonLabel = esc_html($pForm->getGenericSetting('submitButtonLabel'));
+        $formSelector = 'form[id^="onoffice-form"] input[name="oo_formno"][value="' . esc_js($pFormNo) . '"]';
+?>
+    <input type="hidden" name="altcha" value="">
+    <altcha-widget
+        challengeurl="<?php echo esc_url($altchaServerUrl . '/altcha'); ?>"
+        hidelogo
+        hidefooter
+        auto="onload"
+        data-oo-form="form[id^='onoffice-form']:has(input[name='oo_formno'][value='<?php echo esc_attr($pFormNo); ?>'])"
+        style="position:absolute;overflow:hidden;width:1px;height:1px;clip:rect(0,0,0,0);"
+    ></altcha-widget>
+    <button type="submit" class="submit_button"><?php echo esc_html($buttonLabel); ?></button>
+    <script>
+        (function() {
+            var formNo = <?php echo json_encode($pFormNo); ?>;
+            var selectorFormById = 'form[id^="onoffice-form"] input[name="oo_formno"][value="' + formNo + '"]';
+            var form = document.querySelector(selectorFormById)?.closest('form, #onoffice-form, .oo-form, #leadgeneratorform');
+            if (!form) return;
+
+            var widget = form.querySelector('altcha-widget');
+            var hiddenInput = form.querySelector('input[name="altcha"]');
+            var submitBtn = form.querySelector('.submit_button');
+            var verified = false;
+
+            if (widget) {
+                widget.addEventListener('statechange', function(event) {
+                    var detail = event.detail || {};
+                    if (detail.state === 'verified' && detail.payload) {
+                        verified = true;
+                        if (hiddenInput) hiddenInput.value = detail.payload;
+                    }
+                });
+            }
+
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function(e) {
+                    if (!verified) {
+                        e.preventDefault();
+                        if (!form.checkValidity()) { form.reportValidity(); return; }
+                        submitBtn.disabled = true;
+                        submitBtn.classList.add('onoffice-unclickable-form');
+
+                        // Failover: allow submission after 10 seconds
+                        var timer = setTimeout(function() {
+                            form.submit();
+                        }, 10000);
+
+                        var poll = setInterval(function() {
+                            if (verified) {
+                                clearTimeout(timer);
+                                clearInterval(poll);
+                                form.submit();
+                            }
+                        }, 200);
+                    }
+                });
+            }
+        })();
+    </script>
+    <script src="<?php echo esc_url(plugins_url('/third_party/altcha/altcha.min.js', ONOFFICE_PLUGIN_DIR . '/index.php')); ?>" defer></script>
+<?php
+    } else {
 ?>
 
 <input type="submit" value="<?php echo esc_attr($pForm->getGenericSetting('submitButtonLabel')); ?>">
 
 <?php
+    }
 }
