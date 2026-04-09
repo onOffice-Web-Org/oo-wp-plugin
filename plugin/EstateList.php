@@ -506,7 +506,7 @@ class EstateList
 	{
 		$pDefaultFilterBuilder = $this->getDefaultFilterBuilder();
 		if ($pDefaultFilterBuilder instanceof \onOffice\WPlugin\Filter\DefaultFilterBuilderListView) {
-			$filter = $pDefaultFilterBuilder->buildFilter($this->_pDataView);
+			$filter = $pDefaultFilterBuilder->buildFilter();
 		} else {
 			$filter = $pDefaultFilterBuilder->getDefaultFilter();
 		}
