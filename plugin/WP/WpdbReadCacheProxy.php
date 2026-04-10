@@ -21,8 +21,6 @@ class WpdbReadCacheProxy
 
 	public static function isEnabled(): bool
 	{
-		if(is_admin())
-			return false;
 		if (defined('OO_DB_REQUEST_CACHE') && OO_DB_REQUEST_CACHE) {
 			return true;
 		}
