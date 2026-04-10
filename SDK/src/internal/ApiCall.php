@@ -285,8 +285,19 @@ class ApiCall
 	{
 		if ($params["formatoutput"] == true)
 		{
+			if (
+				!isset($cachedResponse["data"]["records"]) ||
+				!is_array($cachedResponse["data"]["records"]) ||
+				!isset($cachedResponse["raw"]["data"]["records"]) ||
+				!is_array($cachedResponse["raw"]["data"]["records"]) ||
+				!isset($cachedResponse["types"]) ||
+				!is_array($cachedResponse["types"])
+			) {
+				return $cachedResponse;
+			}
+
 			$this->filterRecords($cachedResponse, $params["filter"]);
-			if(in_array("sortby", $params) && $params["sortby"] != null)
+			if(array_key_exists("sortby", $params) && $params["sortby"] != null)
 				$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse, $params["filter"], $params["sortby"], $params["sortorder"] ?? 'ASC');
 			$cachedResponse["data"]["meta"]["cntabsolute"] = count($cachedResponse["data"]["records"]);
 
@@ -449,6 +460,17 @@ class ApiCall
 
 	private function filterRecords(array &$cachedResponse, array $filter)
 	{
+		if (
+			!isset($cachedResponse["data"]["records"]) ||
+			!is_array($cachedResponse["data"]["records"]) ||
+			!isset($cachedResponse["raw"]["data"]["records"]) ||
+			!is_array($cachedResponse["raw"]["data"]["records"]) ||
+			!isset($cachedResponse["types"]) ||
+			!is_array($cachedResponse["types"])
+		) {
+			return;
+		}
+
 		$records = $cachedResponse["data"]["records"];
 		$filteredArray = $records;
 		$filteredArrayRaw = $cachedResponse["raw"]["data"]["records"];
