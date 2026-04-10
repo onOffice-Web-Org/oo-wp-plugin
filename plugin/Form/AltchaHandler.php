@@ -187,18 +187,6 @@ class AltchaHandler
     }
 
     /**
-     * Get the PoW complexity value.
-     * Priority: env var > wp-config.php constant > default.
-     */
-    public static function getComplexity(): int
-    {
-        $env = getenv('OO_ALTCHA_COMPLEXITY');
-        $val = $env !== false ? (int) $env
-            : (defined('OO_ALTCHA_COMPLEXITY') ? (int) OO_ALTCHA_COMPLEXITY : self::DEFAULT_COMPLEXITY);
-        return $val > 0 ? $val : self::DEFAULT_COMPLEXITY;
-    }
-
-    /**
      * Get the full challenge URL used by the widget.
      */
     public static function getChallengeUrl(): string
