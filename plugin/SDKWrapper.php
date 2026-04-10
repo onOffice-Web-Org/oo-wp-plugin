@@ -105,12 +105,12 @@ class SDKWrapper
 		$this->_pContainer = self::$_pSharedContainer;
 		$this->_encrypter = $this->_pContainer->make(SymmetricEncryption::class);
 		$this->_pSDK->setCaches($this->_caches);
-		$this->_pSDK->setApiServer('https://api.onoffice.de/api/');
+		$this->_pSDK->setApiServer(ONOFFICE_API_SERVER);
 		$this->_pSDK->setApiVersion('latest');
 		$this->_pSDK->setApiCurlOptions(
 			[
 				CURLOPT_SSL_VERIFYPEER => true,
-				CURLOPT_PROTOCOLS => CURLPROTO_HTTPS
+				CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS
 			]
 		);
 	}
