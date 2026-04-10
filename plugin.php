@@ -79,8 +79,8 @@ const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
 
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
 
-define('ONOFFICE_API_SERVER', 'https://api.onoffice.de/api/');
-#define('ONOFFICE_API_SERVER', 'http://localhost:9999/api/');
+#define('ONOFFICE_API_SERVER', 'https://api.onoffice.de/api/');
+define('ONOFFICE_API_SERVER', 'http://localhost:9999/api/');
 
 // enable per-request db caching (experimental) - this will cache selects in memory for the current request, prevents multiple database queries for the same data
 const OO_DB_REQUEST_CACHE = true;
