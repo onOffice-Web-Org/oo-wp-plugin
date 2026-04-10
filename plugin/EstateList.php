@@ -211,7 +211,11 @@ class EstateList
 		$estateIds = $this->getEstateIdToForeignMapping($this->_records);
 
 		if ($estateIds !== []) {
-			$this->getEstateContactPerson($estateIds);
+			try {
+				$this->getEstateContactPerson($estateIds);
+			} catch (API\ApiClientException $exception) {
+				error_log('onOffice: Contact person data unavailable: ' . $exception->getMessage());
+			}
 
 			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles();
 			try {
@@ -724,7 +728,6 @@ class EstateList
 	 * @param array $estateIds
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 * @throws API\ApiClientException
 	 */
 	private function collectEstateContactPerson($responseArrayContacts, array $estateIds)
 	{
@@ -769,11 +772,15 @@ class EstateList
 				$allAddressIds = [$allAddressIds[0]];
 			}
 
-			$addressList = $this->_pEnvironment->getAddressList();
+			try {
+				$addressList = $this->_pEnvironment->getAddressList();
 
-			$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
-			$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
-			$addressList->loadBrokerAddressesById($allAddressIds, $fields);
+				$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
+				$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
+				$addressList->loadBrokerAddressesById($allAddressIds, $fields);
+			} catch (API\ApiClientException $exception) {
+				error_log('onOffice: Address list data unavailable: ' . $exception->getMessage());
+			}
 		}
 	}
 
@@ -1305,7 +1312,9 @@ class EstateList
 			$geoFields = $pDataView->getGeoFields();
 			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
 		}
-		$allDisplayModes = $pDataView->getRangeFieldDisplayModes();
+		$allDisplayModes = method_exists($pDataView, 'getRangeFieldDisplayModes')
+			? $pDataView->getRangeFieldDisplayModes()
+			: [];
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
