@@ -534,26 +534,6 @@ class EstateList
 	}
 
 	/**
-	 * @param array $estateIds
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws API\ApiClientException
-	 */
-	private function getEstateContactPerson(array $estateIds)
-	{
-		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
-
-		$parameters = [
-			'parentids' => array_keys($estateIds),
-			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
-		];
-		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
-		$pAPIClientAction->setParameters($parameters);
-		$pAPIClientAction->addRequestToQueue()->sendRequests();
-		$this->collectEstateContactPerson($pAPIClientAction->getResultRecords(), $estateIds);
-	}
-
-	/**
 	 * @param string $lang
 	 * @param bool $formatOutput
 	 * @return array

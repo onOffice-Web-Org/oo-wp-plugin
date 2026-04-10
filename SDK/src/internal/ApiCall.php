@@ -165,6 +165,8 @@ class ApiCall
 	{
 		$actionParameters = array();
 		$actionParametersOrder = array();
+		$sourceRequestIdByCacheKey = array();
+		$duplicateRequestsBySourceRequestId = array();
 
 		foreach ($this->_requestQueue as $requestId => $pRequest)
 		{
@@ -190,6 +192,17 @@ class ApiCall
 
 			if ($cachedResponse === null)
 			{
+				if (isset($sourceRequestIdByCacheKey[$inMemoryKey]))
+				{
+					$sourceRequestId = $sourceRequestIdByCacheKey[$inMemoryKey];
+					if (!isset($duplicateRequestsBySourceRequestId[$sourceRequestId]))
+					{
+						$duplicateRequestsBySourceRequestId[$sourceRequestId] = array();
+					}
+					$duplicateRequestsBySourceRequestId[$sourceRequestId][$requestId] = $pRequest;
+					continue;
+				}
+
 				$parametersThisAction = $pRequest->createRequest($token, $secret);
 				
 				if($claim){
@@ -201,6 +214,7 @@ class ApiCall
 
 				$actionParameters[] = $parametersThisAction;
 				$actionParametersOrder[] = $pRequest;
+				$sourceRequestIdByCacheKey[$inMemoryKey] = $requestId;
 			}
 			else
 			{
@@ -212,11 +226,31 @@ class ApiCall
 					$cachedResponse = $this->applyListCacheFiltering($cachedResponse, $params);
 				}
 				$this->_responses[$requestId] = new Response($pRequest, $cachedResponse);
-				$saveToCache = false;
 			}
 		}
 
 		$this->sendHttpRequests($token, $actionParameters, $actionParametersOrder, $httpFetch, $saveToCache);
+
+		// Reuse source results for duplicate requests that were queued in the same send cycle.
+		foreach ($duplicateRequestsBySourceRequestId as $sourceRequestId => $duplicateRequests)
+		{
+			if (isset($this->_responses[$sourceRequestId]))
+			{
+				$sourceResponseData = $this->_responses[$sourceRequestId]->getResponseData();
+				foreach ($duplicateRequests as $duplicateRequestId => $duplicateRequest)
+				{
+					$this->_responses[$duplicateRequestId] = new Response($duplicateRequest, $sourceResponseData);
+				}
+			}
+			elseif (isset($this->_errors[$sourceRequestId]))
+			{
+				$sourceError = $this->_errors[$sourceRequestId];
+				foreach (array_keys($duplicateRequests) as $duplicateRequestId)
+				{
+					$this->_errors[$duplicateRequestId] = $sourceError;
+				}
+			}
+		}
 
 		// Store HTTP responses in in-memory cache for deduplication
 		// Only cache when saveToCache is true — renewCache() passes false and its
@@ -273,11 +307,45 @@ class ApiCall
 	{
 		$keyData = $actionParameters;
 		unset($keyData['timestamp']); // timestamp varies per call, not relevant for dedup
-		ksort($keyData);
-		if (isset($keyData['parameters'])) {
-			ksort($keyData['parameters']);
-		}
+		$keyData = $this->normalizeForInMemoryCacheKey($keyData);
 		return md5(serialize($keyData));
+	}
+
+	/**
+	 * Recursively normalize values for stable in-memory cache keys.
+	 * Sorts associative array keys while preserving numeric-indexed list order.
+	 *
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	private function normalizeForInMemoryCacheKey($value)
+	{
+		if (!is_array($value)) {
+			return $value;
+		}
+
+		if ($this->isAssocArray($value)) {
+			ksort($value);
+		}
+
+		foreach ($value as $key => $item) {
+			$value[$key] = $this->normalizeForInMemoryCacheKey($item);
+		}
+
+		return $value;
+	}
+
+	/**
+	 * @param array $value
+	 * @return bool
+	 */
+	private function isAssocArray(array $value): bool
+	{
+		if ($value === array()) {
+			return false;
+		}
+
+		return array_keys($value) !== range(0, count($value) - 1);
 	}
 	private function tofloat (string $num)
 	{
