@@ -1312,7 +1312,10 @@ class EstateList
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$pFieldsCollectionBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		$filterableFields = $this->_pDataView->getFilterableFields();
+		if (in_array('regionaler_zusatz', $filterableFields, true)) {
+			$pFieldsCollectionBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		}
 		if (!empty($this->_pDataView->getConvertTextToSelectForCityField())) {
 			$pFieldsCollectionBuilderShort->addFieldEstateCityValues($pFieldsCollection, $this->getShowReferenceEstate());
 		}

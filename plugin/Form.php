@@ -102,14 +102,20 @@ class Form
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice-for-wp-websites'));
 		$this->setGenericSetting('formId', 'onoffice-form');
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
+		$pFormConfigFactory = $this->_pContainer->get(DataFormConfigurationFactory::class);
+		$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
+
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection, true)
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsFormFrontend($pFieldsCollection)
-			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName)
-			->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName);
+
+		if ($this->usesRegionalSupplementField($pFormConfig)) {
+			$pFieldBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		}
 
 		if ($type === self::TYPE_INTEREST || $type === self::TYPE_APPLICANT_SEARCH) {
 			$pFieldBuilderShort->addFieldSupervisorForSearchCriteria($pFieldsCollection);
@@ -119,8 +125,6 @@ class Form
 		FormPost::incrementFormNo();
 		$this->_formNo = $pFormPost->getFormNo();
 
-		$pFormConfigFactory = $this->_pContainer->get(DataFormConfigurationFactory::class);
-		$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
 		$this->_pFieldsCollection = $this->buildFieldsCollectionForForm($pFieldsCollection, $type, $pFormConfig);
 		try {
 			$this->_pFormData = $pFormPost->getFormDataInstance($formName, $this->_formNo);
@@ -138,6 +142,16 @@ class Form
 			$this->_pFormData->setValues
 				(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues());
 		}
+	}
+
+	/**
+	 * @param DataFormConfiguration $pConfiguration
+	 * @return bool
+	 */
+	private function usesRegionalSupplementField(DataFormConfiguration $pConfiguration): bool
+	{
+		$inputs = $pConfiguration->getInputs();
+		return array_key_exists('regionaler_zusatz', $inputs);
 	}
 
 	/**
