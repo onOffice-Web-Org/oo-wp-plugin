@@ -307,6 +307,18 @@ class ApiCall
 	{
 		$keyData = $actionParameters;
 		unset($keyData['timestamp']); // timestamp varies per call, not relevant for dedup
+
+		// Keep optional default flags stable for semantically identical requests.
+		if (
+			isset($keyData['resourcetype']) &&
+			$keyData['resourcetype'] === 'fields' &&
+			isset($keyData['parameters']) &&
+			is_array($keyData['parameters']) &&
+			!array_key_exists('showfielddependencies', $keyData['parameters'])
+		) {
+			$keyData['parameters']['showfielddependencies'] = false;
+		}
+
 		$keyData = $this->normalizeForInMemoryCacheKey($keyData);
 		return md5(serialize($keyData));
 	}
