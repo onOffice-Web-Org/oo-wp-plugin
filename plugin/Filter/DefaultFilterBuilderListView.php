@@ -69,13 +69,29 @@ class DefaultFilterBuilderListView
 	}
 
 	/**
+     * Resolves the DataListView to be used.
+     * * Returns the provided override if it is not null; otherwise, falls back 
+     * to the internal default DataListView instance.
+     *
+     * @param DataListView|null $pDataListViewOverride Optional override instance.
+     * @return DataListView The resolved DataListView instance.
+     * @throws \TypeError If no override is provided and the internal instance is not initialized.
+     */
+	public function getDataListView(?DataListView $pDataListViewOverride = null): DataListView
+	{
+		return $pDataListViewOverride ?? $this->_pDataListView;
+	}
+
+	/**
+	 * @param DataListView|null $pDataListViewOverride optional override for DataListView
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
 	public function buildFilter(): array
 	{
-		$filterableFields = $this->_pDataListView->getFilterableFields();
+		$useDataListView = $this->getDataListView();
+		$filterableFields = $useDataListView->getFilterableFields();
 
 		// Geo position will be done later
 		if (in_array(GeoPosition::FIELD_GEO_POSITION, $filterableFields)) {
@@ -87,13 +103,13 @@ class DefaultFilterBuilderListView
 		$fieldFilter = $this->_pEnvironment->getFilterBuilderInputVariables()->getPostFieldsFilter($filterableFields);
 		$filter = array_merge($this->_defaultFilter, $fieldFilter, $this->_geofilter ?? []);
 
-		switch ($this->_pDataListView->getListType()) {
+		switch ($useDataListView->getListType()) {
 			case DataListView::LISTVIEW_TYPE_FAVORITES:
 				$filter = $this->getFavoritesFilter();
 				break;
 		}
 
-		$priceFields = $this->_pDataListView->getListFieldsShowPriceOnRequest();
+		$priceFields = $useDataListView->getListFieldsShowPriceOnRequest();
 		$filterKeys = array_keys($filter);
 
 		if (count(array_intersect($priceFields, $filterKeys)) > 0) {
