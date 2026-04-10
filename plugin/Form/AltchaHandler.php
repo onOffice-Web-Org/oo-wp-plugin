@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Form;
 
+use AltchaOrg\Altcha\Altcha;
+
 /**
  * ALTCHA anti-spam handler.
  *
@@ -37,7 +39,7 @@ class AltchaHandler
 
     const TRANSIENT_PREFIX = 'altcha_used_';
 
-    const REPLAY_TTL = 600;
+    const REPLAY_TTL = 600; // 10 minutes, should be longer than the expected time between challenge issuance and form submission
 
     const DEFAULT_SERVER_URL = 'https://altcha.onofficeweb.com';
     const DEFAULT_COMPLEXITY = 50000;
@@ -73,7 +75,7 @@ class AltchaHandler
     }
 
     /**
-     * Verify the ALTCHA challenge response.
+     * Verify the ALTCHA challenge response using the official library.
      *
      * @return bool
      */
@@ -84,78 +86,27 @@ class AltchaHandler
             return false;
         }
 
+        if (empty($this->_hmacKey)) {
+            $this->_errorCodes[] = 'missing-hmac-key';
+            return false;
+        }
+
+        // 1. Verify PoW + HMAC signature + expiration via official library
+        if (!Altcha::verifySolution($this->_payload, $this->_hmacKey)) {
+            $this->_errorCodes[] = 'verification-failed';
+            return false;
+        }
+
+        // 2. Replay protection: ensure this challenge has not been used before
         $decoded = base64_decode($this->_payload, true);
-        if ($decoded === false) {
-            $this->_errorCodes[] = 'invalid-base64';
-            return false;
-        }
-
         $data = json_decode($decoded, true);
-        if (!is_array($data)) {
-            $this->_errorCodes[] = 'invalid-json';
-            return false;
-        }
-
-        $algorithm = $data['algorithm'] ?? '';
         $challenge = $data['challenge'] ?? '';
-        $number    = $data['number'] ?? null;
-        $salt      = $data['salt'] ?? '';
-        $signature = $data['signature'] ?? '';
 
-        if (empty($algorithm) || empty($challenge) || $number === null || empty($salt)) {
-            $this->_errorCodes[] = 'missing-fields';
-            return false;
-        }
-
-        // Map ALTCHA algorithm names to PHP hash functions
-        $algoMap = [
-            'SHA-256' => 'sha256',
-            'SHA-384' => 'sha384',
-            'SHA-512' => 'sha512',
-        ];
-
-        $phpAlgo = $algoMap[$algorithm] ?? null;
-        if ($phpAlgo === null) {
-            $this->_errorCodes[] = 'unsupported-algorithm';
-            return false;
-        }
-
-        // 1. Proof-of-work: hash(salt + number) === challenge
-        $computedHash = hash($phpAlgo, $salt . (string)$number);
-        if (!hash_equals($challenge, $computedHash)) {
-            $this->_errorCodes[] = 'pow-mismatch';
-            return false;
-        }
-
-        // 2. HMAC signature verification (if an HMAC key is configured)
-        if (!empty($this->_hmacKey) && !empty($signature)) {
-            $expectedSignature = hash_hmac($phpAlgo, $challenge, $this->_hmacKey);
-            if (!hash_equals($expectedSignature, $signature)) {
-                $this->_errorCodes[] = 'signature-mismatch';
-                return false;
-            }
-        }
-
-        // 3. Check challenge expiration from salt parameters
-        if (strpos($salt, '?') !== false) {
-            $queryString = substr($salt, strpos($salt, '?') + 1);
-            parse_str($queryString, $saltParams);
-            if (isset($saltParams['expires'])) {
-                $expires = (int) $saltParams['expires'];
-                if ($expires > 0 && time() > $expires) {
-                    $this->_errorCodes[] = 'challenge-expired';
-                    return false;
-                }
-            }
-        }
-
-        // 4. Replay protection: ensure this challenge has not been used before
         $transientKey = self::TRANSIENT_PREFIX . hash('sha256', $challenge);
         if (get_transient($transientKey) !== false) {
             $this->_errorCodes[] = 'challenge-replayed';
             return false;
         }
-        // Mark challenge as used
         set_transient($transientKey, 1, self::REPLAY_TTL);
 
         return true;

@@ -1,7 +1,7 @@
 {
     "config": {
         "platform": {
-            "php": "8.0"
+            "php": "8.2"
         }
     },
 	"require-dev": {
@@ -27,12 +27,13 @@
 		}
 	},
 	"require": {
-		"php": ">=8.0.0",
+		"php": ">=8.2.0",
 		"php-di/php-di": "^7.1",
 		"ext-curl": "*",
 		"select2/select2": "^4.0",
 		"erusev/parsedown": "^1.7",
         "mjaschen/phpgeo": "^4.0",
-        "orchidjs/tom-select": "^2.4"
+        "orchidjs/tom-select": "^2.4",
+        "altcha-org/altcha": "^2.0"
 	}
 }

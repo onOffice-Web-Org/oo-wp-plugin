@@ -231,8 +231,7 @@ abstract class FormPost
                 $pAltchaHandler = new AltchaHandler($altchaPayload, AltchaHandler::getHmacKey());
                 return $pAltchaHandler->checkCaptcha();
             } catch (\Exception $e) {
-                // Failover: if ALTCHA verification fails unexpectedly, allow form submission
-                return true;
+                return false;
             }
         }
 
