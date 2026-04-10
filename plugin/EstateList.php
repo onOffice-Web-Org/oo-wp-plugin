@@ -214,8 +214,7 @@ class EstateList
 			try {
 				$this->getEstateContactPerson($estateIds);
 			} catch (API\ApiClientException $exception) {
-				// Contact person data is optional for estate rendering.
-				// Keep estate list/detail functional when address module access is unavailable.
+				error_log('onOffice: Contact person data unavailable: ' . $exception->getMessage());
 			}
 
 			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles();
@@ -780,8 +779,7 @@ class EstateList
 				$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
 				$addressList->loadBrokerAddressesById($allAddressIds, $fields);
 			} catch (API\ApiClientException $exception) {
-				// Contact person data is optional for estate rendering.
-				// Keep estate list/detail functional when address module access is unavailable.
+				error_log('onOffice: Address list data unavailable: ' . $exception->getMessage());
 			}
 		}
 	}
