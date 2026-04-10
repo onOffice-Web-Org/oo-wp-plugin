@@ -170,7 +170,9 @@ class ApiCall
 
 		foreach ($this->_requestQueue as $requestId => $pRequest)
 		{
-			$usedParameters = $pRequest->getApiAction()->getActionParameters();
+			$usedParameters = $this->normalizeFieldDependencyParameters(
+				$pRequest->getApiAction()->getActionParameters()
+			);
 			$params = $usedParameters["parameters"];
 
 			// 1. Check in-memory cache first (catches ALL duplicate calls within this PHP request)
@@ -203,7 +205,9 @@ class ApiCall
 					continue;
 				}
 
-				$parametersThisAction = $pRequest->createRequest($token, $secret);
+				$parametersThisAction = $this->normalizeFieldDependencyParameters(
+					$pRequest->createRequest($token, $secret)
+				);
 				
 				if($claim){
 					if(!isset($parametersThisAction['parameters'])){
@@ -263,7 +267,9 @@ class ApiCall
 				{
 					$pResponse = $this->_responses[$reqId];
 					$responseData = $pResponse->getResponseData();
-					$usedParams = $pRequest->getApiAction()->getActionParameters();
+					$usedParams = $this->normalizeFieldDependencyParameters(
+						$pRequest->getApiAction()->getActionParameters()
+					);
 					$key = $this->getInMemoryCacheKey($usedParams);
 					self::$_inMemoryCache[$key] = $responseData;
 				}
@@ -369,6 +375,30 @@ class ApiCall
 		}
 
 		return array_keys($value) !== range(0, count($value) - 1);
+	}
+
+	/**
+	 * For fields requests, always request dependencies to keep one canonical payload.
+	 * This allows later fields requests (with/without explicit showfielddependencies)
+	 * to reuse the same in-memory cache entry.
+	 *
+	 * @param array $actionParameters
+	 * @return array
+	 */
+	private function normalizeFieldDependencyParameters(array $actionParameters): array
+	{
+		if (
+			isset($actionParameters['resourcetype']) &&
+			$actionParameters['resourcetype'] === 'fields'
+		) {
+			if (!isset($actionParameters['parameters']) || !is_array($actionParameters['parameters'])) {
+				$actionParameters['parameters'] = [];
+			}
+			$actionParameters['parameters']['showfielddependencies'] = true;
+			ksort($actionParameters['parameters']);
+		}
+
+		return $actionParameters;
 	}
 	private function tofloat (string $num)
 	{
@@ -758,7 +788,9 @@ class ApiCall
 			if ($pResponse->isCacheable())
 			{
 				$responseData = $pResponse->getResponseData();
-				$requestParameters = $pResponse->getRequest()->getApiAction()->getActionParameters();
+				$requestParameters = $this->normalizeFieldDependencyParameters(
+					$pResponse->getRequest()->getApiAction()->getActionParameters()
+				);
 				$this->writeCache(serialize($responseData), $requestParameters);
 			}
 		}
