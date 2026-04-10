@@ -44,10 +44,6 @@ class AltchaHandler
     const DEFAULT_SERVER_URL = 'https://altcha.onofficeweb.com';
     const DEFAULT_COMPLEXITY = 50000;
 
-    const OPTION_SERVER_URL = 'onoffice-settings-altcha-server-url';
-    const OPTION_HMAC_KEY = 'onoffice-settings-altcha-hmac-key';
-    const OPTION_COMPLEXITY = 'onoffice-settings-altcha-complexity';
-
     const SUPPORTED_THEMES = [
         'onoffice-pure',
         'onoffice-classic',
@@ -171,27 +167,34 @@ class AltchaHandler
 
     /**
      * Get the ALTCHA server URL.
+     * Priority: env var > wp-config.php constant > default.
      */
     public static function getServerUrl(): string
     {
-        $url = get_option(self::OPTION_SERVER_URL, self::DEFAULT_SERVER_URL);
+        $url = getenv('OO_ALTCHA_SERVER_URL')
+            ?: (defined('OO_ALTCHA_SERVER_URL') ? OO_ALTCHA_SERVER_URL : self::DEFAULT_SERVER_URL);
         return !empty($url) ? rtrim($url, '/') : self::DEFAULT_SERVER_URL;
     }
 
     /**
      * Get the HMAC key for signature verification.
+     * Priority: env var > wp-config.php constant.
      */
     public static function getHmacKey(): string
     {
-        return (string) get_option(self::OPTION_HMAC_KEY, '');
+        return getenv('OO_ALTCHA_HMAC_KEY')
+            ?: (defined('OO_ALTCHA_HMAC_KEY') ? (string) OO_ALTCHA_HMAC_KEY : '');
     }
 
     /**
      * Get the PoW complexity value.
+     * Priority: env var > wp-config.php constant > default.
      */
     public static function getComplexity(): int
     {
-        $val = (int) get_option(self::OPTION_COMPLEXITY, self::DEFAULT_COMPLEXITY);
+        $env = getenv('OO_ALTCHA_COMPLEXITY');
+        $val = $env !== false ? (int) $env
+            : (defined('OO_ALTCHA_COMPLEXITY') ? (int) OO_ALTCHA_COMPLEXITY : self::DEFAULT_COMPLEXITY);
         return $val > 0 ? $val : self::DEFAULT_COMPLEXITY;
     }
 
