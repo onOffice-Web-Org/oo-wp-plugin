@@ -906,16 +906,4 @@ implements AddressListBase
 		return $this->_addressesById;
 	}
 
-	/**
-	 * @param APIClientActionGeneric $addressApiCall
-	 * @param array $parameters
-	 * @throws API\ApiClientException
-	 */
-	private function addRawRecordsByAPICall(APIClientActionGeneric $addressApiCall, array $parameters) {
-		$addressApiCall->setParameters($parameters);
-		$addressApiCall->addRequestToQueue()->sendRequests();
-		$recordsRaw = $addressApiCall->getResultRecords();
-
-		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
-	}
 }

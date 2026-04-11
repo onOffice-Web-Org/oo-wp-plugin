@@ -138,33 +138,7 @@ class SDKWrapper
 		$parameters = $pApiAction->getParameters();
 		$callback = $pApiAction->getResultCallback();
 
-
-		// Check list cache and warm it if missing.
-		if (isset($parameters['listname']) && array_key_exists('params_list_cache', $parameters)) {
-			$cacheResponse = $this->_pSDK->callFromCache(
-				$actionId,
-				$resourceId,
-				$identifier,
-				$resourceType,
-				$parameters['params_list_cache']
-			);
-
-			$needsDerivedListData = ($parameters['formatoutput'] ?? false) === true;
-			$hasDerivedListData = is_array($cacheResponse)
-				&& isset($cacheResponse['raw']['data']['records'])
-				&& is_array($cacheResponse['raw']['data']['records'])
-				&& isset($cacheResponse['types'])
-				&& is_array($cacheResponse['types']);
-
-			if ($cacheResponse == null || ($needsDerivedListData && !$hasDerivedListData)) {
-				$language = $parameters['outputlanguage'] ?? Language::getDefault();
-				$listCacheKey = sprintf('%s|%s', (string)$parameters['listname'], (string)$language);
-				if (!isset($this->_renewedListCacheByKey[$listCacheKey])) {
-					$this->renewCache($parameters['listname'], [$language]);
-					$this->_renewedListCacheByKey[$listCacheKey] = true;
-				}
-			}
-		}
+		$this->ensureListCacheWarmIfNeeded($actionId, $resourceId, $identifier, $resourceType, $parameters);
 
 		$id = $this->_pSDK->call($actionId, $resourceId, $identifier, $resourceType, $parameters);
 
@@ -173,6 +147,55 @@ class SDKWrapper
 		}
 
 		return $id;
+	}
+
+	/**
+	 * Warm list cache once per list/language when cache is missing or incomplete.
+	 *
+	 * @param string $actionId
+	 * @param string $resourceId
+	 * @param string|null $identifier
+	 * @param string $resourceType
+	 * @param array $parameters
+	 */
+	private function ensureListCacheWarmIfNeeded(
+		string $actionId,
+		string $resourceId,
+		$identifier,
+		string $resourceType,
+		array $parameters
+	): void {
+		if (!isset($parameters['listname']) || !array_key_exists('params_list_cache', $parameters)) {
+			return;
+		}
+
+		$cacheResponse = $this->_pSDK->callFromCache(
+			$actionId,
+			$resourceId,
+			$identifier,
+			$resourceType,
+			$parameters['params_list_cache']
+		);
+
+		$needsDerivedListData = ($parameters['formatoutput'] ?? false) === true;
+		$hasDerivedListData = is_array($cacheResponse)
+			&& isset($cacheResponse['raw']['data']['records'])
+			&& is_array($cacheResponse['raw']['data']['records'])
+			&& isset($cacheResponse['types'])
+			&& is_array($cacheResponse['types']);
+
+		if ($cacheResponse != null && (!$needsDerivedListData || $hasDerivedListData)) {
+			return;
+		}
+
+		$language = $parameters['outputlanguage'] ?? Language::getDefault();
+		$listCacheKey = sprintf('%s|%s', (string)$parameters['listname'], (string)$language);
+		if (isset($this->_renewedListCacheByKey[$listCacheKey])) {
+			return;
+		}
+
+		$this->renewCache($parameters['listname'], [$language]);
+		$this->_renewedListCacheByKey[$listCacheKey] = true;
 	}
 
 
