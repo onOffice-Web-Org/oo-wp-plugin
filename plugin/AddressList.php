@@ -449,6 +449,8 @@ implements AddressListBase
 	private function collectCountEstates(array $responseArrayContacts, array $addressIds)
 	{
 		$records = $responseArrayContacts[0]['elements'] ?? [];
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+		$actionsByAddressId = [];
 
 		foreach ($addressIds as $index => $addressId)
 		{
@@ -457,7 +459,6 @@ implements AddressListBase
 				continue;
 			}
 
-			$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 			$parameters = [
 				"filter" => [
 					"Id" => [["op" => "IN", "val" => $records[$addressId]]],
@@ -470,9 +471,19 @@ implements AddressListBase
 			$pAPIClientAction = new APIClientActionGeneric
 				($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 			$pAPIClientAction->setParameters($parameters);
-			$pAPIClientAction->addRequestToQueue()->sendRequests();
+			$pAPIClientAction->addRequestToQueue();
+			$actionsByAddressId[$addressId] = $pAPIClientAction;
+		}
+
+		if ($actionsByAddressId === []) {
+			return;
+		}
+
+		$pSDKWrapper->sendRequests();
+
+		foreach ($actionsByAddressId as $addressId => $pAPIClientAction) {
 			$responseMeta = $pAPIClientAction->getResultMeta();
-			$this->_countEstates[$addressId] = (array_key_exists("cntabsolute",$responseMeta)) ? intval($responseMeta["cntabsolute"]) : 0;
+			$this->_countEstates[$addressId] = (array_key_exists("cntabsolute", $responseMeta)) ? intval($responseMeta["cntabsolute"]) : 0;
 		}
 	}
 

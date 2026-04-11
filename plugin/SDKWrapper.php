@@ -70,6 +70,9 @@ class SDKWrapper
 	/** @var array<string, array> */
 	private $_cachedFieldTypesByLanguage = [];
 
+	/** @var array<string, bool> */
+	private $_renewedListCacheByKey = [];
+
 	/**
 	 * @var  SymmetricEncryption
 	 */
@@ -155,7 +158,11 @@ class SDKWrapper
 
 			if ($cacheResponse == null || ($needsDerivedListData && !$hasDerivedListData)) {
 				$language = $parameters['outputlanguage'] ?? Language::getDefault();
-				$this->renewCache($parameters['listname'], [$language]);
+				$listCacheKey = sprintf('%s|%s', (string)$parameters['listname'], (string)$language);
+				if (!isset($this->_renewedListCacheByKey[$listCacheKey])) {
+					$this->renewCache($parameters['listname'], [$language]);
+					$this->_renewedListCacheByKey[$listCacheKey] = true;
+				}
 			}
 		}
 
