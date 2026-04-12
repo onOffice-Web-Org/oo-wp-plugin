@@ -138,7 +138,7 @@ class SDKWrapper
 		$parameters = $pApiAction->getParameters();
 		$callback = $pApiAction->getResultCallback();
 
-		$this->ensureListCacheWarmIfNeeded($actionId, $resourceId, $identifier, $resourceType, $parameters);
+		//$this->ensureListCacheWarmIfNeeded($actionId, $resourceId, $identifier, $resourceType, $parameters);
 
 		$id = $this->_pSDK->call($actionId, $resourceId, $identifier, $resourceType, $parameters);
 
@@ -150,6 +150,8 @@ class SDKWrapper
 	}
 
 	/**
+	 * TODO: Testing this function - if not used, will be removed.
+	 * 
 	 * Warm list cache once per list/language when cache is missing or incomplete.
 	 *
 	 * @param string $actionId
