@@ -67,6 +67,12 @@ class SDKWrapper
 	/** @var array */
 	private $_caches = [];
 
+	/** @var array<string, array> */
+	private $_cachedFieldTypesByLanguage = [];
+
+	/** @var array<string, bool> */
+	private $_renewedListCacheByKey = [];
+
 	/**
 	 * @var  SymmetricEncryption
 	 */
@@ -132,17 +138,7 @@ class SDKWrapper
 		$parameters = $pApiAction->getParameters();
 		$callback = $pApiAction->getResultCallback();
 
-
-		//1 check is call for a list
-		if(isset($parameters['listname']) && array_key_exists('params_list_cache',$parameters))
-		{
-			//2 check is list-data in Cache
-			$cacheResponse = $this->_pSDK->callFromCache($actionId, $resourceId, $identifier, $resourceType, $parameters['params_list_cache']);
-			if($cacheResponse == null)
-			{
-				$this->renewCache($parameters['listname']);
-			}
-		}
+		//$this->ensureListCacheWarmIfNeeded($actionId, $resourceId, $identifier, $resourceType, $parameters);
 
 		$id = $this->_pSDK->call($actionId, $resourceId, $identifier, $resourceType, $parameters);
 
@@ -151,6 +147,57 @@ class SDKWrapper
 		}
 
 		return $id;
+	}
+
+	/**
+	 * TODO: Testing this function - if not used, will be removed.
+	 * 
+	 * Warm list cache once per list/language when cache is missing or incomplete.
+	 *
+	 * @param string $actionId
+	 * @param string $resourceId
+	 * @param string|null $identifier
+	 * @param string $resourceType
+	 * @param array $parameters
+	 */
+	private function ensureListCacheWarmIfNeeded(
+		string $actionId,
+		string $resourceId,
+		$identifier,
+		string $resourceType,
+		array $parameters
+	): void {
+		if (!isset($parameters['listname']) || !array_key_exists('params_list_cache', $parameters)) {
+			return;
+		}
+
+		$cacheResponse = $this->_pSDK->callFromCache(
+			$actionId,
+			$resourceId,
+			$identifier,
+			$resourceType,
+			$parameters['params_list_cache']
+		);
+
+		$needsDerivedListData = ($parameters['formatoutput'] ?? false) === true;
+		$hasDerivedListData = is_array($cacheResponse)
+			&& isset($cacheResponse['raw']['data']['records'])
+			&& is_array($cacheResponse['raw']['data']['records'])
+			&& isset($cacheResponse['types'])
+			&& is_array($cacheResponse['types']);
+
+		if ($cacheResponse != null && (!$needsDerivedListData || $hasDerivedListData)) {
+			return;
+		}
+
+		$language = $parameters['outputlanguage'] ?? Language::getDefault();
+		$listCacheKey = sprintf('%s|%s', (string)$parameters['listname'], (string)$language);
+		if (isset($this->_renewedListCacheByKey[$listCacheKey])) {
+			return;
+		}
+
+		$this->renewCache($parameters['listname'], [$language]);
+		$this->_renewedListCacheByKey[$listCacheKey] = true;
 	}
 
 
@@ -216,7 +263,7 @@ class SDKWrapper
 	 * (does not create cache for detail pages and similar objects)
 	 *
 	 */
-	 public function renewCache(string $listName = null)
+	 public function renewCache(string $listName = null, array $languages = null)
 	 {
 			//1 get all lists
 			//2 clean Cache
@@ -227,7 +274,11 @@ class SDKWrapper
 			$pDefaultFilterBuilderFactory = $this->_pContainer->get(DefaultFilterBuilderFactory::class);
 			$pDefaultFilterBuilderListViewAddressFactory = $this->_pContainer->get(DefaultFilterBuilderListViewAddressFactory::class);
 
-			$languages = Language::getAllWPMLLanguages();
+			if ($languages === null || $languages === []) {
+				$languages = Language::getAllWPMLLanguages();
+			} else {
+				$languages = array_values(array_unique($languages));
+			}
 			$estateLists = $this->getEstateLists($listName);
 			$addressLists = $this->getAddressLists($listName);
 			$this->_caches = [new DBCache(['ttl' => 3600])];
@@ -293,6 +344,13 @@ class SDKWrapper
 	 {
 		$fieldsByModule = [];
 		foreach ($languages as $lang) {
+			if (isset($this->_cachedFieldTypesByLanguage[$lang])) {
+				foreach ($this->_cachedFieldTypesByLanguage[$lang] as $module => $moduleFields) {
+					$fieldsByModule[$module] = $moduleFields;
+				}
+				continue;
+			}
+
 			$parametersGetFieldList = [
 				'labels' => true,
 				'showContent' => true,
@@ -307,12 +365,16 @@ class SDKWrapper
 			$pApiClientActionFields->addRequestToQueue()->sendRequests();
 
 			$records = $pApiClientActionFields->getResultRecords();
+			$fieldTypesForLanguage = [];
 			foreach ($records as $moduleProperties) {
 				foreach ($moduleProperties['elements'] as $fieldName => $fieldProperties) {
-					if($fieldName != 'label')
+					if ($fieldName != 'label') {
+						$fieldTypesForLanguage[$moduleProperties['id']][$fieldName] = $fieldProperties['type'];
 						$fieldsByModule[$moduleProperties['id']][$fieldName] = $fieldProperties['type'];
+					}
 				}
 			}
+			$this->_cachedFieldTypesByLanguage[$lang] = $fieldTypesForLanguage;
 		}
 		return $fieldsByModule;
 	}

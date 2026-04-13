@@ -165,12 +165,6 @@ class EstateFiles
 	}
 
 	/**
-	 *
-	 * @param array $responseArrayEstatePictures
-	 *
-	 */
-
-	/**
 	 * Public wrapper to allow batched processing of pre-fetched estate picture records.
 	 * Used by EstateList::loadEstates() for request batching.
 	 *

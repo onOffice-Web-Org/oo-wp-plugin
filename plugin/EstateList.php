@@ -495,7 +495,6 @@ class EstateList
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
 		foreach ($inputs->getFields() as $name) {
@@ -521,7 +520,6 @@ class EstateList
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
 		foreach ($inputs->getFilterableFields() as $name) {
@@ -531,26 +529,6 @@ class EstateList
 		}
 		$inputs->setFilterableFields($activeInputs);
 		return $inputs;
-	}
-
-	/**
-	 * @param array $estateIds
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws API\ApiClientException
-	 */
-	private function getEstateContactPerson(array $estateIds)
-	{
-		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
-
-		$parameters = [
-			'parentids' => array_keys($estateIds),
-			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
-		];
-		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
-		$pAPIClientAction->setParameters($parameters);
-		$pAPIClientAction->addRequestToQueue()->sendRequests();
-		$this->collectEstateContactPerson($pAPIClientAction->getResultRecords(), $estateIds);
 	}
 
 	/**
@@ -825,7 +803,7 @@ class EstateList
 
 			$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
 			$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
-			$addressList->loadBrokerAddressesById($allAddressIds, $fields);
+			$addressList->loadBrokerAddressesById($allAddressIds, $fields, false);
 		}
 	}
 
@@ -1334,7 +1312,10 @@ class EstateList
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$pFieldsCollectionBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		$filterableFields = $this->_pDataView->getFilterableFields();
+		if (in_array('regionaler_zusatz', $filterableFields, true)) {
+			$pFieldsCollectionBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		}
 		if (!empty($this->_pDataView->getConvertTextToSelectForCityField())) {
 			$pFieldsCollectionBuilderShort->addFieldEstateCityValues($pFieldsCollection, $this->getShowReferenceEstate());
 		}

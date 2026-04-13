@@ -165,10 +165,14 @@ class ApiCall
 	{
 		$actionParameters = array();
 		$actionParametersOrder = array();
+		$sourceRequestIdByCacheKey = array();
+		$duplicateRequestsBySourceRequestId = array();
 
 		foreach ($this->_requestQueue as $requestId => $pRequest)
 		{
-			$usedParameters = $pRequest->getApiAction()->getActionParameters();
+			$usedParameters = $this->normalizeFieldDependencyParameters(
+				$pRequest->getApiAction()->getActionParameters()
+			);
 			$params = $usedParameters["parameters"];
 
 			// 1. Check in-memory cache first (catches ALL duplicate calls within this PHP request)
@@ -190,7 +194,20 @@ class ApiCall
 
 			if ($cachedResponse === null)
 			{
-				$parametersThisAction = $pRequest->createRequest($token, $secret);
+				if (isset($sourceRequestIdByCacheKey[$inMemoryKey]))
+				{
+					$sourceRequestId = $sourceRequestIdByCacheKey[$inMemoryKey];
+					if (!isset($duplicateRequestsBySourceRequestId[$sourceRequestId]))
+					{
+						$duplicateRequestsBySourceRequestId[$sourceRequestId] = array();
+					}
+					$duplicateRequestsBySourceRequestId[$sourceRequestId][$requestId] = $pRequest;
+					continue;
+				}
+
+				$parametersThisAction = $this->normalizeFieldDependencyParameters(
+					$pRequest->createRequest($token, $secret)
+				);
 				
 				if($claim){
 					if(!isset($parametersThisAction['parameters'])){
@@ -201,6 +218,7 @@ class ApiCall
 
 				$actionParameters[] = $parametersThisAction;
 				$actionParametersOrder[] = $pRequest;
+				$sourceRequestIdByCacheKey[$inMemoryKey] = $requestId;
 			}
 			else
 			{
@@ -212,11 +230,31 @@ class ApiCall
 					$cachedResponse = $this->applyListCacheFiltering($cachedResponse, $params);
 				}
 				$this->_responses[$requestId] = new Response($pRequest, $cachedResponse);
-				$saveToCache = false;
 			}
 		}
 
 		$this->sendHttpRequests($token, $actionParameters, $actionParametersOrder, $httpFetch, $saveToCache);
+
+		// Reuse source results for duplicate requests that were queued in the same send cycle.
+		foreach ($duplicateRequestsBySourceRequestId as $sourceRequestId => $duplicateRequests)
+		{
+			if (isset($this->_responses[$sourceRequestId]))
+			{
+				$sourceResponseData = $this->_responses[$sourceRequestId]->getResponseData();
+				foreach ($duplicateRequests as $duplicateRequestId => $duplicateRequest)
+				{
+					$this->_responses[$duplicateRequestId] = new Response($duplicateRequest, $sourceResponseData);
+				}
+			}
+			elseif (isset($this->_errors[$sourceRequestId]))
+			{
+				$sourceError = $this->_errors[$sourceRequestId];
+				foreach (array_keys($duplicateRequests) as $duplicateRequestId)
+				{
+					$this->_errors[$duplicateRequestId] = $sourceError;
+				}
+			}
+		}
 
 		// Store HTTP responses in in-memory cache for deduplication
 		// Only cache when saveToCache is true — renewCache() passes false and its
@@ -229,7 +267,9 @@ class ApiCall
 				{
 					$pResponse = $this->_responses[$reqId];
 					$responseData = $pResponse->getResponseData();
-					$usedParams = $pRequest->getApiAction()->getActionParameters();
+					$usedParams = $this->normalizeFieldDependencyParameters(
+						$pRequest->getApiAction()->getActionParameters()
+					);
 					$key = $this->getInMemoryCacheKey($usedParams);
 					self::$_inMemoryCache[$key] = $responseData;
 				}
@@ -251,8 +291,19 @@ class ApiCall
 	{
 		if ($params["formatoutput"] == true)
 		{
+			if (
+				!isset($cachedResponse["data"]["records"]) ||
+				!is_array($cachedResponse["data"]["records"]) ||
+				!isset($cachedResponse["raw"]["data"]["records"]) ||
+				!is_array($cachedResponse["raw"]["data"]["records"]) ||
+				!isset($cachedResponse["types"]) ||
+				!is_array($cachedResponse["types"])
+			) {
+				return $cachedResponse;
+			}
+
 			$this->filterRecords($cachedResponse, $params["filter"]);
-			if(in_array("sortby", $params) && $params["sortby"] != null)
+			if(array_key_exists("sortby", $params) && $params["sortby"] != null)
 				$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse, $params["filter"], $params["sortby"], $params["sortorder"] ?? 'ASC');
 			$cachedResponse["data"]["meta"]["cntabsolute"] = count($cachedResponse["data"]["records"]);
 
@@ -273,11 +324,81 @@ class ApiCall
 	{
 		$keyData = $actionParameters;
 		unset($keyData['timestamp']); // timestamp varies per call, not relevant for dedup
-		ksort($keyData);
-		if (isset($keyData['parameters'])) {
-			ksort($keyData['parameters']);
+
+		// Keep optional default flags stable for semantically identical requests.
+		if (
+			isset($keyData['resourcetype']) &&
+			$keyData['resourcetype'] === 'fields' &&
+			isset($keyData['parameters']) &&
+			is_array($keyData['parameters']) &&
+			!array_key_exists('showfielddependencies', $keyData['parameters'])
+		) {
+			$keyData['parameters']['showfielddependencies'] = false;
 		}
+
+		$keyData = $this->normalizeForInMemoryCacheKey($keyData);
 		return md5(serialize($keyData));
+	}
+
+	/**
+	 * Recursively normalize values for stable in-memory cache keys.
+	 * Sorts associative array keys while preserving numeric-indexed list order.
+	 *
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	private function normalizeForInMemoryCacheKey($value)
+	{
+		if (!is_array($value)) {
+			return $value;
+		}
+
+		if ($this->isAssocArray($value)) {
+			ksort($value);
+		}
+
+		foreach ($value as $key => $item) {
+			$value[$key] = $this->normalizeForInMemoryCacheKey($item);
+		}
+
+		return $value;
+	}
+
+	/**
+	 * @param array $value
+	 * @return bool
+	 */
+	private function isAssocArray(array $value): bool
+	{
+		if ($value === array()) {
+			return false;
+		}
+
+		return array_keys($value) !== range(0, count($value) - 1);
+	}
+
+	/**
+	 * For fields requests, always request dependencies to keep one canonical payload.
+	 * This allows later fields requests (with/without explicit showfielddependencies)
+	 * to reuse the same in-memory cache entry.
+	 *
+	 * @param array $actionParameters
+	 * @return array
+	 */
+	private function normalizeFieldDependencyParameters(array $actionParameters): array
+	{
+		if (
+			isset($actionParameters['resourcetype']) &&
+			$actionParameters['resourcetype'] === 'fields'
+		) {
+			if (!isset($actionParameters['parameters']) || !is_array($actionParameters['parameters'])) {
+				$actionParameters['parameters'] = [];
+			}
+			$actionParameters['parameters']['showfielddependencies'] = true;
+			ksort($actionParameters['parameters']);
+		}
+
+		return $actionParameters;
 	}
 	private function tofloat (string $num)
 	{
@@ -369,6 +490,17 @@ class ApiCall
 
 	private function filterRecords(array &$cachedResponse, array $filter)
 	{
+		if (
+			!isset($cachedResponse["data"]["records"]) ||
+			!is_array($cachedResponse["data"]["records"]) ||
+			!isset($cachedResponse["raw"]["data"]["records"]) ||
+			!is_array($cachedResponse["raw"]["data"]["records"]) ||
+			!isset($cachedResponse["types"]) ||
+			!is_array($cachedResponse["types"])
+		) {
+			return;
+		}
+
 		$records = $cachedResponse["data"]["records"];
 		$filteredArray = $records;
 		$filteredArrayRaw = $cachedResponse["raw"]["data"]["records"];
@@ -656,7 +788,9 @@ class ApiCall
 			if ($pResponse->isCacheable())
 			{
 				$responseData = $pResponse->getResponseData();
-				$requestParameters = $pResponse->getRequest()->getApiAction()->getActionParameters();
+				$requestParameters = $this->normalizeFieldDependencyParameters(
+					$pResponse->getRequest()->getApiAction()->getActionParameters()
+				);
 				$this->writeCache(serialize($responseData), $requestParameters);
 			}
 		}
