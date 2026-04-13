@@ -96,7 +96,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$errorHtml = renderErrorHtml($errorMessage, $isRequiredMessage);
 
 			if (!$isHiddenField) {
-				echo  '<label class="' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.esc_html($pForm->getFieldLabel( 'message' ));
+				echo  '<label class="' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.wp_kses_post($pForm->getFieldLabel( 'message' ));
 				echo  ' '.wp_kses_post($additionMessage);
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $errorHtml is already escaped from renderErrorHtml
 				echo  '<textarea name="message" data-rule="text" autocomplete="off"' . ($isRequiredMessage ? ' required aria-required="true" aria-invalid="false"' : '') . '>' . esc_textarea($pForm->getFieldValue('message')) . '</textarea>'.$errorHtml.'</label>';

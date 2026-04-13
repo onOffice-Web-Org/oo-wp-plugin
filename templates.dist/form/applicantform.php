@@ -117,12 +117,12 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		$errorHtml = renderErrorHtml($errorMessage, $isRequiredMessage);
 		
 		if (!$isHiddenField) {
-			$line = '<label class="' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$pForm->getFieldLabel( 'message' );
+			$line = '<label class="' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.wp_kses_post($pForm->getFieldLabel( 'message' ));
 			$line .= ' '.$additionMessage;
-			$line .= '<textarea name="message" autocomplete="off"' . ($isRequiredMessage ? ' required aria-required="true" aria-invalid="false"' : '') . '>' . $pForm->getFieldValue('message') . '</textarea>'.$errorHtml.'</label>';
+			$line .= '<textarea name="message" autocomplete="off"' . ($isRequiredMessage ? ' required aria-required="true" aria-invalid="false"' : '') . '>' .esc_textarea($pForm->getFieldValue('message')) . '</textarea>'.$errorHtml.'</label>';
 
 		} else {
-			$line = '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
+			$line = '<input type="hidden" name="message" value="' . esc_attr($pForm->getFieldValue('message')) . '">';
 		}
 	}
 

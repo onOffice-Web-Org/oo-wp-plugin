@@ -108,7 +108,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
                 $line .= '<textarea name="message" autocomplete="off"' . ($isRequiredMessage ? ' required aria-required="true" aria-invalid="false"' : '') . '>' . esc_textarea($pForm->getFieldValue('message')) . '</textarea>'.$errorHtml.'</label>';
 
 			} else {
-				$line = '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
+				$line = '<input type="hidden" name="message" value="' . esc_attr($pForm->getFieldValue('message')) . '">';
 			}
 		}
 		if ($table == 'address') {
