@@ -528,6 +528,7 @@ class EstateList
 			}
 		}
 		$inputs->setFilterableFields($activeInputs);
+
 		return $inputs;
 	}
 
@@ -754,7 +755,6 @@ class EstateList
 	 * @param array $estateIds
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 * @throws API\ApiClientException
 	 */
 	private function collectEstateContactPerson($responseArrayContacts, array $estateIds)
 	{
@@ -799,11 +799,15 @@ class EstateList
 				$allAddressIds = [$allAddressIds[0]];
 			}
 
-			$addressList = $this->_pEnvironment->getAddressList();
+			try {
+				$addressList = $this->_pEnvironment->getAddressList();
 
-			$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
-			$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
-			$addressList->loadBrokerAddressesById($allAddressIds, $fields, false);
+				$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
+				$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
+				$addressList->loadBrokerAddressesById($allAddressIds, $fields, false);
+			} catch (API\ApiClientException $exception) {
+				error_log('onOffice: Address list data unavailable: ' . $exception->getMessage());
+			}
 		}
 	}
 
@@ -1338,7 +1342,9 @@ class EstateList
 			$geoFields = $pDataView->getGeoFields();
 			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
 		}
-		$allDisplayModes = $pDataView->getRangeFieldDisplayModes();
+		$allDisplayModes = method_exists($pDataView, 'getRangeFieldDisplayModes')
+			? $pDataView->getRangeFieldDisplayModes()
+			: [];
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)

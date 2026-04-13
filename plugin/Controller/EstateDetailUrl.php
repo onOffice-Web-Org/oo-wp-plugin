@@ -100,14 +100,18 @@ class EstateDetailUrl
 
 
 	/**
-	 * @param string $title
+	 * @param string|null $title
 	 * @param bool $flag
 	 * @param string $switchLocale
 	 * @return string
 	 */
 
-	public function getSanitizeTitle(string $title, bool $flag = false, $switchLocale = ''): string
+	public function getSanitizeTitle(?string $title, bool $flag = false, $switchLocale = ''): string
 	{
+		if ($title === null) {
+			return '';
+		}
+
 		$sanitizeTitle = $flag ? sanitize_title(remove_accents($title, $switchLocale)) : sanitize_title($title);
 		$arrSanitizeTitle = explode('-', $sanitizeTitle);
 		if (count($arrSanitizeTitle) > self::MAXIMUM_WORD_TITLE) {
