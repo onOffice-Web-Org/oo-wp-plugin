@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use onOffice\WPlugin\Utility\UrlHelper;
+
 
 class EstateDetailUrl
 {
@@ -53,6 +55,7 @@ class EstateDetailUrl
 
 		if ( $estateId !== 0 ) {
 			$urlElements   = wp_parse_url( $url );
+			$baseUrl       = UrlHelper::buildBaseUrl( $urlElements );
 			$getParameters = [];
 
 			if ( ! empty( $urlElements['query'] ) ) {
@@ -73,7 +76,7 @@ class EstateDetailUrl
 				$urlTemp .= $this->getSanitizeTitle( $title, $flag , $switchLocale);
 			}
 
-			$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $urlElements['path'] . $urlTemp . $slashChar;
+			$urlLsSwitcher = $baseUrl . $urlElements['path'] . $urlTemp . $slashChar;
 
 			if ( ! empty( $getParameters ) ) {
 				$urlLsSwitcher .= '?' . http_build_query( $getParameters );
@@ -130,6 +133,7 @@ class EstateDetailUrl
 	{
 		$getParameters = [];
 		$urlElements   = wp_parse_url( $oldUrl );
+		$baseUrl       = UrlHelper::buildBaseUrl( $urlElements );
 		$urlTemp       = $estateId;
 		$tickerUrlHasTitleFlag = false;
 
@@ -153,7 +157,7 @@ class EstateDetailUrl
 		array_pop( $oldUrlPathArr );
 		$newPath = implode( '/', $oldUrlPathArr );
 
-		$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $newPath . '/' . $urlTemp;
+		$urlLsSwitcher = $baseUrl . $newPath . '/' . $urlTemp;
 
 		if (!empty($getParameters)) {
 			$urlLsSwitcher = add_query_arg($getParameters,$urlLsSwitcher);

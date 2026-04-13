@@ -80,6 +80,20 @@ class TestClassEstateDetailUrl
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
+	public function testUrlWithCustomPort()
+	{
+		$estateId = 123;
+		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
+		$url = 'https://www.onoffice.de:8080/detail/?lang=en';
+		$expectedUrl = 'https://www.onoffice.de:8080/detail/123?lang=en';
+
+		$this->assertEquals($expectedUrl, $pInstance->createEstateDetailLink($url, $estateId));
+	}
+
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
 	public function testUrlWithTitle()
 	{
 		add_option('onoffice-detail-view-showTitleUrl', true);
@@ -154,6 +168,23 @@ class TestClassEstateDetailUrl
 		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
 		$url = 'https://www.onoffice.de/detail/123?lang=en';
 		$expectedUrl = 'https://www.onoffice.de/detail/123-test-title?lang=en';
+		$this->assertEquals($expectedUrl, $pInstance->getUrlWithEstateTitle($estateId, $title, $url, false, $pEstateRedirection));
+	}
+
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function testGetUrlWithFilterTrueAndEnableOptionShowTitleKeepsCustomPort()
+	{
+		$pEstateRedirection = apply_filters('oo_is_detailpage_redirection', true);
+		add_option('onoffice-detail-view-showTitleUrl', true);
+		$estateId = 123;
+		$title = 'test-title';
+		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
+		$url = 'https://www.onoffice.de:8080/detail/123?lang=en';
+		$expectedUrl = 'https://www.onoffice.de:8080/detail/123-test-title?lang=en';
+
 		$this->assertEquals($expectedUrl, $pInstance->getUrlWithEstateTitle($estateId, $title, $url, false, $pEstateRedirection));
 	}
 
