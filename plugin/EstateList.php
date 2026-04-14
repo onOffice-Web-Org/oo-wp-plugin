@@ -566,6 +566,26 @@ class EstateList
 			$requestParams['filterid'] = $pListView->getFilterId();
 		}
 
+		$purchaseFields = ['kaufpreis', 'kaufpreis_pro_qm', 'erbpacht', 'pacht'];
+		$rentalFields = ['nettokaltmiete', 'warmmiete', 'kaltmiete', 'miete_pauschal', 'saisonmiete', 'wochmietbto', 'mietpreis_pro_qm'];
+		$allRelevantFields = array_merge($purchaseFields, $rentalFields);
+		$relevantGetParams = [];
+
+		foreach ($_GET as $key => $value) {
+			if (!empty($value) && $value !== '0') {
+				foreach ($allRelevantFields as $field) {
+					if ($key === $field || strpos($key, $field) === 0 || strpos($key, $field . '__') === 0) {
+						$relevantGetParams[$key] = $value;
+						break;
+					}
+				}
+			}
+		}
+
+		if (!empty($relevantGetParams)) {
+			$requestParams['cache_filter_params'] = $relevantGetParams;
+		}
+
 		return $requestParams;
 	}
 	/**
