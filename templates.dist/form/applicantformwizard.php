@@ -58,12 +58,10 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			echo esc_html(sprintf(__('Please enter a value for %s.', 'onoffice-for-wp-websites'), $pForm->getFieldLabel( $input ))).'<br>';
 		}
 
-		$fieldLabel = $pForm->getFieldLabel($input);
-
 		$isRequired = $pForm->isRequiredField($input);
 		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Required', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 		$isHiddenField = $pForm->isHiddenField($input);
-		$label = $fieldLabel.' '.wp_kses_post($addition);
+		$label = wp_kses_post($pForm->getFieldLabel($input)).' '.wp_kses_post($addition);
 
 		if ( in_array( $input, array( 'kaufpreis','kaltmiete','wohnflaeche','anzahl_zimmer' ) ) ) {
 			$line = '<div class="oo-input-wrapper">';
