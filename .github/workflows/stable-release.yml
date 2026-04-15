@@ -1,27 +1,27 @@
-name: Stable Release
+ name: Stable Release
 
-on:
-    workflow_dispatch:
-    # Deactivated automatic trigger on tags
-    push:
-        tags:
-            - 'v*'
+ on:
+   workflow_dispatch:
+   # Deactivated automatic trigger on tags
+   push:
+     tags:
+       - 'v*'
 
-jobs:
-    get-version:
-        name: Get current version
-        runs-on: ubuntu-latest
-        outputs:
-            currentVersion: ${{ steps.get-version.outputs.version }}
-        steps:
-            - name: Get version
-              id: get-version
-                # Remove the leading 'v' from the tag.
-              run: echo "version=6.12" >> $GITHUB_OUTPUT
+ jobs:
+   get-version:
+     name: Get current version
+     runs-on: ubuntu-latest
+     outputs:
+       currentVersion: ${{ steps.get-version.outputs.version }}
+     steps:
+       - name: Get version
+         id: get-version
+         # Remove the leading 'v' from the tag.
+         run: echo "version=6.12" >> $GITHUB_OUTPUT
 
-    build:
-        name: Build release
-        needs: get-version
-        uses: ./.github/workflows/build-release.yml
-        with:
-            expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
+   build:
+     name: Build release
+     needs: get-version
+     uses: ./.github/workflows/build-release.yml
+     with:
+       expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
