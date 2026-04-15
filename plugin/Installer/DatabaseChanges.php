@@ -1336,7 +1336,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 	{
 		$prefix = $this->getPrefix();
 		$tableName = $prefix . 'oo_plugin_forms';
-		$sql = "ALTER TABLE $tableName ADD COLUMN display_unit_area tinyint(1) NOT NULL DEFAULT '0'";
-		$this->_pWPDB->query($sql);
+		$columnExists = $this->_pWPDB->get_results("SHOW COLUMNS FROM $tableName LIKE 'display_unit_area'");
+		if (empty($columnExists)) {
+			$sql = "ALTER TABLE $tableName ADD COLUMN display_unit_area tinyint(1) NOT NULL DEFAULT '0'";
+			$this->_pWPDB->query($sql);
+		}
 	}
 }
