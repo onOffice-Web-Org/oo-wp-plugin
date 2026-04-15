@@ -387,6 +387,14 @@ class Form
 		if (false === $raw) {
 			$label = esc_html($label);
 		}
+
+		if ($this->getDataFormConfiguration()->getDisplayUnitArea()) {
+			$areaFieldsPattern = '/^.*flaeche$|^calculatedArea$/i';
+			if (preg_match($areaFieldsPattern, $field)) {
+				$label .= ' (m²)';
+			}
+		}
+
 		foreach($this->getMarkdownFields() as $markdownFields){
 			if($markdownFields == $field){
 				$label = $parsedown->line($label);
