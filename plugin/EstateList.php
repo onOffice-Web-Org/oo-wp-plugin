@@ -211,7 +211,11 @@ class EstateList
 		$estateIds = $this->getEstateIdToForeignMapping($this->_records);
 
 		if ($estateIds !== []) {
-			$this->getEstateContactPerson($estateIds);
+			try {
+				$this->getEstateContactPerson($estateIds);
+			} catch (API\ApiClientException $exception) {
+				error_log('onOffice: Contact person data unavailable: ' . $exception->getMessage());
+			}
 
 			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles();
 			try {
@@ -478,6 +482,7 @@ class EstateList
 			}
 		}
 		$inputs->setFilterableFields($activeInputs);
+
 		return $inputs;
 	}
 
@@ -501,6 +506,18 @@ class EstateList
 		$this->collectEstateContactPerson($pAPIClientAction->getResultRecords(), $estateIds);
 	}
 
+	private function getCurrentFilter()
+	{
+		$pDefaultFilterBuilder = $this->getDefaultFilterBuilder();
+		if ($pDefaultFilterBuilder instanceof \onOffice\WPlugin\Filter\DefaultFilterBuilderListView) {
+			$filter = $pDefaultFilterBuilder->buildFilter();
+		} else {
+			$filter = $pDefaultFilterBuilder->getDefaultFilter();
+		}
+
+		return $filter;
+	}
+
 	/**
 	 * @param string $lang
 	 * @param bool $formatOutput
@@ -513,8 +530,7 @@ class EstateList
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
 
 		$lang = $lang ?? Language::getDefault();
-
-		$filter = $this->getDefaultFilterBuilder()->getDefaultFilter();
+		$filter = $this->getCurrentFilter();
 		$fields = $pFieldModifierHandler->getAllAPIFields();
 
 		if($formatOutput === false) {
@@ -566,7 +582,7 @@ class EstateList
 	{
 		$language = Language::getDefault();
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
-		$filter = $this->getDefaultFilterBuilder()->buildFilter();
+		$filter = $this->getCurrentFilter();
 
 		if ($this->_filterAddressId != 0) {
 			$addressList = $this->_pEnvironment->getAddressList();
@@ -724,7 +740,6 @@ class EstateList
 	 * @param array $estateIds
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 * @throws API\ApiClientException
 	 */
 	private function collectEstateContactPerson($responseArrayContacts, array $estateIds)
 	{
@@ -769,11 +784,15 @@ class EstateList
 				$allAddressIds = [$allAddressIds[0]];
 			}
 
-			$addressList = $this->_pEnvironment->getAddressList();
+			try {
+				$addressList = $this->_pEnvironment->getAddressList();
 
-			$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
-			$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
-			$addressList->loadBrokerAddressesById($allAddressIds, $fields);
+				$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
+				$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
+				$addressList->loadBrokerAddressesById($allAddressIds, $fields);
+			} catch (API\ApiClientException $exception) {
+				error_log('onOffice: Address list data unavailable: ' . $exception->getMessage());
+			}
 		}
 	}
 
@@ -1305,7 +1324,9 @@ class EstateList
 			$geoFields = $pDataView->getGeoFields();
 			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
 		}
-		$allDisplayModes = $pDataView->getRangeFieldDisplayModes();
+		$allDisplayModes = method_exists($pDataView, 'getRangeFieldDisplayModes')
+			? $pDataView->getRangeFieldDisplayModes()
+			: [];
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)

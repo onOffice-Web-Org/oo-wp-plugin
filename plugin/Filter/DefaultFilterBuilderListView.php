@@ -69,13 +69,29 @@ class DefaultFilterBuilderListView
 	}
 
 	/**
+     * Resolves the DataListView to be used.
+     * * Returns the provided override if it is not null; otherwise, falls back 
+     * to the internal default DataListView instance.
+     *
+     * @param DataListView|null $pDataListViewOverride Optional override instance.
+     * @return DataListView The resolved DataListView instance.
+     * @throws \TypeError If no override is provided and the internal instance is not initialized.
+     */
+	public function getDataListView(?DataListView $pDataListViewOverride = null): DataListView
+	{
+		return $pDataListViewOverride ?? $this->_pDataListView;
+	}
+
+	/**
+	 * @param DataListView|null $pDataListViewOverride optional override for DataListView
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
 	public function buildFilter(): array
 	{
-		$filterableFields = $this->_pDataListView->getFilterableFields();
+		$useDataListView = $this->getDataListView();
+		$filterableFields = $useDataListView->getFilterableFields();
 
 		// Geo position will be done later
 		if (in_array(GeoPosition::FIELD_GEO_POSITION, $filterableFields)) {
@@ -87,21 +103,21 @@ class DefaultFilterBuilderListView
 		$fieldFilter = $this->_pEnvironment->getFilterBuilderInputVariables()->getPostFieldsFilter($filterableFields);
 		$filter = array_merge($this->_defaultFilter, $fieldFilter, $this->_geofilter ?? []);
 
-		switch ($this->_pDataListView->getListType()) {
+		switch ($useDataListView->getListType()) {
 			case DataListView::LISTVIEW_TYPE_FAVORITES:
 				$filter = $this->getFavoritesFilter();
 				break;
 		}
 
-		$priceFields = $this->_pDataListView->getListFieldsShowPriceOnRequest();
-		$filterKeys = array_keys($filter);
+		$priceFields = $useDataListView->getListFieldsShowPriceOnRequest();
 
-		if (count(array_intersect($priceFields, $filterKeys)) > 0) {
+		if (count(array_intersect($priceFields, array_keys($filter))) > 0) {
 			$filter['preisAufAnfrage'][] = ['op' => '!=', 'val' => 1];
 		}
 
 		$filter = $this->addEstateCityFilterWhenConvertTextToSelect($filter, $filterableFields);
 		$filterWithRegion = $this->addSubRegionFilter($filter, $filterableFields);
+		$filterWithRegion = $this->addRentalPurchaseFilter($filterWithRegion);
 
 		return $filterWithRegion;
 	}
@@ -211,5 +227,48 @@ class DefaultFilterBuilderListView
 				['op' => 'geo', 'val' => $geo->km, 'min' => $geo->min ?? null, 'max' => $geo->max ?? null, 'country' => $geo->country ?? null]
 			]
 		];
+	}
+
+	/**
+	 * @param array $filter
+	 * @return array
+	 */
+	private function addRentalPurchaseFilter(array $filter): array
+	{
+		$purchaseFields = ['kaufpreis', 'kaufpreis_pro_qm', 'erbpacht', 'pacht'];
+		$rentalFields = ['nettokaltmiete', 'warmmiete', 'kaltmiete', 'miete_pauschal', 'saisonmiete', 'wochmietbto', 'mietpreis_pro_qm'];
+
+		$hasRentalInput = false;
+		$hasPurchaseInput = false;
+
+		foreach ($_GET as $key => $value) {
+			if (empty($value)) continue;
+
+			foreach ($rentalFields as $field) {
+				if ($key === $field || strpos($key, $field) === 0 || strpos($key, $field . '__') === 0) {
+					$hasRentalInput = true;
+					break;
+				}
+			}
+
+			foreach ($purchaseFields as $field) {
+				if ($key === $field || strpos($key, $field) === 0 || strpos($key, $field . '__') === 0) {
+					$hasPurchaseInput = true;
+					break;
+				}
+			}
+		}
+
+		if ($hasRentalInput && !$hasPurchaseInput) {
+			$filter['kaufpreis'][] = ['op' => '=', 'val' => '0.00'];
+			$filter['kaltmiete'][] = ['op' => '!=', 'val' => '0.00'];
+		}
+
+		if ($hasPurchaseInput && !$hasRentalInput) {
+			$filter['kaltmiete'][] = ['op' => '=', 'val' => '0.00'];
+			$filter['kaufpreis'][] = ['op' => '!=', 'val' => '0.00'];
+		}
+
+		return $filter;
 	}
 }
