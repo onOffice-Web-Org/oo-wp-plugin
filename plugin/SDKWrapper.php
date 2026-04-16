@@ -219,11 +219,7 @@ class SDKWrapper
 			$pDefaultFilterBuilderFactory = $this->_pContainer->get(DefaultFilterBuilderFactory::class);
 			$pDefaultFilterBuilderListViewAddressFactory = $this->_pContainer->get(DefaultFilterBuilderListViewAddressFactory::class);
 
-			if ($languages === null || $languages === []) {
-				$languages = Language::getAllWPMLLanguages();
-			} else {
-				$languages = array_values(array_unique($languages));
-			}
+			$languages = $this->normalizeLanguages($languages);
 			$estateLists = $this->getEstateLists($listName);
 			$addressLists = $this->getAddressLists($listName);
 			$this->_caches = [new DBCache(['ttl' => 3600])];
@@ -280,6 +276,39 @@ class SDKWrapper
 				}
 			}
 	 }
+
+	/**
+	 * Normalize and validate onOffice language codes.
+	 * Falls back to the default language when none are valid.
+	 *
+	 * @param array|null $languages
+	 * @return array
+	 */
+	private function normalizeLanguages(array $languages = null): array
+	{
+		if ($languages === null || $languages === []) {
+			$languages = Language::getAllWPMLLanguages();
+		}
+
+		$allowedLanguages = array_values(array_unique(array_values(Language::LOCALE_MAPPING)));
+		$allowedLanguageLookup = array_fill_keys($allowedLanguages, true);
+
+		$normalizedLanguages = [];
+		foreach ($languages as $language) {
+			if (!is_string($language)) {
+				continue;
+			}
+
+			$language = strtoupper(trim($language));
+			if ($language !== '' && isset($allowedLanguageLookup[$language])) {
+				$normalizedLanguages[] = $language;
+			}
+		}
+
+		$normalizedLanguages = array_values(array_unique($normalizedLanguages));
+
+		return $normalizedLanguages === [] ? [Language::getDefault()] : $normalizedLanguages;
+	}
 	/**
 	 * return all Fields from Api, to save in Cache
 	 * @param array $language
