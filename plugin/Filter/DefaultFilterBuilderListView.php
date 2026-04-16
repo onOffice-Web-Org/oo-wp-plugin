@@ -247,14 +247,14 @@ class DefaultFilterBuilderListView
 			foreach ($rentalFields as $field) {
 				if ($key === $field || strpos($key, $field) === 0 || strpos($key, $field . '__') === 0) {
 					$hasRentalInput = true;
-					break 2;
+					break;
 				}
 			}
 
 			foreach ($purchaseFields as $field) {
 				if ($key === $field || strpos($key, $field) === 0 || strpos($key, $field . '__') === 0) {
 					$hasPurchaseInput = true;
-					break 2;
+					break;
 				}
 			}
 		}
