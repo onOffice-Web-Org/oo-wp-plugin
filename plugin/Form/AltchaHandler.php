@@ -22,6 +22,12 @@
 namespace onOffice\WPlugin\Form;
 
 use AltchaOrg\Altcha\Altcha;
+use AltchaOrg\Altcha\Algorithm\Pbkdf2;
+use AltchaOrg\Altcha\Challenge;
+use AltchaOrg\Altcha\ChallengeParameters;
+use AltchaOrg\Altcha\Payload;
+use AltchaOrg\Altcha\Solution;
+use AltchaOrg\Altcha\VerifySolutionOptions;
 
 /**
  * ALTCHA anti-spam handler.
@@ -87,18 +93,51 @@ class AltchaHandler
             return false;
         }
 
-        // 1. Verify PoW + HMAC signature + expiration via official library
-        if (!Altcha::verifySolution($this->_payload, $this->_hmacKey)) {
-            $this->_errorCodes[] = 'verification-failed';
+        // Decode the base64 payload from the widget
+        $decoded = base64_decode($this->_payload, true);
+        if ($decoded === false) {
+            $this->_errorCodes[] = 'invalid-base64';
             return false;
         }
 
-        // 2. Replay protection: ensure this challenge has not been used before
-        $decoded = base64_decode($this->_payload, true);
         $data = json_decode($decoded, true);
-        $challenge = $data['challenge'] ?? '';
+        if (!is_array($data) || !isset($data['challenge'], $data['solution'])) {
+            $this->_errorCodes[] = 'invalid-payload-structure';
+            return false;
+        }
 
-        $transientKey = self::TRANSIENT_PREFIX . hash('sha256', $challenge);
+        // Reconstruct v2 Payload from widget data
+        $params = ChallengeParameters::fromArray($data['challenge']['parameters'] ?? []);
+        $challenge = new Challenge($params, $data['challenge']['signature'] ?? null);
+        $solution = new Solution(
+            counter: (int) ($data['solution']['counter'] ?? 0),
+            derivedKey: (string) ($data['solution']['derivedKey'] ?? ''),
+            time: isset($data['solution']['time']) ? (float) $data['solution']['time'] : null,
+        );
+        $payload = new Payload($challenge, $solution);
+
+        // Verify PoW + HMAC signature + expiration via official v2 library
+        $altcha = new Altcha(hmacSignatureSecret: $this->_hmacKey);
+        $result = $altcha->verifySolution(new VerifySolutionOptions(
+            algorithm: new Pbkdf2(),
+            payload: $payload,
+        ));
+
+        if (!$result->verified) {
+            if ($result->expired) {
+                $this->_errorCodes[] = 'challenge-expired';
+            } elseif ($result->invalidSignature) {
+                $this->_errorCodes[] = 'invalid-signature';
+            } elseif ($result->invalidSolution) {
+                $this->_errorCodes[] = 'invalid-solution';
+            } else {
+                $this->_errorCodes[] = 'verification-failed';
+            }
+            return false;
+        }
+
+        // Replay protection: ensure this challenge has not been used before
+        $transientKey = self::TRANSIENT_PREFIX . hash('sha256', $params->nonce . $params->salt);
         if (get_transient($transientKey) !== false) {
             $this->_errorCodes[] = 'challenge-replayed';
             return false;
@@ -191,6 +230,6 @@ class AltchaHandler
      */
     public static function getChallengeUrl(): string
     {
-        return self::getServerUrl() . '/altcha';
+        return self::getServerUrl() . '/challenge';
     }
 }

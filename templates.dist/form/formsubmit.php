@@ -136,7 +136,7 @@ if ($pForm->needsReCaptcha() && ($hasEnterprise || $hasClassic)) {
 ?>
     <input type="hidden" name="altcha" value="">
     <altcha-widget
-        challengeurl="<?php echo esc_url($altchaServerUrl . '/altcha'); ?>"
+        challenge="<?php echo esc_url($altchaServerUrl . '/challenge'); ?>"
         hidelogo
         hidefooter
         auto="onload"
