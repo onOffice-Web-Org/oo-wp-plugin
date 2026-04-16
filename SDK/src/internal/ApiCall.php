@@ -135,6 +135,10 @@ class ApiCall
 
 		foreach ($result['response']['results'] as $requestNumber => $resultHttp)
 		{
+			if (!isset($actionParametersOrder[$requestNumber])) {
+				continue;
+			}
+
 			$pRequest = $actionParametersOrder[$requestNumber];
 			$requestId = $pRequest->getRequestId();
 
@@ -148,9 +152,45 @@ class ApiCall
 				$this->_errors[$requestId] = $resultHttp;
 			}
 		}
+
+		// Handle partial API responses where one or more queued actions are missing.
+		foreach ($actionParametersOrder as $pRequest)
+		{
+			$requestId = $pRequest->getRequestId();
+			if (!isset($this->_responses[$requestId]) && !isset($this->_errors[$requestId])) {
+				$this->_errors[$requestId] = $this->buildMissingResultError($pRequest);
+			}
+		}
+
 		if($saveToCache === true) {
 			$this->writeCacheForResponses($idsForCache);
 		}
+	}
+
+	/**
+	 * Build a synthetic API error when the HTTP response omits a queued action result.
+	 *
+	 * @param Request $pRequest
+	 * @return array
+	 */
+	private function buildMissingResultError(Request $pRequest): array
+	{
+		$actionParameters = $pRequest->getApiAction()->getActionParameters();
+
+		return [
+			'actionid' => $actionParameters['actionid'] ?? '',
+			'resourceid' => $actionParameters['resourceid'] ?? '',
+			'resourcetype' => $actionParameters['resourcetype'] ?? '',
+			'identifier' => $actionParameters['identifier'] ?? '',
+			'data' => [
+				'meta' => ['cntabsolute' => 0],
+				'records' => [],
+			],
+			'status' => [
+				'errorcode' => 500,
+				'message' => 'Missing result entry in API response for queued action.',
+			],
+		];
 	}
 
 	/**
