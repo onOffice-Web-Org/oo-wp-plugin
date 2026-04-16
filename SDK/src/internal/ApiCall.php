@@ -291,6 +291,10 @@ class ApiCall
 	{
 		if ($params["formatoutput"] == true)
 		{
+			$filter = (isset($params["filter"]) && is_array($params["filter"]))
+				? $params["filter"]
+				: [];
+
 			if (
 				!isset($cachedResponse["data"]["records"]) ||
 				!is_array($cachedResponse["data"]["records"]) ||
@@ -302,9 +306,9 @@ class ApiCall
 				return $cachedResponse;
 			}
 
-			$this->filterRecords($cachedResponse, $params["filter"]);
+			$this->filterRecords($cachedResponse, $filter);
 			if(array_key_exists("sortby", $params) && $params["sortby"] != null)
-				$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse, $params["filter"], $params["sortby"], $params["sortorder"] ?? 'ASC');
+				$cachedResponse["data"]["records"] = $this->sortRecords($cachedResponse, $filter, $params["sortby"], $params["sortorder"] ?? 'ASC');
 			$cachedResponse["data"]["meta"]["cntabsolute"] = count($cachedResponse["data"]["records"]);
 
 			$cachedResponse["data"]["records"] =
