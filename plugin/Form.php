@@ -151,7 +151,19 @@ class Form
 	private function usesRegionalSupplementField(DataFormConfiguration $pConfiguration): bool
 	{
 		$inputs = $pConfiguration->getInputs();
-		return array_key_exists('regionaler_zusatz', $inputs);
+		if (array_key_exists('regionaler_zusatz', $inputs)) {
+			return true;
+		}
+
+		if (in_array('regionaler_zusatz', $pConfiguration->getRequiredFields(), true)) {
+			return true;
+		}
+
+		if (in_array('regionaler_zusatz', $pConfiguration->getHiddenFields(), true)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

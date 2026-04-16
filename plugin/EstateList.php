@@ -497,6 +497,10 @@ class EstateList
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
+		if (in_array('regionaler_zusatz', $inputs->getFields(), true)) {
+			$pFieldBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		}
+
 		foreach ($inputs->getFields() as $name) {
 			if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
 				$activeInputs[] = $name;
@@ -521,6 +525,10 @@ class EstateList
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
+
+		if (in_array('regionaler_zusatz', $inputs->getFilterableFields(), true)) {
+			$pFieldBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		}
 
 		foreach ($inputs->getFilterableFields() as $name) {
 			if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
