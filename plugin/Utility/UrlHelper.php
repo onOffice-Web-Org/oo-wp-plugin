@@ -26,17 +26,41 @@ namespace onOffice\WPlugin\Utility;
 class UrlHelper
 {
 	/**
-	 * @param array $urlElements
+	 * @param mixed $urlElements
 	 * @return string
 	 */
-	public static function buildBaseUrl(array $urlElements): string
+	public static function buildBaseUrl($urlElements): string
 	{
-		$baseUrl = $urlElements['scheme'] . '://' . $urlElements['host'];
+		if (!is_array($urlElements)) {
+			return '';
+		}
+
+		$scheme = $urlElements['scheme'] ?? '';
+		$host = $urlElements['host'] ?? '';
+
+		if ($scheme === '' || $host === '') {
+			return '';
+		}
+
+		$baseUrl = $scheme . '://' . $host;
 
 		if (isset($urlElements['port'])) {
 			$baseUrl .= ':' . $urlElements['port'];
 		}
 
 		return $baseUrl;
+	}
+
+	/**
+	 * @param mixed $urlElements
+	 * @return string
+	 */
+	public static function getPath($urlElements): string
+	{
+		if (!is_array($urlElements)) {
+			return '';
+		}
+
+		return is_string($urlElements['path'] ?? null) ? $urlElements['path'] : '';
 	}
 }

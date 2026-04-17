@@ -51,6 +51,10 @@ class AddressDetailUrl
 		if ($addressId !== 0) {
 			$urlElements = wp_parse_url($url);
 			$baseUrl = UrlHelper::buildBaseUrl($urlElements);
+			$path = UrlHelper::getPath($urlElements);
+			if ($baseUrl === '' || $path === '') {
+				return $urlLsSwitcher;
+			}
 			$getParameters = [];
 
 			if (!empty($urlElements['query'])) {
@@ -59,9 +63,12 @@ class AddressDetailUrl
 
 			if (!is_null($oldUrl)) {
 				$oldUrlElements = wp_parse_url($oldUrl);
-				$oldUrlPathArr = explode('/', $oldUrlElements['path']);
-				if (empty(end($oldUrlPathArr)) || $flag) {
-					$slashChar = '/';
+				$oldUrlPath = UrlHelper::getPath($oldUrlElements);
+				if ($oldUrlPath !== '') {
+					$oldUrlPathArr = explode('/', $oldUrlPath);
+					if (empty(end($oldUrlPathArr)) || $flag) {
+						$slashChar = '/';
+					}
 				}
 			}
 
@@ -71,7 +78,7 @@ class AddressDetailUrl
 				$urlTemp .= $this->getSanitizeTitle($title, $flag);
 			}
 
-			$urlLsSwitcher = $baseUrl . $urlElements['path'] . $urlTemp . $slashChar;
+			$urlLsSwitcher = $baseUrl . $path . $urlTemp . $slashChar;
 
 			if (!empty($getParameters)) {
 				$urlLsSwitcher .= '?' . http_build_query($getParameters);
@@ -119,6 +126,10 @@ class AddressDetailUrl
 		$getParameters = [];
 		$urlElements = wp_parse_url($oldUrl);
 		$baseUrl = UrlHelper::buildBaseUrl($urlElements);
+		$path = UrlHelper::getPath($urlElements);
+		if ($baseUrl === '' || $path === '') {
+			return (string)$oldUrl;
+		}
 		$urlTemp = $addressId;
 
 		if (!empty($title) && $this->isOptionShowTitleUrl()) {
@@ -133,7 +144,7 @@ class AddressDetailUrl
 			parse_str($urlElements['query'], $getParameters);
 		}
 
-		$oldUrlPathArr = explode('/', $urlElements['path']);
+		$oldUrlPathArr = explode('/', $path);
 		if (empty(end($oldUrlPathArr))) {
 			array_pop($oldUrlPathArr);
 		}
