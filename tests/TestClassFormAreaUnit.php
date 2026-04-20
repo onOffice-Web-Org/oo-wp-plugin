@@ -47,6 +47,10 @@ class TestClassFormAreaUnit extends \WP_UnitTestCase
                 $pFieldCalculatedArea->setType(FieldTypes::FIELD_TYPE_FLOAT);
                 $pFieldsCollection->addField($pFieldCalculatedArea);
 
+                $pFieldGesamtflaecheVerfuegbar = new Field('gesamtflaeche_verfuegbar_qm', 'estate', 'Total available area');
+                $pFieldGesamtflaecheVerfuegbar->setType(FieldTypes::FIELD_TYPE_FLOAT);
+                $pFieldsCollection->addField($pFieldGesamtflaecheVerfuegbar);
+
                 return $pFieldsCollectionBuilder;
             }));
         
@@ -67,7 +71,7 @@ class TestClassFormAreaUnit extends \WP_UnitTestCase
     {
         $pConfig = new DataFormConfigurationContact();
         $pConfig->setDisplayUnitArea(true);
-        $pConfig->setInputs(['wohnflaeche' => 'estate', 'street' => 'address', 'calculatedArea' => 'estate']);
+        $pConfig->setInputs(['wohnflaeche' => 'estate', 'street' => 'address', 'calculatedArea' => 'estate', 'gesamtflaeche_verfuegbar_qm' => 'estate']);
 
         $pDataFormConfigurationFactory = $this->getMockBuilder(DataFormConfigurationFactory::class)
             ->disableOriginalConstructor()
@@ -80,6 +84,7 @@ class TestClassFormAreaUnit extends \WP_UnitTestCase
 
         $this->assertEquals('Living area (m²)', $pForm->getFieldLabel('wohnflaeche'));
         $this->assertEquals('Total Area (m²)', $pForm->getFieldLabel('calculatedArea'));
+        $this->assertEquals('Total available area (m²)', $pForm->getFieldLabel('gesamtflaeche_verfuegbar_qm'));
         $this->assertEquals('Street', $pForm->getFieldLabel('street'));
     }
 
@@ -87,7 +92,7 @@ class TestClassFormAreaUnit extends \WP_UnitTestCase
     {
         $pConfig = new DataFormConfigurationContact();
         $pConfig->setDisplayUnitArea(false);
-        $pConfig->setInputs(['wohnflaeche' => 'estate', 'street' => 'address', 'calculatedArea' => 'estate']);
+        $pConfig->setInputs(['wohnflaeche' => 'estate', 'street' => 'address', 'calculatedArea' => 'estate', 'gesamtflaeche_verfuegbar_qm' => 'estate']);
 
         $pDataFormConfigurationFactory = $this->getMockBuilder(DataFormConfigurationFactory::class)
             ->disableOriginalConstructor()
@@ -100,6 +105,7 @@ class TestClassFormAreaUnit extends \WP_UnitTestCase
 
         $this->assertEquals('Living area', $pForm->getFieldLabel('wohnflaeche'));
         $this->assertEquals('Total Area', $pForm->getFieldLabel('calculatedArea'));
+        $this->assertEquals('Total available area', $pForm->getFieldLabel('gesamtflaeche_verfuegbar_qm'));
         $this->assertEquals('Street', $pForm->getFieldLabel('street'));
     }
 }

@@ -389,7 +389,7 @@ class Form
 		}
 
 		if ($this->getDataFormConfiguration()->getDisplayUnitArea()) {
-			$areaFieldsPattern = '/^.*flaeche$|^calculatedArea$/i';
+			$areaFieldsPattern = '/^.*flaeche(_.*)?$|^calculatedArea$/i';
 			if (preg_match($areaFieldsPattern, $field)) {
 				$label .= ' (m²)';
 			}
