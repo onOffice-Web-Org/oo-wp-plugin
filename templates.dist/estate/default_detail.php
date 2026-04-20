@@ -256,20 +256,48 @@ $dimensions = [
 				$energyClass = $rawValues->getValueRaw($estateId)['elements']['energyClass'] ?? '';
 				$energyClassPermittedValues = $pEstates->getPermittedValues('energyClass');
 				$energyCertificateValueLabels = ["0", "30", "50", "75", "100", "130", "160", "200", "250", ">250"];
+
+				// EPBD-2024: Determine scale type based on expiry date and energy class
+				$epbdThresholdDate = new DateTime('2034-05-01');
+				$expiryDateString = $currentEstate['energieausweis_gueltig_bis'] ?? '';
+				$expiryDate = DateTime::createFromFormat('d.m.Y', $expiryDateString);
+				$isDateValid = $expiryDate && $expiryDate->format('d.m.Y') === $expiryDateString;
+
+				// Legacy classes A+ and H always force legacy scale
+				$isOutOfEpbdBounds = in_array(strtoupper($energyClass), ['A+', 'H']);
+				$isEpbd2024Scale = $isDateValid && $expiryDate >= $epbdThresholdDate && !$isOutOfEpbdBounds;
+
+				// Only show scale if date is valid
+				$showScale = $isDateValid && !empty($energyClassPermittedValues) && !empty($energyClass);
 			?>
-				<div class="oo-details-energy-certificate">
+				<div class="oo-details-energy-certificate<?php echo $isEpbd2024Scale ? ' oo-details-energy-certificate--epbd-2024' : ''; ?>">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
 
-					<?php if (!empty($energyClassPermittedValues) && !empty($energyClass)) : ?>
+					<?php if ($showScale) :
+						// Filter permitted values for EPBD-2024 scale (remove A+ and H)
+						$displayValues = $energyClassPermittedValues;
+						if ($isEpbd2024Scale) {
+							$displayValues = array_values(array_filter(
+								$energyClassPermittedValues,
+								function ($val) {
+									return !in_array(strtoupper($val), ['A+', 'H']);
+								}
+							));
+						}
+					?>
 						<div class="energy-certificate-container">
 							<div class="segmented-bar">
-								<?php foreach ($energyClassPermittedValues as $key => $label): ?>
-									<div class="energy-certificate-label"><span><?php echo esc_html($energyCertificateValueLabels[$key] ?? ''); ?></span></div>
-									<div class="segment<?php echo ($energyClass === $label ? ' selected' : ''); ?>">
+								<?php foreach ($displayValues as $key => $label): ?>
+									<?php if (!$isEpbd2024Scale) : ?>
+										<div class="energy-certificate-label"><span><?php echo esc_html($energyCertificateValueLabels[$key] ?? ''); ?></span></div>
+									<?php endif; ?>
+									<div class="segment<?php echo (strtoupper($energyClass) === strtoupper($label) ? ' selected' : ''); ?>">
 										<span><?php echo esc_html($label); ?></span>
 									</div>
 								<?php endforeach; ?>
-								<div class="energy-certificate-label"><span><?php echo esc_html(end($energyCertificateValueLabels)); ?></span></div>
+								<?php if (!$isEpbd2024Scale) : ?>
+									<div class="energy-certificate-label"><span><?php echo esc_html(end($energyCertificateValueLabels)); ?></span></div>
+								<?php endif; ?>
 							</div>
 						</div>
 					<?php endif; ?>
