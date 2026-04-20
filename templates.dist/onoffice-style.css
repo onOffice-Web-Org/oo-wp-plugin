@@ -619,36 +619,6 @@ button.favorize:focus, .oo-details-btn:focus, .oo-leadformlink:focus, .oo-form i
     color: #fff;
 }
 
-/* EPBD-2024: 7-segment A-G scale */
-.oo-details-energy-certificate--epbd-2024 .energy-certificate-container {
-    margin-bottom: 1.5rem;
-}
-
-.oo-details-energy-certificate--epbd-2024 .segmented-bar {
-    align-items: stretch;
-}
-
-.oo-details-energy-certificate--epbd-2024 .segment {
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.oo-details-energy-certificate--epbd-2024 .segment span {
-    position: static;
-    transform: none;
-    font-weight: bold;
-    color: #fff;
-}
-
-.oo-details-energy-certificate--epbd-2024 .segment.selected {
-    height: 44px;
-    outline: 2px solid #333;
-    outline-offset: -1px;
-    z-index: 1;
-}
-
 /* address list */
 .oo-address-listframe .oo-address-image {
     width: 100%;
