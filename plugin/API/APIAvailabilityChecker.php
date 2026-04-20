@@ -35,7 +35,7 @@ class APIAvailabilityChecker
 			$this->_pSDKWrapper->withCurlOptions(
 				[
 					CURLOPT_SSL_VERIFYPEER => true,
-					CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+					CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
 					CURLOPT_CONNECTTIMEOUT => 1,
 				]
 			), onOfficeSDK::ACTION_ID_READ, 'basicsettings'
