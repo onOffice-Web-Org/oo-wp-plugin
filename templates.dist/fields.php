@@ -166,6 +166,10 @@ if (!function_exists('renderFormField')) {
 			return '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
 		}
 
+		if ($typeCurrentInput === FieldTypes::FIELD_TYPE_LABEL_TEXT) {
+			return '';
+		}
+
 
 		switch ($fieldName) {
 			case 'Briefanrede':

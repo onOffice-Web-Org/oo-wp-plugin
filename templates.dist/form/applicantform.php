@@ -99,7 +99,8 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
         in_array($input, ['krit_bemerkung_oeffentlich', 'Id']) ||
         in_array($input, ['message', 'Id']) ||
         in_array($input, ['AGB_akzeptiert', 'Id']) ||
-        in_array($input, ['Rueckruf_akzeptiert', 'Id'])
+        in_array($input, ['Rueckruf_akzeptiert', 'Id']) ||
+        in_array($input, ['gdprhinttext', 'Id'])
     ) {
         $table = 'other';
     }
@@ -107,6 +108,12 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
 		$line = '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">';
 		$line .= wp_kses_post($pForm->getFieldLabel( 'gdprcheckbox' )) .' </span>'. $addition.renderFormField( 'gdprcheckbox', $pForm ).'</label>';
+	}
+
+	if ( in_array( $input, array( 'gdprhinttext' ) ) ) {
+		$hintLabel = $pForm->getFieldLabel( 'gdprhinttext' );
+		$hintLabel = preg_replace('/<a\s+href=/', '<a target="_blank" rel="noopener noreferrer" href=', $hintLabel);
+		$line = '<div class="oo-gdpr-hint-text">' . wp_kses_post($hintLabel) . '</div>';
 	}
 
 	if ( in_array( $input, array( 'message' )) ) {

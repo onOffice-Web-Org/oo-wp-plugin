@@ -94,6 +94,11 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
             $line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">';
 			$line .= wp_kses_post($pForm->getFieldLabel( 'gdprcheckbox' )) .' '. wp_kses_post($addition).renderFormField( 'gdprcheckbox', $pForm ).'</span></label>';
 		}
+		if ( in_array( $input, array( 'gdprhinttext' ) ) ) {
+			$hintLabel = $pForm->getFieldLabel( 'gdprhinttext' );
+			$hintLabel = preg_replace('/<a\s+href=/', '<a target="_blank" rel="noopener noreferrer" href=', $hintLabel);
+			$line = '<div class="oo-gdpr-hint-text">' . wp_kses_post($hintLabel) . '</div>';
+		}
 		if ( in_array( $input, array( 'message' )) ) {
 			$isRequiredMessage = $pForm->isRequiredField( 'message' );
 			$additionMessage = $isRequiredMessage ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';

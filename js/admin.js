@@ -900,10 +900,34 @@ jQuery(document).ready(function($){
 			return name.replace('exclude', '');
 		})
 
-		if (fieldName === 'DSGVOStatus' || fieldName === 'AGB_akzeptiert' || fieldName === 'gdprcheckbox') {
+		if (fieldName === 'DSGVOStatus' || fieldName === 'AGB_akzeptiert' || fieldName === 'gdprcheckbox' || fieldName === 'gdprhinttext') {
 			var selectors = ['oopluginformfieldconfig-hiddenfield'];
 			var hiddenField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
 			hiddenField.parent().remove();
+		}
+
+		if (fieldName === 'gdprhinttext') {
+			var reqSelectors = ['oopluginformfieldconfig-required'];
+			var requiredField = clonedElement.find('input[name^=' + reqSelectors.join('],input[name^=') + ']');
+			requiredField.parent().remove();
+
+			var defaultValField = clonedElement.find('input[name*="oopluginfieldconfigformdefaultsvalues"]');
+			defaultValField.parent().remove();
+
+			var defaultLangField = clonedElement.find('select[name*="language-language"]');
+			defaultLangField.parent().remove();
+
+			clonedElement.find('input[name*="oopluginfieldconfigformtranslatedlabels-value"]').each(function() {
+				var $input = $(this);
+				var $textarea = $('<textarea></textarea>');
+				$.each(this.attributes, function() {
+					if (this.name !== 'type' && this.name !== 'size') {
+						$textarea.attr(this.name, this.value);
+					}
+				});
+				$textarea.text($input.val());
+				$input.replaceWith($textarea);
+			});
 		}
 
 		if ($(pageContainer).length) {

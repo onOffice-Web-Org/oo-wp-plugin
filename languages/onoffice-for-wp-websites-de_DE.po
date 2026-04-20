@@ -715,6 +715,9 @@ msgstr "G Absage"
 msgid "GDPR (Checkbox)"
 msgstr "DSGVO (Checkbox)"
 
+msgid "GDPR (Notice text)"
+msgstr "DSGVO (Hinweistext)"
+
 msgid "Geo Fields"
 msgstr "Umkreisfelder"
 

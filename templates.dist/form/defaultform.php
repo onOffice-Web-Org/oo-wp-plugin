@@ -61,7 +61,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 	foreach ($pForm->getInputFields() as $input => $table) {
 		if (
-			!in_array($input, array('Id', 'gdprcheckbox', 'message')) &&
+		!in_array($input, array('Id', 'gdprcheckbox', 'gdprhinttext', 'message')) &&
 			$pForm->isRequiredField($input)
 		) {
 			$hasRequiredFields = true;
@@ -86,6 +86,12 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderFormField returns escaped HTML
 			echo '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">';
 			echo wp_kses_post($pForm->getFieldLabel( 'gdprcheckbox' )) .' '. wp_kses_post($addition).renderFormField( 'gdprcheckbox', $pForm ).'</span></label>';
+			continue;
+		}
+		if ( in_array( $input, array( 'gdprhinttext' ) ) ) {
+			$hintLabel = $pForm->getFieldLabel( 'gdprhinttext' );
+			$hintLabel = preg_replace('/<a\s+href=/', '<a target="_blank" rel="noopener noreferrer" href=', $hintLabel);
+			echo '<div class="oo-gdpr-hint-text">' . wp_kses_post($hintLabel) . '</div>';
 			continue;
 		}
 		if ( in_array( $input, array( 'message' ) ) ) {

@@ -67,6 +67,14 @@ class FieldModuleCollectionDecoratorFormContact
 					'label'   => __('Message', 'onoffice-for-wp-websites'),
 					'content' => __('Special Fields', 'onoffice-for-wp-websites')
 				],
+				'gdprhinttext' => [
+					'type' => FieldTypes::FIELD_TYPE_LABEL_TEXT,
+					'length' => null,
+					'permittedvalues' => [],
+					'default' => null,
+					'label'   => __('GDPR (Notice text)', 'onoffice-for-wp-websites'),
+					'content' => __('Special Fields', 'onoffice-for-wp-websites')
+				],
 			],
 		];
 	}

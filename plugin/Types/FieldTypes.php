@@ -67,6 +67,9 @@ abstract class FieldTypes
 	/** */
 	const FIELD_TYPE_DATATYPE_USER = 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:User';
 
+	/** */
+	const FIELD_TYPE_LABEL_TEXT = 'label_text';
+
 	/** @var array */
 	const TYPES_STRING = [
 		self::FIELD_TYPE_TEXT,
