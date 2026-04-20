@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use onOffice\WPlugin\Utility\UrlHelper;
+
 
 class EstateDetailUrl
 {
@@ -53,6 +55,11 @@ class EstateDetailUrl
 
 		if ( $estateId !== 0 ) {
 			$urlElements   = wp_parse_url( $url );
+			$baseUrl       = UrlHelper::buildBaseUrl( $urlElements );
+			$path          = UrlHelper::getPath( $urlElements );
+			if ($baseUrl === '' || $path === '') {
+				return $urlLsSwitcher;
+			}
 			$getParameters = [];
 
 			if ( ! empty( $urlElements['query'] ) ) {
@@ -61,9 +68,12 @@ class EstateDetailUrl
 
 			if ( ! is_null( $oldUrl ) ) {
 				$oldUrlElements = wp_parse_url( $oldUrl );
-				$oldUrlPathArr  = explode( '/', $oldUrlElements['path'] );
-				if ( empty( end( $oldUrlPathArr ) ) || $flag ) {
-					$slashChar = '/';
+				$oldUrlPath = UrlHelper::getPath($oldUrlElements);
+				if ($oldUrlPath !== '') {
+					$oldUrlPathArr  = explode( '/', $oldUrlPath );
+					if ( empty( end( $oldUrlPathArr ) ) || $flag ) {
+						$slashChar = '/';
+					}
 				}
 			}
 
@@ -73,7 +83,7 @@ class EstateDetailUrl
 				$urlTemp .= $this->getSanitizeTitle( $title, $flag , $switchLocale);
 			}
 
-			$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $urlElements['path'] . $urlTemp . $slashChar;
+			$urlLsSwitcher = $baseUrl . $path . $urlTemp . $slashChar;
 
 			if ( ! empty( $getParameters ) ) {
 				$urlLsSwitcher .= '?' . http_build_query( $getParameters );
@@ -130,6 +140,11 @@ class EstateDetailUrl
 	{
 		$getParameters = [];
 		$urlElements   = wp_parse_url( $oldUrl );
+		$baseUrl       = UrlHelper::buildBaseUrl( $urlElements );
+		$path          = UrlHelper::getPath( $urlElements );
+		if ($baseUrl === '' || $path === '') {
+			return (string)$oldUrl;
+		}
 		$urlTemp       = $estateId;
 		$tickerUrlHasTitleFlag = false;
 
@@ -146,14 +161,14 @@ class EstateDetailUrl
 			parse_str( $urlElements['query'], $getParameters );
 		}
 
-		$oldUrlPathArr = explode( '/', $urlElements['path'] );
+		$oldUrlPathArr = explode( '/', $path );
 		if ( empty( end( $oldUrlPathArr ) ) ) {
 			array_pop( $oldUrlPathArr );
 		}
 		array_pop( $oldUrlPathArr );
 		$newPath = implode( '/', $oldUrlPathArr );
 
-		$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $newPath . '/' . $urlTemp;
+		$urlLsSwitcher = $baseUrl . $newPath . '/' . $urlTemp;
 
 		if (!empty($getParameters)) {
 			$urlLsSwitcher = add_query_arg($getParameters,$urlLsSwitcher);

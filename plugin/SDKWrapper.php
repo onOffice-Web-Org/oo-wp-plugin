@@ -67,6 +67,10 @@ class SDKWrapper
 	/** @var array */
 	private $_caches = [];
 
+	/** @var array<string, array> */
+	private $_cachedFieldTypesByLanguage = [];
+
+
 	/**
 	 * @var  SymmetricEncryption
 	 */
@@ -83,6 +87,9 @@ class SDKWrapper
 	 *
 	 */
 
+	/** @var \DI\Container Shared container instance to avoid rebuilding */
+	private static $_pSharedContainer = null;
+
 	public function __construct(
 		onOfficeSDK $pSDK = null,
 		WPOptionWrapperBase $pWPOptionWrapper = null)
@@ -94,17 +101,20 @@ class SDKWrapper
 			new DBCache(['ttl' => 3600]),
 		];
 
-		$pDIContainerBuilder = new ContainerBuilder();
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$this->_pContainer = $pDIContainerBuilder->build();
+		if (self::$_pSharedContainer === null) {
+			$pDIContainerBuilder = new ContainerBuilder();
+			$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+			self::$_pSharedContainer = $pDIContainerBuilder->build();
+		}
+		$this->_pContainer = self::$_pSharedContainer;
 		$this->_encrypter = $this->_pContainer->make(SymmetricEncryption::class);
 		$this->_pSDK->setCaches($this->_caches);
-		$this->_pSDK->setApiServer('https://api.onoffice.de/api/');
+		$this->_pSDK->setApiServer(ONOFFICE_API_SERVER);
 		$this->_pSDK->setApiVersion('latest');
 		$this->_pSDK->setApiCurlOptions(
 			[
 				CURLOPT_SSL_VERIFYPEER => true,
-				CURLOPT_PROTOCOLS => CURLPROTO_HTTPS
+				CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS
 			]
 		);
 	}
@@ -125,18 +135,6 @@ class SDKWrapper
 		$resourceType = $pApiAction->getResourceType();
 		$parameters = $pApiAction->getParameters();
 		$callback = $pApiAction->getResultCallback();
-
-
-		//1 check is call for a list
-		if(isset($parameters['listname']) && array_key_exists('params_list_cache',$parameters))
-		{
-			//2 check is list-data in Cache
-			$cacheResponse = $this->_pSDK->callFromCache($actionId, $resourceId, $identifier, $resourceType, $parameters['params_list_cache']);
-			if($cacheResponse == null)
-			{
-				$this->renewCache($parameters['listname']);
-			}
-		}
 
 		$id = $this->_pSDK->call($actionId, $resourceId, $identifier, $resourceType, $parameters);
 
@@ -188,7 +186,11 @@ class SDKWrapper
 		$records = $pApiClientAction->getResult();
 		$resultMeta = $pApiClientAction->getResultMeta();
 
-		$numpages = ceil($resultMeta['cntabsolute']/500);
+		$cntAbsolute = $resultMeta['cntabsolute'] ?? 0;
+		if (is_array($cntAbsolute)) {
+			$cntAbsolute = $cntAbsolute[0] ?? 0;
+		}
+		$numpages = ceil(intval($cntAbsolute) / 500);
 		//2 loop over other pages
 		if($page == 1 && $numpages > 1)
 		{
@@ -206,7 +208,7 @@ class SDKWrapper
 	 * (does not create cache for detail pages and similar objects)
 	 *
 	 */
-	 public function renewCache(string $listName = null)
+	 public function renewCache(string $listName = null, array $languages = null)
 	 {
 			//1 get all lists
 			//2 clean Cache
@@ -217,7 +219,7 @@ class SDKWrapper
 			$pDefaultFilterBuilderFactory = $this->_pContainer->get(DefaultFilterBuilderFactory::class);
 			$pDefaultFilterBuilderListViewAddressFactory = $this->_pContainer->get(DefaultFilterBuilderListViewAddressFactory::class);
 
-			$languages = Language::getAllWPMLLanguages();
+			$languages = $this->normalizeLanguages($languages);
 			$estateLists = $this->getEstateLists($listName);
 			$addressLists = $this->getAddressLists($listName);
 			$this->_caches = [new DBCache(['ttl' => 3600])];
@@ -274,6 +276,39 @@ class SDKWrapper
 				}
 			}
 	 }
+
+	/**
+	 * Normalize and validate onOffice language codes.
+	 * Falls back to the default language when none are valid.
+	 *
+	 * @param array|null $languages
+	 * @return array
+	 */
+	private function normalizeLanguages(array $languages = null): array
+	{
+		if ($languages === null || $languages === []) {
+			$languages = Language::getAllWPMLLanguages();
+		}
+
+		$allowedLanguages = array_values(array_unique(array_values(Language::LOCALE_MAPPING)));
+		$allowedLanguageLookup = array_fill_keys($allowedLanguages, true);
+
+		$normalizedLanguages = [];
+		foreach ($languages as $language) {
+			if (!is_string($language)) {
+				continue;
+			}
+
+			$language = strtoupper(trim($language));
+			if ($language !== '' && isset($allowedLanguageLookup[$language])) {
+				$normalizedLanguages[] = $language;
+			}
+		}
+
+		$normalizedLanguages = array_values(array_unique($normalizedLanguages));
+
+		return $normalizedLanguages === [] ? [Language::getDefault()] : $normalizedLanguages;
+	}
 	/**
 	 * return all Fields from Api, to save in Cache
 	 * @param array $language
@@ -283,6 +318,13 @@ class SDKWrapper
 	 {
 		$fieldsByModule = [];
 		foreach ($languages as $lang) {
+			if (isset($this->_cachedFieldTypesByLanguage[$lang])) {
+				foreach ($this->_cachedFieldTypesByLanguage[$lang] as $module => $moduleFields) {
+					$fieldsByModule[$module] = $moduleFields;
+				}
+				continue;
+			}
+
 			$parametersGetFieldList = [
 				'labels' => true,
 				'showContent' => true,
@@ -297,12 +339,16 @@ class SDKWrapper
 			$pApiClientActionFields->addRequestToQueue()->sendRequests();
 
 			$records = $pApiClientActionFields->getResultRecords();
+			$fieldTypesForLanguage = [];
 			foreach ($records as $moduleProperties) {
 				foreach ($moduleProperties['elements'] as $fieldName => $fieldProperties) {
-					if($fieldName != 'label')
+					if ($fieldName != 'label') {
+						$fieldTypesForLanguage[$moduleProperties['id']][$fieldName] = $fieldProperties['type'];
 						$fieldsByModule[$moduleProperties['id']][$fieldName] = $fieldProperties['type'];
+					}
 				}
 			}
+			$this->_cachedFieldTypesByLanguage[$lang] = $fieldTypesForLanguage;
 		}
 		return $fieldsByModule;
 	}

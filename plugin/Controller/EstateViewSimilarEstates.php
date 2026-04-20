@@ -93,7 +93,8 @@ class EstateViewSimilarEstates
 		while ($pValuesCurrentEstate = $pEstateList->estateIterator
 			(EstateViewFieldModifierTypes::MODIFIER_TYPE_DETAIL_SIMILAR_ESTATES)) {
 			$this->_pFilterConfiguration->setEstateKind($pValuesCurrentEstate->getValueRaw('objektart') ?? '');
-			$this->_pFilterConfiguration->setMarketingMethod($pValuesCurrentEstate->getValueRaw('vermarktungsart') ?? '');
+			$marketingMethod = (string)($pValuesCurrentEstate->getValueRaw('vermarktungsart') ?? '');
+			$this->_pFilterConfiguration->setMarketingMethod(mb_strtolower($marketingMethod));
 			$this->_pFilterConfiguration->setStreet($pValuesCurrentEstate->getValueRaw('strasse') ?? '');
 			$this->_pFilterConfiguration->setCountry($pValuesCurrentEstate->getValueRaw('land') ?? '');
 			$this->_pFilterConfiguration->setPostalCode($pValuesCurrentEstate->getValueRaw('plz') ?? '');
