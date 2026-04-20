@@ -128,7 +128,7 @@ class Installer
 		delete_option('onoffice-notice-cache-was-cleared');
 		delete_option('onoffice-settings-thousand-separator');
 		delete_option('onoffice-default-address-view');
-		
+		delete_option('onoffice-plugin-version-stored');
 
 		self::flushRules();
 	}
