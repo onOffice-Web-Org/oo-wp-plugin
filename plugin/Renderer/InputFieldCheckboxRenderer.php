@@ -30,6 +30,7 @@ use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use const ONOFFICE_DI_CONFIG_PATH;
+use function esc_attr;
 use function esc_html;
 
 
@@ -118,6 +119,15 @@ class InputFieldCheckboxRenderer
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
 				$onofficeMultipleSelect = $this->isMultipleSelect($key, $pFieldsCollection) ? '1' : '0';
+				$onofficeRangeSupported = '0';
+				$module = $this->getOoModule();
+				if ($module !== '') {
+					try {
+						$fieldType = $pFieldsCollection->getFieldByModuleAndName($module, $key)->getType();
+						$onofficeRangeSupported = FieldTypes::isRangeType($fieldType) ? '1' : '0';
+					} catch (UnknownFieldException $pEx) {
+					}
+				}
 
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
                     .'" value="'.esc_html($key).'"'
@@ -125,6 +135,7 @@ class InputFieldCheckboxRenderer
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped attributes
                     .$this->renderAdditionalAttributes()
                     .' onoffice-multipleSelectType="'.esc_attr($onofficeMultipleSelect).'"'
+					.' data-onoffice-range-supported="'.esc_attr($onofficeRangeSupported).'"'
                     .' id="'.esc_html($inputId).'">'
                     .'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'
                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $textHtml contains escaped hint text

@@ -54,7 +54,7 @@ class onOfficeSDK
 			$apiCall = new ApiCall();
 		}
 		$this->apiCall = $apiCall;
-		$this->apiCall->setServer('https://api.onoffice.de/api/');
+		$this->apiCall->setServer(ONOFFICE_API_SERVER);
 	}
 
 

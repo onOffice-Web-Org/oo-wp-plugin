@@ -258,9 +258,12 @@ class EstateDetail
 		$pDataViewSimilarEstates = $pDataSimilarSettings->getDataViewSimilarEstates();
 
 		$pSimilarEstates = new EstateViewSimilarEstates($pDataViewSimilarEstates);
+		if ($this->getEstateIds() === []) {
+			return '';
+		}
+
 		$pCopyThis = clone $this;
-		$pCopyThis->setFormatOutput(false);
-		$pCopyThis->loadEstates();
+		$pCopyThis->resetEstateIterator();
 		$pSimilarEstates->loadByMainEstates($pCopyThis);
 		return $pSimilarEstates->generateHtmlOutput($this->_estateId);
 	}
