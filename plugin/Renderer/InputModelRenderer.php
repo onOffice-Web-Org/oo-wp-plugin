@@ -375,6 +375,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_SEARCH_FIELD_FOR_FIELD_LISTS:
 			case InputModelOption::HTML_TYPE_TOGGLE_SWITCH:
 			case InputModelOption::HTML_TYPE_SELECT_TWO:
+			case InputModelBase::HTML_TYPE_TEXTAREA:
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}
