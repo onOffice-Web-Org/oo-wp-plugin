@@ -387,6 +387,7 @@ class DataFormConfigurationFactory
 		$pConfig->setTemplate($row['template']);
 		$pConfig->setCaptcha($row['captcha']);
 		$pConfig->setId($row['form_id']);
+		$pConfig->setDisplayUnitArea((bool)($row['display_unit_area'] ?? false));
 
 		if (array_key_exists('form_type', $row)) {
 			$pConfig->setFormType($row['form_type']);
