@@ -48,7 +48,6 @@ class AltchaHandler
     const REPLAY_TTL = 600; // 10 minutes, should be longer than the expected time between challenge issuance and form submission
 
     const DEFAULT_SERVER_URL = 'https://altcha.onofficeweb.com';
-    const DEFAULT_COMPLEXITY = 50000;
 
     const SUPPORTED_THEMES = [
         'onoffice-pure',
