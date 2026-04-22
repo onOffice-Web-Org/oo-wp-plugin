@@ -44,6 +44,7 @@ function oo_plugin_send_update_log() {
 		'https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/update-log.php',
 		array(
 			'timeout'  => 5,
+			'sslverify' => true,
 			'blocking' => false,
 			'body'     => array(
 				'timestamp' => gmdate( 'c' ),
