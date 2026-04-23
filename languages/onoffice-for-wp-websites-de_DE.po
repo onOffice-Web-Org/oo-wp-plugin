@@ -1768,9 +1768,6 @@ msgstr "Einheitenlisten"
 msgid "Units Lists"
 msgstr "Einheitenlisten"
 
-msgid "unknown address list name"
-msgstr "Unbekannter Adresslistenname"
-
 msgid "Up to: "
 msgstr "Bis: "
 
@@ -1898,3 +1895,18 @@ msgstr "Straße der Immobilie"
 
 msgid "Property House Number"
 msgstr "Hausnummer der Immobilie"
+
+msgid "Display"
+msgstr "Anzeige"
+
+msgid "Both"
+msgstr "Beide"
+
+msgid "From"
+msgstr "Von"
+
+msgid "To"
+msgstr "Bis"
+
+msgid "Display area units in labels (m²)"
+msgstr "Flächenangaben in Beschriftungen anzeigen (m²)"
