@@ -105,15 +105,12 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
         $table = 'other';
     }
 
-	if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-		$line = '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">';
-		$line .= wp_kses_post($pForm->getFieldLabel( 'gdprcheckbox' )) .' </span>'. $addition.renderFormField( 'gdprcheckbox', $pForm ).'</label>';
+	if ($input === 'gdprcheckbox') {
+		$line = renderGdprCheckbox($pForm, $displayError, $isRequired, $addition);
 	}
 
-	if ( in_array( $input, array( 'gdprhinttext' ) ) ) {
-		$hintLabel = $pForm->getFieldLabel( 'gdprhinttext' );
-		$hintLabel = preg_replace('/<a\s+href=/', '<a target="_blank" rel="noopener noreferrer" href=', $hintLabel);
-		$line = '<div class="oo-gdpr-hint-text">' . wp_kses_post($hintLabel) . '</div>';
+	if ($input === 'gdprhinttext') {
+		$line = renderGdprHintText($pForm);
 	}
 
 	if ( in_array( $input, array( 'message' )) ) {
