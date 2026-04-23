@@ -98,6 +98,7 @@ class TestTemplateEstateDefaultDetail
 			'energyClass' => 'A',
 			'baujahr' => 'testField',
 			'dreizeiler' => 'Tolle Immobilie in 3 Zeilen',
+			'energieausweis_gueltig_bis' => '15.03.2030',
 		];
 
 		$totalCostsData = [

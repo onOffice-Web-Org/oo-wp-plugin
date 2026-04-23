@@ -28,24 +28,27 @@
             applyGradientToSegments();
 
             function applyGradientToSegments() {
-                const segments = $('.oo-details-energy-certificate .energy-certificate-container .segment');
+                // Apply gradient to all energy certificate containers (legacy and EPBD-2024)
+                $('.oo-details-energy-certificate').each(function() {
+                    const segments = $(this).find('.energy-certificate-container .segment');
 
-                if (segments.length === 0) return;
+                    if (segments.length === 0) return;
 
-                const colors = {
-                    start: [0, 128, 0],
-                    middle: [255, 185, 0],
-                    end: [255, 0, 0]
-                };
+                    const colors = {
+                        start: [0, 128, 0],
+                        middle: [255, 185, 0],
+                        end: [255, 0, 0]
+                    };
 
-                segments.each(function(index) {
-                    const positionRatio = index / (segments.length - 1);
-                    const isInInitialSegment = positionRatio < 0.5;
-                    const normalizedPosition = isInInitialSegment ? positionRatio * 2 : (positionRatio - 0.5) * 2;
-                    const color = calculateColor(isInInitialSegment ? colors.start : colors.middle, isInInitialSegment ? colors.middle : colors.end, normalizedPosition);
-                    const nextColor = calculateColor(isInInitialSegment ? colors.start : colors.middle, isInInitialSegment ? colors.middle : colors.end, normalizedPosition + 1 / (segments.length - 1));
+                    segments.each(function(index) {
+                        const positionRatio = index / (segments.length - 1);
+                        const isInInitialSegment = positionRatio < 0.5;
+                        const normalizedPosition = isInInitialSegment ? positionRatio * 2 : (positionRatio - 0.5) * 2;
+                        const color = calculateColor(isInInitialSegment ? colors.start : colors.middle, isInInitialSegment ? colors.middle : colors.end, normalizedPosition);
+                        const nextColor = calculateColor(isInInitialSegment ? colors.start : colors.middle, isInInitialSegment ? colors.middle : colors.end, normalizedPosition + 1 / (segments.length - 1));
 
-                    $(this).css('background', `linear-gradient(to right, rgb(${color.join(',')}), rgb(${nextColor.join(',')}))`);
+                        $(this).css('background', `linear-gradient(to right, rgb(${color.join(',')}), rgb(${nextColor.join(',')}))`);
+                    });
                 });
             }
 

@@ -129,6 +129,9 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_SHOW_FORM_AS_MODAL = 'showFormAsModal';
 
 	/** */
+	const INPUT_FORM_DISPLAY_UNIT_AREA = 'displayUnitArea';
+
+	/** */
 	const INPUT_FORM_ENABLE_CREATE_TASK = 'enableCreateTask';
 
 	/** */
@@ -336,6 +339,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_SHOW_FORM_AS_MODAL => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'show_form_as_modal',
+		],
+		self::INPUT_FORM_DISPLAY_UNIT_AREA => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'display_unit_area',
 		],
 		self::INPUT_FORM_ENABLE_CREATE_TASK => [
 			self::KEY_TABLE => 'oo_plugin_form_taskconfig',

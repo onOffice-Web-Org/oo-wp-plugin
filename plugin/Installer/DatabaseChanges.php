@@ -46,7 +46,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 63;
+	const MAX_VERSION = 64;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -180,7 +180,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->updateValueGeoFieldsForForms();
 			case $dbversion <= 61:
 				$this->migrateMarkedPropertiesSort();
-			case $dbversion <= 62:
+			case $dbversion <= 63:
+				$this->addDisplayUnitAreaToForms();
+			case $dbversion <= 64:
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
@@ -324,6 +326,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`contact_type` varchar(255) NULL DEFAULT NULL,
 			`page_shortcode` tinytext NOT NULL,
 			`show_form_as_modal` tinyint(1) NOT NULL DEFAULT '1',
+			`display_unit_area` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -1320,6 +1323,23 @@ class DatabaseChanges implements DatabaseChangesInterface
 					error_log("Failed to update listview_id {$row->listview_id} in migrateMarkedPropertiesSort()"); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Needed for debugging database migration issues.
 				}
 			}
+		}
+	}
+
+
+	/**
+	 *
+	 *
+	 */
+
+	private function addDisplayUnitAreaToForms(): void
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . 'oo_plugin_forms';
+		$columnExists = $this->_pWPDB->get_results("SHOW COLUMNS FROM $tableName LIKE 'display_unit_area'");
+		if (empty($columnExists)) {
+			$sql = "ALTER TABLE $tableName ADD COLUMN display_unit_area tinyint(1) NOT NULL DEFAULT '0'";
+			$this->_pWPDB->query($sql);
 		}
 	}
 }

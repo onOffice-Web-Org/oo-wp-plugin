@@ -133,6 +133,9 @@ class DataFormConfiguration
 	/** @var int */
 	private $_taskPriority = 0;
 
+	/** @var bool */
+	private $_displayUnitArea = false;
+
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -443,4 +446,12 @@ class DataFormConfiguration
 	/** @param int $taskStatus */
 	public function setTaskStatus(int $taskStatus)
 		{ $this->_taskStatus = $taskStatus; }
+
+	/** @return bool */
+	public function getDisplayUnitArea(): bool
+		{ return $this->_displayUnitArea; }
+
+	/** @param bool $displayUnitArea */
+	public function setDisplayUnitArea(bool $displayUnitArea)
+		{ $this->_displayUnitArea = $displayUnitArea; }
 }
