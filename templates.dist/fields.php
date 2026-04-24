@@ -433,6 +433,12 @@ if (!function_exists('renderGdprHintText')) {
 	function renderGdprHintText($pForm): string
 	{
 		$hintLabel = $pForm->getFieldLabel('gdprhinttext');
+		$defaultLabel = __('GDPR (Notice text)', 'onoffice-for-wp-websites');
+		// Don't render anything if the admin hasn't configured a hint text
+		// (label is empty or still the default fallback).
+		if (trim((string) $hintLabel) === '' || $hintLabel === esc_html($defaultLabel) || $hintLabel === $defaultLabel) {
+			return '';
+		}
 		// Match opening <a> tag regardless of attribute order so we don't miss links where href isn't the first attribute (e.g. <a class="..." href="...">).
 		$hintLabel = preg_replace('/<a\b([^>]*?)\shref=/i', '<a$1 target="_blank" rel="noopener noreferrer" href=', $hintLabel);
 		return '<div class="oo-gdpr-hint-text">' . wp_kses_post($hintLabel) . '</div>';
