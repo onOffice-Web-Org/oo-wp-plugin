@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d786026103f055a510d74911a90b06d5",
+    "content-hash": "122bd11d83a9752378270fcab21bb58d",
     "packages": [
         {
             "name": "altcha-org/altcha",
@@ -172,25 +172,25 @@
         },
         {
             "name": "mjaschen/phpgeo",
-            "version": "4.2.1",
+            "version": "6.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mjaschen/phpgeo.git",
-                "reference": "5e16834f9433c7780cda7e16aa279814f98ca697"
+                "reference": "8152f70d8ed257665fd73f82f2e6a88707309786"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mjaschen/phpgeo/zipball/5e16834f9433c7780cda7e16aa279814f98ca697",
-                "reference": "5e16834f9433c7780cda7e16aa279814f98ca697",
+                "url": "https://api.github.com/repos/mjaschen/phpgeo/zipball/8152f70d8ed257665fd73f82f2e6a88707309786",
+                "reference": "8152f70d8ed257665fd73f82f2e6a88707309786",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3 || ^8.0"
+                "php": "^8.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.6",
-                "vimeo/psalm": "^4.13"
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "^11.0",
+                "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
             "autoload": {
@@ -239,7 +239,7 @@
                 "docs": "https://phpgeo.marcusjaschen.de/Installation.html",
                 "email": "mjaschen@gmail.com",
                 "issues": "https://github.com/mjaschen/phpgeo/issues",
-                "source": "https://github.com/mjaschen/phpgeo/tree/4.2.1"
+                "source": "https://github.com/mjaschen/phpgeo/tree/6.0.2"
             },
             "funding": [
                 {
@@ -251,7 +251,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-12-03T08:01:10+00:00"
+            "time": "2025-12-02T13:10:24+00:00"
         },
         {
             "name": "orchidjs/tom-select",
@@ -5000,7 +5000,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -5013,5 +5013,5 @@
     "platform-overrides": {
         "php": "8.2"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
