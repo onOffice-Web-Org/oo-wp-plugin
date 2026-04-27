@@ -65,6 +65,9 @@ class CustomLabelRowSaver
 	public function saveCustomLabels(int $formId, array $row, FieldsCollection $pUsedFieldsCollection, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField)
 	{
 		foreach ($row as $field => $values) {
+			if (!is_string($field)) {
+				continue;
+			}
 			$values = is_object($values) ? (array)$values : $values;
 			if ($values !== [] && $values !== '') {
 				$pField = $pUsedFieldsCollection->getFieldByKeyUnsafe($field);

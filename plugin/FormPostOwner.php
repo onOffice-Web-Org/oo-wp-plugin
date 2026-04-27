@@ -341,6 +341,7 @@ class FormPostOwner
 			$requestParams['addressdata']['DSGVOStatus'] = "speicherungzugestimmt";
 		}
 		unset($requestParams['addressdata']['gdprcheckbox']);
+		unset($requestParams['addressdata']['gdprhinttext']);
 
 		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
 		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_DO,

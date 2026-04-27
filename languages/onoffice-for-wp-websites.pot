@@ -979,6 +979,10 @@ msgid "GDPR (Checkbox)"
 msgstr ""
 
 #: 
+msgid "GDPR (Notice text)"
+msgstr ""
+
+#: 
 msgid "Geo Fields"
 msgstr ""
 

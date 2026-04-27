@@ -207,6 +207,7 @@ class FormPostInterest
 			$requestParams['addressdata']['DSGVOStatus'] = "speicherungzugestimmt";
 		}
 		unset($requestParams['addressdata']['gdprcheckbox']);
+		unset($requestParams['addressdata']['gdprhinttext']);
 
 		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
 		$pAPIClientAction = new APIClientActionGeneric

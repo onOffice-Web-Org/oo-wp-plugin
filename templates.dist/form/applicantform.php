@@ -99,14 +99,18 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
         in_array($input, ['krit_bemerkung_oeffentlich', 'Id']) ||
         in_array($input, ['message', 'Id']) ||
         in_array($input, ['AGB_akzeptiert', 'Id']) ||
-        in_array($input, ['Rueckruf_akzeptiert', 'Id'])
+        in_array($input, ['Rueckruf_akzeptiert', 'Id']) ||
+        in_array($input, ['gdprhinttext', 'Id'])
     ) {
         $table = 'other';
     }
 
-	if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-		$line = '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">';
-		$line .= wp_kses_post($pForm->getFieldLabel( 'gdprcheckbox' )) .' </span>'. $addition.renderFormField( 'gdprcheckbox', $pForm ).'</label>';
+	if ($input === 'gdprcheckbox') {
+		$line = renderGdprCheckbox($pForm, $displayError, $isRequired, $addition);
+	}
+
+	if ($input === 'gdprhinttext') {
+		$line = renderGdprHintText($pForm);
 	}
 
 	if ( in_array( $input, array( 'message' )) ) {

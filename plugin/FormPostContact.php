@@ -228,6 +228,7 @@ class FormPostContact
 			$requestParams['addressdata']['DSGVOStatus'] = "speicherungzugestimmt";
 		}
 		unset($requestParams['addressdata']['gdprcheckbox']);
+		unset($requestParams['addressdata']['gdprhinttext']);
 		unset($requestParams['addressdata']['newsletter']);
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;

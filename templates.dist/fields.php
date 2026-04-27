@@ -166,6 +166,14 @@ if (!function_exists('renderFormField')) {
 			return '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
 		}
 
+		if ($typeCurrentInput === FieldTypes::FIELD_TYPE_LABEL_TEXT) {
+			return '';
+		}
+
+		if ($typeCurrentInput === FieldTypes::FIELD_TYPE_LABEL_TEXT) {
+			return '';
+		}
+
 
 		switch ($fieldName) {
 			case 'Briefanrede':
@@ -405,5 +413,34 @@ if (!function_exists('renderCityField')) {
 		$htmlSelect .= '</select>';
 
 		return $htmlSelect;
+	}
+}
+
+if (!function_exists('renderGdprCheckbox')) {
+	function renderGdprCheckbox($pForm, bool $displayError, bool $isRequired, string $addition): string
+	{
+		$errorClass = ($displayError && $isRequired) ? ' displayerror' : '';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderFormField and $addition are already escaped
+		return '<label><span class="oo-label-text' . $errorClass . '">'
+			. wp_kses_post($pForm->getFieldLabel('gdprcheckbox')) . ' '
+			. wp_kses_post($addition)
+			. renderFormField('gdprcheckbox', $pForm)
+			. '</span></label>';
+	}
+}
+
+if (!function_exists('renderGdprHintText')) {
+	function renderGdprHintText($pForm): string
+	{
+		$hintLabel = $pForm->getFieldLabel('gdprhinttext');
+		$defaultLabel = __('GDPR (Notice text)', 'onoffice-for-wp-websites');
+		// Don't render anything if the admin hasn't configured a hint text
+		// (label is empty or still the default fallback).
+		if (trim((string) $hintLabel) === '' || $hintLabel === esc_html($defaultLabel) || $hintLabel === $defaultLabel) {
+			return '';
+		}
+		// Match opening <a> tag regardless of attribute order so we don't miss links where href isn't the first attribute (e.g. <a class="..." href="...">).
+		$hintLabel = preg_replace('/<a\b([^>]*?)\shref=/i', '<a$1 target="_blank" rel="noopener noreferrer" href=', $hintLabel);
+		return '<div class="oo-gdpr-hint-text">' . wp_kses_post($hintLabel) . '</div>';
 	}
 }

@@ -14,7 +14,7 @@ onOffice.custom_labels_input_converter = function () {
     document.querySelectorAll('select[name=language-custom-label-language].onoffice-input, select[name=excludelanguage-custom-label-language].onoffice-input').forEach(function (element) {
         element.backupLanguageSelection = {};
         var mainInput = element.parentElement.parentElement
-            .querySelector('input[name*="oopluginfieldconfigformtranslatedlabels-value"].onoffice-input');
+            .querySelector('input[name*="oopluginfieldconfigformtranslatedlabels-value"].onoffice-input, textarea[name*="oopluginfieldconfigformtranslatedlabels-value"].onoffice-input');
         var fieldname = element.parentElement.parentElement.parentElement
             .querySelector('span.menu-item-settings-name').textContent;
         const uniqueFieldname = getUniqueFieldname(element, fieldname);
@@ -39,7 +39,7 @@ onOffice.custom_labels_input_converter = function () {
                     }
 
                     var targetInput = element.parentElement.parentElement.querySelector(
-                        'input[name="customlabel-lang[' + fieldname + '][' + lang + ']"]');
+                        'input[name="customlabel-lang[' + fieldname + '][' + lang + ']"], textarea[name="customlabel-lang[' + fieldname + '][' + lang + ']"]');
                     targetInput.value = predefinedValues[fieldname][lang];
                 }
             }

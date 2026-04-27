@@ -61,7 +61,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 	foreach ($pForm->getInputFields() as $input => $table) {
 		if (
-			!in_array($input, array('Id', 'gdprcheckbox', 'message')) &&
+		!in_array($input, array('Id', 'gdprcheckbox', 'gdprhinttext', 'message')) &&
 			$pForm->isRequiredField($input)
 		) {
 			$hasRequiredFields = true;
@@ -82,10 +82,14 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		if ( in_array( $input, array( 'Id' ) ) ) {
 			continue;
 		}
-		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderFormField returns escaped HTML
-			echo '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">';
-			echo wp_kses_post($pForm->getFieldLabel( 'gdprcheckbox' )) .' '. wp_kses_post($addition).renderFormField( 'gdprcheckbox', $pForm ).'</span></label>';
+		if ($input === 'gdprcheckbox') {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderGdprCheckbox returns escaped HTML
+			echo renderGdprCheckbox($pForm, $displayError, $isRequired, $addition);
+			continue;
+		}
+		if ($input === 'gdprhinttext') {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderGdprHintText returns escaped HTML
+			echo renderGdprHintText($pForm);
 			continue;
 		}
 		if ( in_array( $input, array( 'message' ) ) ) {
