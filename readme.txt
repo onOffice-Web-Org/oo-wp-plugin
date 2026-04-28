@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 6.1
 Tested up to: 6.9.1
 Requires PHP: 8.2
-Stable tag: 6.12
+Stable tag: 6.14
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -76,7 +76,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-= 6.13 (2026-04-28) =
+= 6.14 (2026-04-28) =
 
 **Added**
 * GDPR consent clause field for forms
@@ -94,6 +94,11 @@ Start editing inside the `onoffice-personalized` folder.
 * Critical error on detail page when object title is missing
 * Markdown function
 * Frontend Access Violation error
+
+= 6.13 (2026-04-28) =
+
+**Added**
+* PHP and WordPress metadata to updater.json
 
 = 6.12 (2026-03-31) =
 
