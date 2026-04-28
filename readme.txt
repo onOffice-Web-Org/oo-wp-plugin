@@ -2,7 +2,7 @@
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 6.1
-Tested up to: 6.9
+Tested up to: 6.9.1
 Requires PHP: 8.2
 Stable tag: 6.12
 License: AGPL 3.0
@@ -75,6 +75,25 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.13 (2026-04-28) =
+
+**Added**
+* GDPR consent clause field for forms
+* "From-to" fields for property search
+
+**Changed**
+* Updated energy certificate scale according to GEG
+* API performance improvements
+* Improved "Rent vs. Purchase" price filter logic
+
+**Fixed**
+* stepper issue in "Property Valuation" form
+* property list duplication error
+* balcony results filter
+* Critical error on detail page when object title is missing
+* Markdown function
+* Frontend Access Violation error
 
 = 6.12 (2026-03-31) =
 
