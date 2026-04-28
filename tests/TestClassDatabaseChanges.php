@@ -119,7 +119,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(63, $dbversion);
+		$this->assertEquals(64, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -212,9 +212,9 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(9))
+		$this->_pWPDBMock->expects($this->exactly(10))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput, []);
 
 		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
 			->will($this->returnValue(true));
@@ -273,9 +273,9 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(7))
+		$this->_pWPDBMock->expects($this->exactly(8))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput, []);
 
 		$this->_pWPDBMock->expects($this->once())->method('delete')
 			->will($this->returnValue(true));
@@ -290,7 +290,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(63, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(64, DatabaseChanges::MAX_VERSION);
 	}
 
 

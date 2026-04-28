@@ -27,6 +27,7 @@ use DI\NotFoundException;
 use Exception;
 use onOffice\WPlugin\Gui\AdminPageAjax;
 use onOffice\WPlugin\Model\FormModel;
+use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Types\FieldTypes;
 use RuntimeException;
 use function __;
@@ -86,7 +87,13 @@ class InputFieldComplexSortableDetailListContentDefault
 				$pInputModel->getField() == 'availableOptions') {
 				continue;
 			}
-			if (($key === 'DSGVOStatus' || $key === 'AGB_akzeptiert' || $key === 'gdprcheckbox') && $pInputModel->getField() === 'hidden_field') {
+			if (($key === 'DSGVOStatus' || $key === 'AGB_akzeptiert' || $key === 'gdprcheckbox' || $key === 'gdprhinttext') && $pInputModel->getField() === 'hidden_field') {
+				continue;
+			}
+
+			if ($key === 'gdprhinttext' && ($pInputModel->getField() === 'required'
+				|| $pInputModel->getTable() === 'oo_plugin_fieldconfig_form_defaults_values'
+				|| $pInputModel->getTable() === 'language')) {
 				continue;
 			}
 
@@ -96,7 +103,7 @@ class InputFieldComplexSortableDetailListContentDefault
 			if ($key !== 'Ort' && $pInputModel->getField() == 'convertInputTextToSelectForField' && !$isDummy) {
 				continue;
 			}
-			if (($type === null || !(FieldTypes::isNumericType($type) || in_array($type, [FieldTypes::FIELD_TYPE_DATETIME, FieldTypes::FIELD_TYPE_DATE]))) && $pInputModel->getField() === 'rangeFieldDisplayMode' && !$isDummy) {
+			if (($type === null || !FieldTypes::isRangeType($type)) && str_starts_with($pInputModel->getField(), 'rangeFieldDisplayMode') && !$isDummy) {
 				continue;
 			}
 			if ($pInputModel->getTable() === 'oo_plugin_form_multipage_title') {
@@ -118,6 +125,13 @@ class InputFieldComplexSortableDetailListContentDefault
 				if (strpos($pInputModel->getTable(), AdminPageAjax::EXCLUDE_FIELD) === 0) {
 					$pInputModel->setTable(substr($pInputModel->getTable(), strlen(AdminPageAjax::EXCLUDE_FIELD)));
 				}
+			}
+
+			if ($key === 'gdprhinttext' && (
+				$pInputModel->getTable() === 'oo_plugin_fieldconfig_form_translated_labels'
+				|| $pInputModel->getTable() === AdminPageAjax::EXCLUDE_FIELD . 'oo_plugin_fieldconfig_form_translated_labels'
+			)) {
+				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXTAREA);
 			}
 
 			$pFormModel->addInputModel($pInputModel);

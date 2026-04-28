@@ -25,8 +25,8 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 6.13
-Requires PHP: 8.0
+Version: 6.14
+Requires PHP: 8.2
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -34,7 +34,7 @@ Domain Path: /languages
 */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-const ONOFFICE_PLUGIN_VERSION = '6.13';
+const ONOFFICE_PLUGIN_VERSION = '6.14';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
 
 require __DIR__ . '/vendor/autoload.php';
@@ -79,6 +79,8 @@ use onOffice\WPlugin\Controller\AddressDetailUrl;
 const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
 
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
+
+define('ONOFFICE_API_SERVER', 'https://api.onoffice.de/api/');
 
 // enable per-request db caching (experimental) - this will cache selects in memory for the current request, prevents multiple database queries for the same data
 const OO_DB_REQUEST_CACHE = true;

@@ -67,6 +67,9 @@ abstract class FieldTypes
 	/** */
 	const FIELD_TYPE_DATATYPE_USER = 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:User';
 
+	/** */
+	const FIELD_TYPE_LABEL_TEXT = 'label_text';
+
 	/** @var array */
 	const TYPES_STRING = [
 		self::FIELD_TYPE_TEXT,
@@ -80,6 +83,7 @@ abstract class FieldTypes
 		self::FIELD_TYPE_MULTISELECT => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
 		self::FIELD_TYPE_SINGLESELECT => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
 		self::FIELD_TYPE_TEXT => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+		self::FIELD_TYPE_LABEL_TEXT => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
 		self::FIELD_TYPE_INTEGER => FILTER_VALIDATE_INT,
 		self::FIELD_TYPE_VARCHAR => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
 		self::FIELD_TYPE_FLOAT => FILTER_SANITIZE_FULL_SPECIAL_CHARS, // locale-specific processing needed

@@ -33,6 +33,7 @@ use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\CaptchaEnterpriseHandler;
+use onOffice\WPlugin\Form\AltchaHandler;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -221,6 +222,17 @@ abstract class FormPost
         if (!empty($classicSiteKey) && !empty($classicSecretKey)) {
             $pHandler = new CaptchaHandler($token, $classicSecretKey);
             return $pHandler->checkCaptcha();
+        }
+
+        // ALTCHA fallback: activated when no reCAPTCHA is configured and a supported theme is active
+        if (AltchaHandler::isAltchaActive()) {
+            $altchaPayload = $_POST['altcha'] ?? '';
+            try {
+                $pAltchaHandler = new AltchaHandler($altchaPayload, AltchaHandler::getHmacKey());
+                return $pAltchaHandler->checkCaptcha();
+            } catch (\Exception $e) {
+                return false;
+            }
         }
 
         return true;

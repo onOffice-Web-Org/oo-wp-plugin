@@ -26,7 +26,7 @@ function oo_plugin_updater( $transient ){
 
 	$remote = json_decode( wp_remote_retrieve_body( $remote ) );
 	if( $remote && version_compare( ONOFFICE_PLUGIN_VERSION, $remote->version, '<' )  ) {
-		$required_php = ! empty( $remote->requires_php ) ? (string) $remote->requires_php : '8.0';
+		$required_php = ! empty( $remote->requires_php ) ? (string) $remote->requires_php : '8.2';
 
 		$res = new stdClass();
 		$res->slug         = 'oo-wp-plugin';

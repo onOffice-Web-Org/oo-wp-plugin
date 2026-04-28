@@ -23,6 +23,7 @@ namespace onOffice\WPlugin;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -134,14 +135,16 @@ class EstateList
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
+	 * @param Container|null $pContainer If null, a new container will be built (legacy).
+	 *        Pass the global DI container from plugin.php for better performance.
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function __construct(DataView $pDataView, EstateListEnvironment $pEnvironment = null)
+	public function __construct(DataView $pDataView, EstateListEnvironment $pEnvironment = null, Container $pContainer = null)
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
+		if ($pContainer === null) {
+			$pContainer = self::getGlobalContainer();
+		}
 		$this->_pEnvironment = $pEnvironment ?? new EstateListEnvironmentDefault($pContainer);
 		$this->_pDataView = $pDataView;
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
@@ -150,6 +153,23 @@ class EstateList
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
 		$this->_pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
 		$this->_redirectIfOldUrl = $pContainer->get(Redirector::class);
+	}
+
+	/**
+	 * Returns a shared global DI container instance.
+	 * Avoids rebuilding the container multiple times per request.
+	 *
+	 * @return Container
+	 */
+	private static function getGlobalContainer(): Container
+	{
+		static $pGlobalContainer = null;
+		if ($pGlobalContainer === null) {
+			$pContainerBuilder = new ContainerBuilder;
+			$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+			$pGlobalContainer = $pContainerBuilder->build();
+		}
+		return $pGlobalContainer;
 	}
 
 	/**
@@ -211,12 +231,44 @@ class EstateList
 		$estateIds = $this->getEstateIdToForeignMapping($this->_records);
 
 		if ($estateIds !== []) {
-			$this->getEstateContactPerson($estateIds);
+			// --- BATCHED Phase 2: Queue idsfromrelation + estatepictures, send together ---
+			$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 
+			// Queue idsfromrelation (contact persons)
+			$pRelationAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
+			$pRelationAction->setParameters([
+				'parentids' => array_keys($estateIds),
+				'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
+			]);
+			$pRelationAction->addRequestToQueue();
+
+			// Queue estatepictures
 			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles();
+			$pPicturesAction = null;
+			if (count($fileCategories) > 0) {
+				$pPicturesAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'estatepictures');
+				$pPicturesAction->setParameters([
+					'estateids' => array_values($estateIds),
+					'categories' => $fileCategories,
+					'language' => Language::getDefault(),
+				]);
+				$pPicturesAction->addRequestToQueue();
+			}
+
+			// Send idsfromrelation + estatepictures in ONE HTTP request
+			$pSDKWrapper->sendRequests();
+
+			// Process idsfromrelation results
+			$this->collectEstateContactPerson($pRelationAction->getResultRecords(), $estateIds);
+
+			// Process estatepictures results
+			if ($pPicturesAction !== null && $pPicturesAction->getResultStatus()) {
+				$this->_pEstateFiles->collectEstateFilesFromRecords($pPicturesAction->getResultRecords());
+			}
+
+			// --- BATCHED Phase 3: file GETs (already batched internally) ---
 			try {
-				$this->_pEstateFiles->getAllFiles($fileCategories, $estateIds, $this->_pEnvironment->getSDKWrapper());
-				$this->_pEstateFiles->getFilesByEstateIds($estateIds, $this->_pEnvironment->getSDKWrapper());
+				$this->_pEstateFiles->getFilesByEstateIds($estateIds, $pSDKWrapper);
 			} catch (\onOffice\SDK\Exception\HttpFetchNoResultException $e) {
 				// Estate files could not be fetched — continue without images
 			}
@@ -443,8 +495,11 @@ class EstateList
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
+
+		if (in_array('regionaler_zusatz', $inputs->getFields(), true)) {
+			$pFieldBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		}
 
 		foreach ($inputs->getFields() as $name) {
 			if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
@@ -469,8 +524,11 @@ class EstateList
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
+
+		if (in_array('regionaler_zusatz', $inputs->getFilterableFields(), true)) {
+			$pFieldBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		}
 
 		foreach ($inputs->getFilterableFields() as $name) {
 			if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
@@ -478,27 +536,8 @@ class EstateList
 			}
 		}
 		$inputs->setFilterableFields($activeInputs);
+
 		return $inputs;
-	}
-
-	/**
-	 * @param array $estateIds
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws API\ApiClientException
-	 */
-	private function getEstateContactPerson(array $estateIds)
-	{
-		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
-
-		$parameters = [
-			'parentids' => array_keys($estateIds),
-			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
-		];
-		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
-		$pAPIClientAction->setParameters($parameters);
-		$pAPIClientAction->addRequestToQueue()->sendRequests();
-		$this->collectEstateContactPerson($pAPIClientAction->getResultRecords(), $estateIds);
 	}
 
 	/**
@@ -724,7 +763,6 @@ class EstateList
 	 * @param array $estateIds
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 * @throws API\ApiClientException
 	 */
 	private function collectEstateContactPerson($responseArrayContacts, array $estateIds)
 	{
@@ -769,11 +807,15 @@ class EstateList
 				$allAddressIds = [$allAddressIds[0]];
 			}
 
-			$addressList = $this->_pEnvironment->getAddressList();
+			try {
+				$addressList = $this->_pEnvironment->getAddressList();
 
-			$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
-			$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
-			$addressList->loadBrokerAddressesById($allAddressIds, $fields);
+				$pDefaultFilterBuilder = new DefaultFilterBuilderDetailViewAddress();
+				$addressList->setDefaultFilterBuilder($pDefaultFilterBuilder);
+				$addressList->loadBrokerAddressesById($allAddressIds, $fields, false);
+			} catch (API\ApiClientException $exception) {
+				error_log('onOffice: Address list data unavailable: ' . $exception->getMessage());
+			}
 		}
 	}
 
@@ -1282,7 +1324,10 @@ class EstateList
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$pFieldsCollectionBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		$filterableFields = $this->_pDataView->getFilterableFields();
+		if (in_array('regionaler_zusatz', $filterableFields, true)) {
+			$pFieldsCollectionBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
+		}
 		if (!empty($this->_pDataView->getConvertTextToSelectForCityField())) {
 			$pFieldsCollectionBuilderShort->addFieldEstateCityValues($pFieldsCollection, $this->getShowReferenceEstate());
 		}
@@ -1305,7 +1350,9 @@ class EstateList
 			$geoFields = $pDataView->getGeoFields();
 			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
 		}
-		$allDisplayModes = $pDataView->getRangeFieldDisplayModes();
+		$allDisplayModes = method_exists($pDataView, 'getRangeFieldDisplayModes')
+			? $pDataView->getRangeFieldDisplayModes()
+			: [];
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)

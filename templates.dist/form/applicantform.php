@@ -74,7 +74,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 	$searchcriteriaLine = '';
 	$isHiddenField = $pForm->isHiddenField($input);
-	$label = $pForm->getFieldLabel($input);
+	$label = wp_kses_post($pForm->getFieldLabel($input));
 
 
 	if ( in_array( $input, array( 'kaufpreis','kaltmiete','wohnflaeche','anzahl_zimmer' ) ) ) {
@@ -85,7 +85,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
 			$line =	 !$isHiddenField ? '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.' '.$addition.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
 		} else {
-			$line = '<label>'.$pForm->getFieldLabel($input).' '.$addition;
+			$line = '<label>'.$label.' '.$addition;
 			$line .= renderFormField($input, $pForm).'</span></label>';
 		}
 
@@ -99,14 +99,18 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
         in_array($input, ['krit_bemerkung_oeffentlich', 'Id']) ||
         in_array($input, ['message', 'Id']) ||
         in_array($input, ['AGB_akzeptiert', 'Id']) ||
-        in_array($input, ['Rueckruf_akzeptiert', 'Id'])
+        in_array($input, ['Rueckruf_akzeptiert', 'Id']) ||
+        in_array($input, ['gdprhinttext', 'Id'])
     ) {
         $table = 'other';
     }
 
-	if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-		$line = '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">';
-		$line .= $pForm->getFieldLabel( 'gdprcheckbox' ) .' </span>'. $addition.renderFormField( 'gdprcheckbox', $pForm ).'</label>';
+	if ($input === 'gdprcheckbox') {
+		$line = renderGdprCheckbox($pForm, $displayError, $isRequired, $addition);
+	}
+
+	if ($input === 'gdprhinttext') {
+		$line = renderGdprHintText($pForm);
 	}
 
 	if ( in_array( $input, array( 'message' )) ) {
@@ -117,12 +121,12 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		$errorHtml = renderErrorHtml($errorMessage, $isRequiredMessage);
 		
 		if (!$isHiddenField) {
-			$line = '<label class="' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$pForm->getFieldLabel( 'message' );
+			$line = '<label class="' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.wp_kses_post($pForm->getFieldLabel( 'message' ));
 			$line .= ' '.$additionMessage;
-			$line .= '<textarea name="message" autocomplete="off"' . ($isRequiredMessage ? ' required aria-required="true" aria-invalid="false"' : '') . '>' . $pForm->getFieldValue('message') . '</textarea>'.$errorHtml.'</label>';
+			$line .= '<textarea name="message" autocomplete="off"' . ($isRequiredMessage ? ' required aria-required="true" aria-invalid="false"' : '') . '>' .esc_textarea($pForm->getFieldValue('message')) . '</textarea>'.$errorHtml.'</label>';
 
 		} else {
-			$line = '<input type="hidden" name="message" value="' . $pForm->getFieldValue('message') . '">';
+			$line = '<input type="hidden" name="message" value="' . esc_attr($pForm->getFieldValue('message')) . '">';
 		}
 	}
 

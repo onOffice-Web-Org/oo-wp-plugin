@@ -54,6 +54,7 @@ class AdminPageFormSettingsApplicantSearch
 
 		$pInputModelResultLimit = $pFormModelBuilder->createInputModelResultLimit();
 		$pInputModelCaptcha = $pFormModelBuilder->createInputModelCaptchaRequired();
+		$pInputModelDisplayUnitArea = $pFormModelBuilder->createInputModelDisplayUnitArea();
 
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
@@ -61,6 +62,7 @@ class AdminPageFormSettingsApplicantSearch
 		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice-for-wp-websites'));
 		$pFormModelFormSpecific->addInputModel($pInputModelResultLimit);
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
+		$pFormModelFormSpecific->addInputModel($pInputModelDisplayUnitArea);
 		$this->addFormModel($pFormModelFormSpecific);
 
 		$pDataFormConfiguration = new DataFormConfigurationApplicantSearch;

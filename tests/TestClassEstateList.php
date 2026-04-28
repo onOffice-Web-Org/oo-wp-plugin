@@ -31,6 +31,7 @@ use DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\AddressList;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\ArrayContainerEscape;
@@ -551,6 +552,26 @@ class TestClassEstateList
 		$this->_pEstateList->estateIterator();
 		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email', 'imageAlt' => ''])],
 			$this->_pEstateList->getEstateContacts());
+	}
+
+	public function testLoadEstatesWithoutAddressModuleAccess()
+	{
+		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
+			->onlyMethods(['__construct', 'loadBrokerAddressesById'])
+			->getMock();
+
+		$pApiClientActionMock = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->getMock();
+
+		$pAddressDataMock->method('loadBrokerAddressesById')
+			->willThrowException(new ApiClientException($pApiClientActionMock));
+
+		$this->_pEnvironment->method('getAddressList')->willReturn($pAddressDataMock);
+
+		$this->_pEstateList->loadEstates();
+
+		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->estateIterator());
 	}
 
 

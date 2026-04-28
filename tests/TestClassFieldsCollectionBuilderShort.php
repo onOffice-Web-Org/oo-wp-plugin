@@ -194,7 +194,7 @@ class TestClassFieldsCollectionBuilderShort
 	{
 		$pFieldsCollection = new FieldsCollection();
 		$this->assertSame($this->_pSubject, $this->_pSubject->addFieldsFormBackend($pFieldsCollection,Form::TYPE_INTEREST));
-		$this->assertCount(5, $pFieldsCollection->getAllFields());
+		$this->assertCount(6, $pFieldsCollection->getAllFields());
 	}
 
 
@@ -208,7 +208,7 @@ class TestClassFieldsCollectionBuilderShort
 	{
 		$pFieldsCollection = new FieldsCollection();
 		$this->assertSame($this->_pSubject, $this->_pSubject->addFieldsFormFrontend($pFieldsCollection));
-		$this->assertCount(10, $pFieldsCollection->getAllFields());
+		$this->assertCount(11, $pFieldsCollection->getAllFields());
 	}
 
 
@@ -242,7 +242,7 @@ class TestClassFieldsCollectionBuilderShort
 			->addFieldsFormFrontend($pFieldsCollection)
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsSearchCriteriaSpecificBackend($pFieldsCollection);
-		$this->assertCount(30, $pFieldsCollection->getAllFields());
+		$this->assertCount(32, $pFieldsCollection->getAllFields());
 	}
 
 	/**

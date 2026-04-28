@@ -743,16 +743,34 @@ jQuery(document).ready(function($){
 		$('.input-search').val('').trigger('input');
 	});
 
+	/**
+	 * jQuery UI drag/drop passes a clone of the draggable helper; it may lack data-* metadata.
+	 * Prefer the canonical list entry from the field picker (still in .search-field-list).
+	 */
+	var resolveSearchFieldListButton = function ($btn) {
+		var key = $btn.attr('value');
+		if (!key) {
+			return $btn;
+		}
+		var $fromList = $('.search-field-list .inputFieldButton.labelButtonHandleField-' + key).first();
+		if ($fromList.length && typeof $fromList.attr('data-onoffice-range-supported') !== 'undefined') {
+			return $fromList;
+		}
+		return $btn;
+	};
+
 	var getCheckedFieldButton = function (btn, pageId) {
 		var addField = 1;
 		var removeField = 2;
-		var checkTypeField = $(btn).children().attr('typeField');
+		var $btn = resolveSearchFieldListButton($(btn));
+		var checkTypeField = $btn.children().attr('typeField');
 		if (checkTypeField == addField) {
-			var label = $(btn).attr('data-action-div');
-			var valElName = $(btn).attr('value');
-			const valElLabel = $(btn).attr('data-onoffice-label');
-			var category = $(btn).attr('data-onoffice-category');
-			var module = $(btn).attr('data-onoffice-module');
+			var label = $btn.attr('data-action-div');
+			var valElName = $btn.attr('value');
+			const valElLabel = $btn.attr('data-onoffice-label');
+			var category = $btn.attr('data-onoffice-category');
+			var supportsRangeDisplay = $btn.attr('data-onoffice-range-supported') === '1';
+			var module = $btn.attr('data-onoffice-module');
 			var actionFieldName = 'labelButtonHandleField-' + valElName;
 			$('.' + actionFieldName).each(function () {
 				const parentItem = $(this);
@@ -763,11 +781,11 @@ jQuery(document).ready(function($){
 			var optionsAvailable = false;
 			var checkedFields = [];
 
-			if ($(btn).attr('onoffice-multipleSelectType')) {
-				optionsAvailable = $(btn).attr('onoffice-multipleSelectType') === '1';
+			if ($btn.attr('onoffice-multipleSelectType')) {
+				optionsAvailable = $btn.attr('onoffice-multipleSelectType') === '1';
 			}
 
-			var clonedItem = createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable, actionFieldName, pageId);
+			var clonedItem = createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable, actionFieldName, pageId, supportsRangeDisplay);
 
 			var event = new CustomEvent('addFieldItem', {
 				detail: {
@@ -785,7 +803,7 @@ jQuery(document).ready(function($){
 				FormMultiPageManager.multiSortable();
 			}
 		} else {
-			var valElName = $(btn).attr('value');
+			var valElName = $btn.attr('value');
 			var checkedFields = [];
 			const actionFieldName = 'labelButtonHandleField-' + valElName;
 			$('.' + actionFieldName).each(function () {
@@ -815,6 +833,7 @@ jQuery(document).ready(function($){
 			var valElName = $(this).val();
 			var valElLabel = $(this).next().text();
 			var module = $(this).attr('data-onoffice-module');
+			var supportsRangeDisplay = $(this).attr('data-onoffice-range-supported') === '1';
 
 			var optionsAvailable = false;
 
@@ -840,7 +859,7 @@ jQuery(document).ready(function($){
 			}
 
 			if (attachField) {
-				var clonedItem = createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable);
+				var clonedItem = createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable, undefined, undefined, supportsRangeDisplay);
 				var event = new CustomEvent('addFieldItem', {
 					detail: {
 						fieldname: valElName,
@@ -857,7 +876,28 @@ jQuery(document).ready(function($){
 		return checkedFields;
 	};
 
-	var createNewFieldItem = function (fieldName, fieldLabel, fieldCategory, module, label, optionsAvailable, actionFieldName, pageId) {
+	var createNewFieldItem = function (fieldName, fieldLabel, fieldCategory, module, label, optionsAvailable, actionFieldName, pageId, supportsRangeDisplay) {
+		supportsRangeDisplay = (supportsRangeDisplay === true || supportsRangeDisplay === '1' || supportsRangeDisplay === 1);
+
+		var fixRangeFieldDummyKeysInClone = function ($root, newFieldName) {
+			$root.find('input[name*="rangeFieldDisplayMode"]').each(function () {
+				var $input = $(this);
+				['value', 'id'].forEach(function (attrName) {
+					var attrVal = $input.attr(attrName);
+					if (attrVal && attrVal.indexOf('dummy_key') !== -1) {
+						$input.attr(attrName, attrVal.split('dummy_key').join(newFieldName));
+					}
+				});
+			});
+			$root.find('label[for*="dummy_key"]').each(function () {
+				var $label = $(this);
+				var forAttr = $label.attr('for');
+				if (forAttr && forAttr.indexOf('dummy_key') !== -1) {
+					$label.attr('for', forAttr.split('dummy_key').join(newFieldName));
+				}
+			});
+		};
+
 		var myLabel = label ? $('#' + label) : {};
 		var dummyKey;
 		const pageContainer = isMultiplePages ? '#multi-page-container' : '#single-page-container';
@@ -900,10 +940,34 @@ jQuery(document).ready(function($){
 			return name.replace('exclude', '');
 		})
 
-		if (fieldName === 'DSGVOStatus' || fieldName === 'AGB_akzeptiert' || fieldName === 'gdprcheckbox') {
+		if (fieldName === 'DSGVOStatus' || fieldName === 'AGB_akzeptiert' || fieldName === 'gdprcheckbox' || fieldName === 'gdprhinttext') {
 			var selectors = ['oopluginformfieldconfig-hiddenfield'];
 			var hiddenField = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
 			hiddenField.parent().remove();
+		}
+
+		if (fieldName === 'gdprhinttext') {
+			var reqSelectors = ['oopluginformfieldconfig-required'];
+			var requiredField = clonedElement.find('input[name^=' + reqSelectors.join('],input[name^=') + ']');
+			requiredField.parent().remove();
+
+			var defaultValField = clonedElement.find('input[name*="oopluginfieldconfigformdefaultsvalues"]');
+			defaultValField.parent().remove();
+
+			var defaultLangField = clonedElement.find('select[name*="language-language"]');
+			defaultLangField.parent().remove();
+
+			clonedElement.find('input[name*="oopluginfieldconfigformtranslatedlabels-value"]').each(function() {
+				var $input = $(this);
+				var $textarea = $('<textarea></textarea>');
+				$.each(this.attributes, function() {
+					if (this.name !== 'type' && this.name !== 'size') {
+						$textarea.attr(this.name, this.value);
+					}
+				});
+				$textarea.text($input.val());
+				$input.replaceWith($textarea);
+			});
 		}
 
 		if ($(pageContainer).length) {
@@ -913,6 +977,20 @@ jQuery(document).ready(function($){
 			var selectors = ['oopluginformfieldconfig-availableOptions', 'oopluginfieldconfig-availableOptions'];
 			var availableOptionEl = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
 			availableOptionEl.parent().remove();
+		}
+
+		if (supportsRangeDisplay) {
+			fixRangeFieldDummyKeysInClone(clonedElement, fieldName);
+		} else {
+			var $rangeInputs = clonedElement.find('input[name*="rangeFieldDisplayMode"]');
+			if ($rangeInputs.length) {
+				var $rangeBlock = $rangeInputs.first().closest('p.custom-input-field');
+				if ($rangeBlock.length) {
+					$rangeBlock.remove();
+				} else {
+					$rangeInputs.closest('p.wp-clearfix').first().remove();
+				}
+			}
 		}
 
 		if (fieldName !== 'ort') {

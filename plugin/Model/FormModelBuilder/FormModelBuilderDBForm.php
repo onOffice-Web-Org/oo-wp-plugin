@@ -288,6 +288,7 @@ class FormModelBuilderDBForm
 		$values['taskDescription'] = $pDataFormConfiguration->getTaskDescription();
 		$values['taskStatus'] = $pDataFormConfiguration->getTaskStatus();
 		$values['titlePerMultiPage'] = $pDataFormConfiguration->getTitlePerMultipage();
+		$values['display_unit_area'] = $pDataFormConfiguration->getDisplayUnitArea();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -484,6 +485,21 @@ class FormModelBuilderDBForm
 
 		return $pInputModelFormLimitResult;
 	}
+
+
+	/**
+	 * @return InputModelDB
+	 * @throws Exception
+	 */
+	public function createInputModelDisplayUnitArea(): InputModelDB
+	{
+		$label = __('Display area units in labels (m²)', 'onoffice-for-wp-websites');
+		$selectedValue = $this->getValue('display_unit_area', false);
+		$pInputModel = $this->generateGenericCheckbox($label, InputModelDBFactoryConfigForm::INPUT_FORM_DISPLAY_UNIT_AREA, (bool)$selectedValue);
+
+		return $pInputModel;
+	}
+
 
     /**
      * @return InputModelDB
