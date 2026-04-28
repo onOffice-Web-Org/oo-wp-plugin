@@ -15,31 +15,37 @@ jobs:
     steps:
       - name: Get version
         id: get-version
-        # Remove the leading 'v' from the tag.
-        run: echo "version=$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')" >> $GITHUB_OUTPUT
+        # For test runs via workflow_dispatch on a branch we don't have a v* tag,
+        # so fall back to a placeholder version.
+        run: |
+          VERSION="$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')"
+          if [ -z "$VERSION" ]; then
+            VERSION="0.0.0-test"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-  build:
-    name: Build release
-    needs: get-version
-    uses: ./.github/workflows/build-release.yml
-    with:
-      expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
-      pluginFolder: onoffice-for-wp-websites
+  # build:
+  #   name: Build release
+  #   needs: get-version
+  #   uses: ./.github/workflows/build-release.yml
+  #   with:
+  #     expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
+  #     pluginFolder: onoffice-for-wp-websites
 
   deploy:
     name: Deploy to Update Server
     runs-on: ubuntu-latest
-    needs: [get-version, build]
+    needs: [get-version]
     steps:
       - name: Checkout source (for readme.txt)
         uses: actions/checkout@v4
         with:
           path: source
 
-      - name: Download release artifact
-        uses: actions/download-artifact@v4.1.7
-        with:
-          name: release
+      # - name: Download release artifact
+      #   uses: actions/download-artifact@v4.1.7
+      #   with:
+      #     name: release
 
       - name: Extract metadata from readme.txt
         id: readme-meta
@@ -85,14 +91,13 @@ jobs:
         with:
           name: oo-wp-plugin Release Bundle
           path: |
-            release.zip
             updater.json
           retention-days: 7
 
-      - name: Set SSH Key for Raidboxes Server
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY_RAIDBOXES }}
+      # - name: Set SSH Key for Raidboxes Server
+      #   uses: webfactory/ssh-agent@v0.9.0
+      #   with:
+      #     ssh-private-key: ${{ secrets.SSH_KEY_RAIDBOXES }}
 
-      - name: Upload Files to Release Server
-        run: rsync -e 'ssh -o StrictHostKeyChecking=no' release.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin
+      # - name: Upload Files to Release Server
+      #   run: rsync -e 'ssh -o StrictHostKeyChecking=no' release.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin
