@@ -35,29 +35,7 @@ Domain Path: /languages
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 const ONOFFICE_PLUGIN_VERSION = '6.12';
-const ONOFFICE_PLUGIN_MIN_PHP  = '8.2';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
-
-// Hard guard: if the server PHP version is below the requirement, abort initialization
-// instead of running into a fatal error during autoload (which would also break wp-admin).
-// We still load the updater so the site can receive a future, compatible release.
-if ( version_compare( PHP_VERSION, ONOFFICE_PLUGIN_MIN_PHP, '<' ) ) {
-	require plugin_dir_path( __FILE__ ) . 'oo-updater.php';
-
-	add_action( 'admin_notices', function () {
-		printf(
-			'<div class="notice notice-error"><p><strong>onOffice for WP-Websites:</strong> %s</p></div>',
-			esc_html( sprintf(
-				/* translators: 1: required PHP version, 2: current PHP version */
-				__( 'This plugin requires PHP %1$s or higher and has been disabled. Your server is running PHP %2$s. Please update PHP to continue using the plugin.', 'onoffice-for-wp-websites' ),
-				ONOFFICE_PLUGIN_MIN_PHP,
-				PHP_VERSION
-			) )
-		);
-	} );
-
-	return;
-}
 
 require __DIR__ . '/vendor/autoload.php';
 require plugin_dir_path( __FILE__ ) . 'oo-updater.php';
