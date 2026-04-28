@@ -31,17 +31,54 @@ jobs:
     runs-on: ubuntu-latest
     needs: [get-version, build]
     steps:
+      - name: Checkout source (for readme.txt)
+        uses: actions/checkout@v4
+        with:
+          path: source
+
       - name: Download release artifact
         uses: actions/download-artifact@v4.1.7
         with:
           name: release
+
+      - name: Extract metadata from readme.txt
+        id: readme-meta
+        run: |
+          README="source/readme.txt"
+          if [ ! -f "$README" ]; then
+            echo "readme.txt not found at $README" >&2
+            exit 1
+          fi
+
+          # Read the standard WordPress plugin readme headers. They look like:
+          #   Requires PHP: 8.2
+          #   Requires at least: 6.1
+          #   Tested up to: 6.9
+          extract() {
+            grep -i -m1 "^$1:" "$README" | sed -E "s/^[^:]+:[[:space:]]*//" | tr -d '\r' | xargs
+          }
+
+          REQUIRES_PHP="$(extract 'Requires PHP')"
+          REQUIRES_WP="$(extract 'Requires at least')"
+          TESTED_WP="$(extract 'Tested up to')"
+
+          if [ -z "$REQUIRES_PHP" ]; then
+            echo "Could not parse 'Requires PHP' from readme.txt" >&2
+            exit 1
+          fi
+
+          echo "requires_php=$REQUIRES_PHP" >> $GITHUB_OUTPUT
+          echo "requires=$REQUIRES_WP"     >> $GITHUB_OUTPUT
+          echo "tested=$TESTED_WP"         >> $GITHUB_OUTPUT
+
+          echo "Parsed: requires_php=$REQUIRES_PHP requires=$REQUIRES_WP tested=$TESTED_WP"
 
       - name: Deployment final release json Updater File
         id: create-json
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: "updater.json"
-          json: '{"version":"${{needs.get-version.outputs.currentVersion}}", "download_url": "https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/release.zip"}'
+          json: '{"version":"${{ needs.get-version.outputs.currentVersion }}","download_url":"https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/release.zip","requires_php":"${{ steps.readme-meta.outputs.requires_php }}","requires":"${{ steps.readme-meta.outputs.requires }}","tested":"${{ steps.readme-meta.outputs.tested }}"}'
 
       - name: Upload release build
         uses: actions/upload-artifact@v4
