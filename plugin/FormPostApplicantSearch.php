@@ -31,6 +31,7 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
+use onOffice\WPlugin\Form\NewsletterFormPostConfiguration;
 use onOffice\WPlugin\Utility\__String;
 
 /**
@@ -70,6 +71,14 @@ class FormPostApplicantSearch
 		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
 
 		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
+	}
+
+	/**
+	 * @return NewsletterFormPostConfiguration
+	 */
+	protected function getNewsletterFormPostConfiguration(): NewsletterFormPostConfiguration
+	{
+		return $this->_pFormPostContactConfiguration;
 	}
 
 	/**
