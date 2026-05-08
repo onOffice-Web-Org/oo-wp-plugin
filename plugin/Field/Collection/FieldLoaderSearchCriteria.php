@@ -44,9 +44,6 @@ class FieldLoaderSearchCriteria
 	/** @var FieldCategoryToFieldConverter */
 	private $_pCategoryConverter;
 
-	/** @var bool */
-	private $_loadFieldDependencies = false;
-
 
 	/**
 	 *
@@ -64,18 +61,6 @@ class FieldLoaderSearchCriteria
 	}
 
 	/**
-	 * Enable or disable loading of field dependencies
-	 *
-	 * @param bool $loadDependencies
-	 * @return self
-	 */
-	public function setLoadFieldDependencies(bool $loadDependencies): self
-	{
-		$this->_loadFieldDependencies = $loadDependencies;
-		return $this;
-	}
-
-	/**
 	 * @return Generator
 	 * @throws APIEmptyResultException
 	 */
@@ -87,7 +72,6 @@ class FieldLoaderSearchCriteria
 		$pApiClientActionSearchCriteriaFields->setParameters([
 			'language' => Language::getDefault(),
 			'additionalTranslations' => true,
-			'showfielddependencies' => $this->_loadFieldDependencies,
 		]);
 		$pApiClientActionSearchCriteriaFields->addRequestToQueue()->sendRequests();
 

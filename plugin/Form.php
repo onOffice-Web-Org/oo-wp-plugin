@@ -109,7 +109,7 @@ class Form
 		$pFieldBuilderShort = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection, true)
-			->addFieldsSearchCriteria($pFieldsCollection, true)
+			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsFormFrontend($pFieldsCollection)
 			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName);
 
@@ -562,15 +562,27 @@ class Form
 		if (!$module) {
 			return [];
 		}
-		
+
 		$fieldObject = $this->_pFieldsCollection->getFieldByModuleAndName($module, $field);
-		
-		// Check if getDependencies method exists and return dependencies if available
-		if (method_exists($fieldObject, 'getDependencies')) {
-			return $fieldObject->getDependencies() ?? [];
+
+		$dependencies = method_exists($fieldObject, 'getDependencies')
+			? ($fieldObject->getDependencies() ?? [])
+			: [];
+
+		// The searchCriteriaFields API does not deliver dependencies. For fields that
+		// also exist in the estate module (e.g. objektart/objekttyp) the dependency
+		// information is identical, so fall back to the estate module's field.
+		if (empty($dependencies)
+			&& $module === onOfficeSDK::MODULE_SEARCHCRITERIA
+			&& $this->_pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $field)
+		) {
+			$pEstateField = $this->_pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ESTATE, $field);
+			if (method_exists($pEstateField, 'getDependencies')) {
+				$dependencies = $pEstateField->getDependencies() ?? [];
+			}
 		}
-		
-		return [];
+
+		return $dependencies;
 	}
 
 	/**
