@@ -109,7 +109,7 @@ class Form
 		$pFieldBuilderShort = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection, true)
-			->addFieldsSearchCriteria($pFieldsCollection)
+			->addFieldsSearchCriteria($pFieldsCollection, true)
 			->addFieldsFormFrontend($pFieldsCollection)
 			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName);
 

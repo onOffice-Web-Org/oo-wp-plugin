@@ -92,10 +92,10 @@ class FieldsCollectionBuilderShort
 	 * @throws NotFoundException
 	 */
 
-	public function addFieldsSearchCriteria(FieldsCollection $pFieldsCollection): self
+	public function addFieldsSearchCriteria(FieldsCollection $pFieldsCollection, bool $loadDependencies = false): self
 	{
 		$pFieldLoaderNoGeo = $this->_pContainer->get(FieldCategoryToFieldConverterSearchCriteriaBackendNoGeo::class);
-		$pFieldsCollectionSearchCriteria = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldLoaderNoGeo);
+		$pFieldsCollectionSearchCriteria = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldLoaderNoGeo, $loadDependencies);
 		$pFieldsCollection->merge($pFieldsCollectionSearchCriteria);
 		return $this;
 	}
@@ -224,9 +224,10 @@ class FieldsCollectionBuilderShort
 	 * @throws NotFoundException
 	 */
 
-	private function buildSearchcriteriaFieldsCollectionByFieldLoader(FieldCategoryToFieldConverter $pConverter): FieldsCollection
+	private function buildSearchcriteriaFieldsCollectionByFieldLoader(FieldCategoryToFieldConverter $pConverter, bool $loadDependencies = false): FieldsCollection
 	{
 		$pFieldLoader = $this->_pContainer->make(FieldLoaderSearchCriteria::class, ['pFieldCategoryConverter' => $pConverter]);
+		$pFieldLoader->setLoadFieldDependencies($loadDependencies);
 		return $this->_pContainer->get(FieldsCollectionBuilder::class)
 			->buildFieldsCollection($pFieldLoader);
 	}
