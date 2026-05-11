@@ -597,5 +597,46 @@ function filter_script_loader_tag($tag, $handle) {
 	return $tag;
 }
 
+/**
+ * E2E Testing: Dynamic theme switcher via URL.
+ * Allows QA to test different themes without changing database options.
+ */
+if (isset($_GET['force_theme']) && isset($_GET['e2e_key']) && $_GET['e2e_key'] === 'qa_rocks') {
+    
+    // 1. Deaktivieren Sie Weiterleitungen, um den Verlust von URL-Parametern zu verhindern.(WPML/Canonical)
+    remove_filter('template_redirect', 'redirect_canonical');
 
+    // 2. Wechseln der Themesvorlagen
+    add_filter('template', 'oo_get_forced_theme_slug', 999);
+    add_filter('stylesheet', 'oo_get_forced_theme_slug', 999);
+    
+    // 3. Hinzufügen einer Klasse zum Body für Playwright-Tests
+    add_filter('body_class', function($classes) {
+        $classes[] = sanitize_text_field($_GET['force_theme']);
+        $classes[] = 'e2e-forced-theme'; // Nützliche Markierung für Debugging
+        return $classes;
+    });
+
+    // Fügen wir einen Header für Debugging hinzu (das, was wir in Network gesehen haben)
+    header('X-QA-Debug: Theme-Switch-Active');
+}
+
+/**
+ * Helper to return the requested theme slug from URL
+ */
+function oo_get_forced_theme_slug($theme) {
+    $allowed_themes = ['onoffice-modern', 'onoffice-classic', 'onoffice-pure', 'onoffice-timeless'];
+    $requested = sanitize_text_field($_GET['force_theme']);
+    
+    return in_array($requested, $allowed_themes) ? $requested : $theme;
+}
+
+add_shortcode('oo_e2e_test_form', function() {
+    $form_name = 'Kontaktformular_E2E'; 
+
+    if (isset($_GET['e2e_key']) && $_GET['e2e_key'] === 'qa_rocks') {
+        return do_shortcode('[oo_form form="' . $form_name . '"]');
+    }
+    return '<div style="border: 2px dashed #f00; padding: 10px;">E2E Test Form Placeholder (Visible only with key)</div>';
+});
 return $pDI;
