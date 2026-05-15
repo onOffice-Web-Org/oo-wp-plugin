@@ -88,12 +88,9 @@ class FieldLoaderEstateRegionValues
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
 				if ($fieldName === 'regionaler_zusatz') {
 					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
-					$this->_pRegionController->fetchRegions();
-					$regions = $this->_pRegionController->getRegions();
-					$fieldProperties['permittedvalues'] = $this->_pRegionFilter
-						->buildRegions($regions);
-					$fieldProperties['labelOnlyValues'] = $this->_pRegionFilter
-						->collectLabelOnlyValues($regions);
+					$regionOptions = $this->_pRegionController->getRegionOptions();
+					$fieldProperties['permittedvalues'] = $regionOptions['permittedvalues'];
+					$fieldProperties['labelOnlyValues'] = $regionOptions['labelOnlyValues'];
 					$fieldProperties['module'] = $module;
 					yield $fieldName => $fieldProperties;
 				}

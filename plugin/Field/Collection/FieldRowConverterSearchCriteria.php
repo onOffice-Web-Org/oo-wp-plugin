@@ -70,10 +70,9 @@ class FieldRowConverterSearchCriteria
 
 		if (FieldTypes::isRegZusatzSearchcritTypes($input['type'])) {
 			$input['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
-			$this->_pRegionController->fetchRegions();
-			$regions = $this->_pRegionController->getRegions();
-			$input['permittedvalues'] = $this->_pRegionFilter->buildRegions($regions);
-			$input['labelOnlyValues'] = $this->_pRegionFilter->collectLabelOnlyValues($regions);
+			$regionOptions = $this->_pRegionController->getRegionOptions();
+			$input['permittedvalues'] = $regionOptions['permittedvalues'];
+			$input['labelOnlyValues'] = $regionOptions['labelOnlyValues'];
 		}
 		unset($input['values']);
 		$input['rangefield'] = (bool)($input['rangefield'] ?? false);
