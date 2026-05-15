@@ -89,6 +89,14 @@ class FieldLoaderEstateRegionValues
 				if ($fieldName === 'regionaler_zusatz') {
 					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 					$regionOptions = $this->_pRegionController->getRegionOptions();
+					if (!isset($regionOptions['permittedvalues'], $regionOptions['labelOnlyValues'])) {
+						$this->_pRegionController->fetchRegions();
+						$regions = $this->_pRegionController->getRegions();
+						$regionOptions = [
+							'permittedvalues' => $this->_pRegionFilter->buildRegions($regions),
+							'labelOnlyValues' => $this->_pRegionFilter->collectLabelOnlyValues($regions),
+						];
+					}
 					$fieldProperties['permittedvalues'] = $regionOptions['permittedvalues'];
 					$fieldProperties['labelOnlyValues'] = $regionOptions['labelOnlyValues'];
 					$fieldProperties['module'] = $module;

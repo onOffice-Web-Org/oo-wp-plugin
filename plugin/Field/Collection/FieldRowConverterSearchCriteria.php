@@ -71,6 +71,14 @@ class FieldRowConverterSearchCriteria
 		if (FieldTypes::isRegZusatzSearchcritTypes($input['type'])) {
 			$input['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 			$regionOptions = $this->_pRegionController->getRegionOptions();
+			if (!isset($regionOptions['permittedvalues'], $regionOptions['labelOnlyValues'])) {
+				$this->_pRegionController->fetchRegions();
+				$regions = $this->_pRegionController->getRegions();
+				$regionOptions = [
+					'permittedvalues' => $this->_pRegionFilter->buildRegions($regions),
+					'labelOnlyValues' => $this->_pRegionFilter->collectLabelOnlyValues($regions),
+				];
+			}
 			$input['permittedvalues'] = $regionOptions['permittedvalues'];
 			$input['labelOnlyValues'] = $regionOptions['labelOnlyValues'];
 		}
