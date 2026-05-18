@@ -31,17 +31,8 @@ use onOffice\WPlugin\WP\WPQueryWrapper;
  *
  */
 
-interface FormPostInterestConfiguration
+interface FormPostInterestConfiguration extends NewsletterFormPostConfiguration
 {
-	/**
-	 *
-	 * @return SDKWrapper
-	 *
-	 */
-
-	public function getSDKWrapper(): SDKWrapper;
-
-
 	/**
 	 *
 	 * @return FormAddressCreator
@@ -58,15 +49,6 @@ interface FormPostInterestConfiguration
 	 */
 
 	public function getSearchcriteriaFields(): SearchcriteriaFields;
-
-
-	/**
-	 *
-	 * @return bool
-	 *
-	 */
-
-	 public function getNewsletterAccepted(): bool;
 
 	/**
 	 *

@@ -31,17 +31,8 @@ use onOffice\WPlugin\WP\WPQueryWrapper;
  *
  */
 
-interface FormPostOwnerConfiguration
+interface FormPostOwnerConfiguration extends NewsletterFormPostConfiguration
 {
-	/**
-	 *
-	 * @return SDKWrapper
-	 *
-	 */
-
-	public function getSDKWrapper(): SDKWrapper;
-
-
 	/**
 	 *
 	 * @return InputVariableReader
@@ -67,13 +58,6 @@ interface FormPostOwnerConfiguration
 	 */
 
 	public function getFormAddressCreator(): FormAddressCreator;
-
-	/**
-	 *
-	 * @return bool
-	 *
-	 */
-	 public function getNewsletterAccepted(): bool;
 
 
 	/**

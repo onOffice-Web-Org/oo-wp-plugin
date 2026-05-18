@@ -29,17 +29,8 @@ use onOffice\WPlugin\WP\WPWrapper;
  *
  */
 
-interface FormPostContactConfiguration
+interface FormPostContactConfiguration extends NewsletterFormPostConfiguration
 {
-	/**
-	 *
-	 * @return SDKWrapper
-	 *
-	 */
-
-	public function getSDKWrapper(): SDKWrapper;
-
-
 	/**
 	 *
 	 * @return string
@@ -47,16 +38,6 @@ interface FormPostContactConfiguration
 	 */
 
 	public function getReferrer(): string;
-
-
-	/**
-	 *
-	 * @return bool
-	 *
-	 */
-
-	public function getNewsletterAccepted(): bool;
-
 
 	/**
 	 *
