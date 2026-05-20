@@ -134,6 +134,7 @@ class FormModelBuilderDBEstateUnitListSettings
 		$pSortableFieldsList->setValuesAvailable($fieldNamesArray);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
 		$pSortableFieldsList->setValue($fields);
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelisHighlight());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 
