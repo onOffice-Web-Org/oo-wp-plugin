@@ -53,6 +53,7 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 			$this->getExpectedFieldNewsletter(),
 			$this->getExpectedFieldGDPRCheckbox(),
 			$this->getExpectedFieldMessage(),
+			$this->getExpectedFieldGDPRHintText(),
 		];
 		$this->assertEquals($expectedResult, $pFieldModuleDecorator->getAllFields());
 	}
@@ -70,6 +71,7 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 		$this->assertFalse($pDecorator->containsFieldByModule('testModuleF', 'testFieldA'));
 		$this->assertTrue($pDecorator->containsFieldByModule(onOfficeSDK::MODULE_ADDRESS, 'newsletter'));
 		$this->assertTrue($pDecorator->containsFieldByModule('', 'message'));
+		$this->assertTrue($pDecorator->containsFieldByModule('', 'gdprhinttext'));
 	}
 
 
@@ -86,6 +88,7 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
 			(onOfficeSDK::MODULE_ADDRESS, 'newsletter'));
 		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName('', 'message'));
+		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName('', 'gdprhinttext'));
 	}
 
 
@@ -153,6 +156,24 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 		$pFieldMessage->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
 
 		return $pFieldMessage;
+	}
+
+	/**
+	 *
+	 * @return Field
+	 *
+	 */
+
+	private function getExpectedFieldGDPRHintText(): Field
+	{
+		$pField = new Field('gdprhinttext', '', 'GDPR (Notice text)');
+		$pField->setCategory('Special Fields');
+		$pField->setDefault(null);
+		$pField->setLength(0);
+		$pField->setPermittedvalues([]);
+		$pField->setType(FieldTypes::FIELD_TYPE_LABEL_TEXT);
+
+		return $pField;
 	}
 	/**
 	 *

@@ -54,7 +54,7 @@ class onOfficeSDK
 			$apiCall = new ApiCall();
 		}
 		$this->apiCall = $apiCall;
-		$this->apiCall->setServer('https://api.onoffice.de/api/');
+		$this->apiCall->setServer(ONOFFICE_API_SERVER);
 	}
 
 
@@ -135,9 +135,9 @@ class onOfficeSDK
 	 *
 	 * @throws Exception\HttpFetchNoResultException
 	 */
-	public function sendRequests($token, $secret, bool $saveToCache = true)
+	public function sendRequests($token, $secret, bool $saveToCache = true, $claim = null)
 	{
-		$this->apiCall->sendRequests($token, $secret, null, $saveToCache);
+		$this->apiCall->sendRequests($token, $secret, null, $saveToCache, $claim);
 	}
 
 	/**

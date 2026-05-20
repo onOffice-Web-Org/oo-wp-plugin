@@ -69,16 +69,15 @@ class TestClassFieldModuleCollectionDecoratorCustomLabelEstate
 	public function prepare()
 	{
 		$rows = [
-			(object)[
-				'customs_labels_id' => 33,
-				'locale' => 'de_DE',
-				'value' => 'Deutschland',
-			]
+			(object)['fieldname' => 'Test 1', 'value' => 'Deutschland'],
+			(object)['fieldname' => 'Test 3', 'value' => 'Deutschland'],
 		];
 		$this->_pWPDBMock = $this->getMockBuilder(\wpdb::class)
 			->disableOriginalConstructor()
 			->onlyMethods(['get_results'])
 			->getMock();
+		$this->_pWPDBMock->prefix = 'wp_';
+		$this->_pWPDBMock->method('get_results')->will($this->returnValue($rows));
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
@@ -98,11 +97,8 @@ class TestClassFieldModuleCollectionDecoratorCustomLabelEstate
 		foreach ($pFieldsCollectionByFormIds as $pFieldsCollectionByFormId) {
 			$this->_pFieldModuleCollection->addField(new Field($pFieldsCollectionByFormId['fieldname'],
 				onOfficeSDK::MODULE_ESTATE));
-			$this->_pWPDBMock->method('get_results')->will($this->returnValue($rows));
-			$this->_pCustomLabelRead = new CustomLabelRead($this->_pWPDBMock);
-			$this->_pCustomLabelRead->readCustomLabelByFormIdAndFieldName(1, $pFieldsCollectionByFormId['fieldname'],
-				'de_DE','oo_plugin_fieldconfig_estate_customs_labels','oo_plugin_fieldconfig_estate_translated_labels');
 		}
+		$this->_pCustomLabelRead = new CustomLabelRead($this->_pWPDBMock);
 		$this->_pContainer->set(CustomLabelRead::class, $this->_pCustomLabelRead);
 	}
 

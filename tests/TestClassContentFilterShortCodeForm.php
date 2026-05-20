@@ -27,6 +27,7 @@ use Exception;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeForm;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
@@ -92,6 +93,17 @@ class TestClassContentFilterShortCodeForm
 
 		$this->assertEquals('testResult',
 			$this->_pContentFilterShortCodeForm->replaceShortCodes(['form' => 'testcontactform']));
+	}
+
+	public function testReplaceShortCodesRethrowsUnknownFormException()
+	{
+		$this->_pDataFormConfigurationFactory->expects($this->once())
+			->method('loadByFormName')
+			->willThrowException(new UnknownFormException());
+		$this->_pLogger->expects($this->never())->method('logErrorAndDisplayMessage');
+
+		$this->expectException(UnknownFormException::class);
+		$this->_pContentFilterShortCodeForm->replaceShortCodes(['form' => 'unknown']);
 	}
 
 	public function testReplaceShortCodesWithError()

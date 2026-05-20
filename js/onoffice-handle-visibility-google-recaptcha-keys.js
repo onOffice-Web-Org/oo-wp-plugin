@@ -12,11 +12,25 @@ jQuery(document).ready(function ($) {
 		}
 	}
 
-	$('.oo-icon-eye-secret-key').on('click', function () {
-		showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-secretkey"]', '.oo-icon-eye-secret-key');
-	});
+	// TODO: remove later, when Enterprise reCAPTCHA is fully rolled out
+    // Classic reCAPTCHA fields
+    $('.oo-icon-eye-secret-key').on('click', function () {
+        showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-secretkey"]', '.oo-icon-eye-secret-key');
+    });
 
-	$('.oo-icon-eye-site-key').on('click', function () {
-		showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-sitekey"]', '.oo-icon-eye-site-key');
-	});
+    $('.oo-icon-eye-site-key').on('click', function () {
+        showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-sitekey"]', '.oo-icon-eye-site-key');
+    });
+
+    // Enterprise reCAPTCHA fields
+    $('.oo-icon-eye-enterprise-projectid').on('click', function () {
+        showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-enterprise-projectid"]', '.oo-icon-eye-enterprise-projectid');
+    });
+
+    $('.oo-icon-eye-enterprise-sitekey').on('click', function () {
+        showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-enterprise-sitekey"]', '.oo-icon-eye-enterprise-sitekey');
+    });
+    $('.oo-icon-eye-enterprise-apikey').on('click', function () {
+        showOrHideGoogleRecaptchaKey('input[name="onoffice-settings-captcha-enterprise-apikey"]', '.oo-icon-eye-enterprise-apikey');
+    });
 });

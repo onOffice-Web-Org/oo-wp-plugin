@@ -70,6 +70,9 @@ class DataFormConfigurationInterest
 	/** @var bool */
 	private $_defaultRecipient = false;
 
+	/** @var bool */
+	private $_pages = false;
+
 	/** @return bool */
 	public function getCheckDuplicateOnCreateAddress()
 		{ return $this->_checkDuplicateOnCreateAddress; }
@@ -93,4 +96,8 @@ class DataFormConfigurationInterest
 	/** @param string $subject */
 	public function setSubject($subject)
 		{ $this->_subject = $subject; }
+
+	/** @param bool $pages */
+	public function setPages($pages)
+		{ $this->_pages = $pages; }
 }

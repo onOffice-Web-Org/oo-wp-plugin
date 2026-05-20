@@ -60,7 +60,12 @@ class InputVariableReader
 
 	public function getFieldValue($field)
 	{
-		$type = $this->getFieldType($field);
+		try {
+			$type = $this->getFieldType($field);
+		} catch (\UnknownFieldException $e) {
+			$type = FieldTypes::FIELD_TYPE_TEXT;
+		}
+		
 		$fieldInputName = $field;
 		$fieldValue = null;
 		if (FieldTypes::isNumericType($type) ||

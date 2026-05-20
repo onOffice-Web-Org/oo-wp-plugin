@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\DataView\UnknownViewException;
 use function add_shortcode;
 
 /**
@@ -55,9 +57,26 @@ class ContentFilterShortCodeRegistrator
 	{
 		foreach ($this->_pBuilder->buildAllContentFilterShortCodes() as $pInstance) {
 			/* @var $pInstance ContentFilterShortCode */
-			add_shortcode($pInstance->getTag(), function($attributesInput) use ($pInstance) {
-				return $pInstance->replaceShortCodes((array)$attributesInput);
+			add_shortcode($pInstance->getTag(), function($attributesInput, $content, $tag) use ($pInstance) {
+				try {
+					return $pInstance->replaceShortCodes((array)$attributesInput);
+				} catch (UnknownViewException | UnknownFormException $e) {
+					return self::buildShortcodeString($tag, (array)$attributesInput);
+				}
 			});
 		}
+	}
+
+	private static function buildShortcodeString(string $tag, array $attributes): string
+	{
+		$parts = [];
+		foreach ($attributes as $name => $value) {
+			if (!is_string($name) || $name === '' || $value === null || $value === '') {
+				continue;
+			}
+			$parts[] = esc_html($name) . '="' . esc_html((string) $value) . '"';
+		}
+		$inner = $parts === [] ? '' : ' ' . implode(' ', $parts);
+		return '[' . esc_html($tag) . $inner . ']';
 	}
 }

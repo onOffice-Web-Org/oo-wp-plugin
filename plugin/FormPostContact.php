@@ -35,7 +35,7 @@ use onOffice\WPlugin\Form\FormPostContactConfiguration;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Factory\AddressListFactory;
-use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\Form\NewsletterFormPostConfiguration;
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 use function sanitize_text_field;
 use function home_url;
@@ -81,6 +81,14 @@ class FormPostContact
 		$this->_pAddressDetailFactory = $pAddressDetailFactory;
 
 		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
+	}
+
+	/**
+	 * @return NewsletterFormPostConfiguration
+	 */
+	protected function getNewsletterFormPostConfiguration(): NewsletterFormPostConfiguration
+	{
+		return $this->_pFormPostContactConfiguration;
 	}
 
 
@@ -170,22 +178,7 @@ class FormPostContact
 			$this->_pFormPostContactConfiguration->getFormAddressCreator()->createTask($pFormConfig, $addressId, $estateId);
 		}
 
-		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
-			// No subscription for newsletter, which is ok
-			return;
-		}
-
-		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();
-		$pAPIClientAction = new APIClientActionGeneric
-			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'registerNewsletter');
-		$pAPIClientAction->setParameters(['register' => true]);
-		$pAPIClientAction->setResourceId($addressId);
-		$pAPIClientAction->addRequestToQueue()->sendRequests();
-
-		if (!$pAPIClientAction->getResultStatus()) {
-            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception with API client object
-            throw new ApiClientException($pAPIClientAction);
-        }
+		$this->setNewsletter($addressId, $pFormConfig);
 	}
 
 	/**
@@ -228,6 +221,7 @@ class FormPostContact
 			$requestParams['addressdata']['DSGVOStatus'] = "speicherungzugestimmt";
 		}
 		unset($requestParams['addressdata']['gdprcheckbox']);
+		unset($requestParams['addressdata']['gdprhinttext']);
 		unset($requestParams['addressdata']['newsletter']);
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;

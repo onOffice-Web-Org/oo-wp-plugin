@@ -174,6 +174,17 @@ class FormModelBuilderDBForm
 			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitlePage);
 			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitleLanguage);
 		}
+		if($this->getFormType() === Form::TYPE_INTEREST){
+			$pInputModelFieldsConfig->setIsMultiPage(true);
+			$pInputModelFieldsConfig->setTemplate($this->getValue('template'));
+
+			$pInputModelMultiPageTitle = $this->createInputModelMultiPageTitle();
+			$pInputModelMultiPageTitlePage = $this->createInputModelMultiPageTitlePage();
+			$pInputModelMultiPageTitleLanguage = $this->createInputModelMultiPageTitleLanguageSwitch();
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitle);
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitlePage);
+			$pInputModelFieldsConfig->addReferencedInputModel($pInputModelMultiPageTitleLanguage);
+		}
 
 		return $pInputModelFieldsConfig;
 	}
@@ -277,6 +288,7 @@ class FormModelBuilderDBForm
 		$values['taskDescription'] = $pDataFormConfiguration->getTaskDescription();
 		$values['taskStatus'] = $pDataFormConfiguration->getTaskStatus();
 		$values['titlePerMultiPage'] = $pDataFormConfiguration->getTitlePerMultipage();
+		$values['display_unit_area'] = $pDataFormConfiguration->getDisplayUnitArea();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -428,24 +440,35 @@ class FormModelBuilderDBForm
 	 * @return InputModelDB
 	 * @throws Exception
 	 */
-	public function createInputModelCaptchaRequired(): InputModelDB
-	{
-		$addition = '';
+    public function createInputModelCaptchaRequired(): InputModelDB
+    {
+        $addition = '';
 
-		if (get_option('onoffice-settings-captcha-sitekey', '') === '') {
-			$addition = __('(won\'t work until set up globally)', 'onoffice-for-wp-websites');
-		}
+        // Check if Enterprise reCAPTCHA is configured
+        $enterpriseSiteKey = get_option('onoffice-settings-captcha-enterprise-sitekey', '');
+        $enterpriseProjectId = get_option('onoffice-settings-captcha-enterprise-projectid', '');
+        $enterpriseApiKey = get_option('onoffice-settings-captcha-enterprise-apikey', '');
+        
+        $hasEnterprise = !empty($enterpriseSiteKey) && !empty($enterpriseProjectId) && !empty($enterpriseApiKey);
+        
+        // TODO: Remove classic check after Enterprise reCAPTCHA is fully rolled out
+        $hasClassic = get_option('onoffice-settings-captcha-sitekey', '') !== '';
+        
+        if (!$hasEnterprise && !$hasClassic) {
+            $addition = '<br><span style="color:red;">(' . 
+                esc_html__('No reCAPTCHA configured', 'onoffice-for-wp-websites') . 
+                ')</span>';
+        }
 
-		/* translators: %s will be replaced with the translation of
-			'(won't work until set up globally)', if captcha hasn't been set up appropriately yet,
-			or blank otherwise. */
-		$labelRequiresCaptcha = sprintf(__('Requires Captcha %s', 'onoffice-for-wp-websites'), $addition);
-		$selectedValue = $this->getValue('captcha', false);
-		$pInputModelFormRequiresCaptcha = $this->generateGenericCheckbox($labelRequiresCaptcha,
-			InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRES_CAPTCHA, $selectedValue);
+        /* translators: %s will be replaced with a warning message if no reCAPTCHA is configured,
+           or blank otherwise. */
+        $labelRequiresCaptcha = sprintf(__('Requires Captcha %s', 'onoffice-for-wp-websites'), $addition);
+        $selectedValue = $this->getValue('captcha', false);
+        $pInputModelFormRequiresCaptcha = $this->generateGenericCheckbox($labelRequiresCaptcha,
+            InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRES_CAPTCHA, $selectedValue);
 
-		return $pInputModelFormRequiresCaptcha;
-	}
+        return $pInputModelFormRequiresCaptcha;
+    }
 
 	/**
 	 * @return InputModelDB
@@ -462,6 +485,21 @@ class FormModelBuilderDBForm
 
 		return $pInputModelFormLimitResult;
 	}
+
+
+	/**
+	 * @return InputModelDB
+	 * @throws Exception
+	 */
+	public function createInputModelDisplayUnitArea(): InputModelDB
+	{
+		$label = __('Display area units in labels (m²)', 'onoffice-for-wp-websites');
+		$selectedValue = $this->getValue('display_unit_area', false);
+		$pInputModel = $this->generateGenericCheckbox($label, InputModelDBFactoryConfigForm::INPUT_FORM_DISPLAY_UNIT_AREA, (bool)$selectedValue);
+
+		return $pInputModel;
+	}
+
 
     /**
      * @return InputModelDB

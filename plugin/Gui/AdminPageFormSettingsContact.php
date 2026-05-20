@@ -113,6 +113,7 @@ class AdminPageFormSettingsContact
 		$pInputModelDefaultRecipient = $pFormModelBuilder->createInputModelDefaultRecipient();
 		$pInputModelSubject = $pFormModelBuilder->createInputModelSubject();
 		$pInputModelCaptcha = $pFormModelBuilder->createInputModelCaptchaRequired();
+		$pInputModelDisplayUnitArea = $pFormModelBuilder->createInputModelDisplayUnitArea();
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
 		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
@@ -121,6 +122,7 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific->addInputModel($pInputModelRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
+		$pFormModelFormSpecific->addInputModel($pInputModelDisplayUnitArea);
 
 		if ($this->_showCreateAddress) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS);

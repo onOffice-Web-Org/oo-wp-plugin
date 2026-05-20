@@ -61,24 +61,24 @@ class FieldModuleCollectionDecoratorCustomLabelForm
 		$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadForm::class);
 		$results = $recordManagerReadForm->getRowByName($formName);
 		$fieldsByFormIds = $recordManagerReadForm->readFieldsByFormId(intval($results['form_id']));
+		$fieldNames = array_column($fieldsByFormIds, 'fieldname');
+		$customLabelRead = $this->_pContainer->get(CustomLabelRead::class);
+		$lang = $this->_pContainer->get(Language::class);
+		$labelsByField = $customLabelRead->readCustomLabelsByFormIdAndFieldNames(
+			intval($results['form_id']),
+			$fieldNames,
+			$lang->getLocale(),
+			RecordManager::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS,
+			RecordManager::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS
+		);
 		foreach ($fieldsByFormIds as $fieldsByFormId) {
-			$lang = $this->_pContainer->get(Language::class);
-			$customLabelRead = $this->_pContainer->get(CustomLabelRead::class);
-			$query = $customLabelRead->readCustomLabelByFormIdAndFieldName(intval($results['form_id']),
-				$fieldsByFormId['fieldname'],
-				$lang->getLocale(),RecordManager::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS);
-			if (empty($query[0]->value)) {
+			$value = $labelsByField[$fieldsByFormId['fieldname']] ?? null;
+			if (empty($value)) {
 				continue;
 			}
-			if ($fieldsByFormId['module'] === onOfficeSDK::MODULE_ADDRESS) {
-				$this->_fieldCustomLabels[onOfficeSDK::MODULE_ADDRESS][$fieldsByFormId['fieldname']] = $query[0]->value;
-			} elseif ($fieldsByFormId['module'] === onOfficeSDK::MODULE_SEARCHCRITERIA) {
-				$this->_fieldCustomLabels[onOfficeSDK::MODULE_SEARCHCRITERIA][$fieldsByFormId['fieldname']] = $query[0]->value;
-			} elseif ($fieldsByFormId['module'] === onOfficeSDK::MODULE_ESTATE) {
-				$this->_fieldCustomLabels[onOfficeSDK::MODULE_ESTATE][$fieldsByFormId['fieldname']] = $query[0]->value;
-			} else {
-				$this->_fieldCustomLabels[''][$fieldsByFormId['fieldname']] = $query[0]->value;
-			}
+			$allowedModules = [onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_SEARCHCRITERIA, onOfficeSDK::MODULE_ESTATE];
+			$module = in_array($fieldsByFormId['module'], $allowedModules, true) ? $fieldsByFormId['module'] : '';
+			$this->_fieldCustomLabels[$module][$fieldsByFormId['fieldname']] = $value;
 		}
 	}
 

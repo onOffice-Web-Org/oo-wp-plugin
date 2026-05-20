@@ -154,7 +154,10 @@ class TestClassRecordManagerInsertGeneric
 
 	public function testGetWpdb()
 	{
-		$this->assertInstanceOf(\wpdb::class, $this->_pSubject->getWpdb());
+		$wpdb = $this->_pSubject->getWpdb();
+		$this->assertTrue(
+			$wpdb instanceof \wpdb || $wpdb instanceof \onOffice\WPlugin\WP\WpdbReadCacheProxy
+		);
 	}
 
 

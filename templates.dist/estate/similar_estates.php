@@ -1,4 +1,8 @@
-<?php $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
+<?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben", "MPAreaButlerUrlWithAddress", "MPAreaButlerUrlNoAddress");
 
 /*  responsive picture properties
  *  customizable widths and heights for individual layouts

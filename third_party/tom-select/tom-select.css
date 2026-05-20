@@ -367,7 +367,7 @@
     --ts-pr-min: .75rem;
   }
   
-  .ts-wrapper.single .ts-control, .ts-wrapper.single .ts-control input {
+  .ts-wrapper.single .ts-control, .ts-wrapper.single .ts-control input, .ts-wrapper.multi .ts-control, .ts-wrapper.multi .ts-control input {
     cursor: pointer;
   }
   
@@ -393,7 +393,7 @@
   }
   
   .ts-control,
-  .ts-wrapper.single.input-active .ts-control {
+  .ts-wrapper.single.input-active .ts-control, .ts-wrapper.multi.input-active .ts-control {
     background: #fff;
     cursor: text;
   }

@@ -1,0 +1,34 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: testMySQLPassword123
+      MYSQL_DATABASE: wordpress_test
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ptestMySQLPassword123"]
+      interval: 3s
+      timeout: 5s
+      retries: 15
+
+  test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - wp-test-cache:/tmp/wp-test-cache
+    working_dir: /app
+    environment:
+      WP_TESTS_DIR: /tmp/wp-test-cache/wordpress-tests-lib
+      WP_CORE_DIR: /tmp/wp-test-cache/wordpress
+      DB_NAME: wordpress_test
+      DB_USER: root
+      DB_PASS: testMySQLPassword123
+      DB_HOST: mysql
+    entrypoint: ["/app/scripts/run-tests-docker.sh"]
+
+volumes:
+  wp-test-cache:

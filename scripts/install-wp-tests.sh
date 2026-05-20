@@ -122,7 +122,7 @@ install_test_suite() {
 		echo -e "\nTest suite already installed at:\n\n\t$WP_TESTS_DIR\n\n(If you experience difficulties running the tests, consider removing it then re-running this script.)\n"
 	fi
 
-	if [ ! -f wp-tests-config.php ]; then
+	if [ ! -f "$WP_TESTS_DIR"/wp-tests-config.php ]; then
 		download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/wp-tests-config-sample.php "$WP_TESTS_DIR"/wp-tests-config.php
 		# remove all forward slashes in the end
 		WP_CORE_DIR=$(echo $WP_CORE_DIR | sed "s:/\+$::")
@@ -132,7 +132,7 @@ install_test_suite() {
 		sed $ioption "s/yourpasswordhere/$DB_PASS/" "$WP_TESTS_DIR"/wp-tests-config.php
 		sed $ioption "s|localhost|${DB_HOST}|" "$WP_TESTS_DIR"/wp-tests-config.php
 	fi
-	echo -e "define( 'ONOFFICE_CREDENTIALS_ENC_KEY' , '123456');" >> "$WP_TESTS_DIR"/wp-tests-config.php
+	grep -q "ONOFFICE_CREDENTIALS_ENC_KEY" "$WP_TESTS_DIR"/wp-tests-config.php || echo -e "define( 'ONOFFICE_CREDENTIALS_ENC_KEY' , '123456');" >> "$WP_TESTS_DIR"/wp-tests-config.php
 
 }
 
@@ -158,8 +158,7 @@ install_db() {
 		fi
 	fi
 
-	# create database
-	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+	mysql --user="$DB_USER" --password="$DB_PASS"$EXTRA -e "CREATE DATABASE IF NOT EXISTS $DB_NAME"
 }
 
 install_wp

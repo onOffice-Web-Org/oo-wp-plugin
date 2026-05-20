@@ -22,6 +22,8 @@
 
 namespace onOffice\WPlugin\Filter\SearchParameters;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\Controller\SearchParametersModelBuilderEstate;

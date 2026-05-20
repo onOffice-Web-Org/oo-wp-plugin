@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use Exception;
 use onOffice\WPlugin\Model;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;

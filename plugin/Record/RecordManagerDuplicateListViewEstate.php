@@ -28,6 +28,7 @@ use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Nette\DI\Extensions\DIExtension;
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 
 
@@ -36,20 +37,18 @@ use wpdb;
  */
 class RecordManagerDuplicateListViewEstate extends RecordManager
 {
-	/** @var wpdb */
+	/** @var wpdb|WpdbReadCacheProxy */
 	private $_pWPDB;
 
 	/** @var Container */
 	private $_pContainer = null;
 
 	/**
-	 *
-	 * @param wpdb $pWPDB
+	 * @param wpdb|WpdbReadCacheProxy $pWPDB
 	 * @param Container $_pContainer
 	 * @throws \Exception
 	 */
-
-	public function __construct(wpdb $pWPDB, Container $_pContainer = null)
+	public function __construct(wpdb|WpdbReadCacheProxy $pWPDB, Container $_pContainer = null)
 	{
 		$this->_pWPDB = $pWPDB;
 		if ($_pContainer === null) {

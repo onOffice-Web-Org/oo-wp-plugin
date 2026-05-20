@@ -1,10 +1,10 @@
 === onOffice for WP-Websites ===
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
-Requires at least: 4.6
-Tested up to: 6.8
-Requires PHP: 7.4
-Stable tag: 6.8
+Requires at least: 6.1
+Tested up to: 6.9.1
+Requires PHP: 8.2
+Stable tag: 6.14
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,105 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.14 (2026-04-28) =
+
+**Added**
+* GDPR consent clause field for forms
+* "From-to" fields for property search
+
+**Changed**
+* Updated energy certificate scale according to GEG
+* API performance improvements
+* Improved "Rent vs. Purchase" price filter logic
+
+**Fixed**
+* stepper issue in "Property Valuation" form
+* property list duplication error
+* balcony results filter
+* Critical error on detail page when object title is missing
+* Markdown function
+* Frontend Access Violation error
+
+= 6.13 (2026-04-28) =
+
+**Added**
+* PHP and WordPress metadata to updater.json
+
+= 6.12 (2026-03-31) =
+
+**Added**
+* Extended GEO radius search for properties
+* Multi-page form wizard for applicant form
+* Added "from-to" search option
+
+**Changed**
+* Performance improvements across the plugin
+
+**Fixed**
+* Critical shortcode error
+* Cache integration for "regionaler_zusatz"
+* Filtering properties by "No" values (e.g., without balcony)
+* reCAPTCHA Enterprise "Test Keys"
+
+= 6.11.1 (2026-02-24) =
+
+**Fixed**
+* WordPress Plugin Directory requirements
+
+= 6.11 (2026-02-24) =
+
+**Fixed**
+* Broken links and 404 page errors
+* Drag & drop sorting issues in the form builder
+* Critical error caused by a duplicate PHP function
+
+**Changed**
+* Automated the handling of translation files
+
+= 6.10.3 (2026-01-29) =
+
+**Fixed**
+* WordPress Plugin Directory requirements
+
+= 6.10.2 (2026-01-29) =
+
+**Fixed**
+* language translation bug
+
+= 6.10.1 (2026-01-27) =
+
+**Added**
+* oo-updater
+
+= 6.10 (2026-01-26) =
+
+**Fixed**
+* WordPress Plugin Directory requirements
+
+**Changed**
+* Commission display in the total price calculator
+
+= 6.9.1 (2026-01-16) =
+
+**Fixed**
+* Form submission issues
+* API error handling
+* Property search language handling
+* Large property list pagination
+
+= 6.9 (2025-12-19) =
+
+**Fixed**
+* Security improvements
+* Translation of geo fields
+* Fatal error on the address detail page
+
+**Added**
+* Google reCAPTCHA Enterprise support
+
+**Changed**
+* Translation workflow
 
 = 6.8 (2025-11-27) =
 

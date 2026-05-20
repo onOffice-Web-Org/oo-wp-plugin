@@ -40,50 +40,7 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 	extends FieldModuleCollectionDecoratorAbstract
 {
 	/** @var array */
-	private $_geoFields = [
-		onOfficeSDK::MODULE_ESTATE => [
-			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY => [
-				'type' => FieldTypes::FIELD_TYPE_SINGLESELECT,
-				'length' => 250,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Country',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-			],
-			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 5,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Radius (km)',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-			],
-			GeoPosition::ESTATE_LIST_SEARCH_STREET => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Street',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-			],
-			GeoPosition::ESTATE_LIST_SEARCH_ZIP => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 10,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Postal Code',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-			],
-			GeoPosition::ESTATE_LIST_SEARCH_CITY => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'City',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-			],
-		],
-	];
+	private $_geoFields = [];
 
 
 	/**
@@ -94,9 +51,53 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 
 	public function __construct(FieldModuleCollection $pFieldModuleCollection)
 	{
+		$this->_geoFields = [
+			onOfficeSDK::MODULE_ESTATE => [
+				GeoPosition::ESTATE_LIST_SEARCH_COUNTRY => [
+					'type' => FieldTypes::FIELD_TYPE_SINGLESELECT,
+					'length' => 250,
+					'permittedvalues' => [],
+					'default' => null,
+					'label' => __('Country', 'onoffice-for-wp-websites'),
+					'module' => onOfficeSDK::MODULE_ESTATE,
+				],
+				GeoPosition::ESTATE_LIST_SEARCH_RADIUS => [
+					'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+					'length' => 5,
+					'permittedvalues' => [],
+					'default' => null,
+					'label' => __('Radius (km)', 'onoffice-for-wp-websites'),
+					'module' => onOfficeSDK::MODULE_ESTATE,
+				],
+				GeoPosition::ESTATE_LIST_SEARCH_STREET => [
+					'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+					'length' => 250,
+					'permittedvalues' => [],
+					'default' => null,
+					'label' => __('Street', 'onoffice-for-wp-websites'),
+					'module' => onOfficeSDK::MODULE_ESTATE,
+				],
+				GeoPosition::ESTATE_LIST_SEARCH_ZIP => [
+					'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+					'length' => 10,
+					'permittedvalues' => [],
+					'default' => null,
+					'label' => __('Postal Code', 'onoffice-for-wp-websites'),
+					'module' => onOfficeSDK::MODULE_ESTATE,
+				],
+				GeoPosition::ESTATE_LIST_SEARCH_CITY => [
+					'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+					'length' => 250,
+					'permittedvalues' => [],
+					'default' => null,
+					'label' => __('City', 'onoffice-for-wp-websites'),
+					'module' => onOfficeSDK::MODULE_ESTATE,
+				],
+			],
+		];
+
 		parent::__construct($pFieldModuleCollection);
 	}
-
 
 	/**
 	 *

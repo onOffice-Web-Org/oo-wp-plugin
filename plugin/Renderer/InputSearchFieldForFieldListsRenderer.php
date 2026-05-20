@@ -27,7 +27,9 @@ use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
+use function esc_attr;
 use function esc_html;
 /**
  *
@@ -176,6 +178,9 @@ class InputSearchFieldForFieldListsRenderer
 
 	private function generateItemSearchHtml(array $item, string $key, string $actionFieldNameClass, string $inputId, string $actionIcons, string $fieldItemCustomCss): string
 	{
+		$fieldType = (string)($item['type'] ?? '');
+		$rangeSupported = FieldTypes::isRangeType($fieldType) ? '1' : '0';
+
 		return '<li class="search-field-item" data-label="' . esc_html($item['label']) . '" data-key="' . esc_html($key) . '" data-content="' . esc_html($item['content']) . '">'
 			. '<span class="field-item inputFieldButton ' . $actionFieldNameClass . '"'
 			. 'name="' . esc_html($this->getName()) . '"'
@@ -183,6 +188,8 @@ class InputSearchFieldForFieldListsRenderer
 			. (isset($item['action']) ? 'data-action-div="actionFor' . esc_html($item['action']) . '"' : '')
 			. 'value="' . esc_html($key) . '"'
 			. 'data-onoffice-category="' . esc_attr($item['content']) . '"'
+			. 'data-onoffice-type="' . esc_attr($fieldType) . '"'
+			. 'data-onoffice-range-supported="' . esc_attr($rangeSupported) . '"'
 			. 'data-onoffice-label="' . esc_attr($item['label']) . '"'
 			. 'id="' . esc_html($inputId) . '">'
 			. '<span ' . $actionIcons . '></span>'

@@ -1,0 +1,41 @@
+{
+    "cardsV2": [
+      {
+        "cardId": "poeditor-notification",
+        "card": {
+          "header": {
+            "title": "OO-FOR-WP-WEBSITES",
+            "imageUrl": "https://avatars.githubusercontent.com/u/4620286?s=200&v=4",
+            "imageType": "SQUARE"
+          },
+          "sections": [
+            {
+              "collapsible": false,
+              "uncollapsibleWidgetsCount": 99,
+              "widgets": [
+                {
+                  "decoratedText": {
+                    "text": "📣 Just wanted to remind you that there's work to be done"
+                  }
+                },
+                {
+                  "buttonList": {
+                    "buttons": [
+                      {
+                        "text": "View project",
+                        "onClick": {
+                          "openLink": {
+                            "url": "https://poeditor.com/projects/view?id=778936"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }

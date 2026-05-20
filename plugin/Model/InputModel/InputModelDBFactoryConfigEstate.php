@@ -106,6 +106,10 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'convertTextToSelectForCityField',
 		],
+		self::INPUT_RANGE_DISPLAY_MODE => [
+			self::KEY_TABLE => 'oo_plugin_fieldconfig',
+			self::KEY_FIELD => 'rangeFieldDisplayMode',
+		],
 		InputModelDBFactory::INPUT_SORT_BY_SETTING => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'sortBySetting',

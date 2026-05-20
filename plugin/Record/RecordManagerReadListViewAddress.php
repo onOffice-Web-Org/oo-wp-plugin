@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\WPlugin\DataView\UnknownViewException;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -129,10 +131,9 @@ class RecordManagerReadListViewAddress
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 
-		 if ($result === null)
-        {
-            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages with __() are for internal debugging
-            throw new \Exception(__('unknown address list name', 'onoffice-for-wp-websites'));
+		if ($result === null) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception in internal code
+            throw new UnknownViewException($name);
         }
 
 		$resultFieldConfig = $this->getFieldconfigByListviewId($result[$this->getIdColumnMain()]);

@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2016  onOffice Software AG
@@ -56,7 +59,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 	$inputAddition = $isRequired ? ' required' : '';
-	$label = esc_html($pForm->getFieldLabel($input)) . ' ' . wp_kses_post($addition);
+	$label = wp_kses_post($pForm->getFieldLabel($input)) . ' ' . wp_kses_post($addition);
 	
 	$permittedValues = $pForm->getPermittedValues( $input, true );
 
@@ -185,10 +188,13 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			} else if ($name === 'regionaler_zusatz') {
 				$pRegionController = new \onOffice\WPlugin\Region\RegionController();
 
+				$value = (array) $value;
 				$pRegion = $pRegionController->getRegionByKey(array_pop($value));
 				/* @var $pRegion \onOffice\WPlugin\Region\Region */
 				if ($pRegion !== null) {
 					$value = esc_html($pRegion->getName());
+				} else {
+					$value = '';
 				}
 			}
 

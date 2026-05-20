@@ -80,6 +80,20 @@ class TestClassAddressDetailUrl
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
+	public function testUrlWithCustomPort()
+	{
+		$addressId = 123;
+		$pInstance = $this->_pContainer->get(AddressDetailUrl::class);
+		$url = 'https://www.onoffice.de:8080/detail/?lang=en';
+		$expectedUrl = 'https://www.onoffice.de:8080/detail/123?lang=en';
+
+		$this->assertEquals($expectedUrl, $pInstance->createAddressDetailLink($url, $addressId));
+	}
+
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
 	public function testAddressDetailUrl()
 	{
 		add_option('onoffice-address-detail-view-showInfoUserUrl', true);
@@ -138,6 +152,23 @@ class TestClassAddressDetailUrl
 		$pInstance = $this->_pContainer->get(AddressDetailUrl::class);
 		$url = 'https://www.onoffice.de/detail/123?lang=en';
 		$expectedUrl = 'https://www.onoffice.de/detail/123-test-title?lang=en';
+		$this->assertEquals($expectedUrl, $pInstance->getUrlWithAddressTitle($addressId, $title, $url, false, $pAddressRedirection));
+	}
+
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function testGetUrlWithFilterTrueAndEnableOptionShowTitleKeepsCustomPort()
+	{
+		$pAddressRedirection = apply_filters('oo_is_address_detail_page_redirection', true);
+		add_option('onoffice-address-detail-view-showInfoUserUrl', true);
+		$addressId = 123;
+		$title = 'test-title';
+		$pInstance = $this->_pContainer->get(AddressDetailUrl::class);
+		$url = 'https://www.onoffice.de:8080/detail/123?lang=en';
+		$expectedUrl = 'https://www.onoffice.de:8080/detail/123-test-title?lang=en';
+
 		$this->assertEquals($expectedUrl, $pInstance->getUrlWithAddressTitle($addressId, $title, $url, false, $pAddressRedirection));
 	}
 

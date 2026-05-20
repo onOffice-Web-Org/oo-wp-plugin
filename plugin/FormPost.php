@@ -25,6 +25,8 @@ use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
@@ -32,12 +34,16 @@ use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Form\CaptchaHandler;
+use onOffice\WPlugin\Form\CaptchaEnterpriseHandler;
+use onOffice\WPlugin\Form\AltchaHandler;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Form\NewsletterFormPostConfiguration;
 
 /**
  *
@@ -195,19 +201,46 @@ abstract class FormPost
 	 */
 
 	private function checkCaptcha(DataFormConfiguration $pConfig): bool
-	{
-		$pWPOptionsWrapper = $this->_pFormPostConfiguration->getWPOptionsWrapper();
-		$isCaptchaSetup = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-sitekey', '') !== '';
+    {
+        if (!$pConfig->getCaptcha()) {
+            return true;
+        }
 
-		if ($pConfig->getCaptcha() && $isCaptchaSetup) {
-			$token = $this->_pFormPostConfiguration->getPostvarCaptchaToken();
-			$secret = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-secretkey', '');
-			$pCaptchaHandler = new CaptchaHandler($token, $secret);
-			return $pCaptchaHandler->checkCaptcha();
-		} else {
-			return true;
-		}
-	}
+        $pWPOptionsWrapper = $this->_pFormPostConfiguration->getWPOptionsWrapper();
+        $token = $this->_pFormPostConfiguration->getPostvarCaptchaToken();
+
+        // Enterprise reCAPTCHA
+        $enterpriseSiteKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-enterprise-sitekey', '');
+        $enterpriseProjectId = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-enterprise-projectid', '');
+        $enterpriseApiKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-enterprise-apikey', '');
+
+        if (!empty($enterpriseSiteKey) && !empty($enterpriseProjectId) && !empty($enterpriseApiKey)) {
+            $pHandler = new CaptchaEnterpriseHandler($token, $enterpriseProjectId, $enterpriseSiteKey, $enterpriseApiKey);
+            return $pHandler->checkCaptcha();
+        }
+
+        // TODO: Classic reCAPTCHA - Remove this later, when Enterprise reCAPTCHA is fully rolled out
+        $classicSiteKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-sitekey', '');
+        $classicSecretKey = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-secretkey', '');
+
+        if (!empty($classicSiteKey) && !empty($classicSecretKey)) {
+            $pHandler = new CaptchaHandler($token, $classicSecretKey);
+            return $pHandler->checkCaptcha();
+        }
+
+        // ALTCHA fallback: activated when no reCAPTCHA is configured and a supported theme is active
+        if (AltchaHandler::isAltchaActive()) {
+            $altchaPayload = $_POST['altcha'] ?? '';
+            try {
+                $pAltchaHandler = new AltchaHandler($altchaPayload, AltchaHandler::getHmacKey());
+                return $pAltchaHandler->checkCaptcha();
+            } catch (\Exception $e) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 	/**
 	 *
@@ -516,4 +549,42 @@ abstract class FormPost
 	/** @return int */
 	public function getAbsolutCountResults(): int
 		{ return $this->_absolutCountResults; }
+
+	/**
+	 * @return NewsletterFormPostConfiguration
+	 */
+	abstract protected function getNewsletterFormPostConfiguration(): NewsletterFormPostConfiguration;
+
+	/**
+	 * @param int $addressId
+	 * @param DataFormConfiguration $pFormConfig
+	 * @return void
+	 * @throws ApiClientException
+	 */
+	protected function setNewsletter(int $addressId, DataFormConfiguration $pFormConfig): void
+	{
+		if (!method_exists($pFormConfig, 'getNewsletterCheckbox') || !$pFormConfig->getNewsletterCheckbox()) {
+			return;
+		}
+
+		$pNewsletterConfiguration = $this->getNewsletterFormPostConfiguration();
+
+		$pAPIClientAction = new APIClientActionGeneric(
+			$pNewsletterConfiguration->getSDKWrapper(),
+			onOfficeSDK::ACTION_ID_DO,
+			'registerNewsletter'
+		);
+
+		$pAPIClientAction->setParameters([
+			'register' => $pNewsletterConfiguration->getNewsletterAccepted(),
+		]);
+
+		$pAPIClientAction->setResourceId($addressId);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+
+		if (!$pAPIClientAction->getResultStatus()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception with API client object
+			throw new ApiClientException($pAPIClientAction);
+		}
+	}
 }

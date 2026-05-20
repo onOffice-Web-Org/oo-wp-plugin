@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2016  onOffice Software AG
@@ -29,6 +31,7 @@ add_thickbox();
 $addressValues = array();
 $miscValues = array();
 $hiddenValues = array();
+$pageHasRequired = array();
 $pageTitles = $pForm->getPageTitlesByCurrentLanguage();
 
 $showFormAsModal = $pForm->getShowFormAsModal() || $pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS;
@@ -45,9 +48,6 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		echo '<p role="status">'.esc_html__('Spam recognized!', 'onoffice-for-wp-websites').'</p>';
 	}
 
-
-
-
 	/* @var $pForm Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		if ($pForm->isHiddenField($input)) {
@@ -55,8 +55,6 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			continue;
 		}
 
-		
-	
 		if ( $pForm->isMissingField( $input )  &&
 			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 			/* translators: %s will be replaced with a translated field name. */
@@ -64,17 +62,17 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		}
 
 		switch ($input) {
-			case "ort": $fieldLabel = esc_html__('Ort der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "plz": $fieldLabel = esc_html__('PLZ der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "strasse": $fieldLabel = esc_html__('Straße der Immobilie', 'onoffice-for-wp-websites'); break;
-			case "hausnummer": $fieldLabel = esc_html__('Hausnummer der Immobilie', 'onoffice-for-wp-websites'); break;
+			case "ort": $fieldLabel = esc_html__('Property Location', 'onoffice-for-wp-websites'); break;
+			case "plz": $fieldLabel = esc_html__('Property ZIP Cod', 'onoffice-for-wp-websites'); break;
+			case "strasse": $fieldLabel = esc_html__('Property Street', 'onoffice-for-wp-websites'); break;
+			case "hausnummer": $fieldLabel = esc_html__('Property House Number', 'onoffice-for-wp-websites'); break;
 			default: $fieldLabel = $pForm->getFieldLabel($input);
 		}
 
 		$isRequired = $pForm->isRequiredField($input);
 		$addition   = $isRequired ? '<span class="oo-visually-hidden">'.esc_html__('Pflichtfeld', 'onoffice-for-wp-websites').'</span><span aria-hidden="true">*</span>' : '';
 		$isHiddenField = $pForm->isHiddenField($input);
-		$label = $fieldLabel.' '.wp_kses_post($addition);
+		$label = wp_kses_post($fieldLabel).' '.wp_kses_post($addition);
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
 
@@ -86,11 +84,15 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			$line .= renderFormField($input, $pForm).'</span></label>';		
 		}
 
-	
 		$pageNumber = $pForm->getPagePerForm($input);
 		if (!isset($addressValues[$pageNumber])) {
 			$addressValues[$pageNumber] = array();
 		}
+
+		if ($isRequired && !$pForm->isHiddenField($input)) {
+			$pageHasRequired[$pageNumber] = true;
+		}
+
 		$addressValues[$pageNumber][] = $line;
 	}
 }
@@ -121,12 +123,9 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 					$hasRequiredFields = true;
 					break;
 				}
-			}
-
-			if ($hasRequiredFields) {
-				echo '<div class="oo-form-required" aria-hidden="true">' . esc_html__('* Mandatory fields', 'onoffice-for-wp-websites') . '</div>';
 			} ?>
 			<div id="leadform-<?php echo esc_attr(sanitize_title($pForm->getFormId())); ?>">
+			
 				<?php
 					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
 						echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
@@ -139,14 +138,17 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
                 foreach ($addressValues as $pageNumber => $fields): $pageIndex++?>
                     <div class="lead-lightbox lead-page-<?php echo esc_attr($pageNumber); ?>">
+					<?php
+						if (!empty($pageHasRequired[$pageNumber])) {
+							echo '<div class="oo-form-required" aria-hidden="true">' . esc_html__('* Mandatory fields', 'onoffice-for-wp-websites') . '</div>';
+						} ?>
+
                         <?php if($totalPages > 1): ?>
-                            <span><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></span>
+                            <h2 class="lead-title"><?php echo esc_html($pageTitles[$pageNumber-1]['value']); ?></h2>
                         <?php endif; ?>
-                        <p>
                             <?php 
 							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $fields contains escaped HTML from renderFormField
 							echo implode('', $fields); ?>
-                        </p>
                         <?php if ($pageIndex === $totalPages): ?>
                             <p>
                             <div style="float:right">
@@ -161,13 +163,13 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				<?php
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $hiddenValues contains escaped HTML from renderFormField
 				echo implode($hiddenValues); ?>
-				<span class="leadform-back" style="float:left; cursor:pointer;" role="button">
+				<button class="leadform-back" style="float:left; cursor:pointer;" type="button">
 					<?php echo esc_html__('Back', 'onoffice-for-wp-websites'); ?>
-				</span>
+				</button>
 				<?php if ($totalPages !== 1): ?>
-				<span class="leadform-forward" style="float:right; cursor:pointer;" role="button">
+				<button class="leadform-forward" style="float:right; cursor:pointer;" type="button">
 					<?php echo esc_html__('Next', 'onoffice-for-wp-websites'); ?>
-				</span>
+				</button>
 				<?php endif; ?>
 			</div>
 		</form>

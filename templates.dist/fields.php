@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use onOffice\WPlugin\Region\Region;
 use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -58,17 +60,18 @@ if (!function_exists('renderFieldEstateSearch')) {
 		}
 
 		if ($properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN) {
-            echo '<fieldset><legend>' . esc_html($fieldLabel) . '</legend>
-        <input type="radio" id="' . esc_attr($inputName) . '_u" name="' . esc_attr($inputName) . '" value="u"
-            ' . ($selectedValue === null ? ' checked' : '') . '>
-        <label for="' . esc_attr($inputName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
-        <input type="radio" id="' . esc_attr($inputName) . '_y" name="' . esc_attr($inputName) . '" value="y"
-            ' . ($selectedValue === true  ? 'checked' : '') . '>
-        <label for="' . esc_attr($inputName) . '_y">' . esc_html__('Yes', 'onoffice-for-wp-websites') . '</label>
-        <input type="radio" id="' . esc_attr($inputName) . '_n" name="' . esc_attr($inputName) . '" value="n"
-            ' . ($selectedValue === false ? 'checked' : '') . '>
-        <label for="' . esc_attr($inputName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
-      </fieldset>';
+			echo '<br>';
+			echo '<fieldset><legend>' . esc_html($fieldLabel) . '</legend>
+		<input type="radio" id="' . esc_attr($inputName) . '_u" name="' . esc_attr($inputName) . '" value="u"
+			' . ($selectedValue === null || $selectedValue === '' ? ' checked' : '') . '>
+		<label for="' . esc_attr($inputName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
+		<input type="radio" id="' . esc_attr($inputName) . '_y" name="' . esc_attr($inputName) . '" value="1"
+			' . ($selectedValue === '1' || $selectedValue === 1 || $selectedValue === true ? 'checked' : '') . '>
+		<label for="' . esc_attr($inputName) . '_y">' . esc_html__('Yes', 'onoffice-for-wp-websites') . '</label>
+		<input type="radio" id="' . esc_attr($inputName) . '_n" name="' . esc_attr($inputName) . '" value="0"
+			' . ($selectedValue === '0' || $selectedValue === 0 || $selectedValue === false ? 'checked' : '') . '>
+		<label for="' . esc_attr($inputName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
+	  </fieldset>';
 		} elseif (($inputName === 'ort' || $inputName === 'Ort') && !empty($properties['permittedvalues'])) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped in renderCityField
             echo renderCityField($inputName, $properties);
@@ -104,18 +107,24 @@ if (!function_exists('renderFieldEstateSearch')) {
 			FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']
 		) {
+			$displayMode = $properties['rangeFieldDisplayMode'] ?? 'range';
 			echo '<fieldset class="oo-searchrange">';
 			echo '<legend>' . esc_html($fieldLabel) . '</legend>';
-			echo '<label for="' . esc_attr($inputName) . '__von">';
-			esc_html_e('From: ', 'onoffice-for-wp-websites');
-			//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
-			echo '<input id="' . esc_attr($inputName) . '__von" name="' . esc_attr($inputName) . '__von" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
-			echo '<label for="' . esc_attr($inputName) . '__bis">';
-			esc_html_e('Up to: ', 'onoffice-for-wp-websites');
-			//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
-			echo '<input id="' . esc_attr($inputName) . '__bis" name="' . esc_attr($inputName) . '__bis" ' . $inputType;
-			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label></fieldset>';
+			if ($displayMode !== 'toOnly') {
+				echo '<label for="' . esc_attr($inputName) . '__von">';
+				esc_html_e('From: ', 'onoffice-for-wp-websites');
+				//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
+				echo '<input id="' . esc_attr($inputName) . '__von" name="' . esc_attr($inputName) . '__von" ' . $inputType;
+				echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"></label>';
+			}
+			if ($displayMode !== 'fromOnly') {
+				echo '<label for="' . esc_attr($inputName) . '__bis">';
+				esc_html_e('Up to: ', 'onoffice-for-wp-websites');
+				//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType is controlled and safe
+				echo '<input id="' . esc_attr($inputName) . '__bis" name="' . esc_attr($inputName) . '__bis" ' . $inputType;
+				echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"></label>';
+			}
+			echo '</fieldset>';
 		} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="' . esc_attr($properties['length']) . '"' : '';
@@ -131,7 +140,7 @@ if (!function_exists('renderFormField')) {
 
 	function renderErrorHtml(?string $errorMessage, bool $shouldDisplay): string {
         if (!empty($errorMessage) && $shouldDisplay) {
-            return "<div class='error' aria-hidden='true' role='alert' aria-atomic='true'><p>" . esc_html($errorMessage) . "</p></div>";
+            return "<span class='error' aria-hidden='true' aria-atomic='true'><p>" . esc_html($errorMessage) . "</p></span>";
         }
         return '';
     }
@@ -155,6 +164,14 @@ if (!function_exists('renderFormField')) {
 			}
 
 			return '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
+		}
+
+		if ($typeCurrentInput === FieldTypes::FIELD_TYPE_LABEL_TEXT) {
+			return '';
+		}
+
+		if ($typeCurrentInput === FieldTypes::FIELD_TYPE_LABEL_TEXT) {
+			return '';
 		}
 
 
@@ -258,7 +275,7 @@ if (!function_exists('renderFormField')) {
 			$errorMessage = esc_html__('Please select at least one option.', 'onoffice-for-wp-websites');
 			$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 
-			$output = '<select aria-hidden="true" tabindex="-1" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
+			$output = '<select aria-hidden="true" class="custom-multiple-select-tom form-control" autocomplete="off" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
 			$output .= $htmlOptions;
 			$output .= '</select>'.$errorHtml;
 		} else {
@@ -368,9 +385,10 @@ if (!function_exists('renderRegionalAddition')) {
 		ob_start();
 		/* translators: %s: field label for regional addition dropdown */
 		echo '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
+		$selectedValue = (array) ($selectedValue ?? []);
 		foreach ($regions as $pRegion) {
 			/* @var $pRegion Region */
-			printRegion($pRegion, $selectedValue ?? []);
+			printRegion($pRegion, $selectedValue);
 		}
 		$output .= ob_get_clean();
 		$output .= '</select>';
@@ -395,5 +413,34 @@ if (!function_exists('renderCityField')) {
 		$htmlSelect .= '</select>';
 
 		return $htmlSelect;
+	}
+}
+
+if (!function_exists('renderGdprCheckbox')) {
+	function renderGdprCheckbox($pForm, bool $displayError, bool $isRequired, string $addition): string
+	{
+		$errorClass = ($displayError && $isRequired) ? ' displayerror' : '';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderFormField and $addition are already escaped
+		return '<label><span class="oo-label-text' . $errorClass . '">'
+			. wp_kses_post($pForm->getFieldLabel('gdprcheckbox')) . ' '
+			. wp_kses_post($addition)
+			. renderFormField('gdprcheckbox', $pForm)
+			. '</span></label>';
+	}
+}
+
+if (!function_exists('renderGdprHintText')) {
+	function renderGdprHintText($pForm): string
+	{
+		$hintLabel = $pForm->getFieldLabel('gdprhinttext');
+		$defaultLabel = __('GDPR (Notice text)', 'onoffice-for-wp-websites');
+		// Don't render anything if the admin hasn't configured a hint text
+		// (label is empty or still the default fallback).
+		if (trim((string) $hintLabel) === '' || $hintLabel === esc_html($defaultLabel) || $hintLabel === $defaultLabel) {
+			return '';
+		}
+		// Match opening <a> tag regardless of attribute order so we don't miss links where href isn't the first attribute (e.g. <a class="..." href="...">).
+		$hintLabel = preg_replace('/<a\b([^>]*?)\shref=/i', '<a$1 target="_blank" rel="noopener noreferrer" href=', $hintLabel);
+		return '<div class="oo-gdpr-hint-text">' . wp_kses_post($hintLabel) . '</div>';
 	}
 }

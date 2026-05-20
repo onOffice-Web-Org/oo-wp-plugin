@@ -62,10 +62,11 @@ class FormPostConfigurationDefault
 	 *
 	 */
 
-	public function getPostvarCaptchaToken(): string
-	{
-		return filter_input(INPUT_POST, CaptchaHandler::RECAPTCHA_RESPONSE_PARAM) ?? '';
-	}
+    public function getPostvarCaptchaToken(): string
+    {
+        $token = filter_input(INPUT_POST, CaptchaHandler::RECAPTCHA_RESPONSE_PARAM) ?? '';
+        return $token;
+    }
 
 
 	/**

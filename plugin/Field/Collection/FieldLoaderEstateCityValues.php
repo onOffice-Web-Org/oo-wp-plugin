@@ -87,6 +87,7 @@ class FieldLoaderEstateCityValues
 		$requestParams = [
 			'data' => ['ort'],
 			'listlimit' => 500,
+			'estatelanguage' => Language::getDefault(),
 		];
 
 		if ($this->_pShowReferenceEstate === DataListView::HIDE_REFERENCE_ESTATE) {

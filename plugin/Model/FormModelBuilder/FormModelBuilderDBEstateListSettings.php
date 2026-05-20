@@ -314,6 +314,24 @@ class FormModelBuilderDBEstateListSettings
 
 	/**
 	 *
+	 * @return InputModelDB
+	 */
+	public function getInputModelRangeFieldDisplayMode()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Display', 'onoffice-for-wp-websites'); 
+		$type = InputModelDBFactoryConfigEstate::INPUT_RANGE_DISPLAY_MODE;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_RADIO);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelRangeFieldDisplayMode'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 *
 	 * @param InputModelBase $pInputModel
 	 * @param string $key Name of input
 	 *
@@ -396,6 +414,25 @@ class FormModelBuilderDBEstateListSettings
 
 	/**
 	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key The field name (e.g., 'kaufpreis')
+	 */
+	public function callbackValueInputModelRangeFieldDisplayMode(InputModelBase $pInputModel, string $key)
+	{
+		$pInputModel->setField("rangeFieldDisplayMode[$key]");
+		$pInputModel->setValuesAvailable([
+			"$key:range"    => __('Both', 'onoffice-for-wp-websites'),
+			"$key:fromOnly" => __('From', 'onoffice-for-wp-websites'),
+			"$key:toOnly"   => __('To', 'onoffice-for-wp-websites'),
+		]);
+
+		$activeModes = $this->getValue('rangeFieldDisplayModes');
+		$currentValue = (is_array($activeModes) && isset($activeModes[$key])) ? $activeModes[$key] : 'range';
+		$pInputModel->setValue("$key:$currentValue");
+	}
+
+	/**
+	 *
 	 * @param string $module
 	 * @param string $htmlType
 	 * @param bool $isShow
@@ -437,6 +474,7 @@ class FormModelBuilderDBEstateListSettings
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelIsHidden());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelisHighlight());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelConvertInputTextToSelectCityField());
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelRangeFieldDisplayMode());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelAvailableOptions());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());

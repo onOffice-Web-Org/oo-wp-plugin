@@ -29,6 +29,7 @@ use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstate;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstateDetail;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstateList;
+use onOffice\WPlugin\DataView\UnknownViewException;
 
 class TestClassContentFilterShortCodeEstate
 	extends \WP_UnitTestCase
@@ -66,12 +67,22 @@ class TestClassContentFilterShortCodeEstate
 		$this->assertSame('oo_estate', $result);
 	}
 
+	public function testReplaceShortCodesRethrowsUnknownViewException()
+	{
+		$pContentFilterList = $this->_pContainer->get(ContentFilterShortCodeEstateList::class);
+		$pContentFilterList->method('render')->willThrowException(new UnknownViewException('missing'));
+
+		$this->expectException(UnknownViewException::class);
+		$this->_pContainer->get(ContentFilterShortCodeEstate::class)->replaceShortCodes(['view' => 'missing']);
+	}
+
 	public function testReplaceShortCodesForDetail()
 	{
 		$input = [
 			'view' => 'default_view',
 			'units' => 'test_units',
-			'address' => null
+			'address' => null,
+			'geo' => null,
 		];
 		$pContentFilterDetail = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
 		$pContentFilterDetail->expects($this->once())
@@ -82,7 +93,7 @@ class TestClassContentFilterShortCodeEstate
 		$pContentFilterList = $this->_pContainer->get(ContentFilterShortCodeEstateList::class);
 		$pContentFilterList->expects($this->once())
 			->method('render')
-			->with(['view' => 'other', 'units' => null, 'address' => null])
+			->with(['view' => 'other', 'units' => null, 'address' => null, 'geo' => null])
 			->will($this->returnValue('rendered list'));
 
 		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstate::class);

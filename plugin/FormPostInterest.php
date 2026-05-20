@@ -33,7 +33,7 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfiguration;
-use function sanitize_email;
+use onOffice\WPlugin\Form\NewsletterFormPostConfiguration;
 use function sanitize_text_field;
 
 /**
@@ -73,6 +73,14 @@ class FormPostInterest
 	}
 
 	/**
+	 * @return NewsletterFormPostConfiguration
+	 */
+	protected function getNewsletterFormPostConfiguration(): NewsletterFormPostConfiguration
+	{
+		return $this->_pFormPostInterestConfiguration;
+	}
+
+	/**
 	 * @param FormData $pFormData
 	 * @throws ApiClientException
 	 * @throws DependencyException
@@ -109,7 +117,7 @@ class FormPostInterest
 				if ($writeActivity) {
 					$this->_pFormPostInterestConfiguration->getFormAddressCreator()->createAgentsLog($pFormConfiguration, $addressId, null);
 				}
-				$this->setNewsletter( $addressId );
+				$this->setNewsletter( $addressId, $pFormConfiguration );
 				if ($enableCreateTask) {
 					$this->_pFormPostInterestConfiguration->getFormAddressCreator()->createTask($pFormConfiguration, $addressId, $estateId);
 				}
@@ -136,36 +144,6 @@ class FormPostInterest
 			->getFormFieldsWithRangeFields($formFields);
 		return $postvars;
 	}
-
-
-	/**
-	 *
-	 * @param FormData $pFormData
-	 * @return void
-	 * @throws ApiClientException
-	 * @throws Field\UnknownFieldException
-	 */
-
-	private function setNewsletter( $addressId)
-	{
-		if (!$this->_pFormPostInterestConfiguration->getNewsletterAccepted()) {
-			// No subscription for newsletter, which is ok
-			return;
-		}
-
-		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
-		$pAPIClientAction = new APIClientActionGeneric
-			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'registerNewsletter');
-		$pAPIClientAction->setParameters(['register' => true]);
-		$pAPIClientAction->setResourceId($addressId);
-		$pAPIClientAction->addRequestToQueue()->sendRequests();
-
-		if (!$pAPIClientAction->getResultStatus()) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is for internal API error handling, not user-facing output
-			throw new ApiClientException($pAPIClientAction);
-		}
-	}
-
 
 	/**
 	 * @param FormData $pFormData
@@ -207,6 +185,7 @@ class FormPostInterest
 			$requestParams['addressdata']['DSGVOStatus'] = "speicherungzugestimmt";
 		}
 		unset($requestParams['addressdata']['gdprcheckbox']);
+		unset($requestParams['addressdata']['gdprhinttext']);
 
 		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
 		$pAPIClientAction = new APIClientActionGeneric

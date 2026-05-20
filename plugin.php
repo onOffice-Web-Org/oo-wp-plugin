@@ -25,15 +25,16 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 6.8
+Version: 6.14
+Requires PHP: 8.2
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
 Domain Path: /languages
 */
-defined( 'ABSPATH' ) or die();
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-const ONOFFICE_PLUGIN_VERSION = '6.8';
+const ONOFFICE_PLUGIN_VERSION = '6.14';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
 
 require __DIR__ . '/vendor/autoload.php';
@@ -55,6 +56,7 @@ use onOffice\WPlugin\DataView\DataDetailViewCheckAccessControl;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Field\EstateKindTypeReader;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
+use onOffice\WPlugin\Form\CaptchaEnterpriseDataChecker;
 use onOffice\WPlugin\Form\Preview\FormPreviewApplicantSearch;
 use onOffice\WPlugin\Form\Preview\FormPreviewEstate;
 use onOffice\WPlugin\FormPostHandler;
@@ -66,7 +68,6 @@ use onOffice\WPlugin\PDF\PdfDownload;
 use onOffice\WPlugin\PDF\PdfDownloadException;
 use onOffice\WPlugin\Record\EstateIdRequestGuard;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
-use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
@@ -78,6 +79,11 @@ use onOffice\WPlugin\Controller\AddressDetailUrl;
 const DEFAULT_LIMIT_CHARACTER_TITLE = 60;
 
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
+
+define('ONOFFICE_API_SERVER', 'https://api.onoffice.de/api/');
+
+// enable per-request db caching (experimental) - this will cache selects in memory for the current request, prevents multiple database queries for the same data
+const OO_DB_REQUEST_CACHE = true;
 
 $pDIBuilder = new ContainerBuilder();
 $pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -214,25 +220,23 @@ add_action('init', function() use ($pAdminViewController) {
 }, 11);
 add_action('admin_init', [$pAdminViewController, 'add_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
+add_action('admin_init', [CaptchaEnterpriseDataChecker::class, 'addHook']);
 add_action('admin_init', [$pDetailViewPostSaveController, 'getAllPost']);
 add_action('plugins_loaded', function() {
 	$mo_file = ONOFFICE_PLUGIN_DIR . '/languages/onoffice-for-wp-websites-'.get_locale().'.mo';
 	if (file_exists($mo_file)) {
 		load_textdomain('onoffice-for-wp-websites', $mo_file);
-	} else {
-		load_plugin_textdomain('onoffice-for-wp-websites', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
 	}
-	// Check 'onoffice-personalized' Folder exists
+	// WordPress automatically loads translations for 'onoffice-for-wp-websites' domain since WP 4.6+
+
+	// Load custom 'onoffice' domain translations from personalized/theme folders
 	$onofficePersonalizedFolderLanguages = plugin_dir_path(__DIR__) . 'onoffice-personalized/languages';
-	$onofficePersonalizedFolder = plugin_dir_path(__DIR__) . 'onoffice-personalized';
 	$onofficeThemeFolderLanguages = get_stylesheet_directory() . '/onoffice-theme/languages';
 
 	if (is_dir($onofficeThemeFolderLanguages)) {
 		load_textdomain('onoffice', $onofficeThemeFolderLanguages . '/onoffice-'.get_locale().'.mo');
 	} elseif (is_dir($onofficePersonalizedFolderLanguages)) {
-		load_plugin_textdomain('onoffice', false, basename($onofficePersonalizedFolder) . '/languages');
-	} else {
-		load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
+		load_textdomain('onoffice', $onofficePersonalizedFolderLanguages . '/onoffice-'.get_locale().'.mo');
 	}
 });
 
@@ -558,8 +562,23 @@ function update_status_close_action_button_option()
 
 function delete_google_recaptcha_keys()
 {
+	if (!check_ajax_referer('delete_google_recaptcha_keys', 'nonce', false)) {
+        wp_send_json_error('Invalid nonce', 403);
+    }
     update_option('onoffice-settings-captcha-sitekey', '');
     update_option('onoffice-settings-captcha-secretkey', '');
+    echo true;
+    wp_die();
+}
+
+function delete_google_recaptcha_enterprise_keys()
+{
+	if (!check_ajax_referer('delete_google_recaptcha_enterprise_keys', 'nonce', false)) {
+        wp_send_json_error('Invalid nonce', 403);
+    }
+    update_option('onoffice-settings-captcha-enterprise-projectid', '');
+    update_option('onoffice-settings-captcha-enterprise-sitekey', '');
+    update_option('onoffice-settings-captcha-enterprise-apikey', '');
     echo true;
     wp_die();
 }
@@ -567,6 +586,7 @@ function delete_google_recaptcha_keys()
 add_action('wp_ajax_update_active_plugin_seo_option', 'update_status_close_action_button_option');
 add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
 add_action('wp_ajax_delete_google_recaptcha_keys', 'delete_google_recaptcha_keys');
+add_action('wp_ajax_delete_google_recaptcha_enterprise_keys', 'delete_google_recaptcha_enterprise_keys');
 
 add_action('wp', function () {
 	if (!get_option('add-detail-posts-to-rewrite-rules')) {

@@ -18,21 +18,43 @@ jQuery(document).ready(function ($) {
 		jQuery.post(warning_active_plugin_vars.ajaxurl, data);
 	});
 
-	$(document).on('click', '.delete-google-recaptcha-keys-button', function (event) {
-		let notification = confirm_dialog_google_recaptcha_keys.notification;
-		if (confirm(notification)) {
-			event.preventDefault();
-			const data = {
-				'action': 'delete_google_recaptcha_keys'
-			};
+	// TODO: remove later, when Enterprise reCAPTCHA is fully rolled out
+	// Classic reCAPTCHA Delete Keys
+    $(document).on('click', '.delete-google-recaptcha-keys-button', function (event) {
+        let notification = confirm_dialog_google_recaptcha_keys.notification;
+        if (confirm(notification)) {
+            event.preventDefault();
+            const data = {
+                'action': 'delete_google_recaptcha_keys',
+				'nonce': delete_google_recaptcha_keys.nonce
+            };
 
-			jQuery.post(delete_google_recaptcha_keys.ajaxurl, data);
-			$('input[name="onoffice-settings-captcha-sitekey"]').val('');
-			$('input[name="onoffice-settings-captcha-secretkey"]').val('');
-		} else {
-			event.preventDefault();
-		}
-	});
+            jQuery.post(delete_google_recaptcha_keys.ajaxurl, data);
+            $('input[name="onoffice-settings-captcha-sitekey"]').val('');
+            $('input[name="onoffice-settings-captcha-secretkey"]').val('');
+        } else {
+            event.preventDefault();
+        }
+    });
+
+    // Enterprise reCAPTCHA Delete Keys
+    $(document).on('click', '.delete-google-recaptcha-enterprise-keys-button', function (event) {
+        let notification = confirm_dialog_google_recaptcha_keys.notification;
+        if (confirm(notification)) {
+            event.preventDefault();
+            const data = {
+                'action': 'delete_google_recaptcha_enterprise_keys',
+				'nonce': delete_google_recaptcha_enterprise_keys.nonce
+            };
+
+            jQuery.post(delete_google_recaptcha_enterprise_keys.ajaxurl, data);
+            $('input[name="onoffice-settings-captcha-enterprise-projectid"]').val('');
+            $('input[name="onoffice-settings-captcha-enterprise-sitekey"]').val('');
+			$('input[name="onoffice-settings-captcha-enterprise-apikey"]').val('');
+        } else {
+            event.preventDefault();
+        }
+    });
 
 	$(document).on('click', '.oo-poststuff #send_form', function(event) {
 		const $input = $(`[name="${screenDataHandleNotification.name}"]`);

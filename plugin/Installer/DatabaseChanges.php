@@ -36,6 +36,7 @@ use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPPluginChecker;
+use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
 use function dbDelta;
 use function esc_sql;
@@ -45,12 +46,12 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 62;
+	const MAX_VERSION = 64;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
 
-	/** @var wpdb */
+	/** @var wpdb|WpdbReadCacheProxy */
 	private $_pWPDB;
 
 	/** @var Container */
@@ -58,11 +59,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	/**
 	 * @param WPOptionWrapperBase $pWpOption
-	 * @param wpdb $pWPDB
+	 * @param wpdb|WpdbReadCacheProxy $pWPDB
 	 *
 	 * @throws Exception
 	 */
-	public function __construct(WPOptionWrapperBase $pWpOption, wpdb $pWPDB)
+	public function __construct(WPOptionWrapperBase $pWpOption, wpdb|WpdbReadCacheProxy $pWPDB)
 	{
 		$this->_pWpOption = $pWpOption;
 		$this->_pWPDB = $pWPDB;
@@ -179,6 +180,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->updateValueGeoFieldsForForms();
 			case $dbversion <= 61:
 				$this->migrateMarkedPropertiesSort();
+			case $dbversion <= 63:
+				$this->addDisplayUnitAreaToForms();
+			case $dbversion <= 64:
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
@@ -322,6 +326,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`contact_type` varchar(255) NULL DEFAULT NULL,
 			`page_shortcode` tinytext NOT NULL,
 			`show_form_as_modal` tinyint(1) NOT NULL DEFAULT '1',
+			`display_unit_area` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -349,6 +354,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`hidden` tinyint(1) NOT NULL DEFAULT '0',
 			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
 			`convertTextToSelectForCityField` tinyint(1) NOT NULL DEFAULT '0',
+			`rangeFieldDisplayMode` varchar(20) DEFAULT 'range',
 			PRIMARY KEY (`fieldconfig_id`)
 		) $charsetCollate;";
 
@@ -1317,6 +1323,23 @@ class DatabaseChanges implements DatabaseChangesInterface
 					error_log("Failed to update listview_id {$row->listview_id} in migrateMarkedPropertiesSort()"); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Needed for debugging database migration issues.
 				}
 			}
+		}
+	}
+
+
+	/**
+	 *
+	 *
+	 */
+
+	private function addDisplayUnitAreaToForms(): void
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . 'oo_plugin_forms';
+		$columnExists = $this->_pWPDB->get_results("SHOW COLUMNS FROM $tableName LIKE 'display_unit_area'");
+		if (empty($columnExists)) {
+			$sql = "ALTER TABLE $tableName ADD COLUMN display_unit_area tinyint(1) NOT NULL DEFAULT '0'";
+			$this->_pWPDB->query($sql);
 		}
 	}
 }

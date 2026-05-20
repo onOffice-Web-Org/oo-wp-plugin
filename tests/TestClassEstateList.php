@@ -31,6 +31,7 @@ use DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\AddressList;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\ArrayContainerEscape;
@@ -553,6 +554,26 @@ class TestClassEstateList
 			$this->_pEstateList->getEstateContacts());
 	}
 
+	public function testLoadEstatesWithoutAddressModuleAccess()
+	{
+		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
+			->onlyMethods(['__construct', 'loadBrokerAddressesById'])
+			->getMock();
+
+		$pApiClientActionMock = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->getMock();
+
+		$pAddressDataMock->method('loadBrokerAddressesById')
+			->willThrowException(new ApiClientException($pApiClientActionMock));
+
+		$this->_pEnvironment->method('getAddressList')->willReturn($pAddressDataMock);
+
+		$this->_pEstateList->loadEstates();
+
+		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->estateIterator());
+	}
+
 
 	/**
 	 *
@@ -704,7 +725,8 @@ class TestClassEstateList
 				'compoundFields' => [],
 				'labelOnlyValues' => [],
 				'tablename' => '',
-				'dependencies' => Array ()
+				'dependencies' => Array (),
+				'rangeFieldDisplayMode' => 'range'
 			],
 			'objekttyp' => [
 				'name' => 'objekttyp',
@@ -721,7 +743,8 @@ class TestClassEstateList
 				'compoundFields' => [],
 				'labelOnlyValues' => [],
 				'tablename' => '',
-				'dependencies' => Array ()
+				'dependencies' => Array (),
+				'rangeFieldDisplayMode' => 'range'
 			],
 		];
 
@@ -1122,6 +1145,14 @@ class TestClassEstateList
 				$pFieldsCollectionOut->merge($pFieldsCollection);
 				return $pFieldsCollectionBuilderShort;
 			});
+
+		$pFieldsCollectionBuilderShort->method('addFieldsAddressEstateWithRegionValues')
+			->willReturnCallback(function (FieldsCollection $pFieldsCollectionOut)
+			use ($pFieldsCollection, $pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
+			{
+				$pFieldsCollectionOut->merge($pFieldsCollection);
+				return $pFieldsCollectionBuilderShort;
+			});
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
 
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
@@ -1197,6 +1228,14 @@ class TestClassEstateList
 		return $pDataView;
 	}
 
+	public function testGetEstateListParametersForCacheIncludesRegionalerZusatz()
+	{
+		$this->_pEstateList->getDataView()->setFields(['Id', 'objektart', 'regionaler_zusatz']);
+		$params = $this->_pEstateList->getEstateListParametersForCache(true);
+		
+		$this->assertContains('regionaler_zusatz', $params['data']);
+	}
+
 	/**
 	 *
 	 * @return FieldsCollection
@@ -1235,6 +1274,7 @@ class TestClassEstateList
 			'plz',
 			'land',
 			'energyClass',
+			'regionaler_zusatz',
 		];
 		foreach ($fieldNames as $fieldName) {
 			$field = new Field($fieldName, 'estate', 'testLabel');

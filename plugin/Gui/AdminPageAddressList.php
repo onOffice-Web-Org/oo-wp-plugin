@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use onOffice\WPlugin\Gui\Table\AddressListTable;
 use onOffice\WPlugin\Utility\FileVersionHelper;
 use function __;

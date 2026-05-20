@@ -479,16 +479,17 @@ class DetailViewPostSaveController
 			}
 
 			foreach ( $allContents as $allContent ) {
-				if ( strpos( $allContent[0], 'oo_estate' ) !== false ) {
-					$this->addPageShortCode( $listView, [ 'ID' => $postID, 'post_content' => $allContent[0] ],
+				$content = $allContent[0] ?? '';
+				if ( strpos( $content, 'oo_estate' ) !== false ) {
+					$this->addPageShortCode( $listView, [ 'ID' => $postID, 'post_content' => $content ],
 						'estate' );
 				}
-				if ( strpos( $allContent[0], 'oo_address' ) !== false ) {
-					$this->addPageShortCode( $listViewAddress, [ 'ID' => $postID, 'post_content' => $allContent[0] ],
+				if ( strpos( $content, 'oo_address' ) !== false ) {
+					$this->addPageShortCode( $listViewAddress, [ 'ID' => $postID, 'post_content' => $content ],
 						'address' );
 				}
-				if ( strpos( $allContent[0], 'oo_form' ) !== false ) {
-					$this->addPageShortCode( $listForm, [ 'ID' => $postID, 'post_content' => $allContent[0] ],
+				if ( strpos( $content, 'oo_form' ) !== false ) {
+					$this->addPageShortCode( $listForm, [ 'ID' => $postID, 'post_content' => $content ],
 						'form' );
 				}
 			}
@@ -513,19 +514,21 @@ class DetailViewPostSaveController
 			$allContents = [ [ 0 => $post->post_content ] ] + $metaKeys;
 
 			foreach ( $allContents as $allContent ) {
-				if ( strpos( $allContent[0],
-						'oo_estate' ) !== false || is_array( $metaKeys ) && isset( $metaKeys['list_shortcode'] ) && strpos( $metaKeys['list_shortcode'][0],
+				$content = $allContent[0] ?? '';
+				$shortcode = $metaKeys['list_shortcode'][0] ?? '';
+				if ( strpos( $content,
+						'oo_estate' ) !== false || is_array( $metaKeys ) && isset( $metaKeys['list_shortcode'] ) && strpos( $shortcode,
 						'oo_estate' ) == false && count( $metaKeys['list_shortcode'] ) !== 0 ) {
 					$this->deletePageShortCode( $listView, $post, "oo_plugin_listviews", "listview_id", "listview_id" );
 				}
-				if ( strpos( $allContent[0],
-						'oo_address' ) !== false || is_array( $metaKeys ) && isset( $metaKeys['list_shortcode'] ) && strpos( $metaKeys['list_shortcode'][0],
+				if ( strpos( $content,
+						'oo_address' ) !== false || is_array( $metaKeys ) && isset( $metaKeys['list_shortcode'] ) && strpos( $shortcode,
 						'oo_estate' ) == false && count( $metaKeys['list_shortcode'] ) !== 0 ) {
 					$this->deletePageShortCode( $listViewAddress, $post, "oo_plugin_listviews_address",
 						"listview_address_id", "listview_address_id" );
 				}
-				if ( strpos( $allContent[0],
-						'oo_form' ) !== false || is_array( $metaKeys ) && isset( $metaKeys['list_shortcode'] ) && strpos( $metaKeys['list_shortcode'][0],
+				if ( strpos( $content,
+						'oo_form' ) !== false || is_array( $metaKeys ) && isset( $metaKeys['list_shortcode'] ) && strpos( $shortcode,
 						'oo_estate' ) == false && count( $metaKeys['list_shortcode'] ) !== 0 ) {
 					$this->deletePageShortCode( $listForm, $post, "oo_plugin_forms", "form_id", "form_id" );
 				}

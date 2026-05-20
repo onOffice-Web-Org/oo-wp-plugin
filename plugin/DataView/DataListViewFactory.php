@@ -85,6 +85,7 @@ class DataListViewFactory
 		$pListView->setShowMap($row['show_map']);
 		$pListView->setShowPriceOnRequest((bool)$row['show_price_on_request']);
 		$pListView->setConvertTextToSelectForCityField($row['convertTextToSelectForCityField']);
+		$pListView->setRangeFieldDisplayModes($row['rangeFieldDisplayModes'] ?? []);
 		$pListView->setMarkedPropertiesSort($row['markedPropertiesSort']);
 		$pListView->setSortByTags($row['sortByTags']);
 		$pListView->setSortByTagsDirection($row['sortByTagsDirection']);

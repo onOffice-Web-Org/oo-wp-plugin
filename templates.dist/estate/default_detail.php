@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  *
  *    Copyright (C) 2020  onOffice GmbH
@@ -253,17 +255,45 @@ $dimensions = [
 			<?php if ($pEstates->getShowEnergyCertificate()) {
 				$energyClass = $rawValues->getValueRaw($estateId)['elements']['energyClass'] ?? '';
 				$energyClassPermittedValues = $pEstates->getPermittedValues('energyClass');
-				$energyCertificateValueLabels = ["0", "30", "50", "75", "100", "130", "160", "200", "250", ">250"];
+				$energyCertificateValueLabelsLegacy = ["0", "30", "50", "75", "100", "130", "160", "200", "250", ">250"];
+				$energyCertificateValueLabelsEpbd = ["0", "30", "75", "100", "130", "160", "200", ">250"];
+
+				// EPBD-2024: Determine scale type based on expiry date and energy class
+				$epbdThresholdDate = new DateTime('2034-05-01');
+				$expiryDateString = $currentEstate['energieausweis_gueltig_bis'] ?? '';
+				$expiryDate = DateTime::createFromFormat('d.m.Y', $expiryDateString);
+				$isDateValid = $expiryDate && $expiryDate->format('d.m.Y') === $expiryDateString;
+
+				// Legacy classes A+ and H always force legacy scale
+				$isOutOfEpbdBounds = in_array(strtoupper($energyClass), ['A+', 'H']);
+				$isEpbd2024Scale = $isDateValid && $expiryDate >= $epbdThresholdDate && !$isOutOfEpbdBounds;
+
+				// Only show scale if date is valid
+				$showScale = $isDateValid && !empty($energyClassPermittedValues) && !empty($energyClass);
+
+				// Select labels and values based on scale type
+				$energyCertificateValueLabels = $isEpbd2024Scale ? $energyCertificateValueLabelsEpbd : $energyCertificateValueLabelsLegacy;
 			?>
 				<div class="oo-details-energy-certificate">
 					<h2><?php echo esc_html($pEstates->getFieldLabel('energieausweistyp')); ?></h2>
 
-					<?php if (!empty($energyClassPermittedValues) && !empty($energyClass)) : ?>
+					<?php if ($showScale) :
+						// Filter permitted values for EPBD-2024 scale (remove A+ and H)
+						$displayValues = $energyClassPermittedValues;
+						if ($isEpbd2024Scale) {
+							$displayValues = array_values(array_filter(
+								$energyClassPermittedValues,
+								function ($val) {
+									return !in_array(strtoupper($val), ['A+', 'H']);
+								}
+							));
+						}
+					?>
 						<div class="energy-certificate-container">
 							<div class="segmented-bar">
-								<?php foreach ($energyClassPermittedValues as $key => $label): ?>
+								<?php foreach ($displayValues as $key => $label): ?>
 									<div class="energy-certificate-label"><span><?php echo esc_html($energyCertificateValueLabels[$key] ?? ''); ?></span></div>
-									<div class="segment<?php echo ($energyClass === $label ? ' selected' : ''); ?>">
+									<div class="segment<?php echo (strtoupper($energyClass) === strtoupper($label) ? ' selected' : ''); ?>">
 										<span><?php echo esc_html($label); ?></span>
 									</div>
 								<?php endforeach; ?>
@@ -314,8 +344,19 @@ $dimensions = [
 					<div class="oo-costs-container">
 						<div class="oo-donut-chart">
 						<?php
-							$values = [$totalCostsData['kaufpreis']['raw'], $totalCostsData['bundesland']['raw'], $totalCostsData['aussen_courtage']['raw'],$totalCostsData['notary_fees']['raw'], $totalCostsData['land_register_entry']['raw']];
-							$valuesTitle = [$totalCostsData['kaufpreis']['default'], $totalCostsData['bundesland']['default'], $totalCostsData['aussen_courtage']['default'],$totalCostsData['notary_fees']['default'], $totalCostsData['land_register_entry']['default']];
+							$values = [$totalCostsData['kaufpreis']['raw'], $totalCostsData['bundesland']['raw']];
+							$valuesTitle = [$totalCostsData['kaufpreis']['default'], $totalCostsData['bundesland']['default']];
+							
+							if (!empty($totalCostsData['aussen_courtage']['raw'])) {
+								$values[] = $totalCostsData['aussen_courtage']['raw'];
+								$valuesTitle[] = $totalCostsData['aussen_courtage']['default'];
+							}
+							
+							$values[] = $totalCostsData['notary_fees']['raw'];
+							$values[] = $totalCostsData['land_register_entry']['raw'];
+							
+							$valuesTitle[] = $totalCostsData['notary_fees']['default'];
+							$valuesTitle[] = $totalCostsData['land_register_entry']['default'];
 							$chart = new EstateCostsChart($values, $valuesTitle);
 							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Generates SVG with escaped content
 							echo $chart->generateSVG(); ?>
@@ -336,13 +377,15 @@ $dimensions = [
 									<div><?php echo esc_html($totalCostsData['bundesland']['default']); ?></div>
 								</div>
 							</div>
+							<?php if (!empty($totalCostsData['aussen_courtage']['default'])): ?>
 							<div class="oo-costs-item">
 								<span class="color-indicator oo-donut-chart-color2"></span>
 								<div class="oo-price-label">
-									<div><?php esc_html_e('Broker commission', 'onoffice-for-wp-websites'); ?></div>
+									<div><?php esc_html_e('Buyers commission', 'onoffice-for-wp-websites'); ?></div>
 									<div><?php echo esc_html($totalCostsData['aussen_courtage']['default']); ?></div>
 								</div>
 							</div>
+							<?php endif; ?>
 							<div class="oo-costs-item">
 								<span class="color-indicator oo-donut-chart-color3"></span>
 								<div class="oo-price-label">
@@ -498,19 +541,21 @@ $dimensions = [
 			/**
 			 * The heading above an embed that links directly to the embedded page.
 			 */
-			function headingLink($url, $title)
-			{
-				if ($title) {
-					return
-						'<a class="player-title" target="_blank" rel="noopener noreferrer" href="' . esc_attr($url) . '">
-							' . esc_html($title) . '
-								<svg aria-hidden="true" focusable="false" width="0.7em" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
-									<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>
-									<path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/>
-								</svg>
-						</a>';
-				} else {
-					return '';
+			if (!function_exists('headingLink')) {
+				function headingLink($url, $title)
+				{
+					if ($title) {
+						return
+							'<a class="player-title" target="_blank" rel="noopener noreferrer" href="' . esc_attr($url) . '">
+								' . esc_html($title) . '
+									<svg aria-hidden="true" focusable="false" width="0.7em" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
+										<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>
+										<path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/>
+									</svg>
+							</a>';
+					} else {
+						return '';
+					}
 				}
 			}
 
