@@ -286,9 +286,12 @@ if (!function_exists('renderFormField')) {
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox"';
 
-				if (($fieldName == 'gdprcheckbox') || ($fieldName == 'AGB_akzeptiert'))
+				if ($fieldName == 'AGB_akzeptiert')
 				{
 					$errorMessage = esc_html__('Please agree to the terms and conditions.', 'onoffice-for-wp-websites');
+				}
+				else if($fieldName == 'gdprcheckbox') {
+					$errorMessage = esc_html__('Please agree to the privacy policy.', 'onoffice-for-wp-websites');
 				}
 				else 
 				{
