@@ -41,11 +41,16 @@ use onOffice\WPlugin\SDKWrapper;
 
 class RegionController
 {
+	private const REGION_OPTIONS_TRANSIENT_PREFIX = 'oo_plugin_region_options_';
+
 	/** @var array */
 	private $_regions = [];
 
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
+
+	/** @var array|null */
+	private $_regionOptions = null;
 
 	/**
 	 *
@@ -66,8 +71,12 @@ class RegionController
 	/**
 	 * @throws ApiClientException
 	 */
-	public function fetchRegions()
+	public function fetchRegions(bool $forceRefresh = false)
 	{
+		if (!$forceRefresh && $this->_regions !== []) {
+			return;
+		}
+
 		$pApiClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'regions');
 		$pApiClientAction->setParameters(['language' => Language::getDefault()]);
@@ -135,6 +144,99 @@ class RegionController
 		return $this->_regions;
 	}
 
+	/**
+	 * @return array{permittedvalues: array, labelOnlyValues: array}
+	 * @throws ApiClientException
+	 */
+	public function getRegionOptions(): array
+	{
+		if (is_array($this->_regionOptions)) {
+			return $this->_regionOptions;
+		}
+
+		$cacheKey = self::getRegionOptionsCacheKey(Language::getDefault());
+		$cachedOptions = get_transient($cacheKey);
+		if (
+			is_array($cachedOptions) &&
+			isset($cachedOptions['permittedvalues']) &&
+			isset($cachedOptions['labelOnlyValues']) &&
+			is_array($cachedOptions['permittedvalues']) &&
+			is_array($cachedOptions['labelOnlyValues'])
+		) {
+			$this->_regionOptions = $cachedOptions;
+			return $this->_regionOptions;
+		}
+
+		$this->fetchRegions();
+		$this->_regionOptions = [
+			'permittedvalues' => $this->buildRegionOptions($this->_regions),
+			'labelOnlyValues' => $this->collectLabelOnlyRegionValues($this->_regions),
+		];
+		set_transient($cacheKey, $this->_regionOptions, $this->getRegionOptionsCacheTtl());
+
+		return $this->_regionOptions;
+	}
+
+	public static function clearRegionOptionsCache(): void
+	{
+		$languages = array_values(array_unique(array_values(Language::LOCALE_MAPPING)));
+		foreach ($languages as $language) {
+			delete_transient(self::getRegionOptionsCacheKey($language));
+		}
+	}
+
+	private static function getRegionOptionsCacheKey(string $language): string
+	{
+		return self::REGION_OPTIONS_TRANSIENT_PREFIX . strtolower($language);
+	}
+
+	private function getRegionOptionsCacheTtl(): int
+	{
+		$cacheSchedule = get_option('onoffice-settings-duration-cache');
+		if (is_string($cacheSchedule) && $cacheSchedule !== '') {
+			$schedules = wp_get_schedules();
+			if (isset($schedules[$cacheSchedule]['interval'])) {
+				return (int)$schedules[$cacheSchedule]['interval'];
+			}
+		}
+
+		return HOUR_IN_SECONDS;
+	}
+
+	/**
+	 * @param Region[] $regions
+	 * @return array
+	 */
+	private function buildRegionOptions(array $regions, int $level = 1): array
+	{
+		$result = [];
+		foreach ($regions as $pRegion) {
+			$regionParts = [$pRegion->getName(), $pRegion->getState(), $pRegion->getCountry()];
+			$result[$pRegion->getId()] = str_repeat('–', $level - 1)
+				.' '.implode(', ', array_filter($regionParts));
+			$result = array_merge($result, $this->buildRegionOptions($pRegion->getChildren(), $level + 1));
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param Region[] $regions
+	 * @return array
+	 */
+	private function collectLabelOnlyRegionValues(array $regions): array
+	{
+		$results = [];
+		foreach ($regions as $pRegion) {
+			if ($pRegion->getChildren() !== []) {
+				$results[] = $pRegion->getId();
+				$results = array_merge($results, $this->collectLabelOnlyRegionValues($pRegion->getChildren()));
+			}
+		}
+
+		return $results;
+	}
+
 
 	/**
 	 *
@@ -176,7 +278,7 @@ class RegionController
 	public function getParentRegionsByChildRegionKeys(array $childRegions): array
 	{
 		$newPermitted = [];
-		$this->fetchRegions();
+		$this->fetchRegions(true);
 		// collect allowed (parent) regions
 		foreach ($childRegions as $permittedRegion) {
 			$pRegionPermitted = $this->getRegionByKey($permittedRegion);
