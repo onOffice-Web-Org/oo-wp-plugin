@@ -202,7 +202,8 @@ class InputFieldComplexSortableDetailListRenderer
 			}
 			else if(
 				str_contains(get_class($formModelBuilder),'FormModelBuilderEstateDetailSettings') ||
-				str_contains(get_class($formModelBuilder),'FormModelBuilderSimilarEstateSettings')
+				str_contains(get_class($formModelBuilder),'FormModelBuilderSimilarEstateSettings') ||
+				str_contains(get_class($formModelBuilder),'FormModelBuilderDBEstateUnitListSettings')
 			) {
 				$isHighlighted = $formModelBuilder->isHightlightedField($key);
 			}
