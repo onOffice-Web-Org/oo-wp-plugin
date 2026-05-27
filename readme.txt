@@ -76,6 +76,17 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 6.15 (2026-05-27) =
+
+**Added**
+* Field dependencies for search criteria fields in multi-page form wizard
+
+**Fixed**
+* Keyfacts: highlight checkbox for property-units
+* Caching for "regionaler_zusatz"
+* Unsubscribing from Newsletter via forms
+* Error message for GDPR checkbox (privacy policy)
+
 = 6.14 (2026-04-28) =
 
 **Added**
