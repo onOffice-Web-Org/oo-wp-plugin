@@ -25,6 +25,8 @@ use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
@@ -40,6 +42,8 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Form\NewsletterFormPostConfiguration;
 
 /**
  *
@@ -545,4 +549,42 @@ abstract class FormPost
 	/** @return int */
 	public function getAbsolutCountResults(): int
 		{ return $this->_absolutCountResults; }
+
+	/**
+	 * @return NewsletterFormPostConfiguration
+	 */
+	abstract protected function getNewsletterFormPostConfiguration(): NewsletterFormPostConfiguration;
+
+	/**
+	 * @param int $addressId
+	 * @param DataFormConfiguration $pFormConfig
+	 * @return void
+	 * @throws ApiClientException
+	 */
+	protected function setNewsletter(int $addressId, DataFormConfiguration $pFormConfig): void
+	{
+		if (!method_exists($pFormConfig, 'getNewsletterCheckbox') || !$pFormConfig->getNewsletterCheckbox()) {
+			return;
+		}
+
+		$pNewsletterConfiguration = $this->getNewsletterFormPostConfiguration();
+
+		$pAPIClientAction = new APIClientActionGeneric(
+			$pNewsletterConfiguration->getSDKWrapper(),
+			onOfficeSDK::ACTION_ID_DO,
+			'registerNewsletter'
+		);
+
+		$pAPIClientAction->setParameters([
+			'register' => $pNewsletterConfiguration->getNewsletterAccepted(),
+		]);
+
+		$pAPIClientAction->setResourceId($addressId);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+
+		if (!$pAPIClientAction->getResultStatus()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception with API client object
+			throw new ApiClientException($pAPIClientAction);
+		}
+	}
 }

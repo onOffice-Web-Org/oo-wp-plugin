@@ -39,7 +39,7 @@ use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Types\FieldTypes;
-use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Form\NewsletterFormPostConfiguration;
 
 /**
  *
@@ -81,6 +81,14 @@ class FormPostOwner
 		$this->_pFormPostOwnerConfiguration = $pFormPostOwnerConfiguration;
 		$this->_pEstateFields = $pEstateFields;
 		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
+	}
+
+	/**
+	 * @return NewsletterFormPostConfiguration
+	 */
+	protected function getNewsletterFormPostConfiguration(): NewsletterFormPostConfiguration
+	{
+		return $this->_pFormPostOwnerConfiguration;
 	}
 
 	/**
@@ -132,7 +140,7 @@ class FormPostOwner
 				if ($writeActivity) {
 					$this->_pFormPostOwnerConfiguration->getFormAddressCreator()->createAgentsLog($pDataFormConfiguration, $addressId, $estateId);
 				}
-				$this->setNewsletter( $addressId );
+				$this->setNewsletter( $addressId, $pDataFormConfiguration );
 				if ($enableCreateTask) {
 					$this->_pFormPostOwnerConfiguration->getFormAddressCreator()->createTask($pDataFormConfiguration, $addressId, $estateId);
 				}
@@ -209,36 +217,6 @@ class FormPostOwner
 		}
 
 		return $estateData;
-	}
-
-
-	/**
-	 *
-	 * @param  FormData  $pFormData
-	 *
-	 * @return void
-	 * @throws ApiClientException
-	 * @throws Field\UnknownFieldException
-	 */
-
-	private function setNewsletter( $addressId )
-	{
-		if ( ! $this->_pFormPostOwnerConfiguration->getNewsletterAccepted() ) {
-			// No subscription for newsletter, which is ok
-			return;
-		}
-
-		$pSDKWrapper      = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
-		$pAPIClientAction = new APIClientActionGeneric
-		( $pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'registerNewsletter' );
-		$pAPIClientAction->setParameters( [ 'register' => true ] );
-		$pAPIClientAction->setResourceId( $addressId );
-		$pAPIClientAction->addRequestToQueue()->sendRequests();
-
-		if ( ! $pAPIClientAction->getResultStatus() ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- ApiClientException is for internal API error handling
-			throw new ApiClientException( $pAPIClientAction );
-		}
 	}
 
 	/**
