@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 6.1
 Tested up to: 6.9.1
 Requires PHP: 8.2
-Stable tag: 6.14
+Stable tag: 6.15
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,17 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.15 (2026-05-27) =
+
+**Added**
+* Field dependencies for search criteria fields in multi-page form wizard
+
+**Fixed**
+* Keyfacts: highlight checkbox for property-units
+* Caching for "regionaler_zusatz"
+* Unsubscribing from Newsletter via forms
+* Error message for GDPR checkbox (privacy policy)
 
 = 6.14 (2026-04-28) =
 
