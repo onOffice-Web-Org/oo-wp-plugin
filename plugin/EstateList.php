@@ -314,6 +314,7 @@ class EstateList
 		$estateParametersRaw['data'][] = 'preisAufAnfrage';
 		$estateParametersRaw['data'][] = 'virtualAddress';
 		$estateParametersRaw['data'][] = 'provisionsfrei';
+		$estateParametersRaw['data'][] = 'objektadresse_freigeben';
 
 		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
 			$estateParametersRaw['data'] []= 'waehrung';
