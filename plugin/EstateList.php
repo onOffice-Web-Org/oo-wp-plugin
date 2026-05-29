@@ -284,6 +284,35 @@ class EstateList
 	}
 
 	/**
+	 * Returns a cloned estate list that is loaded with all matching estates
+	 * so map renderers can show pins independently from the current page.
+	 *
+	 * @return EstateList
+	 * @throws API\APIEmptyResultException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownViewException
+	 * @throws HttpFetchNoResultException
+	 * @throws API\ApiClientException
+	 */
+	public function getEstateListForMap(): EstateList
+	{
+		$pEstateListForMap = clone $this;
+		$pDataViewForMap = clone $this->_pDataView;
+		$estateCount = $this->getEstateOverallCount();
+
+		if (method_exists($pDataViewForMap, 'setRecordsPerPage') && $estateCount > 0) {
+			$pDataViewForMap->setRecordsPerPage($estateCount);
+		}
+
+		$pEstateListForMap->_pDataView = $pDataViewForMap;
+		$pEstateListForMap->loadEstates(1);
+		$pEstateListForMap->resetEstateIterator();
+
+		return $pEstateListForMap;
+	}
+
+	/**
 	 *
 	 */
 	private function buildFieldsCollectionForEstate()
