@@ -1236,6 +1236,24 @@ class TestClassEstateList
 		$this->assertContains('regionaler_zusatz', $params['data']);
 	}
 
+	public function testGetEstateParametersUsesPageDependentListoffset()
+	{
+		$getEstateParameters = Closure::bind(function (int $currentPage, bool $formatOutput) {
+			return $this->getEstateParameters($currentPage, $formatOutput);
+		}, $this->_pEstateList, EstateList::class);
+
+		$pageOneParams = $getEstateParameters(1, true);
+		$pageTwoParams = $getEstateParameters(2, true);
+
+		$this->assertArrayHasKey('listoffset', $pageOneParams);
+		$this->assertArrayHasKey('listoffset', $pageTwoParams);
+		$this->assertIsInt($pageOneParams['listoffset']);
+		$this->assertIsInt($pageTwoParams['listoffset']);
+		$this->assertSame(0, $pageOneParams['listoffset']);
+		$this->assertSame(5, $pageTwoParams['listoffset']);
+		$this->assertNotSame($pageOneParams['listoffset'], $pageTwoParams['listoffset']);
+	}
+
 	/**
 	 *
 	 * @return FieldsCollection
