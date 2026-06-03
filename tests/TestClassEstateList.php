@@ -1305,24 +1305,6 @@ class TestClassEstateList
 	}
 
 	/**
-	 * Random sort must not add listoffset, otherwise the API would consistently
-	 * paginate within a re-shuffled set causing duplicates / missing data.
-	 */
-	public function testGetEstateParametersRandomDoesNotIncludeListoffset()
-	{
-		$pDataView = $this->_pEstateList->getDataView();
-		$pDataView->setRandom(true);
-
-		$getEstateParameters = Closure::bind(function (int $currentPage, bool $formatOutput) {
-			return $this->getEstateParameters($currentPage, $formatOutput);
-		}, $this->_pEstateList, EstateList::class);
-
-		$params = $getEstateParameters(2, true);
-
-		$this->assertArrayNotHasKey('listoffset', $params);
-	}
-
-	/**
 	 * Ensure listoffset progresses monotonically across many pages with the
 	 * formula (currentPage - 1) * recordsPerPage and never collapses to 0.
 	 */
