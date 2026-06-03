@@ -121,9 +121,6 @@ class ApiCall
 		{
 			return;
 		}
-		if (isset($actionParameters['parameters']['filter']['geo'])) {
-			unset($actionParameters['parameters']['filter']['geo']);
-		}
 		foreach ($actionParameters as $key => $action) {
 			if (isset($action['parameters']['filter']['geo'])) {
 				unset($actionParameters[$key]['parameters']['filter']['geo']);
