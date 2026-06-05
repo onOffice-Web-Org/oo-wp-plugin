@@ -1297,8 +1297,6 @@ class TestClassEstateList
 			$this->assertArrayHasKey('listlimit', $params);
 			$this->assertIsInt($params['listoffset'], "listoffset must be int for page {$page}");
 			$this->assertIsInt($params['listlimit'], "listlimit must be int for page {$page}");
-			$this->assertFalse(is_array($params['listoffset']), "listoffset must not be array for page {$page}");
-			$this->assertFalse(is_array($params['listlimit']), "listlimit must not be array for page {$page}");
 			$this->assertGreaterThanOrEqual(0, $params['listoffset']);
 			$this->assertGreaterThan(0, $params['listlimit']);
 		}
