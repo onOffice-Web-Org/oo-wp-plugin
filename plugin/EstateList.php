@@ -1257,6 +1257,20 @@ class EstateList
 	}
 
 	/**
+     * Retrieves the unformatted API raw data of a contact person directly by their ID.
+     * * @param int|string $addressId
+     * @return array
+     */
+    public function getContactRawById($addressId): array
+    {
+        if (empty($addressId)) {
+            return [];
+        }
+
+        return $this->getEnvironment()->getAddressList()->getRawById((int)$addressId);
+    }
+
+	/**
 	 * @return int
 	 */
 	public function getCurrentEstateId(): int
