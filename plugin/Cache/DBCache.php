@@ -89,7 +89,8 @@ class DBCache
 		$parametersSerialized = $this->getParametersSerialized( $parameters );
 		if(isset($parameters['parameters']['listname']))
 		{
-			$parametersSerialized = $parameters['parameters']['listname'].intval($parameters['parameters']['formatoutput']).$parameters['parameters']['outputlanguage'];
+			$filterKey = isset($parameters['parameters']['filter']) ? serialize($parameters['parameters']['filter']) : '';
+			$parametersSerialized = $parameters['parameters']['listname'].intval($parameters['parameters']['formatoutput']).$parameters['parameters']['outputlanguage'].$filterKey;
 		}
 		$parametersHashed = md5( $parametersSerialized );
 		return $parametersHashed;
