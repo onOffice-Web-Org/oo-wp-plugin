@@ -409,6 +409,13 @@ class EstateList
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
 
+        if (!empty($this->_filterAddressId)) {
+            $addressList = $this->_pEnvironment->getAddressList();
+            $addressList->fetchEstatesForAddressIds([$this->_filterAddressId]);
+            $estateIds = $addressList->getEstateIdsForContact($this->_filterAddressId);
+            $filter['Id'] = [["op" => "IN", "val" => $estateIds]];
+        }
+
 		$numRecordsPerPage = 500;
 
 		$pFieldModifierHandler = new ViewFieldModifierHandler(
