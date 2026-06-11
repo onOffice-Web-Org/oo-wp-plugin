@@ -1,0 +1,101 @@
+name: Merge source into release branch
+
+on:
+  workflow_call:
+    inputs:
+      target-branch:
+        required: true
+        type: string
+      merge-release-ours-first:
+        required: false
+        type: boolean
+        default: false
+      auto_build:
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: merge-into-${{ inputs.target-branch }}
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+
+    env:
+      TARGET_BRANCH: ${{ inputs.target-branch }}
+      SOURCE_BRANCH: ${{ github.ref_name }}
+      MERGE_RELEASE_OURS_FIRST: ${{ inputs.merge-release-ours-first }}
+      AUTO_BUILD: ${{ inputs.auto_build }}
+
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            ${{ github.event.repository.name }}
+
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+          fetch-tags: true
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Validate stable release source
+        if: inputs.target-branch == 'release'
+        run: |
+          if [ "${SOURCE_BRANCH}" != "${{ github.event.repository.default_branch }}" ]; then
+            echo "::error::Stable releases must be created from ${{ github.event.repository.default_branch }}, not ${SOURCE_BRANCH}."
+            exit 1
+          fi
+
+      - name: Merge source into target branch
+        run: |
+          set -e
+          git fetch origin "${SOURCE_BRANCH}" --tags
+
+          if git ls-remote --exit-code --heads origin "${TARGET_BRANCH}" > /dev/null 2>&1; then
+            git fetch origin "${TARGET_BRANCH}" --tags
+            git checkout "${TARGET_BRANCH}"
+          else
+            git checkout -B "${TARGET_BRANCH}" "origin/${SOURCE_BRANCH}"
+          fi
+
+          if [ "${MERGE_RELEASE_OURS_FIRST}" = "true" ] && git ls-remote --exit-code --heads origin release > /dev/null 2>&1; then
+            git fetch origin release --tags
+            git merge --no-edit -s ours origin/release
+          fi
+
+          git merge --no-edit -X theirs "origin/${SOURCE_BRANCH}"
+
+          # release.yml reads this trailer on prerelease pushes and forwards it to the beta deploy job.
+          if [ "${TARGET_BRANCH}" = "prerelease" ] && [ "${AUTO_BUILD}" = "true" ]; then
+            ORIG_MSG=$(git log -1 --pretty=%B)
+            NEW_MSG="${ORIG_MSG}"$'\n\n'"Auto-Build: true"
+            git commit --amend --no-edit -m "${NEW_MSG}"
+          fi
+
+          git push origin "HEAD:${TARGET_BRANCH}"
+
+      - name: Summary
+        run: |
+          echo "### Merged into \`${{ inputs.target-branch }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Source: \`${{ github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**release.yml** runs on push to \`${{ inputs.target-branch }}\`." >> "$GITHUB_STEP_SUMMARY"

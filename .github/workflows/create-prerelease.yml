@@ -1,0 +1,21 @@
+name: 🧪 Create prerelease
+
+on:
+  workflow_dispatch:
+    inputs:
+      auto_build:
+        description: 'Beta-Image nach Deploy automatisch bauen?'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  merge:
+    uses: ./.github/workflows/merge-source-into-branch.yml
+    with:
+      target-branch: prerelease
+      merge-release-ours-first: true
+      auto_build: ${{ inputs.auto_build == true }}
+    secrets: inherit
