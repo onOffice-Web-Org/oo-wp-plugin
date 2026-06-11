@@ -90,9 +90,12 @@ class DBCache
 		if(isset($parameters['parameters']['listname']))
 		{
 			$parametersSerialized = $parameters['parameters']['listname'].intval($parameters['parameters']['formatoutput']).$parameters['parameters']['outputlanguage'];
+			// Append ID filters to the cache key to guarantee uniqueness for identity-based lists (like unit lists with sub-estates).
+			if (isset($parameters['parameters']['filter']['Id'])) {
+				$parametersSerialized .= serialize($parameters['parameters']['filter']['Id']);
+			}
 		}
-		$parametersHashed = md5( $parametersSerialized );
-		return $parametersHashed;
+		return md5( $parametersSerialized );
 	}
 
 
