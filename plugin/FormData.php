@@ -90,25 +90,11 @@ class FormData
 	/**
 	 *
 	 * @return array
-	 *
 	 */
-
 	public function getMissingFields(): array
 	{
 		$missing = [];
 
-		if ($propertyType = $this->_values['objektart']) {
-			$json_file_path = ONOFFICE_PLUGIN_DIR . '/field-dependencies.json';
-			if (file_exists($json_file_path)) {
-				$json_contents = file_get_contents($json_file_path);
-				$json_data = json_decode($json_contents, true);
-				if (!empty($required_for_type = $json_data[$propertyType])) {
-					$leadgenFields = array_unique(array_merge(...array_values($json_data)));
-					$not_required_fields = array_diff($leadgenFields, $required_for_type);
-					$this->_requiredFields = array_diff($this->_requiredFields, $not_required_fields);
-				}
-			}
-		}
 
 		if ($this->_formSent) {
 			$filledFormData = array_filter($this->_values, function ($v) {
