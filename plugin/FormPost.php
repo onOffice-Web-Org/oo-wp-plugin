@@ -275,9 +275,7 @@ abstract class FormPost
 			isset($propertyType) &&
 			preg_match('/ownerleadgenerator/', $pFormConfig->getTemplate())
 		) {
-			var_dump(":(");
 			$requiredFields = $this->getVisibleRequiredFields($requiredFields, $propertyType);
-			var_dump($requiredFields);
 		}
 
 		$pFormData = new FormData($pFormConfig, $formNo);
