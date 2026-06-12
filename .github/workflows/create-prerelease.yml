@@ -16,6 +16,5 @@ jobs:
     uses: ./.github/workflows/merge-source-into-branch.yml
     with:
       target-branch: prerelease
-      merge-release-ours-first: true
       auto_build: ${{ inputs.auto_build == true }}
     secrets: inherit

@@ -6,10 +6,6 @@ on:
       target-branch:
         required: true
         type: string
-      merge-release-ours-first:
-        required: false
-        type: boolean
-        default: false
       auto_build:
         required: false
         type: boolean
@@ -29,7 +25,6 @@ jobs:
     env:
       TARGET_BRANCH: ${{ inputs.target-branch }}
       SOURCE_BRANCH: ${{ github.ref_name }}
-      MERGE_RELEASE_OURS_FIRST: ${{ inputs.merge-release-ours-first }}
       AUTO_BUILD: ${{ inputs.auto_build }}
 
     steps:
@@ -74,11 +69,6 @@ jobs:
             git checkout "${TARGET_BRANCH}"
           else
             git checkout -B "${TARGET_BRANCH}" "origin/${SOURCE_BRANCH}"
-          fi
-
-          if [ "${MERGE_RELEASE_OURS_FIRST}" = "true" ] && git ls-remote --exit-code --heads origin release > /dev/null 2>&1; then
-            git fetch origin release --tags
-            git merge --no-edit -s ours origin/release
           fi
 
           git merge --no-ff --no-edit -X theirs "origin/${SOURCE_BRANCH}"
