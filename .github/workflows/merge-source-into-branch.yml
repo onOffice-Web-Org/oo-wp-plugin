@@ -81,13 +81,11 @@ jobs:
             git merge --no-edit -s ours origin/release
           fi
 
-          git merge --no-edit -X theirs "origin/${SOURCE_BRANCH}"
+          git merge --no-ff --no-edit -X theirs "origin/${SOURCE_BRANCH}"
 
-          # release.yml reads this trailer on prerelease pushes and forwards it to the beta deploy job.
+          # release.yml reads the latest commit trailer on prerelease pushes and forwards it to the beta deploy job.
           if [ "${TARGET_BRANCH}" = "prerelease" ] && [ "${AUTO_BUILD}" = "true" ]; then
-            ORIG_MSG=$(git log -1 --pretty=%B)
-            NEW_MSG="${ORIG_MSG}"$'\n\n'"Auto-Build: true"
-            git commit --amend --no-edit -m "${NEW_MSG}"
+            git commit --allow-empty -m "ci(release): request beta auto-build" -m "Auto-Build: true"
           fi
 
           git push origin "HEAD:${TARGET_BRANCH}"
