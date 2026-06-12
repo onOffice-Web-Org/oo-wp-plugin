@@ -268,9 +268,18 @@ abstract class FormPost
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$formData = $pFormFieldValidator->getValidatedValues($formFields, $this->_pFieldsCollection);
 		$requiredFields = $this->getAllowedRequiredFields($requiredFields);
-		$requiredFieldsAreAllowed = $this->getAllowedRequiredFieldsIsRangeField($requiredFields);
+		$requiredFields = $this->getAllowedRequiredFieldsIsRangeField($requiredFields);
+		$propertyType = $formData['objektart'] ?: null;
+
+		if (
+			isset($propertyType) &&
+			preg_match('/ownerleadgenerator/', $pFormConfig->getTemplate())
+		) {
+			$requiredFields = $this->getVisibleRequiredFields($requiredFields, $propertyType);
+		}
+
 		$pFormData = new FormData($pFormConfig, $formNo);
-		$pFormData->setRequiredFields($requiredFieldsAreAllowed);
+		$pFormData->setRequiredFields($requiredFields);
 		$pFormData->setFormtype($pFormConfig->getFormType());
 		$pFormData->setValues($formData);
 
@@ -312,6 +321,30 @@ abstract class FormPost
 	protected function getFieldsCollection(): FieldsCollection
 	{
 		return $this->_pFieldsCollection;
+	}
+
+	/**
+	 * @param string $field selected property type
+	 */
+	private function getVisibleRequiredFields(array $requiredFields, string $field): array
+	{
+		$json_file_path = ONOFFICE_PLUGIN_DIR . '/field-dependencies.json';
+
+		if (!file_exists($json_file_path)) {
+			return [];
+		}
+
+		$json_data = json_decode(file_get_contents($json_file_path), true);
+
+		if (empty($json_data) || !is_array($json_data)) {
+			return [];
+		}
+
+		$visibleFields = $json_data[$field] ?? [];
+		$allFields = array_unique(array_merge(...array_values($json_data)));
+		$hiddenFields = array_diff($allFields, $visibleFields);
+
+		return array_diff($requiredFields, $hiddenFields);
 	}
 
 	/**

@@ -90,12 +90,11 @@ class FormData
 	/**
 	 *
 	 * @return array
-	 *
 	 */
-
 	public function getMissingFields(): array
 	{
 		$missing = [];
+
 
 		if ($this->_formSent) {
 			$filledFormData = array_filter($this->_values, function ($v) {
