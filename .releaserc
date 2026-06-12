@@ -1,0 +1,57 @@
+{
+  "branches": [
+    { "name": "release", "channel": false },
+    { "name": "prerelease", "channel": "prerelease", "prerelease": "prerelease" }
+  ],
+  "tagFormat": "v${version}",
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          { "type": "change", "release": "minor" },
+          { "type": "chore", "release": "patch" }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits",
+        "presetConfig": {
+          "types": [
+            { "type": "feat", "section": "Features" },
+            { "type": "change", "section": "Changes" },
+            { "type": "fix", "section": "Bug Fixes" },
+            { "type": "perf", "section": "Performance Improvements" },
+            { "type": "chore", "section": "Maintenance" },
+            { "type": "docs", "section": "Documentation" },
+            { "type": "style", "section": "Styles" },
+            { "type": "refactor", "section": "Code Refactoring" },
+            { "type": "test", "section": "Tests" }
+          ]
+        }
+      }
+    ],
+    ["@semantic-release/npm", { "npmPublish": false }],
+    "./bin/semantic-release-prepare.cjs",
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["package.json", "package-lock.json", "plugin.php", "readme.txt"],
+        "message": "ci(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "successComment": false,
+        "failComment": false,
+        "assets": [
+          { "path": "release.zip", "label": "onoffice-for-wp-websites.zip" }
+        ]
+      }
+    ]
+  ]
+}
