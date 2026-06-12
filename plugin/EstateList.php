@@ -30,6 +30,7 @@ use DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
@@ -284,9 +285,6 @@ class EstateList
 	}
 
 	/**
-	 * Returns a cloned estate list that is loaded with all matching estates
-	 * so map renderers can show pins independently from the current page.
-	 *
 	 * @return EstateList
 	 * @throws API\APIEmptyResultException
 	 * @throws DependencyException
@@ -306,7 +304,7 @@ class EstateList
 		}
 
 		$pEstateListForMap->_pDataView = $pDataViewForMap;
-		$pEstateListForMap->loadEstates(1);
+		$pEstateListForMap->loadEstatesForMap(1);
 		$pEstateListForMap->resetEstateIterator();
 
 		return $pEstateListForMap;
@@ -387,6 +385,110 @@ class EstateList
 		$this->processRecordsRawForOrderEsates($combinedRawRecords, $result);
 		$pagedRecords = array_slice($result, $startPosition, $numRecordsPerPage, true);
 		$this->_records = $pagedRecords;
+	}
+
+	/**
+	 * @param int $currentPage
+	 * @throws UnknownViewException
+	 * @throws API\ApiClientException
+	 */
+	private function loadEstatesForMap(int $currentPage = 1)
+	{
+		$this->_pEnvironment->getFieldnames()->loadLanguage();
+
+		$this->loadRecordsForMap($currentPage);
+
+		$this->resetEstateIterator();
+	}
+
+	/**
+	 * @param int $currentPage
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownViewException
+	 */
+	private function loadRecordsForMap(int $currentPage)
+	{
+		$estateParameters = $this->getEstateParametersForMap($currentPage, $this->_formatOutput);
+		$this->_pApiClientAction->setParameters($estateParameters);
+		$this->_pApiClientAction->addRequestToQueue();
+
+		$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false);
+		$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
+
+		$pApiClientActionRawValues = clone $this->_pApiClientAction;
+		$pApiClientActionRawValues->setParameters($estateParametersRaw);
+		$pApiClientActionRawValues->addRequestToQueue();
+
+		$this->_pEnvironment->getSDKWrapper()->sendRequests();
+
+		$this->_records = $this->_pApiClientAction->getResultRecords();
+		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
+		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+	}
+
+	/**
+	 * @param int $currentPage
+	 * @param bool $formatOutput
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownViewException
+	 */
+	private function getEstateParametersForMap(int $currentPage, bool $formatOutput)
+	{
+		$language = Language::getDefault();
+		$pListView = $this->filterActiveInputFields($this->_pDataView);
+		$filter = $this->getDefaultFilterBuilder()->buildFilter();
+
+
+		$numRecordsPerPage = $this->getRecordsPerPage();
+
+		$mapFields = [
+			'breitengrad',
+			'laengengrad',
+			'objekttitel',
+			'strasse',
+			'hausnummer',
+			'plz',
+			'ort',
+			'land',
+		];
+
+		$requestParams = [
+			'data' => $mapFields,
+			'filter' => $filter,
+			'estatelanguage' => $language,
+			'outputlanguage' => $language,
+			'listlimit' => $numRecordsPerPage,
+			'formatoutput' => $formatOutput,
+			'addMainLangId' => true,
+		];
+
+		if ($pListView instanceof DataListView) {
+			$requestParams = array('listname' => $this->_pDataView->getName()) + $requestParams;
+		}
+
+		if (!$pListView->getRandom()) {
+			$offset = ($currentPage - 1) * $numRecordsPerPage;
+			$this->_currentEstatePage = $currentPage;
+			$requestParams += [
+				'listoffset' => $offset
+			];
+		}
+
+		if ($pListView->getName() === 'detail') {
+			if ($this->getViewRestrict()) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			}
+		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+		}
+
+		return $requestParams;
 	}
 
 	/**
