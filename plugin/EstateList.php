@@ -454,6 +454,8 @@ class EstateList
 			'plz',
 			'ort',
 			'land',
+			'virtualAddress',
+            'referenz',
 		];
 
 		$requestParams = [
