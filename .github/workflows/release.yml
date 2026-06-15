@@ -1,0 +1,311 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - release
+      - prerelease
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: semantic-release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  ARTIFACT_NAME: oo-wp-plugin
+  ARTIFACT_TYPE: plugin
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      auto_build: ${{ steps.read-trailer.outputs.auto_build }}
+      release_tag: ${{ steps.show-release.outputs.release_tag }}
+
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            ${{ github.event.repository.name }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Read Auto-Build trailer
+        id: read-trailer
+        run: |
+          VALUE=$(git log -1 --pretty=%B | git interpret-trailers --parse | grep '^Auto-Build:' | tail -n 1 | cut -d' ' -f2 | tr -d '[:space:]' || true)
+          if [ "${VALUE}" = "true" ]; then
+            echo "auto_build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "auto_build=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, mysqli, intl, curl
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure Git for semantic-release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Bootstrap legacy version tag
+        run: |
+          legacy_tag="$(git tag --list 'v[0-9]*.[0-9]*' --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+$' | head -n 1)"
+
+          if [ -n "$legacy_tag" ] && ! git rev-parse -q --verify "refs/tags/${legacy_tag}.0" > /dev/null; then
+            git tag "${legacy_tag}.0" "$legacy_tag"
+          fi
+
+      - name: Sync stable release history into prerelease
+        if: github.ref_name == 'prerelease'
+        run: |
+          if git ls-remote --exit-code --heads origin release > /dev/null 2>&1; then
+            git fetch origin release --tags
+            git merge --no-edit -s ours origin/release
+          fi
+
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: npx semantic-release
+
+      - name: Show GitHub Release link
+        id: show-release
+        run: |
+          if [ ! -f release.zip ]; then
+            echo "No release artifact was created for this run." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          tag="$(git tag --points-at HEAD | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n 1 || true)"
+
+          if [ -z "$tag" ]; then
+            echo "No release tag was created for this run." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          release_url="${{ github.server_url }}/${{ github.repository }}/releases/tag/${tag}"
+
+          echo "### GitHub Release" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Created release: [${tag}](${release_url})" >> "$GITHUB_STEP_SUMMARY"
+          echo "release_tag=${tag}" >> "$GITHUB_OUTPUT"
+
+  sync-version-files-to-default-branch:
+    name: Sync version files to default branch
+    runs-on: ubuntu-latest
+    needs: release
+    if: github.ref_name == 'release' && needs.release.outputs.release_tag != ''
+    continue-on-error: true
+
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            ${{ github.event.repository.name }}
+
+      - name: Checkout default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Sync released version fields
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          RELEASE_TAG: ${{ needs.release.outputs.release_tag }}
+        run: |
+          set +e
+
+          (
+            set -euo pipefail
+
+            VERSION="${RELEASE_TAG#v}"
+
+            git fetch origin "${GITHUB_SHA}" --depth=1
+            git show "${GITHUB_SHA}:bin/update-readme-changelog.cjs" > /tmp/update-readme-changelog.cjs
+
+            sed -i -E "s/^(Version:[[:space:]]*).*/\1${VERSION}/" plugin.php
+            sed -i -E "s/^(const ONOFFICE_PLUGIN_VERSION = ')[^']+(';)/\1${VERSION}\2/" plugin.php
+            sed -i -E "s/^(Stable tag:[[:space:]]*).*/\1${VERSION}/" readme.txt
+
+            gh release view "${RELEASE_TAG}" --repo "${GITHUB_REPOSITORY}" --json body --jq .body > /tmp/release-notes.md
+            node /tmp/update-readme-changelog.cjs "${VERSION}" /tmp/release-notes.md readme.txt
+
+            VERSION="${VERSION}" node <<'NODE'
+          const fs = require('fs');
+
+          const version = process.env.VERSION;
+          const escapedVersion = version.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+          function updateJsonFile(file, update) {
+            const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+            update(data);
+            fs.writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`);
+            return data;
+          }
+
+          function assertMatch(file, label, pattern) {
+            const content = fs.readFileSync(file, 'utf8');
+            if (!pattern.test(content)) {
+              throw new Error(`${label} was not updated in ${file}`);
+            }
+          }
+
+          const packageJson = updateJsonFile('package.json', (data) => {
+            data.version = version;
+          });
+
+          const packageLock = updateJsonFile('package-lock.json', (data) => {
+            data.version = version;
+            if (data.packages && data.packages['']) {
+              data.packages[''].version = version;
+            }
+          });
+
+          assertMatch('plugin.php', 'Plugin header version', new RegExp(`^Version:\\s*${escapedVersion}$`, 'm'));
+          assertMatch('plugin.php', 'ONOFFICE_PLUGIN_VERSION', new RegExp(`^const ONOFFICE_PLUGIN_VERSION = '${escapedVersion}';$`, 'm'));
+          assertMatch('readme.txt', 'Stable tag', new RegExp(`^Stable tag:\\s*${escapedVersion}$`, 'm'));
+          assertMatch('readme.txt', 'Changelog entry', new RegExp(`^= ${escapedVersion} \\(\\d{4}-\\d{2}-\\d{2}\\) =$`, 'm'));
+
+          if (packageJson.version !== version) {
+            throw new Error('package.json version was not updated');
+          }
+
+          if (packageLock.version !== version || packageLock.packages?.['']?.version !== version) {
+            throw new Error('package-lock.json root version was not updated');
+          }
+          NODE
+
+            if git diff --quiet -- package.json package-lock.json plugin.php readme.txt; then
+              echo "Version files already match ${VERSION}."
+              exit 0
+            fi
+
+            git add package.json package-lock.json plugin.php readme.txt
+            git commit -m "ci(release): sync released version files from ${RELEASE_TAG} [skip ci]"
+
+            git fetch origin "${DEFAULT_BRANCH}"
+            if ! git merge-base --is-ancestor "origin/${DEFAULT_BRANCH}" HEAD; then
+              echo "::warning::${DEFAULT_BRANCH} moved while syncing version files. Skipping non-critical version sync."
+              exit 0
+            fi
+
+            git push origin "HEAD:${DEFAULT_BRANCH}"
+          )
+          status=$?
+
+          if [ "${status}" -ne 0 ]; then
+            echo "::warning::Could not sync released version files back to ${DEFAULT_BRANCH}. This does not affect the release."
+          fi
+
+          exit 0
+
+  deploy-beta:
+    name: Deploy to Beta Master
+    runs-on: ubuntu-latest
+    needs: release
+    if: github.ref_name == 'prerelease' && needs.release.outputs.release_tag != ''
+
+    steps:
+      - name: Print Debug Information
+        run: |
+          echo "Release tag: ${{ needs.release.outputs.release_tag }}"
+          echo "Auto-Build: ${{ needs.release.outputs.auto_build }}"
+      - name: Download ZIP from GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download "${{ needs.release.outputs.release_tag }}" \
+            --repo "${{ github.repository }}" \
+            --pattern "release.zip"
+
+      - name: Login to Hosting API
+        id: api-login
+        run: |
+          LOGIN_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.HOSTING_API_URL }}/client-login" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d '{
+              "client_id": "${{ secrets.HOSTING_API_CLIENT_ID }}",
+              "client_secret": "${{ secrets.HOSTING_API_CLIENT_SECRET }}"
+            }')
+
+          HTTP_CODE=$(echo "$LOGIN_RESPONSE" | tail -1)
+          BODY=$(echo "$LOGIN_RESPONSE" | sed '$d')
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::API Login failed (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
+
+          TOKEN=$(echo "$BODY" | jq -r '.data.token')
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "::error::No token received from login response"
+            exit 1
+          fi
+
+          echo "::add-mask::${TOKEN}"
+          echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to Beta Master via Hosting API
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.HOSTING_API_URL }}/releases/deploy" \
+            -H "Authorization: Bearer ${{ steps.api-login.outputs.token }}" \
+            -H "Accept: application/json" \
+            -F "artifact_file=@release.zip" \
+            -F "artifact_type=${{ env.ARTIFACT_TYPE }}" \
+            -F "artifact_name=${{ env.ARTIFACT_NAME }}" \
+            -F "channel=beta" \
+            -F "auto_build=${{ needs.release.outputs.auto_build == 'true' && '1' || '0' }}")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: ${HTTP_CODE}"
+          echo "Response: ${BODY}"
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::Deploy failed (HTTP ${HTTP_CODE}): ${BODY}"
+            exit 1
+          fi
