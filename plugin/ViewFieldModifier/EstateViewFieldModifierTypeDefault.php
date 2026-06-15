@@ -61,7 +61,7 @@ class EstateViewFieldModifierTypeDefault
 	{
 		$apiFields = array_merge($this->getViewFields(), [
 			'virtualAddress',
-			'objektadresse_freigeben',
+			'objektadresse_freigeben_api',
 
 			// for `vermarktungsstatus`
 			'reserviert',
