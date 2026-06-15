@@ -1,69 +1,69 @@
 # Releasing
 
-## Update the changelog
-The changelog is in the `readme.txt` under the heading `== Changelog ==`.
+## Automated Releases (Semantic Releases)
 
-You have to follow the format for WordPress to display it correctly. It's easiest to copy a section and then edit it.
+Releases are automatically created using semantic versioning when code is merged into the `prerelease` or `release` branch.
 
-In order to know what has changed, you can view the [commits](https://github.com/onOffice-Web-Org/oo-wp-plugin/commits/master) since the last release. Check the corresponding PRs (there should be a link in the commit message) to learn more about what changed.
+**Process:**
+1. Merge your changes to `master` using [conventional commit](#commit-messages) prefixes in PR titles.
+2. Run the **🧪 Create prerelease** action from `master`. It merges `master` into the `prerelease` branch and triggers semantic-release, which creates a GitHub Pre-Release and attaches the built plugin ZIP (`onoffice-for-wp-websites.zip`).
+   - **Auto Build option:** When triggering the prerelease action, you can enable the `Beta-Image nach Deploy automatisch bauen?` checkbox. This is forwarded for future beta hosting deploys.
+3. Test the prerelease. If something is wrong, fix it in a feature branch, merge to `master`, and create a new prerelease.
+4. Run the **🚀 Create release** action from `master`. It merges `master` into the `release` branch and triggers semantic-release to create the final release.
+5. On published final release, the update server deploy runs automatically and distributes `release.zip`.
 
-For general guidance on writing a changelog, see [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+**What happens automatically on release:**
+- Version is bumped in `plugin.php`, `readme.txt` (Stable tag), and `package.json`
+- On final releases only: the `== Changelog ==` section in `readme.txt` is updated from the generated release notes
+- Plugin ZIP is built and attached to the GitHub Release
+- Version changes are committed back to the release branch and synced to `master`
 
-## Update CSS Version
-Changes to the styling will sometimes not be visible due to caching. To prevent this, the CSS must be versioned.
+**Changelog:** Do not edit `readme.txt` changelog manually. Write clear conventional commit messages — they become both the GitHub release notes and the WordPress changelog. Prereleases do not update `readme.txt` changelog; only final releases do.
 
-If any changes have been made to admin.css for this release:
-Change version in `wp_enqueue_style('onoffice-admin-css', plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), 'v4.20');` in `AdminViewController.php"`
+## Version Bumping Rules
 
-## Development release
+- `feat:` commits → minor version bump (e.g., 6.15.0 → 6.16.0)
+- `fix:` and `perf:` commits → patch version bump (e.g., 6.15.0 → 6.15.1)
+- Commits with a `!` inside the prefix, e.g. `feat!: ...` → major version bump (e.g., 6.15.0 → 7.0.0)
+- `change:` commits → minor version bump
+- `chore:` commits → patch version bump
+- Commits like `docs:`, `style:`, `ci:`, `refactor:`, `test:`, `build:` don't trigger releases
 
-1. Go to https://github.com/onOfficeGmbH/oo-wp-plugin/actions/workflows/development-release.yml.
-2. To the right, choose "Run workflow" and run it on `master`.
-    - The deployment uses secrets from the "WordPress SVN" [environment](#environment) and needs to be approved.
-3. If the run fails because the versions are not set correctly, fix them as specified in the error message and start another development release.
-4. If the run succeeds, you can download the "Development Version" from https://wordpress.org/plugins/onoffice-for-wp-websites/advanced/. (Or [download it directly](https://downloads.wordpress.org/plugin/onoffice-for-wp-websites.zip).)
-5. Note that the translations take about 15 minutes or more before you can edit them at https://translate.wordpress.org/locale/de/default/wp-plugins/onoffice-for-wp-websites/.
+## Commit Messages
 
-## Stable release
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) for commit messages. This enables automatic semantic versioning and changelog generation.
 
-1. Ensure you have prepared the release:
-    - Tested it.
-    - [Updated the changelog](#update-the-changelog).
-2. Update the version number in `readme.txt` and `plugin.php`.
-    - The version needs to be set in the following places:
-      - In the comment of the `readme.txt` as the `Stable tag`.
-      - As the newest [changelog](#update-the-changelog) item in `readme.txt`.
-      - In the comment of the `plugin.php` as the `Version`.
-      - Constant ONOFFICE_PLUGIN_VERSION
-3. Merge changelog und new version with e.g. message "Update to version v3.2" in master.
-4. To trigger the release, you create a new tag. This is easiest to do by creating a release on GitHub:
-    1. Go to https://github.com/onOfficeGmbH/oo-wp-plugin/releases.
-    2. In the top right, click on "Draft new release".
-    3. For "Choose a tag" enter the new version and create a new tag.
-    4. Keep "master" as target.
-    5. To the right, click on "Auto-generate release notes".
-    6. In the description, remove all project and ticket numbers. These are usually at the beginning of the list items. For example, the entry `*  P#60599 Space for map is taken even when the map is not shown by @tung-le-esg in https://github.com/onOfficeGmbH/oo-wp-plugin/pull/154` should be edited to `* Space for map is taken even when the map is not shown by @tung-le-esg in https://github.com/onOfficeGmbH/oo-wp-plugin/pull/154`.
-5. If something went wrong, you will need to reset the tag. In the following example, the tag is `v3.2`.
-    1. In your console, delete the tag with `git tag -d v3.2`.
-    2. Remove the tag from GitHub with `git push origin :v3.2`. (Only users with admin access to the repository can do this.)
-    3. Re-add a tag by redoing step 3.
+PR titles are validated by the **Lint PR** workflow — when squash-merging, the PR title becomes the commit message and must follow this format.
 
-## Update translation Branch
+### Commit Message Format
 
-The translation branch will be updated to provide new translation keys. If new translation keys have been added, these will be translated in the next release.
+```
+<type>(<scope>): <subject>
 
-1. Merge master into translation.
-2. Push changes to translation.
+<body>
 
-## Update release Branch
+<footer>
+```
 
-To be able to fix any critical problems anytime in current stable version, we update release branch on every release.
+**Types:**
+- `feat`: A new feature (triggers minor version bump)
+- `change`: Something existing changed (not a new feature, not a bugfix)
+- `fix`: A bug fix (triggers patch version bump)
+- `perf`: A performance improvement (triggers patch version bump)
+- `docs`: Documentation only changes
+- `style`: Code style changes (formatting, missing semi colons, etc.)
+- `refactor`: Code refactoring without bug fixes or features
+- `test`: Adding or updating tests
+- `chore`: Maintenance tasks (triggers patch version bump)
+- `build`: Build system or dependency changes
+- `ci`: CI configuration changes
+- `revert`: Reverts a previous commit
 
-1. Merge master into release.
-2. Push changes to release.
-
-## Environment
-
-To push to the WordPress SVN you need to authenticate as the WordPress user @onofficeweb. We use a GitHub [environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) to store the credentials as secrets.
-
-The "WordPress SVN" environment is protected so that Actions that use those secrets need to be approved. If you are a [required reviewer](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#required-reviewers), you can [approve the workflow run](https://docs.github.com/en/actions/managing-workflow-runs/reviewing-deployments).
+**Examples:**
+```
+feat(P#12345): add estate list filter
+change(P#11111): rename admin menu label
+fix(forms): resolve GDPR checkbox validation
+perf(estates): reduce API calls on list view
+docs: update release documentation
+```
