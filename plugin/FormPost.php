@@ -269,7 +269,7 @@ abstract class FormPost
 		$formData = $pFormFieldValidator->getValidatedValues($formFields, $this->_pFieldsCollection);
 		$requiredFields = $this->getAllowedRequiredFields($requiredFields);
 		$requiredFields = $this->getAllowedRequiredFieldsIsRangeField($requiredFields);
-		$propertyType = $formData['objektart'] ?: null;
+		$propertyType = isset($formData['objektart']) ? $formData['objektart'] : null;
 
 		if (
 			isset($propertyType) &&
