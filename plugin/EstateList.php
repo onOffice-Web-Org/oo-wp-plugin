@@ -410,33 +410,74 @@ class EstateList
 	 */
 	private function loadRecordsForMap(int $currentPage)
 	{
-		$estateParameters = $this->getEstateParametersForMap($currentPage, $this->_formatOutput);
-		$this->_pApiClientAction->setParameters($estateParameters);
-		$this->_pApiClientAction->addRequestToQueue();
+		$numRecordsPerPage = $this->getRecordsPerPage();
 
-		$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false);
-		$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
+		if ($numRecordsPerPage > 500) {
+			$allRecords = [];
+			$allRecordsRaw = [];
+			$totalFetched = 0;
 
-		$pApiClientActionRawValues = clone $this->_pApiClientAction;
-		$pApiClientActionRawValues->setParameters($estateParametersRaw);
-		$pApiClientActionRawValues->addRequestToQueue();
+			do {
+				$offset = $totalFetched;
+				$requestLimit = min(500, $numRecordsPerPage - $totalFetched);
 
-		$this->_pEnvironment->getSDKWrapper()->sendRequests();
+				$estateParameters = $this->getEstateParametersForMap($currentPage, $this->_formatOutput, $offset, $requestLimit);
+				$this->_pApiClientAction->setParameters($estateParameters);
+				$this->_pApiClientAction->addRequestToQueue();
 
-		$this->_records = $this->_pApiClientAction->getResultRecords();
-		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
-		$this->_recordsRaw = !empty($recordsRaw) ? array_combine(array_column($recordsRaw, 'id'), $recordsRaw) : [];
+				$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false, $offset, $requestLimit);
+				$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
+
+				$pApiClientActionRawValues = clone $this->_pApiClientAction;
+				$pApiClientActionRawValues->setParameters($estateParametersRaw);
+				$pApiClientActionRawValues->addRequestToQueue();
+
+				$this->_pEnvironment->getSDKWrapper()->sendRequests();
+
+				$records = $this->_pApiClientAction->getResultRecords();
+				$recordsRaw = $pApiClientActionRawValues->getResultRecords();
+
+				$allRecords = array_merge($allRecords, $records);
+				if (!empty($recordsRaw)) {
+					$allRecordsRaw = array_merge($allRecordsRaw, array_combine(array_column($recordsRaw, 'id'), $recordsRaw));
+				}
+
+				$totalFetched += count($records);
+			} while (count($records) == 500 && $totalFetched < $numRecordsPerPage);
+
+			$this->_records = $allRecords;
+			$this->_recordsRaw = $allRecordsRaw;
+		} else {
+			$estateParameters = $this->getEstateParametersForMap($currentPage, $this->_formatOutput);
+			$this->_pApiClientAction->setParameters($estateParameters);
+			$this->_pApiClientAction->addRequestToQueue();
+
+			$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false);
+			$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
+
+			$pApiClientActionRawValues = clone $this->_pApiClientAction;
+			$pApiClientActionRawValues->setParameters($estateParametersRaw);
+			$pApiClientActionRawValues->addRequestToQueue();
+
+			$this->_pEnvironment->getSDKWrapper()->sendRequests();
+
+			$this->_records = $this->_pApiClientAction->getResultRecords();
+			$recordsRaw = $pApiClientActionRawValues->getResultRecords();
+			$this->_recordsRaw = !empty($recordsRaw) ? array_combine(array_column($recordsRaw, 'id'), $recordsRaw) : [];
+		}
 	}
 
 	/**
 	 * @param int $currentPage
 	 * @param bool $formatOutput
+	 * @param int $offset
+	 * @param int|null $requestLimit
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 * @throws UnknownViewException
 	 */
-	private function getEstateParametersForMap(int $currentPage, bool $formatOutput)
+	private function getEstateParametersForMap(int $currentPage, bool $formatOutput, int $offset = 0, ?int $requestLimit = null)
 	{
 		$language = Language::getDefault();
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
@@ -444,6 +485,12 @@ class EstateList
 
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
+
+		if ($requestLimit !== null && $numRecordsPerPage > 500) {
+			$listLimit = $requestLimit;
+		} else {
+			$listLimit = $numRecordsPerPage;
+		}
 
 		$mapFields = [
 			'breitengrad',
@@ -463,7 +510,7 @@ class EstateList
 			'filter' => $filter,
 			'estatelanguage' => $language,
 			'outputlanguage' => $language,
-			'listlimit' => $numRecordsPerPage,
+			'listlimit' => $listLimit,
 			'formatoutput' => $formatOutput,
 			'addMainLangId' => true,
 		];
@@ -473,10 +520,14 @@ class EstateList
 		}
 
 		if (!$pListView->getRandom()) {
-			$offset = ($currentPage - 1) * $numRecordsPerPage;
+			if ($offset > 0 || $requestLimit !== null) {
+				$calculatedOffset = $offset;
+			} else {
+				$calculatedOffset = ($currentPage - 1) * $numRecordsPerPage;
+			}
 			$this->_currentEstatePage = $currentPage;
 			$requestParams += [
-				'listoffset' => $offset
+				'listoffset' => $calculatedOffset
 			];
 		}
 
