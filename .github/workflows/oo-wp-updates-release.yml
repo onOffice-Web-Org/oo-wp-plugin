@@ -1,29 +1,48 @@
 name: onOffice WP-Updates Release
 
 on:
-  workflow_dispatch:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published]
 
 jobs:
   get-version:
     name: Get current version
     runs-on: ubuntu-latest
+    if: ${{ !github.event.release.prerelease }}
     outputs:
       currentVersion: ${{ steps.get-version.outputs.version }}
     steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
       - name: Get version
         id: get-version
-        # Remove the leading 'v' from the tag.
-        run: echo "version=$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')" >> $GITHUB_OUTPUT
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          if [[ ! "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Update-server deploys require a final semantic version tag like v6.16.0. Got: ${TAG_NAME}"
+            exit 1
+          fi
+
+          VERSION="${TAG_NAME#v}"
+
+          grep -Eq "^Version:[[:space:]]+${VERSION}$" plugin.php
+          grep -Eq "^const ONOFFICE_PLUGIN_VERSION = '${VERSION}';$" plugin.php
+          grep -Eq "^Stable tag:[[:space:]]+${VERSION}$" readme.txt
+
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
   build:
     name: Build release
     needs: get-version
     uses: ./.github/workflows/build-release.yml
     with:
+      ref: ${{ github.event.release.tag_name }}
       expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
+      checkVersion: false
       pluginFolder: onoffice-for-wp-websites
 
   deploy:
@@ -34,6 +53,7 @@ jobs:
       - name: Checkout source (for readme.txt)
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.release.tag_name }}
           path: source
 
       - name: Download release artifact

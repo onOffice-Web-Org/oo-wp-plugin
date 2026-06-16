@@ -1,0 +1,14 @@
+name: 🚀 Create release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  merge:
+    uses: ./.github/workflows/merge-source-into-branch.yml
+    with:
+      target-branch: release
+    secrets: inherit
