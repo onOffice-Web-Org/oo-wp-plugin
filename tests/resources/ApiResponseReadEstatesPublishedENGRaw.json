@@ -15,7 +15,8 @@
 			"vermarktungsart",
 			"preisAufAnfrage",
 			"virtualAddress",
-			"provisionsfrei"
+			"provisionsfrei",
+			"nutzungsart"
 		],
 		"filter": {
 			"veroeffentlichen": [
