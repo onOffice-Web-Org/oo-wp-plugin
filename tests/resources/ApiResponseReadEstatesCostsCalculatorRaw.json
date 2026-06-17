@@ -16,6 +16,7 @@
 			"preisAufAnfrage",
 			"virtualAddress",
 			"provisionsfrei",
+			"nutzungsart",
 			"kaufpreis",
 			"aussen_courtage",
 			"bundesland",
