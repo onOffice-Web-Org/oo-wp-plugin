@@ -594,6 +594,13 @@ class EstateList
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
 
+        if (!empty($this->_filterAddressId)) {
+            $addressList = $this->_pEnvironment->getAddressList();
+            $addressList->fetchEstatesForAddressIds([$this->_filterAddressId]);
+            $estateIds = $addressList->getEstateIdsForContact($this->_filterAddressId);
+            $filter['Id'] = [["op" => "IN", "val" => $estateIds]];
+        }
+
 		$numRecordsPerPage = 500;
 
 		$pFieldModifierHandler = new ViewFieldModifierHandler(
@@ -1440,6 +1447,20 @@ class EstateList
 
 		return $result;
 	}
+
+	/**
+     * Retrieves the unformatted API raw data of a contact person directly by their ID.
+     * * @param int|string $addressId
+     * @return array
+     */
+    public function getContactRawById($addressId): array
+    {
+        if (empty($addressId)) {
+            return [];
+        }
+
+        return $this->getEnvironment()->getAddressList()->getRawById((int)$addressId);
+    }
 
 	/**
 	 * @return int
