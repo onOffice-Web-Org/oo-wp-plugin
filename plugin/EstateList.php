@@ -30,6 +30,7 @@ use DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
@@ -284,6 +285,32 @@ class EstateList
 	}
 
 	/**
+	 * @return EstateList
+	 * @throws API\APIEmptyResultException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownViewException
+	 * @throws HttpFetchNoResultException
+	 * @throws API\ApiClientException
+	 */
+	public function getEstateListForMap(): EstateList
+	{
+		$pEstateListForMap = clone $this;
+		$pDataViewForMap = clone $this->_pDataView;
+		$estateCount = $this->getEstateOverallCount();
+
+		if (method_exists($pDataViewForMap, 'setRecordsPerPage') && $estateCount > 0) {
+			$pDataViewForMap->setRecordsPerPage($estateCount);
+		}
+
+		$pEstateListForMap->_pDataView = $pDataViewForMap;
+		$pEstateListForMap->loadEstatesForMap(1);
+		$pEstateListForMap->resetEstateIterator();
+
+		return $pEstateListForMap;
+	}
+
+	/**
 	 *
 	 */
 	private function buildFieldsCollectionForEstate()
@@ -314,6 +341,7 @@ class EstateList
 		$estateParametersRaw['data'][] = 'preisAufAnfrage';
 		$estateParametersRaw['data'][] = 'virtualAddress';
 		$estateParametersRaw['data'][] = 'provisionsfrei';
+		$estateParametersRaw['data'][] = 'nutzungsart';
 
 		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
 			$estateParametersRaw['data'] []= 'waehrung';
@@ -358,6 +386,163 @@ class EstateList
 		$this->processRecordsRawForOrderEsates($combinedRawRecords, $result);
 		$pagedRecords = array_slice($result, $startPosition, $numRecordsPerPage, true);
 		$this->_records = $pagedRecords;
+	}
+
+	/**
+	 * @param int $currentPage
+	 * @throws UnknownViewException
+	 * @throws API\ApiClientException
+	 */
+	private function loadEstatesForMap(int $currentPage = 1)
+	{
+		$this->_pEnvironment->getFieldnames()->loadLanguage();
+
+		$this->loadRecordsForMap($currentPage);
+
+		$this->resetEstateIterator();
+	}
+
+	/**
+	 * @param int $currentPage
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownViewException
+	 */
+	private function loadRecordsForMap(int $currentPage)
+	{
+		$numRecordsPerPage = $this->getRecordsPerPage();
+
+		if ($numRecordsPerPage > 500) {
+			$allRecords = [];
+			$allRecordsRaw = [];
+			$totalFetched = 0;
+
+			do {
+				$offset = $totalFetched;
+				$requestLimit = min(500, $numRecordsPerPage - $totalFetched);
+
+				$estateParameters = $this->getEstateParametersForMap($currentPage, $this->_formatOutput, $offset, $requestLimit);
+				$this->_pApiClientAction->setParameters($estateParameters);
+				$this->_pApiClientAction->addRequestToQueue();
+
+				$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false, $offset, $requestLimit);
+				$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
+
+				$pApiClientActionRawValues = clone $this->_pApiClientAction;
+				$pApiClientActionRawValues->setParameters($estateParametersRaw);
+				$pApiClientActionRawValues->addRequestToQueue();
+
+				$this->_pEnvironment->getSDKWrapper()->sendRequests();
+
+				$records = $this->_pApiClientAction->getResultRecords();
+				$recordsRaw = $pApiClientActionRawValues->getResultRecords();
+
+				$allRecords = array_merge($allRecords, $records);
+				if (!empty($recordsRaw)) {
+					$allRecordsRaw = array_merge($allRecordsRaw, array_combine(array_column($recordsRaw, 'id'), $recordsRaw));
+				}
+
+				$totalFetched += count($records);
+			} while (count($records) == 500 && $totalFetched < $numRecordsPerPage);
+
+			$this->_records = $allRecords;
+			$this->_recordsRaw = $allRecordsRaw;
+		} else {
+			$estateParameters = $this->getEstateParametersForMap($currentPage, $this->_formatOutput);
+			$this->_pApiClientAction->setParameters($estateParameters);
+			$this->_pApiClientAction->addRequestToQueue();
+
+			$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false);
+			$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
+
+			$pApiClientActionRawValues = clone $this->_pApiClientAction;
+			$pApiClientActionRawValues->setParameters($estateParametersRaw);
+			$pApiClientActionRawValues->addRequestToQueue();
+
+			$this->_pEnvironment->getSDKWrapper()->sendRequests();
+
+			$this->_records = $this->_pApiClientAction->getResultRecords();
+			$recordsRaw = $pApiClientActionRawValues->getResultRecords();
+			$this->_recordsRaw = !empty($recordsRaw) ? array_combine(array_column($recordsRaw, 'id'), $recordsRaw) : [];
+		}
+	}
+
+	/**
+	 * @param int $currentPage
+	 * @param bool $formatOutput
+	 * @param int $offset
+	 * @param int|null $requestLimit
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownViewException
+	 */
+	private function getEstateParametersForMap(int $currentPage, bool $formatOutput, int $offset = 0, ?int $requestLimit = null)
+	{
+		$language = Language::getDefault();
+		$pListView = $this->filterActiveInputFields($this->_pDataView);
+		$filter = $this->getDefaultFilterBuilder()->buildFilter();
+
+
+		$numRecordsPerPage = $this->getRecordsPerPage();
+
+		if ($requestLimit !== null && $numRecordsPerPage > 500) {
+			$listLimit = $requestLimit;
+		} else {
+			$listLimit = $numRecordsPerPage;
+		}
+
+		$mapFields = [
+			'breitengrad',
+			'laengengrad',
+			'objekttitel',
+			'strasse',
+			'hausnummer',
+			'plz',
+			'ort',
+			'land',
+			'virtualAddress',
+            'referenz',
+		];
+
+		$requestParams = [
+			'data' => $mapFields,
+			'filter' => $filter,
+			'estatelanguage' => $language,
+			'outputlanguage' => $language,
+			'listlimit' => $listLimit,
+			'formatoutput' => $formatOutput,
+			'addMainLangId' => true,
+		];
+
+		if ($pListView instanceof DataListView) {
+			$requestParams = array('listname' => $this->_pDataView->getName()) + $requestParams;
+		}
+
+		if (!$pListView->getRandom()) {
+			if ($offset > 0 || $requestLimit !== null) {
+				$calculatedOffset = $offset;
+			} else {
+				$calculatedOffset = ($currentPage - 1) * $numRecordsPerPage;
+			}
+			$this->_currentEstatePage = $currentPage;
+			$requestParams += [
+				'listoffset' => $calculatedOffset
+			];
+		}
+
+		if ($pListView->getName() === 'detail') {
+			if ($this->getViewRestrict()) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			}
+		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+		}
+
+		return $requestParams;
 	}
 
 	/**

@@ -7,6 +7,8 @@ Integrate real estates, contact forms and contact persons from the onOffice Soft
 
 In [./documentation/Building.md](./documentation/Building.md) you can find instructions for how to set up your development environment. There are also instructions for making a .zip file that you can upload to WordPress.
 
+For the release process and [Conventional Commits](https://www.conventionalcommits.org/) conventions, see [./documentation/Releasing.md](./documentation/Releasing.md).
+
 ## Getting Started
 
 1. Move the plugin directory into a new subdirectory inside the WordPress plugins directory (`wp-content/plugins/`)
