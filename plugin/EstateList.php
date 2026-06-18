@@ -341,7 +341,6 @@ class EstateList
 		$estateParametersRaw['data'][] = 'preisAufAnfrage';
 		$estateParametersRaw['data'][] = 'virtualAddress';
 		$estateParametersRaw['data'][] = 'provisionsfrei';
-		$estateParametersRaw['data'][] = 'showGoogleMap';
 		$estateParametersRaw['data'][] = 'nutzungsart';
 
 		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
