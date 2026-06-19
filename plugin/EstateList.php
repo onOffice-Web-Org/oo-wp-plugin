@@ -1068,7 +1068,13 @@ class EstateList
 		}
 
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
-			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
+    
+			if (isset($recordRaw['showGoogleMap']) && ($recordRaw['showGoogleMap'] === '0' || $recordRaw['showGoogleMap'] === 0 || $recordRaw['showGoogleMap'] === false)) {
+				$recordModified['showGoogleMap'] = false;
+			} 
+			elseif (isset($recordRaw['showGoogleMap']) && ($recordRaw['showGoogleMap'] === '1' || $recordRaw['showGoogleMap'] === 1 || $recordRaw['showGoogleMap'] === true)) {
+				$recordModified['showGoogleMap'] = true;
+			} 
 		}
 
 		if ($checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0) {
@@ -1580,7 +1586,7 @@ class EstateList
 	/**
 	 * @return bool
 	 */
-	private function getShowMapConfig(): bool
+	public function getShowMapConfig(): bool
 	{
 		if ($this->_pDataView instanceof DataListView) {
 			return $this->_pDataView->getShowMap();

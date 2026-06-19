@@ -1344,7 +1344,7 @@ class TestClassEstateList
 			'pacht',
 			'kaltmiete',
 			'virtualAddress',
-			'objektadresse_freigeben',
+			'objektadresse_freigeben_api',
 			'reserviert',
 			'verkauft',
 			'vermarktungsart',
