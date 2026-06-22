@@ -599,6 +599,13 @@ class EstateList
 		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
 
+        if (!empty($this->_filterAddressId)) {
+            $addressList = $this->_pEnvironment->getAddressList();
+            $addressList->fetchEstatesForAddressIds([$this->_filterAddressId]);
+            $estateIds = $addressList->getEstateIdsForContact($this->_filterAddressId);
+            $filter['Id'] = [["op" => "IN", "val" => $estateIds]];
+        }
+
 		$numRecordsPerPage = 500;
 
 		$pFieldModifierHandler = new ViewFieldModifierHandler(
@@ -1073,7 +1080,13 @@ class EstateList
 		}
 
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
-			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
+    
+			if (isset($recordRaw['showGoogleMap']) && ($recordRaw['showGoogleMap'] === '0' || $recordRaw['showGoogleMap'] === 0 || $recordRaw['showGoogleMap'] === false)) {
+				$recordModified['showGoogleMap'] = false;
+			} 
+			elseif (isset($recordRaw['showGoogleMap']) && ($recordRaw['showGoogleMap'] === '1' || $recordRaw['showGoogleMap'] === 1 || $recordRaw['showGoogleMap'] === true)) {
+				$recordModified['showGoogleMap'] = true;
+			} 
 		}
 
 		if ($checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0) {
@@ -1473,6 +1486,20 @@ class EstateList
 	}
 
 	/**
+     * Retrieves the unformatted API raw data of a contact person directly by their ID.
+     * * @param int|string $addressId
+     * @return array
+     */
+    public function getContactRawById($addressId): array
+    {
+        if (empty($addressId)) {
+            return [];
+        }
+
+        return $this->getEnvironment()->getAddressList()->getRawById((int)$addressId);
+    }
+
+	/**
 	 * @return int
 	 */
 	public function getCurrentEstateId(): int
@@ -1590,7 +1617,7 @@ class EstateList
 	/**
 	 * @return bool
 	 */
-	private function getShowMapConfig(): bool
+	public function getShowMapConfig(): bool
 	{
 		if ($this->_pDataView instanceof DataListView) {
 			return $this->_pDataView->getShowMap();
