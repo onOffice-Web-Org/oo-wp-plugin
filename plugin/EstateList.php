@@ -130,6 +130,9 @@ class EstateList
 	/** @var string */
 	private $_energyCertificate = '';
 
+	/** @var bool|null */
+	private $_hasPriceOnRequestField = null;
+
 	private $_geoFilter = null;
 
 
@@ -338,7 +341,9 @@ class EstateList
 		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'][] = 'vermarktungsart';
-		$estateParametersRaw['data'][] = 'preisAufAnfrage';
+		if ($this->hasPriceOnRequestField()) {
+			$estateParametersRaw['data'][] = 'preisAufAnfrage';
+		}
 		$estateParametersRaw['data'][] = 'virtualAddress';
 		$estateParametersRaw['data'][] = 'provisionsfrei';
 		$estateParametersRaw['data'][] = 'nutzungsart';
@@ -627,12 +632,14 @@ class EstateList
 			if ($formatOutput !== true) {
 				$requestParams['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 				$requestParams['data'][] = 'vermarktungsart';
-				$requestParams['data'][] = 'preisAufAnfrage';
+				if ($this->hasPriceOnRequestField()) {
+					$requestParams['data'][] = 'preisAufAnfrage';
+				}
 				if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
 					$requestParams['data'][] = 'waehrung';
 				}
 			}
-			if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
+			if ($this->enableShowPriceOnRequestText() && $this->hasPriceOnRequestField() && !in_array('preisAufAnfrage', $requestParams['data'], true)) {
 				$requestParams['data'][] = 'preisAufAnfrage';
 			}
 			if ($pListView->getName() === 'detail') {
@@ -768,7 +775,9 @@ class EstateList
 
 		$requestParams['data'][] = $pListView->getSortby();
 		$requestParams['data'] = array_merge($requestParams['data'], $pListView->getSortByUserValues());
-		$requestParams['data'][] = 'preisAufAnfrage';
+		if ($this->hasPriceOnRequestField()) {
+			$requestParams['data'][] = 'preisAufAnfrage';
+		}
 		$requestParams['data'][] = 'provisionsfrei';
 		$requestParams['data'][] = 'referenz';
 		$requestParams['sortby'] = $pListView->getSortby();
@@ -846,7 +855,7 @@ class EstateList
 			];
 		}
 
-		if ($this->enableShowPriceOnRequestText() && !isset($requestParams['data']['preisAufAnfrage'])) {
+		if ($this->enableShowPriceOnRequestText() && $this->hasPriceOnRequestField() && !in_array('preisAufAnfrage', $requestParams['data'], true)) {
 			$requestParams['data'][] = 'preisAufAnfrage';
 		}
 		if ($pListView->getName() === 'detail') {
@@ -923,7 +932,10 @@ class EstateList
 			}
 		}
 
-		if(in_array($requestParams['sortby'], $pListView->getListFieldsShowPriceOnRequest())){
+		if (
+			in_array($requestParams['sortby'], $pListView->getListFieldsShowPriceOnRequest()) &&
+			$this->hasPriceOnRequestField()
+		) {
 			$sortKey = $requestParams['sortby'];
 			$sortOrder = $requestParams['sortorder'];
 
@@ -1102,7 +1114,7 @@ class EstateList
 
 		$recordModified = new ArrayContainerEscape($recordModified);
 
-		if ($recordRaw['preisAufAnfrage'] === DataListView::SHOW_PRICE_ON_REQUEST) {
+		if ($this->hasPriceOnRequestField() && ($recordRaw['preisAufAnfrage'] ?? null) === DataListView::SHOW_PRICE_ON_REQUEST) {
 			if ($this->enableShowPriceOnRequestText()) {
 				$priceFields = $this->_pDataView->getListFieldsShowPriceOnRequest();
 
@@ -1148,6 +1160,25 @@ class EstateList
 		if (!empty($recordModified[$field])) {
 			$recordModified[$field] = esc_html__('Price on request', 'onoffice-for-wp-websites');
 		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function hasPriceOnRequestField(): bool
+	{
+		if ($this->_hasPriceOnRequestField !== null) {
+			return $this->_hasPriceOnRequestField;
+		}
+
+		try {
+			$this->_pEnvironment->getFieldnames()->getFieldInformation('preisAufAnfrage', onOfficeSDK::MODULE_ESTATE);
+			$this->_hasPriceOnRequestField = true;
+		} catch (UnknownFieldException $pE) {
+			$this->_hasPriceOnRequestField = false;
+		}
+
+		return $this->_hasPriceOnRequestField;
 	}
 
 	public function custom_pre_get_document_title($title_parts_array, $recordModified)
