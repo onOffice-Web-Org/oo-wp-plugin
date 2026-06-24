@@ -18,7 +18,7 @@ const VIEWPORTS = [
 ];
 
 const E2E_SECRET = 'qa_rocks';
-const BASE_PATH = '/test-modern-formulare/newsletter/';
+const BASE_PATH = '/e2e-test-formulare/newsletterformular/';
 
 test.describe('Newsletter Formular: Multi-Theme Engine & Visual Regression', () => {
 

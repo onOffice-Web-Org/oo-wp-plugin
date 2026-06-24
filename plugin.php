@@ -659,4 +659,13 @@ add_shortcode('oo_e2e_test_form', function() {
     }
     return '<div style="border: 2px dashed #f00; padding: 10px;">E2E Test Form Placeholder (Visible only with key)</div>';
 });
+
+add_shortcode('oo_e2e_newsletter_form', function() {
+    $form_name = 'Newsletterformular_E2E'; 
+
+    if (isset($_GET['e2e_key']) && $_GET['e2e_key'] === 'qa_rocks') {
+        return do_shortcode('[oo_form form="' . $form_name . '"]');
+    }
+    return '<div style="border: 2px dashed #f00; padding: 10px;">E2E Newsletter Form Placeholder (Visible only with key)</div>';
+});
 return $pDI;
