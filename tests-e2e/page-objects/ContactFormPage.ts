@@ -23,7 +23,7 @@ export class ContactFormPage {
         this.lastNameInput = this.form.locator('input[name="Name"]'); 
         this.emailInput = this.form.locator('input[name="Email"]');
         this.phoneInput = this.form.locator('input[name*="Telefon"]');
-        this.messageInput = this.form.locator('textarea[name*="tmpField"], textarea[name*="Message"]');
+        this.messageInput = this.form.locator('textarea[name*="tmpField"], textarea[name*="Message"], textarea[name*="nachricht" i], textarea').first();
         this.gdprCheckbox = this.form.locator('input[name*="gdprcheckbox"]');
         
         // Buttons und Nachrichten

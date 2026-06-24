@@ -34,6 +34,21 @@ export class NewsletterPage {
         }
     }
 
+    /**
+     * Ausblenden unnötiger Elemente (Chat, fixierte Header) für übersichtlichere Screenshots
+     */
+    async hideOverlays() {
+        await this.page.addStyleTag({ 
+            content: `
+                #usercentrics-root, .uc-container, [id^="usercentrics"],
+                iframe[title*="chat"], .superchat-widget, .c-header.--fixed { 
+                    display: none !important; 
+                    visibility: hidden !important; 
+                }
+            ` 
+        });
+    }
+
     async fillAllFields(email: string) {
         const activeForm = this.form.filter({ visible: true }).first();
         const activeEmail = activeForm.locator('input[name="Email"]');

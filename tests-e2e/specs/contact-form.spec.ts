@@ -28,16 +28,23 @@ test.describe('Kontaktformular: Multi-Theme Engine & Visual Regression', () => {
             let contactPage: ContactFormPage;
 
             test.beforeEach(async ({ page }) => {
-                // Wenn die Theme "Pure" ist — kennzeichnen wir sie als "fixme", da dort die Gestaltung/Abhängigkeiten defekt sind
-                /*if (theme === 'onoffice-pure' || theme === 'onoffice-timeless') {
-                    test.fixme(true, 'Die Theme "Pure" hat bekannte Probleme mit der Formulargestaltung, die vor dem Test behoben werden müssen.');
-                }
-                */
-               
                 contactPage = new ContactFormPage(page);
                 
                 // URLs mit Theme-Wechsel- und Cache-Umgehungs-Flags generieren
                 const url = `${BASE_PATH}?force_theme=${theme}&e2e_key=${E2E_SECRET}&t=${Date.now()}`;
+
+                await page.route('**/kontaktformular/**', async route => {
+                    const response = await route.fetch();
+                    // Wenn der Server eine HTML-Seite zurückgibt, ersetzen wir das ALTCHA Tag dynamisch.
+                    if (response.headers()['content-type']?.includes('text/html')) {
+                        let htmlText = await response.text();
+                        // Wir betten das Mock-Attribut in den Seitencode ein, bevor der Browser ihn sieht.
+                        htmlText = htmlText.replace('<altcha-widget', '<altcha-widget mock');
+                        await route.fulfill({ response, body: htmlText });
+                    } else {
+                        await route.fallback();
+                    }
+                });
                 
                 await page.goto(url, { waitUntil: 'networkidle' });
                 
