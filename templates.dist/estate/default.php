@@ -97,9 +97,14 @@ $dimensions = [
 	}
 </style>
 
-<div class="oo-estate-map">
-    <?php require('map/map.php'); ?>
-</div>
+<?php 
+if ($pEstates->getShowMapConfig()) {
+?>
+    <div class="oo-estate-map">
+        <?php require('map/map.php'); ?>
+    </div>
+<?php } ?>
+
 <div class="oo-listheadline" id="oo-listheadline-<?php echo esc_attr($list_id);?>">
 	<h1><?php esc_html_e('Overview of Estates', 'onoffice-for-wp-websites'); ?></h1>
 	<p>

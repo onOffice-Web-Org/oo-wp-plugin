@@ -56,7 +56,7 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 			'virtualAddress',
 			'virtualLatitude',
 			'virtualLongitude',
-			'objektadresse_freigeben',
+			'objektadresse_freigeben_api',
 			'strasse',
 		];
 		$this->assertEqualSets($expectedResult, $result);
@@ -125,7 +125,7 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 
 		$record = [
 			'virtualAddress' => '0',
-			'objektadresse_freigeben' => '0',
+			'objektadresse_freigeben_api' => '0',
 			'strasse' => 'Echte Straße',
 			'hausnummer' => '10',
 			'laengengrad' => '13.3672133',
@@ -134,7 +134,7 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 
 		$expectedResult = [
 			'virtualAddress' => '0',
-			'objektadresse_freigeben' => '0',
+			'objektadresse_freigeben_api' => '0',
 			'hausnummer' => '10',
 			'laengengrad' => 0,
 			'breitengrad' => 0,
@@ -142,8 +142,8 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 
 		$this->assertEquals($expectedResult, $pViewFieldModifier->reduceRecord($record));
 		unset($record['strasse']);
-		$record['objektadresse_freigeben'] = '1';
-		$expectedResult['objektadresse_freigeben'] = '1';
+		$record['objektadresse_freigeben_api'] = '1';
+		$expectedResult['objektadresse_freigeben_api'] = '1';
 		$this->assertEquals($expectedResult, $pViewFieldModifier->reduceRecord($record));
 	}
 
