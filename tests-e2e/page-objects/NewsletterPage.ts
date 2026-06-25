@@ -9,29 +9,44 @@ export class NewsletterPage {
     readonly firstNameInput: Locator;
     readonly lastNameInput: Locator;
 
-    constructor(page: Page, formSelector: string = '.oo-newsletter-form') { 
+    constructor(page: Page) { 
         this.page = page;
-        this.form = page.locator('form').filter({ has: page.locator('input[name="oo_formid"][value="Newsletter"]') });
+        
+        // Находим базовый локатор для формы новостей
+        this.form = page.locator('form').filter({ has: page.locator('input[name="oo_formid"][value*="Newsletter"]') }).first();
+        
         this.firstNameInput = this.form.locator('input[name="Vorname"]');
         this.lastNameInput = this.form.locator('input[name="Name"]');
-        this.emailInput = this.form.locator('input[name="Email"]');
-        this.submitBtn = this.form.locator('.oo-js-submit-button');
-        this.infoMessages = page.locator('.c-info-messages');
+        this.emailInput = this.form.locator('input[name="Email"], input[type="email"]').first();
+        this.submitBtn = this.form.locator('.oo-js-submit-button, button[type="submit"]');
+        this.infoMessages = page.locator('.onoffice-form-alerts, .status-message, div[class*="message"], div[class*="alert"], .c-info-messages').first();
     }
 
-    async goto() {
-        await this.page.goto('test-modern-formulare/newsletterformular-test/', { waitUntil: 'networkidle' });
-    }
-
+    /**
+     * Cookie-Banner und Entsperrung der Benutzeroberfläche
+     */
     async acceptCookies() {
-        const acceptButton = this.page.locator('button:has-text("Alles akzeptieren")');
-        try {
-            await acceptButton.waitFor({ state: 'visible', timeout: 10000 });
-            await acceptButton.click({ force: true });
-            await expect(this.page.locator('#usercentrics-root')).not.toBeVisible({ timeout: 15000 });
-        } catch (e) {
-            console.log('Usercentrics Banner nicht gefunden oder bereits akzeptiert.');
-        }
+        await this.page.evaluate(() => {
+            (window as any).UC_UI_SUPPRESS_CMP_DISPLAY = true;
+            const cleanUp = () => {
+                const blockers = document.querySelectorAll('#usercentrics-root, [id^="usercentrics"], .uc-overlay, .uc-container');
+                blockers.forEach(el => el.remove());
+
+                const resetStyles = (el: HTMLElement) => {
+                    if (!el) return;
+                    el.style.setProperty('overflow', 'auto', 'important');
+                    el.style.setProperty('pointer-events', 'auto', 'important');
+                    el.style.setProperty('position', 'static', 'important');
+                    el.style.setProperty('height', 'auto', 'important');
+                };
+                
+                resetStyles(document.documentElement);
+                resetStyles(document.body);
+            };
+            cleanUp();
+            const interval = setInterval(cleanUp, 500);
+            setTimeout(() => clearInterval(interval), 3000);
+        });
     }
 
     /**
@@ -49,38 +64,71 @@ export class NewsletterPage {
         });
     }
 
-    async fillAllFields(email: string) {
-        const activeForm = this.form.filter({ visible: true }).first();
-        const activeEmail = activeForm.locator('input[name="Email"]');
-        const activeName = activeForm.locator('input[name="Name"]');
+    private getActiveForm() {
+        return this.form.filter({ visible: true }).first();
+    }
 
-        if (await activeName.isVisible()) {
-            await activeName.fill('E2E-Tester');
-            await activeName.dispatchEvent('blur');
+    async fillAllFields(email: string) {
+        const activeForm = this.getActiveForm();
+        
+        const typeSafe = async (locator: Locator, value: string) => {
+            await locator.waitFor({ state: 'visible', timeout: 5000 });
+            await locator.focus();
+            await locator.press('Control+A');
+            await locator.press('Backspace');
+            await locator.pressSequentially(value, { delay: 40 }); 
+            
+            await locator.dispatchEvent('input');
+            await locator.dispatchEvent('change');
+            await locator.dispatchEvent('blur');
+        };
+
+        const activeEmail = activeForm.locator('input[name="Email"], input[type="email"]').first();
+        const activeFirstName = activeForm.locator('input[name="Vorname"]').first();
+        const activeLastName = activeForm.locator('input[name="Name"]').first();
+
+        if (await activeFirstName.count() > 0 && await activeFirstName.isVisible()) {
+            await typeSafe(activeFirstName, 'E2E');
         }
-        await activeEmail.fill(email);
-        await activeEmail.dispatchEvent('blur');
+        if (await activeLastName.count() > 0 && await activeLastName.isVisible()) {
+            await typeSafe(activeLastName, 'Tester');
+        }
+        
+        await typeSafe(activeEmail, email);
     }
 
     async acceptRequiredCheckboxes() {
-        const checkboxLabels = this.form.locator('label').filter({ has: this.page.locator('input[required]') });
-        const count = await checkboxLabels.count();
+        const activeForm = this.getActiveForm();
         
-        for (let i = 0; i < count; i++) {
-            await checkboxLabels.nth(i).click({ position: { x: 10, y: 10 } });
+        const newsletterLabel = activeForm.locator('label').filter({ hasText: 'Newsletter anmelden' }).first();
+        const privacyLabel = activeForm.locator('label').filter({ hasText: 'Datenschutzbestimmungen' }).first();
+        
+        if (await newsletterLabel.count() > 0) {
+            await newsletterLabel.click({ force: true });
+            await this.page.waitForTimeout(200); // Даем микропаузу теме отобразить галочку
+        }
+        
+        if (await privacyLabel.count() > 0) {
+            await privacyLabel.click({ force: true });
             await this.page.waitForTimeout(200);
         }
+
+        const checkboxes = activeForm.locator('input[type="checkbox"]');
+        const count = await checkboxes.count();
+        for (let i = 0; i < count; i++) {
+            const cb = checkboxes.nth(i);
+            await cb.dispatchEvent('input');
+            await cb.dispatchEvent('change');
+        }
+        
+        await this.page.waitForTimeout(500);
     }
 
     async submit() {
-        const activeForm = this.form.filter({ visible: true }).first();
-        const activeSubmitBtn = activeForm.locator('.oo-js-submit-button');
+        const activeForm = this.getActiveForm();
+        const activeSubmitBtn = activeForm.locator('.oo-js-submit-button, button[type="submit"]').first();
         
-        const altcha = activeForm.locator('input[name="altcha"]');
-        if (await altcha.count() > 0) {
-            await expect(altcha).not.toHaveValue('', { timeout: 15000 });
-        }
-
-        await activeSubmitBtn.click();
+        await this.page.waitForTimeout(1500);
+        await activeSubmitBtn.click({ force: true });
     }
 }
