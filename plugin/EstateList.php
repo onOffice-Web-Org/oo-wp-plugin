@@ -380,8 +380,12 @@ class EstateList
 	 */
 	private function loadRecordsOrderEstatesByTags(int $currentPage)
 	{
-		$this->_records = $this->fetchDataForOrderEstatesByTags($currentPage, $this->_formatOutput);
+		// Fetch raw first, formatted second: $this->_pApiClientAction must point to the formatted
+		// request last so that getEstateOverallCount() reads a correctly typed cntabsolute integer.
+		// The pre-warmed cache stores the raw payload as a merged multi-page array where
+		// cntabsolute can be an array; the formatted cache entry has it recalculated as an int.
 		$formattedRecordsRaw = $this->fetchDataForOrderEstatesByTags($currentPage, false);
+		$this->_records = $this->fetchDataForOrderEstatesByTags($currentPage, $this->_formatOutput);
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
 		$startPosition = ($currentPage - 1) * $numRecordsPerPage;

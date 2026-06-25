@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\WPlugin\Cache\CacheHandler;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
@@ -136,6 +137,15 @@ abstract class AdminPageEstateListSettingsBase
 		}
 		if ($result) {
 			$this->saveCustomLabels($recordId, $row, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS);
+			// Invalidate the API cache so the frontend immediately reflects the updated list
+			// configuration (e.g. a new marketing-status sort sequence). The next cron run of
+			// oo_cache_renew will rebuild the cache in the background.
+			try {
+				$this->getContainer()->get(CacheHandler::class)->clear();
+				wp_schedule_single_event(time(), 'oo_cache_renew');
+			} catch (\Exception $e) {
+				// Non-critical: cache will expire naturally or be rebuilt by the cron schedule.
+			}
 		}
 		$pResult->result = $result;
 		$pResult->record_id = $recordId;
