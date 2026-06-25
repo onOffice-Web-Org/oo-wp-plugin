@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Controller;
 
 use DateTime;
+use onOffice\WPlugin\Field\PriceFormatService;
 use onOffice\WPlugin\Gui\DateTimeFormatter;
 use onOffice\WPlugin\Types\FieldTypes;
 
@@ -112,13 +113,10 @@ class InputVariableReaderFormatter
 	 */
 	public function formatFloatValue(float $value): string
 	{
-		$onofficeSettingsThousandSeparator = get_option('onoffice-settings-thousand-separator');
+		$pPriceFormatService = new PriceFormatService();
+		$decimalSep = $pPriceFormatService->getDecimalSeparator();
 
-		if ($onofficeSettingsThousandSeparator === self::COMMA_THOUSAND_SEPARATOR || $onofficeSettingsThousandSeparator === self::DOT_THOUSAND_SEPARATOR) {
-			return $value;
-		}
-
-		return number_format($value, 2, '.', '');
+		return number_format($value, 2, $decimalSep, '');
 	}
 
 	/**

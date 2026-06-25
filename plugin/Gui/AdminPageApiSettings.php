@@ -22,8 +22,8 @@
 namespace onOffice\WPlugin\Gui;
 
 use DI\ContainerBuilder;
-use onOffice\WPlugin\Controller\InputVariableReaderFormatter;
 use onOffice\WPlugin\Favorites;
+use onOffice\WPlugin\Field\PriceFormatService;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
@@ -744,26 +744,49 @@ class AdminPageApiSettings
 	 */
 	private function addFormModelSeparatorFormatSettings(string $pageSlug)
 	{
-		$labelSeparatorFormatSettings = __('Separator Format Settings', 'onoffice-for-wp-websites');
-		$labelSeparatorCharacterFormat = __('Thousand Separator Format', 'onoffice-for-wp-websites');
+		$pService = new PriceFormatService();
 
-		$pInputModelSeparatorCharacterFormat = new InputModelOption('onoffice-settings', 'thousand-separator',
-			$labelSeparatorCharacterFormat, InputModelOption::SETTING_TYPE_STRING);
-		$pInputModelSeparatorCharacterFormat->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-		$selectedThousandValue = get_option($pInputModelSeparatorCharacterFormat->getIdentifier(), '.');
-		$pInputModelSeparatorCharacterFormat->setValue($selectedThousandValue);
-		$pInputModelSeparatorCharacterFormat->setValuesAvailable([
-			'' => __('Please choose', 'onoffice-for-wp-websites'),
-			InputVariableReaderFormatter::DOT_THOUSAND_SEPARATOR => __('Dot (ex: 123.456.789)', 'onoffice-for-wp-websites'),
-			InputVariableReaderFormatter::COMMA_THOUSAND_SEPARATOR => __('Comma (ex: 123,456,789)', 'onoffice-for-wp-websites'),
+		$labelSection = __('Price and currency format', 'onoffice-for-wp-websites');
+
+		$labelThousandSeparator = __('Thousand Separator', 'onoffice-for-wp-websites');
+		$pInputThousand = new InputModelOption('onoffice-settings', 'thousand-separator-custom',
+			$labelThousandSeparator, InputModelOption::SETTING_TYPE_STRING);
+		$pInputThousand->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputThousand->setValue(get_option($pInputThousand->getIdentifier(), '.'));
+		$pInputThousand->setValuesAvailable([
+			'.' => __('Dot (.)', 'onoffice-for-wp-websites'),
+			',' => __('Comma (,)', 'onoffice-for-wp-websites'),
+			"'" => __("Apostrophe (')", 'onoffice-for-wp-websites'),
+		]);
+
+		$labelDecimalSeparator = __('Decimal Separator', 'onoffice-for-wp-websites');
+		$pInputDecimal = new InputModelOption('onoffice-settings', 'decimal-separator',
+			$labelDecimalSeparator, InputModelOption::SETTING_TYPE_STRING);
+		$pInputDecimal->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputDecimal->setValue(get_option($pInputDecimal->getIdentifier(), ','));
+		$pInputDecimal->setValuesAvailable([
+			',' => __('Comma (,)', 'onoffice-for-wp-websites'),
+			'.' => __('Dot (.)', 'onoffice-for-wp-websites'),
+		]);
+
+		$labelCurrencyPosition = __('Currency Position', 'onoffice-for-wp-websites');
+		$pInputCurrencyPos = new InputModelOption('onoffice-settings', 'currency-position',
+			$labelCurrencyPosition, InputModelOption::SETTING_TYPE_STRING);
+		$pInputCurrencyPos->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputCurrencyPos->setValue(get_option($pInputCurrencyPos->getIdentifier(), 'after'));
+		$pInputCurrencyPos->setValuesAvailable([
+			'after' => __('After the price', 'onoffice-for-wp-websites'),
+			'before' => __('Before the price', 'onoffice-for-wp-websites'),
 		]);
 
 		$pFormModel = new FormModel();
-		$pFormModel->addInputModel($pInputModelSeparatorCharacterFormat);
-		$pFormModel->setGroupSlug('onoffice-thousand-separator');
+		$pFormModel->addInputModel($pInputThousand);
+		$pFormModel->addInputModel($pInputDecimal);
+		$pFormModel->addInputModel($pInputCurrencyPos);
+		$pFormModel->setGroupSlug('onoffice-price-format');
 		$pFormModel->setPageSlug($pageSlug);
-		$pFormModel->setLabel($labelSeparatorFormatSettings);
-	
+		$pFormModel->setLabel($labelSection);
+
 		$this->addFormModel($pFormModel);
 	}
 }
