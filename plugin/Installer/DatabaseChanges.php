@@ -46,7 +46,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 64;
+	const MAX_VERSION = 65;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -183,6 +183,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			case $dbversion <= 63:
 				$this->addDisplayUnitAreaToForms();
 			case $dbversion <= 64:
+				$this->setCaptchaDefaultTrue();
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
@@ -312,7 +313,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`limitresults` int,
 			`checkduplicates` tinyint(1) NOT NULL DEFAULT '0',
 			`pages` int NOT NULL DEFAULT '0',
-			`captcha` tinyint(1) NOT NULL DEFAULT '0',
+			`captcha` tinyint(1) NOT NULL DEFAULT '1',
 			`newsletter` tinyint(1) NOT NULL DEFAULT '0',
 			`country_active` tinyint(1) NOT NULL DEFAULT '1',
 			`zip_active` tinyint(1) NOT NULL DEFAULT '1',
@@ -1326,12 +1327,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
-
-	/**
-	 *
-	 *
-	 */
-
 	private function addDisplayUnitAreaToForms(): void
 	{
 		$prefix = $this->getPrefix();
@@ -1340,6 +1335,21 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if (empty($columnExists)) {
 			$sql = "ALTER TABLE $tableName ADD COLUMN display_unit_area tinyint(1) NOT NULL DEFAULT '0'";
 			$this->_pWPDB->query($sql);
+		}
+	}
+
+	private function setCaptchaDefaultTrue(): void
+	{
+		// check if onOffice theme
+		if (\OnOffice\WPlugin\Form\AltchaHandler::isSupportedTheme()) {
+			$prefix = $this->getPrefix();
+			$tableName = $prefix . 'oo_plugin_forms';
+
+			$this->_pWPDB->update(
+				table: $tableName,
+				data: ['captcha' => 1],
+				where: ['captcha' => 0],
+			);
 		}
 	}
 }
