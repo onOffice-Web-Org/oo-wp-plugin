@@ -75,11 +75,11 @@ jobs:
           fi
 
           merge_failed=false
+          NO_FF=""
           if [ "${TARGET_BRANCH}" = "release" ]; then
-            git merge --no-edit --no-ff -X theirs "origin/${SOURCE_BRANCH}" || merge_failed=true
-          else
-            git merge --no-edit -X theirs "origin/${SOURCE_BRANCH}" || merge_failed=true
+            NO_FF="--no-ff"
           fi
+          git merge --no-edit ${NO_FF} -X theirs "origin/${SOURCE_BRANCH}" || merge_failed=true
 
           if git diff --name-only --diff-filter=U | grep -q .; then
             while IFS= read -r path; do
