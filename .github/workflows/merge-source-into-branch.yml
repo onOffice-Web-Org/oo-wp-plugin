@@ -3,6 +3,9 @@ name: Merge source into release branch
 on:
   workflow_call:
     inputs:
+      source-branch:
+        required: false
+        type: string
       target-branch:
         required: true
         type: string
@@ -24,7 +27,7 @@ jobs:
 
     env:
       TARGET_BRANCH: ${{ inputs.target-branch }}
-      SOURCE_BRANCH: ${{ github.ref_name }}
+      SOURCE_BRANCH: ${{ inputs.source-branch || github.ref_name }}
       AUTO_BUILD: ${{ inputs.auto_build }}
 
     steps:
@@ -41,7 +44,7 @@ jobs:
       - name: Checkout source branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ inputs.source-branch || github.ref_name }}
           fetch-depth: 0
           fetch-tags: true
           token: ${{ steps.app-token.outputs.token }}
@@ -51,17 +54,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Validate stable release source
-        if: inputs.target-branch == 'release'
-        run: |
-          if [ "${SOURCE_BRANCH}" != "${{ github.event.repository.default_branch }}" ]; then
-            echo "::error::Stable releases must be created from ${{ github.event.repository.default_branch }}, not ${SOURCE_BRANCH}."
-            exit 1
-          fi
-
       - name: Merge source into target branch
         run: |
           set -e
+          if [ -z "${SOURCE_BRANCH}" ] || [ -z "${TARGET_BRANCH}" ]; then
+            echo "Source and target branch must be set."
+            exit 1
+          fi
+          if [ "${SOURCE_BRANCH}" = "${TARGET_BRANCH}" ]; then
+            echo "Source and target branch must be different."
+            exit 1
+          fi
           git fetch origin "${SOURCE_BRANCH}" --tags
 
           if git ls-remote --exit-code --heads origin "${TARGET_BRANCH}" > /dev/null 2>&1; then
@@ -84,6 +87,6 @@ jobs:
         run: |
           echo "### Merged into \`${{ inputs.target-branch }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "Source: \`${{ github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Source: \`${SOURCE_BRANCH}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "**release.yml** runs on push to \`${{ inputs.target-branch }}\`." >> "$GITHUB_STEP_SUMMARY"
