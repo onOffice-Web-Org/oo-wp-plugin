@@ -74,7 +74,26 @@ jobs:
             git checkout -B "${TARGET_BRANCH}" "origin/${SOURCE_BRANCH}"
           fi
 
-          git merge --no-ff --no-edit -X theirs "origin/${SOURCE_BRANCH}"
+          merge_failed=false
+          if [ "${TARGET_BRANCH}" = "release" ]; then
+            git merge --no-edit --no-ff -X theirs "origin/${SOURCE_BRANCH}" || merge_failed=true
+          else
+            git merge --no-edit -X theirs "origin/${SOURCE_BRANCH}" || merge_failed=true
+          fi
+
+          if git diff --name-only --diff-filter=U | grep -q .; then
+            while IFS= read -r path; do
+              if git cat-file -e "origin/${SOURCE_BRANCH}:${path}" 2>/dev/null; then
+                git checkout "origin/${SOURCE_BRANCH}" -- "${path}"
+                git add "${path}"
+              else
+                git rm -f -- "${path}"
+              fi
+            done < <(git diff --name-only --diff-filter=U)
+            git commit --no-edit
+          elif [ "${merge_failed}" = "true" ]; then
+            exit 1
+          fi
 
           # release.yml reads the latest commit trailer on prerelease pushes and forwards it to the beta deploy job.
           if [ "${TARGET_BRANCH}" = "prerelease" ] && [ "${AUTO_BUILD}" = "true" ]; then
