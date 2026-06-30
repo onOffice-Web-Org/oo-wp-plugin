@@ -6,10 +6,10 @@ Releases are automatically created using semantic versioning when code is merged
 
 **Process:**
 1. Merge your changes to `master` using [conventional commit](#commit-messages) prefixes in PR titles.
-2. Run the **🧪 Create prerelease** action from `master`. It merges `master` into the `prerelease` branch and triggers semantic-release, which creates a GitHub Pre-Release and attaches the built plugin ZIP (`onoffice-for-wp-websites.zip`).
+2. Run the **🧪 Create prerelease** action. By default it merges `master` into the `prerelease` branch and triggers semantic-release, which creates a GitHub Pre-Release and attaches the built plugin ZIP (`onoffice-for-wp-websites.zip`).
    - **Auto Build option:** When triggering the prerelease action, you can enable the `Beta-Image nach Deploy automatisch bauen?` checkbox. This is forwarded for future beta hosting deploys.
-3. Test the prerelease. If something is wrong, fix it in a feature branch, merge to `master`, and create a new prerelease.
-4. Run the **🚀 Create release** action from `master`. It merges `master` into the `release` branch and triggers semantic-release to create the final release.
+3. Test the prerelease. If something is wrong, fix it in a feature branch, merge to the selected source branch, and create a new prerelease.
+4. Run the **🚀 Create release** action. By default it merges `prerelease` into the `release` branch; `master` or another source branch can still be selected. It triggers semantic-release to create the final release.
 5. On published final release, the update server deploy runs automatically and distributes `release.zip`.
 
 **What happens automatically on release:**
@@ -17,6 +17,8 @@ Releases are automatically created using semantic versioning when code is merged
 - On final releases only: the `== Changelog ==` section in `readme.txt` is updated from the generated release notes
 - Plugin ZIP is built and attached to the GitHub Release
 - Version changes are committed back to the release branch and synced to `master`
+
+The release actions are merge helpers only. Manual pushes or merges into `prerelease` or `release` also trigger the release workflow.
 
 **Changelog:** Do not edit `readme.txt` changelog manually. Write clear conventional commit messages — they become both the GitHub release notes and the WordPress changelog. Prereleases do not update `readme.txt` changelog; only final releases do.
 
