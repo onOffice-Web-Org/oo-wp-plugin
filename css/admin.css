@@ -750,6 +750,7 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .oo-search-field {
 	width: 100%;
 	float: left;
+	box-sizing: border-box;
 }
 
 .oo-search-field .input-search{
