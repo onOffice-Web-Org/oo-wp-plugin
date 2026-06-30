@@ -8,6 +8,12 @@ DB_NAME="${DB_NAME:-wordpress_test}"
 DB_USER="${DB_USER:-root}"
 DB_PASS="${DB_PASS:-testMySQLPassword123}"
 
+# Wait for database to be ready
+bash scripts/wait-for-db.sh
+
+# Reset test database to ensure clean state
+bash scripts/reset-test-db.sh
+
 if [ ! -f "$WP_TESTS_DIR/includes/functions.php" ]; then
 	echo "Installing WordPress test suite..."
 	export WP_TESTS_DIR WP_CORE_DIR
