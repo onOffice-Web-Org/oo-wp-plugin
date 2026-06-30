@@ -193,6 +193,18 @@ $pDI->get(ScriptLoaderRegistrator::class)->generate();
 
 add_action('plugins_loaded', function() use ($pDI) {
 	$pDI->get(DatabaseChangesInterface::class)->install();
+
+	// After a plugin update the raw list-cache entries may still contain the old
+	// field set (e.g. missing vermarktungsart). Clear once per version bump so
+	// the next cron run of oo_cache_renew rebuilds a consistent cache.
+	if (get_option('onoffice-plugin-version-stored') !== ONOFFICE_PLUGIN_VERSION) {
+		try {
+			$pDI->get(CacheHandler::class)->clear();
+		} catch (\Exception $e) {
+			// Non-critical: cache will rebuild on the next cron run.
+		}
+		update_option('onoffice-plugin-version-stored', ONOFFICE_PLUGIN_VERSION);
+	}
 });
 
 add_action('init', function() use ($pDI) {
