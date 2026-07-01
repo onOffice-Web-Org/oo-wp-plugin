@@ -635,7 +635,7 @@ msgstr "Beispielimmobilie"
 msgid "Existing data record:"
 msgstr "Bestehender Datensatz:"
 
-msgid "Exklusive"
+msgid "Exclusive"
 msgstr "Exklusive"
 
 msgid "Expression used"

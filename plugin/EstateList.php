@@ -380,8 +380,12 @@ class EstateList
 	 */
 	private function loadRecordsOrderEstatesByTags(int $currentPage)
 	{
-		$this->_records = $this->fetchDataForOrderEstatesByTags($currentPage, $this->_formatOutput);
+		// Fetch raw first, formatted second: $this->_pApiClientAction must point to the formatted
+		// request last so that getEstateOverallCount() reads a correctly typed cntabsolute integer.
+		// The pre-warmed cache stores the raw payload as a merged multi-page array where
+		// cntabsolute can be an array; the formatted cache entry has it recalculated as an int.
 		$formattedRecordsRaw = $this->fetchDataForOrderEstatesByTags($currentPage, false);
+		$this->_records = $this->fetchDataForOrderEstatesByTags($currentPage, $this->_formatOutput);
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
 		$startPosition = ($currentPage - 1) * $numRecordsPerPage;
@@ -614,8 +618,17 @@ class EstateList
 		);
 
 		$aggregatedData = [];
+		$seenIds = [];
 		$totalFetched = 0;
 		$this->_currentEstatePage = $currentPage;
+
+		// Route the marketing-status sequence sort through the list cache, exactly like the
+		// standard list path (getEstateParameters). When the list has been pre-warmed, the SDK
+		// serves the full record set from cache instead of hitting the API page by page.
+		$useListCache = $pListView instanceof DataListView && empty($this->_filterAddressId);
+		$paramsListCache = $useListCache
+			? $this->getEstateListParametersForCache($formatOutput, $language)
+			: null;
 
 		do {
 			$offset = $totalFetched;
@@ -629,6 +642,10 @@ class EstateList
 				'formatoutput' => $formatOutput,
 				'addMainLangId' => true,
 			];
+			if ($useListCache) {
+				$requestParams = ['listname' => $this->_pDataView->getName()] + $requestParams;
+				$requestParams['params_list_cache'] = $paramsListCache;
+			}
 			if ($formatOutput !== true) {
 				$requestParams['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 				$requestParams['data'][] = 'vermarktungsart';
@@ -658,9 +675,25 @@ class EstateList
 			$this->_pApiClientAction->addRequestToQueue()->sendRequests();
 			$result = $this->_pApiClientAction->getResultRecords();
 
-			$aggregatedData = array_merge($aggregatedData, $result);
-			$totalFetched += count($result);
-		} while (count($result) == $numRecordsPerPage);
+			// Deduplicate by estate id: a cache hit returns the full record set on every
+			// iteration (the cache ignores listoffset for the raw response), so without this
+			// the loop would both duplicate records and never terminate for lists whose size
+			// is an exact multiple of the page size.
+			$newRecords = [];
+			foreach ($result as $record) {
+				$id = $record['id'] ?? null;
+				if ($id !== null && isset($seenIds[$id])) {
+					continue;
+				}
+				if ($id !== null) {
+					$seenIds[$id] = true;
+				}
+				$newRecords[] = $record;
+			}
+
+			$aggregatedData = array_merge($aggregatedData, $newRecords);
+			$totalFetched += count($newRecords);
+		} while (count($result) == $numRecordsPerPage && count($newRecords) > 0);
 
 		if ($formatOutput !== true) {
 			usort($aggregatedData, [$this, 'sortMarkedProperties']);
@@ -758,7 +791,10 @@ class EstateList
 		if($formatOutput === false) {
 			$fields = array_merge(
 				$fields,
-				$this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio()
+				$this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio(),
+				// Needed so the marketing-status sequence sort (SHOW_MARKED_PROPERTIES_SORT)
+				// can compute the marketing tag of each estate directly from the cache.
+				['vermarktungsart']
 			);
 		}
 

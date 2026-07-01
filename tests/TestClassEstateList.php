@@ -1325,6 +1325,51 @@ class TestClassEstateList
 	}
 
 	/**
+	 * Verify that fetchDataForOrderEstatesByTags routes through the list cache when
+	 * SHOW_MARKED_PROPERTIES_SORT is active: the outgoing API request must carry
+	 * 'listname' (so DBCache::getParametersHashed builds the listname-based key) and
+	 * 'vermarktungsart' must be in the requested fields (for tag-priority computation).
+	 */
+	public function testFetchDataForOrderEstatesByTagsUsesListCacheRouting()
+	{
+		$pDataView = $this->getDataView();
+		$pDataView->setSortBySetting(DataListView::SHOW_MARKED_PROPERTIES_SORT);
+
+		$pEstateList = new EstateList($pDataView, $this->_pEnvironment);
+
+		$capturedParamSets = [];
+		$pMockAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['setParameters', 'addRequestToQueue', 'sendRequests', 'getResultRecords'])
+			->getMock();
+		$pMockAction->method('setParameters')
+			->willReturnCallback(function (array $params) use (&$capturedParamSets, $pMockAction) {
+				$capturedParamSets[] = $params;
+			});
+		$pMockAction->method('addRequestToQueue')->willReturnSelf();
+		$pMockAction->method('getResultRecords')->willReturn([]);
+
+		$refProp = new \ReflectionProperty(EstateList::class, '_pApiClientAction');
+		$refProp->setAccessible(true);
+		$refProp->setValue($pEstateList, $pMockAction);
+
+		$fetchData = Closure::bind(function (int $page, bool $fmt) {
+			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
+		}, $pEstateList, EstateList::class);
+
+		$fetchData(1, false);
+
+		$this->assertNotEmpty($capturedParamSets, 'setParameters was never called');
+		$rawParams = $capturedParamSets[0];
+
+		$this->assertArrayHasKey('listname', $rawParams,
+			'fetchDataForOrderEstatesByTags must include listname so the DB cache key matches the pre-warmed entry');
+		$this->assertSame($pDataView->getName(), $rawParams['listname']);
+		$this->assertContains('vermarktungsart', $rawParams['data'],
+			'vermarktungsart must be fetched so getInfoTagOfProperty can determine kauf/miete for sold/rented estates');
+	}
+
+	/**
 	 *
 	 * @return FieldsCollection
 	 *
