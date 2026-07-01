@@ -51,7 +51,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 			'virtualAddress',
 			'virtualLatitude',
 			'virtualLongitude',
-			'objektadresse_freigeben',
+			'objektadresse_freigeben_api',
 			'strasse',
 		];
 
@@ -78,7 +78,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 			$record['hausnummer'] = $record['virtualHouseNumber'] ?? '';
 			$record['laengengrad'] = $record['virtualLongitude'] ?? .0;
 			$record['breitengrad'] = $record['virtualLatitude'] ?? .0;
-		} elseif (0 == $record['objektadresse_freigeben'] ||
+		} elseif (0 == $record['objektadresse_freigeben_api'] ||
 			__String::getNew($record['strasse'] ?? '')->isEmpty()) {
 			$record['laengengrad'] = 0;
 			$record['breitengrad'] = 0;

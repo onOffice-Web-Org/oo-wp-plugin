@@ -1236,6 +1236,94 @@ class TestClassEstateList
 		$this->assertContains('regionaler_zusatz', $params['data']);
 	}
 
+	public function testGetEstateParametersUsesPageDependentListoffset()
+	{
+		$getEstateParameters = Closure::bind(function (int $currentPage, bool $formatOutput) {
+			return $this->getEstateParameters($currentPage, $formatOutput);
+		}, $this->_pEstateList, EstateList::class);
+
+		$pageOneParams = $getEstateParameters(1, true);
+		$pageTwoParams = $getEstateParameters(2, true);
+
+		$this->assertArrayHasKey('listoffset', $pageOneParams);
+		$this->assertArrayHasKey('listoffset', $pageTwoParams);
+		$this->assertIsInt($pageOneParams['listoffset']);
+		$this->assertIsInt($pageTwoParams['listoffset']);
+		$this->assertSame(0, $pageOneParams['listoffset']);
+		$this->assertSame(5, $pageTwoParams['listoffset']);
+		$this->assertNotSame($pageOneParams['listoffset'], $pageTwoParams['listoffset']);
+	}
+
+	/**
+	 * Regression test for customers with > 500 estates: when recordsPerPage was
+	 * configured larger than the default, every page incorrectly returned the
+	 * data of the first page because listoffset was not scaled by the
+	 * configured page size.
+	 */
+	public function testGetEstateParametersScalesListoffsetByRecordsPerPage()
+	{
+		$this->_pEstateList->getDataView()->setRecordsPerPage(500);
+
+		$getEstateParameters = Closure::bind(function (int $currentPage, bool $formatOutput) {
+			return $this->getEstateParameters($currentPage, $formatOutput);
+		}, $this->_pEstateList, EstateList::class);
+
+		$pageOne = $getEstateParameters(1, true);
+		$pageTwo = $getEstateParameters(2, true);
+		$pageThree = $getEstateParameters(3, true);
+
+		$this->assertSame(500, $pageOne['listlimit']);
+		$this->assertSame(500, $pageTwo['listlimit']);
+		$this->assertSame(500, $pageThree['listlimit']);
+		$this->assertSame(0, $pageOne['listoffset']);
+		$this->assertSame(500, $pageTwo['listoffset']);
+		$this->assertSame(1000, $pageThree['listoffset']);
+	}
+
+	/**
+	 * Regression test: listoffset and listlimit must always be scalar ints.
+	 * Customers reported critical errors where these fields were arrays
+	 * instead of the expected primitive type, breaking the API request.
+	 */
+	public function testGetEstateParametersListoffsetAndListlimitAreScalarInts()
+	{
+		$getEstateParameters = Closure::bind(function (int $currentPage, bool $formatOutput) {
+			return $this->getEstateParameters($currentPage, $formatOutput);
+		}, $this->_pEstateList, EstateList::class);
+
+		foreach ([1, 2, 3, 10, 100] as $page) {
+			$params = $getEstateParameters($page, true);
+			$this->assertArrayHasKey('listoffset', $params);
+			$this->assertArrayHasKey('listlimit', $params);
+			$this->assertIsInt($params['listoffset'], "listoffset must be int for page {$page}");
+			$this->assertIsInt($params['listlimit'], "listlimit must be int for page {$page}");
+			$this->assertGreaterThanOrEqual(0, $params['listoffset']);
+			$this->assertGreaterThan(0, $params['listlimit']);
+		}
+	}
+
+	/**
+	 * Ensure listoffset progresses monotonically across many pages with the
+	 * formula (currentPage - 1) * recordsPerPage and never collapses to 0.
+	 */
+	public function testGetEstateParametersListoffsetIsMonotonicAcrossPages()
+	{
+		$this->_pEstateList->getDataView()->setRecordsPerPage(25);
+
+		$getEstateParameters = Closure::bind(function (int $currentPage, bool $formatOutput) {
+			return $this->getEstateParameters($currentPage, $formatOutput);
+		}, $this->_pEstateList, EstateList::class);
+
+		$previousOffset = -1;
+		for ($page = 1; $page <= 20; $page++) {
+			$params = $getEstateParameters($page, true);
+			$expected = ($page - 1) * 25;
+			$this->assertSame($expected, $params['listoffset'], "Wrong listoffset for page {$page}");
+			$this->assertGreaterThan($previousOffset, $params['listoffset']);
+			$previousOffset = $params['listoffset'];
+		}
+	}
+
 	/**
 	 *
 	 * @return FieldsCollection
@@ -1256,7 +1344,7 @@ class TestClassEstateList
 			'pacht',
 			'kaltmiete',
 			'virtualAddress',
-			'objektadresse_freigeben',
+			'objektadresse_freigeben_api',
 			'reserviert',
 			'verkauft',
 			'vermarktungsart',
