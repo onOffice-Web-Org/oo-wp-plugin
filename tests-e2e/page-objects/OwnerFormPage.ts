@@ -3,95 +3,118 @@ import { Page, Locator, expect } from '@playwright/test';
 export class OwnerFormPage {
     readonly page: Page;
     readonly form: Locator;
-    readonly plzInput: Locator;
-    readonly areaInput: Locator;
-    readonly firstNameInput: Locator;
-    readonly lastNameInput: Locator;
-    readonly emailInput: Locator;
-    readonly phoneInput: Locator;
-    readonly gdprCheckbox: Locator;
     readonly submitBtn: Locator;
     readonly infoMessages: Locator;
     readonly altchaVerified: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        this.form = page.locator('#onoffice-form-1');
+        this.form = page.locator('form, #onoffice-form-1').filter({ has: page.locator('input[name="oo_formid"]') }).first();
         
-        this.plzInput = this.form.getByPlaceholder('Plz', { exact: false });
-        this.areaInput = this.form.locator('input[name*="wohnflaeche"], input[name*="Wohnfläche"]').first();
+        this.submitBtn = this.form.getByRole('button', { name: /Absenden/i }).or(this.form.locator('.oo-js-submit-button, button[type="submit"]'));
+        this.infoMessages = page.locator('.onoffice-form-alerts, .status-message, div[class*="message"], div[class*="alert"], .c-info-messages').first();
         
-        this.firstNameInput = this.form.getByPlaceholder('Vorname');
-        this.lastNameInput = this.form.locator('input[name="Name"]');
-        this.emailInput = this.form.locator('input[name="Email"]');
-        this.phoneInput = this.form.locator('input[name*="Telefon"]');
-        
-        this.gdprCheckbox = this.form.getByLabel(/Datenschutzbestimmungen/i);
-        this.submitBtn = this.form.locator('.oo-js-submit-button');
-        this.infoMessages = page.locator('.c-info-messages');
         this.altchaVerified = this.form.locator('altcha-widget [state="verified"], .altcha-verified');
     }
 
+    private async typeSafe(locator: Locator, value: string) {
+        const target = locator.filter({ visible: true }).first();
+        await target.waitFor({ state: 'visible', timeout: 5000 });
+        await target.focus();
+        await target.press('Control+A');
+        await target.press('Backspace');
+        await target.pressSequentially(value, { delay: 30 });
+        
+        await target.dispatchEvent('input');
+        await target.dispatchEvent('change');
+        await target.dispatchEvent('blur');
+    }
+
     async goto() {
-        await this.page.goto('test-modern-formulare/eigentuemerformular-test/', { waitUntil: 'networkidle' });
+        await this.page.goto('/e2e-test-formulare/eigentuemerformular/', { waitUntil: 'networkidle' });
     }
 
     async acceptCookies() {
-        const acceptButton = this.page.locator('button:has-text("Alles akzeptieren")');
-        try {
-            await acceptButton.waitFor({ state: 'visible', timeout: 8000 });
-            await acceptButton.click({ force: true });
-            await expect(this.page.locator('#usercentrics-root')).not.toBeVisible();
-        } catch (e) {
-            console.log('Usercentrics не найден.');
-        }
+        await this.page.evaluate(() => {
+            (window as any).UC_UI_SUPPRESS_CMP_DISPLAY = true;
+            const cleanUp = () => {
+                const blockers = document.querySelectorAll('#usercentrics-root, [id^="usercentrics"], .uc-overlay, .uc-container');
+                blockers.forEach(el => el.remove());
+                const resetStyles = (el: HTMLElement) => {
+                    if (!el) return;
+                    el.style.setProperty('overflow', 'auto', 'important');
+                    el.style.setProperty('pointer-events', 'auto', 'important');
+                };
+                resetStyles(document.documentElement);
+                resetStyles(document.body);
+            };
+            cleanUp();
+            const interval = setInterval(cleanUp, 500);
+            setTimeout(() => clearInterval(interval), 2000);
+        });
     }
 
     async hideOverlays() {
         await this.page.addStyleTag({
             content: `
-                #usercentrics-root, .uc-container, [id^="usercentrics"],
+                #wpadminbar, #usercentrics-root, .uc-container, [id^="usercentrics"],
                 iframe[title*="chat"], .superchat-widget, .c-header.--fixed { 
                     display: none !important; 
+                    visibility: hidden !important; 
                 }
             `
         });
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(300);
     }
 
     async fillPropertyData(plz: string, area: string) {
-        await this.plzInput.click();
-        await this.plzInput.pressSequentially(plz, { delay: 50 });
-        await this.plzInput.dispatchEvent('blur');
+        const activeForm = this.form.filter({ visible: true }).first();
+    
+        const plzField = activeForm.locator('input[name*="plz" i]')
+            .or(activeForm.getByPlaceholder(/plz/i))
+            .or(activeForm.getByLabel(/plz/i));
+            
+        const areaField = activeForm.locator('input[name*="flaeche" i], input[name*="fläche" i]')
+            .or(activeForm.getByPlaceholder(/wohnfläche|flaeche/i))
+            .or(activeForm.getByLabel(/wohnfläche|flaeche/i));
 
-        await this.areaInput.click();
-        await this.areaInput.pressSequentially(area, { delay: 50 });
-        await this.areaInput.dispatchEvent('blur');
+        await this.typeSafe(plzField, plz);
+        await this.typeSafe(areaField, area);
     }
 
     async fillContactData(data: { firstName: string, lastName: string, email: string, phone: string }) {
-        await this.firstNameInput.click();
-        await this.firstNameInput.pressSequentially(data.firstName, { delay: 50 });
-        await this.firstNameInput.dispatchEvent('input'); 
-        await this.firstNameInput.dispatchEvent('blur');
+        const activeForm = this.form.filter({ visible: true }).first();
 
-        await this.lastNameInput.click();
-        await this.lastNameInput.pressSequentially(data.lastName, { delay: 50 });
-        await this.lastNameInput.dispatchEvent('blur');
+        const firstNameInput = activeForm.getByLabel(/^Vorname/i).first(); // Строгое начало слова, без учета регистра
+        const lastNameInput = activeForm.getByLabel(/^Nachname/i).first();
+        const emailInput = activeForm.getByLabel(/^E-Mail/i).first();
+        const phoneInput = activeForm.getByLabel(/^Telefon/i).first();   
 
-        await this.emailInput.fill(data.email);
-        await this.phoneInput.fill(data.phone);
-        
-        const gdprCheckbox = this.gdprCheckbox;
-        if (await gdprCheckbox.isVisible()) {
-        await gdprCheckbox.check({ force: true });
+        await this.typeSafe(firstNameInput, data.firstName);
+        await this.typeSafe(lastNameInput, data.lastName);
+        await this.typeSafe(emailInput, data.email);
+        await this.typeSafe(phoneInput, data.phone);
+
+        const checkboxes = activeForm.locator('input[type="checkbox"]');
+        const count = await checkboxes.count();
+        for (let i = 0; i < count; i++) {
+            const cb = checkboxes.nth(i);
+            await cb.check({ force: true });
+            await cb.dispatchEvent('input');
+            await cb.dispatchEvent('change');
         }
+        await this.page.waitForTimeout(1500);
     }
 
     async submit() {
-        if (await this.form.locator('altcha-widget').isVisible()) {
+        const activeForm = this.form.filter({ visible: true }).first();
+        
+        if (await activeForm.locator('altcha-widget').isVisible()) {
             await expect(this.altchaVerified).toBeVisible({ timeout: 20000 });
         }
-        await this.submitBtn.click();
+        
+        const activeSubmitBtn = activeForm.locator('button:has-text("Absenden"), button[type="submit"]').or(this.submitBtn).filter({ visible: true }).first();
+        await activeSubmitBtn.scrollIntoViewIfNeeded();
+        await activeSubmitBtn.click({ force: true });
     }
 }

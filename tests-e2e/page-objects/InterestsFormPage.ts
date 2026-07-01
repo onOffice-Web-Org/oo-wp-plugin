@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 export class InterestsFormPage {
     readonly page: Page;
@@ -8,86 +8,117 @@ export class InterestsFormPage {
 
     constructor(page: Page) {
         this.page = page;
-        // Главный контейнер формы
-        this.form = page.locator('#onoffice-form-1').first();
+        this.form = page.locator('form, #onoffice-form-1').filter({ has: page.locator('input[name="oo_formid"]') }).first();
         
-        // Кнопка отправки формы (используем роль для гибкости между темами)
-        this.submitBtn = this.form.getByRole('button', { name: /Absenden/i }).first();
-        
-        // Локатор для баннеров успешной отправки или ошибок бэкенда
-        this.infoMessages = page.locator('.onoffice-form-alerts, .status-message, div[class*="message"], div[class*="alert"]').first();
+        this.submitBtn = this.form.getByRole('button', { name: /Absenden/i }).or(this.form.locator('button[type="submit"]'));
+        this.infoMessages = page.locator('.onoffice-form-alerts, .status-message, div[class*="message"], div[class*="alert"], .c-info-messages').first();
     }
 
-    /**
-     * Открытие страницы формы интересанта с ключом защиты
-     */
+    private async typeSafe(locator: Locator, value: string) {
+        const target = locator.filter({ visible: true }).first();
+        await target.waitFor({ state: 'visible', timeout: 5000 });
+        await target.focus();
+        await target.press('Control+A');
+        await target.press('Backspace');
+        await target.pressSequentially(value, { delay: 30 }); 
+        
+        await target.dispatchEvent('input');
+        await target.dispatchEvent('change');
+        await target.dispatchEvent('blur');
+    }
+
     async goto(): Promise<void> {
-        await this.page.goto('e2e-test-formulare/interessentenformular/?e2e_key=qa_rocks');
+        await this.page.goto('/e2e-test-formulare/interessentenformular/', { waitUntil: 'networkidle' });
     }
 
-    /**
-     * Принятие кук / согласий, если они перекрывают экран
-     */
     async acceptCookies(): Promise<void> {
-        const cookieButton = this.page.getByRole('button', { name: /accept|alle akzeptieren|einverstanden/i }).first();
-        if (await cookieButton.isVisible({ timeout: 2000 })) {
-            await cookieButton.click();
-        }
+        await this.page.evaluate(() => {
+            (window as any).UC_UI_SUPPRESS_CMP_DISPLAY = true;
+            const cleanUp = () => {
+                const blockers = document.querySelectorAll('#usercentrics-root, [id^="usercentrics"], .uc-overlay, .uc-container');
+                blockers.forEach(el => el.remove());
+                const resetStyles = (el: HTMLElement) => {
+                    if (!el) return;
+                    el.style.setProperty('overflow', 'auto', 'important');
+                    el.style.setProperty('pointer-events', 'auto', 'important');
+                };
+                resetStyles(document.documentElement);
+                resetStyles(document.body);
+            };
+            cleanUp();
+            const interval = setInterval(cleanUp, 500);
+            setTimeout(() => clearInterval(interval), 2000);
+        });
     }
 
-    /**
-     * Скрытие панели WordPress администратора перед скриншотами
-     */
     async hideOverlays(): Promise<void> {
-        const adminBar = this.page.locator('#wpadminbar');
-        if (await adminBar.isVisible()) {
-            await adminBar.evaluate((el) => el.style.display = 'none');
-        }
+        await this.page.addStyleTag({
+            content: `
+                #wpadminbar, #usercentrics-root, .uc-container, [id^="usercentrics"],
+                iframe[title*="chat"], .superchat-widget, .c-header.--fixed { 
+                    display: none !important; 
+                    visibility: hidden !important; 
+                }
+            `
+        });
+        await this.page.waitForTimeout(300);
     }
 
-    /**
-     * Проставление всех обязательных чекбоксов (например, DSGVO/Datenschutz)
-     */
     async checkAllRequiredCheckboxes(): Promise<void> {
-        const checkboxes = this.form.getByRole('checkbox');
+        const activeForm = this.form.filter({ visible: true }).first();
+        const checkboxes = activeForm.locator('input[type="checkbox"]');
         const count = await checkboxes.count();
-        for (let i = 0; i < count; i++) {
-            await checkboxes.nth(i).check({ force: true });
-        }
-    }
-
-    /**
-     * Заполнение критериев поиска (например, комнаты и бюджет)
-     */
-    async fillSearchCriteria(rooms: string, price: string): Promise<void> {
-        // Ищем инпуты по именам, id или типам (умный фоллбек)
-        const roomsInput = this.form.locator('input[name*="zimmer"], input[id*="zimmer"], spinbutton').first();
-        const priceInput = this.form.locator('input[name*="preis"], input[id*="kaufpreis"], input[id*="preis"]').first();
-
-        if (await roomsInput.isVisible()) await roomsInput.fill(rooms);
-        if (await priceInput.isVisible()) await priceInput.fill(price);
-    }
-
-    /**
-     * Заполнение контактных данных пользователя
-     */
-    async fillContactInfo(data: { firstName: string; lastName: string; email: string; phone: string; message: string }): Promise<void> {
-        // Используем комбинацию поиска по тексту/лейблу и по атрибутам name для стабильности на разных темах
-        await this.form.locator('input[placeholder*="Vorname"], input[name*="vorname"]').first().fill(data.firstName);
-        await this.form.locator('input[placeholder*="Nachname"], input[placeholder*="Name"], input[name*="nachname"]').first().fill(data.lastName);
-        await this.form.locator('input[placeholder*="E-Mail"], input[type="email"]').first().fill(data.email);
-        await this.form.locator('input[placeholder*="Telefon"], input[type="tel"]').first().fill(data.phone);
         
-        const messageField = this.form.locator('textarea, input[name*="nachricht"]').first();
-        if (await messageField.isVisible()) {
-            await messageField.fill(data.message);
+        for (let i = 0; i < count; i++) {
+            const cb = checkboxes.nth(i);
+            await cb.check({ force: true });
+            await cb.dispatchEvent('input');
+            await cb.dispatchEvent('change');
+        }
+        
+        await this.page.waitForTimeout(1500);
+    }
+
+    async fillSearchCriteria(rooms: string, price: string): Promise<void> {
+        const activeForm = this.form.filter({ visible: true }).first();
+        
+        const roomsInput = activeForm.locator('input[name*="zimmer" i], input[id*="zimmer" i]')
+            .or(activeForm.getByPlaceholder(/zimmer/i))
+            .or(activeForm.getByLabel(/zimmer/i));
+            
+        const priceInput = activeForm.locator('input[name*="preis" i], input[id*="preis" i], input[name*="kaufpreis" i]')
+            .or(activeForm.getByPlaceholder(/preis/i))
+            .or(activeForm.getByLabel(/preis/i));
+
+        await this.typeSafe(roomsInput, rooms);
+        await this.typeSafe(priceInput, price);
+    }
+
+    async fillContactInfo(data: { firstName: string; lastName: string; email: string; phone: string; message: string }): Promise<void> {
+        const activeForm = this.form.filter({ visible: true }).first();
+
+        const firstNameInput = activeForm.getByLabel(/^Vorname/i).first(); 
+        const lastNameInput = activeForm.getByLabel(/^Nachname/i).first();
+        const emailInput = activeForm.getByLabel(/^E-Mail/i).first();
+        const phoneInput = activeForm.getByLabel(/^Telefon/i).first();
+        const messageInput = activeForm.getByLabel(/Nachricht/i).first();
+
+        await this.typeSafe(firstNameInput, data.firstName);
+        await this.typeSafe(lastNameInput, data.lastName);
+        
+        await this.typeSafe(emailInput, data.email);
+        await this.typeSafe(phoneInput, data.phone);
+
+        if (await messageInput.filter({ visible: true }).count() > 0) {
+            await this.typeSafe(messageInput, data.message);
         }
     }
 
-    /**
-     * Отправка формы
-     */
     async submit(): Promise<void> {
-        await this.submitBtn.click({ force: true });
+        const activeForm = this.form.filter({ visible: true }).first();
+        const activeSubmitBtn = activeForm.locator('button:has-text("Absenden"), button[type="submit"]').or(this.submitBtn).filter({ visible: true }).first();
+        
+        await activeSubmitBtn.scrollIntoViewIfNeeded();
+        await activeSubmitBtn.click({ force: true });
     }
 }

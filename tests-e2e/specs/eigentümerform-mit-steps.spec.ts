@@ -17,7 +17,7 @@ const VIEWPORTS = [
 const E2E_SECRET = 'qa_rocks';
 const BASE_PATH = '/e2e-test-formulare/eigentuemerformular-mit-seite/';
 
-test.describe('Multi-Step Form: Multi-Theme Engine & Visual Regression', () => {
+test.describe('Eigentümerformular Multi-Step: Multi-Theme Engine & Visual Regression', () => {
     
     for (const theme of THEMES) {
         test.describe(`Theme: ${theme}`, () => {
@@ -91,9 +91,9 @@ test.describe('Multi-Step Form: Multi-Theme Engine & Visual Regression', () => {
             /**
              * 3. FUNKTIONALE Szenarien (Happy Flow und Negativ)
              */
-            test.describe('Functional Flow', () => {
+            test.describe('Functional Scenarios', () => {
                 
-                test('Submission: Happy Path full flow', async () => {
+                test('Submission: Happy Path', async () => {
                     await multiStepPage.fillStep1Contact('Owner', `happy-step-${Date.now()}@owner.de`);
                     
                     await multiStepPage.fillStep2Interests({
@@ -113,7 +113,7 @@ test.describe('Multi-Step Form: Multi-Theme Engine & Visual Regression', () => {
                     expect(msg).toMatch(/Vielen Dank|Spam erkannt|erfolgreich/);
                 });
 
-                test('Negative: Validation blocks transition', async ({ page }) => {
+                test('Validation: Required Fields', async ({ page }) => {
                     const nextBtn = multiStepPage.nextBtn.filter({ visible: true }).first();
                     await nextBtn.click({ force: true });
                     

@@ -110,7 +110,7 @@ test.describe('Newsletter Formular: Multi-Theme Engine & Visual Regression', () 
                     await expect(newsletterPage.page.getByText(/Vielen Dank|erfolgreich|Spam erkannt/i)).toBeVisible({ timeout: 15000 });
                 });
 
-                test('Newsletter: Email Validation', async () => {
+                test('Validation: Email Format', async () => {
                     await newsletterPage.fillAllFields('invalid-email');
                     await newsletterPage.acceptRequiredCheckboxes();
                     
