@@ -195,20 +195,6 @@ add_action('plugins_loaded', function() use ($pDI) {
 	$pDI->get(DatabaseChangesInterface::class)->install();
 });
 
-add_action('upgrader_process_complete', function ($upgrader, $hookExtra) use ($pDI) {
-	if (
-		($hookExtra['action'] ?? '') === 'update' &&
-		($hookExtra['type'] ?? '') === 'plugin' &&
-		in_array(ONOFFICE_PLUGIN_BASENAME, (array) ($hookExtra['plugins'] ?? []), true)
-	) {
-		try {
-			$pDI->get(CacheHandler::class)->clear();
-		} catch (\Throwable $e) {
-			// Non-critical: cache rebuilds on next oo_cache_renew cron run.
-		}
-	}
-}, 10, 2);
-
 add_action('init', function() use ($pDI) {
 	$pRewriteRuleBuilder = $pDI->get(RewriteRuleBuilder::class);
 	$pRewriteRuleBuilder->addCustomRewriteTags();
