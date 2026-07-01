@@ -36,6 +36,27 @@ $pageTitles = $pForm->getPageTitlesByCurrentLanguage();
 
 $showFormAsModal = $pForm->getShowFormAsModal() || $pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS;
 
+$json_file_path = ONOFFICE_PLUGIN_DIR . '/field-dependencies.json';
+
+if (file_exists($json_file_path)) {
+	$script_path = plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-field-dependencies.min.js';
+	wp_register_script(
+		'oo-field-dependencies',
+		$script_path
+	);
+
+	$json_contents = file_get_contents($json_file_path);
+	$json_data = json_decode($json_contents, true);
+
+	wp_localize_script(
+		'oo-field-dependencies',
+		'oo_field_dependencies',
+		$json_data
+	);
+
+	wp_enqueue_script('oo-field-dependencies');
+}
+
 if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 	echo '<p role="status">'.esc_html__('Thank you for your inquiry. We will get back to you as soon as possible.', 'onoffice-for-wp-websites').'</p>';
 } else {
