@@ -1112,6 +1112,10 @@ class EstateList
 			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordRaw['waehrung'] ?? '');
 		}
 
+		if (isset($recordModified['regionaler_zusatz']) && is_array($recordModified['regionaler_zusatz'])) {
+			$recordModified['regionaler_zusatz'] = $recordModified['regionaler_zusatz'][0] ?? '';
+		}
+
 		$recordModified = new ArrayContainerEscape($recordModified);
 
 		if ($this->hasPriceOnRequestField() && ($recordRaw['preisAufAnfrage'] ?? null) === DataListView::SHOW_PRICE_ON_REQUEST) {
