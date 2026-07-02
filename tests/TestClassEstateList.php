@@ -951,27 +951,27 @@ class TestClassEstateList
 		$totalCostsData = [
 			'kaufpreis' => [
 				'raw' => 123456.56,
-				'default' => '123.456,56 €'
+				'default' => "123.456,56\xc2\xa0€"
 			],
 			'bundesland' => [
 				'raw' => 4321,
-				'default' => '4.321 €'
+				'default' => "4.321\xc2\xa0€"
 			],
 			'aussen_courtage' => [
 				'raw' => 22222,
-				'default' => '22.222 €'
+				'default' => "22.222\xc2\xa0€"
 			],
 			'notary_fees' => [
 				'raw' => 1852,
-				'default' => '1.852 €'
+				'default' => "1.852\xc2\xa0€"
 			],
 			'land_register_entry' => [
 				'raw' => 617,
-				'default' => '617 €'
+				'default' => "617\xc2\xa0€"
 			],
 			'total_costs' => [
 				'raw' => 152468.56,
-				'default' => '152.468,56 €'
+				'default' => "152.468,56\xc2\xa0€"
 			]
 		];
 

@@ -1606,7 +1606,7 @@ class EstateList
 			$result[$field]['rangeFieldDisplayMode'] = $allDisplayModes[$field] ?? 'range';
 			if (
 				in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS) &&
-				!empty(get_option('onoffice-settings-thousand-separator'))
+				!empty(get_option('onoffice-settings-thousand-separator-custom'))
 			) {
 				$result[$field]['is-apply-thousand-separator'] = true;
 			}

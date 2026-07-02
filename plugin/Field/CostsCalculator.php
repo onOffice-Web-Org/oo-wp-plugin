@@ -24,6 +24,7 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Field\PriceFormatService;
 
 class CostsCalculator
 {
@@ -129,9 +130,8 @@ class CostsCalculator
 	 */
 	private function formatCurrency(float $amount, string $currency): string
 	{
-		$decimalPlaces = floor($amount) == $amount ? 0 : 2;
-
-		return number_format($amount, $decimalPlaces, ',', '.') . ' ' . $currency;
+		$pPriceFormatService = new PriceFormatService();
+		return $pPriceFormatService->formatPrice($amount, $currency);
 	}
 
 	/**

@@ -103,7 +103,7 @@ class TestClassEstateListInputVariableReader
 		$valueWarmmiete = $pEstateListInputVariableReader->getFieldValue('warmmiete');
 		$valueKaltmiete = $pEstateListInputVariableReader->getFieldValue('kaltmiete');
 
-		$this->assertEquals([10, 32], $valueKaufpreis);
+		$this->assertEquals([10, 32000], $valueKaufpreis);
 		$this->assertEquals([3, 9], $valueEtage);
 		$this->assertEquals([0, 900], $valueWarmmiete);
 		$this->assertEquals([1000, 0], $valueKaltmiete);
@@ -188,15 +188,13 @@ class TestClassEstateListInputVariableReader
 	 *
 	 */
 
-	public function testFloatUSLocale()
+	public function testFloatGermanLocale()
 	{
-		$this->switchLocale('en_US');
-
 		$pEstateListInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('kaufpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$pEstateListInputVariableReaderConfig->setValue('kaufpreis', '399.99');
+		$pEstateListInputVariableReaderConfig->setValue('kaufpreis', '399,99');
 
 		$pEstateListInputVariableReader = new InputVariableReader
 			(onOfficeSDK::MODULE_ESTATE, $pEstateListInputVariableReaderConfig);

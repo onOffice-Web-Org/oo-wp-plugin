@@ -224,12 +224,19 @@ class FormPostInterest
 	{
 		$searchData = $pFormData->getSearchcriteriaData();
 		
-		// Clean up German number format for range fields
+		// Clean up number format for range fields
+		$thousandSep = get_option('onoffice-settings-thousand-separator-custom', '.');
+		$decimalSep = get_option('onoffice-settings-decimal-separator', ',');
 		foreach ($searchData as $key => $value) {
 			if (str_ends_with($key, '__von') || str_ends_with($key, '__bis')) {
 				if (is_string($value) && !empty($value)) {
-					// Remove dots and commas that are thousand separators (followed by exactly 3 digits)
-					$searchData[$key] = preg_replace('/[.,](?=\d{3}(?:\D|$))/', '', $value);
+					if (!empty($thousandSep)) {
+						$value = str_replace($thousandSep, '', $value);
+					}
+					if ($decimalSep !== '.') {
+						$value = str_replace($decimalSep, '.', $value);
+					}
+					$searchData[$key] = $value;
 				}
 			}
 		}
