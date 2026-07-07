@@ -66,39 +66,44 @@ class PriceFormatService
 	public function formatPriceField($value, string $currency = '€'): string
 	{
 		$normalized = (string) $value;
-		$decimalSep = $this->getDecimalSeparator();
-		$thousandsSep = $this->getThousandSeparator();
-
-		$isFormattedInput = preg_match('/[€$£¥]/', $normalized);
 
 		$currencySymbols = ['€', '$', '£', '¥', 'CHF', 'USD', 'EUR', 'GBP', 'JPY', $currency];
 		$normalized = str_replace($currencySymbols, '', $normalized);
 		$normalized = trim($normalized);
 
-		if ($decimalSep !== '.' && preg_match('/^-?\d{1,3}(\.\d{3})+(\.\d*)?$/', $normalized)) {
+		// Values coming from the onOffice API are always pre-formatted using '.'
+		// as thousand separator and ',' as decimal separator (e.g. "299.000,00"),
+		// independent of the separators configured for the frontend display.
+		// That fixed source format must be detected/normalized on its own,
+		// never based on the currently configured separators - otherwise
+		// choosing '.' as the decimal separator makes the code treat the
+		// source's thousand dots as decimal dots and silently drop digits.
+		$forceDecimals = false;
+		if (preg_match('/^-?\d{1,3}(\.\d{3})+(,\d+)?$/', $normalized) || preg_match('/^-?\d+,\d+$/', $normalized)) {
+			$forceDecimals = strpos($normalized, ',') !== false;
 			$normalized = str_replace('.', '', $normalized);
-		}
-		if ($thousandsSep !== '' && $thousandsSep !== '.' && $thousandsSep !== ',') {
-			$normalized = str_replace($thousandsSep, '', $normalized);
+			$normalized = str_replace(',', '.', $normalized);
+		} elseif (!is_numeric($normalized)) {
+			$decimalSep = $this->getDecimalSeparator();
+			$thousandsSep = $this->getThousandSeparator();
+			if ($thousandsSep !== '') {
+				$normalized = str_replace($thousandsSep, '', $normalized);
+			}
+			$normalized = str_replace($decimalSep, '.', $normalized);
+			$normalized = preg_replace('/[^0-9.\-]/', '', $normalized);
+			if (substr_count($normalized, '.') > 1) {
+				$parts = explode('.', $normalized);
+				$intPart = implode('', array_slice($parts, 0, -1));
+				$decPart = end($parts);
+				$normalized = $intPart . '.' . $decPart;
+			}
+			$forceDecimals = strpos($normalized, '.') !== false;
 		}
 
-		$forceDecimals = $isFormattedInput && preg_match('/[.,]\d/', $normalized);
-
-		if (is_numeric($normalized)) {
-			return $this->formatPrice((float) $normalized, $currency, $forceDecimals ? 2 : null);
-		}
-
-		$normalized = str_replace($decimalSep, '.', $normalized);
-		$normalized = preg_replace('/[^0-9.\-]/', '', $normalized);
-		if (substr_count($normalized, '.') > 1) {
-			$parts = explode('.', $normalized);
-			$intPart = implode('', array_slice($parts, 0, -1));
-			$decPart = end($parts);
-			$normalized = $intPart . '.' . $decPart;
-		}
 		if (!is_numeric($normalized)) {
 			return (string) $value;
 		}
+
 		return $this->formatPrice((float) $normalized, $currency, $forceDecimals ? 2 : null);
 	}
 }
