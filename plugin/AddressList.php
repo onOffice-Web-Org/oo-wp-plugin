@@ -364,25 +364,6 @@ implements AddressListBase
 		$parameters = $this->getAddressParameters($newPage, true);
 		$parametersRaw = $this->getAddressParameters($newPage, false);
 
-		// Detect active geo filter before modifying parameters
-		$geoKm = 0;
-		$geoLoc = null;
-		$filter = $parameters['filter'] ?? [];
-		if (isset($filter['geo'][0]['loc'])) {
-			$geoKm = intval($filter['geo'][0]['val'] ?? 0);
-			$geoLoc = $filter['geo'][0]['loc'] ?? null;
-		}
-
-		// When geo search is active, fetch ALL records (large limit) so client-side
-		// distance filtering covers the full dataset, not just the current page.
-		$geoAllRecords = null;
-		if ($geoKm > 0 && $geoLoc !== null) {
-			$parameters['listlimit'] = 10000;
-			$parameters['listoffset'] = 0;
-			$parametersRaw['listlimit'] = 10000;
-			$parametersRaw['listoffset'] = 0;
-		}
-
 		$this->_pApiClientAction->setParameters($parameters);
 		$this->_pApiClientAction->addRequestToQueue();
 
@@ -393,58 +374,47 @@ implements AddressListBase
 		$pSDKWrapper->sendRequests();
 		$result = $this->_pApiClientAction->getResult();
 		$this->_records = $result["data"]["records"];
-		$recordsRaw = $pApiClientActionRaw->getResultRecords();
 
-		// Apply client-side geo filter
-		if ($geoKm > 0 && $geoLoc !== null) {
-			$locCoords = explode(',', $geoLoc);
-			if (count($locCoords) === 2) {
-				$searchLng = floatval($locCoords[0]);
-				$searchLat = floatval($locCoords[1]);
-				$searchCoord = new Coordinate($searchLat, $searchLng);
-				$calculator = new Vincenty();
+		// Apply geo distance filter (client-side; API does not support geo operator)
+		$geoFilter = $parameters['filter']['geo'][0] ?? null;
+		if ($geoFilter && !empty($geoFilter['loc'])) {
+			$locParts = explode(',', $geoFilter['loc']);
+			if (count($locParts) === 2) {
+				$refLng = (float) trim($locParts[0]);
+				$refLat = (float) trim($locParts[1]);
+				$radiusKm = (float) ($geoFilter['val'] ?? 200);
+				$radius = $radiusKm * 1000;
+				$refCoord = new Coordinate($refLat, $refLng);
+				$vincenty = new Vincenty();
 				$filtered = [];
 				foreach ($this->_records as $rec) {
-					$el = $rec['elements'] ?? [];
-					$lng = $el['laengengrad'] ?? null;
-					$lat = $el['breitengrad'] ?? null;
-					if ($lng === null || $lat === null) {
-						continue;
-					}
-					$recCoord = new Coordinate(floatval($lat), floatval($lng));
-					$distance = $calculator->getDistance($searchCoord, $recCoord);
-					if (intval($distance / 1000) <= $geoKm) {
-						$el['geo_distance'] = intval($distance);
-						$rec['elements'] = $el;
-						$filtered[] = $rec;
+					$elements = $rec['elements'] ?? [];
+					$lng = $elements['laengengrad'] ?? null;
+					$lat = $elements['breitengrad'] ?? null;
+					if ($lng !== null && $lat !== null) {
+						$coord = new Coordinate((float) $lat, (float) $lng);
+						$dist = $vincenty->getDistance($refCoord, $coord);
+						if ($dist <= $radius) {
+							$filtered[] = $rec;
+						}
 					}
 				}
-				$this->_records = $filtered;
 				$this->_geoFilteredCount = count($filtered);
-				$result['data']['meta']['cntabsolute'] = $this->_geoFilteredCount;
+				$this->_records = $filtered;
 			}
 		}
 
-
+		$recordsRaw = $pApiClientActionRaw->getResultRecords();
 
 		$this->fetchEstatesForAddressIds($this->getAddressIds());
 		$this->fillAddressesById($this->_records);
-
-		// Re-apply offset/limit pagination if geo filter expanded to all records
-		if ($geoKm > 0 && $geoLoc !== null) {
-			$offset = ($newPage - 1) * $this->_pDataViewAddress->getRecordsPerPage();
-			$this->_records = array_slice($this->_records, $offset, $this->_pDataViewAddress->getRecordsPerPage());
-		}
-
-		// Filter raw records to match filtered _records
-		$filteredIds = array_column($this->_records, 'id');
-		$recordsRaw = array_values(array_filter($recordsRaw, function($r) use ($filteredIds) {
-			return in_array($r['id'], $filteredIds);
-		}));
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 
-		$cntabsolute = $this->getAddressOverallCount();
-		$numpages = ceil($cntabsolute/$this->_pDataViewAddress->getRecordsPerPage());
+		$resultMeta = $this->_pApiClientAction->getResultMeta();
+		if ($this->_geoFilteredCount !== null) {
+			$resultMeta['cntabsolute'] = $this->_geoFilteredCount;
+		}
+		$numpages = ceil($resultMeta['cntabsolute']/$this->_pDataViewAddress->getRecordsPerPage());
 
 		$multipage = $numpages > 1;
 		$more = true;
