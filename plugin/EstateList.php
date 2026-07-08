@@ -1117,10 +1117,8 @@ class EstateList
 		if ($this->hasPriceOnRequestField() && ($recordRaw['preisAufAnfrage'] ?? null) === DataListView::SHOW_PRICE_ON_REQUEST) {
 			if ($this->enableShowPriceOnRequestText()) {
 				$priceFields = $this->_pDataView->getListFieldsShowPriceOnRequest();
-
 				foreach ($priceFields as $priceField) {
-					$rawPrice = $recordRaw[$priceField] ?? null;
-					$this->displayTextPriceOnRequest($recordModified, $priceField, $rawPrice);
+					$this->displayTextPriceOnRequest($recordModified, $priceField);
 				}
 				$this->_totalCostsData = [];
 			}
@@ -1156,10 +1154,13 @@ class EstateList
 	 * @param ArrayContainerEscape $recordModified
 	 * @param string $field
 	 */
-	private function displayTextPriceOnRequest($recordModified, $field, $rawPrice)
+	private function displayTextPriceOnRequest($recordModified, $field)
 	{
-		// Skip if the field is empty, raw value contains text (e.g., 'auf Anfrage'), or is a zero value (e.g., 0.00)
-		if (empty($recordModified[$field]) || !is_numeric($rawPrice) || (float)$rawPrice === 0.0) {
+		if (empty($recordModified[$field])) {
+			return;
+		}
+		$digitsOnly = preg_replace('/[^0-9]/', '', $recordModified[$field]);
+		if (intval($digitsOnly) === 0) {
 			return;
 		}
 		$recordModified[$field] = esc_html__('Price on request', 'onoffice-for-wp-websites');
