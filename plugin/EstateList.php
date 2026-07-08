@@ -364,6 +364,9 @@ class EstateList
 
 		$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
 
+		unset($estateParametersRaw['listname']);
+		unset($estateParametersRaw['params_list_cache']);
+
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
