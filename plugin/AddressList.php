@@ -49,8 +49,6 @@ use onOffice\WPlugin\DataView\DataAddressDetailView;
 use onOffice\WPlugin\Controller\AddressDetailUrl;
 use onOffice\WPlugin\Filter\EstateFilterBuilderDetailViewAddress;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
-use Location\Distance\Vincenty;
-use Location\Coordinate;
 
 /**
  *
@@ -158,9 +156,6 @@ implements AddressListBase
 
 	/** @var AddressDetailUrl */
 	private $_pLanguageSwitcher;
-
-	/** @var int|null */
-	private $_geoFilteredCount = null;
 
 	/**
 	 *
@@ -270,15 +265,14 @@ implements AddressListBase
 			$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
 		}
 
-		$hasGeoSearch = false;
-
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
 		if ( isset( $_GET['geo_search'] ) ) {
 			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
 			$geoCoords = explode( ',', $geoSearch );
 			if ( count( $geoCoords ) === 2 ) {
+				$filter['geo'][0]['op'] = $filter['geo'][0]['op'] ?? 'geo';
+				$filter['geo'][0]['val'] = $filter['geo'][0]['val'] ?? 200;
 				$filter['geo'][0]['loc'] = $geoSearch;
-				$hasGeoSearch = true;
 			}
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
@@ -296,9 +290,7 @@ implements AddressListBase
 		);
 
 		if ($this->_pDataViewAddress instanceof DataListViewAddress) {
-			if (!$hasGeoSearch) {
-				$parameters['params_list_cache'] = $this->getAddressListParametersForCache($formatOutput, $language);
-			}
+			$parameters['params_list_cache'] = $this->getAddressListParametersForCache($formatOutput, $language);
 			$parameters = array('listname' => $this->_pDataViewAddress->getName()) + $parameters;
 		}
 
@@ -375,35 +367,6 @@ implements AddressListBase
 		$result = $this->_pApiClientAction->getResult();
 		$this->_records = $result["data"]["records"];
 
-		// Apply geo distance filter (client-side; API does not support geo operator)
-		$geoFilter = $parameters['filter']['geo'][0] ?? null;
-		if ($geoFilter && !empty($geoFilter['loc'])) {
-			$locParts = explode(',', $geoFilter['loc']);
-			if (count($locParts) === 2) {
-				$refLng = (float) trim($locParts[0]);
-				$refLat = (float) trim($locParts[1]);
-				$radiusKm = (float) ($geoFilter['val'] ?? 200);
-				$radius = $radiusKm * 1000;
-				$refCoord = new Coordinate($refLat, $refLng);
-				$vincenty = new Vincenty();
-				$filtered = [];
-				foreach ($this->_records as $rec) {
-					$elements = $rec['elements'] ?? [];
-					$lng = $elements['laengengrad'] ?? null;
-					$lat = $elements['breitengrad'] ?? null;
-					if ($lng !== null && $lat !== null) {
-						$coord = new Coordinate((float) $lat, (float) $lng);
-						$dist = $vincenty->getDistance($refCoord, $coord);
-						if ($dist <= $radius) {
-							$filtered[] = $rec;
-						}
-					}
-				}
-				$this->_geoFilteredCount = count($filtered);
-				$this->_records = $filtered;
-			}
-		}
-
 		$recordsRaw = $pApiClientActionRaw->getResultRecords();
 
 		$this->fetchEstatesForAddressIds($this->getAddressIds());
@@ -411,9 +374,6 @@ implements AddressListBase
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 
 		$resultMeta = $this->_pApiClientAction->getResultMeta();
-		if ($this->_geoFilteredCount !== null) {
-			$resultMeta['cntabsolute'] = $this->_geoFilteredCount;
-		}
 		$numpages = ceil($resultMeta['cntabsolute']/$this->_pDataViewAddress->getRecordsPerPage());
 
 		$multipage = $numpages > 1;
@@ -589,9 +549,6 @@ implements AddressListBase
 	 */
 	public function getAddressOverallCount()
 	{
-		if ($this->_geoFilteredCount !== null) {
-			return $this->_geoFilteredCount;
-		}
 		return $this->_pApiClientAction->getResultMeta()['cntabsolute'];
 	}
 

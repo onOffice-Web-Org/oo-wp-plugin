@@ -121,6 +121,7 @@ class ApiCall
 		{
 			return;
 		}
+
 		foreach ($actionParameters as $key => $action) {
 			if (isset($action['parameters']['filter']['geo'])) {
 				unset($actionParameters[$key]['parameters']['filter']['geo']);
@@ -129,6 +130,7 @@ class ApiCall
 				unset($actionParameters[$key]['parameters']['params_list_cache']['filter']['geo']);
 			}
 		}
+
 		$responseHttp = $this->getFromHttp($token, $actionParameters, $httpFetch);
 
 		$result = json_decode($responseHttp, true);
@@ -282,6 +284,7 @@ class ApiCall
 		}
 
 		$this->sendHttpRequests($token, $actionParameters, $actionParametersOrder, $httpFetch, $saveToCache);
+		$this->applyFreshGeoFiltering($actionParametersOrder);
 
 		// Reuse source results for duplicate requests that were queued in the same send cycle.
 		foreach ($duplicateRequestsBySourceRequestId as $sourceRequestId => $duplicateRequests)
@@ -342,15 +345,13 @@ class ApiCall
 			$filter = (isset($params["filter"]) && is_array($params["filter"]))
 				? $params["filter"]
 				: [];
+			$hasGeoFilter = isset($filter['geo'][0]['loc']);
 
-			if (
-				!isset($cachedResponse["data"]["records"]) ||
-				!is_array($cachedResponse["data"]["records"]) ||
-				!isset($cachedResponse["raw"]["data"]["records"]) ||
-				!is_array($cachedResponse["raw"]["data"]["records"]) ||
-				!isset($cachedResponse["types"]) ||
-				!is_array($cachedResponse["types"])
-			) {
+			if (!$hasGeoFilter && !$this->hasCompleteFilterableResponseShape($cachedResponse)) {
+				return $cachedResponse;
+			}
+
+			if (!$this->ensureFilterableResponseShape($cachedResponse)) {
 				return $cachedResponse;
 			}
 
@@ -363,6 +364,93 @@ class ApiCall
 				$this->recordsPerPage($cachedResponse["data"]["records"], intval($params["listlimit"] ?? 20), intval($params["listoffset"] ?? 0));
 		}
 		return $cachedResponse;
+	}
+
+	/**
+	 * Apply client-side geo filtering to fresh list responses after cache writing.
+	 * Fresh API responses are already paginated by the API, so this intentionally
+	 * only filters/sorts the returned page and does not re-apply pagination.
+	 *
+	 * @param Request[] $actionParametersOrder
+	 */
+	private function applyFreshGeoFiltering(array $actionParametersOrder): void
+	{
+		foreach ($actionParametersOrder as $pRequest)
+		{
+			$requestId = $pRequest->getRequestId();
+			if (!isset($this->_responses[$requestId])) {
+				continue;
+			}
+
+			$usedParams = $this->normalizeFieldDependencyParameters(
+				$pRequest->getApiAction()->getActionParameters()
+			);
+			$params = $usedParams['parameters'] ?? [];
+			$geoFilter = $params['filter']['geo'][0] ?? null;
+
+			if (
+				!isset($params['listname']) ||
+				($params['formatoutput'] ?? false) != true ||
+				!is_array($geoFilter) ||
+				empty($geoFilter['loc'])
+			) {
+				continue;
+			}
+
+			$pResponse = $this->_responses[$requestId];
+			$responseData = $pResponse->getResponseData();
+			if (!$this->ensureFilterableResponseShape($responseData)) {
+				continue;
+			}
+
+			$filter = ['geo' => [$geoFilter]];
+			$this->filterRecords($responseData, $filter);
+			$responseData['data']['records'] = $this->sortRecords($responseData, $filter, 'geo_distance', 'ASC');
+			$responseData['data']['meta']['cntabsolute'] = count($responseData['data']['records']);
+
+			$this->_responses[$requestId] = new Response($pRequest, $responseData);
+		}
+	}
+
+	private function ensureFilterableResponseShape(array &$response): bool
+	{
+		if (
+			!isset($response['data']['records']) ||
+			!is_array($response['data']['records'])
+		) {
+			return false;
+		}
+
+		if (!isset($response['raw']) || !is_array($response['raw'])) {
+			$response['raw'] = [];
+		}
+		if (!isset($response['raw']['data']) || !is_array($response['raw']['data'])) {
+			$response['raw']['data'] = [];
+		}
+		if (!isset($response['raw']['data']['records']) || !is_array($response['raw']['data']['records'])) {
+			$response['raw']['data']['records'] = [];
+			foreach ($response['data']['records'] as $record) {
+				$response['raw']['data']['records'][] = [
+					'id' => $record['id'] ?? 0,
+					'elements' => $record['elements'] ?? [],
+				];
+			}
+		}
+		if (!isset($response['types']) || !is_array($response['types'])) {
+			$response['types'] = [];
+		}
+
+		return true;
+	}
+
+	private function hasCompleteFilterableResponseShape(array $response): bool
+	{
+		return isset($response['data']['records']) &&
+			is_array($response['data']['records']) &&
+			isset($response['raw']['data']['records']) &&
+			is_array($response['raw']['data']['records']) &&
+			isset($response['types']) &&
+			is_array($response['types']);
 	}
 
 	/**
@@ -542,14 +630,7 @@ class ApiCall
 
 	private function filterRecords(array &$cachedResponse, array $filter)
 	{
-		if (
-			!isset($cachedResponse["data"]["records"]) ||
-			!is_array($cachedResponse["data"]["records"]) ||
-			!isset($cachedResponse["raw"]["data"]["records"]) ||
-			!is_array($cachedResponse["raw"]["data"]["records"]) ||
-			!isset($cachedResponse["types"]) ||
-			!is_array($cachedResponse["types"])
-		) {
+		if (!$this->ensureFilterableResponseShape($cachedResponse)) {
 			return;
 		}
 
@@ -754,8 +835,8 @@ class ApiCall
 						$longitude = floatval($selectedCoordinates[0]);
 						$latitude = floatval($selectedCoordinates[1]);
 
-						$coordinate1 = new Coordinate($item["elements"]['laengengrad'], $item["elements"]['breitengrad']);
-						$coordinate2 = new Coordinate($longitude, $latitude);
+						$coordinate1 = new Coordinate((float)$item["elements"]['breitengrad'], (float)$item["elements"]['laengengrad']);
+						$coordinate2 = new Coordinate($latitude, $longitude);
 						$distance = $calculator->getDistance($coordinate1, $coordinate2);
 
 						if(intval($distance/1000) > $km){
