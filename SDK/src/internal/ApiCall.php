@@ -347,11 +347,16 @@ class ApiCall
 				: [];
 			$hasGeoFilter = isset($filter['geo'][0]['loc']);
 
-			if (!$hasGeoFilter && !$this->hasCompleteFilterableResponseShape($cachedResponse)) {
-				return $cachedResponse;
-			}
-
-			if (!$this->ensureFilterableResponseShape($cachedResponse)) {
+			if (
+				!isset($cachedResponse["data"]["records"]) ||
+				!is_array($cachedResponse["data"]["records"]) ||
+				(!$hasGeoFilter && (
+					!isset($cachedResponse["raw"]["data"]["records"]) ||
+					!is_array($cachedResponse["raw"]["data"]["records"]) ||
+					!isset($cachedResponse["types"]) ||
+					!is_array($cachedResponse["types"])
+				))
+			) {
 				return $cachedResponse;
 			}
 
@@ -368,8 +373,7 @@ class ApiCall
 
 	/**
 	 * Apply client-side geo filtering to fresh list responses after cache writing.
-	 * Fresh API responses are already paginated by the API, so this intentionally
-	 * only filters/sorts the returned page and does not re-apply pagination.
+	 * Fresh API responses are already paginated by the API, so keep that slice.
 	 *
 	 * @param Request[] $actionParametersOrder
 	 */
@@ -398,59 +402,13 @@ class ApiCall
 			}
 
 			$pResponse = $this->_responses[$requestId];
-			$responseData = $pResponse->getResponseData();
-			if (!$this->ensureFilterableResponseShape($responseData)) {
-				continue;
-			}
-
-			$filter = ['geo' => [$geoFilter]];
-			$this->filterRecords($responseData, $filter);
-			$responseData['data']['records'] = $this->sortRecords($responseData, $filter, 'geo_distance', 'ASC');
-			$responseData['data']['meta']['cntabsolute'] = count($responseData['data']['records']);
-
-			$this->_responses[$requestId] = new Response($pRequest, $responseData);
+			$params['listoffset'] = 0;
+			$params['listlimit'] = PHP_INT_MAX;
+			$this->_responses[$requestId] = new Response(
+				$pRequest,
+				$this->applyListCacheFiltering($pResponse->getResponseData(), $params)
+			);
 		}
-	}
-
-	private function ensureFilterableResponseShape(array &$response): bool
-	{
-		if (
-			!isset($response['data']['records']) ||
-			!is_array($response['data']['records'])
-		) {
-			return false;
-		}
-
-		if (!isset($response['raw']) || !is_array($response['raw'])) {
-			$response['raw'] = [];
-		}
-		if (!isset($response['raw']['data']) || !is_array($response['raw']['data'])) {
-			$response['raw']['data'] = [];
-		}
-		if (!isset($response['raw']['data']['records']) || !is_array($response['raw']['data']['records'])) {
-			$response['raw']['data']['records'] = [];
-			foreach ($response['data']['records'] as $record) {
-				$response['raw']['data']['records'][] = [
-					'id' => $record['id'] ?? 0,
-					'elements' => $record['elements'] ?? [],
-				];
-			}
-		}
-		if (!isset($response['types']) || !is_array($response['types'])) {
-			$response['types'] = [];
-		}
-
-		return true;
-	}
-
-	private function hasCompleteFilterableResponseShape(array $response): bool
-	{
-		return isset($response['data']['records']) &&
-			is_array($response['data']['records']) &&
-			isset($response['raw']['data']['records']) &&
-			is_array($response['raw']['data']['records']) &&
-			isset($response['types']) &&
-			is_array($response['types']);
 	}
 
 	/**
@@ -630,8 +588,23 @@ class ApiCall
 
 	private function filterRecords(array &$cachedResponse, array $filter)
 	{
-		if (!$this->ensureFilterableResponseShape($cachedResponse)) {
+		if (
+			!isset($cachedResponse["data"]["records"]) ||
+			!is_array($cachedResponse["data"]["records"])
+		) {
 			return;
+		}
+		if (!isset($cachedResponse["raw"]["data"]["records"]) || !is_array($cachedResponse["raw"]["data"]["records"])) {
+			$cachedResponse["raw"]["data"]["records"] = [];
+			foreach ($cachedResponse["data"]["records"] as $record) {
+				$cachedResponse["raw"]["data"]["records"][] = [
+					"id" => $record["id"] ?? 0,
+					"elements" => $record["elements"] ?? [],
+				];
+			}
+		}
+		if (!isset($cachedResponse["types"]) || !is_array($cachedResponse["types"])) {
+			$cachedResponse["types"] = [];
 		}
 
 		$records = $cachedResponse["data"]["records"];
@@ -812,8 +785,8 @@ class ApiCall
 					elseif (strtolower($op) === 'geo')
 					{
 						$km = intval($val);
-						$min = $value[0]["min"];
-						$max = $value[0]["max"];
+						$min = $value[0]["min"] ?? null;
+						$max = $value[0]["max"] ?? null;
 
 						$loc = $value[0]["loc"] ?? '';
 						if(str_starts_with($loc, "0-")) {
