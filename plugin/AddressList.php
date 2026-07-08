@@ -270,8 +270,6 @@ implements AddressListBase
 			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
 			$geoCoords = explode( ',', $geoSearch );
 			if ( count( $geoCoords ) === 2 ) {
-				$filter['geo'][0]['op'] = $filter['geo'][0]['op'] ?? 'geo';
-				$filter['geo'][0]['val'] = $filter['geo'][0]['val'] ?? 200;
 				$filter['geo'][0]['loc'] = $geoSearch;
 			}
 		}
@@ -366,7 +364,6 @@ implements AddressListBase
 		$pSDKWrapper->sendRequests();
 		$result = $this->_pApiClientAction->getResult();
 		$this->_records = $result["data"]["records"];
-
 		$recordsRaw = $pApiClientActionRaw->getResultRecords();
 
 		$this->fetchEstatesForAddressIds($this->getAddressIds());
