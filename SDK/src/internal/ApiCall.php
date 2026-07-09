@@ -373,7 +373,6 @@ class ApiCall
 
 	/**
 	 * Apply client-side geo filtering to fresh list responses after cache writing.
-	 * Fresh API responses are already paginated by the API, so keep that slice.
 	 *
 	 * @param Request[] $actionParametersOrder
 	 */
@@ -403,7 +402,7 @@ class ApiCall
 
 			$pResponse = $this->_responses[$requestId];
 			$params['listoffset'] = 0;
-			$params['listlimit'] = PHP_INT_MAX;
+			$params['listlimit'] = 500;
 			$this->_responses[$requestId] = new Response(
 				$pRequest,
 				$this->applyListCacheFiltering($pResponse->getResponseData(), $params)
