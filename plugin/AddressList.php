@@ -266,14 +266,21 @@ implements AddressListBase
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
+		$hasGeoSearch = false;
 		if ( isset( $_GET['geo_search'] ) ) {
 			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
 			$geoCoords = explode( ',', $geoSearch );
 			if ( count( $geoCoords ) === 2 ) {
 				$filter['geo'][0]['loc'] = $geoSearch;
+				$hasGeoSearch = true;
 			}
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		if ($hasGeoSearch) {
+			$offset = 0;
+			$numRecordsPerPage = 500;
+		}
 
 		$parameters = array(
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
