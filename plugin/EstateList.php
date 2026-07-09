@@ -1227,6 +1227,29 @@ class EstateList
 	}
 
 	/**
+	 * Resolve the total number of estates for this list through the regular list cache
+	 * lifecycle, without loading estate pictures, contacts or raw values.
+	 *
+	 * The request is built with the exact same parameters as loadRecords()'s main
+	 * request, so it produces the identical DBCache key. On a cache hit no additional
+	 * API call is made; on a miss the regular data-creation process runs and warms the
+	 * list cache before the count is returned. This lets the estate search preview reuse
+	 * the estate list's cache entry instead of issuing its own isolated API request.
+	 *
+	 * @return int
+	 * @throws API\ApiClientException
+	 * @throws UnknownViewException
+	 */
+	public function getEstateOverallCountFromCache(): int
+	{
+		$estateParameters = $this->getEstateParameters(1, $this->_formatOutput);
+		$this->_pApiClientAction->setParameters($estateParameters);
+		$this->_pApiClientAction->addRequestToQueue()->sendRequests();
+
+		return (int) $this->getEstateOverallCount();
+	}
+
+	/**
 	 * @param string $field
 	 * @return string
 	 */
