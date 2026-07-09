@@ -2,6 +2,12 @@ name: 🚀 Create release
 
 on:
   workflow_dispatch:
+    inputs:
+      source-branch:
+        description: Branch to merge into release
+        required: true
+        default: prerelease
+        type: string
 
 permissions:
   contents: write
@@ -10,5 +16,6 @@ jobs:
   merge:
     uses: ./.github/workflows/merge-source-into-branch.yml
     with:
+      source-branch: ${{ inputs.source-branch }}
       target-branch: release
     secrets: inherit

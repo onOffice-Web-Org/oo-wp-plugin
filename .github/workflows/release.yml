@@ -86,7 +86,7 @@ jobs:
         run: |
           if git ls-remote --exit-code --heads origin release > /dev/null 2>&1; then
             git fetch origin release --tags
-            git merge --no-edit -s ours origin/release
+            git merge --no-edit --no-ff -s ours origin/release
           fi
 
       - name: Run semantic-release
