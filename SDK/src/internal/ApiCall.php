@@ -123,11 +123,9 @@ class ApiCall
 		}
 		foreach ($actionParameters as $key => $action) {
 			if (isset($action['parameters']['filter']['geo'])) {
-				unset($actionParameters[$key]['parameters']['filter']['geo']);
+		//		unset($actionParameters[$key]['parameters']['filter']['geo']);
 			}
-			if (isset($action['parameters']['params_list_cache']['filter']['geo'])) {
-				unset($actionParameters[$key]['parameters']['params_list_cache']['filter']['geo']);
-			}
+			
 		}
 		$responseHttp = $this->getFromHttp($token, $actionParameters, $httpFetch);
 
