@@ -307,6 +307,52 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 		$this->assertArrayHasKey('records', $result['data']);
 	}
 
+	/**
+	 * Geo max should cap the complete result before pagination is applied.
+	 */
+	public function testApplyListCacheFiltering_geoMaxCapsTotalBeforePagination()
+	{
+		$apiCall = new ApiCall();
+		$records = [];
+		for ($id = 1; $id <= 5; $id++) {
+			$records[] = [
+				'id' => $id,
+				'elements' => [
+					'laengengrad' => 7.0 + ($id / 1000),
+					'breitengrad' => 51.0,
+				],
+			];
+		}
+
+		$response = [
+			'data' => [
+				'meta' => ['cntabsolute' => 5],
+				'records' => $records,
+			],
+		];
+
+		$method = new ReflectionMethod(ApiCall::class, 'applyListCacheFiltering');
+		$method->setAccessible(true);
+
+		$params = [
+			'formatoutput' => true,
+			'filter' => ['geo' => [[
+				'op' => 'geo',
+				'val' => 200,
+				'loc' => '7.0,51.0',
+				'max' => 3,
+			]]],
+			'listlimit' => 2,
+			'listoffset' => 2,
+		];
+
+		$result = $method->invokeArgs($apiCall, [$response, $params]);
+
+		$this->assertEquals(3, $result['data']['meta']['cntabsolute']);
+		$this->assertCount(1, $result['data']['records']);
+		$this->assertEquals(3, $result['data']['records'][0]['id']);
+	}
+
 
 	/**
 	 * applyListCacheFiltering should early-return when no geo filter and raw/types missing.

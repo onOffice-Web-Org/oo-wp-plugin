@@ -839,6 +839,7 @@ class ApiCall
 			$cachedResponse["data"]["records"] = $filteredArray;
 			$cachedResponse["raw"]["data"]["records"] = $filteredArrayRaw;
 			$filteredArray = $this->sortRecords($cachedResponse, $filter, 'geo_distance', 'ASC');
+			$filteredArray = array_slice($filteredArray, 0, $isGeoAndMax);
 		}
 		$cachedResponse["data"]["records"] = $filteredArray;
 		$cachedResponse["raw"]["data"]["records"] = $filteredArrayRaw;
