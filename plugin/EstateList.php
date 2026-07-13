@@ -371,6 +371,14 @@ class EstateList
 		$this->_records = $this->_pApiClientAction->getResultRecords();
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search pagination
+		if (isset($_GET['geo_search'])) {
+			$perPage = $this->getRecordsPerPage();
+			$offset = ($currentPage - 1) * $perPage;
+			$this->_records = array_slice($this->_records, $offset, $perPage);
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
@@ -854,7 +862,7 @@ class EstateList
 		}
 
 		if (!$pListView->getRandom()) {
-			$offset = ($currentPage - 1) * $numRecordsPerPage;
+			$offset = $hasGeoSearch ? 0 : ($currentPage - 1) * $numRecordsPerPage;
 			$this->_currentEstatePage = $currentPage;
 			$requestParams += [
 				'listoffset' => $offset
