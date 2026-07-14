@@ -276,6 +276,9 @@ implements AddressListBase
 			}
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		if (!$hasGeoSearch) {
+			unset($filter['geo']);
+		}
 
 		if ($hasGeoSearch) {
 			$offset = 0;
