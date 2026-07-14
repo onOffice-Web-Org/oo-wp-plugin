@@ -268,6 +268,13 @@ class AdminPageEstateListSettings
 			if ($pFormFieldsConfig !== null) {
 				$pFormFieldsConfig->setOoModule($module);
 				$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+			} else {
+				error_log(sprintf(
+					'[onOffice Debug] FormModel fehlt für Modul: %s | Kategorie: %s | Generierter Slug: %s',
+					$module,
+					$category,
+					$slug
+				));
 			}
 		}
 	}
