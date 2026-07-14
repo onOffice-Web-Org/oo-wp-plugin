@@ -106,6 +106,15 @@ abstract class AdminPageAjax
 	 */
 	protected function createMetaBoxByForm(FormModel $pFormModel, string $position = 'left')
 	{
+		if ($pFormModel === null) {
+            $current_screen = get_current_screen();
+            error_log(sprintf(
+                '[onOffice Debug] createMetaBoxByForm erhielt NULL auf Screen-ID: %s',
+                $current_screen ? $current_screen->id : 'Unbekannt'
+            ));
+            return;
+        }
+
 		$screenId = get_current_screen()->id;
 		$formId = $pFormModel->getGroupSlug();
 		$formIdHtmlFriendly = HtmlIdGenerator::generateByString($formId);
