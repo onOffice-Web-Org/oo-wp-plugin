@@ -373,13 +373,11 @@ implements AddressListBase
 		$this->_records = $result["data"]["records"];
 		$recordsRaw = $pApiClientActionRaw->getResultRecords();
 
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
-		if (isset($_GET['geo_search'])) {
+		if (isset($parameters['filter']['geo'][0]['loc'])) {
 			$perPage = $this->_pDataViewAddress->getRecordsPerPage();
 			$offset = ($newPage - 1) * $perPage;
 			$this->_records = array_slice($this->_records, $offset, $perPage);
 		}
-		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$this->fetchEstatesForAddressIds($this->getAddressIds());
 		$this->fillAddressesById($this->_records);

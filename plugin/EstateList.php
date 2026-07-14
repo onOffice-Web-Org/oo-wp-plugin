@@ -372,13 +372,11 @@ class EstateList
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search pagination
-		if (isset($_GET['geo_search'])) {
+		if (isset($estateParameters['filter']['geo'][0]['loc'])) {
 			$perPage = $this->getRecordsPerPage();
 			$offset = ($currentPage - 1) * $perPage;
 			$this->_records = array_slice($this->_records, $offset, $perPage);
 		}
-		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
