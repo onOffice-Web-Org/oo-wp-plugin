@@ -108,10 +108,19 @@ abstract class AdminPageAjax
 	{
 		if ($pFormModel === null) {
             $current_screen = get_current_screen();
+            $screenId = $current_screen ? $current_screen->id : 'Unbekannt';
+            
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+            $callerFile = isset($backtrace[0]['file']) ? basename($backtrace[0]['file']) : 'Unbekannt';
+            $callerLine = isset($backtrace[0]['line']) ? $backtrace[0]['line'] : 'Unbekannt';
+
             error_log(sprintf(
-                '[onOffice Debug] createMetaBoxByForm erhielt NULL auf Screen-ID: %s',
-                $current_screen ? $current_screen->id : 'Unbekannt'
+                '[onOffice Debug] createMetaBoxByForm erhielt NULL auf Screen-ID: %s (Aufgerufen in %s auf Zeile %s)',
+                $screenId,
+                $callerFile,
+                $callerLine
             ));
+            
             return;
         }
 
