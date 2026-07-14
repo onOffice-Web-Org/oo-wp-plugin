@@ -268,17 +268,6 @@ class AdminPageEstateListSettings
 			if ($pFormFieldsConfig !== null) {
 				$pFormFieldsConfig->setOoModule($module);
 				$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
-			} else {
-				wp_die(sprintf(
-					'<h3>onOffice Debug Information</h3>' .
-					'<p><strong>Modul:</strong> %s</p>' .
-					'<p><strong>Kategorie (Das Problem!):</strong> %s</p>' .
-					'<p><strong>Generierter Slug:</strong> %s</p>' .
-					'<p>Lösche diese Testzeilen danach wieder aus dem Code.',
-					esc_html($module),
-					esc_html($category),
-					esc_html($slug)
-				));
 			}
 		}
 	}
