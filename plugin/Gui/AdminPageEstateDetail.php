@@ -311,7 +311,10 @@ class AdminPageEstateDetail
 
 		foreach (array_keys($fieldsEstate) as $category) {
 			$pFormFieldsConfig = $this->getFormModelByGroupSlug(onOfficeSDK::MODULE_ESTATE.$category);
-			$this->createMetaBoxByForm($pFormFieldsConfig, 'advanced');
+
+			if ($pFormFieldsConfig !== null) {
+                $this->createMetaBoxByForm($pFormFieldsConfig, 'advanced');
+            }
 		}
 	}
 
