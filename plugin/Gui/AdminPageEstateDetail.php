@@ -330,7 +330,9 @@ class AdminPageEstateDetail
 
 		foreach (array_keys($fieldNamesContactData) as $category) {
 			$pFormFieldsConfig = $this->getFormModelByGroupSlug(onOfficeSDK::MODULE_ADDRESS.$category);
-			$this->createMetaBoxByForm($pFormFieldsConfig, 'contactperson');
+			if ($pFormFieldsConfig !== null) {
+				$this->createMetaBoxByForm($pFormFieldsConfig, 'contactperson');
+            }
 		}
 	}
 
