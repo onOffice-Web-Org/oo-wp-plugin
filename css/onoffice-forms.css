@@ -10,3 +10,8 @@ span.onoffice-pleasefill {
 	cursor: not-allowed;
 	pointer-events: none;
 }
+
+.oo-hidden-by-filter {
+	display: none !important;
+}
+

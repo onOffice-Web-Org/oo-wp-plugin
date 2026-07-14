@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 6.1
 Tested up to: 6.9.1
 Requires PHP: 8.2
-Stable tag: 6.16.0-prerelease.1
+Stable tag: 6.16.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,33 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.16.0 (2026-07-01) =
+
+**Added**
+* add PHP and WordPress metadata from readme.txt to updater.json
+* Feldabhängigkeiten in der Wertermittlung
+* semantic releases
+* update version to 6.13 and set required PHP version to 8.0
+
+**Changed**
+* Abweichender Agreementlink bei provisionsfrei
+
+**Fixed**
+* remove geo filter from api call
+* added method getContactRawById for wp-websites
+* docker tests
+* Karten anzeigen Immobilienliste
+* Sortierung Immoliste
+* cache key collisions for unit estate lists
+* Adressfreigabe Pin auf Map
+
+**Maintenance**
+* WP-Plugin oo-updater und Kundenliste
+* update dependencies
+
+**Tests**
+* add test for paginated data
 
 = 6.15 (2026-05-27) =
 
