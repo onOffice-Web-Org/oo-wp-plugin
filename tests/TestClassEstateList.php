@@ -1324,6 +1324,46 @@ class TestClassEstateList
 		}
 	}
 
+	public function testGetEstateParametersEmptyGeoSearchUsesRegularPagination()
+	{
+		$originalGet = $_GET;
+		$_GET['geo_search'] = '';
+
+		try {
+			$getEstateParameters = Closure::bind(function (int $currentPage, bool $formatOutput) {
+				return $this->getEstateParameters($currentPage, $formatOutput);
+			}, $this->_pEstateList, EstateList::class);
+
+			$params = $getEstateParameters(2, true);
+
+			$this->assertSame(5, $params['listlimit']);
+			$this->assertSame(5, $params['listoffset']);
+			$this->assertArrayNotHasKey('geo', $params['filter']);
+		} finally {
+			$_GET = $originalGet;
+		}
+	}
+
+	public function testGetEstateParametersValidGeoSearchFetchesAllAndKeepsApiOffsetZero()
+	{
+		$originalGet = $_GET;
+		$_GET['geo_search'] = '7.0,51.0';
+
+		try {
+			$getEstateParameters = Closure::bind(function (int $currentPage, bool $formatOutput) {
+				return $this->getEstateParameters($currentPage, $formatOutput);
+			}, $this->_pEstateList, EstateList::class);
+
+			$params = $getEstateParameters(2, true);
+
+			$this->assertSame(500, $params['listlimit']);
+			$this->assertSame(0, $params['listoffset']);
+			$this->assertSame('7.0,51.0', $params['filter']['geo'][0]['loc']);
+		} finally {
+			$_GET = $originalGet;
+		}
+	}
+
 	/**
 	 * Verify that fetchDataForOrderEstatesByTags routes through the list cache when
 	 * SHOW_MARKED_PROPERTIES_SORT is active: the outgoing API request must carry
