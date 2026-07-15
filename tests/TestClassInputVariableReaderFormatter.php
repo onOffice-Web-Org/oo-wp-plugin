@@ -3,6 +3,7 @@
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Controller\InputVariableReaderFormatter;
+use onOffice\WPlugin\Field\PriceFormatService;
 use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
 
@@ -15,7 +16,7 @@ class TestClassInputVariableReaderFormatter
 	 */
 	public function testFormatFloatValueWithDecimalSeparatorComma()
 	{
-		$pInstance = new InputVariableReaderFormatter;
+		$pInstance = new InputVariableReaderFormatter(new PriceFormatService());
 		update_option('onoffice-settings-thousand-separator-custom', '.');
 		update_option('onoffice-settings-decimal-separator', ',');
 
@@ -29,7 +30,7 @@ class TestClassInputVariableReaderFormatter
 	 */
 	public function testFormatFloatValueWithDecimalSeparatorDot()
 	{
-		$pInstance = new InputVariableReaderFormatter;
+		$pInstance = new InputVariableReaderFormatter(new PriceFormatService());
 		update_option('onoffice-settings-thousand-separator-custom', ',');
 		update_option('onoffice-settings-decimal-separator', '.');
 
@@ -45,7 +46,7 @@ class TestClassInputVariableReaderFormatter
 	 */
 	public function testFormatDateOrDateTimeValue()
 	{
-		$pInstance = new InputVariableReaderFormatter;
+		$pInstance = new InputVariableReaderFormatter(new PriceFormatService());
 
 		$this->assertEquals('2018/06/28 12:01:00 pm', $pInstance->formatValue('2018-06-28 14:01:00', FieldTypes::FIELD_TYPE_DATETIME));
 		$this->assertEquals('2018/06/28 12:01:00 pm', $pInstance->formatDateOrDateTimeValue('2018-06-28 14:01:00', FieldTypes::FIELD_TYPE_DATETIME));
@@ -56,7 +57,7 @@ class TestClassInputVariableReaderFormatter
 	 */
 	public function testFormatValueArrayWithDecimalSeparatorComma()
 	{
-		$pInstance = new InputVariableReaderFormatter;
+		$pInstance = new InputVariableReaderFormatter(new PriceFormatService());
 		update_option('onoffice-settings-thousand-separator-custom', '.');
 		update_option('onoffice-settings-decimal-separator', ',');
 
@@ -68,7 +69,7 @@ class TestClassInputVariableReaderFormatter
 	 */
 	public function testFormatValueArrayWithDecimalSeparatorDot()
 	{
-		$pInstance = new InputVariableReaderFormatter;
+		$pInstance = new InputVariableReaderFormatter(new PriceFormatService());
 		update_option('onoffice-settings-thousand-separator-custom', ',');
 		update_option('onoffice-settings-decimal-separator', '.');
 

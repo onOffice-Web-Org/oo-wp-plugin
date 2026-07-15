@@ -31,9 +31,12 @@ class CostsCalculator
 	/** @var SDKWrapper */
 	private $_pSDKWrapper;
 
-	public function __construct(SDKWrapper $_pSDKWrapper)
+	private $pPriceFormatService;
+
+	public function __construct(SDKWrapper $_pSDKWrapper, PriceFormatService $pPriceFormatService)
 	{
 		$this->_pSDKWrapper = $_pSDKWrapper;
+		$this->pPriceFormatService = $pPriceFormatService;
 	}
 
 	
@@ -130,8 +133,7 @@ class CostsCalculator
 	 */
 	private function formatCurrency(float $amount, string $currency): string
 	{
-		$pPriceFormatService = new PriceFormatService();
-		return $pPriceFormatService->formatPrice($amount, $currency);
+		return $this->pPriceFormatService->formatPrice($amount, $currency);
 	}
 
 	/**

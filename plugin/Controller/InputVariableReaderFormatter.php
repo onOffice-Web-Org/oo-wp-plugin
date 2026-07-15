@@ -28,6 +28,13 @@ use onOffice\WPlugin\Types\FieldTypes;
 
 class InputVariableReaderFormatter
 {
+	private $pPriceFormatService;
+
+	public function __construct(PriceFormatService $pPriceFormatService)
+	{
+		$this->pPriceFormatService = $pPriceFormatService;
+	}
+
 	const APPLY_THOUSAND_SEPARATOR_FIELDS = [
 		'mieteinnahmen_pro_jahr_ist',
 		'mieteinnahmen_pro_jahr_soll',
@@ -113,8 +120,7 @@ class InputVariableReaderFormatter
 	 */
 	public function formatFloatValue(float $value): string
 	{
-		$pPriceFormatService = new PriceFormatService();
-		$decimalSep = $pPriceFormatService->getDecimalSeparator();
+		$decimalSep = $this->pPriceFormatService->getDecimalSeparator();
 
 		return number_format($value, 2, $decimalSep, '');
 	}
