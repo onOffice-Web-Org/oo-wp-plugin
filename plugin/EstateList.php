@@ -371,6 +371,12 @@ class EstateList
 		$this->_records = $this->_pApiClientAction->getResultRecords();
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+
+		if (isset($estateParameters['filter']['geo'][0]['loc'])) {
+			$perPage = $this->getRecordsPerPage();
+			$offset = ($currentPage - 1) * $perPage;
+			$this->_records = array_slice($this->_records, $offset, $perPage);
+		}
 	}
 
 	/**
@@ -823,14 +829,23 @@ class EstateList
 		);
 		
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
+		$hasGeoSearch = false;
 		if ( isset( $_GET['geo_search'] ) ) {
 			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
 			$geoCoords = explode( ',', $geoSearch );
 			if ( count( $geoCoords ) === 2 ) {
 				$filter['geo'][0]['loc'] = $geoSearch;
+				$hasGeoSearch = true;
 			}
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		if (!$hasGeoSearch) {
+			unset($filter['geo']);
+		}
+
+		if ($hasGeoSearch) {
+			$numRecordsPerPage = 500;
+		}
 
 		$requestParams = [
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
@@ -848,7 +863,7 @@ class EstateList
 		}
 
 		if (!$pListView->getRandom()) {
-			$offset = ($currentPage - 1) * $numRecordsPerPage;
+			$offset = $hasGeoSearch ? 0 : ($currentPage - 1) * $numRecordsPerPage;
 			$this->_currentEstatePage = $currentPage;
 			$requestParams += [
 				'listoffset' => $offset
@@ -1224,6 +1239,29 @@ class EstateList
 	public function getEstateOverallCount()
 	{
 		return $this->_pApiClientAction->getResultMeta()['cntabsolute'];
+	}
+
+	/**
+	 * Resolve the total number of estates for this list through the regular list cache
+	 * lifecycle, without loading estate pictures, contacts or raw values.
+	 *
+	 * The request is built with the exact same parameters as loadRecords()'s main
+	 * request, so it produces the identical DBCache key. On a cache hit no additional
+	 * API call is made; on a miss the regular data-creation process runs and warms the
+	 * list cache before the count is returned. This lets the estate search preview reuse
+	 * the estate list's cache entry instead of issuing its own isolated API request.
+	 *
+	 * @return int
+	 * @throws API\ApiClientException
+	 * @throws UnknownViewException
+	 */
+	public function getEstateOverallCountFromCache(): int
+	{
+		$estateParameters = $this->getEstateParameters(1, $this->_formatOutput);
+		$this->_pApiClientAction->setParameters($estateParameters);
+		$this->_pApiClientAction->addRequestToQueue()->sendRequests();
+
+		return (int) $this->getEstateOverallCount();
 	}
 
 	/**
