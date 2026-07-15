@@ -896,6 +896,25 @@ class ApiCall
 				$requestParameters = $this->normalizeFieldDependencyParameters(
 					$pResponse->getRequest()->getApiAction()->getActionParameters()
 				);
+
+				// A list-cache entry (listname key) must always hold the COMPLETE record set,
+				// because that key ignores listoffset and is expected to answer every page. A
+				// live miss for a list larger than one page only returns a single page of at
+				// most `listlimit` records; persisting it here would truncate the list on the
+				// next read. Skip such partial pages — the full set is (re)built by
+				// SDKWrapper::renewCache(), which writes to the cache directly.
+				$params = $requestParameters['parameters'] ?? [];
+				$records = $responseData['data']['records'] ?? null;
+				$cntAbsolute = $responseData['data']['meta']['cntabsolute'] ?? null;
+				if (
+					isset($params['params_list_cache']) &&
+					is_array($records) &&
+					is_numeric($cntAbsolute) &&
+					count($records) < (int) $cntAbsolute
+				) {
+					continue;
+				}
+
 				$this->writeCache(serialize($responseData), $requestParameters);
 			}
 		}

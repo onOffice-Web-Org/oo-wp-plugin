@@ -648,13 +648,12 @@ class EstateList
 				'formatoutput' => $formatOutput,
 				'addMainLangId' => true,
 			];
-			// Only the first page may use the listname-based cache key: a pre-warmed entry
-			// contains the full record set, so a hit answers the whole list at once. On a
-			// cache miss the response is stored under the listname key as a single page of
-			// at most 500 records; follow-up pages must bypass the list cache (falling back
-			// to the parameter-hash key) or they would read that partial entry again and
-			// truncate lists larger than 500 estates.
-			if ($useListCache && $offset === 0) {
+			// Route every page through the listname-based cache key. A pre-warmed entry holds
+			// the full record set, so each 500-block is answered from that single entry
+			// (applyListCacheFiltering slices it by listoffset/listlimit). Partial live pages
+			// are never persisted under the listname key (ApiCall::writeCacheForResponses skips
+			// them), so follow-up offsets can safely reuse it without risking a truncated read.
+			if ($useListCache) {
 				$requestParams = ['listname' => $this->_pDataView->getName()] + $requestParams;
 				$requestParams['params_list_cache'] = $paramsListCache;
 			}

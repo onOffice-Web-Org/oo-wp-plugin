@@ -1412,11 +1412,12 @@ class TestClassEstateList
 	}
 
 	/**
-	 * Follow-up pages (listoffset > 0) must not carry 'listname': on a cache miss the
-	 * first page is stored under the listname key, so a subsequent listname request
-	 * would read that partial entry again and truncate lists larger than 500 estates.
+	 * Lists larger than one 500-record page must route EVERY page through the listname
+	 * cache key. A pre-warmed entry holds the full record set, so each 500-block is served
+	 * from that single entry; partial live pages are never persisted under the listname key
+	 * (ApiCall::writeCacheForResponses skips them), so follow-up offsets can safely reuse it.
 	 */
-	public function testFetchDataForOrderEstatesByTagsBypassesListCacheForFollowUpPages()
+	public function testFetchDataForOrderEstatesByTagsRoutesAllPagesThroughListCache()
 	{
 		$pDataView = $this->getDataView();
 		$pDataView->setSortBySetting(DataListView::SHOW_MARKED_PROPERTIES_SORT);
@@ -1465,13 +1466,20 @@ class TestClassEstateList
 
 		$records = $fetchData(1, false);
 
+		// All 510 records across both pages are aggregated (no truncation, no duplicates).
 		$this->assertCount(510, $records);
 		$this->assertCount(2, $capturedParamSets);
+
+		// First page: listname cache key, offset 0.
 		$this->assertArrayHasKey('listname', $capturedParamSets[0]);
+		$this->assertArrayHasKey('params_list_cache', $capturedParamSets[0]);
 		$this->assertSame(0, $capturedParamSets[0]['listoffset']);
-		$this->assertArrayNotHasKey('listname', $capturedParamSets[1],
-			'follow-up pages must bypass the listname cache key');
-		$this->assertArrayNotHasKey('params_list_cache', $capturedParamSets[1]);
+
+		// Follow-up page: also routed through the listname cache key, offset 500.
+		$this->assertArrayHasKey('listname', $capturedParamSets[1],
+			'every page must route through the listname cache key after the guard removal');
+		$this->assertArrayHasKey('params_list_cache', $capturedParamSets[1]);
+		$this->assertSame($pDataView->getName(), $capturedParamSets[1]['listname']);
 		$this->assertSame(500, $capturedParamSets[1]['listoffset']);
 	}
 
