@@ -31,6 +31,9 @@ namespace onOffice\WPlugin\Renderer;
 class InputFieldEmailRenderer
 	extends InputFieldRenderer
 {
+	/** @var string */
+	private $_suffixHtml = '';
+
 	/**
 	 *
 	 * @param string $type
@@ -47,6 +50,10 @@ class InputFieldEmailRenderer
 		parent::__construct($type, $name, $value);
 	}
 
+	/** @param string $suffixHtml Pre-escaped HTML, echoed right after the input tag */
+	public function setSuffixHtml($suffixHtml)
+		{ $this->_suffixHtml = $suffixHtml; }
+
 	/**
 	 *
 	 */
@@ -61,7 +68,10 @@ class InputFieldEmailRenderer
              . '" value="' . esc_html( $this->getValue() ) . '" id="' . esc_html( $this->getGuiId() ) . '"'
 			 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped attributes
              . ' ' . $this->renderAdditionalAttributes()
+             . '>'
+             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $_suffixHtml is built and escaped by the caller
+             . $this->_suffixHtml
              // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $textHtml contains escaped hint text
-             . '>' . $textHtml;
+             . $textHtml;
 	}
 }

@@ -76,6 +76,9 @@ class DataFormConfiguration
 	/** @var bool */
 	private $_defaultRecipient = false;
 
+	/** @var bool */
+	private $_useBrokerRecipient = false;
+
 	/** @var array */
 	private $_markdownFields = [];
 
@@ -307,6 +310,14 @@ class DataFormConfiguration
 	/** @param bool $defaultRecipient */
 	public function setDefaultRecipient(bool $defaultRecipient)
 		{ $this->_defaultRecipient = $defaultRecipient; }
+
+	/** @return bool */
+	public function getUseBrokerRecipient(): bool
+		{ return $this->_useBrokerRecipient; }
+
+	/** @param bool $useBrokerRecipient */
+	public function setUseBrokerRecipient(bool $useBrokerRecipient)
+		{ $this->_useBrokerRecipient = $useBrokerRecipient; }
 
 	/** @return string */
 	public function getRecipient()

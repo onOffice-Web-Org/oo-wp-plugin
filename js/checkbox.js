@@ -43,12 +43,6 @@ onOffice.checkboxAdmin = function() {
 		],
 
 		// view: form
-		"input[name=oopluginforms-defaultrecipient]": [
-			{
-				element: "input[name=oopluginforms-recipient]",
-				invert: true
-			}
-		],
 		"input[name^=oopluginformfieldconfig-hiddenfield]": [
 			{
 				element: "input[name^=oopluginformfieldconfig-required]",
@@ -194,3 +188,36 @@ jQuery(document).ready(function() {
 	var cbAdmin = new onOffice.checkboxAdmin();
 	cbAdmin.changeCbStatus(this, null);
 });
+
+// view: form - recipient mode radio group (default / custom / broker email).
+// Deterministic on purpose: every change re-evaluates all three from scratch,
+// so there's no dependency on which element's handler happens to run last.
+onOffice.setupRecipientModeRadios = function() {
+	var $ = jQuery;
+	var GROUP_SELECTOR = 'input[name=oopluginforms-defaultrecipient],'
+		+ 'input[name=oopluginforms-usebrokerrecipient],'
+		+ 'input[name=oopluginforms-recipientmode-custom]';
+
+	var sync = function($scope) {
+		var $custom = $scope.find('input[name=oopluginforms-recipientmode-custom]');
+		var $recipient = $scope.find('input[name=oopluginforms-recipient]');
+		if ($custom.length && $recipient.length) {
+			$recipient.prop('disabled', !$custom.prop('checked'));
+		}
+	};
+
+	$(document).on('change', GROUP_SELECTOR, function() {
+		var $this = $(this);
+		var $scope = $this.closest('form, body');
+		if ($this.prop('checked')) {
+			$scope.find(GROUP_SELECTOR).not(this).prop('checked', false);
+		}
+		sync($scope);
+	});
+
+	$(GROUP_SELECTOR).each(function() {
+		sync($(this).closest('form, body'));
+	});
+};
+
+jQuery(document).ready(onOffice.setupRecipientModeRadios);

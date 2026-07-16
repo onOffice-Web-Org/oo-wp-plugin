@@ -143,6 +143,9 @@ class InputModelRenderer
 				if ($pInputModel->getHintHtml() != null) {
 					$pInstance->setHint($pInputModel->getHintHtml());
 				}
+				if ($pInputModel->isRenderAsRadio()) {
+					$pInstance->setType('radio');
+				}
 				break;
 
 			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST:
@@ -270,6 +273,9 @@ class InputModelRenderer
 				$pInstance = new InputFieldEmailRenderer('email', $elementName);
 				$pInstance->addAdditionalAttribute('size', '50');
 				$pInstance->setValue($pInputModel->getValue());
+				if ($pInputModel->getSuffixHtml() !== '') {
+					$pInstance->setSuffixHtml($pInputModel->getSuffixHtml());
+				}
 				break;
 
 			case InputModelOption::HTML_TYPE_BUTTON_FIELD:

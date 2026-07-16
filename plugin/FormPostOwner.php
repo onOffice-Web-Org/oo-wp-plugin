@@ -33,6 +33,8 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
+use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
+use onOffice\WPlugin\Factory\AddressListFactory;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\EstateFields;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
@@ -63,6 +65,9 @@ class FormPostOwner
 	/** @var EstateFields */
 	private $_pEstateFields = null;
 
+	/** @var AddressListFactory */
+	private $_pAddressDetailFactory;
+
 
 	/**
 	 * @param FormPostConfiguration $pFormPostConfiguration
@@ -70,16 +75,19 @@ class FormPostOwner
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 * @param FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm
 	 * @param EstateFields $pEstateFields
+	 * @param AddressListFactory $pAddressDetailFactory
 	 */
 	public function __construct(
 		FormPostConfiguration $pFormPostConfiguration,
 		FormPostOwnerConfiguration $pFormPostOwnerConfiguration,
 		SearchcriteriaFields $pSearchcriteriaFields,
 		FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm,
-		EstateFields $pEstateFields)
+		EstateFields $pEstateFields,
+		AddressListFactory $pAddressDetailFactory)
 	{
 		$this->_pFormPostOwnerConfiguration = $pFormPostOwnerConfiguration;
 		$this->_pEstateFields = $pEstateFields;
+		$this->_pAddressDetailFactory = $pAddressDetailFactory;
 		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
 	}
 
@@ -107,7 +115,7 @@ class FormPostOwner
 		$pDataFormConfiguration = $pFormData->getDataFormConfiguration();
 		$this->_pFormData = $pFormData;
 
-		$recipient = $pDataFormConfiguration->getRecipientByUserSelection();
+		$recipient = $this->determineRecipient($pDataFormConfiguration);
 
 		$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
@@ -150,6 +158,65 @@ class FormPostOwner
 				$this->sendContactRequest( $recipient, $estateId ?? 0, $estateData, $subject );
 			}
 		}
+	}
+
+	/**
+	 * Determines the email address the lead will be sent to.
+	 *
+	 * @param DataFormConfigurationOwner $pDataFormConfiguration
+	 * @return string
+	 */
+
+	private function determineRecipient(DataFormConfigurationOwner $pDataFormConfiguration): string
+	{
+		// Note: not using getRecipientByUserSelection() here, since it's typed to return
+		// string but can in practice return null (e.g. no recipient configured, relying on
+		// the broker recipient below instead), which would throw a TypeError.
+		$recipient = $pDataFormConfiguration->getDefaultRecipient()
+			? get_option('onoffice-settings-default-email', '')
+			: (string) ($pDataFormConfiguration->getRecipient() ?? '');
+
+		if ($pDataFormConfiguration->getUseBrokerRecipient()) {
+			$recipient = $this->getBrokerRecipient() ?? get_option('onoffice-settings-default-email', '');
+		}
+
+		return $recipient;
+	}
+
+	/**
+	 * Returns the email address of the real estate advisor whose detail page this form is
+	 * embedded on, or null if the form isn't on an advisor detail page or the advisor has no email.
+	 *
+	 * @return string|null
+	 */
+
+	private function getBrokerRecipient(): ?string
+	{
+		$pDataAddressDetailViewHandler = new DataAddressDetailViewHandler();
+		$pAddressDataView = $pDataAddressDetailViewHandler->getAddressDetailView();
+		$pageId = intval($pAddressDataView->getPageId());
+
+		if ($pageId === 0) {
+			return null;
+		}
+
+		// Same query var the address detail page itself uses to know which address to
+		// display (see ContentFilterShortCodeAddressDetail::getAddressId())
+		$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
+		$addressId = $pWPQuery->query_vars['address_id'] ?? 0;
+
+		if (empty($addressId)) {
+			return null;
+		}
+
+		// Load the address the same way the address detail page itself does (AddressDetail::
+		// loadSingleAddress()
+		$defaultFields = ['defaultemail' => 'Email'];
+		$addressList = $this->_pAddressDetailFactory->createAddressDetail((int) $addressId);
+		$addressList->loadAddressesById([(int) $addressId], $defaultFields);
+		$email = $addressList->getCurrentAddress()[$addressId]['Email'] ?? '';
+
+		return $email !== '' ? $email : null;
 	}
 
 	/**

@@ -120,6 +120,10 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice-for-wp-websites'));
 		$pFormModelFormSpecific->addInputModel($pInputModelDefaultRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelRecipient);
+		if ($this->getType() === Form::TYPE_OWNER) {
+			$pInputModelUseBrokerRecipient = $pFormModelBuilder->createInputModelUseBrokerRecipient();
+			$pFormModelFormSpecific->addInputModel($pInputModelUseBrokerRecipient);
+		}
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
 		$pFormModelFormSpecific->addInputModel($pInputModelDisplayUnitArea);

@@ -131,6 +131,12 @@ abstract class InputModelBase
 	/** @var string */
 	private $_hint = null;
 
+	/** @var bool Render a checkbox as a radio button (visual only, same submit behavior) */
+	private $_renderAsRadio = false;
+
+	/** @var string Raw HTML echoed right after the rendered input tag */
+	private $_suffixHtml = '';
+
 	/** @var string */
 	private $_id = null;
 
@@ -273,6 +279,22 @@ abstract class InputModelBase
 	/** @param string $hint */
 	public function setHintHtml($hint)
 	{ $this->_hint = $hint; }
+
+	/** @return bool */
+	public function isRenderAsRadio()
+	{ return $this->_renderAsRadio; }
+
+	/** @param bool $renderAsRadio */
+	public function setRenderAsRadio($renderAsRadio)
+	{ $this->_renderAsRadio = $renderAsRadio; }
+
+	/** @return string */
+	public function getSuffixHtml()
+	{ return $this->_suffixHtml; }
+
+	/** @param string $suffixHtml */
+	public function setSuffixHtml($suffixHtml)
+	{ $this->_suffixHtml = $suffixHtml; }
 
 	/** @param string $id */
 	public function setId($id)
