@@ -89,11 +89,18 @@ class DBCache
 		$parametersSerialized = $this->getParametersSerialized( $parameters );
 		if(isset($parameters['parameters']['listname']))
 		{
-			$parametersSerialized = $parameters['parameters']['listname'].intval($parameters['parameters']['formatoutput']).$parameters['parameters']['outputlanguage'];
-			// Append ID filters to the cache key to guarantee uniqueness for identity-based lists (like unit lists with sub-estates).
-			if (isset($parameters['parameters']['filter']['Id'])) {
-				$parametersSerialized .= serialize($parameters['parameters']['filter']['Id']);
+			$hashParts = [
+				$parameters['parameters']['listname'],
+				intval($parameters['parameters']['formatoutput']),
+				$parameters['parameters']['outputlanguage'],
+			];
+
+			$filter = $parameters['parameters']['filter'] ?? [];
+			if (is_array($filter) && count($filter) > 0) {
+				$hashParts[] = serialize($filter);
 			}
+
+			$parametersSerialized = implode('|', $hashParts);
 		}
 		return md5( $parametersSerialized );
 	}

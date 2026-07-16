@@ -737,6 +737,48 @@ class TestClassAddressList
 		return json_decode($responseStr, true);
 	}
 
+	public function testGetAddressParametersEmptyGeoSearchUsesRegularPagination()
+	{
+		$originalGet = $_GET;
+		$_GET['geo_search'] = '';
+
+		try {
+			$this->_pEnvironment->getFieldnames()->loadLanguage();
+			$getAddressParameters = Closure::bind(function (int $currentPage, bool $formatOutput) {
+				return $this->getAddressParameters($currentPage, $formatOutput);
+			}, $this->_pAddressList, AddressList::class);
+
+			$params = $getAddressParameters(2, true);
+
+			$this->assertSame(5, $params['listlimit']);
+			$this->assertSame(5, $params['listoffset']);
+			$this->assertArrayNotHasKey('geo', $params['filter']);
+		} finally {
+			$_GET = $originalGet;
+		}
+	}
+
+	public function testGetAddressParametersValidGeoSearchFetchesAllAndKeepsApiOffsetZero()
+	{
+		$originalGet = $_GET;
+		$_GET['geo_search'] = '7.0,51.0';
+
+		try {
+			$this->_pEnvironment->getFieldnames()->loadLanguage();
+			$getAddressParameters = Closure::bind(function (int $currentPage, bool $formatOutput) {
+				return $this->getAddressParameters($currentPage, $formatOutput);
+			}, $this->_pAddressList, AddressList::class);
+
+			$params = $getAddressParameters(2, true);
+
+			$this->assertSame(500, $params['listlimit']);
+			$this->assertSame(0, $params['listoffset']);
+			$this->assertSame('7.0,51.0', $params['filter']['geo'][0]['loc']);
+		} finally {
+			$_GET = $originalGet;
+		}
+	}
+
 	private function getResponseGetRowsRaw()
 	{
 		$responseStr = '
