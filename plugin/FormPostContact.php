@@ -103,7 +103,7 @@ class FormPostContact
 	protected function analyseFormContentByPrefix(FormData $pFormData)
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
-		$recipient = $pFormConfig->getRecipientByUserSelection();
+		$recipient = $this->determineRecipient($pFormConfig);
 		$subject = $this->generateDefaultEmailSubject($pFormData->getFormtype(), $this->_pFormPostContactConfiguration->getNewsletterAccepted());
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
@@ -143,6 +143,58 @@ class FormPostContact
 		$pField->setType(FieldTypes::FIELD_TYPE_INTEGER);
 
 		return [$pField];
+	}
+
+	/**
+	 * Determines the email address the lead will be sent to.
+	 *
+	 * @param DataFormConfiguration $pFormConfig
+	 * @return string
+	 */
+
+	private function determineRecipient(DataFormConfiguration $pFormConfig): string
+	{
+		$recipient = (string) ($pFormConfig->getRecipientByUserSelection() ?? '');
+
+		if ($pFormConfig->getUseBrokerRecipient()) {
+			$recipient = $this->getBrokerRecipient() ?? $recipient;
+		}
+
+		return $recipient;
+	}
+
+	/**
+	 * Returns the email address of the address whose detail page this form is embedded
+	 * on, or null if the form isn't on an address detail page or the address has no email.
+	 *
+	 * @return string|null
+	 */
+
+	private function getBrokerRecipient(): ?string
+	{
+		$pDataAddressDetailViewHandler = new DataAddressDetailViewHandler();
+		$pAddressDataView = $pDataAddressDetailViewHandler->getAddressDetailView();
+		$pageId = intval($pAddressDataView->getPageId());
+
+		if ($pageId === 0) {
+			return null;
+		}
+
+		// Same query var the address detail page itself uses to know which address to
+		// display (see ContentFilterShortCodeAddressDetail::getAddressId())
+		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
+		$addressId = $pWPQuery->query_vars['address_id'] ?? 0;
+
+		if (empty($addressId)) {
+			return null;
+		}
+
+		$defaultFields = ['defaultemail' => 'Email'];
+		$addressList = $this->_pAddressDetailFactory->createAddressDetail((int) $addressId);
+		$addressList->loadAddressesById([(int) $addressId], $defaultFields);
+		$email = $addressList->getCurrentAddress()[$addressId]['Email'] ?? '';
+
+		return $email !== '' ? $email : null;
 	}
 
 	/**
@@ -225,24 +277,6 @@ class FormPostContact
 		unset($requestParams['addressdata']['newsletter']);
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
-		}
-		$pDataAddressDetailViewHandler = new DataAddressDetailViewHandler();
-		$pAddressDataView = $pDataAddressDetailViewHandler->getAddressDetailView();
-
-		$referrerURL = get_site_url().$requestParams['referrer'];
-
-		if(intval($pAddressDataView->getPageId()) != 0 && (
-			str_starts_with($referrerURL, get_permalink($pAddressDataView->getPageId()))
-			|| str_starts_with($referrerURL, get_permalink($pAddressDataView->getPageId()))))
-		{
-			//if form posted on address detail page, change recipient
-			$addressId = str_replace(get_permalink($pAddressDataView->getPageId()),"",$referrerURL);
-			$addressId = preg_replace('/-.*|\/.*|\D+/', '', $addressId);
-
-			$defaultFields = ['defaultemail' => 'Email'];
-			$addressList = $this->_pAddressDetailFactory->create($pAddressDataView);
-			$addressList->loadBrokerAddressesById([$addressId], $defaultFields);
-			$requestParams['recipient'] = $addressList->getCurrentAddress()[$addressId]['Email'];
 		}
 
 		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();

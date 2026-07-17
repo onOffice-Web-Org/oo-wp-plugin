@@ -422,12 +422,12 @@ class FormModelBuilderDBForm
 	 * @return InputModelDB
 	 * @throws Exception
 	 */
-	public function createInputModelUseBrokerRecipient(): InputModelDB
+	public function createInputModelUseBrokerRecipient(bool $defaultValueForNewForms = false): InputModelDB
 	{
 		$hint = __('If this form is embedded on the detail page of an address, the request is sent directly to that address\'s email. If the address has no email, or the form is not embedded on an address detail page, the recipient selected above is used instead.', 'onoffice-for-wp-websites');
 		$labelUseBrokerRecipient = __('Use the email address from the address detail page', 'onoffice-for-wp-websites')
 			. ' <span class="dashicons dashicons-editor-help oo-field-hint" tabindex="0" title="' . esc_attr($hint) . '"></span>';
-		$selectedValue = $this->getValue('use_broker_recipient', false);
+		$selectedValue = $this->getValue('use_broker_recipient', $defaultValueForNewForms);
 		$pInputModelUseBrokerRecipient = $this->generateGenericCheckbox($labelUseBrokerRecipient,
 			InputModelDBFactoryConfigForm::INPUT_FORM_USE_BROKER_RECIPIENT, $selectedValue);
 

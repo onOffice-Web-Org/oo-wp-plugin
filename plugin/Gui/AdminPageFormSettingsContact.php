@@ -120,8 +120,11 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice-for-wp-websites'));
 		$pFormModelFormSpecific->addInputModel($pInputModelDefaultRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelRecipient);
-		if ($this->getType() === Form::TYPE_OWNER) {
-			$pInputModelUseBrokerRecipient = $pFormModelBuilder->createInputModelUseBrokerRecipient();
+		if (in_array($this->getType(), [Form::TYPE_CONTACT, Form::TYPE_OWNER, Form::TYPE_INTEREST], true)) {
+			// Existing contact forms relied on an always-on address-detail-page override
+			// before this checkbox existed, so new contact forms default to enabled too.
+			$defaultValueForNewForms = $this->getType() === Form::TYPE_CONTACT;
+			$pInputModelUseBrokerRecipient = $pFormModelBuilder->createInputModelUseBrokerRecipient($defaultValueForNewForms);
 			$pFormModelFormSpecific->addInputModel($pInputModelUseBrokerRecipient);
 		}
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);

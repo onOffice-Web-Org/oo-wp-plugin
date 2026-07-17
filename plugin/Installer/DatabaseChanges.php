@@ -1365,6 +1365,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if (empty($columnExists)) {
 			$sql = "ALTER TABLE $tableName ADD COLUMN use_broker_recipient tinyint(1) NOT NULL DEFAULT '0'";
 			$this->_pWPDB->query($sql);
+
+			// Contact forms always sent to the address-detail-page email before this flag
+			// existed (referrer-URL based, unconditional). Backfill existing contact forms
+			// so their behavior doesn't silently change once the checkbox starts gating it.
+			$this->_pWPDB->query("UPDATE $tableName SET use_broker_recipient = 1 WHERE form_type = 'contact'");
 		}
 	}
 }

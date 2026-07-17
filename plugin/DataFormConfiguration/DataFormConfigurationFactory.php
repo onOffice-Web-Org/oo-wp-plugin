@@ -364,6 +364,7 @@ class DataFormConfigurationFactory
 	{
 		$pConfig->setRecipient($row['recipient']);
 		$pConfig->setDefaultRecipient($row['default_recipient']);
+		$pConfig->setUseBrokerRecipient((bool)($row['use_broker_recipient'] ?? false));
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCreateAddress((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
@@ -440,6 +441,7 @@ class DataFormConfigurationFactory
 	{
 		$pConfig->setRecipient($row['recipient']);
 		$pConfig->setDefaultRecipient($row['default_recipient']);
+		$pConfig->setUseBrokerRecipient((bool)($row['use_broker_recipient'] ?? false));
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setPages($row['pages']);
 		$pConfig->setCreateInterest((bool)$row['createaddress']);
