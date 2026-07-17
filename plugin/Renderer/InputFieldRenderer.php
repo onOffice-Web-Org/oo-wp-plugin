@@ -145,11 +145,6 @@ abstract class InputFieldRenderer
 	}
 
 
-	/** @param string $type */
-	public function setType($type)
-		{ $this->_type = $type; }
-
-
 	/**
 	 * @param FieldModuleCollection $pExtraFieldsCollection
 	 * @param bool $inactiveOnly

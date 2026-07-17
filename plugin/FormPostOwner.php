@@ -177,7 +177,10 @@ class FormPostOwner
 			: (string) ($pDataFormConfiguration->getRecipient() ?? '');
 
 		if ($pDataFormConfiguration->getUseBrokerRecipient()) {
-			$recipient = $this->getBrokerRecipient() ?? get_option('onoffice-settings-default-email', '');
+			// Falls back to the recipient computed above (the admin's default/custom-email
+			// selection), not the global default, if this isn't an address detail page or
+			// the address has no email.
+			$recipient = $this->getBrokerRecipient() ?? $recipient;
 		}
 
 		return $recipient;

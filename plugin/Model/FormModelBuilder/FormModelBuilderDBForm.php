@@ -396,27 +396,8 @@ class FormModelBuilderDBForm
 			$pInputModelFormDefaultData = $this->generateItalicLabelCheckbox($labelDefaultData,
 				InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_RECIPIENT, $selectedValue, $italicLabel);
 		}
-		$pInputModelFormDefaultData->setRenderAsRadio(true);
 
 		return $pInputModelFormDefaultData;
-	}
-
-	/**
-	 * Decorative radio button that lets the admin pick "custom email address" as the
-	 * recipient mode. It has no DB column of its own - its meaning is simply "neither
-	 * default_recipient nor use_broker_recipient is active" - so it's never read back on
-	 * save; it only exists to make the 3 recipient options behave like one radio group.
-	 *
-	 * @return string
-	 */
-	private function buildRecipientModeCustomRadioHtml(): string
-	{
-		$isDefaultActive = (bool) $this->getValue('default_recipient', false);
-		$isBrokerActive = (bool) $this->getValue('use_broker_recipient', false);
-		$isCustomActive = !$isDefaultActive && !$isBrokerActive;
-
-		return ' <input type="radio" name="oopluginforms-recipientmode-custom" value="1"'
-			. ($isCustomActive ? ' checked="checked"' : '') . '>';
 	}
 
 	/**
@@ -432,7 +413,6 @@ class FormModelBuilderDBForm
 		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_EMAIL);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
 		$pInputModelFormRecipient->setDeactivate(true);
-		$pInputModelFormRecipient->setSuffixHtml($this->buildRecipientModeCustomRadioHtml());
 
 		return $pInputModelFormRecipient;
 	}
@@ -444,13 +424,12 @@ class FormModelBuilderDBForm
 	 */
 	public function createInputModelUseBrokerRecipient(): InputModelDB
 	{
-		$hint = __('If this form is embedded on the detail page of a real estate advisor, the request is sent directly to their email address. If no advisor email is available, or the form is not embedded on an advisor detail page, the default email address above is used instead.', 'onoffice-for-wp-websites');
-		$labelUseBrokerRecipient = __('Use email address of the responsible real estate advisor, if available', 'onoffice-for-wp-websites')
+		$hint = __('If this form is embedded on the detail page of an address, the request is sent directly to that address\'s email. If the address has no email, or the form is not embedded on an address detail page, the recipient selected above is used instead.', 'onoffice-for-wp-websites');
+		$labelUseBrokerRecipient = __('Use the email address from the address detail page', 'onoffice-for-wp-websites')
 			. ' <span class="dashicons dashicons-editor-help oo-field-hint" tabindex="0" title="' . esc_attr($hint) . '"></span>';
-		$selectedValue = $this->getValue('use_broker_recipient', true);
+		$selectedValue = $this->getValue('use_broker_recipient', false);
 		$pInputModelUseBrokerRecipient = $this->generateGenericCheckbox($labelUseBrokerRecipient,
 			InputModelDBFactoryConfigForm::INPUT_FORM_USE_BROKER_RECIPIENT, $selectedValue);
-		$pInputModelUseBrokerRecipient->setRenderAsRadio(true);
 
 		return $pInputModelUseBrokerRecipient;
 	}
@@ -468,7 +447,6 @@ class FormModelBuilderDBForm
 		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_EMAIL);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
 		$pInputModelFormRecipient->setDeactivate(true);
-		$pInputModelFormRecipient->setSuffixHtml($this->buildRecipientModeCustomRadioHtml());
 		$pInputModelFormRecipient->setHintHtml(__('Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email.', 'onoffice-for-wp-websites'));
 
 		return $pInputModelFormRecipient;
