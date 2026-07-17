@@ -67,10 +67,10 @@ class FormTranslation
 				self::SUB_LABEL => _nx_noop('Owner Form', 'Owner Forms', 'forms', 'onoffice-for-wp-websites'),
 				self::SUB_DB_VALUE => Form::TYPE_OWNER,
 			],
-			//Form::TYPE_APPLICANT_SEARCH => [
-			//	self::SUB_LABEL => _nx_noop('Applicant Search Form', 'Applicant Search Forms', 'forms', 'onoffice-for-wp-websites'),
-			//	self::SUB_DB_VALUE => Form::TYPE_APPLICANT_SEARCH,
-			//],
+			Form::TYPE_APPLICANT_SEARCH => [
+				self::SUB_LABEL => _nx_noop('Applicant Search Form', 'Applicant Search Forms', 'forms', 'onoffice-for-wp-websites'),
+				self::SUB_DB_VALUE => Form::TYPE_APPLICANT_SEARCH,
+			],
 		];
 	}
 

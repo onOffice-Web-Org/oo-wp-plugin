@@ -237,6 +237,11 @@ class FormsTable
 
 		foreach ($formConfig as $type => $label)
 		{
+			if ($type === Form::TYPE_APPLICANT_SEARCH)
+			{
+				continue;
+			}
+
 			$editUrl = add_query_arg($paramName, $type, $baseUrl);
 
 			$current = ($this->_listType == $type ? ' class="current" aria-current="page"' : '');
