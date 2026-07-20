@@ -239,6 +239,7 @@ class TestClassFormPostOwner
 		$this->prepareMockerForAddressCreationSuccess();
 		$this->prepareMockerForEstateCreationSuccess();
 		$this->prepareMockerForRelationSuccess();
+		$this->prepareMockerForFindAddressIdByEmailNoMatch('test@my-onoffice.com');
 		$this->prepareMockerForContactSuccess();
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 
@@ -371,6 +372,7 @@ class TestClassFormPostOwner
 		$this->prepareMockerForAddressCreationSuccess();
 		$this->prepareMockerForEstateCreationSuccess();
 		$this->prepareMockerForRelationSuccess();
+		$this->prepareMockerForFindAddressIdByEmailNoMatch('test@my-onoffice.com');
 		$this->prepareSDKWrapperForCreateTask();
 		$this->prepareMockerForContactSuccess();
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
@@ -609,6 +611,47 @@ class TestClassFormPostOwner
 
 		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'relation',
 			'', $parameters, null, $response);
+	}
+
+
+	/**
+	 * Mocks the address lookup FormPostOwner::assignEstateResponsible() performs to find the
+	 * address behind the resolved recipient email, returning no match - i.e. the recipient
+	 * isn't tied to a known address, so no estate-responsible relation gets created.
+	 *
+	 * @param string $email
+	 */
+
+	private function prepareMockerForFindAddressIdByEmailNoMatch(string $email)
+	{
+		$parameters = [
+			'data' => ['Id'],
+			'filter' => [
+				'defaultemail' => [['op' => '=', 'val' => $email]],
+			],
+			'listlimit' => 1,
+		];
+
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'address',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => [
+					'cntabsolute' => null,
+				],
+				'records' => [],
+			],
+			'status' => [
+				'errorcode' => 0,
+				'message' => 'OK',
+			],
+		];
+
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_READ,
+			'address', '', $parameters, null, $response);
 	}
 
 
