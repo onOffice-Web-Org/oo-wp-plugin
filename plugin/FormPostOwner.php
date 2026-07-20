@@ -68,6 +68,9 @@ class FormPostOwner
 	/** @var AddressListFactory */
 	private $_pAddressDetailFactory;
 
+	/** @var int|null Address id behind the resolved recipient email, if known (set by getBrokerRecipient()) */
+	private $_recipientAddressId = null;
+
 
 	/**
 	 * @param FormPostConfiguration $pFormPostConfiguration
@@ -145,6 +148,7 @@ class FormPostOwner
 					$subject = $this->generateCustomEmailSubject($pDataFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pDataFormConfiguration->getInputs());
 				}
 				$this->createOwnerRelation( $estateId, $addressId );
+				$this->assignEstateResponsible( $estateId, $recipient );
 				if ($writeActivity) {
 					$this->_pFormPostOwnerConfiguration->getFormAddressCreator()->createAgentsLog($pDataFormConfiguration, $addressId, $estateId);
 				}
@@ -219,7 +223,111 @@ class FormPostOwner
 		$addressList->loadAddressesById([(int) $addressId], $defaultFields);
 		$email = $addressList->getCurrentAddress()[$addressId]['Email'] ?? '';
 
-		return $email !== '' ? $email : null;
+		if ($email !== '') {
+			$this->_recipientAddressId = (int) $addressId;
+			return $email;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Assigns the address behind the resolved recipient as the estate's contact person
+	 * (RELATION_TYPE_CONTACT_BROKER), so the onOffice API routes contactaddress notifications
+	 * for this estate to the same person the plugin resolved as recipient - otherwise the API
+	 * ignores the 'recipient' override entirely once an estateid is present.
+	 *
+	 * @param int $estateId
+	 * @param string $recipient
+	 */
+
+	private function assignEstateResponsible(int $estateId, string $recipient)
+	{
+		try {
+			$addressId = $this->resolveRecipientAddressId($recipient);
+
+			if ($addressId === null) {
+				return;
+			}
+
+			$this->createContactBrokerRelation($estateId, $addressId);
+		} catch (ApiClientException $pException) {
+			// Non-fatal - the estate/owner were already created successfully; failing to
+			// additionally assign a contact person shouldn't block the whole submission.
+			error_log('onOffice: could not assign estate responsible: ' . $pException->getMessage());
+		}
+	}
+
+	/**
+	 * @param string $recipient
+	 * @return int|null
+	 */
+
+	private function resolveRecipientAddressId(string $recipient): ?int
+	{
+		if ($recipient === '') {
+			return null;
+		}
+
+		if ($this->_recipientAddressId !== null) {
+			return $this->_recipientAddressId;
+		}
+
+		return $this->findAddressIdByEmail($recipient);
+	}
+
+	/**
+	 * @param string $email
+	 * @return int|null
+	 * @throws API\APIEmptyResultException
+	 * @throws ApiClientException
+	 */
+
+	private function findAddressIdByEmail(string $email): ?int
+	{
+		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+		$pApiClientAction->setParameters([
+			'data' => ['Id'],
+			'filter' => [
+				'defaultemail' => [['op' => '=', 'val' => $email]],
+			],
+			'listlimit' => 1,
+		]);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+
+		$records = $pApiClientAction->getResultRecords();
+
+		return isset($records[0]['id']) ? (int) $records[0]['id'] : null;
+	}
+
+	/**
+	 *
+	 * @param int $estateId
+	 * @param int $addressId
+	 * @throws ApiClientException
+	 *
+	 */
+
+	private function createContactBrokerRelation(int $estateId, int $addressId)
+	{
+		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
+
+		$pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'relation');
+		$pApiClientAction->setParameters([
+			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
+			'parentid' => $estateId,
+			'childid' => $addressId,
+		]);
+
+		$pApiClientAction->addRequestToQueue();
+		$pSDKWrapper->sendRequests();
+
+		if (!$pApiClientAction->getResultStatus()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- ApiClientException is for internal API error handling
+			throw new ApiClientException($pApiClientAction);
+		}
 	}
 
 	/**
