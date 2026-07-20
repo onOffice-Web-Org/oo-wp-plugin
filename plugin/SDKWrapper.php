@@ -225,7 +225,7 @@ class SDKWrapper
 			$this->_caches = [new DBCache(['ttl' => 3600])];
 			$fieldsInformation = $this->getAllFields($languages);
 
-			$allEstates = []; // estate_id (int) => objekttitel (string)
+			$allEstates = [];
 
 			foreach ($this->_caches as $pCache) {
 				foreach ($estateLists as $list) {
@@ -244,7 +244,8 @@ class SDKWrapper
 
 						foreach ((array)($responseRaw['data']['records'] ?? []) as $record) {
 							if (isset($record['id'])) {
-								$allEstates[(int)$record['id']] = $record['elements']['objekttitel'] ?? '';
+								// Gruppiertung nach $lang: kein Ueberschreiben zwischen Sprachiterationen
+								$allEstates[$lang][(int)$record['id']] = $record['elements']['objekttitel'] ?? '';
 							}
 						}
 
@@ -289,10 +290,10 @@ class SDKWrapper
 			 *
 			 * Allows external hooks (e.g. an nginx FastCGI cache warmer) to act on the
 			 * complete set of currently active estates without needing to parse the DB cache
-			 * themselves. Duplicate estate IDs across multiple list views are de-duplicated
-			 * (last write wins per language iteration).
+			 * themselves. Estates from multiple list views are merged per language key.
 			 *
-			 * @param array<int,string> $allEstates Map of estate_id => objekttitel (raw, unformatted).
+			 * @param array<string,array<int,string>> $allEstates Grouped by onOffice language code.
+			 *   Example: ['DEU' => [7407 => 'Charmante Wohnung', ...], 'ENG' => [7407 => 'Charming flat', ...]]
 			 */
 			do_action('onoffice/cache_renew/estates_ready', $allEstates);
 	 }
