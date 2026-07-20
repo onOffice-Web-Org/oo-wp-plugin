@@ -225,6 +225,12 @@ class SDKWrapper
 			$this->_caches = [new DBCache(['ttl' => 3600])];
 			$fieldsInformation = $this->getAllFields($languages);
 
+			// Sammelt alle Immobilien-IDs und Titel aus dem erneuerten Cache.
+			// Wird nach dem Loop per do_action an externe Hooks (z.B. nginx Cache-Warmer)
+			// übergeben. Jede Sprach-Iteration überschreibt ältere Einträge für dieselbe ID –
+			// der zuletzt verarbeitete Titel gewinnt (für URL-Konstruktion ausreichend).
+			$allEstates = []; // estate_id (int) => objekttitel (string)
+
 			foreach ($this->_caches as $pCache) {
 				foreach ($estateLists as $list) {
 					$pListView = $pDataListViewFactory->getListViewByName($list->name);
@@ -239,6 +245,15 @@ class SDKWrapper
 						$pRequest = new Request($pApiActionRaw);
 						$usedParametersRaw = $pRequest->getApiAction()->getActionParameters();
 						$pCache->write($usedParametersRaw,serialize($responseRaw));
+
+						// Estate-IDs und Titel für den Cache-Warmer sammeln.
+						// $responseRaw entspricht APIClientActionGeneric::getResult():
+						// ['data' => ['records' => [['id'=>X,'elements'=>['objekttitel'=>'...']],...]]].
+						foreach ((array)($responseRaw['data']['records'] ?? []) as $record) {
+							if (isset($record['id'])) {
+								$allEstates[(int)$record['id']] = $record['elements']['objekttitel'] ?? '';
+							}
+						}
 
 						$params = $pEstateList->getEstateListParametersForCache(true, $lang); // formatted
 						$response = $this->createCacheForList($params, 'estate');
@@ -275,6 +290,18 @@ class SDKWrapper
 					}
 				}
 			}
+
+			/**
+			 * Fires after all estate list caches have been renewed.
+			 *
+			 * Allows external hooks (e.g. an nginx FastCGI cache warmer) to act on the
+			 * complete set of currently active estates without needing to parse the DB cache
+			 * themselves. Duplicate estate IDs across multiple list views are de-duplicated
+			 * (last write wins per language iteration).
+			 *
+			 * @param array<int,string> $allEstates Map of estate_id => objekttitel (raw, unformatted).
+			 */
+			do_action('onoffice/cache_renew/estates_ready', $allEstates);
 	 }
 
 	/**
