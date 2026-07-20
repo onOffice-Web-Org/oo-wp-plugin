@@ -225,10 +225,6 @@ class SDKWrapper
 			$this->_caches = [new DBCache(['ttl' => 3600])];
 			$fieldsInformation = $this->getAllFields($languages);
 
-			// Sammelt alle Immobilien-IDs und Titel aus dem erneuerten Cache.
-			// Wird nach dem Loop per do_action an externe Hooks (z.B. nginx Cache-Warmer)
-			// übergeben. Jede Sprach-Iteration überschreibt ältere Einträge für dieselbe ID –
-			// der zuletzt verarbeitete Titel gewinnt (für URL-Konstruktion ausreichend).
 			$allEstates = []; // estate_id (int) => objekttitel (string)
 
 			foreach ($this->_caches as $pCache) {
@@ -246,9 +242,6 @@ class SDKWrapper
 						$usedParametersRaw = $pRequest->getApiAction()->getActionParameters();
 						$pCache->write($usedParametersRaw,serialize($responseRaw));
 
-						// Estate-IDs und Titel für den Cache-Warmer sammeln.
-						// $responseRaw entspricht APIClientActionGeneric::getResult():
-						// ['data' => ['records' => [['id'=>X,'elements'=>['objekttitel'=>'...']],...]]].
 						foreach ((array)($responseRaw['data']['records'] ?? []) as $record) {
 							if (isset($record['id'])) {
 								$allEstates[(int)$record['id']] = $record['elements']['objekttitel'] ?? '';
