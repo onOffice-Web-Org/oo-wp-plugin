@@ -143,12 +143,15 @@ class FormPostOwner
 				$this->_messageDuplicateAddressData = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
 					->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 				$estateData = $this->getEstateData();
+				$userId = $this->resolveRecipientUserId($recipient);
+				if ($userId !== null) {
+					$estateData['benutzer'] = $userId;
+				}
 				$estateId   = $this->createEstate( $estateData );
 				if (!empty($pDataFormConfiguration->getSubject())) {
 					$subject = $this->generateCustomEmailSubject($pDataFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pDataFormConfiguration->getInputs());
 				}
 				$this->createOwnerRelation( $estateId, $addressId );
-				$this->assignEstateResponsible( $estateId, $recipient );
 				if ($writeActivity) {
 					$this->_pFormPostOwnerConfiguration->getFormAddressCreator()->createAgentsLog($pDataFormConfiguration, $addressId, $estateId);
 				}
@@ -232,66 +235,46 @@ class FormPostOwner
 	}
 
 	/**
-	 * Assigns the address behind the resolved recipient as the estate's contact person
-	 * (RELATION_TYPE_CONTACT_BROKER), so the onOffice API routes contactaddress notifications
-	 * for this estate to the same person the plugin resolved as recipient - otherwise the API
-	 * ignores the 'recipient' override entirely once an estateid is present.
+	 * Resolves the onOffice system user id (module 'user', field 'benutzer' on the estate) behind
+	 * the resolved recipient, so it can be written onto the estate being created. This is a plain
+	 * field on the estate record, not a relation - RELATION_TYPE_CONTACT_BROKER is the "Ansprechpartner"
+	 * (contact person) shown on the listing, a different, unrelated concept.
 	 *
-	 * @param int $estateId
-	 * @param string $recipient
-	 */
-
-	private function assignEstateResponsible(int $estateId, string $recipient)
-	{
-		try {
-			$addressId = $this->resolveRecipientAddressId($recipient);
-
-			if ($addressId === null) {
-				return;
-			}
-
-			$this->createContactBrokerRelation($estateId, $addressId);
-		} catch (ApiClientException $pException) {
-			// Non-fatal - the estate/owner were already created successfully; failing to
-			// additionally assign a contact person shouldn't block the whole submission.
-			error_log('onOffice: could not assign estate responsible: ' . $pException->getMessage());
-		}
-	}
-
-	/**
 	 * @param string $recipient
 	 * @return int|null
 	 */
 
-	private function resolveRecipientAddressId(string $recipient): ?int
+	private function resolveRecipientUserId(string $recipient): ?int
 	{
 		if ($recipient === '') {
 			return null;
 		}
 
 		if ($this->_recipientAddressId !== null) {
-			return $this->_recipientAddressId;
+			$userId = $this->findUserId(['adrId' => [['op' => '=', 'val' => $this->_recipientAddressId]]]);
+
+			if ($userId !== null) {
+				return $userId;
+			}
 		}
 
-		return $this->findAddressIdByEmail($recipient);
+		return $this->findUserId(['email' => [['op' => '=', 'val' => $recipient]]]);
 	}
 
 	/**
-	 * @param string $email
+	 * @param array $filter
 	 * @return int|null
 	 * @throws API\APIEmptyResultException
 	 * @throws ApiClientException
 	 */
 
-	private function findAddressIdByEmail(string $email): ?int
+	private function findUserId(array $filter): ?int
 	{
 		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
-		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'user');
 		$pApiClientAction->setParameters([
-			'data' => ['Id'],
-			'filter' => [
-				'defaultemail' => [['op' => '=', 'val' => $email]],
-			],
+			'data' => ['Nr'],
+			'filter' => $filter,
 			'listlimit' => 1,
 		]);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
@@ -299,35 +282,6 @@ class FormPostOwner
 		$records = $pApiClientAction->getResultRecords();
 
 		return isset($records[0]['id']) ? (int) $records[0]['id'] : null;
-	}
-
-	/**
-	 *
-	 * @param int $estateId
-	 * @param int $addressId
-	 * @throws ApiClientException
-	 *
-	 */
-
-	private function createContactBrokerRelation(int $estateId, int $addressId)
-	{
-		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
-
-		$pApiClientAction = new APIClientActionGeneric
-			($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'relation');
-		$pApiClientAction->setParameters([
-			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
-			'parentid' => $estateId,
-			'childid' => $addressId,
-		]);
-
-		$pApiClientAction->addRequestToQueue();
-		$pSDKWrapper->sendRequests();
-
-		if (!$pApiClientAction->getResultStatus()) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- ApiClientException is for internal API error handling
-			throw new ApiClientException($pApiClientAction);
-		}
 	}
 
 	/**
