@@ -146,7 +146,7 @@ class FormPostInterest
 
 	private function determineRecipient(DataFormConfiguration $pFormConfig): string
 	{
-		$recipient = (string) ($pFormConfig->getRecipientByUserSelection() ?? '');
+		$recipient = $pFormConfig->getRecipientByUserSelection();
 
 		if ($pFormConfig->getUseBrokerRecipient()) {
 			$recipient = $this->getBrokerRecipient() ?? $recipient;
@@ -182,7 +182,7 @@ class FormPostInterest
 		$defaultFields = ['defaultemail' => 'Email'];
 		$addressList = $this->_pAddressDetailFactory->createAddressDetail((int) $addressId);
 		$addressList->loadAddressesById([(int) $addressId], $defaultFields);
-		$email = $addressList->getCurrentAddress()[$addressId]['Email'] ?? '';
+		$email = $addressList->getAddressById((int) $addressId)['Email'] ?? '';
 
 		return $email !== '' ? $email : null;
 	}

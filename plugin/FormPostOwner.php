@@ -176,12 +176,7 @@ class FormPostOwner
 
 	private function determineRecipient(DataFormConfigurationOwner $pDataFormConfiguration): string
 	{
-		// Note: not using getRecipientByUserSelection() here, since it's typed to return
-		// string but can in practice return null (e.g. no recipient configured, relying on
-		// the broker recipient below instead), which would throw a TypeError.
-		$recipient = $pDataFormConfiguration->getDefaultRecipient()
-			? get_option('onoffice-settings-default-email', '')
-			: (string) ($pDataFormConfiguration->getRecipient() ?? '');
+		$recipient = $pDataFormConfiguration->getRecipientByUserSelection();
 
 		if ($pDataFormConfiguration->getUseBrokerRecipient()) {
 			// Falls back to the recipient computed above (the admin's default/custom-email
@@ -224,7 +219,7 @@ class FormPostOwner
 		$defaultFields = ['defaultemail' => 'Email'];
 		$addressList = $this->_pAddressDetailFactory->createAddressDetail((int) $addressId);
 		$addressList->loadAddressesById([(int) $addressId], $defaultFields);
-		$email = $addressList->getCurrentAddress()[$addressId]['Email'] ?? '';
+		$email = $addressList->getAddressById((int) $addressId)['Email'] ?? '';
 
 		if ($email !== '') {
 			$this->_recipientAddressId = (int) $addressId;

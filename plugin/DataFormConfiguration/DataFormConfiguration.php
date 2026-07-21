@@ -335,7 +335,7 @@ class DataFormConfiguration
 			return get_option( 'onoffice-settings-default-email', '' );
 		}
 
-		return $this->_recipient;
+		return (string) $this->_recipient;
 	}
 
 	/** @return bool */
