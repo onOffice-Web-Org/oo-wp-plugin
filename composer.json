@@ -34,6 +34,6 @@
 		"erusev/parsedown": "^1.7",
         "mjaschen/phpgeo": "^4.0",
         "orchidjs/tom-select": "^2.6",
-        "altcha-org/altcha": "^2.0"
+        "altcha-org/altcha": "^2.1"
 	}
 }
