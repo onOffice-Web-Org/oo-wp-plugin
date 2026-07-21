@@ -239,7 +239,7 @@ class TestClassFormPostOwner
 		$this->prepareMockerForAddressCreationSuccess();
 		$this->prepareMockerForEstateCreationSuccess();
 		$this->prepareMockerForRelationSuccess();
-		$this->prepareMockerForFindUserIdByEmailNoMatch('test@my-onoffice.com');
+		$this->prepareMockerForFindAddressIdByEmailNoMatch('test@my-onoffice.com');
 		$this->prepareMockerForContactSuccess();
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 
@@ -372,7 +372,7 @@ class TestClassFormPostOwner
 		$this->prepareMockerForAddressCreationSuccess();
 		$this->prepareMockerForEstateCreationSuccess();
 		$this->prepareMockerForRelationSuccess();
-		$this->prepareMockerForFindUserIdByEmailNoMatch('test@my-onoffice.com');
+		$this->prepareMockerForFindAddressIdByEmailNoMatch('test@my-onoffice.com');
 		$this->prepareSDKWrapperForCreateTask();
 		$this->prepareMockerForContactSuccess();
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
@@ -615,19 +615,19 @@ class TestClassFormPostOwner
 
 
 	/**
-	 * Mocks the user lookup FormPostOwner::resolveRecipientUserId() performs to find the
-	 * onOffice system user behind the resolved recipient email, returning no match - i.e.
-	 * the recipient isn't tied to a known user, so no 'benutzer' gets set on the estate.
+	 * Mocks the address lookup FormPostOwner::assignEstateContactBroker() performs to find the
+	 * address behind the resolved recipient email, returning no match - i.e. the recipient
+	 * isn't tied to a known address, so no contact-broker relation gets created.
 	 *
 	 * @param string $email
 	 */
 
-	private function prepareMockerForFindUserIdByEmailNoMatch(string $email)
+	private function prepareMockerForFindAddressIdByEmailNoMatch(string $email)
 	{
 		$parameters = [
-			'data' => ['Nr'],
+			'data' => ['Id'],
 			'filter' => [
-				'email' => [['op' => '=', 'val' => $email]],
+				'defaultemail' => [['op' => '=', 'val' => $email]],
 			],
 			'listlimit' => 1,
 		];
@@ -635,7 +635,7 @@ class TestClassFormPostOwner
 		$response = [
 			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
 			'resourceid' => '',
-			'resourcetype' => 'user',
+			'resourcetype' => 'address',
 			'cacheable' => false,
 			'identifier' => '',
 			'data' => [
@@ -651,7 +651,7 @@ class TestClassFormPostOwner
 		];
 
 		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_READ,
-			'user', '', $parameters, null, $response);
+			'address', '', $parameters, null, $response);
 	}
 
 
