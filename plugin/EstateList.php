@@ -347,10 +347,11 @@ class EstateList
 		$estateParametersRaw['data'][] = 'virtualAddress';
 		$estateParametersRaw['data'][] = 'provisionsfrei';
 		$estateParametersRaw['data'][] = 'nutzungsart';
-
-		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
-			$estateParametersRaw['data'] []= 'waehrung';
-		}
+		$estateParametersRaw['data'][] = 'waehrung';
+		$estateParametersRaw['data'] = array_merge(
+			$estateParametersRaw['data'],
+			$this->_pDataView->getListFieldsShowPriceOnRequest()
+		);
 
 		if ($this->getShowTotalCostsCalculator()) {
 			$fields = ['kaufpreis', 'aussen_courtage', 'bundesland', 'waehrung'];

@@ -121,8 +121,9 @@ class InputVariableReaderFormatter
 	public function formatFloatValue(float $value): string
 	{
 		$decimalSep = $this->pPriceFormatService->getDecimalSeparator();
+		$decimalPlaces = floor($value) == $value ? 0 : 2;
 
-		return number_format($value, 2, $decimalSep, '');
+		return number_format($value, $decimalPlaces, $decimalSep, '');
 	}
 
 	/**

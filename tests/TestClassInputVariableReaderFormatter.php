@@ -20,8 +20,10 @@ class TestClassInputVariableReaderFormatter
 		update_option('onoffice-settings-thousand-separator-custom', '.');
 		update_option('onoffice-settings-decimal-separator', ',');
 
-		$this->assertEquals('3948,00', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
-		$this->assertEquals('3948,00', $pInstance->formatFloatValue(3948.00));
+		$this->assertEquals('3948', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals('3948', $pInstance->formatFloatValue(3948.00));
+		$this->assertEquals('3948,50', $pInstance->formatValue(3948.50, FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals('3948,50', $pInstance->formatFloatValue(3948.50));
 	}
 
 	/**
@@ -34,8 +36,10 @@ class TestClassInputVariableReaderFormatter
 		update_option('onoffice-settings-thousand-separator-custom', ',');
 		update_option('onoffice-settings-decimal-separator', '.');
 
-		$this->assertEquals('3948.00', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
-		$this->assertEquals('3948.00', $pInstance->formatFloatValue(3948.00));
+		$this->assertEquals('3948', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals('3948', $pInstance->formatFloatValue(3948.00));
+		$this->assertEquals('3948.50', $pInstance->formatValue(3948.50, FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals('3948.50', $pInstance->formatFloatValue(3948.50));
 	}
 
 	/**
@@ -61,7 +65,7 @@ class TestClassInputVariableReaderFormatter
 		update_option('onoffice-settings-thousand-separator-custom', '.');
 		update_option('onoffice-settings-decimal-separator', ',');
 
-		$this->assertEquals(['3948,00'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals(['3948'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
 	}
 
 	/**
@@ -73,6 +77,6 @@ class TestClassInputVariableReaderFormatter
 		update_option('onoffice-settings-thousand-separator-custom', ',');
 		update_option('onoffice-settings-decimal-separator', '.');
 
-		$this->assertEquals(['3948.00'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals(['3948'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
 	}
 }
