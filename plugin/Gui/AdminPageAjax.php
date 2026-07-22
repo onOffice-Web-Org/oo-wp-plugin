@@ -106,6 +106,10 @@ abstract class AdminPageAjax
 	 */
 	protected function createMetaBoxByForm(FormModel $pFormModel, string $position = 'left')
 	{
+		if ($pFormModel === null) {
+            return;
+        }
+
 		$screenId = get_current_screen()->id;
 		$formId = $pFormModel->getGroupSlug();
 		$formIdHtmlFriendly = HtmlIdGenerator::generateByString($formId);

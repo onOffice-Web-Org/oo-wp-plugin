@@ -364,6 +364,9 @@ class EstateList
 
 		$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
 
+		unset($estateParametersRaw['listname']);
+		unset($estateParametersRaw['params_list_cache']);
+
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
@@ -1184,7 +1187,6 @@ class EstateList
 		if ($this->hasPriceOnRequestField() && ($recordRaw['preisAufAnfrage'] ?? null) === DataListView::SHOW_PRICE_ON_REQUEST) {
 			if ($this->enableShowPriceOnRequestText()) {
 				$priceFields = $this->_pDataView->getListFieldsShowPriceOnRequest();
-
 				foreach ($priceFields as $priceField) {
 					$this->displayTextPriceOnRequest($recordModified, $priceField);
 				}
@@ -1224,9 +1226,14 @@ class EstateList
 	 */
 	private function displayTextPriceOnRequest($recordModified, $field)
 	{
-		if (!empty($recordModified[$field])) {
-			$recordModified[$field] = esc_html__('Price on request', 'onoffice-for-wp-websites');
+		if (empty($recordModified[$field])) {
+			return;
 		}
+		$digitsOnly = preg_replace('/[^0-9]/', '', $recordModified[$field]);
+		if (intval($digitsOnly) === 0) {
+			return;
+		}
+		$recordModified[$field] = esc_html__('Price on request', 'onoffice-for-wp-websites');
 	}
 
 	/**
