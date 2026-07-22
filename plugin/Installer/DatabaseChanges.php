@@ -47,7 +47,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 65;
+	const MAX_VERSION = 66;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -185,6 +185,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->addDisplayUnitAreaToForms();
 			case $dbversion <= 64:
 				$this->setCaptchaDefaultTrue();
+			case $dbversion <= 65:
+				$this->addUseBrokerRecipientToForms();
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
@@ -329,6 +331,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`page_shortcode` tinytext NOT NULL,
 			`show_form_as_modal` tinyint(1) NOT NULL DEFAULT '1',
 			`display_unit_area` tinyint(1) NOT NULL DEFAULT '0',
+			`use_broker_recipient` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -1351,6 +1354,17 @@ class DatabaseChanges implements DatabaseChangesInterface
 				data: ['captcha' => 1],
 				where: ['captcha' => 0],
 			);
+		}
+	}
+
+	private function addUseBrokerRecipientToForms(): void
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . 'oo_plugin_forms';
+		$columnExists = $this->_pWPDB->get_results("SHOW COLUMNS FROM $tableName LIKE 'use_broker_recipient'");
+		if (empty($columnExists)) {
+			$sql = "ALTER TABLE $tableName ADD COLUMN use_broker_recipient tinyint(1) NOT NULL DEFAULT '0'";
+			$this->_pWPDB->query($sql);
 		}
 	}
 }

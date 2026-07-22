@@ -242,7 +242,14 @@ class FormPostContact
 			$defaultFields = ['defaultemail' => 'Email'];
 			$addressList = $this->_pAddressDetailFactory->create($pAddressDataView);
 			$addressList->loadBrokerAddressesById([$addressId], $defaultFields);
-			$requestParams['recipient'] = $addressList->getCurrentAddress()[$addressId]['Email'];
+			// Only overwrite the recipient if a matching broker (ArtDaten=Makler) address was
+			// actually found - otherwise keep the recipient determined above. Without this
+			// guard, a non-broker address (or a failed address-id extraction) resulted in
+			// $recipient being set to null, which the API rejects outright.
+			$brokerEmail = $addressList->getCurrentAddress()[$addressId]['Email'] ?? '';
+			if ($brokerEmail !== '') {
+				$requestParams['recipient'] = $brokerEmail;
+			}
 		}
 
 		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();

@@ -53,7 +53,8 @@ class AdminPageFormSettingsInquiry
 		$table = RecordManager::TABLENAME_FORMS;
 		$resultName = isset($row[$table]['name']) && !empty(trim($row[$table]['name']));
 		$resultRecipient = ($row[$table]['default_recipient'] == 0 && isset($row[$table]['recipient']) && $row[$table]['recipient'] != null)
-			|| $row[$table]['default_recipient'] == 1;
+			|| $row[$table]['default_recipient'] == 1
+			|| ($row[$table]['use_broker_recipient'] ?? 0) == 1;
 
 		$this->_hasEmailError = !$resultRecipient;
 
