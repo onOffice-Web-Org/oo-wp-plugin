@@ -237,15 +237,14 @@ class FormsTable
 
 		foreach ($formConfig as $type => $label)
 		{
-			$count = isset($this->_countByType[$type]) ? $this->_countByType[$type] : 0;
-			if ($type !== 'all' && $count === 5)
-			{
+			if ($type === Form::TYPE_APPLICANT_SEARCH) {
 				continue;
 			}
 
 			$editUrl = add_query_arg($paramName, $type, $baseUrl);
 
 			$current = ($this->_listType == $type ? ' class="current" aria-current="page"' : '');
+			$count = isset($this->_countByType[$type]) ? $this->_countByType[$type] : 0;
 
 			$result[$type] = '<a href="'.esc_url($editUrl).'"'.$current.'>'.
 				sprintf( '%s <span class="count">(%s)</span>',
