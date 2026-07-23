@@ -24,15 +24,19 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Field\PriceFormatService;
 
 class CostsCalculator
 {
 	/** @var SDKWrapper */
 	private $_pSDKWrapper;
 
-	public function __construct(SDKWrapper $_pSDKWrapper)
+	private $pPriceFormatService;
+
+	public function __construct(SDKWrapper $_pSDKWrapper, PriceFormatService $pPriceFormatService)
 	{
 		$this->_pSDKWrapper = $_pSDKWrapper;
+		$this->pPriceFormatService = $pPriceFormatService;
 	}
 
 	
@@ -129,9 +133,7 @@ class CostsCalculator
 	 */
 	private function formatCurrency(float $amount, string $currency): string
 	{
-		$decimalPlaces = floor($amount) == $amount ? 0 : 2;
-
-		return number_format($amount, $decimalPlaces, ',', '.') . ' ' . $currency;
+		return $this->pPriceFormatService->formatPrice($amount, $currency);
 	}
 
 	/**

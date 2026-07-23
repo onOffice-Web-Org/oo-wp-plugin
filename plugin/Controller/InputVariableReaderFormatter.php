@@ -22,11 +22,19 @@
 namespace onOffice\WPlugin\Controller;
 
 use DateTime;
+use onOffice\WPlugin\Field\PriceFormatService;
 use onOffice\WPlugin\Gui\DateTimeFormatter;
 use onOffice\WPlugin\Types\FieldTypes;
 
 class InputVariableReaderFormatter
 {
+	private $pPriceFormatService;
+
+	public function __construct(PriceFormatService $pPriceFormatService)
+	{
+		$this->pPriceFormatService = $pPriceFormatService;
+	}
+
 	const APPLY_THOUSAND_SEPARATOR_FIELDS = [
 		'mieteinnahmen_pro_jahr_ist',
 		'mieteinnahmen_pro_jahr_soll',
@@ -112,13 +120,10 @@ class InputVariableReaderFormatter
 	 */
 	public function formatFloatValue(float $value): string
 	{
-		$onofficeSettingsThousandSeparator = get_option('onoffice-settings-thousand-separator');
+		$decimalSep = $this->pPriceFormatService->getDecimalSeparator();
+		$decimalPlaces = floor($value) == $value ? 0 : 2;
 
-		if ($onofficeSettingsThousandSeparator === self::COMMA_THOUSAND_SEPARATOR || $onofficeSettingsThousandSeparator === self::DOT_THOUSAND_SEPARATOR) {
-			return $value;
-		}
-
-		return number_format($value, 2, '.', '');
+		return number_format($value, $decimalPlaces, $decimalSep, '');
 	}
 
 	/**

@@ -347,10 +347,11 @@ class EstateList
 		$estateParametersRaw['data'][] = 'virtualAddress';
 		$estateParametersRaw['data'][] = 'provisionsfrei';
 		$estateParametersRaw['data'][] = 'nutzungsart';
-
-		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
-			$estateParametersRaw['data'] []= 'waehrung';
-		}
+		$estateParametersRaw['data'][] = 'waehrung';
+		$estateParametersRaw['data'] = array_merge(
+			$estateParametersRaw['data'],
+			$this->_pDataView->getListFieldsShowPriceOnRequest()
+		);
 
 		if ($this->getShowTotalCostsCalculator()) {
 			$fields = ['kaufpreis', 'aussen_courtage', 'bundesland', 'waehrung'];
@@ -644,9 +645,7 @@ class EstateList
 				if ($this->hasPriceOnRequestField()) {
 					$requestParams['data'][] = 'preisAufAnfrage';
 				}
-				if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
-					$requestParams['data'][] = 'waehrung';
-				}
+				$requestParams['data'][] = 'waehrung';
 			}
 			if ($this->enableShowPriceOnRequestText() && $this->hasPriceOnRequestField() && !in_array('preisAufAnfrage', $requestParams['data'], true)) {
 				$requestParams['data'][] = 'preisAufAnfrage';
@@ -1655,7 +1654,7 @@ class EstateList
 			$result[$field]['rangeFieldDisplayMode'] = $allDisplayModes[$field] ?? 'range';
 			if (
 				in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS) &&
-				!empty(get_option('onoffice-settings-thousand-separator'))
+				!empty(get_option('onoffice-settings-thousand-separator-custom'))
 			) {
 				$result[$field]['is-apply-thousand-separator'] = true;
 			}
