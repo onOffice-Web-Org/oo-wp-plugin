@@ -642,9 +642,7 @@ class EstateList
 				if ($this->hasPriceOnRequestField()) {
 					$requestParams['data'][] = 'preisAufAnfrage';
 				}
-				if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
-					$requestParams['data'][] = 'waehrung';
-				}
+				$requestParams['data'][] = 'waehrung';
 			}
 			if ($this->enableShowPriceOnRequestText() && $this->hasPriceOnRequestField() && !in_array('preisAufAnfrage', $requestParams['data'], true)) {
 				$requestParams['data'][] = 'preisAufAnfrage';
