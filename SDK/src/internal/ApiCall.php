@@ -121,6 +121,7 @@ class ApiCall
 		{
 			return;
 		}
+
 		foreach ($actionParameters as $key => $action) {
 			if (isset($action['parameters']['filter']['geo'])) {
 				unset($actionParameters[$key]['parameters']['filter']['geo']);
@@ -129,6 +130,7 @@ class ApiCall
 				unset($actionParameters[$key]['parameters']['params_list_cache']['filter']['geo']);
 			}
 		}
+
 		$responseHttp = $this->getFromHttp($token, $actionParameters, $httpFetch);
 
 		$result = json_decode($responseHttp, true);
@@ -282,6 +284,7 @@ class ApiCall
 		}
 
 		$this->sendHttpRequests($token, $actionParameters, $actionParametersOrder, $httpFetch, $saveToCache);
+		$this->applyFreshGeoFiltering($actionParametersOrder);
 
 		// Reuse source results for duplicate requests that were queued in the same send cycle.
 		foreach ($duplicateRequestsBySourceRequestId as $sourceRequestId => $duplicateRequests)
@@ -342,14 +345,17 @@ class ApiCall
 			$filter = (isset($params["filter"]) && is_array($params["filter"]))
 				? $params["filter"]
 				: [];
+			$hasGeoFilter = isset($filter['geo'][0]['loc']);
 
 			if (
 				!isset($cachedResponse["data"]["records"]) ||
 				!is_array($cachedResponse["data"]["records"]) ||
-				!isset($cachedResponse["raw"]["data"]["records"]) ||
-				!is_array($cachedResponse["raw"]["data"]["records"]) ||
-				!isset($cachedResponse["types"]) ||
-				!is_array($cachedResponse["types"])
+				(!$hasGeoFilter && (
+					!isset($cachedResponse["raw"]["data"]["records"]) ||
+					!is_array($cachedResponse["raw"]["data"]["records"]) ||
+					!isset($cachedResponse["types"]) ||
+					!is_array($cachedResponse["types"])
+				))
 			) {
 				return $cachedResponse;
 			}
@@ -363,6 +369,45 @@ class ApiCall
 				$this->recordsPerPage($cachedResponse["data"]["records"], intval($params["listlimit"] ?? 20), intval($params["listoffset"] ?? 0));
 		}
 		return $cachedResponse;
+	}
+
+	/**
+	 * Apply client-side geo filtering to fresh list responses after cache writing.
+	 *
+	 * @param Request[] $actionParametersOrder
+	 */
+	private function applyFreshGeoFiltering(array $actionParametersOrder): void
+	{
+		foreach ($actionParametersOrder as $pRequest)
+		{
+			$requestId = $pRequest->getRequestId();
+			if (!isset($this->_responses[$requestId])) {
+				continue;
+			}
+
+			$usedParams = $this->normalizeFieldDependencyParameters(
+				$pRequest->getApiAction()->getActionParameters()
+			);
+			$params = $usedParams['parameters'] ?? [];
+			$geoFilter = $params['filter']['geo'][0] ?? null;
+
+			if (
+				!isset($params['listname']) ||
+				($params['formatoutput'] ?? false) != true ||
+				!is_array($geoFilter) ||
+				empty($geoFilter['loc'])
+			) {
+				continue;
+			}
+
+			$pResponse = $this->_responses[$requestId];
+			$params['listoffset'] = 0;
+			$params['listlimit'] = 500;
+			$this->_responses[$requestId] = new Response(
+				$pRequest,
+				$this->applyListCacheFiltering($pResponse->getResponseData(), $params)
+			);
+		}
 	}
 
 	/**
@@ -544,13 +589,21 @@ class ApiCall
 	{
 		if (
 			!isset($cachedResponse["data"]["records"]) ||
-			!is_array($cachedResponse["data"]["records"]) ||
-			!isset($cachedResponse["raw"]["data"]["records"]) ||
-			!is_array($cachedResponse["raw"]["data"]["records"]) ||
-			!isset($cachedResponse["types"]) ||
-			!is_array($cachedResponse["types"])
+			!is_array($cachedResponse["data"]["records"])
 		) {
 			return;
+		}
+		if (!isset($cachedResponse["raw"]["data"]["records"]) || !is_array($cachedResponse["raw"]["data"]["records"])) {
+			$cachedResponse["raw"]["data"]["records"] = [];
+			foreach ($cachedResponse["data"]["records"] as $record) {
+				$cachedResponse["raw"]["data"]["records"][] = [
+					"id" => $record["id"] ?? 0,
+					"elements" => $record["elements"] ?? [],
+				];
+			}
+		}
+		if (!isset($cachedResponse["types"]) || !is_array($cachedResponse["types"])) {
+			$cachedResponse["types"] = [];
 		}
 
 		$records = $cachedResponse["data"]["records"];
@@ -731,8 +784,8 @@ class ApiCall
 					elseif (strtolower($op) === 'geo')
 					{
 						$km = intval($val);
-						$min = $value[0]["min"];
-						$max = $value[0]["max"];
+						$min = $value[0]["min"] ?? null;
+						$max = $value[0]["max"] ?? null;
 
 						$loc = $value[0]["loc"] ?? '';
 						if(str_starts_with($loc, "0-")) {
@@ -754,8 +807,8 @@ class ApiCall
 						$longitude = floatval($selectedCoordinates[0]);
 						$latitude = floatval($selectedCoordinates[1]);
 
-						$coordinate1 = new Coordinate($item["elements"]['laengengrad'], $item["elements"]['breitengrad']);
-						$coordinate2 = new Coordinate($longitude, $latitude);
+						$coordinate1 = new Coordinate((float)$item["elements"]['breitengrad'], (float)$item["elements"]['laengengrad']);
+						$coordinate2 = new Coordinate($latitude, $longitude);
 						$distance = $calculator->getDistance($coordinate1, $coordinate2);
 
 						if(intval($distance/1000) > $km){
