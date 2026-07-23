@@ -109,7 +109,7 @@ jobs:
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: "updater.json"
-          json: '{"version":"${{ needs.get-version.outputs.currentVersion }}","download_url":"https://dev.onoffice-wp-updates.de/plugins/oo-wp-plugin/release.zip","requires_php":"${{ steps.readme-meta.outputs.requires_php }}","requires":"${{ steps.readme-meta.outputs.requires }}","tested":"${{ steps.readme-meta.outputs.tested }}"}'
+          json: '{"version":"${{ needs.get-version.outputs.currentVersion }}","download_url":"https://dev.onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/release.zip","requires_php":"${{ steps.readme-meta.outputs.requires_php }}","requires":"${{ steps.readme-meta.outputs.requires }}","tested":"${{ steps.readme-meta.outputs.tested }}"}'
 
       - name: Upload release build
         uses: actions/upload-artifact@v4
