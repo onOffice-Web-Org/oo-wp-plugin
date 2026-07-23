@@ -3,24 +3,35 @@ name: onOffice WP-Updates Release (Dev Update Server)
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Existing release tag to redeploy to the dev update server (e.g. v6.16.0)"
+        required: true
+        type: string
 
 jobs:
   get-version:
     name: Get current version
     runs-on: ubuntu-latest
-    if: ${{ !github.event.release.prerelease }}
+    if: ${{ github.event_name == 'workflow_dispatch' || !github.event.release.prerelease }}
     outputs:
       currentVersion: ${{ steps.get-version.outputs.version }}
+      tagName: ${{ steps.tag.outputs.tag }}
     steps:
+      - name: Determine release tag
+        id: tag
+        run: echo "tag=${{ github.event.inputs.release_tag || github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+
       - name: Checkout release tag
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ steps.tag.outputs.tag }}
 
       - name: Get version
         id: get-version
         env:
-          TAG_NAME: ${{ github.event.release.tag_name }}
+          TAG_NAME: ${{ steps.tag.outputs.tag }}
         run: |
           if [[ ! "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "::error::Update-server deploys require a final semantic version tag like v6.16.0. Got: ${TAG_NAME}"
@@ -40,7 +51,7 @@ jobs:
     needs: get-version
     uses: ./.github/workflows/build-release.yml
     with:
-      ref: ${{ github.event.release.tag_name }}
+      ref: ${{ needs.get-version.outputs.tagName }}
       expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
       checkVersion: false
       pluginFolder: onoffice-for-wp-websites
@@ -53,7 +64,7 @@ jobs:
       - name: Checkout source (for readme.txt)
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ needs.get-version.outputs.tagName }}
           path: source
 
       - name: Download release artifact
