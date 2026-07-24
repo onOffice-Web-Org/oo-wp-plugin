@@ -203,12 +203,26 @@ onOffice.default_values_input_converter = function () {
                 mainInputClone.id = 'input_radio_js_' + onOffice.js_field_count;
                 mainInputClone.value = k;
                 label.textContent = fieldDefinition.permittedvalues[k];
-                if (k == onOffice_loc_settings.defaultvalues[fieldName]) {
-                    mainInputClone.checked = true;
+                const savedValue = onOffice_loc_settings.defaultvalues[fieldName];
+                const actualValue = Array.isArray(savedValue) ? savedValue[0] : savedValue;
+                const isChecked = String(k) === String(actualValue);
+                mainInputClone.checked = isChecked;
+                mainInputClone.removeAttribute('checked');
+                if (isChecked) {
+                    mainInputClone.setAttribute('checked', 'checked');
+                    label.classList.add('checked');
                 }
                 label.appendChild(mainInputClone);
                 element.appendChild(label);
                 parent.parentElement.appendChild(element);
+                mainInputClone.addEventListener('change', function() {
+                    document.querySelectorAll(`input[name="${mainInputClone.name}"]`).forEach(input => {
+                        input.removeAttribute('checked');
+                        input.closest('label')?.classList.remove('checked');
+                    });
+                    this.setAttribute('checked', 'checked');
+                    this.closest('label')?.classList.add('checked');
+                });
             });
             const labels = parent.parentElement.getElementsByTagName('label')[1];
             parent.parentElement.removeChild(labels);
@@ -396,11 +410,23 @@ document.addEventListener("addFieldItem", function(e) {
             onOffice.js_field_count += 1;
             label.htmlFor = 'input_radio_js_' + onOffice.js_field_count;
             label.textContent = fieldDefinition.permittedvalues[k];
-            if(k == onOffice_loc_settings.defaultvalues[fieldName]){
-                input.checked = true;
+            const savedVal = onOffice_loc_settings.defaultvalues[fieldName];
+            const actualVal = Array.isArray(savedVal) ? savedVal[0] : savedVal;
+            const isChecked = String(k) === String(actualVal);
+            input.checked = isChecked;
+            if (isChecked) {
+                label.classList.add('checked');
             }
             label.appendChild(input);
             fieldset.appendChild(label);
+            input.addEventListener('change', function() {
+                document.querySelectorAll(`input[name="${input.name}"]`).forEach(inp => {
+                    inp.removeAttribute('checked');
+                    inp.closest('label')?.classList.remove('checked');
+                });
+                this.setAttribute('checked', 'checked');
+                this.closest('label')?.classList.add('checked');
+            });
         });
 
         element.parentNode.replaceChild(fieldset, element);

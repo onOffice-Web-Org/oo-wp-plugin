@@ -729,6 +729,33 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 	margin: 10px;
 }
 
+.oo-poststuff .custom-input-field .onoffice-input-radio label input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    max-width: 16px;
+    border: 2px solid #8c8f94;
+    border-radius: 50%;
+    background-color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    vertical-align: middle;
+}
+
+.oo-poststuff .custom-input-field .onoffice-input-radio label input[type="radio"][checked]::before {
+    content: "";
+    display: block;
+    width: 8px;
+    height: 8px ;
+    background-color: #3f9de4;
+    border-radius: 50% ;
+}
+
 .oo-poststuff .custom-input-field .field-item-detail {
 	margin-left: 5px;
 }
