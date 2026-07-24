@@ -126,4 +126,4 @@ jobs:
           ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
 
       - name: Upload Files to Dev Update Server
-        run: rsync -e 'ssh -o StrictHostKeyChecking=no' release.zip updater.json zipupload@dev.onoffice-wp-updates.de:plugins/oo-wp-plugin
+        run: rsync -e 'ssh -o StrictHostKeyChecking=no' release.zip updater.json zipupload@dev.onoffice-wp-updates.de:dev.onoffice-wp-updates.de/releases/plugins/oo-wp-plugin
