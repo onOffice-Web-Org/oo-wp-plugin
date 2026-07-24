@@ -1,0 +1,52 @@
+name: PR Preview Build (Dev Update Server)
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency:
+  group: pr-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build preview
+    uses: ./.github/workflows/build-release.yml
+    with:
+      ref: ${{ github.event.pull_request.head.sha }}
+      expectedVersion: pr-preview
+      checkVersion: false
+      pluginFolder: onoffice-for-wp-websites
+
+  deploy:
+    name: Deploy PR preview to Dev Update Server
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Determine project folder
+        id: project
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
+        run: |
+          PROJECT=$(echo "$BRANCH_NAME" | grep -oE 'P#[0-9]+' | head -1 | tr -d '#')
+          if [ -z "$PROJECT" ]; then
+            echo "::error::Branch name '$BRANCH_NAME' does not start with a P#<number> project tag."
+            exit 1
+          fi
+          echo "folder=$PROJECT" >> "$GITHUB_OUTPUT"
+
+      - name: Download release artifact
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: release
+
+      - name: Set SSH Key for Dev Update Server
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
+
+      - name: Upload PR preview build
+        run: |
+          rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
+            release.zip \
+            zipupload@dev.onoffice-wp-updates.de:pr-builds/${{ steps.project.outputs.folder }}/plugins/oo-wp-plugin/
