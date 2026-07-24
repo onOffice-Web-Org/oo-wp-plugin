@@ -121,6 +121,9 @@ class InputModelBuilderDefaultValue
 		array $presetValuesDefaultValue)
 	{
 		$fieldsDefaultValue = $presetValuesDefaultValue[$pField->getName()] ?? '';
+		if (is_array($fieldsDefaultValue)) {
+			$fieldsDefaultValue = $fieldsDefaultValue[0] ?? '';
+		}
 		$pInputModel->setValue($fieldsDefaultValue);
 		$pInputModel->setValuesAvailable(['' => ''] + $pField->getPermittedvalues());
 		$type = self::FIELD_TYPE_TO_HTML_TYPE_MAPPING[$pField->getType()] ?? InputModelOption::HTML_TYPE_TEXT;

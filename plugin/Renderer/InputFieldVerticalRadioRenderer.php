@@ -52,7 +52,7 @@ class InputFieldVerticalRadioRenderer extends InputFieldRenderer
             $inputId = 'label'.$this->getGuiId().'b'.$key.$this->getName();
             echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
                  .'" value="'.esc_html($key).'"'
-                 .($key == $this->getCheckedValue() ? ' checked="checked" ' : '')
+                 .($key === (string)$this->getCheckedValue() ? ' checked="checked" ' : '')
                  .' id="'.esc_html($inputId).'">'
                  .'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
         }

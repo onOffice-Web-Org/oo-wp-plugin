@@ -73,9 +73,11 @@ class InputFieldRadioRenderer
             foreach ($this->getValue() as $key => $label)
             {
                 $inputId = 'label'.$this->getGuiId().'b'.$key.$this->getName();
+                $checkedValue = $this->getCheckedValue();
+                $isChecked = $key === (string)$checkedValue;
                 echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
                     .'" value="'.esc_html($key).'"'
-                    .($key == $this->getCheckedValue() ? ' checked="checked" ' : '')
+                    .($isChecked ? ' checked="checked" ' : '')
                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- renderAdditionalAttributes() returns escaped content
                     .$this->renderAdditionalAttributes()
                     .' id="'.esc_html($inputId).'">'

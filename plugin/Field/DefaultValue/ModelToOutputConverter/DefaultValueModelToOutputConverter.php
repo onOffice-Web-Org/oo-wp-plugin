@@ -134,6 +134,7 @@ class DefaultValueModelToOutputConverter
 			$rowData = array_values(array_filter($rows, function ($row) use ($pField) {
 				return $pField->getName() == $row->fieldname;
 			}));
+			if (!empty($rowData)) {
 			switch ($pField) {
 				case $pField->getIsRangeField():
 					$pDataModel = $this->convertNumericRange($formId, $pField, $rowData);
