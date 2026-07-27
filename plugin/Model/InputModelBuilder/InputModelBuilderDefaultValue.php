@@ -121,7 +121,7 @@ class InputModelBuilderDefaultValue
 		array $presetValuesDefaultValue)
 	{
 		$fieldsDefaultValue = $presetValuesDefaultValue[$pField->getName()] ?? '';
-		if (is_array($fieldsDefaultValue)) {
+		if (is_array($fieldsDefaultValue) && $pField->getType() !== FieldTypes::FIELD_TYPE_BOOLEAN) {
 			$fieldsDefaultValue = $fieldsDefaultValue[0] ?? '';
 		}
 		$pInputModel->setValue($fieldsDefaultValue);
