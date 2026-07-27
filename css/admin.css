@@ -750,8 +750,8 @@ body #post-head-content p.wp-clearfix:nth-child(1) {
 .oo-poststuff .custom-input-field .onoffice-input-radio label input[type="radio"][checked]::before {
     content: "";
     display: block;
-    width: 8px;
-    height: 8px ;
+    width: 6px;
+    height: 6px ;
     background-color: #3f9de4;
     border-radius: 50% ;
 }
