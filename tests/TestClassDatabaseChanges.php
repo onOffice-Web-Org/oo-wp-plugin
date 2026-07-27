@@ -119,7 +119,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(65, $dbversion);
+		$this->assertEquals(66, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -212,9 +212,11 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(10))
+		$useBrokerRecipientColumnOutput = [(object)['Field' => 'use_broker_recipient']];
+
+		$this->_pWPDBMock->expects($this->exactly(11))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput, []);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput, [], $useBrokerRecipientColumnOutput);
 
 		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
 			->will($this->returnValue(true));
@@ -273,9 +275,11 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(8))
+		$useBrokerRecipientColumnOutput = [(object)['Field' => 'use_broker_recipient']];
+
+		$this->_pWPDBMock->expects($this->exactly(9))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput, []);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput, [], $useBrokerRecipientColumnOutput);
 
 		$this->_pWPDBMock->expects($this->once())->method('delete')
 			->will($this->returnValue(true));
@@ -290,7 +294,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(65, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(66, DatabaseChanges::MAX_VERSION);
 	}
 
 
