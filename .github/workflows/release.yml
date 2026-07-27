@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  ARTIFACT_NAME: oo-wp-plugin
+  ARTIFACT_NAME: onoffice-for-wp-websites
   ARTIFACT_TYPE: plugin
 
 jobs:
