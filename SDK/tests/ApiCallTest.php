@@ -4,9 +4,13 @@ namespace Tests\onOffice\SDK;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
+use onOffice\SDK\internal\ApiAction;
 use onOffice\SDK\internal\ApiCall;
 use onOffice\SDK\internal\HttpFetch;
+use onOffice\SDK\internal\Request;
+use onOffice\SDK\internal\Response;
 use ReflectionMethod;
+use ReflectionProperty;
 
 class ApiCallTest extends \PHPUnit\Framework\TestCase
 {
@@ -386,5 +390,129 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 		$result = $method->invokeArgs($apiCall, [$response, $params]);
 
 		$this->assertEquals($originalResponse, $result);
+	}
+
+
+	/**
+	 * @param array $parameters e.g. ['listname' => 'default']
+	 * @param array $responseData
+	 * @return Response
+	 */
+	private function buildCacheableResponse(array $parameters, array $responseData): Response
+	{
+		$pApiAction = new ApiAction('someActionId', 'someResourceType', $parameters, 'someResourceId', 'someIdentifier');
+		$pRequest = new Request($pApiAction);
+
+		return new Response($pRequest, $responseData);
+	}
+
+
+	/**
+	 * A partial page (fewer records than cntabsolute) for a listname request must not
+	 * be written to the cache, since the listname cache key must always hold the
+	 * complete record set.
+	 */
+	public function testWriteCacheForResponses_skipsPartialListPage()
+	{
+		$apiCall = new ApiCall();
+
+		$cache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
+		$cache->expects($this->never())->method('write');
+		$apiCall->addCache($cache);
+
+		$response = $this->buildCacheableResponse(
+			['listname' => 'default'],
+			[
+				'actionid' => 'someActionId',
+				'resourcetype' => 'someResourceType',
+				'cacheable' => true,
+				'data' => [
+					'records' => [['id' => 1], ['id' => 2]],
+					'meta' => ['cntabsolute' => 5],
+				],
+			]
+		);
+
+		$requestId = $response->getRequest()->getRequestId();
+		$responsesProperty = new ReflectionProperty(ApiCall::class, '_responses');
+		$responsesProperty->setAccessible(true);
+		$responsesProperty->setValue($apiCall, [$requestId => $response]);
+
+		$method = new ReflectionMethod(ApiCall::class, 'writeCacheForResponses');
+		$method->setAccessible(true);
+		$method->invokeArgs($apiCall, [[$requestId]]);
+	}
+
+
+	/**
+	 * A complete page (records count equals cntabsolute) for a listname request
+	 * must be written to the cache.
+	 */
+	public function testWriteCacheForResponses_writesCompleteListPage()
+	{
+		$apiCall = new ApiCall();
+
+		$cache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
+		$cache->expects($this->once())->method('write');
+		$apiCall->addCache($cache);
+
+		$response = $this->buildCacheableResponse(
+			['listname' => 'default'],
+			[
+				'actionid' => 'someActionId',
+				'resourcetype' => 'someResourceType',
+				'cacheable' => true,
+				'data' => [
+					'records' => [['id' => 1], ['id' => 2]],
+					'meta' => ['cntabsolute' => 2],
+				],
+			]
+		);
+
+		$requestId = $response->getRequest()->getRequestId();
+		$responsesProperty = new ReflectionProperty(ApiCall::class, '_responses');
+		$responsesProperty->setAccessible(true);
+		$responsesProperty->setValue($apiCall, [$requestId => $response]);
+
+		$method = new ReflectionMethod(ApiCall::class, 'writeCacheForResponses');
+		$method->setAccessible(true);
+		$method->invokeArgs($apiCall, [[$requestId]]);
+	}
+
+
+	/**
+	 * Requests without a listname parameter must be cached regardless of how the
+	 * record count compares to cntabsolute, since the partial-page guard only
+	 * applies to listname cache entries.
+	 */
+	public function testWriteCacheForResponses_writesNonListResponseEvenIfPartial()
+	{
+		$apiCall = new ApiCall();
+
+		$cache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
+		$cache->expects($this->once())->method('write');
+		$apiCall->addCache($cache);
+
+		$response = $this->buildCacheableResponse(
+			[],
+			[
+				'actionid' => 'someActionId',
+				'resourcetype' => 'someResourceType',
+				'cacheable' => true,
+				'data' => [
+					'records' => [['id' => 1]],
+					'meta' => ['cntabsolute' => 5],
+				],
+			]
+		);
+
+		$requestId = $response->getRequest()->getRequestId();
+		$responsesProperty = new ReflectionProperty(ApiCall::class, '_responses');
+		$responsesProperty->setAccessible(true);
+		$responsesProperty->setValue($apiCall, [$requestId => $response]);
+
+		$method = new ReflectionMethod(ApiCall::class, 'writeCacheForResponses');
+		$method->setAccessible(true);
+		$method->invokeArgs($apiCall, [[$requestId]]);
 	}
 }
