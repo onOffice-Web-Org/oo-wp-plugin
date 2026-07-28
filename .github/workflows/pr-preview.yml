@@ -50,3 +50,98 @@ jobs:
           rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
             release.zip \
             zipupload@dev.onoffice-wp-updates.de:pr-builds/${{ steps.project.outputs.folder }}/plugins/oo-wp-plugin/
+
+      - name: Update project manifest
+        env:
+          FOLDER: ${{ steps.project.outputs.folder }}
+        run: |
+          set -e
+          MANIFEST_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/manifest.json"
+          ARTIFACT_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/plugins/oo-wp-plugin/release.zip"
+
+          # Read-modify-write against a shared file with no server-side locking:
+          # retry with jitter + verify, so a concurrent push from another repo
+          # for the same ticket can't silently overwrite our entry.
+          for attempt in 1 2 3 4 5; do
+            sleep "0.$((RANDOM % 9 + 1))"
+
+            curl -sf "$MANIFEST_URL" -o manifest.json || echo "[]" > manifest.json
+
+            jq --arg name "oo-wp-plugin" --arg url "$ARTIFACT_URL" --arg type "plugin" \
+              '[.[] | select(.name != $name)] + [{name: $name, type: $type, url: $url}]' \
+              manifest.json > manifest.tmp.json && mv manifest.tmp.json manifest.json
+
+            rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
+              manifest.json \
+              zipupload@dev.onoffice-wp-updates.de:pr-builds/${FOLDER}/
+
+            sleep 1
+            curl -sf "$MANIFEST_URL" -o manifest-check.json || echo "[]" > manifest-check.json
+
+            MATCH=$(jq --arg name "oo-wp-plugin" --arg url "$ARTIFACT_URL" \
+              '[.[] | select(.name == $name and .url == $url)] | length' manifest-check.json)
+
+            if [ "$MATCH" -ge 1 ]; then
+              echo "Manifest updated successfully (attempt $attempt)"
+              break
+            fi
+
+            echo "Manifest verification failed, retrying (attempt $attempt/5)..."
+            if [ "$attempt" = "5" ]; then
+              echo "::error::Failed to update manifest after 5 attempts"
+              exit 1
+            fi
+          done
+
+      - name: Login to Hosting API
+        id: api-login
+        run: |
+          LOGIN_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.HOSTING_API_URL }}/client-login" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d '{
+              "client_id": "${{ secrets.HOSTING_API_CLIENT_ID }}",
+              "client_secret": "${{ secrets.HOSTING_API_CLIENT_SECRET }}"
+            }')
+
+          HTTP_CODE=$(echo "$LOGIN_RESPONSE" | tail -1)
+          BODY=$(echo "$LOGIN_RESPONSE" | sed '$d')
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::API Login fehlgeschlagen (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
+
+          TOKEN=$(echo "$BODY" | jq -r '.data.token')
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "::error::Kein Token in Login-Response erhalten"
+            exit 1
+          fi
+
+          echo "::add-mask::${TOKEN}"
+          echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger project box build
+        env:
+          FOLDER: ${{ steps.project.outputs.folder }}
+        run: |
+          PROJECT_NUMBER="${FOLDER#P}"
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.HOSTING_API_URL }}/test-environments/build-from-project" \
+            -H "Authorization: Bearer ${{ steps.api-login.outputs.token }}" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d "{\"project_number\": \"${PROJECT_NUMBER}\"}")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: ${HTTP_CODE}"
+          echo "Response: ${BODY}"
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::Box-Build fehlgeschlagen (HTTP ${HTTP_CODE}): ${BODY}"
+            exit 1
+          fi
