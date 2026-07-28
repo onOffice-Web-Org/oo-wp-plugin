@@ -4,12 +4,44 @@ namespace Tests\onOffice\SDK;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
+use onOffice\SDK\internal\ApiAction;
 use onOffice\SDK\internal\ApiCall;
 use onOffice\SDK\internal\HttpFetch;
+use onOffice\SDK\internal\Request;
+use onOffice\SDK\internal\Response;
 use ReflectionMethod;
+use ReflectionProperty;
 
 class ApiCallTest extends \PHPUnit\Framework\TestCase
 {
+	/**
+	 * ApiCall::$_inMemoryCache is static, so responses cached by one test are visible to
+	 * every later test in the same process. Without this reset a test that queues the
+	 * same parameters as an earlier one gets an in-memory cache hit, skips the HTTP call
+	 * and silently tests nothing, which makes results depend on execution order.
+	 */
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$inMemoryCache = new ReflectionProperty(ApiCall::class, '_inMemoryCache');
+		$inMemoryCache->setAccessible(true);
+		$inMemoryCache->setValue(null, []);
+	}
+
+
+	/**
+	 * @return onOfficeSDKCache&\PHPUnit\Framework\MockObject\MockObject
+	 */
+	private function createCacheMock()
+	{
+		// onOfficeSDKCache declares a constructor, so the generated mock must not call it.
+		return $this->getMockBuilder(onOfficeSDKCache::class)
+			->disableOriginalConstructor()
+			->getMock();
+	}
+
+
 	public function testCallByRawData()
 	{
 		$apiCall = new ApiCall();
@@ -136,8 +168,7 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testAddCache()
 	{
-		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
-			->getMock();
+		$cache = $this->createCacheMock();
 
 		$apiCall = new ApiCall();
 		$apiCall->addCache($cache);
@@ -148,8 +179,7 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testRemoveCacheInstances()
 	{
-		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
-			->getMock();
+		$cache = $this->createCacheMock();
 
 		$apiCall = new ApiCall();
 		$apiCall->addCache($cache);
@@ -390,167 +420,177 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 
 
 	/**
-	 * A live miss that returns only a partial page of a list-cache request (records <
-	 * cntabsolute) must NOT be written to the cache: the listname key ignores listoffset,
-	 * so a partial page would truncate the list on the next read.
+	 * @param array $parameters e.g. ['listname' => 'default']
+	 * @param array $responseData
+	 * @return Response
 	 */
-	public function testWriteCacheForResponses_skipsPartialListCachePage()
+	private function buildCacheableResponse(array $parameters, array $responseData): Response
 	{
-		$apiCall = new ApiCall();
+		$pApiAction = new ApiAction('someActionId', 'someResourceType', $parameters, 'someResourceId', 'someIdentifier');
+		$pRequest = new Request($pApiAction);
 
-		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$cache->method('getHttpResponseByParameterArray')->willReturn(null);
-		$cache->expects($this->never())->method('write');
-		$apiCall->addCache($cache);
-
-		$this->queueListCacheRequest($apiCall, 'Alle Immobilien - Karte');
-		$apiCall->sendRequests('someToken', 'someSecret',
-			$this->httpFetchReturning($this->buildEstateListResult(500, 800)));
+		return new Response($pRequest, $responseData);
 	}
 
 
 	/**
-	 * A live miss that returns the complete list (records == cntabsolute) IS written to
-	 * the cache.
+	 * @param array $parameters request parameters, e.g. ['listname' => 'default']
+	 * @param array $data the data part of the API response
+	 * @return array [$cacheMock, $invokeWriteCache]
 	 */
-	public function testWriteCacheForResponses_writesFullListCacheSet()
+	private function prepareWriteCacheForResponses(array $parameters, array $data): array
 	{
 		$apiCall = new ApiCall();
 
-		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$cache->method('getHttpResponseByParameterArray')->willReturn(null);
-		$cache->expects($this->once())->method('write');
+		$cache = $this->createCacheMock();
 		$apiCall->addCache($cache);
 
-		$this->queueListCacheRequest($apiCall, 'Kleine Liste');
-		$apiCall->sendRequests('someToken', 'someSecret',
-			$this->httpFetchReturning($this->buildEstateListResult(120, 120)));
+		$response = $this->buildCacheableResponse($parameters, [
+			'actionid' => 'someActionId',
+			'resourcetype' => 'someResourceType',
+			'cacheable' => true,
+			'data' => $data,
+		]);
+
+		$requestId = $response->getRequest()->getRequestId();
+		$responsesProperty = new ReflectionProperty(ApiCall::class, '_responses');
+		$responsesProperty->setAccessible(true);
+		$responsesProperty->setValue($apiCall, [$requestId => $response]);
+
+		$invokeWriteCache = function () use ($apiCall, $requestId) {
+			$method = new ReflectionMethod(ApiCall::class, 'writeCacheForResponses');
+			$method->setAccessible(true);
+			$method->invokeArgs($apiCall, [[$requestId]]);
+		};
+
+		return [$cache, $invokeWriteCache];
 	}
 
 
 	/**
-	 * A NON-list request (no params_list_cache) always caches, even when it returns fewer
-	 * records than cntabsolute — the skip only applies to list-cache requests.
+	 * A partial page (fewer records than cntabsolute) for a listname request must not
+	 * be written to the cache, since the listname cache key must always hold the
+	 * complete record set.
 	 */
-	public function testWriteCacheForResponses_nonListRequestAlwaysCaches()
+	public function testWriteCacheForResponses_skipsPartialListPage()
 	{
-		$apiCall = new ApiCall();
-
-		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$cache->method('getHttpResponseByParameterArray')->willReturn(null);
-		$cache->expects($this->once())->method('write');
-		$apiCall->addCache($cache);
-
-		// No params_list_cache in the request parameters.
-		$apiCall->callByRawData(
-			'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
-			'', '', 'estate',
-			['listlimit' => 500, 'listoffset' => 0, 'formatoutput' => true]
-		);
-		$apiCall->sendRequests('someToken', 'someSecret',
-			$this->httpFetchReturning($this->buildEstateListResult(500, 800)));
-	}
-
-
-	/**
-	 * When cntabsolute is missing/invalid the shape cannot be judged, so the conservative
-	 * default is to cache normally.
-	 */
-	public function testWriteCacheForResponses_invalidMetaCachesNormally()
-	{
-		$apiCall = new ApiCall();
-
-		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$cache->method('getHttpResponseByParameterArray')->willReturn(null);
-		$cache->expects($this->once())->method('write');
-		$apiCall->addCache($cache);
-
-		$result = $this->buildEstateListResult(500, 800);
-		unset($result['data']['meta']); // no cntabsolute -> cannot tell -> cache normally
-
-		$this->queueListCacheRequest($apiCall, 'Liste ohne Meta');
-		$apiCall->sendRequests('someToken', 'someSecret', $this->httpFetchReturning($result));
-	}
-
-
-	/**
-	 * Queue a list-cache estate read (listname + params_list_cache) on the given ApiCall.
-	 *
-	 * @param ApiCall $apiCall
-	 * @param string $listName
-	 */
-	private function queueListCacheRequest(ApiCall $apiCall, string $listName): void
-	{
-		$apiCall->callByRawData(
-			'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
-			'',
-			'',
-			'estate',
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			['listname' => 'default'],
 			[
-				'listname' => $listName,
-				'params_list_cache' => ['listname' => $listName],
-				'listlimit' => 500,
-				'listoffset' => 0,
-				'formatoutput' => true,
+				'records' => [['id' => 1], ['id' => 2]],
+				'meta' => ['cntabsolute' => 5],
 			]
 		);
+
+		$cache->expects($this->never())->method('write');
+
+		$invokeWriteCache();
 	}
 
 
 	/**
-	 * Build an HttpFetch mock whose send() returns a single-result API response.
-	 *
-	 * @param array $result
-	 * @return HttpFetch
+	 * Some resource types report cntabsolute as an array. The partial page must still
+	 * be recognized.
 	 */
-	private function httpFetchReturning(array $result): HttpFetch
+	public function testWriteCacheForResponses_skipsPartialListPageWithCntAbsoluteAsArray()
 	{
-		$httpFetch = $this->getMockBuilder(HttpFetch::class)
-			->disableOriginalConstructor()
-			->onlyMethods(['send'])
-			->getMock();
-		$httpFetch->method('send')->willReturn(json_encode([
-			'response' => ['results' => [0 => $result]],
-		]));
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			['listname' => 'default'],
+			[
+				'records' => [['id' => 1], ['id' => 2]],
+				'meta' => ['cntabsolute' => [5]],
+			]
+		);
 
-		return $httpFetch;
+		$cache->expects($this->never())->method('write');
+
+		$invokeWriteCache();
 	}
 
 
 	/**
-	 * Build a cacheable estate list HTTP result with $recordCount records and a
-	 * cntabsolute of $cntAbsolute.
-	 *
-	 * @param int $recordCount
-	 * @param int $cntAbsolute
-	 * @return array
+	 * A response for a page beyond the first can never hold the complete record set,
+	 * so it must be skipped even when the response carries no usable cntabsolute.
 	 */
-	private function buildEstateListResult(int $recordCount, int $cntAbsolute): array
+	public function testWriteCacheForResponses_skipsListPageBeyondFirstPageWithoutCntAbsolute()
 	{
-		$records = [];
-		for ($i = 0; $i < $recordCount; $i++) {
-			$records[] = ['id' => $i + 1, 'type' => 'estate', 'elements' => []];
-		}
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			['listname' => 'default', 'listoffset' => 20, 'listlimit' => 20],
+			[
+				'records' => [['id' => 21], ['id' => 22]],
+				'meta' => [],
+			]
+		);
 
-		return [
-			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
-			'resourceid' => '',
-			'resourcetype' => 'estate',
-			'cacheable' => true,
-			'identifier' => '',
-			'data' => [
-				'meta' => ['cntabsolute' => $cntAbsolute],
-				'records' => $records,
-			],
-			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		$cache->expects($this->never())->method('write');
+
+		$invokeWriteCache();
+	}
+
+
+	/**
+	 * A complete page (records count equals cntabsolute) for a listname request
+	 * must be written to the cache.
+	 */
+	public function testWriteCacheForResponses_writesCompleteListPage()
+	{
+		$data = [
+			'records' => [['id' => 1], ['id' => 2]],
+			'meta' => ['cntabsolute' => 2],
 		];
+
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			['listname' => 'default', 'listoffset' => 0],
+			$data
+		);
+
+		$cache->expects($this->once())
+			->method('write')
+			->with($this->anything(), $this->callback(function ($value) use ($data) {
+				return unserialize($value)['data'] === $data;
+			}));
+
+		$invokeWriteCache();
+	}
+
+
+	/**
+	 * Requests without a listname parameter must be cached regardless of how the
+	 * record count compares to cntabsolute, since the partial-page guard only
+	 * applies to listname cache entries.
+	 */
+	public function testWriteCacheForResponses_writesNonListResponseEvenIfPartial()
+	{
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			[],
+			[
+				'records' => [['id' => 1]],
+				'meta' => ['cntabsolute' => 5],
+			]
+		);
+
+		$cache->expects($this->once())->method('write');
+
+		$invokeWriteCache();
+	}
+
+
+	/**
+	 * Without a listname the cache key covers all parameters including listoffset, so
+	 * paged responses stay cacheable.
+	 */
+	public function testWriteCacheForResponses_writesNonListResponseBeyondFirstPage()
+	{
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			['listoffset' => 20, 'listlimit' => 20],
+			[
+				'records' => [['id' => 21], ['id' => 22]],
+				'meta' => ['cntabsolute' => 50],
+			]
+		);
+
+		$cache->expects($this->once())->method('write');
+
+		$invokeWriteCache();
 	}
 }
