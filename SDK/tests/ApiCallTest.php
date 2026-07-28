@@ -387,4 +387,170 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertEquals($originalResponse, $result);
 	}
+
+
+	/**
+	 * A live miss that returns only a partial page of a list-cache request (records <
+	 * cntabsolute) must NOT be written to the cache: the listname key ignores listoffset,
+	 * so a partial page would truncate the list on the next read.
+	 */
+	public function testWriteCacheForResponses_skipsPartialListCachePage()
+	{
+		$apiCall = new ApiCall();
+
+		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$cache->method('getHttpResponseByParameterArray')->willReturn(null);
+		$cache->expects($this->never())->method('write');
+		$apiCall->addCache($cache);
+
+		$this->queueListCacheRequest($apiCall, 'Alle Immobilien - Karte');
+		$apiCall->sendRequests('someToken', 'someSecret',
+			$this->httpFetchReturning($this->buildEstateListResult(500, 800)));
+	}
+
+
+	/**
+	 * A live miss that returns the complete list (records == cntabsolute) IS written to
+	 * the cache.
+	 */
+	public function testWriteCacheForResponses_writesFullListCacheSet()
+	{
+		$apiCall = new ApiCall();
+
+		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$cache->method('getHttpResponseByParameterArray')->willReturn(null);
+		$cache->expects($this->once())->method('write');
+		$apiCall->addCache($cache);
+
+		$this->queueListCacheRequest($apiCall, 'Kleine Liste');
+		$apiCall->sendRequests('someToken', 'someSecret',
+			$this->httpFetchReturning($this->buildEstateListResult(120, 120)));
+	}
+
+
+	/**
+	 * A NON-list request (no params_list_cache) always caches, even when it returns fewer
+	 * records than cntabsolute — the skip only applies to list-cache requests.
+	 */
+	public function testWriteCacheForResponses_nonListRequestAlwaysCaches()
+	{
+		$apiCall = new ApiCall();
+
+		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$cache->method('getHttpResponseByParameterArray')->willReturn(null);
+		$cache->expects($this->once())->method('write');
+		$apiCall->addCache($cache);
+
+		// No params_list_cache in the request parameters.
+		$apiCall->callByRawData(
+			'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'', '', 'estate',
+			['listlimit' => 500, 'listoffset' => 0, 'formatoutput' => true]
+		);
+		$apiCall->sendRequests('someToken', 'someSecret',
+			$this->httpFetchReturning($this->buildEstateListResult(500, 800)));
+	}
+
+
+	/**
+	 * When cntabsolute is missing/invalid the shape cannot be judged, so the conservative
+	 * default is to cache normally.
+	 */
+	public function testWriteCacheForResponses_invalidMetaCachesNormally()
+	{
+		$apiCall = new ApiCall();
+
+		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$cache->method('getHttpResponseByParameterArray')->willReturn(null);
+		$cache->expects($this->once())->method('write');
+		$apiCall->addCache($cache);
+
+		$result = $this->buildEstateListResult(500, 800);
+		unset($result['data']['meta']); // no cntabsolute -> cannot tell -> cache normally
+
+		$this->queueListCacheRequest($apiCall, 'Liste ohne Meta');
+		$apiCall->sendRequests('someToken', 'someSecret', $this->httpFetchReturning($result));
+	}
+
+
+	/**
+	 * Queue a list-cache estate read (listname + params_list_cache) on the given ApiCall.
+	 *
+	 * @param ApiCall $apiCall
+	 * @param string $listName
+	 */
+	private function queueListCacheRequest(ApiCall $apiCall, string $listName): void
+	{
+		$apiCall->callByRawData(
+			'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'',
+			'',
+			'estate',
+			[
+				'listname' => $listName,
+				'params_list_cache' => ['listname' => $listName],
+				'listlimit' => 500,
+				'listoffset' => 0,
+				'formatoutput' => true,
+			]
+		);
+	}
+
+
+	/**
+	 * Build an HttpFetch mock whose send() returns a single-result API response.
+	 *
+	 * @param array $result
+	 * @return HttpFetch
+	 */
+	private function httpFetchReturning(array $result): HttpFetch
+	{
+		$httpFetch = $this->getMockBuilder(HttpFetch::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['send'])
+			->getMock();
+		$httpFetch->method('send')->willReturn(json_encode([
+			'response' => ['results' => [0 => $result]],
+		]));
+
+		return $httpFetch;
+	}
+
+
+	/**
+	 * Build a cacheable estate list HTTP result with $recordCount records and a
+	 * cntabsolute of $cntAbsolute.
+	 *
+	 * @param int $recordCount
+	 * @param int $cntAbsolute
+	 * @return array
+	 */
+	private function buildEstateListResult(int $recordCount, int $cntAbsolute): array
+	{
+		$records = [];
+		for ($i = 0; $i < $recordCount; $i++) {
+			$records[] = ['id' => $i + 1, 'type' => 'estate', 'elements' => []];
+		}
+
+		return [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'estate',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => $cntAbsolute],
+				'records' => $records,
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+	}
 }
