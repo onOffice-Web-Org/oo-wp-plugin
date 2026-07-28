@@ -906,8 +906,11 @@ class ApiCall
 				$params = $requestParameters['parameters'] ?? [];
 				$records = $responseData['data']['records'] ?? null;
 				$cntAbsolute = $responseData['data']['meta']['cntabsolute'] ?? null;
+				if (is_array($cntAbsolute)) {
+					$cntAbsolute = $cntAbsolute[0] ?? null;
+				}
 				if (
-					isset($params['params_list_cache']) &&
+					isset($params['listname']) &&
 					is_array($records) &&
 					is_numeric($cntAbsolute) &&
 					count($records) < (int) $cntAbsolute
