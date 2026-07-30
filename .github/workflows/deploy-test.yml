@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - 'feat/P#167869--Github-Action-Master'
+      - 'fix/plugin-zip'
   workflow_dispatch:
 
 concurrency:
