@@ -22,6 +22,7 @@ jobs:
 
   deploy-test:
     name: Deploy Test to new Hosting
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     needs: build
 
