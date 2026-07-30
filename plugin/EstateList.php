@@ -71,6 +71,12 @@ class EstateList
 {
 	const DEFAULT_LIMIT_CHARACTER_DESCRIPTION = 150;
 
+	/**
+	 * Appended to the view name so the map request (reduced field set) gets its own list-cache
+	 * key. '#' can never occur in a sanitized view name, so it cannot collide with a real one.
+	 */
+	const MAP_CACHE_LISTNAME_MARKER = '#map';
+
 	/** @var array */
 	private $_records = [];
 
@@ -535,7 +541,9 @@ class EstateList
 		];
 
 		if ($pListView instanceof DataListView) {
-			$requestParams = array('listname' => $this->_pDataView->getName()) + $requestParams;
+			// Own cache key for the map: it fetches only map fields, but the list cache key
+			// ignores the field set — sharing it would overwrite the list's values (P#150089).
+			$requestParams = array('listname' => $this->_pDataView->getName() . self::MAP_CACHE_LISTNAME_MARKER) + $requestParams;
 		}
 
 		if (!$pListView->getRandom()) {
@@ -651,11 +659,8 @@ class EstateList
 				'formatoutput' => $formatOutput,
 				'addMainLangId' => true,
 			];
-			// Route every page through the listname-based cache key. A pre-warmed entry holds
-			// the full record set, so each 500-block is answered from that single entry
-			// (applyListCacheFiltering slices it by listoffset/listlimit). Partial live pages
-			// are never persisted under the listname key (ApiCall::writeCacheForResponses skips
-			// them), so follow-up offsets can safely reuse it without risking a truncated read.
+			// Route every page through the listname cache key: a pre-warmed entry holds the full
+			// set and is sliced per page; partial live pages are not persisted (see ApiCall).
 			if ($useListCache) {
 				$requestParams = ['listname' => $this->_pDataView->getName()] + $requestParams;
 				$requestParams['params_list_cache'] = $paramsListCache;
