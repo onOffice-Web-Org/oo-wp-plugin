@@ -897,22 +897,23 @@ class ApiCall
 					$pResponse->getRequest()->getApiAction()->getActionParameters()
 				);
 
-				// A list-cache entry (listname key) must always hold the COMPLETE record set,
-				// because that key ignores listoffset and is expected to answer every page. A
-				// live miss for a list larger than one page only returns a single page of at
-				// most `listlimit` records; persisting it here would truncate the list on the
-				// next read. Skip such partial pages — the full set is (re)built by
-				// SDKWrapper::renewCache(), which writes to the cache directly.
+				// The listname key ignores listoffset, so only the COMPLETE set may be stored.
+				// Skip partial/paginated pages; the full set is (re)built by renewCache().
 				$params = $requestParameters['parameters'] ?? [];
 				$records = $responseData['data']['records'] ?? null;
-				$cntAbsolute = $responseData['data']['meta']['cntabsolute'] ?? null;
-				if (
-					isset($params['params_list_cache']) &&
-					is_array($records) &&
-					is_numeric($cntAbsolute) &&
-					count($records) < (int) $cntAbsolute
-				) {
-					continue;
+				if (isset($params['listname']) && is_array($records))
+				{
+					$cntAbsolute = $responseData['data']['meta']['cntabsolute'] ?? null;
+					if (is_array($cntAbsolute)) {
+						$cntAbsolute = $cntAbsolute[0] ?? null;
+					}
+
+					$isBeyondFirstPage = (int) ($params['listoffset'] ?? 0) > 0;
+					$isTruncated = is_numeric($cntAbsolute) && count($records) < (int) $cntAbsolute;
+
+					if ($isBeyondFirstPage || $isTruncated) {
+						continue;
+					}
 				}
 
 				$this->writeCache(serialize($responseData), $requestParameters);

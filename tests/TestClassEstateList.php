@@ -1531,6 +1531,44 @@ class TestClassEstateList
 	}
 
 	/**
+	 * Regression (P#150089 map/list cache-key collision): the map request only fetches a
+	 * reduced field set (coordinates + address), while DBCache::getParametersHashed() keys the
+	 * list cache on listname + formatoutput + language only — the requested fields are not part
+	 * of the key. If the map reused the plain view name, its write would overwrite the list
+	 * cache entry with map-only fields and the list would render estates without values. The
+	 * map listname therefore carries a collision-proof marker so it uses a distinct cache key.
+	 */
+	public function testMapRequestUsesDistinctListnameCacheKey()
+	{
+		// No active geo range search: geo would strip listname from the list request.
+		$this->_pEstateList->setGeoSearchBuilder(new GeoSearchBuilderEmpty());
+
+		$getMapParams = Closure::bind(function (int $page, bool $fmt) {
+			return $this->getEstateParametersForMap($page, $fmt);
+		}, $this->_pEstateList, EstateList::class);
+		$getListParams = Closure::bind(function (int $page, bool $fmt) {
+			return $this->getEstateParameters($page, $fmt);
+		}, $this->_pEstateList, EstateList::class);
+
+		$viewName = $this->_pEstateList->getDataView()->getName();
+		$mapParams = $getMapParams(1, true);
+		$listParams = $getListParams(1, true);
+
+		$this->assertSame($viewName . EstateList::MAP_CACHE_LISTNAME_MARKER, $mapParams['listname'],
+			'map request must use the map-marker listname so it does not share the list cache key');
+		$this->assertSame($viewName, $listParams['listname'],
+			'list request must use the plain view name as listname');
+		$this->assertNotSame($listParams['listname'], $mapParams['listname'],
+			'map and list must not collide on the same listname cache key');
+
+		// The marker must contain a character that sanitizeShortcodeName() strips, so no saved
+		// view name can ever equal a map cache key (collision-proof).
+		$sanitized = preg_replace('/[^a-zA-Z0-9äÄöÖüÜß:_ \-]/u', '', EstateList::MAP_CACHE_LISTNAME_MARKER);
+		$this->assertNotSame(EstateList::MAP_CACHE_LISTNAME_MARKER, $sanitized,
+			'the map marker must include a character disallowed in view names, so it cannot collide');
+	}
+
+	/**
 	 *
 	 * @return FieldsCollection
 	 *
