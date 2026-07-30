@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - 'fix/plugin-zip'
+      - 'fix/pugin-zip'
   workflow_dispatch:
 
 concurrency:
