@@ -897,13 +897,8 @@ class ApiCall
 					$pResponse->getRequest()->getApiAction()->getActionParameters()
 				);
 
-				// A list-cache entry (listname key) must always hold the COMPLETE record set,
-				// because that key ignores listoffset and is expected to answer every page. A
-				// live miss for a list larger than one page only returns a single page of at
-				// most `listlimit` records; persisting it here would truncate the list on the
-				// next read. Skip such partial pages — the full set is (re)built by
-				// SDKWrapper::renewCache(), which writes to the cache directly.
-
+				// The listname key ignores listoffset, so only the COMPLETE set may be stored.
+				// Skip partial/paginated pages; the full set is (re)built by renewCache().
 				$params = $requestParameters['parameters'] ?? [];
 				$records = $responseData['data']['records'] ?? null;
 				if (isset($params['listname']) && is_array($records))
