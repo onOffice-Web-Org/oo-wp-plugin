@@ -49,7 +49,7 @@
         "successComment": false,
         "failComment": false,
         "assets": [
-          { "path": "release.zip", "label": "onoffice-for-wp-websites.zip" }
+          { "path": "onoffice-for-wp-websites.zip", "label": "onoffice-for-wp-websites.zip" }
         ]
       }
     ]

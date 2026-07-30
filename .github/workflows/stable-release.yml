@@ -46,8 +46,8 @@
        - name: Unzip release
          working-directory: /tmp/release
          run: |
-           unzip release.zip
-           rm release.zip
+            unzip onoffice-for-wp-websites.zip
+            rm onoffice-for-wp-websites.zip
 
        - name: Make directory for updating SVN
          run: mkdir /tmp/svn

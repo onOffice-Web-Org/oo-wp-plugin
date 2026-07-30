@@ -40,14 +40,14 @@ jobs:
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: "updater.json"
-          json: '{"version":"${{needs.get-version.outputs.currentVersion}}", "download_url": "https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/release.zip"}'
+          json: '{"version":"${{needs.get-version.outputs.currentVersion}}", "download_url": "https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/onoffice-for-wp-websites.zip"}'
 
       - name: Upload release build
         uses: actions/upload-artifact@v4
         with:
           name: oo-wp-plugin Release Bundle
           path: |
-            release.zip
+            onoffice-for-wp-websites.zip
             updater.json
           retention-days: 7
 
@@ -57,4 +57,4 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_KEY_RAIDBOXES }}
 
       - name: Upload Files to Release Server
-        run: rsync -e 'ssh -o StrictHostKeyChecking=no' release.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin
+        run: rsync -e 'ssh -o StrictHostKeyChecking=no' onoffice-for-wp-websites.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin
