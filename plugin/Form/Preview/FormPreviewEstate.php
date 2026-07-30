@@ -7,15 +7,12 @@ namespace onOffice\WPlugin\Form\Preview;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
+use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
-use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
-use onOffice\WPlugin\GeoPosition;
 
 
 class FormPreviewEstate
@@ -23,28 +20,36 @@ class FormPreviewEstate
 	/** @var DataListViewFactory */
 	private $_pDataListViewFactory;
 
-	/** @var APIClientActionGeneric */
-	private $_pApiClientAction;
+	/** @var EstateListFactory */
+	private $_pEstateListFactory;
 
 	/** @var DefaultFilterBuilderFactory */
 	private $_pDefaultFilterBuilderFactory;
 
 	/**
 	 * @param DataListViewFactory $pDataListViewFactory
-	 * @param APIClientActionGeneric $pApiClientAction
+	 * @param EstateListFactory $pEstateListFactory
 	 * @param DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory
 	 */
 	public function __construct(
 		DataListViewFactory $pDataListViewFactory,
-		APIClientActionGeneric $pApiClientAction,
+		EstateListFactory $pEstateListFactory,
 		DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory)
 	{
 		$this->_pDataListViewFactory = $pDataListViewFactory;
-		$this->_pApiClientAction = $pApiClientAction;
+		$this->_pEstateListFactory = $pEstateListFactory;
 		$this->_pDefaultFilterBuilderFactory = $pDefaultFilterBuilderFactory;
 	}
 
 	/**
+	 * Return the number of estates that match the given list configuration.
+	 *
+	 * The preview does not issue its own isolated API request. Instead it builds the
+	 * estate list exactly as the front-end does and resolves the count through the
+	 * regular DataListView cache lifecycle: on a cache hit the value is read from the
+	 * shared list cache entry without any API call, and on a cache miss the regular
+	 * data-creation process runs, warms the list cache and returns the count.
+	 *
 	 * @param string $listName
 	 * @return int
 	 * @throws DependencyException
@@ -55,36 +60,14 @@ class FormPreviewEstate
 	 */
 	public function preview(string $listName): int
 	{
+		/** @var DataListView $pListView */
 		$pListView = $this->_pDataListViewFactory->getListViewByName($listName);
-		$requestParams = [
-			'listlimit' => 0,
-			'filterid' => $pListView->getFilterId(),
-		];
-		if (in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true)) {
-			$pGeoSearchBuilder = new GeoSearchBuilderFromInputVars;
-			$pGeoSearchBuilder->setViewProperty($pListView);
-			$geoRangeSearchParameters = $pGeoSearchBuilder->buildParameters();
 
-			if ($geoRangeSearchParameters !== []) {
-				$requestParams['georangesearch'] = $geoRangeSearchParameters;
-			}
-		}
-		$pDefaultFilterBuilder = $this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
-		$requestParams['filter'] = $pDefaultFilterBuilder->buildFilter();
+		$pEstateList = $this->_pEstateListFactory->createEstateList($pListView);
+		$pEstateList->setDefaultFilterBuilder(
+			$this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView)
+		);
 
-		switch ($pListView->getShowReferenceEstate()) {
-			case DataListView::HIDE_REFERENCE_ESTATE:
-				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-				break;
-			case DataListView::SHOW_ONLY_REFERENCE_ESTATE:
-				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
-				break;
-		}
-
-		$pApiClientAction = $this->_pApiClientAction->withActionIdAndResourceType
-			(onOfficeSDK::ACTION_ID_READ, 'estate');
-		$pApiClientAction->setParameters($requestParams);
-		$pApiClientAction->addRequestToQueue()->sendRequests();
-		return (int)$pApiClientAction->getResultMeta()['cntabsolute'];
+		return $pEstateList->getEstateOverallCountFromCache();
 	}
 }

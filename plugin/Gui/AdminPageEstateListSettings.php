@@ -264,8 +264,11 @@ class AdminPageEstateListSettings
 		foreach ($fieldNames as $category) {
 			$slug = $this->generateGroupSlugByModuleCategory($module, $category);
 			$pFormFieldsConfig = $this->getFormModelByGroupSlug($slug);
-			$pFormFieldsConfig->setOoModule($module);
-			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+
+			if ($pFormFieldsConfig !== null) {
+				$pFormFieldsConfig->setOoModule($module);
+				$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+			}
 		}
 	}
 

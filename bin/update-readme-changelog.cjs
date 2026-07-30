@@ -25,7 +25,12 @@ function extractReleaseDate(notes) {
 
 function cleanListItem(item) {
 	return item
-		.replace(/\s+\(\[[0-9a-f]{7,40}\]\([^)]+\)\)$/i, '')
+		.replace(/^\*\*(?:[A-Za-z]#\d+|#\d+):\*\*\s*/i, '')
+		.replace(/,\s*closes\b.*$/i, '')
+		.replace(/\s*\([^)]*\[[^\]]+\]\([^)]+\)[^)]*\)/g, '')
+		.replace(/\[[^\]]+\]\([^)]+\)/g, '')
+		.replace(/\s*\(#\d+\)\s*$/g, '')
+		.replace(/\s{2,}/g, ' ')
 		.trim();
 }
 

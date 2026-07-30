@@ -79,29 +79,29 @@ Start editing inside the `onoffice-personalized` folder.
 = 6.16.0 (2026-07-01) =
 
 **Added**
-* add PHP and WordPress metadata from readme.txt to updater.json ([#1193](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1193))
-* **P#149205:** Feldabhängigkeiten in der Wertermittlung ([#1217](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1217)) ([009c886](https://github.com/onOffice-Web-Org/oo-wp-plugin/commit/009c88683cf49275d933e8d87df82c6276c4c09e)), closes [P#149205](https://github.com/onOffice-Web-Org/P/issues/149205)
-* **P#165283:** semantic releases ([#1215](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1215)) ([ff99ec1](https://github.com/onOffice-Web-Org/oo-wp-plugin/commit/ff99ec14868b3f9261785c09d5aa8cf93a153dcb)), closes [P#165283](https://github.com/onOffice-Web-Org/P/issues/165283) [P#165283](https://github.com/onOffice-Web-Org/P/issues/165283)
-* update version to 6.13 and set required PHP version to 8.0 ([#1194](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1194))
+* add PHP and WordPress metadata from readme.txt to updater.json
+* Feldabhängigkeiten in der Wertermittlung
+* semantic releases
+* update version to 6.13 and set required PHP version to 8.0
 
 **Changed**
-* **P#163379:** Abweichender Agreementlink bei provisionsfrei ([#1210](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1210)) ([bfd2892](https://github.com/onOffice-Web-Org/oo-wp-plugin/commit/bfd2892d2ab35d461b3409f4165b9374fd51fbd7)), closes [P#163379](https://github.com/onOffice-Web-Org/P/issues/163379) [P#163379](https://github.com/onOffice-Web-Org/P/issues/163379)
+* Abweichender Agreementlink bei provisionsfrei
 
 **Fixed**
-* **#164815:** remove geo filter from api call ([#1209](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1209)) ([2b2111d](https://github.com/onOffice-Web-Org/oo-wp-plugin/commit/2b2111dfb76182974c4f44bd487f5fce2fb9cc23)), closes [#164815](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/164815)
-* added method getContactRawById for wp-websites ([#1211](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1211))
-* docker tests ([#1229](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1229))
-* **P#150089:** Karten anzeigen Immobilienliste ([fe38c1a](https://github.com/onOffice-Web-Org/oo-wp-plugin/commit/fe38c1ae84c9a040fc6f689a6f255e105cfd51b4)), closes [P#150089](https://github.com/onOffice-Web-Org/P/issues/150089)
-* **P#164383:** Sortierung Immoliste ([fa6d6f1](https://github.com/onOffice-Web-Org/oo-wp-plugin/commit/fa6d6f128fd239affefdf618771f6fb8aa6e7e46)), closes [P#164383](https://github.com/onOffice-Web-Org/P/issues/164383)
-* **p#164723:** cache key collisions for unit estate lists ([#1213](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1213)) ([46a628b](https://github.com/onOffice-Web-Org/oo-wp-plugin/commit/46a628b626218be755ce15921f73aea946685d4e)), closes [p#164723](https://github.com/onOffice-Web-Org/p/issues/164723)
-* **P#165597:** Adressfreigabe Pin auf Map ([#1218](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1218)) ([62355b8](https://github.com/onOffice-Web-Org/oo-wp-plugin/commit/62355b8e69c83999b0f6a32058a965b7b702e6a8)), closes [P#165597](https://github.com/onOffice-Web-Org/P/issues/165597)
+* remove geo filter from api call
+* added method getContactRawById for wp-websites
+* docker tests
+* Karten anzeigen Immobilienliste
+* Sortierung Immoliste
+* cache key collisions for unit estate lists
+* Adressfreigabe Pin auf Map
 
 **Maintenance**
-* **P#161097:** WP-Plugin oo-updater und Kundenliste ([#1188](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1188)) ([cc80478](https://github.com/onOffice-Web-Org/oo-wp-plugin/commit/cc80478e0bfdc2c3cee0ab6eef26954048ef0650)), closes [P#161097](https://github.com/onOffice-Web-Org/P/issues/161097)
-* **T#5663467:** update dependencies ([#1222](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1222)) ([e6cc59d](https://github.com/onOffice-Web-Org/oo-wp-plugin/commit/e6cc59da2e8dfbf86b580d98dab0648c2633249c)), closes [T#5663467](https://github.com/onOffice-Web-Org/T/issues/5663467)
+* WP-Plugin oo-updater und Kundenliste
+* update dependencies
 
 **Tests**
-* **P#153931:** add test for paginated data ([#1208](https://github.com/onOffice-Web-Org/oo-wp-plugin/issues/1208)) ([fa4f39a](https://github.com/onOffice-Web-Org/oo-wp-plugin/commit/fa4f39ac05942c8c4a0cff6622b410f9f642eb7c)), closes [P#153931](https://github.com/onOffice-Web-Org/P/issues/153931)
+* add test for paginated data
 
 = 6.15 (2026-05-27) =
 

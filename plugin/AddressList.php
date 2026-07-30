@@ -105,6 +105,12 @@ implements AddressListBase
 		'department'
 	];
 
+	/** @var string[] Fields that are always fetched unformatted so themes can
+	 * read them via getRawById() without them being configured in the view. */
+	private $_addressParametersForRawRecords = [
+		'homepage_veroeffentlichen'
+	];
+
 	/** @var string[] */
 	private $_specialContactData = [
 		'mobile',
@@ -213,7 +219,8 @@ implements AddressListBase
 							array_unique(
 								array_merge(
 									$fields,                           // whatever the view asked for (formatted)
-									$this->_addressParametersForImageAlt // still keep alt deps
+									$this->_addressParametersForImageAlt, // still keep alt deps
+									$this->_addressParametersForRawRecords
 								)
 							)
 						),
@@ -266,14 +273,24 @@ implements AddressListBase
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Geo search is a public filter, no nonce needed
+		$hasGeoSearch = false;
 		if ( isset( $_GET['geo_search'] ) ) {
 			$geoSearch = sanitize_text_field( wp_unslash( $_GET['geo_search'] ) );
 			$geoCoords = explode( ',', $geoSearch );
 			if ( count( $geoCoords ) === 2 ) {
 				$filter['geo'][0]['loc'] = $geoSearch;
+				$hasGeoSearch = true;
 			}
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		if (!$hasGeoSearch) {
+			unset($filter['geo']);
+		}
+
+		if ($hasGeoSearch) {
+			$offset = 0;
+			$numRecordsPerPage = 500;
+		}
 
 		$parameters = array(
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
@@ -365,6 +382,12 @@ implements AddressListBase
 		$result = $this->_pApiClientAction->getResult();
 		$this->_records = $result["data"]["records"];
 		$recordsRaw = $pApiClientActionRaw->getResultRecords();
+
+		if (isset($parameters['filter']['geo'][0]['loc'])) {
+			$perPage = $this->_pDataViewAddress->getRecordsPerPage();
+			$offset = ($newPage - 1) * $perPage;
+			$this->_records = array_slice($this->_records, $offset, $perPage);
+		}
 
 		$this->fetchEstatesForAddressIds($this->getAddressIds());
 		$this->fillAddressesById($this->_records);
