@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - 'feat/P#167869--Github-Action-Master'
   workflow_dispatch:
 
 concurrency:
