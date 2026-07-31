@@ -10,7 +10,7 @@ Releases are automatically created using semantic versioning when code is merged
    - **Auto Build option:** When triggering the prerelease action, you can enable the `Beta-Image nach Deploy automatisch bauen?` checkbox. This is forwarded for future beta hosting deploys.
 3. Test the prerelease. If something is wrong, fix it in a feature branch, merge to `master`, and create a new prerelease.
 4. Run the **🚀 Create release** action from `master`. It merges `master` into the `release` branch and triggers semantic-release to create the final release.
-5. On published final release, the update server deploy runs automatically and distributes `release.zip`.
+5. On published final release, the update server deploy runs automatically and distributes `onoffice-for-wp-websites.zip`.
 
 **What happens automatically on release:**
 - Version is bumped in `plugin.php`, `readme.txt` (Stable tag), and `package.json`

@@ -1,26 +1,37 @@
-name: onOffice WP-Updates Release
+name: onOffice WP-Updates Release (Dev Update Server)
 
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Existing release tag to redeploy to the dev update server (e.g. v6.16.0)"
+        required: true
+        type: string
 
 jobs:
   get-version:
     name: Get current version
     runs-on: ubuntu-latest
-    if: ${{ !github.event.release.prerelease }}
+    if: ${{ github.event_name == 'workflow_dispatch' || !github.event.release.prerelease }}
     outputs:
       currentVersion: ${{ steps.get-version.outputs.version }}
+      tagName: ${{ steps.tag.outputs.tag }}
     steps:
+      - name: Determine release tag
+        id: tag
+        run: echo "tag=${{ github.event.inputs.release_tag || github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+
       - name: Checkout release tag
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ steps.tag.outputs.tag }}
 
       - name: Get version
         id: get-version
         env:
-          TAG_NAME: ${{ github.event.release.tag_name }}
+          TAG_NAME: ${{ steps.tag.outputs.tag }}
         run: |
           if [[ ! "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "::error::Update-server deploys require a final semantic version tag like v6.16.0. Got: ${TAG_NAME}"
@@ -40,20 +51,20 @@ jobs:
     needs: get-version
     uses: ./.github/workflows/build-release.yml
     with:
-      ref: ${{ github.event.release.tag_name }}
+      ref: ${{ needs.get-version.outputs.tagName }}
       expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
       checkVersion: false
       pluginFolder: onoffice-for-wp-websites
 
   deploy:
-    name: Deploy to Update Server
+    name: Deploy to Dev Update Server
     runs-on: ubuntu-latest
     needs: [get-version, build]
     steps:
       - name: Checkout source (for readme.txt)
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ needs.get-version.outputs.tagName }}
           path: source
 
       - name: Download release artifact
@@ -98,21 +109,21 @@ jobs:
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: "updater.json"
-          json: '{"version":"${{ needs.get-version.outputs.currentVersion }}","download_url":"https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/onoffice-for-wp-websites.zip","requires_php":"${{ steps.readme-meta.outputs.requires_php }}","requires":"${{ steps.readme-meta.outputs.requires }}","tested":"${{ steps.readme-meta.outputs.tested }}"}'
+          json: '{"version":"${{ needs.get-version.outputs.currentVersion }}","download_url":"https://dev.onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/onoffice-for-wp-websites.zip","requires_php":"${{ steps.readme-meta.outputs.requires_php }}","requires":"${{ steps.readme-meta.outputs.requires }}","tested":"${{ steps.readme-meta.outputs.tested }}"}'
 
       - name: Upload release build
         uses: actions/upload-artifact@v4
         with:
-          name: oo-wp-plugin Release Bundle
+          name: oo-wp-plugin Release Bundle (Dev)
           path: |
             onoffice-for-wp-websites.zip
             updater.json
           retention-days: 7
 
-      - name: Set SSH Key for Raidboxes Server
+      - name: Set SSH Key for Dev Update Server
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY_RAIDBOXES }}
+          ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
 
-      - name: Upload Files to Release Server
-        run: rsync -e 'ssh -o StrictHostKeyChecking=no' onoffice-for-wp-websites.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin
+      - name: Upload Files to Dev Update Server
+        run: rsync -e 'ssh -o StrictHostKeyChecking=no' onoffice-for-wp-websites.zip updater.json zipupload@dev.onoffice-wp-updates.de:dev.onoffice-wp-updates.de/releases/plugins/oo-wp-plugin

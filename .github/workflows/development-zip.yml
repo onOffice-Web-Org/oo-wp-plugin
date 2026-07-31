@@ -62,8 +62,8 @@ jobs:
       - name: Unzip release
         working-directory: /tmp/release/onoffice-for-wp-websites/
         run: |
-          unzip release.zip
-          rm release.zip
+          unzip onoffice-for-wp-websites.zip
+          rm onoffice-for-wp-websites.zip
 
       - name: Create development zip
         working-directory: /tmp/release/  # To prevent nested paths (like /tmp/release/onoffice/readme.txt) we need to be in this directory.
