@@ -211,7 +211,8 @@ class TestClassAddressList
             'data' => [
                 'Name','KdNr','Vorname','phone',       // from $fields passed to loadAddressesById
                 'contactCategory','Zusatz1','branch','communityOfHeirs','communityOfOwners',
-                'umbrellaOrganization','association','institution','department' // alt deps
+                'umbrellaOrganization','association','institution','department', // alt deps
+                'homepage_veroeffentlichen' // always fetched raw fields
             ],
             'outputlanguage' => Language::getDefault(),
             'filter' => [],
@@ -263,7 +264,8 @@ class TestClassAddressList
             'data' => [
                 'Name','KdNr','Vorname','phone',
                 'contactCategory','Zusatz1','branch','communityOfHeirs','communityOfOwners',
-                'umbrellaOrganization','association','institution','department'
+                'umbrellaOrganization','association','institution','department',
+                'homepage_veroeffentlichen'
             ],
             'outputlanguage' => "ENG",
             'formatoutput' => false,

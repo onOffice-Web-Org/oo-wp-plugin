@@ -4,12 +4,44 @@ namespace Tests\onOffice\SDK;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
+use onOffice\SDK\internal\ApiAction;
 use onOffice\SDK\internal\ApiCall;
 use onOffice\SDK\internal\HttpFetch;
+use onOffice\SDK\internal\Request;
+use onOffice\SDK\internal\Response;
 use ReflectionMethod;
+use ReflectionProperty;
 
 class ApiCallTest extends \PHPUnit\Framework\TestCase
 {
+	/**
+	 * ApiCall::$_inMemoryCache is static, so responses cached by one test are visible to
+	 * every later test in the same process. Without this reset a test that queues the
+	 * same parameters as an earlier one gets an in-memory cache hit, skips the HTTP call
+	 * and silently tests nothing, which makes results depend on execution order.
+	 */
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$inMemoryCache = new ReflectionProperty(ApiCall::class, '_inMemoryCache');
+		$inMemoryCache->setAccessible(true);
+		$inMemoryCache->setValue(null, []);
+	}
+
+
+	/**
+	 * @return onOfficeSDKCache&\PHPUnit\Framework\MockObject\MockObject
+	 */
+	private function createCacheMock()
+	{
+		// onOfficeSDKCache declares a constructor, so the generated mock must not call it.
+		return $this->getMockBuilder(onOfficeSDKCache::class)
+			->disableOriginalConstructor()
+			->getMock();
+	}
+
+
 	public function testCallByRawData()
 	{
 		$apiCall = new ApiCall();
@@ -136,8 +168,7 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testAddCache()
 	{
-		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
-			->getMock();
+		$cache = $this->createCacheMock();
 
 		$apiCall = new ApiCall();
 		$apiCall->addCache($cache);
@@ -148,8 +179,7 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testRemoveCacheInstances()
 	{
-		$cache = $this->getMockBuilder(onOfficeSDKCache::class)
-			->getMock();
+		$cache = $this->createCacheMock();
 
 		$apiCall = new ApiCall();
 		$apiCall->addCache($cache);
@@ -386,5 +416,181 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 		$result = $method->invokeArgs($apiCall, [$response, $params]);
 
 		$this->assertEquals($originalResponse, $result);
+	}
+
+
+	/**
+	 * @param array $parameters e.g. ['listname' => 'default']
+	 * @param array $responseData
+	 * @return Response
+	 */
+	private function buildCacheableResponse(array $parameters, array $responseData): Response
+	{
+		$pApiAction = new ApiAction('someActionId', 'someResourceType', $parameters, 'someResourceId', 'someIdentifier');
+		$pRequest = new Request($pApiAction);
+
+		return new Response($pRequest, $responseData);
+	}
+
+
+	/**
+	 * @param array $parameters request parameters, e.g. ['listname' => 'default']
+	 * @param array $data the data part of the API response
+	 * @return array [$cacheMock, $invokeWriteCache]
+	 */
+	private function prepareWriteCacheForResponses(array $parameters, array $data): array
+	{
+		$apiCall = new ApiCall();
+
+		$cache = $this->createCacheMock();
+		$apiCall->addCache($cache);
+
+		$response = $this->buildCacheableResponse($parameters, [
+			'actionid' => 'someActionId',
+			'resourcetype' => 'someResourceType',
+			'cacheable' => true,
+			'data' => $data,
+		]);
+
+		$requestId = $response->getRequest()->getRequestId();
+		$responsesProperty = new ReflectionProperty(ApiCall::class, '_responses');
+		$responsesProperty->setAccessible(true);
+		$responsesProperty->setValue($apiCall, [$requestId => $response]);
+
+		$invokeWriteCache = function () use ($apiCall, $requestId) {
+			$method = new ReflectionMethod(ApiCall::class, 'writeCacheForResponses');
+			$method->setAccessible(true);
+			$method->invokeArgs($apiCall, [[$requestId]]);
+		};
+
+		return [$cache, $invokeWriteCache];
+	}
+
+
+	/**
+	 * A partial page (fewer records than cntabsolute) for a listname request must not
+	 * be written to the cache, since the listname cache key must always hold the
+	 * complete record set.
+	 */
+	public function testWriteCacheForResponses_skipsPartialListPage()
+	{
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			['listname' => 'default'],
+			[
+				'records' => [['id' => 1], ['id' => 2]],
+				'meta' => ['cntabsolute' => 5],
+			]
+		);
+
+		$cache->expects($this->never())->method('write');
+
+		$invokeWriteCache();
+	}
+
+
+	/**
+	 * Some resource types report cntabsolute as an array. The partial page must still
+	 * be recognized.
+	 */
+	public function testWriteCacheForResponses_skipsPartialListPageWithCntAbsoluteAsArray()
+	{
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			['listname' => 'default'],
+			[
+				'records' => [['id' => 1], ['id' => 2]],
+				'meta' => ['cntabsolute' => [5]],
+			]
+		);
+
+		$cache->expects($this->never())->method('write');
+
+		$invokeWriteCache();
+	}
+
+
+	/**
+	 * A response for a page beyond the first can never hold the complete record set,
+	 * so it must be skipped even when the response carries no usable cntabsolute.
+	 */
+	public function testWriteCacheForResponses_skipsListPageBeyondFirstPageWithoutCntAbsolute()
+	{
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			['listname' => 'default', 'listoffset' => 20, 'listlimit' => 20],
+			[
+				'records' => [['id' => 21], ['id' => 22]],
+				'meta' => [],
+			]
+		);
+
+		$cache->expects($this->never())->method('write');
+
+		$invokeWriteCache();
+	}
+
+
+	/**
+	 * A complete page (records count equals cntabsolute) for a listname request
+	 * must be written to the cache.
+	 */
+	public function testWriteCacheForResponses_writesCompleteListPage()
+	{
+		$data = [
+			'records' => [['id' => 1], ['id' => 2]],
+			'meta' => ['cntabsolute' => 2],
+		];
+
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			['listname' => 'default', 'listoffset' => 0],
+			$data
+		);
+
+		$cache->expects($this->once())
+			->method('write')
+			->with($this->anything(), $this->callback(function ($value) use ($data) {
+				return unserialize($value)['data'] === $data;
+			}));
+
+		$invokeWriteCache();
+	}
+
+
+	/**
+	 * Requests without a listname parameter must be cached regardless of how the
+	 * record count compares to cntabsolute, since the partial-page guard only
+	 * applies to listname cache entries.
+	 */
+	public function testWriteCacheForResponses_writesNonListResponseEvenIfPartial()
+	{
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			[],
+			[
+				'records' => [['id' => 1]],
+				'meta' => ['cntabsolute' => 5],
+			]
+		);
+
+		$cache->expects($this->once())->method('write');
+
+		$invokeWriteCache();
+	}
+
+
+	/**
+	 * Without a listname the cache key covers all parameters including listoffset, so
+	 * paged responses stay cacheable.
+	 */
+	public function testWriteCacheForResponses_writesNonListResponseBeyondFirstPage()
+	{
+		list($cache, $invokeWriteCache) = $this->prepareWriteCacheForResponses(
+			['listoffset' => 20, 'listlimit' => 20],
+			[
+				'records' => [['id' => 21], ['id' => 22]],
+				'meta' => ['cntabsolute' => 50],
+			]
+		);
+
+		$cache->expects($this->once())->method('write');
+
+		$invokeWriteCache();
 	}
 }

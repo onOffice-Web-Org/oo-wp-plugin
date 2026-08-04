@@ -105,6 +105,12 @@ implements AddressListBase
 		'department'
 	];
 
+	/** @var string[] Fields that are always fetched unformatted so themes can
+	 * read them via getRawById() without them being configured in the view. */
+	private $_addressParametersForRawRecords = [
+		'homepage_veroeffentlichen'
+	];
+
 	/** @var string[] */
 	private $_specialContactData = [
 		'mobile',
@@ -213,7 +219,8 @@ implements AddressListBase
 							array_unique(
 								array_merge(
 									$fields,                           // whatever the view asked for (formatted)
-									$this->_addressParametersForImageAlt // still keep alt deps
+									$this->_addressParametersForImageAlt, // still keep alt deps
+									$this->_addressParametersForRawRecords
 								)
 							)
 						),
