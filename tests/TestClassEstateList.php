@@ -61,6 +61,8 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Utility\Redirector;
+use ReflectionMethod;
+use ReflectionProperty;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
@@ -941,6 +943,76 @@ class TestClassEstateList
 		$this->_pEstateList->loadEstates();
 		$result = $this->_pEstateList->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP);
 		$this->assertEquals('1', $result['showGoogleMap']);
+	}
+
+	/**
+	 * Regression test: when an estate has no explicit per-estate 'showGoogleMap'
+	 * override (raw value missing/empty — the normal case), estateIterator()'s
+	 * MODIFIER_TYPE_MAP branch must fall back to the list-level DataListView::getShowMap()
+	 * setting instead of silently leaving 'showGoogleMap' at its default empty string,
+	 * which made map pins disappear regardless of the list's "show map" setting.
+	 *
+	 */
+	public function testGetShowMapConfigFallsBackToListSettingWhenNoPerEstateOverride()
+	{
+		$this->_pEstateList->loadEstates();
+
+		$pRecordsRawProperty = new ReflectionProperty(EstateList::class, '_recordsRaw');
+		$pRecordsRawProperty->setAccessible(true);
+		$recordsRaw = $pRecordsRawProperty->getValue($this->_pEstateList);
+		foreach ($recordsRaw as &$recordRaw) {
+			$recordRaw['elements']['showGoogleMap'] = '';
+		}
+		unset($recordRaw);
+		$pRecordsRawProperty->setValue($this->_pEstateList, $recordsRaw);
+
+		$this->_pEstateList->resetEstateIterator();
+		$result = $this->_pEstateList->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP);
+
+		$this->assertTrue($result['showGoogleMap'],
+			'no per-estate override should fall back to DataListView::getShowMap(), which is true in the test fixture');
+	}
+
+	/**
+	 * Regression test for P#165597 and its follow-up bugs: the map request used
+	 * a hardcoded field list that didn't request every field the map-specific
+	 * post-processing in estateIterator() depends on.
+	 *
+	 * - EstateViewFieldModifierTypeEstateGeoBase::reduceRecord() treats a missing
+	 *   'objektadresse_freigeben_api' as falsy (0 == null) and zeroes out the
+	 *   real breitengrad/laengengrad coordinates for every estate.
+	 * - EstateList::estateIterator()'s MODIFIER_TYPE_MAP branch only overrides
+	 *   $recordModified['showGoogleMap'] when the raw value is an explicit '0'/'1' —
+	 *   if 'showGoogleMap' is never fetched, isset() is always false and the flag
+	 *   silently stays at its default empty string for every estate.
+	 *
+	 * This asserts the map's API request actually includes every field those
+	 * two code paths depend on.
+	 *
+	 */
+	public function testGetEstateParametersForMapRequestsGeoReductionFields()
+	{
+		$pReflectionMethod = new ReflectionMethod(EstateList::class, 'getEstateParametersForMap');
+		$pReflectionMethod->setAccessible(true);
+		$result = $pReflectionMethod->invokeArgs($this->_pEstateList, [1, true]);
+
+		$requiredFields = [
+			'breitengrad',
+			'laengengrad',
+			'virtualAddress',
+			'objektadresse_freigeben_api',
+			'virtualLatitude',
+			'virtualLongitude',
+			'virtualStreet',
+			'virtualHouseNumber',
+			'showGoogleMap',
+		];
+
+		foreach ($requiredFields as $requiredField) {
+			$this->assertContains($requiredField, $result['data'],
+				"map request is missing '$requiredField', needed by estateIterator()'s "
+				.'MODIFIER_TYPE_MAP post-processing (geo reduction and/or showGoogleMap)');
+		}
 	}
 
 	/**
