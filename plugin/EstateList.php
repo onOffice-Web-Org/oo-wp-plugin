@@ -1171,11 +1171,6 @@ class EstateList
 			elseif (isset($recordRaw['showGoogleMap']) && ($recordRaw['showGoogleMap'] === '1' || $recordRaw['showGoogleMap'] === 1 || $recordRaw['showGoogleMap'] === true)) {
 				$recordModified['showGoogleMap'] = true;
 			}
-			else {
-				// No explicit per-estate override (raw value missing/empty) -> fall back
-				// to the list-level "show map" setting, as done before P#165597.
-				$recordModified['showGoogleMap'] = $this->getShowMapConfig();
-			}
 		}
 
 		if ($checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0) {

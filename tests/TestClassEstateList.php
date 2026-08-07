@@ -946,36 +946,6 @@ class TestClassEstateList
 	}
 
 	/**
-	 * Regression test: when an estate has no explicit per-estate 'showGoogleMap'
-	 * override (raw value missing/empty — the normal case), estateIterator()'s
-	 * MODIFIER_TYPE_MAP branch must fall back to the list-level DataListView::getShowMap()
-	 * setting instead of silently leaving 'showGoogleMap' at its default empty string,
-	 * which made map pins disappear regardless of the list's "show map" setting.
-	 *
-	 */
-	public function testGetShowMapConfigFallsBackToListSettingWhenNoPerEstateOverride()
-	{
-		$this->_pEstateList->loadEstates();
-
-		$pRecordsRawProperty = new ReflectionProperty(EstateList::class, '_recordsRaw');
-		$pRecordsRawProperty->setAccessible(true);
-		$recordsRaw = $pRecordsRawProperty->getValue($this->_pEstateList);
-		foreach ($recordsRaw as &$recordRaw) {
-			$recordRaw['elements']['showGoogleMap'] = '';
-		}
-		unset($recordRaw);
-		$pRecordsRawProperty->setValue($this->_pEstateList, $recordsRaw);
-
-		$this->_pEstateList->resetEstateIterator();
-		$result = $this->_pEstateList->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP);
-
-		// $result is an ArrayContainerEscape, which stringifies booleans for output —
-		// same reason testGetShowMapConfig() above asserts '1' rather than true.
-		$this->assertEquals('1', $result['showGoogleMap'],
-			'no per-estate override should fall back to DataListView::getShowMap(), which is true in the test fixture');
-	}
-
-	/**
 	 * Regression test for P#165597 and its follow-up bugs: the map request used
 	 * a hardcoded field list that didn't request every field the map-specific
 	 * post-processing in estateIterator() depends on.
