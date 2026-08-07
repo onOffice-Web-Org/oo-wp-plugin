@@ -969,7 +969,9 @@ class TestClassEstateList
 		$this->_pEstateList->resetEstateIterator();
 		$result = $this->_pEstateList->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP);
 
-		$this->assertTrue($result['showGoogleMap'],
+		// $result is an ArrayContainerEscape, which stringifies booleans for output —
+		// same reason testGetShowMapConfig() above asserts '1' rather than true.
+		$this->assertEquals('1', $result['showGoogleMap'],
 			'no per-estate override should fall back to DataListView::getShowMap(), which is true in the test fixture');
 	}
 
