@@ -44,6 +44,12 @@ jobs:
           fetch-tags: true
           token: ${{ steps.app-token.outputs.token }}
 
+      - name: Pull translations from POEditor
+        env:
+          POEDITOR_READONLY_API_KEY: ${{ secrets.POEDITOR_READONLY_API_KEY }}
+          POEDITOR_PROJECT_ID: ${{ secrets.POEDITOR_PROJECT_ID }}
+        run: bash bin/pull-translations.sh
+
       - name: Read Auto-Build trailer
         id: read-trailer
         run: |
