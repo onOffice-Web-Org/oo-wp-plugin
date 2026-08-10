@@ -61,6 +61,8 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Utility\Redirector;
+use ReflectionMethod;
+use ReflectionProperty;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
@@ -941,6 +943,48 @@ class TestClassEstateList
 		$this->_pEstateList->loadEstates();
 		$result = $this->_pEstateList->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP);
 		$this->assertEquals('1', $result['showGoogleMap']);
+	}
+
+	/**
+	 * Regression test for P#165597 and its follow-up bugs: the map request used
+	 * a hardcoded field list that didn't request every field the map-specific
+	 * post-processing in estateIterator() depends on.
+	 *
+	 * - EstateViewFieldModifierTypeEstateGeoBase::reduceRecord() treats a missing
+	 *   'objektadresse_freigeben_api' as falsy (0 == null) and zeroes out the
+	 *   real breitengrad/laengengrad coordinates for every estate.
+	 * - EstateList::estateIterator()'s MODIFIER_TYPE_MAP branch only overrides
+	 *   $recordModified['showGoogleMap'] when the raw value is an explicit '0'/'1' —
+	 *   if 'showGoogleMap' is never fetched, isset() is always false and the flag
+	 *   silently stays at its default empty string for every estate.
+	 *
+	 * This asserts the map's API request actually includes every field those
+	 * two code paths depend on.
+	 *
+	 */
+	public function testGetEstateParametersForMapRequestsGeoReductionFields()
+	{
+		$pReflectionMethod = new ReflectionMethod(EstateList::class, 'getEstateParametersForMap');
+		$pReflectionMethod->setAccessible(true);
+		$result = $pReflectionMethod->invokeArgs($this->_pEstateList, [1, true]);
+
+		$requiredFields = [
+			'breitengrad',
+			'laengengrad',
+			'virtualAddress',
+			'objektadresse_freigeben_api',
+			'virtualLatitude',
+			'virtualLongitude',
+			'virtualStreet',
+			'virtualHouseNumber',
+			'showGoogleMap',
+		];
+
+		foreach ($requiredFields as $requiredField) {
+			$this->assertContains($requiredField, $result['data'],
+				"map request is missing '$requiredField', needed by estateIterator()'s "
+				.'MODIFIER_TYPE_MAP post-processing (geo reduction and/or showGoogleMap)');
+		}
 	}
 
 	/**
