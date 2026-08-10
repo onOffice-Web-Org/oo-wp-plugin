@@ -528,6 +528,19 @@ class EstateList
 			'land',
 			'virtualAddress',
             'referenz',
+			// Needed by EstateViewFieldModifierTypeEstateGeoBase::reduceRecord() to decide
+			// whether breitengrad/laengengrad should be zeroed out or replaced with the
+			// virtual-address coordinates. Without these, the missing keys are treated as
+			// falsy and the real coordinates get zeroed for every estate (P#165597 regression).
+			'objektadresse_freigeben_api',
+			'virtualLatitude',
+			'virtualLongitude',
+			'virtualStreet',
+			'virtualHouseNumber',
+			// Needed so estateIterator()'s MODIFIER_TYPE_MAP branch can read
+			// $recordRaw['showGoogleMap'] — without it isset() never passes and
+			// $recordModified['showGoogleMap'] is left unset for every estate.
+			'showGoogleMap',
 		];
 
 		$requestParams = [
@@ -1151,13 +1164,13 @@ class EstateList
 		}
 
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
-    
+
 			if (isset($recordRaw['showGoogleMap']) && ($recordRaw['showGoogleMap'] === '0' || $recordRaw['showGoogleMap'] === 0 || $recordRaw['showGoogleMap'] === false)) {
 				$recordModified['showGoogleMap'] = false;
-			} 
+			}
 			elseif (isset($recordRaw['showGoogleMap']) && ($recordRaw['showGoogleMap'] === '1' || $recordRaw['showGoogleMap'] === 1 || $recordRaw['showGoogleMap'] === true)) {
 				$recordModified['showGoogleMap'] = true;
-			} 
+			}
 		}
 
 		if ($checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0) {
