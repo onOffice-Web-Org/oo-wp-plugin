@@ -1,0 +1,95 @@
+name: Deploy Test
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/build-release.yml
+    with:
+      expectedVersion: test
+      checkVersion: false
+      pluginFolder: onoffice-for-wp-websites
+
+  deploy-test:
+    name: Deploy Test to new Hosting
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download release artifact
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: release
+
+      - name: Login to Hosting API
+        id: api-login
+        run: |
+          LOGIN_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.HOSTING_API_URL }}/client-login" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d '{
+              "client_id": "${{ secrets.HOSTING_API_CLIENT_ID }}",
+              "client_secret": "${{ secrets.HOSTING_API_CLIENT_SECRET }}"
+            }')
+
+          HTTP_CODE=$(echo "$LOGIN_RESPONSE" | tail -1)
+          BODY=$(echo "$LOGIN_RESPONSE" | sed '$d')
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::API Login fehlgeschlagen (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
+
+          TOKEN=$(echo "$BODY" | jq -r '.data.token')
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "::error::Kein Token in Login-Response erhalten"
+            exit 1
+          fi
+
+          echo "::add-mask::${TOKEN}"
+          echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy Test via Hosting API
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.HOSTING_API_URL }}/releases/deploy" \
+            -H "Authorization: Bearer ${{ steps.api-login.outputs.token }}" \
+            -H "Accept: application/json" \
+            -F "artifact_file=@onoffice-for-wp-websites.zip" \
+            -F "artifact_type=plugin" \
+            -F "artifact_name=onoffice-for-wp-websites" \
+            -F "channel=test" \
+            -F "auto_build=true")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: ${HTTP_CODE}"
+          echo "Response: ${BODY}"
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::Deploy fehlgeschlagen (HTTP ${HTTP_CODE}): ${BODY}"
+            exit 1
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Test Deploy" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Artifact: \`onoffice-for-wp-websites\` (plugin)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Channel: \`test\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Branch: \`${{ github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Commit: \`${{ github.sha }}\`" >> "$GITHUB_STEP_SUMMARY"

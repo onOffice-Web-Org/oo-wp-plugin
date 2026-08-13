@@ -61,6 +61,8 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Utility\Redirector;
+use ReflectionMethod;
+use ReflectionProperty;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
@@ -944,6 +946,48 @@ class TestClassEstateList
 	}
 
 	/**
+	 * Regression test for P#165597 and its follow-up bugs: the map request used
+	 * a hardcoded field list that didn't request every field the map-specific
+	 * post-processing in estateIterator() depends on.
+	 *
+	 * - EstateViewFieldModifierTypeEstateGeoBase::reduceRecord() treats a missing
+	 *   'objektadresse_freigeben_api' as falsy (0 == null) and zeroes out the
+	 *   real breitengrad/laengengrad coordinates for every estate.
+	 * - EstateList::estateIterator()'s MODIFIER_TYPE_MAP branch only overrides
+	 *   $recordModified['showGoogleMap'] when the raw value is an explicit '0'/'1' —
+	 *   if 'showGoogleMap' is never fetched, isset() is always false and the flag
+	 *   silently stays at its default empty string for every estate.
+	 *
+	 * This asserts the map's API request actually includes every field those
+	 * two code paths depend on.
+	 *
+	 */
+	public function testGetEstateParametersForMapRequestsGeoReductionFields()
+	{
+		$pReflectionMethod = new ReflectionMethod(EstateList::class, 'getEstateParametersForMap');
+		$pReflectionMethod->setAccessible(true);
+		$result = $pReflectionMethod->invokeArgs($this->_pEstateList, [1, true]);
+
+		$requiredFields = [
+			'breitengrad',
+			'laengengrad',
+			'virtualAddress',
+			'objektadresse_freigeben_api',
+			'virtualLatitude',
+			'virtualLongitude',
+			'virtualStreet',
+			'virtualHouseNumber',
+			'showGoogleMap',
+		];
+
+		foreach ($requiredFields as $requiredField) {
+			$this->assertContains($requiredField, $result['data'],
+				"map request is missing '$requiredField', needed by estateIterator()'s "
+				.'MODIFIER_TYPE_MAP post-processing (geo reduction and/or showGoogleMap)');
+		}
+	}
+
+	/**
 	 *
 	 */
 	public function testGetShowTotalCostsCalculator()
@@ -1362,6 +1406,210 @@ class TestClassEstateList
 		} finally {
 			$_GET = $originalGet;
 		}
+	}
+
+	/**
+	 * Verify that fetchDataForOrderEstatesByTags routes through the list cache when
+	 * SHOW_MARKED_PROPERTIES_SORT is active: the outgoing API request must carry
+	 * 'listname' (so DBCache::getParametersHashed builds the listname-based key) and
+	 * 'vermarktungsart' must be in the requested fields (for tag-priority computation).
+	 */
+	public function testFetchDataForOrderEstatesByTagsUsesListCacheRouting()
+	{
+		$pDataView = $this->getDataView();
+		$pDataView->setSortBySetting(DataListView::SHOW_MARKED_PROPERTIES_SORT);
+
+		$pEstateList = new EstateList($pDataView, $this->_pEnvironment);
+		// no active geo range search in this scenario (the environment mock simulates one)
+		$pEstateList->setGeoSearchBuilder(new GeoSearchBuilderEmpty());
+
+		$capturedParamSets = [];
+		$pMockAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['setParameters', 'addRequestToQueue', 'sendRequests', 'getResultRecords'])
+			->getMock();
+		$pMockAction->method('setParameters')
+			->willReturnCallback(function (array $params) use (&$capturedParamSets, $pMockAction) {
+				$capturedParamSets[] = $params;
+			});
+		$pMockAction->method('addRequestToQueue')->willReturnSelf();
+		$pMockAction->method('getResultRecords')->willReturn([]);
+
+		$refProp = new \ReflectionProperty(EstateList::class, '_pApiClientAction');
+		$refProp->setAccessible(true);
+		$refProp->setValue($pEstateList, $pMockAction);
+
+		$fetchData = Closure::bind(function (int $page, bool $fmt) {
+			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
+		}, $pEstateList, EstateList::class);
+
+		$fetchData(1, false);
+
+		$this->assertNotEmpty($capturedParamSets, 'setParameters was never called');
+		$rawParams = $capturedParamSets[0];
+
+		$this->assertArrayHasKey('listname', $rawParams,
+			'fetchDataForOrderEstatesByTags must include listname so the DB cache key matches the pre-warmed entry');
+		$this->assertSame($pDataView->getName(), $rawParams['listname']);
+		$this->assertContains('vermarktungsart', $rawParams['data'],
+			'vermarktungsart must be fetched so getInfoTagOfProperty can determine kauf/miete for sold/rented estates');
+	}
+
+	/**
+	 * Lists larger than one 500-record page must route EVERY page through the listname
+	 * cache key. A pre-warmed entry holds the full record set, so each 500-block is served
+	 * from that single entry; partial live pages are never persisted under the listname key
+	 * (ApiCall::writeCacheForResponses skips them), so follow-up offsets can safely reuse it.
+	 */
+	public function testFetchDataForOrderEstatesByTagsRoutesAllPagesThroughListCache()
+	{
+		$pDataView = $this->getDataView();
+		$pDataView->setSortBySetting(DataListView::SHOW_MARKED_PROPERTIES_SORT);
+		$pDataView->setMarkedPropertiesSort('neu,top_angebot,no_marker');
+
+		$pEstateList = new EstateList($pDataView, $this->_pEnvironment);
+		// no active geo range search in this scenario (the environment mock simulates one)
+		$pEstateList->setGeoSearchBuilder(new GeoSearchBuilderEmpty());
+
+		$makeRecords = function (int $startId, int $count): array {
+			$records = [];
+			for ($i = 0; $i < $count; $i++) {
+				$records[] = [
+					'id' => $startId + $i,
+					'elements' => [
+						'vermarktungsart' => 'kauf',
+						'verkauft' => '0',
+						'neu' => '1',
+						'top_angebot' => '0',
+					],
+				];
+			}
+			return $records;
+		};
+
+		$capturedParamSets = [];
+		$pMockAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['setParameters', 'addRequestToQueue', 'sendRequests', 'getResultRecords'])
+			->getMock();
+		$pMockAction->method('setParameters')
+			->willReturnCallback(function (array $params) use (&$capturedParamSets) {
+				$capturedParamSets[] = $params;
+			});
+		$pMockAction->method('addRequestToQueue')->willReturnSelf();
+		$pMockAction->method('getResultRecords')->willReturnOnConsecutiveCalls(
+			$makeRecords(1, 500), $makeRecords(501, 10));
+
+		$refProp = new \ReflectionProperty(EstateList::class, '_pApiClientAction');
+		$refProp->setAccessible(true);
+		$refProp->setValue($pEstateList, $pMockAction);
+
+		$fetchData = Closure::bind(function (int $page, bool $fmt) {
+			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
+		}, $pEstateList, EstateList::class);
+
+		$records = $fetchData(1, false);
+
+		// All 510 records across both pages are aggregated (no truncation, no duplicates).
+		$this->assertCount(510, $records);
+		$this->assertCount(2, $capturedParamSets);
+
+		// First page: listname cache key, offset 0.
+		$this->assertArrayHasKey('listname', $capturedParamSets[0]);
+		$this->assertArrayHasKey('params_list_cache', $capturedParamSets[0]);
+		$this->assertSame(0, $capturedParamSets[0]['listoffset']);
+
+		// Follow-up page: also routed through the listname cache key, offset 500.
+		$this->assertArrayHasKey('listname', $capturedParamSets[1],
+			'every page must route through the listname cache key after the guard removal');
+		$this->assertArrayHasKey('params_list_cache', $capturedParamSets[1]);
+		$this->assertSame($pDataView->getName(), $capturedParamSets[1]['listname']);
+		$this->assertSame(500, $capturedParamSets[1]['listoffset']);
+	}
+
+	/**
+	 * An active geo range search must bypass the list cache: geo parameters are not part
+	 * of the listname cache key, so a cache hit would ignore the geo restriction.
+	 */
+	public function testFetchDataForOrderEstatesByTagsBypassesListCacheForGeoRangeSearch()
+	{
+		$pDataView = $this->getDataView();
+		$pDataView->setSortBySetting(DataListView::SHOW_MARKED_PROPERTIES_SORT);
+
+		$pEstateList = new EstateList($pDataView, $this->_pEnvironment);
+		$pGeoSearchBuilder = $this->getMockBuilder(GeoSearchBuilderEmpty::class)
+			->onlyMethods(['buildParameters'])->getMock();
+		$pGeoSearchBuilder->method('buildParameters')
+			->willReturn(['radius' => 10, 'country' => 'DEU', 'zip' => '52068']);
+		$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
+
+		$capturedParamSets = [];
+		$pMockAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['setParameters', 'addRequestToQueue', 'sendRequests', 'getResultRecords'])
+			->getMock();
+		$pMockAction->method('setParameters')
+			->willReturnCallback(function (array $params) use (&$capturedParamSets) {
+				$capturedParamSets[] = $params;
+			});
+		$pMockAction->method('addRequestToQueue')->willReturnSelf();
+		$pMockAction->method('getResultRecords')->willReturn([]);
+
+		$refProp = new \ReflectionProperty(EstateList::class, '_pApiClientAction');
+		$refProp->setAccessible(true);
+		$refProp->setValue($pEstateList, $pMockAction);
+
+		$fetchData = Closure::bind(function (int $page, bool $fmt) {
+			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
+		}, $pEstateList, EstateList::class);
+
+		$fetchData(1, false);
+
+		$this->assertNotEmpty($capturedParamSets, 'setParameters was never called');
+		$rawParams = $capturedParamSets[0];
+
+		$this->assertArrayHasKey('georangesearch', $rawParams);
+		$this->assertArrayNotHasKey('listname', $rawParams,
+			'listname must be removed when a geo range search is active');
+		$this->assertArrayNotHasKey('params_list_cache', $rawParams);
+	}
+
+	/**
+	 * Regression (P#150089 map/list cache-key collision): the map request only fetches a
+	 * reduced field set (coordinates + address), while DBCache::getParametersHashed() keys the
+	 * list cache on listname + formatoutput + language only — the requested fields are not part
+	 * of the key. If the map reused the plain view name, its write would overwrite the list
+	 * cache entry with map-only fields and the list would render estates without values. The
+	 * map listname therefore carries a collision-proof marker so it uses a distinct cache key.
+	 */
+	public function testMapRequestUsesDistinctListnameCacheKey()
+	{
+		// No active geo range search: geo would strip listname from the list request.
+		$this->_pEstateList->setGeoSearchBuilder(new GeoSearchBuilderEmpty());
+
+		$getMapParams = Closure::bind(function (int $page, bool $fmt) {
+			return $this->getEstateParametersForMap($page, $fmt);
+		}, $this->_pEstateList, EstateList::class);
+		$getListParams = Closure::bind(function (int $page, bool $fmt) {
+			return $this->getEstateParameters($page, $fmt);
+		}, $this->_pEstateList, EstateList::class);
+
+		$viewName = $this->_pEstateList->getDataView()->getName();
+		$mapParams = $getMapParams(1, true);
+		$listParams = $getListParams(1, true);
+
+		$this->assertSame($viewName . EstateList::MAP_CACHE_LISTNAME_MARKER, $mapParams['listname'],
+			'map request must use the map-marker listname so it does not share the list cache key');
+		$this->assertSame($viewName, $listParams['listname'],
+			'list request must use the plain view name as listname');
+		$this->assertNotSame($listParams['listname'], $mapParams['listname'],
+			'map and list must not collide on the same listname cache key');
+
+		// The marker must contain a character that sanitizeShortcodeName() strips, so no saved
+		// view name can ever equal a map cache key (collision-proof).
+		$sanitized = preg_replace('/[^a-zA-Z0-9äÄöÖüÜß:_ \-]/u', '', EstateList::MAP_CACHE_LISTNAME_MARKER);
+		$this->assertNotSame(EstateList::MAP_CACHE_LISTNAME_MARKER, $sanitized,
+			'the map marker must include a character disallowed in view names, so it cannot collide');
 	}
 
 	/**
