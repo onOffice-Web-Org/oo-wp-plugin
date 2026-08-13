@@ -897,6 +897,29 @@ class TestClassEstateList
 		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
 		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
 
+		$dataReadEstateRaw = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENGRaw.json'), true);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', [
+				'data' => ['referenz', 'reserviert', 'verkauft', 'objekttitel', 'objektbeschreibung', 'exclusive',
+					'neu', 'top_angebot', 'preisreduktion', 'courtage_frei', 'objekt_des_tages', 'vermarktungsart',
+					'preisAufAnfrage', 'virtualAddress', 'provisionsfrei', 'nutzungsart', 'waehrung', 'kaufpreis',
+					'erbpacht'],
+				'filter' => [
+					'veroeffentlichen' => [['op' => '=', 'val' => 1]],
+					'referenz' => [['op' => '=', 'val' => 0]],
+				],
+				'estatelanguage' => 'ENG',
+				'outputlanguage' => 'ENG',
+				'listlimit' => 5,
+				'formatoutput' => false,
+				'addMainLangId' => true,
+				'listoffset' => 0,
+				'sortby' => 'Id',
+				'sortorder' => 'ASC',
+				'filterid' => 12,
+			], null, $dataReadEstateRaw['response']);
+
 		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
 		$this->_pEstateList->loadEstates();
 		update_option( 'home', 'http://example.com/detail' );
