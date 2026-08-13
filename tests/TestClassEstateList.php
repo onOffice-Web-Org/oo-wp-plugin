@@ -897,6 +897,29 @@ class TestClassEstateList
 		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
 		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
 
+		$dataReadEstateRaw = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENGRaw.json'), true);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', [
+				'data' => ['referenz', 'reserviert', 'verkauft', 'objekttitel', 'objektbeschreibung', 'exclusive',
+					'neu', 'top_angebot', 'preisreduktion', 'courtage_frei', 'objekt_des_tages', 'vermarktungsart',
+					'preisAufAnfrage', 'virtualAddress', 'provisionsfrei', 'nutzungsart', 'waehrung', 'kaufpreis',
+					'erbpacht'],
+				'filter' => [
+					'veroeffentlichen' => [['op' => '=', 'val' => 1]],
+					'referenz' => [['op' => '=', 'val' => 0]],
+				],
+				'estatelanguage' => 'ENG',
+				'outputlanguage' => 'ENG',
+				'listlimit' => 5,
+				'formatoutput' => false,
+				'addMainLangId' => true,
+				'listoffset' => 0,
+				'sortby' => 'Id',
+				'sortorder' => 'ASC',
+				'filterid' => 12,
+			], null, $dataReadEstateRaw['response']);
+
 		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
 		$this->_pEstateList->loadEstates();
 		update_option( 'home', 'http://example.com/detail' );
@@ -995,27 +1018,27 @@ class TestClassEstateList
 		$totalCostsData = [
 			'kaufpreis' => [
 				'raw' => 123456.56,
-				'default' => '123.456,56 €'
+				'default' => "123.456,56\xc2\xa0€"
 			],
 			'bundesland' => [
 				'raw' => 4321,
-				'default' => '4.321 €'
+				'default' => "4.321\xc2\xa0€"
 			],
 			'aussen_courtage' => [
 				'raw' => 22222,
-				'default' => '22.222 €'
+				'default' => "22.222\xc2\xa0€"
 			],
 			'notary_fees' => [
 				'raw' => 1852,
-				'default' => '1.852 €'
+				'default' => "1.852\xc2\xa0€"
 			],
 			'land_register_entry' => [
 				'raw' => 617,
-				'default' => '617 €'
+				'default' => "617\xc2\xa0€"
 			],
 			'total_costs' => [
 				'raw' => 152468.56,
-				'default' => '152.468,56 €'
+				'default' => "152.468,56\xc2\xa0€"
 			]
 		];
 
