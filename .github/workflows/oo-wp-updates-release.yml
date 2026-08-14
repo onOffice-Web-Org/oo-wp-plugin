@@ -109,10 +109,10 @@ jobs:
             updater.json
           retention-days: 7
 
-      - name: Set SSH Key for Raidboxes Server
+      - name: Set SSH Key for Update Server
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY_RAIDBOXES }}
+          ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
 
-      - name: Upload Files to Release Server
-        run: rsync -e 'ssh -o StrictHostKeyChecking=no' onoffice-for-wp-websites.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin
+      - name: Upload Files to Update Server
+        run: rsync -e 'ssh -o StrictHostKeyChecking=no' onoffice-for-wp-websites.zip updater.json zipupload@onoffice-wp-updates.de:onoffice-wp-updates.de/releases/plugins/oo-wp-plugin
