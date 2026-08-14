@@ -242,13 +242,6 @@ class SDKWrapper
 						$usedParametersRaw = $pRequest->getApiAction()->getActionParameters();
 						$pCache->write($usedParametersRaw,serialize($responseRaw));
 
-						foreach ((array)($responseRaw['data']['records'] ?? []) as $record) {
-							if (isset($record['id'])) {
-								// Gruppiertung nach $lang: kein Ueberschreiben zwischen Sprachiterationen
-								$allEstates[$lang][(int)$record['id']] = $record['elements']['objekttitel'] ?? '';
-							}
-						}
-
 						$params = $pEstateList->getEstateListParametersForCache(true, $lang); // formatted
 						$response = $this->createCacheForList($params, 'estate');
 						$pApiAction = new ApiAction(onOfficeSDK::ACTION_ID_READ, 'estate', $params, '', null);
@@ -259,6 +252,20 @@ class SDKWrapper
 						$pCache->write($usedParameters,serialize($response));
 					}
 				}
+
+				foreach ($languages as $lang) {
+					$params = [
+						'data' => ['Id', 'objekttitel'],
+						'estatelanguage' => $lang,
+						'outputlanguage' => $lang,
+						'listlimit' => 500,
+						'formatoutput' => false,
+						'addMainLangId' => true,
+					];
+					$response = $this->createCacheForList($params, 'estate');
+					$allEstates = $this->collectEstatesByLanguage($allEstates, $response, $lang);
+				}
+
 				foreach ($addressLists as $list) {
 					$pListView = $pDataListViewFactoryAddress->getListViewByName($list->name);
 					$addressList = new AddressList($pListView);
@@ -289,14 +296,26 @@ class SDKWrapper
 			 * Fires after all estate list caches have been renewed.
 			 *
 			 * Allows external hooks (e.g. an nginx FastCGI cache warmer) to act on the
-			 * complete set of currently active estates without needing to parse the DB cache
-			 * themselves. Estates from multiple list views are merged per language key.
+			 * complete set of API-accessible estates without needing to parse the DB cache
+			 * themselves.
 			 *
 			 * @param array<string,array<int,string>> $allEstates Grouped by onOffice language code.
 			 *   Example: ['DEU' => [7407 => 'Charmante Wohnung', ...], 'ENG' => [7407 => 'Charming flat', ...]]
 			 */
 			do_action('onoffice/cache_renew/estates_ready', $allEstates);
 	 }
+
+	private function collectEstatesByLanguage(array $allEstates, array $response, string $language): array
+	{
+		foreach ((array)($response['data']['records'] ?? []) as $record) {
+			if (isset($record['id'])) {
+				$estateId = $record['elements']['mainLangId'] ?? $record['id'];
+				$allEstates[$language][(int)$estateId] = $record['elements']['objekttitel'] ?? '';
+			}
+		}
+
+		return $allEstates;
+	}
 
 	/**
 	 * Normalize and validate onOffice language codes.

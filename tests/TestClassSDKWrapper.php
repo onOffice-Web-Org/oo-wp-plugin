@@ -283,6 +283,43 @@ class TestClassSDKWrapper
 		$this->assertCount(1, $pMocker->getRequestArray());
 	}
 
+	public function testCollectEstatesByLanguageUsesMainLanguageIdForDetailUrls()
+	{
+		$germanResponse = [
+			'data' => [
+				'records' => [
+					[
+						'id' => 123,
+						'elements' => ['objekttitel' => 'Deutscher Titel'],
+					],
+				],
+			],
+		];
+		$englishResponse = [
+			'data' => [
+				'records' => [
+					[
+						'id' => 456,
+						'elements' => [
+							'mainLangId' => 123,
+							'objekttitel' => 'English title',
+						],
+					],
+				],
+			],
+		];
+
+		$pReflection = new \ReflectionMethod(SDKWrapper::class, 'collectEstatesByLanguage');
+		$pReflection->setAccessible(true);
+		$result = $pReflection->invoke(new SDKWrapperMocker(), [], $germanResponse, 'DEU');
+		$result = $pReflection->invoke(new SDKWrapperMocker(), $result, $englishResponse, 'ENG');
+
+		$this->assertSame([
+			'DEU' => [123 => 'Deutscher Titel'],
+			'ENG' => [123 => 'English title'],
+		], $result);
+	}
+
 	/**
 	 * Issues exactly ceil(cntabsolute / 500) requests and uses
 	 * monotonically increasing offsets 0, 500, 1000, ..., never collapsing
