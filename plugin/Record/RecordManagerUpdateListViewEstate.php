@@ -165,4 +165,50 @@ class RecordManagerUpdateListViewEstate
 
 		return $this->updateByDataListView($pDataListView);
 	}
+
+	/**
+	 * Persists the selected fields for this listview from scratch (delete + re-insert), with all
+	 * per-field display options (filterable/hidden/highlighted/availableOptions/
+	 * convertTextToSelectForCityField/rangeFieldDisplayMode) left at their default/empty value,
+	 * since they are not relevant for a plain card/table display such as complexunits.
+	 *
+	 * Intentionally NOT implemented via updateByRow(self::TABLENAME_FIELDCONFIG, ...): the row
+	 * shape updateByDataListView() currently passes for that table (a flat list of field names,
+	 * see getFields()) does not match what updateByRow() expects there (associative per-field
+	 * rows, as produced by the admin form's InputModelDBAdapterRow) - that existing code path
+	 * appears to have never been exercised with non-empty fields.
+	 *
+	 * This is the internal PHP entry point other plugins (e.g. oo-vue-addons) are meant to call
+	 * directly, e.g.:
+	 *   (new RecordManagerUpdateListViewEstate($listviewId))->updateSelectedFields($fieldNames);
+	 *
+	 * @param string[] $fieldNames
+	 * @return bool success
+	 */
+	public function updateSelectedFields(array $fieldNames): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$listviewId = $this->getRecordId();
+
+		$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG, ['listview_id' => $listviewId]);
+
+		$result = true;
+		foreach (array_values($fieldNames) as $index => $fieldName) {
+			$inserted = $pWpDb->insert($prefix.self::TABLENAME_FIELDCONFIG, [
+				'listview_id' => $listviewId,
+				'order' => $index + 1,
+				'fieldname' => $fieldName,
+				'filterable' => 0,
+				'hidden' => 0,
+				'highlighted' => 0,
+				'availableOptions' => 0,
+				'convertTextToSelectForCityField' => 0,
+				'rangeFieldDisplayMode' => '',
+			]);
+			$result = $result && ($inserted !== false);
+		}
+
+		return $result;
+	}
 }
