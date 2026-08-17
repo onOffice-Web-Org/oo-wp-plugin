@@ -28,6 +28,7 @@ use DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIEmptyResultException;
+use onOffice\WPlugin\Controller\ComplexUnitsChildEstateIdsLoader;
 use onOffice\WPlugin\Controller\SearchParametersModelBuilderEstate;
 use onOffice\WPlugin\Controller\SortList\SortListBuilder;
 use onOffice\WPlugin\Controller\SortList\SortListDataModel;
@@ -36,9 +37,12 @@ use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderPresetEstateIds;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
+use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
@@ -68,6 +72,9 @@ class ContentFilterShortCodeEstateList
 	/** @var SearchParameters */
 	private $_pSearchParameters;
 
+	/** @var ComplexUnitsChildEstateIdsLoader */
+	private $_pComplexUnitsChildEstateIdsLoader;
+
 	/**
 	 * @param DataListViewFactory $pDataListViewFactory
 	 * @param WPQueryWrapper $pWPQueryWrapper
@@ -77,6 +84,7 @@ class ContentFilterShortCodeEstateList
 	 * @param EstateListFactory $pEstateDetailFactory
 	 * @param Template $pTemplate
 	 * @param SearchParameters $pSearchParameters
+	 * @param ComplexUnitsChildEstateIdsLoader $pComplexUnitsChildEstateIdsLoader
 	 */
 	public function __construct(
 		DataListViewFactory $pDataListViewFactory,
@@ -86,7 +94,8 @@ class ContentFilterShortCodeEstateList
 		DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory,
 		EstateListFactory $pEstateDetailFactory,
 		Template $pTemplate,
-		SearchParameters $pSearchParameters)
+		SearchParameters $pSearchParameters,
+		ComplexUnitsChildEstateIdsLoader $pComplexUnitsChildEstateIdsLoader)
 	{
 		$this->_pDataListViewFactory = $pDataListViewFactory;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
@@ -96,6 +105,7 @@ class ContentFilterShortCodeEstateList
 		$this->_pEstateDetailFactory = $pEstateDetailFactory;
 		$this->_pTemplate = $pTemplate;
 		$this->_pSearchParameters = $pSearchParameters;
+		$this->_pComplexUnitsChildEstateIdsLoader = $pComplexUnitsChildEstateIdsLoader;
 	}
 
 	/**
@@ -119,8 +129,7 @@ class ContentFilterShortCodeEstateList
 			$pListViewWithSortParams = $this->listViewWithSortParams($pListView, $pSortListModel);
 
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel, false);
-			$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory
-				->buildDefaultListViewFilter($pListViewWithSortParams);
+			$pListViewFilterBuilder = $this->buildFilterBuilder($pListViewWithSortParams);
 
 			$pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
 			$pGeoSearchBuilder->setViewProperty($pListViewWithSortParams);
@@ -154,6 +163,40 @@ class ContentFilterShortCodeEstateList
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel, true);
 		}
 		return $result;
+	}
+
+	/**
+	 * For the standalone "complexunits" list type, the list is not driven by a normal search
+	 * filter but by the child estates of an explicitly configured parent/main estate (see
+	 * DataListView::getParentEstateId()/getParentEstateMainIds()). All other list types keep
+	 * using the normal filter mechanism.
+	 *
+	 * @param DataListView $pListView
+	 * @return DefaultFilterBuilder
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+	private function buildFilterBuilder(DataListView $pListView): DefaultFilterBuilder
+	{
+		if ($pListView->getListType() !== DataListView::LISTVIEW_TYPE_COMPLEXUNITS) {
+			return $this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
+		}
+
+		$parentEstateId = $this->resolveParentEstateId($pListView);
+		$childEstateIds = $this->_pComplexUnitsChildEstateIdsLoader->loadChildEstateIds($parentEstateId);
+		return new DefaultFilterBuilderPresetEstateIds($childEstateIds);
+	}
+
+	/**
+	 * @param DataListView $pListView
+	 * @return string
+	 */
+	private function resolveParentEstateId(DataListView $pListView): string
+	{
+		$currentLanguage = Language::getDefault();
+		$parentEstateMainIds = $pListView->getParentEstateMainIds();
+		return (string) ($parentEstateMainIds[$currentLanguage] ?? $pListView->getParentEstateId());
 	}
 
 	/**
