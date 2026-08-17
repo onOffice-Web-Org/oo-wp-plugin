@@ -656,7 +656,9 @@ class EstateList
 		// Route the marketing-status sequence sort through the list cache, exactly like the
 		// standard list path (getEstateParameters). When the list has been pre-warmed, the SDK
 		// serves the full record set from cache instead of hitting the API page by page.
-		$useListCache = $pListView instanceof DataListView && empty($this->_filterAddressId);
+		$useListCache = $pListView instanceof DataListView
+			&& empty($this->_filterAddressId)
+			&& $formatOutput === true;
 		$paramsListCache = $useListCache
 			? $this->getEstateListParametersForCache($formatOutput, $language)
 			: null;
