@@ -244,7 +244,6 @@ class SDKWrapper
 
 						foreach ((array)($responseRaw['data']['records'] ?? []) as $record) {
 							if (isset($record['id'])) {
-								// Gruppiertung nach $lang: kein Ueberschreiben zwischen Sprachiterationen
 								$allEstates[$lang][(int)$record['id']] = $record['elements']['objekttitel'] ?? '';
 							}
 						}
