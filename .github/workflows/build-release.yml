@@ -75,12 +75,12 @@ jobs:
           if [ -z "$TARGET" ]; then
             TARGET="."
           fi
-          zip -r ../release.zip "$TARGET"
+          zip -r ../onoffice-for-wp-websites.zip "$TARGET"
 
       - name: Upload release as artifact
         uses: actions/upload-artifact@v4
         with:
           name: release
-          path: /tmp/release.zip
+          path: /tmp/onoffice-for-wp-websites.zip
           retention-days: 7
 

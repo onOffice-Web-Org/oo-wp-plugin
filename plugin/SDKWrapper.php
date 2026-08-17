@@ -28,11 +28,13 @@
 
 namespace onOffice\WPlugin;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Cache\DBCache;
+use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
@@ -224,13 +226,14 @@ class SDKWrapper
 			$addressLists = $this->getAddressLists($listName);
 			$this->_caches = [new DBCache(['ttl' => 3600])];
 			$fieldsInformation = $this->getAllFields($languages);
+			$pEstateListEnvironment = $this->createEstateListEnvironment();
 
 			$allEstates = [];
 
 			foreach ($this->_caches as $pCache) {
 				foreach ($estateLists as $list) {
 					$pListView = $pDataListViewFactory->getListViewByName($list->name);
-					$pEstateList = new EstateList($pListView);
+					$pEstateList = new EstateList($pListView, $pEstateListEnvironment);
 
 					$pListViewFilterBuilder = $pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
 					$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
@@ -296,6 +299,28 @@ class SDKWrapper
 			 */
 			do_action('onoffice/cache_renew/estates_ready', $allEstates);
 	 }
+
+	/**
+	 * Build an estate list environment whose field list is already loaded, so that field
+	 * existence checks (EstateList::hasPriceOnRequestField()) work during cache warming.
+	 * A failing field request must not abort the cache renewal; the environment is then
+	 * returned unloaded and behaves exactly as before.
+	 *
+	 * @return EstateListEnvironmentDefault
+	 */
+	private function createEstateListEnvironment(): EstateListEnvironmentDefault
+	{
+		$pEnvironment = new EstateListEnvironmentDefault($this->_pContainer);
+
+		try {
+			$pEnvironment->getFieldnames()->loadLanguage();
+		} catch (\Exception $pException) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Needed to debug incomplete cache entries.
+			error_log('onOffice: could not load field list for cache warming: ' . $pException->getMessage());
+		}
+
+		return $pEnvironment;
+	}
 
 	/**
 	 * Normalize and validate onOffice language codes.

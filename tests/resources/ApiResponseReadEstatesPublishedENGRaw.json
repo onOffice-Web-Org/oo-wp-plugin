@@ -16,7 +16,20 @@
 			"preisAufAnfrage",
 			"virtualAddress",
 			"provisionsfrei",
-			"nutzungsart"
+			"nutzungsart",
+			"waehrung",
+			"kaufpreis",
+			"erbpacht",
+			"nettokaltmiete",
+			"warmmiete",
+			"pacht",
+			"kaltmiete",
+			"miete_pauschal",
+			"saisonmiete",
+			"wochmietbto",
+			"kaufpreis_pro_qm",
+			"mietpreis_pro_qm",
+			"calculatedPrice"
 		],
 		"filter": {
 			"veroeffentlichen": [

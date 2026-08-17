@@ -44,6 +44,12 @@ jobs:
           fetch-tags: true
           token: ${{ steps.app-token.outputs.token }}
 
+      - name: Pull translations from POEditor
+        env:
+          POEDITOR_READONLY_API_KEY: ${{ secrets.POEDITOR_READONLY_API_KEY }}
+          POEDITOR_PROJECT_ID: ${{ secrets.POEDITOR_PROJECT_ID }}
+        run: bash bin/pull-translations.sh
+
       - name: Read Auto-Build trailer
         id: read-trailer
         run: |
@@ -97,7 +103,7 @@ jobs:
       - name: Show GitHub Release link
         id: show-release
         run: |
-          if [ ! -f release.zip ]; then
+          if [ ! -f onoffice-for-wp-websites.zip ]; then
             echo "No release artifact was created for this run." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
@@ -255,7 +261,7 @@ jobs:
         run: |
           gh release download "${{ needs.release.outputs.release_tag }}" \
             --repo "${{ github.repository }}" \
-            --pattern "release.zip"
+            --pattern "onoffice-for-wp-websites.zip"
 
       - name: Login to Hosting API
         id: api-login
@@ -293,7 +299,7 @@ jobs:
             "${{ secrets.HOSTING_API_URL }}/releases/deploy" \
             -H "Authorization: Bearer ${{ steps.api-login.outputs.token }}" \
             -H "Accept: application/json" \
-            -F "artifact_file=@release.zip" \
+            -F "artifact_file=@onoffice-for-wp-websites.zip" \
             -F "artifact_type=${{ env.ARTIFACT_TYPE }}" \
             -F "artifact_name=${{ env.ARTIFACT_NAME }}" \
             -F "channel=beta" \
