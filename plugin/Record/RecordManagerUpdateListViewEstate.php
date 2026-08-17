@@ -21,7 +21,11 @@
 
 namespace onOffice\WPlugin\Record;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Controller\ComplexUnitsMainIdResolver;
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\DataView\DataListViewFactory;
+use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
@@ -51,6 +55,8 @@ class RecordManagerUpdateListViewEstate
 			'sortBySetting' => $pDataViewList->getSortBySetting(),
 			'sortByUserDefinedDefault' => $pDataViewList->getSortByUserDefinedDefault(),
 			'sortByUserDefinedDirection' => $pDataViewList->getSortByUserDefinedDirection(),
+			'parent_estate_id' => $pDataViewList->getParentEstateId(),
+			'parent_estate_main_ids' => wp_json_encode($pDataViewList->getParentEstateMainIds()),
 		];
 
 		$tableRow = [
@@ -123,5 +129,40 @@ class RecordManagerUpdateListViewEstate
 		}
 
 		return $result !== false;
+	}
+
+	/**
+	 * Sets the parent estate id for a "complexunits" list view and resolves + persists the
+	 * language-specific main ids for all currently active WPML languages.
+	 *
+	 * This is the internal PHP entry point other plugins (e.g. oo-vue-addons, right after
+	 * cloning a project website box) are meant to call directly, e.g.:
+	 *   (new RecordManagerUpdateListViewEstate($listviewId))->updateParentEstateId($immobilienId);
+	 * There is intentionally no REST endpoint for this in this plugin.
+	 *
+	 * @param string $parentEstateId
+	 * @return bool success
+	 */
+	public function updateParentEstateId(string $parentEstateId): bool
+	{
+		$pRecordManagerRead = new RecordManagerReadListViewEstate();
+		$row = $pRecordManagerRead->getRowById($this->getRecordId());
+
+		if (empty($row)) {
+			return false;
+		}
+
+		$pFactory = new DataListViewFactory($pRecordManagerRead);
+		$pDataListView = $pFactory->createListViewByRow($row);
+		$pDataListView->setParentEstateId($parentEstateId);
+
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		/** @var ComplexUnitsMainIdResolver $pResolver */
+		$pResolver = $pContainer->get(ComplexUnitsMainIdResolver::class);
+		$pDataListView->setParentEstateMainIds($pResolver->resolveMainIdsByLanguage($parentEstateId));
+
+		return $this->updateByDataListView($pDataListView);
 	}
 }

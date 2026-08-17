@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\AdminViewController;
+use onOffice\WPlugin\Controller\ComplexUnitsMainIdResolver;
 use onOffice\WPlugin\Controller\SortList\SortListTypes;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
@@ -119,6 +120,7 @@ class AdminPageEstateListSettings
 		}
 
 		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
+		$pInputModelParentEstateId = $pFormModelBuilder->createInputModelParentEstateId();
 		$pInputModelListReferenceEstates = $pFormModelBuilder->createInputModelShowReferenceEstates();
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
@@ -147,6 +149,7 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice-for-wp-websites'));
 		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
+		$pFormModelRecordsFilter->addInputModel($pInputModelParentEstateId);
 		$pFormModelRecordsFilter->addInputModel($pInputModelListReferenceEstates);
 		$pFormModelRecordsFilter->addInputModel($pInputModelFilter);
 		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
@@ -315,9 +318,30 @@ class AdminPageEstateListSettings
 		$pFactory = new DataListViewFactory();
 		$pDataListView = $pFactory->createListViewByRow($values);
 
-		if (!in_array($pDataListView->getListType(), array('default', 'reference', 'favorites'))) {
+		if (!in_array($pDataListView->getListType(), array('default', 'reference', 'favorites', DataListView::LISTVIEW_TYPE_COMPLEXUNITS))) {
 			throw new UnknownViewException;
 		}
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @return array
+	 *
+	 */
+
+	protected function setFixedValues(array $row)
+	{
+		$row = parent::setFixedValues($row);
+
+		$parentEstateId = (string) ($row[RecordManager::TABLENAME_LIST_VIEW]['parent_estate_id'] ?? '');
+		/** @var ComplexUnitsMainIdResolver $pResolver */
+		$pResolver = $this->getContainer()->get(ComplexUnitsMainIdResolver::class);
+		$row[RecordManager::TABLENAME_LIST_VIEW]['parent_estate_main_ids'] =
+			wp_json_encode($pResolver->resolveMainIdsByLanguage($parentEstateId));
+
+		return $row;
 	}
 
 
@@ -342,6 +366,13 @@ class AdminPageEstateListSettings
 		wp_enqueue_script('oo-checkbox-js');
 		wp_enqueue_script('onoffice-custom-form-label-js');
 		wp_enqueue_script('oo-reference-estate-js');
+
+		wp_register_script('oo-listtype-complexunits-js',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/dist/onoffice-listtype-complexunits-select.min.js',
+			['jquery'],
+			FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-listtype-complexunits-select.min.js'),
+			true);
+		wp_enqueue_script('oo-listtype-complexunits-js');
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviews-name']);
 		wp_register_script('onoffice-multiselect', plugins_url('/dist/onoffice-multiselect.min.js', $pluginPath), ['jquery'], FileVersionHelper::getFileVersion(ONOFFICE_PLUGIN_DIR . '/dist/onoffice-multiselect.min.js'), true);
