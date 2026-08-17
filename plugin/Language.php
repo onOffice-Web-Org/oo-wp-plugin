@@ -94,6 +94,9 @@ class Language
 		$languageMapping = self::LOCALE_MAPPING;
 		$languages = apply_filters( 'wpml_active_languages', NULL, 'orderby=id&order=desc' );
 		$result = (is_array($languages)) ? array_map(fn($lg) => $languageMapping[$lg["default_locale"]] ?? null, $languages) : [Language::getDefault()];
+		// Filter out languages that could not be mapped to an onOffice 3-letter code (see LOCALE_MAPPING)
+		// so that callers never end up issuing an API request with language=null.
+		$result = array_values(array_filter($result, fn($languageCode) => $languageCode !== null));
 		return (count($result) == 0) ? [Language::getDefault()] : $result;
 	}
 
