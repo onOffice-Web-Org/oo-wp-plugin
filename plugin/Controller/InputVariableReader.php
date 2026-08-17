@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use onOffice\WPlugin\Field\PriceFormatService;
 use onOffice\WPlugin\Types\FieldTypes;
 use WP_Locale;
 use function number_format_i18n;
@@ -111,7 +112,7 @@ class InputVariableReader
 
 	private function formatValue($value, string $type)
 	{
-		$pFormatter = new InputVariableReaderFormatter;
+		$pFormatter = new InputVariableReaderFormatter(new PriceFormatService());
 
 		return $pFormatter->formatValue($value, $type);
 	}
