@@ -10,19 +10,37 @@ concurrency:
 
 jobs:
   build:
-    name: Build preview
-    uses: ./.github/workflows/build-release.yml
-    with:
-      ref: ${{ github.event.pull_request.head.sha }}
-      expectedVersion: pr-preview
-      checkVersion: false
-      pluginFolder: onoffice-for-wp-websites
-
-  deploy:
-    name: Deploy PR preview to Dev Update Server
     runs-on: ubuntu-latest
-    needs: build
+
     steps:
+      - uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set SSH Key for Github Repos
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.OO_ACTION_PRIVATE_KEY }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          extensions: mbstring, mysqli, intl, curl
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      # `make build`: composer install + npm install + npm run build (webpack),
+      # then assembles and zips onoffice-for-wp-websites.zip - the plugin's
+      # actual WordPress slug (see plugin.php's Text Domain), which differs
+      # from this repo's name (oo-wp-plugin). Using the repo name here instead
+      # would install to the wrong wp-content/plugins folder on the box.
+      - name: Build preview
+        run: make build
+
       - name: Determine project folder
         id: project
         env:
@@ -35,11 +53,6 @@ jobs:
           fi
           echo "folder=$PROJECT" >> "$GITHUB_OUTPUT"
 
-      - name: Download release artifact
-        uses: actions/download-artifact@v4.1.7
-        with:
-          name: release
-
       - name: Set SSH Key for Dev Update Server
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -48,16 +61,17 @@ jobs:
       - name: Upload PR preview build
         run: |
           rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
-            release.zip \
-            zipupload@dev.onoffice-wp-updates.de:pr-builds/${{ steps.project.outputs.folder }}/plugins/oo-wp-plugin/
+            onoffice-for-wp-websites.zip \
+            zipupload@dev.onoffice-wp-updates.de:pr-builds/${{ steps.project.outputs.folder }}/plugins/onoffice-for-wp-websites/
 
       - name: Update project manifest
         env:
           FOLDER: ${{ steps.project.outputs.folder }}
+          ARTIFACT_NAME: onoffice-for-wp-websites
         run: |
           set -e
           MANIFEST_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/manifest.json"
-          ARTIFACT_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/plugins/oo-wp-plugin/release.zip"
+          ARTIFACT_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/plugins/${ARTIFACT_NAME}/${ARTIFACT_NAME}.zip"
 
           # Read-modify-write against a shared file with no server-side locking:
           # retry with jitter + verify, so a concurrent push from another repo
@@ -67,7 +81,7 @@ jobs:
 
             curl -sf "$MANIFEST_URL" -o manifest.json || echo "[]" > manifest.json
 
-            jq --arg name "oo-wp-plugin" --arg url "$ARTIFACT_URL" --arg type "plugin" \
+            jq --arg name "$ARTIFACT_NAME" --arg url "$ARTIFACT_URL" --arg type "plugin" \
               '[.[] | select(.name != $name)] + [{name: $name, type: $type, url: $url}]' \
               manifest.json > manifest.tmp.json && mv manifest.tmp.json manifest.json
 
@@ -78,7 +92,7 @@ jobs:
             sleep 1
             curl -sf "$MANIFEST_URL" -o manifest-check.json || echo "[]" > manifest-check.json
 
-            MATCH=$(jq --arg name "oo-wp-plugin" --arg url "$ARTIFACT_URL" \
+            MATCH=$(jq --arg name "$ARTIFACT_NAME" --arg url "$ARTIFACT_URL" \
               '[.[] | select(.name == $name and .url == $url)] | length' manifest-check.json)
 
             if [ "$MATCH" -ge 1 ]; then
