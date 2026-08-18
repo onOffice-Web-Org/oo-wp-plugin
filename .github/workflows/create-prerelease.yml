@@ -3,6 +3,11 @@ name: 🧪 Create prerelease
 on:
   workflow_dispatch:
     inputs:
+      source-branch:
+        description: 'Branch, der in den Prerelease-Branch gemerged werden soll'
+        required: true
+        default: beta
+        type: string
       auto_build:
         description: 'Beta-Image nach Deploy automatisch bauen?'
         type: boolean
@@ -15,6 +20,7 @@ jobs:
   merge:
     uses: ./.github/workflows/merge-source-into-branch.yml
     with:
+      source-branch: ${{ inputs.source-branch || 'beta' }}
       target-branch: prerelease
       auto_build: ${{ inputs.auto_build == true }}
     secrets: inherit
