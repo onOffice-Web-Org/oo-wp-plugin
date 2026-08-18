@@ -896,6 +896,26 @@ class ApiCall
 				$requestParameters = $this->normalizeFieldDependencyParameters(
 					$pResponse->getRequest()->getApiAction()->getActionParameters()
 				);
+
+				// The listname key ignores listoffset, so only the COMPLETE set may be stored.
+				// Skip partial/paginated pages; the full set is (re)built by renewCache().
+				$params = $requestParameters['parameters'] ?? [];
+				$records = $responseData['data']['records'] ?? null;
+				if (isset($params['listname']) && is_array($records))
+				{
+					$cntAbsolute = $responseData['data']['meta']['cntabsolute'] ?? null;
+					if (is_array($cntAbsolute)) {
+						$cntAbsolute = $cntAbsolute[0] ?? null;
+					}
+
+					$isBeyondFirstPage = (int) ($params['listoffset'] ?? 0) > 0;
+					$isTruncated = is_numeric($cntAbsolute) && count($records) < (int) $cntAbsolute;
+
+					if ($isBeyondFirstPage || $isTruncated) {
+						continue;
+					}
+				}
+
 				$this->writeCache(serialize($responseData), $requestParameters);
 			}
 		}

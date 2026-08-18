@@ -61,6 +61,8 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Utility\Redirector;
+use ReflectionMethod;
+use ReflectionProperty;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
@@ -895,6 +897,29 @@ class TestClassEstateList
 		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
 		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
 
+		$dataReadEstateRaw = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENGRaw.json'), true);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', [
+				'data' => ['referenz', 'reserviert', 'verkauft', 'objekttitel', 'objektbeschreibung', 'exclusive',
+					'neu', 'top_angebot', 'preisreduktion', 'courtage_frei', 'objekt_des_tages', 'vermarktungsart',
+					'preisAufAnfrage', 'virtualAddress', 'provisionsfrei', 'nutzungsart', 'waehrung', 'kaufpreis',
+					'erbpacht'],
+				'filter' => [
+					'veroeffentlichen' => [['op' => '=', 'val' => 1]],
+					'referenz' => [['op' => '=', 'val' => 0]],
+				],
+				'estatelanguage' => 'ENG',
+				'outputlanguage' => 'ENG',
+				'listlimit' => 5,
+				'formatoutput' => false,
+				'addMainLangId' => true,
+				'listoffset' => 0,
+				'sortby' => 'Id',
+				'sortorder' => 'ASC',
+				'filterid' => 12,
+			], null, $dataReadEstateRaw['response']);
+
 		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
 		$this->_pEstateList->loadEstates();
 		update_option( 'home', 'http://example.com/detail' );
@@ -944,6 +969,48 @@ class TestClassEstateList
 	}
 
 	/**
+	 * Regression test for P#165597 and its follow-up bugs: the map request used
+	 * a hardcoded field list that didn't request every field the map-specific
+	 * post-processing in estateIterator() depends on.
+	 *
+	 * - EstateViewFieldModifierTypeEstateGeoBase::reduceRecord() treats a missing
+	 *   'objektadresse_freigeben_api' as falsy (0 == null) and zeroes out the
+	 *   real breitengrad/laengengrad coordinates for every estate.
+	 * - EstateList::estateIterator()'s MODIFIER_TYPE_MAP branch only overrides
+	 *   $recordModified['showGoogleMap'] when the raw value is an explicit '0'/'1' —
+	 *   if 'showGoogleMap' is never fetched, isset() is always false and the flag
+	 *   silently stays at its default empty string for every estate.
+	 *
+	 * This asserts the map's API request actually includes every field those
+	 * two code paths depend on.
+	 *
+	 */
+	public function testGetEstateParametersForMapRequestsGeoReductionFields()
+	{
+		$pReflectionMethod = new ReflectionMethod(EstateList::class, 'getEstateParametersForMap');
+		$pReflectionMethod->setAccessible(true);
+		$result = $pReflectionMethod->invokeArgs($this->_pEstateList, [1, true]);
+
+		$requiredFields = [
+			'breitengrad',
+			'laengengrad',
+			'virtualAddress',
+			'objektadresse_freigeben_api',
+			'virtualLatitude',
+			'virtualLongitude',
+			'virtualStreet',
+			'virtualHouseNumber',
+			'showGoogleMap',
+		];
+
+		foreach ($requiredFields as $requiredField) {
+			$this->assertContains($requiredField, $result['data'],
+				"map request is missing '$requiredField', needed by estateIterator()'s "
+				.'MODIFIER_TYPE_MAP post-processing (geo reduction and/or showGoogleMap)');
+		}
+	}
+
+	/**
 	 *
 	 */
 	public function testGetShowTotalCostsCalculator()
@@ -951,27 +1018,27 @@ class TestClassEstateList
 		$totalCostsData = [
 			'kaufpreis' => [
 				'raw' => 123456.56,
-				'default' => '123.456,56 €'
+				'default' => "123.456,56\xc2\xa0€"
 			],
 			'bundesland' => [
 				'raw' => 4321,
-				'default' => '4.321 €'
+				'default' => "4.321\xc2\xa0€"
 			],
 			'aussen_courtage' => [
 				'raw' => 22222,
-				'default' => '22.222 €'
+				'default' => "22.222\xc2\xa0€"
 			],
 			'notary_fees' => [
 				'raw' => 1852,
-				'default' => '1.852 €'
+				'default' => "1.852\xc2\xa0€"
 			],
 			'land_register_entry' => [
 				'raw' => 617,
-				'default' => '617 €'
+				'default' => "617\xc2\xa0€"
 			],
 			'total_costs' => [
 				'raw' => 152468.56,
-				'default' => '152.468,56 €'
+				'default' => "152.468,56\xc2\xa0€"
 			]
 		];
 
@@ -1362,6 +1429,263 @@ class TestClassEstateList
 		} finally {
 			$_GET = $originalGet;
 		}
+	}
+
+	/**
+	 * Verify that fetchDataForOrderEstatesByTags routes the FORMATTED request through the list
+	 * cache when SHOW_MARKED_PROPERTIES_SORT is active: it must carry 'listname' (so
+	 * DBCache::getParametersHashed builds the listname-based key). The raw request must not —
+	 * see testFetchDataForOrderEstatesByTagsNeverServesRawValuesFromListCache.
+	 */
+	public function testFetchDataForOrderEstatesByTagsUsesListCacheRouting()
+	{
+		$pDataView = $this->getDataView();
+		$pDataView->setSortBySetting(DataListView::SHOW_MARKED_PROPERTIES_SORT);
+
+		$pEstateList = new EstateList($pDataView, $this->_pEnvironment);
+		// no active geo range search in this scenario (the environment mock simulates one)
+		$pEstateList->setGeoSearchBuilder(new GeoSearchBuilderEmpty());
+
+		$capturedParamSets = [];
+		$pMockAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['setParameters', 'addRequestToQueue', 'sendRequests', 'getResultRecords'])
+			->getMock();
+		$pMockAction->method('setParameters')
+			->willReturnCallback(function (array $params) use (&$capturedParamSets, $pMockAction) {
+				$capturedParamSets[] = $params;
+			});
+		$pMockAction->method('addRequestToQueue')->willReturnSelf();
+		$pMockAction->method('getResultRecords')->willReturn([]);
+
+		$refProp = new \ReflectionProperty(EstateList::class, '_pApiClientAction');
+		$refProp->setAccessible(true);
+		$refProp->setValue($pEstateList, $pMockAction);
+
+		$fetchData = Closure::bind(function (int $page, bool $fmt) {
+			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
+		}, $pEstateList, EstateList::class);
+
+		$fetchData(1, true);
+
+		$this->assertNotEmpty($capturedParamSets, 'setParameters was never called');
+		$formattedParams = $capturedParamSets[0];
+
+		$this->assertArrayHasKey('listname', $formattedParams,
+			'fetchDataForOrderEstatesByTags must include listname so the DB cache key matches the pre-warmed entry');
+		$this->assertSame($pDataView->getName(), $formattedParams['listname']);
+		$this->assertArrayHasKey('params_list_cache', $formattedParams);
+	}
+
+	/**
+	 * Regression (price on request with the marketing-status sequence sort): the raw record set
+	 * carries preisAufAnfrage, which estateIterator() evaluates to replace price values with the
+	 * "Price on request" text. DBCache::getParametersHashed() keys list entries on
+	 * listname/formatoutput/language/filter only — the requested field set is NOT part of the
+	 * key, so a cached entry created without preisAufAnfrage would be handed back for a request
+	 * that explicitly asks for it, silently disabling the price-on-request output. The raw
+	 * request must therefore bypass the list cache, exactly like loadRecords() does.
+	 */
+	public function testFetchDataForOrderEstatesByTagsNeverServesRawValuesFromListCache()
+	{
+		$pDataView = $this->getDataView();
+		$pDataView->setSortBySetting(DataListView::SHOW_MARKED_PROPERTIES_SORT);
+
+		$pEstateList = new EstateList($pDataView, $this->_pEnvironment);
+		// no active geo range search in this scenario (the environment mock simulates one)
+		$pEstateList->setGeoSearchBuilder(new GeoSearchBuilderEmpty());
+
+		$capturedParamSets = [];
+		$pMockAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['setParameters', 'addRequestToQueue', 'sendRequests', 'getResultRecords'])
+			->getMock();
+		$pMockAction->method('setParameters')
+			->willReturnCallback(function (array $params) use (&$capturedParamSets) {
+				$capturedParamSets[] = $params;
+			});
+		$pMockAction->method('addRequestToQueue')->willReturnSelf();
+		$pMockAction->method('getResultRecords')->willReturn([]);
+
+		$refProp = new \ReflectionProperty(EstateList::class, '_pApiClientAction');
+		$refProp->setAccessible(true);
+		$refProp->setValue($pEstateList, $pMockAction);
+
+		$fetchData = Closure::bind(function (int $page, bool $fmt) {
+			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
+		}, $pEstateList, EstateList::class);
+
+		$fetchData(1, false);
+
+		$this->assertNotEmpty($capturedParamSets, 'setParameters was never called');
+		$rawParams = $capturedParamSets[0];
+
+		$this->assertArrayNotHasKey('listname', $rawParams,
+			'the raw values must not be served from the list cache: its key ignores the requested fields');
+		$this->assertArrayNotHasKey('params_list_cache', $rawParams);
+		$this->assertContains('preisAufAnfrage', $rawParams['data'],
+			'preisAufAnfrage must be requested so estateIterator can hide prices that are on request');
+		$this->assertContains('vermarktungsart', $rawParams['data'],
+			'vermarktungsart must be fetched so getInfoTagOfProperty can determine kauf/miete for sold/rented estates');
+	}
+
+	/**
+	 * Lists larger than one 500-record page must route EVERY formatted page through the listname
+	 * cache key. A pre-warmed entry holds the full record set, so each 500-block is served
+	 * from that single entry; partial live pages are never persisted under the listname key
+	 * (ApiCall::writeCacheForResponses skips them), so follow-up offsets can safely reuse it.
+	 */
+	public function testFetchDataForOrderEstatesByTagsRoutesAllPagesThroughListCache()
+	{
+		$pDataView = $this->getDataView();
+		$pDataView->setSortBySetting(DataListView::SHOW_MARKED_PROPERTIES_SORT);
+		$pDataView->setMarkedPropertiesSort('neu,top_angebot,no_marker');
+
+		$pEstateList = new EstateList($pDataView, $this->_pEnvironment);
+		// no active geo range search in this scenario (the environment mock simulates one)
+		$pEstateList->setGeoSearchBuilder(new GeoSearchBuilderEmpty());
+
+		$makeRecords = function (int $startId, int $count): array {
+			$records = [];
+			for ($i = 0; $i < $count; $i++) {
+				$records[] = [
+					'id' => $startId + $i,
+					'elements' => [
+						'vermarktungsart' => 'kauf',
+						'verkauft' => '0',
+						'neu' => '1',
+						'top_angebot' => '0',
+					],
+				];
+			}
+			return $records;
+		};
+
+		$capturedParamSets = [];
+		$pMockAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['setParameters', 'addRequestToQueue', 'sendRequests', 'getResultRecords'])
+			->getMock();
+		$pMockAction->method('setParameters')
+			->willReturnCallback(function (array $params) use (&$capturedParamSets) {
+				$capturedParamSets[] = $params;
+			});
+		$pMockAction->method('addRequestToQueue')->willReturnSelf();
+		$pMockAction->method('getResultRecords')->willReturnOnConsecutiveCalls(
+			$makeRecords(1, 500), $makeRecords(501, 10));
+
+		$refProp = new \ReflectionProperty(EstateList::class, '_pApiClientAction');
+		$refProp->setAccessible(true);
+		$refProp->setValue($pEstateList, $pMockAction);
+
+		$fetchData = Closure::bind(function (int $page, bool $fmt) {
+			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
+		}, $pEstateList, EstateList::class);
+
+		$records = $fetchData(1, true);
+
+		// All 510 records across both pages are aggregated (no truncation, no duplicates).
+		$this->assertCount(510, $records);
+		$this->assertCount(2, $capturedParamSets);
+
+		// First page: listname cache key, offset 0.
+		$this->assertArrayHasKey('listname', $capturedParamSets[0]);
+		$this->assertArrayHasKey('params_list_cache', $capturedParamSets[0]);
+		$this->assertSame(0, $capturedParamSets[0]['listoffset']);
+
+		// Follow-up page: also routed through the listname cache key, offset 500.
+		$this->assertArrayHasKey('listname', $capturedParamSets[1],
+			'every page must route through the listname cache key after the guard removal');
+		$this->assertArrayHasKey('params_list_cache', $capturedParamSets[1]);
+		$this->assertSame($pDataView->getName(), $capturedParamSets[1]['listname']);
+		$this->assertSame(500, $capturedParamSets[1]['listoffset']);
+	}
+
+	/**
+	 * An active geo range search must bypass the list cache: geo parameters are not part
+	 * of the listname cache key, so a cache hit would ignore the geo restriction.
+	 */
+	public function testFetchDataForOrderEstatesByTagsBypassesListCacheForGeoRangeSearch()
+	{
+		$pDataView = $this->getDataView();
+		$pDataView->setSortBySetting(DataListView::SHOW_MARKED_PROPERTIES_SORT);
+
+		$pEstateList = new EstateList($pDataView, $this->_pEnvironment);
+		$pGeoSearchBuilder = $this->getMockBuilder(GeoSearchBuilderEmpty::class)
+			->onlyMethods(['buildParameters'])->getMock();
+		$pGeoSearchBuilder->method('buildParameters')
+			->willReturn(['radius' => 10, 'country' => 'DEU', 'zip' => '52068']);
+		$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
+
+		$capturedParamSets = [];
+		$pMockAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['setParameters', 'addRequestToQueue', 'sendRequests', 'getResultRecords'])
+			->getMock();
+		$pMockAction->method('setParameters')
+			->willReturnCallback(function (array $params) use (&$capturedParamSets) {
+				$capturedParamSets[] = $params;
+			});
+		$pMockAction->method('addRequestToQueue')->willReturnSelf();
+		$pMockAction->method('getResultRecords')->willReturn([]);
+
+		$refProp = new \ReflectionProperty(EstateList::class, '_pApiClientAction');
+		$refProp->setAccessible(true);
+		$refProp->setValue($pEstateList, $pMockAction);
+
+		$fetchData = Closure::bind(function (int $page, bool $fmt) {
+			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
+		}, $pEstateList, EstateList::class);
+
+		// The formatted request is the one that normally uses the list cache, so it is the one
+		// that has to prove the geo bypass (the raw request never uses the cache at all).
+		$fetchData(1, true);
+
+		$this->assertNotEmpty($capturedParamSets, 'setParameters was never called');
+		$formattedParams = $capturedParamSets[0];
+
+		$this->assertArrayHasKey('georangesearch', $formattedParams);
+		$this->assertArrayNotHasKey('listname', $formattedParams,
+			'listname must be removed when a geo range search is active');
+		$this->assertArrayNotHasKey('params_list_cache', $formattedParams);
+	}
+
+	/**
+	 * Regression (P#150089 map/list cache-key collision): the map request only fetches a
+	 * reduced field set (coordinates + address), while DBCache::getParametersHashed() keys the
+	 * list cache on listname + formatoutput + language only — the requested fields are not part
+	 * of the key. If the map reused the plain view name, its write would overwrite the list
+	 * cache entry with map-only fields and the list would render estates without values. The
+	 * map listname therefore carries a collision-proof marker so it uses a distinct cache key.
+	 */
+	public function testMapRequestUsesDistinctListnameCacheKey()
+	{
+		// No active geo range search: geo would strip listname from the list request.
+		$this->_pEstateList->setGeoSearchBuilder(new GeoSearchBuilderEmpty());
+
+		$getMapParams = Closure::bind(function (int $page, bool $fmt) {
+			return $this->getEstateParametersForMap($page, $fmt);
+		}, $this->_pEstateList, EstateList::class);
+		$getListParams = Closure::bind(function (int $page, bool $fmt) {
+			return $this->getEstateParameters($page, $fmt);
+		}, $this->_pEstateList, EstateList::class);
+
+		$viewName = $this->_pEstateList->getDataView()->getName();
+		$mapParams = $getMapParams(1, true);
+		$listParams = $getListParams(1, true);
+
+		$this->assertSame($viewName . EstateList::MAP_CACHE_LISTNAME_MARKER, $mapParams['listname'],
+			'map request must use the map-marker listname so it does not share the list cache key');
+		$this->assertSame($viewName, $listParams['listname'],
+			'list request must use the plain view name as listname');
+		$this->assertNotSame($listParams['listname'], $mapParams['listname'],
+			'map and list must not collide on the same listname cache key');
+
+		// The marker must contain a character that sanitizeShortcodeName() strips, so no saved
+		// view name can ever equal a map cache key (collision-proof).
+		$sanitized = preg_replace('/[^a-zA-Z0-9äÄöÖüÜß:_ \-]/u', '', EstateList::MAP_CACHE_LISTNAME_MARKER);
+		$this->assertNotSame(EstateList::MAP_CACHE_LISTNAME_MARKER, $sanitized,
+			'the map marker must include a character disallowed in view names, so it cannot collide');
 	}
 
 	/**

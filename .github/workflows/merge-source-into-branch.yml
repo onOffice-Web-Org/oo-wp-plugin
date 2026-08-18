@@ -3,6 +3,11 @@ name: Merge source into release branch
 on:
   workflow_call:
     inputs:
+      source-branch:
+        description: 'Branch, der gemerged wird. Ohne Angabe der Branch, aus dem der Workflow gestartet wurde.'
+        required: false
+        type: string
+        default: ${{ github.ref_name }}
       target-branch:
         required: true
         type: string
@@ -24,7 +29,7 @@ jobs:
 
     env:
       TARGET_BRANCH: ${{ inputs.target-branch }}
-      SOURCE_BRANCH: ${{ github.ref_name }}
+      SOURCE_BRANCH: ${{ inputs.source-branch }}
       AUTO_BUILD: ${{ inputs.auto_build }}
 
     steps:
@@ -41,7 +46,7 @@ jobs:
       - name: Checkout source branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ inputs.source-branch }}
           fetch-depth: 0
           fetch-tags: true
           token: ${{ steps.app-token.outputs.token }}
@@ -54,8 +59,8 @@ jobs:
       - name: Validate stable release source
         if: inputs.target-branch == 'release'
         run: |
-          if [ "${SOURCE_BRANCH}" != "${{ github.event.repository.default_branch }}" ]; then
-            echo "::error::Stable releases must be created from ${{ github.event.repository.default_branch }}, not ${SOURCE_BRANCH}."
+          if [ "${SOURCE_BRANCH}" != "prerelease" ]; then
+            echo "::error::Stable releases must be created from prerelease, not ${SOURCE_BRANCH}."
             exit 1
           fi
 
@@ -84,6 +89,6 @@ jobs:
         run: |
           echo "### Merged into \`${{ inputs.target-branch }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "Source: \`${{ github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Source: \`${{ inputs.source-branch }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "**release.yml** runs on push to \`${{ inputs.target-branch }}\`." >> "$GITHUB_STEP_SUMMARY"

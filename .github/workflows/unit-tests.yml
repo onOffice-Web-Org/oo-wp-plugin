@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - master
+      - beta
   pull_request:
     branches:
       - master
+      - beta
+      - prerelease
+      - release
   schedule:
     - cron: "0 13 * * 1" # Every Monday at 1PM UTC (9AM EST)
 
