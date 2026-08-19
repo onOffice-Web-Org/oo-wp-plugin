@@ -55,9 +55,22 @@ jobs:
 
       - name: Upload PR preview build
         run: |
-          rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
-            onoffice-for-wp-websites.zip \
-            zipupload@dev.onoffice-wp-updates.de:pr-builds/${{ steps.project.outputs.folder }}/plugins/onoffice-for-wp-websites/
+          # rrsync on the remote serializes access per session; a concurrent
+          # run (e.g. another repo's PR preview for the same project) can
+          # trip "Another instance of rrsync is already accessing this
+          # directory", so retry with backoff instead of failing outright.
+          for attempt in 1 2 3 4 5; do
+            if rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
+              onoffice-for-wp-websites.zip \
+              zipupload@dev.onoffice-wp-updates.de:pr-builds/${{ steps.project.outputs.folder }}/plugins/onoffice-for-wp-websites/; then
+              echo "Upload successful (attempt $attempt)"
+              exit 0
+            fi
+            echo "rsync failed (attempt $attempt/5), retrying..."
+            sleep "$((attempt * 3))"
+          done
+          echo "::error::Failed to upload PR preview build after 5 attempts"
+          exit 1
 
       - name: Update project manifest
         env:
