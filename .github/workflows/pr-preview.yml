@@ -17,11 +17,6 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Set SSH Key for Github Repos
-        uses: webfactory/ssh-agent@v0.8.0
-        with:
-          ssh-private-key: ${{ secrets.OO_ACTION_PRIVATE_KEY }}
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
