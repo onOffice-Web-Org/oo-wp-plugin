@@ -211,27 +211,4 @@ class RecordManagerUpdateListViewEstate
 
 		return $result;
 	}
-
-	/**
-	 * Enables/disables the "Show estate map" option for this listview (used e.g. by the
-	 * complexunits list type to show a map alongside the list of units). This is the internal
-	 * PHP entry point other plugins (e.g. oo-vue-addons) are meant to call directly, e.g.:
-	 *   (new RecordManagerUpdateListViewEstate($listviewId))->updateShowMap($showMap);
-	 *
-	 * @param bool $showMap
-	 * @return bool success
-	 */
-	public function updateShowMap(bool $showMap): bool
-	{
-		$prefix = $this->getTablePrefix();
-		$pWpDb = $this->getWpdb();
-
-		$result = $pWpDb->update(
-			$prefix.self::TABLENAME_LIST_VIEW,
-			['show_map' => $showMap ? 1 : 0],
-			['listview_id' => $this->getRecordId()]
-		);
-
-		return $result !== false;
-	}
 }
