@@ -897,6 +897,29 @@ class TestClassEstateList
 		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
 		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
 
+		$dataReadEstateRaw = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENGRaw.json'), true);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', [
+				'data' => ['referenz', 'reserviert', 'verkauft', 'objekttitel', 'objektbeschreibung', 'exclusive',
+					'neu', 'top_angebot', 'preisreduktion', 'courtage_frei', 'objekt_des_tages', 'vermarktungsart',
+					'preisAufAnfrage', 'virtualAddress', 'provisionsfrei', 'nutzungsart', 'waehrung', 'kaufpreis',
+					'erbpacht'],
+				'filter' => [
+					'veroeffentlichen' => [['op' => '=', 'val' => 1]],
+					'referenz' => [['op' => '=', 'val' => 0]],
+				],
+				'estatelanguage' => 'ENG',
+				'outputlanguage' => 'ENG',
+				'listlimit' => 5,
+				'formatoutput' => false,
+				'addMainLangId' => true,
+				'listoffset' => 0,
+				'sortby' => 'Id',
+				'sortorder' => 'ASC',
+				'filterid' => 12,
+			], null, $dataReadEstateRaw['response']);
+
 		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
 		$this->_pEstateList->loadEstates();
 		update_option( 'home', 'http://example.com/detail' );
@@ -995,27 +1018,27 @@ class TestClassEstateList
 		$totalCostsData = [
 			'kaufpreis' => [
 				'raw' => 123456.56,
-				'default' => '123.456,56 €'
+				'default' => "123.456,56\xc2\xa0€"
 			],
 			'bundesland' => [
 				'raw' => 4321,
-				'default' => '4.321 €'
+				'default' => "4.321\xc2\xa0€"
 			],
 			'aussen_courtage' => [
 				'raw' => 22222,
-				'default' => '22.222 €'
+				'default' => "22.222\xc2\xa0€"
 			],
 			'notary_fees' => [
 				'raw' => 1852,
-				'default' => '1.852 €'
+				'default' => "1.852\xc2\xa0€"
 			],
 			'land_register_entry' => [
 				'raw' => 617,
-				'default' => '617 €'
+				'default' => "617\xc2\xa0€"
 			],
 			'total_costs' => [
 				'raw' => 152468.56,
-				'default' => '152.468,56 €'
+				'default' => "152.468,56\xc2\xa0€"
 			]
 		];
 
@@ -1409,10 +1432,10 @@ class TestClassEstateList
 	}
 
 	/**
-	 * Verify that fetchDataForOrderEstatesByTags routes through the list cache when
-	 * SHOW_MARKED_PROPERTIES_SORT is active: the outgoing API request must carry
-	 * 'listname' (so DBCache::getParametersHashed builds the listname-based key) and
-	 * 'vermarktungsart' must be in the requested fields (for tag-priority computation).
+	 * Verify that fetchDataForOrderEstatesByTags routes the FORMATTED request through the list
+	 * cache when SHOW_MARKED_PROPERTIES_SORT is active: it must carry 'listname' (so
+	 * DBCache::getParametersHashed builds the listname-based key). The raw request must not —
+	 * see testFetchDataForOrderEstatesByTagsNeverServesRawValuesFromListCache.
 	 */
 	public function testFetchDataForOrderEstatesByTagsUsesListCacheRouting()
 	{
@@ -1443,20 +1466,71 @@ class TestClassEstateList
 			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
 		}, $pEstateList, EstateList::class);
 
+		$fetchData(1, true);
+
+		$this->assertNotEmpty($capturedParamSets, 'setParameters was never called');
+		$formattedParams = $capturedParamSets[0];
+
+		$this->assertArrayHasKey('listname', $formattedParams,
+			'fetchDataForOrderEstatesByTags must include listname so the DB cache key matches the pre-warmed entry');
+		$this->assertSame($pDataView->getName(), $formattedParams['listname']);
+		$this->assertArrayHasKey('params_list_cache', $formattedParams);
+	}
+
+	/**
+	 * Regression (price on request with the marketing-status sequence sort): the raw record set
+	 * carries preisAufAnfrage, which estateIterator() evaluates to replace price values with the
+	 * "Price on request" text. DBCache::getParametersHashed() keys list entries on
+	 * listname/formatoutput/language/filter only — the requested field set is NOT part of the
+	 * key, so a cached entry created without preisAufAnfrage would be handed back for a request
+	 * that explicitly asks for it, silently disabling the price-on-request output. The raw
+	 * request must therefore bypass the list cache, exactly like loadRecords() does.
+	 */
+	public function testFetchDataForOrderEstatesByTagsNeverServesRawValuesFromListCache()
+	{
+		$pDataView = $this->getDataView();
+		$pDataView->setSortBySetting(DataListView::SHOW_MARKED_PROPERTIES_SORT);
+
+		$pEstateList = new EstateList($pDataView, $this->_pEnvironment);
+		// no active geo range search in this scenario (the environment mock simulates one)
+		$pEstateList->setGeoSearchBuilder(new GeoSearchBuilderEmpty());
+
+		$capturedParamSets = [];
+		$pMockAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['setParameters', 'addRequestToQueue', 'sendRequests', 'getResultRecords'])
+			->getMock();
+		$pMockAction->method('setParameters')
+			->willReturnCallback(function (array $params) use (&$capturedParamSets) {
+				$capturedParamSets[] = $params;
+			});
+		$pMockAction->method('addRequestToQueue')->willReturnSelf();
+		$pMockAction->method('getResultRecords')->willReturn([]);
+
+		$refProp = new \ReflectionProperty(EstateList::class, '_pApiClientAction');
+		$refProp->setAccessible(true);
+		$refProp->setValue($pEstateList, $pMockAction);
+
+		$fetchData = Closure::bind(function (int $page, bool $fmt) {
+			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
+		}, $pEstateList, EstateList::class);
+
 		$fetchData(1, false);
 
 		$this->assertNotEmpty($capturedParamSets, 'setParameters was never called');
 		$rawParams = $capturedParamSets[0];
 
-		$this->assertArrayHasKey('listname', $rawParams,
-			'fetchDataForOrderEstatesByTags must include listname so the DB cache key matches the pre-warmed entry');
-		$this->assertSame($pDataView->getName(), $rawParams['listname']);
+		$this->assertArrayNotHasKey('listname', $rawParams,
+			'the raw values must not be served from the list cache: its key ignores the requested fields');
+		$this->assertArrayNotHasKey('params_list_cache', $rawParams);
+		$this->assertContains('preisAufAnfrage', $rawParams['data'],
+			'preisAufAnfrage must be requested so estateIterator can hide prices that are on request');
 		$this->assertContains('vermarktungsart', $rawParams['data'],
 			'vermarktungsart must be fetched so getInfoTagOfProperty can determine kauf/miete for sold/rented estates');
 	}
 
 	/**
-	 * Lists larger than one 500-record page must route EVERY page through the listname
+	 * Lists larger than one 500-record page must route EVERY formatted page through the listname
 	 * cache key. A pre-warmed entry holds the full record set, so each 500-block is served
 	 * from that single entry; partial live pages are never persisted under the listname key
 	 * (ApiCall::writeCacheForResponses skips them), so follow-up offsets can safely reuse it.
@@ -1508,7 +1582,7 @@ class TestClassEstateList
 			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
 		}, $pEstateList, EstateList::class);
 
-		$records = $fetchData(1, false);
+		$records = $fetchData(1, true);
 
 		// All 510 records across both pages are aggregated (no truncation, no duplicates).
 		$this->assertCount(510, $records);
@@ -1563,15 +1637,17 @@ class TestClassEstateList
 			return $this->fetchDataForOrderEstatesByTags($page, $fmt);
 		}, $pEstateList, EstateList::class);
 
-		$fetchData(1, false);
+		// The formatted request is the one that normally uses the list cache, so it is the one
+		// that has to prove the geo bypass (the raw request never uses the cache at all).
+		$fetchData(1, true);
 
 		$this->assertNotEmpty($capturedParamSets, 'setParameters was never called');
-		$rawParams = $capturedParamSets[0];
+		$formattedParams = $capturedParamSets[0];
 
-		$this->assertArrayHasKey('georangesearch', $rawParams);
-		$this->assertArrayNotHasKey('listname', $rawParams,
+		$this->assertArrayHasKey('georangesearch', $formattedParams);
+		$this->assertArrayNotHasKey('listname', $formattedParams,
 			'listname must be removed when a geo range search is active');
-		$this->assertArrayNotHasKey('params_list_cache', $rawParams);
+		$this->assertArrayNotHasKey('params_list_cache', $formattedParams);
 	}
 
 	/**

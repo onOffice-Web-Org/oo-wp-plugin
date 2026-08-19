@@ -3,6 +3,7 @@
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Controller\InputVariableReaderFormatter;
+use onOffice\WPlugin\Field\PriceFormatService;
 use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
 
@@ -13,26 +14,32 @@ class TestClassInputVariableReaderFormatter
 	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatValue
 	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatFloatValue
 	 */
-	public function testFormatFloatValueWithThousandSeparatorComma()
+	public function testFormatFloatValueWithDecimalSeparatorComma()
 	{
-		$pInstance = new InputVariableReaderFormatter;
-		update_option('onoffice-settings-thousand-separator', 'comma-separator');
+		$pInstance = new InputVariableReaderFormatter(new PriceFormatService());
+		update_option('onoffice-settings-thousand-separator-custom', '.');
+		update_option('onoffice-settings-decimal-separator', ',');
 
 		$this->assertEquals('3948', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
 		$this->assertEquals('3948', $pInstance->formatFloatValue(3948.00));
+		$this->assertEquals('3948,50', $pInstance->formatValue(3948.50, FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals('3948,50', $pInstance->formatFloatValue(3948.50));
 	}
 
 	/**
 	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatValue
 	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatFloatValue
 	 */
-	public function testFormatFloatValueWithThousandSeparatorDot()
+	public function testFormatFloatValueWithDecimalSeparatorDot()
 	{
-		$pInstance = new InputVariableReaderFormatter;
-		update_option('onoffice-settings-thousand-separator', 'dot-separator');
+		$pInstance = new InputVariableReaderFormatter(new PriceFormatService());
+		update_option('onoffice-settings-thousand-separator-custom', ',');
+		update_option('onoffice-settings-decimal-separator', '.');
 
 		$this->assertEquals('3948', $pInstance->formatValue(3948.00, FieldTypes::FIELD_TYPE_FLOAT));
 		$this->assertEquals('3948', $pInstance->formatFloatValue(3948.00));
+		$this->assertEquals('3948.50', $pInstance->formatValue(3948.50, FieldTypes::FIELD_TYPE_FLOAT));
+		$this->assertEquals('3948.50', $pInstance->formatFloatValue(3948.50));
 	}
 
 	/**
@@ -43,7 +50,7 @@ class TestClassInputVariableReaderFormatter
 	 */
 	public function testFormatDateOrDateTimeValue()
 	{
-		$pInstance = new InputVariableReaderFormatter;
+		$pInstance = new InputVariableReaderFormatter(new PriceFormatService());
 
 		$this->assertEquals('2018/06/28 12:01:00 pm', $pInstance->formatValue('2018-06-28 14:01:00', FieldTypes::FIELD_TYPE_DATETIME));
 		$this->assertEquals('2018/06/28 12:01:00 pm', $pInstance->formatDateOrDateTimeValue('2018-06-28 14:01:00', FieldTypes::FIELD_TYPE_DATETIME));
@@ -52,10 +59,11 @@ class TestClassInputVariableReaderFormatter
 	/**
 	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatValue
 	 */
-	public function testFormatValueArrayWithThousandSeparatorComma()
+	public function testFormatValueArrayWithDecimalSeparatorComma()
 	{
-		$pInstance = new InputVariableReaderFormatter;
-		update_option('onoffice-settings-thousand-separator', 'comma-separator');
+		$pInstance = new InputVariableReaderFormatter(new PriceFormatService());
+		update_option('onoffice-settings-thousand-separator-custom', '.');
+		update_option('onoffice-settings-decimal-separator', ',');
 
 		$this->assertEquals(['3948'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
 	}
@@ -63,10 +71,11 @@ class TestClassInputVariableReaderFormatter
 	/**
 	 * @covers \onOffice\WPlugin\Controller\InputVariableReaderFormatter::formatValue
 	 */
-	public function testFormatValueArrayWithThousandSeparatorDot()
+	public function testFormatValueArrayWithDecimalSeparatorDot()
 	{
-		$pInstance = new InputVariableReaderFormatter;
-		update_option('onoffice-settings-thousand-separator', 'dot-separator');
+		$pInstance = new InputVariableReaderFormatter(new PriceFormatService());
+		update_option('onoffice-settings-thousand-separator-custom', ',');
+		update_option('onoffice-settings-decimal-separator', '.');
 
 		$this->assertEquals(['3948'], $pInstance->formatValue([3948.00], FieldTypes::FIELD_TYPE_FLOAT));
 	}

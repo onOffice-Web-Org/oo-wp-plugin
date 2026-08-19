@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\ScriptLoader;
 
 use onOffice\WPlugin\Favorites;
+use onOffice\WPlugin\Field\PriceFormatService;
 use onOffice\WPlugin\Template\TemplateCall;
 use const ONOFFICE_PLUGIN_DIR;
 use function plugins_url;
@@ -363,8 +364,12 @@ class ScriptLoaderGenericConfigurationDefault
 				]);
 				break;
 			case 'onoffice-apply-thousand-separator':
+				$pPriceFormatService = new PriceFormatService();
 				wp_localize_script('onoffice-apply-thousand-separator', 'onoffice_apply_thousand_separator', [
-					'thousand_separator_format' => get_option('onoffice-settings-thousand-separator')
+					'thousand_separator_format' => get_option('onoffice-settings-thousand-separator'),
+					'thousand_separator' => $pPriceFormatService->getThousandSeparator(),
+					'decimal_separator' => $pPriceFormatService->getDecimalSeparator(),
+					'currency_position' => $pPriceFormatService->getCurrencyPosition(),
 				]);
 				break;
 	}}

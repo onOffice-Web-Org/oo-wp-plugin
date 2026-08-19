@@ -16,4 +16,4 @@ npm run build
 rm -rf "${RELEASE_ROOT}"
 PREFIX="${RELEASE_ROOT}/${PLUGIN_FOLDER}" make release
 
-(cd "${RELEASE_ROOT}" && zip -r "${WORKSPACE}/release.zip" "${PLUGIN_FOLDER}")
+(cd "${RELEASE_ROOT}" && zip -r "${WORKSPACE}/onoffice-for-wp-websites.zip" "${PLUGIN_FOLDER}")

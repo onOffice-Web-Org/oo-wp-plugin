@@ -110,19 +110,15 @@ class InputVariableReaderParser
 			return null;
 		}
 
-		global $wp_locale;
+		$thousandSep = get_option('onoffice-settings-thousand-separator-custom', '.');
+		$decimalSep = get_option('onoffice-settings-decimal-separator', ',');
 
-		$stringThousand = ($wp_locale->number_format['thousands_sep'] === ',')
-			? __String::getNew($floatString)->replace($wp_locale->number_format['thousands_sep'], '') : $floatString;
-
-		$stringDec = __String::getNew($stringThousand)->replace
-		($wp_locale->number_format['decimal_point'], '.');
-
-		$onofficeSettingsThousandSeparator = get_option('onoffice-settings-thousand-separator');
-		if ($onofficeSettingsThousandSeparator === InputVariableReaderFormatter::DOT_THOUSAND_SEPARATOR) {
-			$stringDec = str_replace('.', '', $floatString);
-		} elseif ($onofficeSettingsThousandSeparator === InputVariableReaderFormatter::COMMA_THOUSAND_SEPARATOR) {
-			$stringDec = str_replace(',', '', $floatString);
+		$stringDec = $floatString;
+		if (!empty($thousandSep)) {
+			$stringDec = str_replace($thousandSep, '', $stringDec);
+		}
+		if ($decimalSep !== '.') {
+			$stringDec = str_replace($decimalSep, '.', $stringDec);
 		}
 
 		return floatval($stringDec);

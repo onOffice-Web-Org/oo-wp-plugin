@@ -28,6 +28,7 @@ use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Form\AltchaHandler;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Gui\Table\FormsTable;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
@@ -226,8 +227,12 @@ class AdminPageFormList
 			admin_url( 'admin.php?page=onoffice-editform' ) );
 		$linkAddNewOwnerForm = add_query_arg( $typeParam, Form::TYPE_OWNER,
 			admin_url( 'admin.php?page=onoffice-editform' ) );
-		$linkAddNewApplicantSearchForm = add_query_arg( $typeParam, Form::TYPE_APPLICANT_SEARCH,
-			admin_url( 'admin.php?page=onoffice-editform' ) );
+		
+		$linkAddNewApplicantSearchForm = null;
+		if(!AltchaHandler::isSupportedTheme()) {
+			$linkAddNewApplicantSearchForm = add_query_arg( $typeParam, Form::TYPE_APPLICANT_SEARCH,
+				admin_url( 'admin.php?page=onoffice-editform' ) );
+		}
 
 		echo '</h1>';
 
@@ -253,9 +258,9 @@ class AdminPageFormList
                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $linkAddNewOwnerForm is escaped by add_query_arg() and admin_url()
                     echo '<li><a href="' . esc_url($linkAddNewOwnerForm) . '"><p>' . esc_html__( 'Owner Form',
                     'onoffice-for-wp-websites' ) . '</p></a></li>';
-                }			
+				}
 
-                if (current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH))	{
+				if ($linkAddNewApplicantSearchForm !== null && current_user_can(UserCapabilities::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH))	{
                     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $linkAddNewApplicantSearchForm is escaped by add_query_arg() and admin_url()
                 	echo  '<li><a href="' . esc_url($linkAddNewApplicantSearchForm) . '"><p>' . esc_html__( 'Applicant Search Form',
                     'onoffice-for-wp-websites' ) . '</p></a></li>';

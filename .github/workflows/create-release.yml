@@ -10,5 +10,6 @@ jobs:
   merge:
     uses: ./.github/workflows/merge-source-into-branch.yml
     with:
+      source-branch: prerelease
       target-branch: release
     secrets: inherit

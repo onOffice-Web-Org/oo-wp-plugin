@@ -7,7 +7,10 @@ Integrate real estates, contact forms and contact persons from the onOffice Soft
 
 In [./documentation/Building.md](./documentation/Building.md) you can find instructions for how to set up your development environment. There are also instructions for making a .zip file that you can upload to WordPress.
 
-For the release process and [Conventional Commits](https://www.conventionalcommits.org/) conventions, see [./documentation/Releasing.md](./documentation/Releasing.md).
+Releases run over the branches `master` → `beta` → `prerelease` → `release`. The full process, how to
+ship a bugfix during a running beta test and what to watch out for is documented in
+[./documentation/RELEASE.md](./documentation/RELEASE.md), together with the
+[Conventional Commits](https://www.conventionalcommits.org/) conventions.
 
 ## Getting Started
 
