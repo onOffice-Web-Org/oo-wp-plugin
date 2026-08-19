@@ -154,19 +154,23 @@ class SDKWrapper
 		$pOptionsWrapper = $this->_pWPOptionWrapper;
 		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
 		$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
+		$apiClaim = $pOptionsWrapper->getOption('onoffice-settings-apiclaim');
 		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
 			try {
 				$secretDecrypt = $this->_encrypter->decrypt($secret, ONOFFICE_CREDENTIALS_ENC_KEY);
 				$tokenDecrypt = $this->_encrypter->decrypt($token, ONOFFICE_CREDENTIALS_ENC_KEY);
+				$apiClaimDecrypt = $this->_encrypter->decrypt($apiClaim, ONOFFICE_CREDENTIALS_ENC_KEY);
 			}catch (\RuntimeException $exception){
 				$this->_pSDK->removeCacheInstances();
 				$secretDecrypt = $secret;
 				$tokenDecrypt = $token;
+				$apiClaimDecrypt = $apiClaim;
 			}
 			$secret = $secretDecrypt;
 			$token = $tokenDecrypt;
+			$apiClaim = $apiClaimDecrypt;
 		}
-		$this->_pSDK->sendRequests($token, $secret, $saveToCache);
+		$this->_pSDK->sendRequests($token, $secret, $saveToCache, $apiClaim);
 		$errors = $this->_pSDK->getErrors();
 
 		foreach ($this->_callbacksAfterSend as $handle => $callback) {
