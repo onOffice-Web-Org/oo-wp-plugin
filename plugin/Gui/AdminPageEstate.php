@@ -28,6 +28,7 @@ use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewEstate;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_action;
@@ -232,6 +233,10 @@ class AdminPageEstate
 				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
 				$itemsDeleted = $pBulkDeleteRecord->delete
 					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ESTATE, $estateIds);
+				if ($itemsDeleted > 0) {
+					do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ESTATE,
+						RecordManagerFactory::ACTION_DELETE, null);
+				}
 				$redirectTo = add_query_arg(['delete' => $itemsDeleted, 'tab' => $this->getSelectedTab()],
 					admin_url('admin.php?page=onoffice-estates'));
 			}
@@ -253,6 +258,7 @@ class AdminPageEstate
 				if (isset($_GET['listVewId'])) {
 				    $listViewRootId = absint(wp_unslash($_GET['listVewId']));
 					$pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
+					do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ESTATE, 'duplicate', null);
 				}
 			}
 			return $redirectTo;

@@ -28,6 +28,7 @@ use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Record\RecordManagerDeleteListViewAddress;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewAddress;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_action;
@@ -226,6 +227,10 @@ class AdminPageAddress
 				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
 				$itemsDeleted = $pBulkDeleteRecord->delete
 					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ADDRESS, $recordIds);
+				if ($itemsDeleted > 0) {
+					do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ADDRESS,
+						RecordManagerFactory::ACTION_DELETE, null);
+				}
 				$redirectTo = add_query_arg(['delete' => $itemsDeleted],
 					admin_url('admin.php?page=onoffice-addresses'));
 			}
@@ -247,6 +252,7 @@ class AdminPageAddress
 				$listViewRootId = isset($_GET['listViewId']) ? absint(wp_unslash($_GET['listViewId'])) : 0;
 				if ($listViewRootId > 0) {
 					$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
+					do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ADDRESS, 'duplicate', null);
 				}
 			}
 
