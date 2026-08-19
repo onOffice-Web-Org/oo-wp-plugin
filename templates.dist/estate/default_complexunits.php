@@ -28,7 +28,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /* @var $pEstates onOffice\WPlugin\EstateList */
 use onOffice\WPlugin\Pagination\ListPagination;
-// Listing ID for pagination query parameter
 $list_id = $pEstates->getDataView()->getId();
 
 $dont_echo = ['vermarktungsstatus','objekttitel'];
