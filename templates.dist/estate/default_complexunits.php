@@ -38,6 +38,12 @@ $pEstatesClone->resetEstateIterator();
 $rawValues = $pEstates->getRawValues();
 ?>
 
+<?php if ($pEstates->getShowMapConfig()) { ?>
+    <div class="oo-estate-map">
+        <?php require('map/map.php'); ?>
+    </div>
+<?php } ?>
+
 <?php if (
     (bool) $pEstates->estateIterator() == true &&
     !empty($pEstates->estateIterator())
