@@ -299,7 +299,7 @@ class SDKWrapper
 			 * themselves. Estates from multiple list views are merged per language key.
 			 *
 			 * @param array<string,array<int,string>> $allEstates Grouped by onOffice language code.
-			 *   Example: ['DEU' => [7407 => 'Charmante Wohnung', ...], 'ENG' => [7407 => 'Charming flat', ...]]
+			 *   Example: ['DEU' => [7407 => 'Charmante Wohnung', ...], 'ENG' => [7408 => 'Charming flat', ...]]
 			 */
 			do_action('onoffice/cache_renew/estates_ready', $allEstates);
 	 }
