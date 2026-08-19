@@ -48,6 +48,11 @@ if (PHP_VERSION_ID >= 70400) {
 			if ($errstr === "Function ReflectionType::__toString() is deprecated") {
 				return true;
 			}
+
+			// PHP 8.4 flags pre-existing implicit-nullable signatures; would abort the bootstrap.
+			if (strpos($errstr, 'Implicitly marking parameter') !== false) {
+				return true;
+			}
 		}
 
 		$errorHandler = new ErrorHandler(true, true, true, true);
