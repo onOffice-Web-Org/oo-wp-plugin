@@ -29,6 +29,33 @@ use onOffice\WPlugin\Filter\EstateCityValuesMapper;
 use onOffice\WPlugin\Language;
 use WP_UnitTestCase;
 
+class EstateCityValuesMapperSDKWrapperMocker
+	extends SDKWrapperMocker
+{
+	/** @var bool[] */
+	private $_saveToCacheValues = [];
+
+	/** @var int[] */
+	private $_requestCounts = [];
+
+	public function sendRequests(bool $saveToCache = true)
+	{
+		$this->_saveToCacheValues[] = $saveToCache;
+		$this->_requestCounts[] = count($this->getRequestArray());
+		parent::sendRequests($saveToCache);
+	}
+
+	public function getSaveToCacheValues(): array
+	{
+		return $this->_saveToCacheValues;
+	}
+
+	public function getRequestCounts(): array
+	{
+		return $this->_requestCounts;
+	}
+}
+
 /**
  *
  */
@@ -37,6 +64,9 @@ class TestClassEstateCityValuesMapper
 {
 	/** @var EstateCityValuesMapper */
 	private $_pMapper = null;
+
+	/** @var EstateCityValuesMapperSDKWrapperMocker */
+	private $_pSDKWrapper = null;
 
 	/** @var array */
 	private $_responseCurrentLanguage = [
@@ -47,7 +77,7 @@ class TestClassEstateCityValuesMapper
 		"identifier" => "",
 		"data" => [
 			"meta" => [
-				"cntabsolute" => null
+				"cntabsolute" => 4
 			],
 			"records" =>
 				[
@@ -97,7 +127,7 @@ class TestClassEstateCityValuesMapper
 		"identifier" => "",
 		"data" => [
 			"meta" => [
-				"cntabsolute" => null
+				"cntabsolute" => 4
 			],
 			"records" =>
 				[
@@ -139,14 +169,17 @@ class TestClassEstateCityValuesMapper
 	 */
 	public function prepare()
 	{
-		$pSDKWrapper = new SDKWrapperMocker();
+		$this->_pSDKWrapper = new EstateCityValuesMapperSDKWrapperMocker();
 
 		$currentLanguageParams = [
 			'data' => ['ort', 'Id'],
 			'listlimit' => 500,
 			'addMainLangId' => true,
+			'sortby' => 'Id',
+			'sortorder' => 'ASC',
 			'estatelanguage' => Language::getDefault(),
 			'filter' => [
+				'referenz' => [['op' => '=', 'val' => 0]],
 				'veroeffentlichen' => [['op' => '=', 'val' => 1]]
 			]
 		];
@@ -154,22 +187,27 @@ class TestClassEstateCityValuesMapper
 			'data' => ['ort', 'Id'],
 			'listlimit' => 500,
 			'addMainLangId' => true,
+			'sortby' => 'Id',
+			'sortorder' => 'ASC',
 			'filter' => [
+				'referenz' => [['op' => '=', 'val' => 0]],
 				'veroeffentlichen' => [['op' => '=', 'val' => 1]]
 			]
 		];
-		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
 			$currentLanguageParams, null, $this->_responseCurrentLanguage);
-		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
 			$mainLanguageParams, null, $this->_responseMainLanguage);
 
-		$this->_pMapper = new EstateCityValuesMapper($pSDKWrapper, DataListView::HIDE_REFERENCE_ESTATE);
+		$this->_pMapper = new EstateCityValuesMapper($this->_pSDKWrapper, DataListView::HIDE_REFERENCE_ESTATE);
 	}
 
 	public function testGetMainLanguageCityValuesExpandsLocalizedCities()
 	{
 		$result = $this->_pMapper->getMainLanguageCityValues(['Gufidaun']);
 		$this->assertEquals(['Gudon'], $result);
+		$this->assertSame([true], $this->_pSDKWrapper->getSaveToCacheValues());
+		$this->assertSame([2], $this->_pSDKWrapper->getRequestCounts());
 	}
 
 	public function testGetMainLanguageCityValuesMergesCollisions()
@@ -193,5 +231,71 @@ class TestClassEstateCityValuesMapper
 	public function testGetMainLanguageCityValuesEmptyInput()
 	{
 		$this->assertEquals([], $this->_pMapper->getMainLanguageCityValues([]));
+		$this->assertSame([], $this->_pSDKWrapper->getRequestArray());
+		$this->assertSame([], $this->_pSDKWrapper->getSaveToCacheValues());
+	}
+
+	public function testGetMainLanguageCityValuesPaginatesAndUsesFilterId()
+	{
+		$pSDKWrapper = new EstateCityValuesMapperSDKWrapperMocker();
+		$currentLanguageParams = [
+			'data' => ['ort', 'Id'],
+			'listlimit' => 500,
+			'addMainLangId' => true,
+			'sortby' => 'Id',
+			'sortorder' => 'ASC',
+			'estatelanguage' => Language::getDefault(),
+			'filter' => [
+				'referenz' => [['op' => '=', 'val' => 0]],
+				'veroeffentlichen' => [['op' => '=', 'val' => 1]],
+			],
+			'filterid' => 23,
+		];
+		$mainLanguageParams = $currentLanguageParams;
+		unset($mainLanguageParams['estatelanguage']);
+
+		foreach ([0, 500, 1000] as $offset) {
+			$currentParams = $currentLanguageParams;
+			$mainParams = $mainLanguageParams;
+			if ($offset !== 0) {
+				$currentParams['listoffset'] = $offset;
+				$mainParams['listoffset'] = $offset;
+			}
+
+			$currentRecords = $offset === 1000 ? [[
+				'id' => 'local-1001',
+				'elements' => ['ort' => 'Spätstadt', 'mainLangId' => 'main-1001'],
+			]] : [];
+			$mainRecords = $offset === 1000 ? [[
+				'id' => 'main-1001',
+				'elements' => ['ort' => 'Late City'],
+			]] : [];
+
+			$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
+				$currentParams, null, $this->buildResponse(1001, $currentRecords));
+			$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
+				$mainParams, null, $this->buildResponse(1001, $mainRecords));
+		}
+
+		$pMapper = new EstateCityValuesMapper($pSDKWrapper, DataListView::HIDE_REFERENCE_ESTATE, 23);
+		$this->assertSame(['Late City'], $pMapper->getMainLanguageCityValues(['Spätstadt']));
+		$this->assertSame([true, true], $pSDKWrapper->getSaveToCacheValues());
+		$this->assertSame([2, 6], $pSDKWrapper->getRequestCounts());
+	}
+
+	private function buildResponse(int $count, array $records): array
+	{
+		return [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'estate',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => $count],
+				'records' => $records,
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
 	}
 }
