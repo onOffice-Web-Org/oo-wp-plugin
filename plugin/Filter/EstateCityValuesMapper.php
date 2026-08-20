@@ -47,10 +47,17 @@ class EstateCityValuesMapper
 	/** @var string */
 	private $_pShowReferenceEstate = '';
 
-	public function __construct(SDKWrapper $pSDKWrapper = null, string $pShowReferenceEstate = '')
+	/** @var int */
+	private $_filterId = 0;
+
+	public function __construct(
+		SDKWrapper $pSDKWrapper = null,
+		string $pShowReferenceEstate = '',
+		int $filterId = 0)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper ?? new SDKWrapper();
 		$this->_pShowReferenceEstate = $pShowReferenceEstate;
+		$this->_filterId = $filterId;
 	}
 
 	/**
@@ -87,17 +94,18 @@ class EstateCityValuesMapper
 	 */
 	private function buildMapping(): array
 	{
-		$currentLanguageRecords = $this->readEstates(Language::getDefault());
-		$mainLanguageRecords = $this->readEstates(null);
+		[$currentLanguageRecords, $mainLanguageRecords] = $this->readEstates();
 
 		$mainOrtById = [];
 		foreach ($mainLanguageRecords as $record) {
-			$mainOrtById[$record['id']] = $record['elements']['ort'];
+			if (isset($record['id'], $record['elements']['ort'])) {
+				$mainOrtById[$record['id']] = $record['elements']['ort'];
+			}
 		}
 
 		$mapping = [];
 		foreach ($currentLanguageRecords as $record) {
-			$localizedOrt = $record['elements']['ort'];
+			$localizedOrt = $record['elements']['ort'] ?? '';
 			if ($localizedOrt === '') {
 				continue;
 			}
@@ -111,16 +119,55 @@ class EstateCityValuesMapper
 	}
 
 	/**
-	 * @param string|null $language null = main language (no estatelanguage)
-	 * @return array
+	 * @return array{0: array, 1: array}
 	 * @throws ApiClientException
 	 */
-	private function readEstates(?string $language): array
+	private function readEstates(): array
+	{
+		$languages = [Language::getDefault(), null];
+		$actions = [];
+		foreach ($languages as $language) {
+			$actions[] = $this->queueReadEstatesAction($language);
+		}
+		$this->_pSDKWrapper->sendRequests();
+
+		$recordsByLanguage = [];
+		$additionalActions = [];
+		foreach ($actions as $index => $pAction) {
+			$records = $pAction->getResultRecords();
+			$recordsByLanguage[$index] = $records;
+			$total = $pAction->getResultMeta()['cntabsolute'] ?? count($records);
+			$total = is_array($total) ? ($total[0] ?? count($records)) : $total;
+
+			for ($offset = 500; $offset < (int)$total; $offset += 500) {
+				$additionalActions[$index][] = $this->queueReadEstatesAction($languages[$index], $offset);
+			}
+		}
+
+		if ($additionalActions !== []) {
+			$this->_pSDKWrapper->sendRequests();
+			foreach ($additionalActions as $index => $pageActions) {
+				foreach ($pageActions as $pAction) {
+					$recordsByLanguage[$index] = array_merge(
+						$recordsByLanguage[$index], $pAction->getResultRecords());
+				}
+			}
+		}
+
+		return [$recordsByLanguage[0], $recordsByLanguage[1]];
+	}
+
+	/**
+	 * @param string|null $language null = main language (no estatelanguage)
+	 */
+	private function queueReadEstatesAction(?string $language, int $offset = 0): APIClientActionGeneric
 	{
 		$requestParams = [
 			'data' => ['ort', 'Id'],
 			'listlimit' => 500,
 			'addMainLangId' => true,
+			'sortby' => 'Id',
+			'sortorder' => 'ASC',
 		];
 
 		if ($language !== null) {
@@ -133,12 +180,16 @@ class EstateCityValuesMapper
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
 		}
 		$requestParams['filter']['veroeffentlichen'][] = ['op' => '=', 'val' => 1];
+		if ($this->_filterId !== 0) {
+			$requestParams['filterid'] = $this->_filterId;
+		}
+		if ($offset !== 0) {
+			$requestParams['listoffset'] = $offset;
+		}
 
 		$pApiClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$pApiClientAction->setParameters($requestParams);
-		$pApiClientAction->addRequestToQueue()->sendRequests();
-
-		return $pApiClientAction->getResultRecords();
+		return $pApiClientAction->addRequestToQueue();
 	}
 }

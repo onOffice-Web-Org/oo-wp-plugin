@@ -25,7 +25,9 @@ namespace onOffice\WPlugin\Filter;
 
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -185,8 +187,15 @@ class DefaultFilterBuilderListView
 				return $baseFilter;
 			}
 
-			$pEstateCityValuesMapper = new EstateCityValuesMapper(null, $this->_pDataListView->getShowReferenceEstate());
-			$additionalEstateCities = $pEstateCityValuesMapper->getMainLanguageCityValues($estateCityValue);
+			try {
+				$pEstateCityValuesMapper = new EstateCityValuesMapper(
+					null,
+					$this->_pDataListView->getShowReferenceEstate(),
+					$this->_pDataListView->getFilterId());
+				$additionalEstateCities = $pEstateCityValuesMapper->getMainLanguageCityValues($estateCityValue);
+			} catch (ApiClientException | HttpFetchNoResultException $e) {
+				$additionalEstateCities = $estateCityValue;
+			}
 
 			if ($additionalEstateCities !== []) {
 				$baseFilter['ort'] = [
