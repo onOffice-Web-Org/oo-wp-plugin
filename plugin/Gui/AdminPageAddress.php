@@ -248,11 +248,15 @@ class AdminPageAddress
 
 				/* @var $pRecordManagerDuplicateListViewAddress RecordManagerDuplicateListViewAddress */
 				$pRecordManagerDuplicateListViewAddress = $pDI->get(RecordManagerDuplicateListViewAddress::class);
+				// AddressListTable passes the list view NAME in listViewId (not a numeric
+				// ID like the estate table does) - absint() would always yield 0 here.
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
-				$listViewRootId = isset($_GET['listViewId']) ? absint(wp_unslash($_GET['listViewId'])) : 0;
-				if ($listViewRootId > 0) {
-					$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
-					do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ADDRESS, 'duplicate', null);
+				$listViewRootName = isset($_GET['listViewId']) ? sanitize_text_field(wp_unslash($_GET['listViewId'])) : '';
+				if ($listViewRootName !== '') {
+					$duplicated = $pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootName);
+					if ($duplicated) {
+						do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ADDRESS, 'duplicate', null);
+					}
 				}
 			}
 

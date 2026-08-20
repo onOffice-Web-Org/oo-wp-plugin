@@ -257,8 +257,10 @@ class AdminPageEstate
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
 				if (isset($_GET['listVewId'])) {
 				    $listViewRootId = absint(wp_unslash($_GET['listVewId']));
-					$pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
-					do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ESTATE, 'duplicate', null);
+					$duplicated = $pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
+					if ($duplicated) {
+						do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ESTATE, 'duplicate', null);
+					}
 				}
 			}
 			return $redirectTo;

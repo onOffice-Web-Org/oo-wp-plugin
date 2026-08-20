@@ -342,8 +342,10 @@ class AdminPageFormList
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
 				$listViewRootName = isset($_GET['form']) ? sanitize_text_field(wp_unslash($_GET['form'])) : '';
 				if (!empty($listViewRootName)) {
-					$pRecordManagerDuplicateListViewForm->duplicateByName($listViewRootName);
-					do_action('onoffice/config_changed', RecordManagerFactory::TYPE_FORM, 'duplicate', null);
+					$duplicated = $pRecordManagerDuplicateListViewForm->duplicateByName($listViewRootName);
+					if ($duplicated) {
+						do_action('onoffice/config_changed', RecordManagerFactory::TYPE_FORM, 'duplicate', null);
+					}
 				}
 			}
 			return $redirectTo;
