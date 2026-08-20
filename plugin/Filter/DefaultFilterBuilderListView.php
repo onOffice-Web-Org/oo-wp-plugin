@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Filter;
 
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\SDK\Exception\ApiCallFaultyResponseException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\ApiClientException;
@@ -193,7 +194,7 @@ class DefaultFilterBuilderListView
 					$this->_pDataListView->getShowReferenceEstate(),
 					$this->_pDataListView->getFilterId());
 				$additionalEstateCities = $pEstateCityValuesMapper->getMainLanguageCityValues($estateCityValue);
-			} catch (ApiClientException | HttpFetchNoResultException $e) {
+			} catch (ApiClientException | HttpFetchNoResultException | ApiCallFaultyResponseException $e) {
 				$additionalEstateCities = $estateCityValue;
 			}
 
