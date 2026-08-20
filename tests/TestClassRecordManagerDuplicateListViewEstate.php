@@ -161,7 +161,10 @@ class TestClassRecordManagerDuplicateListViewEstate
 	{
 		$pRecordManagerReadListViewEstate = $this->getMockBuilder(RecordManagerReadListViewEstate::class)
 			->getMock();
-		$pRecordManagerReadListViewEstate->method('getRowById')->will($this->returnValue(null));
+		// getRowById() is declared to return array (not nullable) - an empty
+		// array is the type-correct "not found" signal. duplicateByIds() treats
+		// it the same as null, since `[] != null` evaluates to false in PHP.
+		$pRecordManagerReadListViewEstate->method('getRowById')->will($this->returnValue([]));
 		$this->_pContainer->set(RecordManagerReadListViewEstate::class, $pRecordManagerReadListViewEstate);
 		$pSubject = new RecordManagerDuplicateListViewEstate($this->_pWPDB, $this->_pContainer);
 
