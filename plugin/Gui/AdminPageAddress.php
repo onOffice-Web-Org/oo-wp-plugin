@@ -48,6 +48,8 @@ use function esc_html__;
 class AdminPageAddress
 	extends AdminPage
 {
+	use FiresConfigChangedHook;
+
 	/** */
 	const PAGE_ADDRESS_LIST = 'list';
 
@@ -227,10 +229,8 @@ class AdminPageAddress
 				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
 				$itemsDeleted = $pBulkDeleteRecord->delete
 					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ADDRESS, $recordIds);
-				if ($itemsDeleted > 0) {
-					do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ADDRESS,
-						RecordManagerFactory::ACTION_DELETE, null);
-				}
+				self::fireConfigChangedHook($itemsDeleted > 0, RecordManagerFactory::TYPE_ADDRESS,
+					RecordManagerFactory::ACTION_DELETE, null);
 				$redirectTo = add_query_arg(['delete' => $itemsDeleted],
 					admin_url('admin.php?page=onoffice-addresses'));
 			}
@@ -254,9 +254,7 @@ class AdminPageAddress
 				$listViewRootName = isset($_GET['listViewId']) ? sanitize_text_field(wp_unslash($_GET['listViewId'])) : '';
 				if ($listViewRootName !== '') {
 					$duplicated = $pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootName);
-					if ($duplicated) {
-						do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ADDRESS, 'duplicate', null);
-					}
+					self::fireConfigChangedHook($duplicated, RecordManagerFactory::TYPE_ADDRESS, 'duplicate', null);
 				}
 			}
 

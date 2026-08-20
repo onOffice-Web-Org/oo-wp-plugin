@@ -62,6 +62,8 @@ use function add_screen_option;
 class AdminPageFormList
 	extends AdminPage
 {
+	use FiresConfigChangedHook;
+
 	/** */
 	const PARAM_TYPE = 'type';
 
@@ -305,10 +307,8 @@ class AdminPageFormList
 				check_admin_referer('bulk-forms');
 				$capability = UserCapabilities::RULE_EDIT_VIEW_FORM;
 				$itemsDeleted = $pBulkDeleteRecord->delete($pRecordManagerDeleteForm, $capability, $formIds);
-				if ($itemsDeleted > 0) {
-					do_action('onoffice/config_changed', RecordManagerFactory::TYPE_FORM,
-						RecordManagerFactory::ACTION_DELETE, null);
-				}
+				self::fireConfigChangedHook($itemsDeleted > 0, RecordManagerFactory::TYPE_FORM,
+					RecordManagerFactory::ACTION_DELETE, null);
 				$redirectTo = add_query_arg('delete', $itemsDeleted,
 					admin_url('admin.php?page=onoffice-forms'));
 			}
@@ -343,9 +343,7 @@ class AdminPageFormList
 				$listViewRootName = isset($_GET['form']) ? sanitize_text_field(wp_unslash($_GET['form'])) : '';
 				if (!empty($listViewRootName)) {
 					$duplicated = $pRecordManagerDuplicateListViewForm->duplicateByName($listViewRootName);
-					if ($duplicated) {
-						do_action('onoffice/config_changed', RecordManagerFactory::TYPE_FORM, 'duplicate', null);
-					}
+					self::fireConfigChangedHook($duplicated, RecordManagerFactory::TYPE_FORM, 'duplicate', null);
 				}
 			}
 			return $redirectTo;

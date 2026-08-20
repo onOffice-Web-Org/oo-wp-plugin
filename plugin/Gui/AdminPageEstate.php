@@ -48,6 +48,8 @@ use function esc_html;
 class AdminPageEstate
 	extends AdminPage
 {
+	use FiresConfigChangedHook;
+
 	/** */
 	const PAGE_ESTATE_LIST = 'list';
 
@@ -233,10 +235,8 @@ class AdminPageEstate
 				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
 				$itemsDeleted = $pBulkDeleteRecord->delete
 					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ESTATE, $estateIds);
-				if ($itemsDeleted > 0) {
-					do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ESTATE,
-						RecordManagerFactory::ACTION_DELETE, null);
-				}
+				self::fireConfigChangedHook($itemsDeleted > 0, RecordManagerFactory::TYPE_ESTATE,
+					RecordManagerFactory::ACTION_DELETE, null);
 				$redirectTo = add_query_arg(['delete' => $itemsDeleted, 'tab' => $this->getSelectedTab()],
 					admin_url('admin.php?page=onoffice-estates'));
 			}
@@ -258,9 +258,7 @@ class AdminPageEstate
 				if (isset($_GET['listVewId'])) {
 				    $listViewRootId = absint(wp_unslash($_GET['listVewId']));
 					$duplicated = $pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
-					if ($duplicated) {
-						do_action('onoffice/config_changed', RecordManagerFactory::TYPE_ESTATE, 'duplicate', null);
-					}
+					self::fireConfigChangedHook($duplicated, RecordManagerFactory::TYPE_ESTATE, 'duplicate', null);
 				}
 			}
 			return $redirectTo;
