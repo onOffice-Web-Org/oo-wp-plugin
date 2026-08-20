@@ -44,9 +44,6 @@ class DefaultFilterBuilderListView
 	/** @var FieldsCollectionBuilderShort  */
 	private $_pFieldsCollectionBuilderShort;
 
-	/** @var EstateCityValuesMapper */
-	private $_pEstateCityValuesMapper;
-
 	private $_geofilter = null;
 
 	/** @var array */
@@ -60,27 +57,15 @@ class DefaultFilterBuilderListView
 	 * @param DataListView $pDataListView
 	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
 	 * @param DefaultFilterBuilderListViewEnvironment|null $pEnvironment
-	 * @param EstateCityValuesMapper|null $pEstateCityValuesMapper
 	 */
 	public function __construct(
 		DataListView $pDataListView,
 		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort,
-		DefaultFilterBuilderListViewEnvironment $pEnvironment = null,
-		EstateCityValuesMapper $pEstateCityValuesMapper = null)
+		DefaultFilterBuilderListViewEnvironment $pEnvironment = null)
 	{
 		$this->_pDataListView = $pDataListView;
 		$this->_pEnvironment = $pEnvironment ?? new DefaultFilterBuilderListViewEnvironmentDefault();
 		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
-		$this->_pEstateCityValuesMapper = $pEstateCityValuesMapper;
-	}
-
-	private function getEstateCityValuesMapper(): EstateCityValuesMapper
-	{
-		if ($this->_pEstateCityValuesMapper === null) {
-			$this->_pEstateCityValuesMapper = new EstateCityValuesMapper(
-				null, $this->_pDataListView->getShowReferenceEstate());
-		}
-		return $this->_pEstateCityValuesMapper;
 	}
 
 	/**
@@ -200,7 +185,8 @@ class DefaultFilterBuilderListView
 				return $baseFilter;
 			}
 
-			$additionalEstateCities = $this->getEstateCityValuesMapper()->getMainLanguageCityValues($estateCityValue);
+			$pEstateCityValuesMapper = new EstateCityValuesMapper(null, $this->_pDataListView->getShowReferenceEstate());
+			$additionalEstateCities = $pEstateCityValuesMapper->getMainLanguageCityValues($estateCityValue);
 
 			if ($additionalEstateCities !== []) {
 				$baseFilter['ort'] = [
