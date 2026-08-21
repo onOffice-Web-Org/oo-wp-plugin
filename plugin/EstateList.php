@@ -347,6 +347,7 @@ class EstateList
 		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'][] = 'vermarktungsart';
+		$estateParametersRaw['data'][] = 'objektart';
 		if ($this->hasPriceOnRequestField()) {
 			$estateParametersRaw['data'][] = 'preisAufAnfrage';
 		}
@@ -1628,7 +1629,7 @@ class EstateList
 	 */
 	public function getCurrentMultiLangEstateMainId()
 	{
-		return $this->_currentEstate['mainId'];
+		return (int) ($this->_currentEstate['mainId'] ?? 0);
 	}
 
 	/**

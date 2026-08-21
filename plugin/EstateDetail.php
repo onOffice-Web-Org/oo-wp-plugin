@@ -265,7 +265,13 @@ class EstateDetail
 		$pCopyThis = clone $this;
 		$pCopyThis->resetEstateIterator();
 		$pSimilarEstates->loadByMainEstates($pCopyThis);
-		return $pSimilarEstates->generateHtmlOutput($this->_estateId);
+
+		// The sub lists are indexed by the main language id, which differs from the id in
+		// the URL as soon as a translated record is shown. Falling back to the requested
+		// id keeps single language installations working.
+		$mainEstateId = $this->getCurrentMultiLangEstateMainId() ?: (int) $this->_estateId;
+
+		return $pSimilarEstates->generateHtmlOutput($mainEstateId);
 	}
 
 	/**
