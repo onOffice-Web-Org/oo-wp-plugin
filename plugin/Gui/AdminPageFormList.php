@@ -34,6 +34,7 @@ use onOffice\WPlugin\Gui\Table\FormsTable;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Record\RecordManagerDeleteForm;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewForm;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
@@ -61,6 +62,8 @@ use function add_screen_option;
 class AdminPageFormList
 	extends AdminPage
 {
+	use FiresConfigChangedHook;
+
 	/** */
 	const PARAM_TYPE = 'type';
 
@@ -304,6 +307,8 @@ class AdminPageFormList
 				check_admin_referer('bulk-forms');
 				$capability = UserCapabilities::RULE_EDIT_VIEW_FORM;
 				$itemsDeleted = $pBulkDeleteRecord->delete($pRecordManagerDeleteForm, $capability, $formIds);
+				self::fireConfigChangedHook($itemsDeleted > 0, RecordManagerFactory::TYPE_FORM,
+					RecordManagerFactory::ACTION_DELETE, null);
 				$redirectTo = add_query_arg('delete', $itemsDeleted,
 					admin_url('admin.php?page=onoffice-forms'));
 			}
@@ -337,7 +342,8 @@ class AdminPageFormList
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
 				$listViewRootName = isset($_GET['form']) ? sanitize_text_field(wp_unslash($_GET['form'])) : '';
 				if (!empty($listViewRootName)) {
-					$pRecordManagerDuplicateListViewForm->duplicateByName($listViewRootName);
+					$duplicated = $pRecordManagerDuplicateListViewForm->duplicateByName($listViewRootName);
+					self::fireConfigChangedHook($duplicated, RecordManagerFactory::TYPE_FORM, 'duplicate', null);
 				}
 			}
 			return $redirectTo;

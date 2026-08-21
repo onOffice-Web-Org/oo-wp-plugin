@@ -52,15 +52,21 @@ class RecordManagerDeleteListViewEstate
 	 *
 	 */
 
-	public function deleteByIds(array $ids)
+	public function deleteByIds(array $ids): int
 	{
 		$prefix = $this->_pWPDB->prefix;
+		$deletedCount = 0;
 
 		foreach ($ids as $id) {
-			$this->_pWPDB->delete($prefix.'oo_plugin_listviews', ['listview_id' => $id]);
+			$mainRowDeleted = $this->_pWPDB->delete($prefix.'oo_plugin_listviews', ['listview_id' => $id]);
 			$this->_pWPDB->delete($prefix.'oo_plugin_fieldconfig', ['listview_id' => $id]);
 			$this->_pWPDB->delete($prefix.'oo_plugin_picturetypes', ['listview_id' => $id]);
 			$this->_pWPDB->delete($prefix.'oo_plugin_listview_contactperson', ['listview_id' => $id]);
+			if (!empty($mainRowDeleted)) {
+				$deletedCount++;
+			}
 		}
+
+		return $deletedCount;
 	}
 }

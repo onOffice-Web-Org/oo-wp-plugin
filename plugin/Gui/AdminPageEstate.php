@@ -28,6 +28,7 @@ use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewEstate;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_action;
@@ -47,6 +48,8 @@ use function esc_html;
 class AdminPageEstate
 	extends AdminPage
 {
+	use FiresConfigChangedHook;
+
 	/** */
 	const PAGE_ESTATE_LIST = 'list';
 
@@ -232,6 +235,8 @@ class AdminPageEstate
 				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
 				$itemsDeleted = $pBulkDeleteRecord->delete
 					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ESTATE, $estateIds);
+				self::fireConfigChangedHook($itemsDeleted > 0, RecordManagerFactory::TYPE_ESTATE,
+					RecordManagerFactory::ACTION_DELETE, null);
 				$redirectTo = add_query_arg(['delete' => $itemsDeleted, 'tab' => $this->getSelectedTab()],
 					admin_url('admin.php?page=onoffice-estates'));
 			}
@@ -252,7 +257,8 @@ class AdminPageEstate
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
 				if (isset($_GET['listVewId'])) {
 				    $listViewRootId = absint(wp_unslash($_GET['listVewId']));
-					$pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
+					$duplicated = $pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
+					self::fireConfigChangedHook($duplicated, RecordManagerFactory::TYPE_ESTATE, 'duplicate', null);
 				}
 			}
 			return $redirectTo;
