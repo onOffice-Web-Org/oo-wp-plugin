@@ -13,15 +13,16 @@
 			"9": "courtage_frei",
 			"10": "objekt_des_tages",
 			"11": "vermarktungsart",
-			"12": "preisAufAnfrage",
-			"13": "virtualAddress",
-			"14": "provisionsfrei",
-			"15": "nutzungsart",
-			"16": "waehrung",
-			"17": "kaufpreis",
-			"18": "erbpacht",
-			"20": "aussen_courtage",
-			"21": "bundesland"
+			"12": "objektart",
+			"13": "preisAufAnfrage",
+			"14": "virtualAddress",
+			"15": "provisionsfrei",
+			"16": "nutzungsart",
+			"17": "waehrung",
+			"18": "kaufpreis",
+			"19": "erbpacht",
+			"21": "aussen_courtage",
+			"22": "bundesland"
 		},
 		"filter": {
 			"veroeffentlichen": [

@@ -903,8 +903,8 @@ class TestClassEstateList
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', [
 				'data' => ['referenz', 'reserviert', 'verkauft', 'objekttitel', 'objektbeschreibung', 'exclusive',
 					'neu', 'top_angebot', 'preisreduktion', 'courtage_frei', 'objekt_des_tages', 'vermarktungsart',
-					'preisAufAnfrage', 'virtualAddress', 'provisionsfrei', 'nutzungsart', 'waehrung', 'kaufpreis',
-					'erbpacht'],
+					'objektart', 'preisAufAnfrage', 'virtualAddress', 'provisionsfrei', 'nutzungsart', 'waehrung',
+					'kaufpreis', 'erbpacht'],
 				'filter' => [
 					'veroeffentlichen' => [['op' => '=', 'val' => 1]],
 					'referenz' => [['op' => '=', 'val' => 0]],
