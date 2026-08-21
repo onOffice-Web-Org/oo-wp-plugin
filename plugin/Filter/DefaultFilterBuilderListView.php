@@ -181,7 +181,7 @@ class DefaultFilterBuilderListView
 	 */
 	private function addEstateCityFilterWhenConvertTextToSelect(array $baseFilter, array $filterableFields): array
 	{
-		if (in_array('ort', $filterableFields) && !empty($this->_pDataListView->getConvertTextToSelectForCityField())) {
+		if (in_array('ort', $filterableFields)) {
 			$estateCityValue = $this->_pEnvironment->getInputVariableReader()->getFieldValue('ort');
 
 			if (!is_array($estateCityValue) || empty($estateCityValue)) {
