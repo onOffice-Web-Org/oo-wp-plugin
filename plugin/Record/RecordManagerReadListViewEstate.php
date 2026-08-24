@@ -155,7 +155,10 @@ class RecordManagerReadListViewEstate
 			$result['rangeFieldDisplayModes'] = $this->getStringFieldValuesByFieldRow($fieldRows, 'rangeFieldDisplayMode');
 		}
 
-		return $result;
+		// $result may still be null here (no matching row) - the method is
+		// declared to return array, so callers checking "not found" via
+		// isset()/!= null must get a type-correct empty array, not a TypeError.
+		return $result ?? [];
 	}
 
 
