@@ -25,7 +25,9 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\Gui\AdminPageEstate;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
+use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Record\RecordManagerFactory;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
 
 /**
@@ -38,8 +40,8 @@ use WP_UnitTestCase;
  *
  * AdminPageEstate::preOutput() builds its own internal DI container using the
  * real RecordManager* classes, which cannot be swapped for mocks from the
- * outside. This test therefore runs against real plugin DB tables (created
- * here via dbDelta(), mirroring the schema in Installer\DatabaseChanges).
+	 * outside. This test therefore installs the real plugin DB tables through
+	 * Installer\DatabaseChanges, matching the existing database-backed tests.
  *
  * IMPORTANT: dbDelta()/CREATE TABLE triggers an implicit MySQL commit, which
  * would break WP_UnitTestCase's shared transaction/rollback mechanism for
@@ -63,7 +65,9 @@ class TestClassAdminPageEstateBulkActionsFireConfigChangedHook
 
 	public function prepare()
 	{
-		$this->createTablesIfMissing();
+		global $wpdb;
+		$pDbChanges = new DatabaseChanges(new WPOptionWrapperTest(), $wpdb);
+		$pDbChanges->install();
 		$this->_capturedCalls = [];
 
 		add_action('onoffice/config_changed', function ($type, $action, $recordId) {
@@ -85,93 +89,6 @@ class TestClassAdminPageEstateBulkActionsFireConfigChangedHook
 	{
 		remove_all_actions('onoffice/config_changed');
 	}
-
-
-	/**
-	 * Schema copied verbatim from Installer\DatabaseChanges' create-table
-	 * methods for the tables RecordManagerDuplicateListViewEstate/
-	 * RecordManagerDeleteListViewEstate/RecordManagerReadListViewEstate touch.
-	 * Deliberately NOT calling DatabaseChanges::install() itself, since that
-	 * also runs a long chain of unrelated legacy migration/update routines
-	 * with side effects unrelated to this test.
-	 */
-	private function createTablesIfMissing(): void
-	{
-		global $wpdb;
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		$prefix = $wpdb->prefix;
-		$charsetCollate = $wpdb->get_charset_collate();
-
-		dbDelta("CREATE TABLE {$prefix}oo_plugin_listviews (
-			`listview_id` int(11) NOT NULL AUTO_INCREMENT,
-			`name` varchar(191) NOT NULL,
-			`filterId` int(11),
-			`sortby` tinytext NOT NULL,
-			`sortorder` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
-			`show_status` tinyint(1) NOT NULL DEFAULT '1',
-			`list_type` ENUM('default', 'reference', 'favorites', 'units') NOT NULL DEFAULT 'default',
-			`template` tinytext NOT NULL,
-			`expose` tinytext,
-			`recordsPerPage` INT( 10 ) NOT NULL DEFAULT '10',
-			`random` tinyint(1) NOT NULL DEFAULT '0',
-			`country_active` tinyint(1) NOT NULL DEFAULT '1',
-			`zip_active` tinyint(1) NOT NULL DEFAULT '1',
-			`city_active` tinyint(1) NOT NULL DEFAULT '0',
-			`street_active` tinyint(1) NOT NULL DEFAULT '1',
-			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
-			`radius` INT( 10 ) NULL DEFAULT NULL,
-			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
-			`sortBySetting` ENUM('0','1','2') NOT NULL DEFAULT '0',
-			`sortByUserDefinedDefault` VARCHAR(200) NOT NULL,
-			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0',
-			`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0',
-			`page_shortcode` tinytext NOT NULL,
-			`show_map` tinyint(1) NOT NULL DEFAULT '1',
-			`show_price_on_request` tinyint(1) NOT NULL DEFAULT '0',
-			`markedPropertiesSort` VARCHAR( 255 ) NOT NULL DEFAULT '',
-			`sortByTags` tinytext NOT NULL,
-			`sortByTagsDirection` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
-			PRIMARY KEY (`listview_id`),
-			UNIQUE KEY `name` (`name`)
-		) $charsetCollate;");
-
-		dbDelta("CREATE TABLE {$prefix}oo_plugin_fieldconfig (
-			`fieldconfig_id` bigint(20) NOT NULL AUTO_INCREMENT,
-			`listview_id` int(11) NOT NULL,
-			`order` int(11) NOT NULL,
-			`fieldname` tinytext NOT NULL,
-			`filterable` tinyint(1) NOT NULL DEFAULT '0',
-			`hidden` tinyint(1) NOT NULL DEFAULT '0',
-			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
-			`convertTextToSelectForCityField` tinyint(1) NOT NULL DEFAULT '0',
-			`rangeFieldDisplayMode` varchar(20) DEFAULT 'range',
-			PRIMARY KEY (`fieldconfig_id`)
-		) $charsetCollate;");
-
-		dbDelta("CREATE TABLE {$prefix}oo_plugin_picturetypes (
-			`picturetype_id` bigint(20) NOT NULL AUTO_INCREMENT,
-			`listview_id` int(11) NOT NULL,
-			`picturetype` tinytext NOT NULL,
-			PRIMARY KEY (`picturetype_id`)
-		) $charsetCollate;");
-
-		dbDelta("CREATE TABLE {$prefix}oo_plugin_sortbyuservalues (
-			`sortbyvalue_id` bigint(20) NOT NULL AUTO_INCREMENT,
-			`listview_id` int(11) NOT NULL,
-			`sortbyuservalue` varchar(100) NOT NULL,
-			PRIMARY KEY (`sortbyvalue_id`)
-		) $charsetCollate;");
-
-		dbDelta("CREATE TABLE {$prefix}oo_plugin_listview_contactperson (
-			`contactperson_id` int(11) NOT NULL AUTO_INCREMENT,
-			`listview_id` int(11) NOT NULL,
-			`order` int(11) NOT NULL,
-			`fieldname` tinytext NOT NULL,
-			PRIMARY KEY (`contactperson_id`)
-		) $charsetCollate;");
-	}
-
-
 	private function insertEstateListViewFixture(string $name): int
 	{
 		global $wpdb;
