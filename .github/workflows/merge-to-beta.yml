@@ -32,16 +32,16 @@ jobs:
     steps:
       - name: Create GitHub App token
         id: app-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          client-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
           private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           repositories: |
             ${{ github.event.repository.name }}
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -90,8 +90,9 @@ jobs:
           else
             LOST=$(git log --oneline "${SRC}..HEAD" || true)
             if [ -n "$LOST" ]; then
-              echo "::warning::Commits on ${TARGET_BRANCH} whose content is replaced by ${SOURCE_BRANCH}. Backmerge them if they are still needed:"
+              echo "::error::${TARGET_BRANCH} carries commits that are not in ${SOURCE_BRANCH}. The cut would roll their content back. Backmerge ${TARGET_BRANCH} into ${SOURCE_BRANCH} first, then start this workflow again."
               echo "$LOST" | sed 's/^/  /'
+              exit 1
             fi
             git merge --no-commit --no-ff -s ours "${SRC}" || true
             git read-tree -u --reset "${SRC}"

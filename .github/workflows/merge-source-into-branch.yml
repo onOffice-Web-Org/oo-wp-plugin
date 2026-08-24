@@ -85,7 +85,15 @@ jobs:
           else
             LOST=$(git log --oneline "$SRC..HEAD" || true)
             if [ -n "$LOST" ]; then
-              echo "Commits on ${TARGET_BRANCH} whose content is replaced by ${SOURCE_BRANCH}:"
+              if [ "${TARGET_BRANCH}" = "release" ]; then
+                echo "::error::${TARGET_BRANCH} carries commits that are not in ${SOURCE_BRANCH}. Merging would roll their content back. Merge them into ${SOURCE_BRANCH} first, then start this workflow again."
+                echo "$LOST" | sed 's/^/  /'
+                exit 1
+              fi
+              # On prerelease these are the release automation commits: version bumps,
+              # POEditor sync and the -s ours merge of release. They are expected here and
+              # semantic-release recreates them right after this merge.
+              echo "::notice::Commits on ${TARGET_BRANCH} whose content is replaced by ${SOURCE_BRANCH}:"
               echo "$LOST" | sed 's/^/  /'
             fi
             git merge --no-commit --no-ff -s ours "$SRC" || true
