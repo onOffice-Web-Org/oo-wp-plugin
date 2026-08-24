@@ -30,26 +30,6 @@ use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
 
-/**
- * Complements TestClassFiresConfigChangedHook (which only tests the extracted
- * trait method in isolation): this class exercises the REAL bulk-action
- * closures registered by AdminPageEstate::preOutput() end to end, proving the
- * hook actually fires when an estate list view is really duplicated/deleted
- * through the actual admin code path - not just when the trait method is
- * called directly.
- *
- * AdminPageEstate::preOutput() builds its own internal DI container using the
- * real RecordManager* classes, which cannot be swapped for mocks from the
-	 * outside. This test therefore installs the real plugin DB tables through
-	 * Installer\DatabaseChanges, matching the existing database-backed tests.
- *
- * IMPORTANT: dbDelta()/CREATE TABLE triggers an implicit MySQL commit, which
- * would break WP_UnitTestCase's shared transaction/rollback mechanism for
- * every other test in the suite if run in the main test process. Every test
- * method here therefore uses @runInSeparateProcess, exactly like the existing
- * TestClassInstaller::testInstall() (which mutates similarly global,
- * persistent state).
- */
 class TestClassAdminPageEstateBulkActionsFireConfigChangedHook
 	extends WP_UnitTestCase
 {
