@@ -83,7 +83,7 @@ jobs:
           if git merge-base --is-ancestor "$SRC" HEAD && git diff --quiet "$SRC" HEAD; then
             echo "${TARGET_BRANCH} already matches ${SOURCE_BRANCH}, nothing to merge."
           else
-            LOST=$(git log --oneline "$SRC..HEAD" || true)
+            LOST=$(git log --oneline "$SRC..HEAD")
             if [ -n "$LOST" ]; then
               if [ "${TARGET_BRANCH}" = "release" ]; then
                 echo "::error::${TARGET_BRANCH} carries commits that are not in ${SOURCE_BRANCH}. Merging would roll their content back. Merge them into ${SOURCE_BRANCH} first, then start this workflow again."
@@ -96,9 +96,18 @@ jobs:
               echo "::notice::Commits on ${TARGET_BRANCH} whose content is replaced by ${SOURCE_BRANCH}:"
               echo "$LOST" | sed 's/^/  /'
             fi
-            git merge --no-commit --no-ff -s ours "$SRC" || true
+            # No "|| true": a failing merge must fail the job. -s ours cannot
+            # conflict, it only returns non-zero on a real git error.
+            git merge --no-commit --no-ff -s ours "$SRC"
             git read-tree -u --reset "$SRC"
-            git commit --no-edit -m "Merge ${SOURCE_BRANCH} into ${TARGET_BRANCH}"
+            if git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+              git commit --no-edit -m "Merge ${SOURCE_BRANCH} into ${TARGET_BRANCH}"
+            elif ! git diff --cached --quiet; then
+              # Source was already an ancestor, only the tree needed correcting
+              git commit -m "chore: sync ${TARGET_BRANCH} with ${SOURCE_BRANCH}"
+            else
+              echo "Nothing to commit, ${TARGET_BRANCH} already matches ${SOURCE_BRANCH}."
+            fi
           fi
 
           # The merge is only valid if the target now carries exactly the source tree
