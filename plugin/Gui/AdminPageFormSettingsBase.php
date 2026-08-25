@@ -276,6 +276,10 @@ abstract class AdminPageFormSettingsBase
 		if ($result) {
 			$this->saveDefaultValues($recordId, $row);
 			$this->saveCustomLabels($recordId, $row, RecordManager::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS);
+
+			// Allows external hooks (e.g. the nginx/Redis cache purger in the hosting infra)
+			// to react to config changes that never go through save_post/deleted_post.
+			do_action('onoffice/config_changed', $type, $action, $recordId);
 		}
 
 		$pResult->result = $result;

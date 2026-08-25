@@ -28,6 +28,7 @@ use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Record\RecordManagerDeleteListViewAddress;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewAddress;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_action;
@@ -47,6 +48,8 @@ use function esc_html__;
 class AdminPageAddress
 	extends AdminPage
 {
+	use FiresConfigChangedHook;
+
 	/** */
 	const PAGE_ADDRESS_LIST = 'list';
 
@@ -226,6 +229,8 @@ class AdminPageAddress
 				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
 				$itemsDeleted = $pBulkDeleteRecord->delete
 					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ADDRESS, $recordIds);
+				self::fireConfigChangedHook($itemsDeleted > 0, RecordManagerFactory::TYPE_ADDRESS,
+					RecordManagerFactory::ACTION_DELETE, null);
 				$redirectTo = add_query_arg(['delete' => $itemsDeleted],
 					admin_url('admin.php?page=onoffice-addresses'));
 			}
@@ -243,10 +248,13 @@ class AdminPageAddress
 
 				/* @var $pRecordManagerDuplicateListViewAddress RecordManagerDuplicateListViewAddress */
 				$pRecordManagerDuplicateListViewAddress = $pDI->get(RecordManagerDuplicateListViewAddress::class);
+				// AddressListTable passes the list view NAME in listViewId (not a numeric
+				// ID like the estate table does) - absint() would always yield 0 here.
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Bulk action handled by WordPress core with nonce verification
-				$listViewRootId = isset($_GET['listViewId']) ? absint(wp_unslash($_GET['listViewId'])) : 0;
-				if ($listViewRootId > 0) {
-					$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
+				$listViewRootName = isset($_GET['listViewId']) ? sanitize_text_field(wp_unslash($_GET['listViewId'])) : '';
+				if ($listViewRootName !== '') {
+					$duplicated = $pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootName);
+					self::fireConfigChangedHook($duplicated, RecordManagerFactory::TYPE_ADDRESS, 'duplicate', null);
 				}
 			}
 
