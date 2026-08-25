@@ -100,6 +100,19 @@ jobs:
             # conflict, it only returns non-zero on a real git error.
             git merge --no-commit --no-ff -s ours "$SRC"
             git read-tree -u --reset "$SRC"
+
+            # Paths that exist only on the target are kept on purpose. Branch-specific
+            # workflows, CHANGELOG or e2e specs live on prerelease/release and must
+            # survive the merge. Everything the source does have is overwritten by it.
+            KEEP=$(git diff --cached --name-only --diff-filter=D HEAD)
+            if [ -n "$KEEP" ]; then
+              echo "Kept on ${TARGET_BRANCH}, not present in ${SOURCE_BRANCH}:"
+              echo "$KEEP" | sed 's/^/  /'
+              printf '%s\n' "$KEEP" | while IFS= read -r keep_path; do
+                [ -n "$keep_path" ] || continue
+                git checkout HEAD -- "$keep_path"
+              done
+            fi
             if git rev-parse -q --verify MERGE_HEAD >/dev/null; then
               git commit --no-edit -m "Merge ${SOURCE_BRANCH} into ${TARGET_BRANCH}"
             elif ! git diff --cached --quiet; then
@@ -110,10 +123,12 @@ jobs:
             fi
           fi
 
-          # The merge is only valid if the target now carries exactly the source tree
-          if ! git diff --quiet "$SRC" HEAD; then
+          # Every path the source has must now be identical on the target. Extra paths
+          # that only the target has are fine, they were kept deliberately.
+          DRIFT=$(git diff --name-status "$SRC" HEAD | awk '$1 != "A"')
+          if [ -n "$DRIFT" ]; then
             echo "::error::${TARGET_BRANCH} still differs from ${SOURCE_BRANCH} after the merge."
-            git diff --name-status "$SRC" HEAD
+            echo "$DRIFT" | sed 's/^/  /'
             exit 1
           fi
 
