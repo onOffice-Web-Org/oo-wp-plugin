@@ -64,7 +64,7 @@ jobs:
               MATCH=$(echo "$branch" | grep -oE 'P#[0-9]+' | head -1 | tr -d '#')
               if [ "$MATCH" = "$FOLDER" ]; then
                 BEFORE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-                echo "Triggering upload for ${repo}@${branch} (project P${FOLDER})"
+                echo "Triggering upload for ${repo}@${branch} (project ${FOLDER})"
 
                 if gh api "repos/${OWNER}/${repo}/actions/workflows/pr-preview-upload.yml/dispatches" \
                   -X POST -f "ref=${branch}"; then
@@ -90,7 +90,7 @@ jobs:
           done
 
           if [ ! -s sibling-runs.txt ]; then
-            echo "::error::No repo (including this one) has a branch tagged P#${FOLDER} - nothing was uploaded."
+            echo "::error::No repo (including this one) has a branch tagged ${FOLDER} - nothing was uploaded."
             exit 1
           fi
 
