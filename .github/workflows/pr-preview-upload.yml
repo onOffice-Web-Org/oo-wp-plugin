@@ -1,0 +1,119 @@
+name: PR Preview Upload (Dev Update Server)
+
+# Never fires on its own - only dispatched by pr-preview.yml's coordinator
+# job, once per repo with a branch tagged for the ticket being previewed.
+# Keeping this split from the coordinator means a plain build/upload retry
+# can't accidentally also re-trigger a box restart.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: pr-preview-upload-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          extensions: mbstring, mysqli, intl, curl
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      # `make build`: composer install + npm install + npm run build (webpack),
+      # then assembles and zips onoffice-for-wp-websites.zip - the plugin's
+      # actual WordPress slug (see plugin.php's Text Domain), which differs
+      # from this repo's name (oo-wp-plugin). Using the repo name here instead
+      # would install to the wrong wp-content/plugins folder on the box.
+      - name: Build preview
+        run: make build
+
+      - name: Determine project folder
+        id: project
+        env:
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          PROJECT=$(echo "$BRANCH_NAME" | grep -oE 'P#[0-9]+' | head -1 | tr -d '#')
+          if [ -z "$PROJECT" ]; then
+            echo "::error::Branch name '$BRANCH_NAME' does not start with a P#<number> project tag."
+            exit 1
+          fi
+          echo "folder=$PROJECT" >> "$GITHUB_OUTPUT"
+
+      - name: Set SSH Key for Dev Update Server
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
+
+      - name: Upload PR preview build
+        run: |
+          # rrsync on the remote serializes access per session; a concurrent
+          # run (e.g. another repo's PR preview for the same project) can
+          # trip "Another instance of rrsync is already accessing this
+          # directory", so retry with backoff instead of failing outright.
+          for attempt in 1 2 3 4 5; do
+            if rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
+              onoffice-for-wp-websites.zip \
+              zipupload@dev.onoffice-wp-updates.de:pr-builds/${{ steps.project.outputs.folder }}/plugins/onoffice-for-wp-websites/; then
+              echo "Upload successful (attempt $attempt)"
+              exit 0
+            fi
+            echo "rsync failed (attempt $attempt/5), retrying..."
+            sleep "$((attempt * 3))"
+          done
+          echo "::error::Failed to upload PR preview build after 5 attempts"
+          exit 1
+
+      - name: Update project manifest
+        env:
+          FOLDER: ${{ steps.project.outputs.folder }}
+          ARTIFACT_NAME: onoffice-for-wp-websites
+        run: |
+          set -e
+          MANIFEST_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/manifest.json"
+          ARTIFACT_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/plugins/${ARTIFACT_NAME}/${ARTIFACT_NAME}.zip"
+
+          # Read-modify-write against a shared file with no server-side locking:
+          # retry with jitter + verify, so a concurrent push from another repo
+          # for the same ticket can't silently overwrite our entry.
+          for attempt in 1 2 3 4 5; do
+            sleep "0.$((RANDOM % 9 + 1))"
+
+            curl -sf "$MANIFEST_URL" -o manifest.json || echo "[]" > manifest.json
+
+            jq --arg name "$ARTIFACT_NAME" --arg url "$ARTIFACT_URL" --arg type "plugin" \
+              '[.[] | select(.name != $name)] + [{name: $name, type: $type, url: $url}]' \
+              manifest.json > manifest.tmp.json && mv manifest.tmp.json manifest.json
+
+            rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
+              manifest.json \
+              zipupload@dev.onoffice-wp-updates.de:pr-builds/${FOLDER}/
+
+            sleep 1
+            curl -sf "$MANIFEST_URL" -o manifest-check.json || echo "[]" > manifest-check.json
+
+            MATCH=$(jq --arg name "$ARTIFACT_NAME" --arg url "$ARTIFACT_URL" \
+              '[.[] | select(.name == $name and .url == $url)] | length' manifest-check.json)
+
+            if [ "$MATCH" -ge 1 ]; then
+              echo "Manifest updated successfully (attempt $attempt)"
+              break
+            fi
+
+            echo "Manifest verification failed, retrying (attempt $attempt/5)..."
+            if [ "$attempt" = "5" ]; then
+              echo "::error::Failed to update manifest after 5 attempts"
+              exit 1
+            fi
+          done

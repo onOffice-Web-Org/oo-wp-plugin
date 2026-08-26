@@ -1,41 +1,22 @@
-name: PR Preview Build (Dev Update Server)
+name: PR Preview Coordinator (Dev Update Server)
 
+# Only ever fires on a real PR event - never dispatched itself - so exactly
+# one coordinator run exists per PR push, and it triggers the box restart
+# at most once per run. It never builds anything itself; it dispatches
+# pr-preview-upload.yml (this repo's own and every sibling's) and only
+# restarts the box once every dispatched upload has finished successfully.
 on:
-  pull_request:
-    types: [opened, synchronize]
+  workflow_dispatch:
 
 concurrency:
   group: pr-preview-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  build:
+  coordinate:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4.1.1
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.1
-          extensions: mbstring, mysqli, intl, curl
-
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-
-      # `make build`: composer install + npm install + npm run build (webpack),
-      # then assembles and zips onoffice-for-wp-websites.zip - the plugin's
-      # actual WordPress slug (see plugin.php's Text Domain), which differs
-      # from this repo's name (oo-wp-plugin). Using the repo name here instead
-      # would install to the wrong wp-content/plugins folder on the box.
-      - name: Build preview
-        run: make build
-
       - name: Determine project folder
         id: project
         env:
@@ -48,72 +29,99 @@ jobs:
           fi
           echo "folder=$PROJECT" >> "$GITHUB_OUTPUT"
 
-      - name: Set SSH Key for Dev Update Server
-        uses: webfactory/ssh-agent@v0.9.0
+      - name: Create GitHub App token for sibling repos
+        id: sibling-app-token
+        uses: actions/create-github-app-token@v3
         with:
-          ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
+          client-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            onoffice-classic
+            onoffice-modern
+            onoffice-pure
+            onoffice-timeless
+            oo-wp-plugin
+            oo-vue-addons
 
-      - name: Upload PR preview build
-        run: |
-          # rrsync on the remote serializes access per session; a concurrent
-          # run (e.g. another repo's PR preview for the same project) can
-          # trip "Another instance of rrsync is already accessing this
-          # directory", so retry with backoff instead of failing outright.
-          for attempt in 1 2 3 4 5; do
-            if rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
-              onoffice-for-wp-websites.zip \
-              zipupload@dev.onoffice-wp-updates.de:pr-builds/${{ steps.project.outputs.folder }}/plugins/onoffice-for-wp-websites/; then
-              echo "Upload successful (attempt $attempt)"
-              exit 0
-            fi
-            echo "rsync failed (attempt $attempt/5), retrying..."
-            sleep "$((attempt * 3))"
-          done
-          echo "::error::Failed to upload PR preview build after 5 attempts"
-          exit 1
-
-      - name: Update project manifest
+      - name: Trigger upload workflows across all repos
         env:
+          GH_TOKEN: ${{ steps.sibling-app-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
           FOLDER: ${{ steps.project.outputs.folder }}
-          ARTIFACT_NAME: onoffice-for-wp-websites
         run: |
-          set -e
-          MANIFEST_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/manifest.json"
-          ARTIFACT_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/plugins/${ARTIFACT_NAME}/${ARTIFACT_NAME}.zip"
+          # For every repo in the family (this one included), look for a
+          # branch tagged with our P#<number> and dispatch its
+          # pr-preview-upload.yml on that branch, recording the dispatched
+          # run's id so the next step can wait on it. All uploads happen
+          # via the dispatched workflow, never inline here.
+          : > sibling-runs.txt
+          for repo in onoffice-classic onoffice-modern onoffice-pure onoffice-timeless oo-wp-plugin oo-vue-addons; do
+            BRANCHES=$(gh api "repos/${OWNER}/${repo}/branches" --paginate --jq '.[].name' 2>/dev/null || true)
 
-          # Read-modify-write against a shared file with no server-side locking:
-          # retry with jitter + verify, so a concurrent push from another repo
-          # for the same ticket can't silently overwrite our entry.
-          for attempt in 1 2 3 4 5; do
-            sleep "0.$((RANDOM % 9 + 1))"
+            while IFS= read -r branch; do
+              [ -z "$branch" ] && continue
+              MATCH=$(echo "$branch" | grep -oE 'P#[0-9]+' | head -1 | tr -d '#')
+              if [ "$MATCH" = "$FOLDER" ]; then
+                BEFORE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+                echo "Triggering upload for ${repo}@${branch} (project P${FOLDER})"
 
-            curl -sf "$MANIFEST_URL" -o manifest.json || echo "[]" > manifest.json
+                if gh api "repos/${OWNER}/${repo}/actions/workflows/pr-preview-upload.yml/dispatches" \
+                  -X POST -f "ref=${branch}"; then
 
-            jq --arg name "$ARTIFACT_NAME" --arg url "$ARTIFACT_URL" --arg type "plugin" \
-              '[.[] | select(.name != $name)] + [{name: $name, type: $type, url: $url}]' \
-              manifest.json > manifest.tmp.json && mv manifest.tmp.json manifest.json
+                  RUN_ID=""
+                  for i in 1 2 3 4 5 6 7 8 9 10; do
+                    sleep 3
+                    RUN_ID=$(gh api "repos/${OWNER}/${repo}/actions/workflows/pr-preview-upload.yml/runs?event=workflow_dispatch&branch=${branch}" \
+                      --jq "[.workflow_runs[] | select(.created_at >= \"${BEFORE}\")] | sort_by(.created_at) | .[0].id // empty")
+                    [ -n "$RUN_ID" ] && break
+                  done
 
-            rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
-              manifest.json \
-              zipupload@dev.onoffice-wp-updates.de:pr-builds/${FOLDER}/
-
-            sleep 1
-            curl -sf "$MANIFEST_URL" -o manifest-check.json || echo "[]" > manifest-check.json
-
-            MATCH=$(jq --arg name "$ARTIFACT_NAME" --arg url "$ARTIFACT_URL" \
-              '[.[] | select(.name == $name and .url == $url)] | length' manifest-check.json)
-
-            if [ "$MATCH" -ge 1 ]; then
-              echo "Manifest updated successfully (attempt $attempt)"
-              break
-            fi
-
-            echo "Manifest verification failed, retrying (attempt $attempt/5)..."
-            if [ "$attempt" = "5" ]; then
-              echo "::error::Failed to update manifest after 5 attempts"
-              exit 1
-            fi
+                  if [ -n "$RUN_ID" ]; then
+                    echo "${repo} ${RUN_ID}" >> sibling-runs.txt
+                  else
+                    echo "::warning::Could not locate the dispatched run for ${repo}@${branch}; won't wait for it."
+                  fi
+                else
+                  echo "::warning::Failed to dispatch pr-preview-upload.yml for ${repo}@${branch}"
+                fi
+              fi
+            done <<< "$BRANCHES"
           done
+
+          if [ ! -s sibling-runs.txt ]; then
+            echo "::error::No repo (including this one) has a branch tagged P#${FOLDER} - nothing was uploaded."
+            exit 1
+          fi
+
+      - name: Wait for all uploads to finish
+        env:
+          GH_TOKEN: ${{ steps.sibling-app-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          # Only restart the box once every dispatched upload has actually
+          # succeeded - a failed or stuck component means stale/missing
+          # content, so the restart is skipped entirely rather than firing
+          # with a partial manifest.
+          FAILED=0
+          PIDS=()
+          while read -r repo run_id; do
+            [ -z "$repo" ] && continue
+            (
+              echo "Waiting for ${repo} run ${run_id}..."
+              timeout 900 gh run watch "$run_id" --repo "${OWNER}/${repo}" --exit-status
+            ) &
+            PIDS+=($!)
+          done < sibling-runs.txt
+
+          for pid in "${PIDS[@]}"; do
+            wait "$pid" || FAILED=1
+          done
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo "::error::One or more component uploads failed or timed out - not restarting the box."
+            exit 1
+          fi
 
       - name: Login to Hosting API
         id: api-login
