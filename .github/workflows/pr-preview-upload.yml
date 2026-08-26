@@ -57,6 +57,8 @@ jobs:
           ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
 
       - name: Upload PR preview build
+        env:
+          FOLDER: ${{ steps.project.outputs.folder }}
         run: |
           # rrsync on the remote serializes access per session; a concurrent
           # run (e.g. another repo's PR preview for the same project) can
@@ -65,7 +67,7 @@ jobs:
           for attempt in 1 2 3 4 5; do
             if rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
               onoffice-for-wp-websites.zip \
-              zipupload@dev.onoffice-wp-updates.de:pr-builds/${{ steps.project.outputs.folder }}/plugins/onoffice-for-wp-websites/; then
+              "zipupload@dev.onoffice-wp-updates.de:pr-builds/${FOLDER}/plugins/onoffice-for-wp-websites/"; then
               echo "Upload successful (attempt $attempt)"
               exit 0
             fi
