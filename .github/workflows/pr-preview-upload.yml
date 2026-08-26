@@ -75,45 +75,32 @@ jobs:
           echo "::error::Failed to upload PR preview build after 5 attempts"
           exit 1
 
-      - name: Update project manifest
+      - name: Write manifest fragment
         env:
           FOLDER: ${{ steps.project.outputs.folder }}
           ARTIFACT_NAME: onoffice-for-wp-websites
+          REPO_NAME: ${{ github.event.repository.name }}
+          SHA: ${{ github.sha }}
         run: |
-          set -e
-          MANIFEST_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/manifest.json"
           ARTIFACT_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/plugins/${ARTIFACT_NAME}/${ARTIFACT_NAME}.zip"
 
-          # Read-modify-write against a shared file with no server-side locking:
-          # retry with jitter + verify, so a concurrent push from another repo
-          # for the same ticket can't silently overwrite our entry.
+          jq -n --arg name "$ARTIFACT_NAME" --arg url "$ARTIFACT_URL" --arg type "plugin" --arg sha "$SHA" \
+            '{name: $name, type: $type, url: $url, sha: $sha}' > fragment.json
+
+          # Unlike the old shared manifest.json, this file is uniquely ours
+          # (keyed by repo name under manifest-fragments/) - no other run
+          # ever writes it, so there's nothing to race against. The
+          # coordinator assembles every repo's fragment into manifest.json
+          # itself, as the sole writer, once all uploads for a round finish.
           for attempt in 1 2 3 4 5; do
-            sleep "0.$((RANDOM % 9 + 1))"
-
-            curl -sf "$MANIFEST_URL" -o manifest.json || echo "[]" > manifest.json
-
-            jq --arg name "$ARTIFACT_NAME" --arg url "$ARTIFACT_URL" --arg type "plugin" \
-              '[.[] | select(.name != $name)] + [{name: $name, type: $type, url: $url}]' \
-              manifest.json > manifest.tmp.json && mv manifest.tmp.json manifest.json
-
-            rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
-              manifest.json \
-              zipupload@dev.onoffice-wp-updates.de:pr-builds/${FOLDER}/
-
-            sleep 1
-            curl -sf "$MANIFEST_URL" -o manifest-check.json || echo "[]" > manifest-check.json
-
-            MATCH=$(jq --arg name "$ARTIFACT_NAME" --arg url "$ARTIFACT_URL" \
-              '[.[] | select(.name == $name and .url == $url)] | length' manifest-check.json)
-
-            if [ "$MATCH" -ge 1 ]; then
-              echo "Manifest updated successfully (attempt $attempt)"
-              break
+            if rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
+              fragment.json \
+              "zipupload@dev.onoffice-wp-updates.de:pr-builds/${FOLDER}/manifest-fragments/${REPO_NAME}.json"; then
+              echo "Manifest fragment written successfully (attempt $attempt)"
+              exit 0
             fi
-
-            echo "Manifest verification failed, retrying (attempt $attempt/5)..."
-            if [ "$attempt" = "5" ]; then
-              echo "::error::Failed to update manifest after 5 attempts"
-              exit 1
-            fi
+            echo "rsync failed (attempt $attempt/5), retrying..."
+            sleep "$((attempt * 3))"
           done
+          echo "::error::Failed to write manifest fragment after 5 attempts"
+          exit 1

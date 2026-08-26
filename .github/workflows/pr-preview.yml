@@ -123,6 +123,56 @@ jobs:
             exit 1
           fi
 
+      - name: Set SSH Key for Dev Update Server
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
+
+      - name: Assemble and publish manifest
+        env:
+          FOLDER: ${{ steps.project.outputs.folder }}
+        run: |
+          set -e
+          # Every fragment here was just confirmed to exist by a successful
+          # upload run (previous step), so unlike a first-ever manifest
+          # fetch there's no legitimate "not published yet" case - any
+          # failure (404 included) is unexpected and fatal. This assembly
+          # is also the ONLY writer of manifest.json: each fragment file is
+          # uniquely owned by its repo, so there's no concurrent writer to
+          # race against here either.
+          rm -f fragment-*.json
+          while read -r repo run_id; do
+            [ -z "$repo" ] && continue
+            FRAGMENT_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/manifest-fragments/${repo}.json"
+
+            set +e
+            HTTP_CODE=$(curl -s -o "fragment-${repo}.json" -w '%{http_code}' "$FRAGMENT_URL")
+            CURL_EXIT=$?
+            set -e
+
+            if [ "$CURL_EXIT" -ne 0 ] || [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+              echo "::error::Failed to fetch manifest fragment for ${repo} from ${FRAGMENT_URL} (curl exit ${CURL_EXIT}, HTTP ${HTTP_CODE})"
+              exit 1
+            fi
+          done < sibling-runs.txt
+
+          jq -s '.' fragment-*.json > manifest.json
+          echo "Assembled manifest:"
+          cat manifest.json
+
+          for attempt in 1 2 3 4 5; do
+            if rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
+              manifest.json \
+              zipupload@dev.onoffice-wp-updates.de:pr-builds/${FOLDER}/; then
+              echo "Manifest published successfully (attempt $attempt)"
+              exit 0
+            fi
+            echo "rsync failed (attempt $attempt/5), retrying..."
+            sleep "$((attempt * 3))"
+          done
+          echo "::error::Failed to publish manifest after 5 attempts"
+          exit 1
+
       - name: Login to Hosting API
         id: api-login
         run: |
@@ -134,12 +184,24 @@ jobs:
               "client_id": "${{ secrets.HOSTING_API_CLIENT_ID }}",
               "client_secret": "${{ secrets.HOSTING_API_CLIENT_SECRET }}"
             }')
+          CURL_EXIT=$?
+
+          if [ "$CURL_EXIT" -ne 0 ]; then
+            echo "::error::curl-Transportfehler beim API Login (exit ${CURL_EXIT})"
+            exit 1
+          fi
 
           HTTP_CODE=$(echo "$LOGIN_RESPONSE" | tail -1)
           BODY=$(echo "$LOGIN_RESPONSE" | sed '$d')
 
-          if [ "$HTTP_CODE" -ge 400 ]; then
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
             echo "::error::API Login fehlgeschlagen (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
+
+          SUCCESS=$(echo "$BODY" | jq -r '.success // empty')
+          if [ "$SUCCESS" != "true" ]; then
+            echo "::error::API Login meldete success=false oder fehlendes success-Feld"
             exit 1
           fi
 
@@ -164,6 +226,12 @@ jobs:
             -H "Content-Type: application/json" \
             -H "Accept: application/json" \
             -d "{\"project_number\": \"${PROJECT_NUMBER}\"}")
+          CURL_EXIT=$?
+
+          if [ "$CURL_EXIT" -ne 0 ]; then
+            echo "::error::curl-Transportfehler beim Box-Build (exit ${CURL_EXIT})"
+            exit 1
+          fi
 
           HTTP_CODE=$(echo "$RESPONSE" | tail -1)
           BODY=$(echo "$RESPONSE" | sed '$d')
@@ -171,7 +239,14 @@ jobs:
           echo "HTTP Status: ${HTTP_CODE}"
           echo "Response: ${BODY}"
 
-          if [ "$HTTP_CODE" -ge 400 ]; then
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
             echo "::error::Box-Build fehlgeschlagen (HTTP ${HTTP_CODE}): ${BODY}"
+            exit 1
+          fi
+
+          SUCCESS=$(echo "$BODY" | jq -r '.success // empty')
+          if [ "$SUCCESS" != "true" ]; then
+            ERROR_MSG=$(echo "$BODY" | jq -r '.error // .message // "unknown error"')
+            echo "::error::Box-Build meldete success=false: ${ERROR_MSG}"
             exit 1
           fi
