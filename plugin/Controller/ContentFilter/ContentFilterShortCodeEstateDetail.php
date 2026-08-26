@@ -96,10 +96,18 @@ class ContentFilterShortCodeEstateDetail
 	public function renderHtmlHelperUserIfEmptyEstateId(): string
 	{
 		$pDataDetail = $this->getRandomEstateDetail();
-		$itemTitle = empty($pDataDetail['elements']["objekttitel"]) ? __('Example estate', 'onoffice-for-wp-websites') : $pDataDetail['elements']["objekttitel"];
 		$type = __('estate', 'onoffice-for-wp-websites');
 		$documentLink = __('https://wp-plugin.onoffice.com/en/first-steps/estate-lists/', 'onoffice-for-wp-websites');
-		$linkDetail = '<a class="oo-detailview-helper-link" href=' . $this->getEstateLink($pDataDetail) . '>' . $itemTitle . '</a>';
+		$linkDetail = '';
+
+		// getRandomEstateDetail() returns [] when the API has no published, non-reference estate
+		// to preview. RenderHtmlHelperUsers falls back to the documentation link in that case and
+		// discards $linkDetail, so the preview link is only built for a record that exists.
+		if (!empty($pDataDetail)) {
+			$itemTitle = empty($pDataDetail['elements']["objekttitel"]) ? __('Example estate', 'onoffice-for-wp-websites') : $pDataDetail['elements']["objekttitel"];
+			$linkDetail = '<a class="oo-detailview-helper-link" href=' . $this->getEstateLink($pDataDetail) . '>' . $itemTitle . '</a>';
+		}
+
 		return RenderHtmlHelperUsers::renderHtmlHelperUserIfEmptyId($type, $documentLink, $linkDetail, $pDataDetail);
 	}
 
@@ -168,19 +176,22 @@ class ContentFilterShortCodeEstateDetail
 	 */
 	public function getEstateLink( $pEstateListDetail ): string
 	{
-		$pLanguageSwitcher = new EstateDetailUrl;
-		$pageId            = $pEstateListDetail['elements']['mainLangId'] ?? $pEstateListDetail['id'];
-		$fullLink          = '#';
+		// Both keys are absent for an empty record, so the fallback needs its own default -
+		// '??' only guards its left-hand operand, not $pEstateListDetail['id'].
+		$estateId = (int) ( $pEstateListDetail['elements']['mainLangId'] ?? $pEstateListDetail['id'] ?? 0 );
 
-		if ( $pageId !== 0 ) {
-			$estate           = $pEstateListDetail['elements']['mainLangId'] ?? $pEstateListDetail['id'];
-			$title            = $pEstateListDetail['elements']['objekttitel'] ?? '';
-			$url              = $this->getPageLink();
-			$fullLink         = $pLanguageSwitcher->createEstateDetailLink( $url, (int) $estate, $title );
-			$fullLinkElements = wp_parse_url($fullLink);
-			if ( empty( $fullLinkElements['query'] ) ) {
-				$fullLink .= '/';
-			}
+		if ( $estateId === 0 ) {
+			return '#';
+		}
+
+		$pLanguageSwitcher = new EstateDetailUrl;
+		$title             = $pEstateListDetail['elements']['objekttitel'] ?? '';
+		$url               = $this->getPageLink();
+		$fullLink          = $pLanguageSwitcher->createEstateDetailLink( $url, $estateId, $title );
+		$fullLinkElements  = wp_parse_url( $fullLink );
+
+		if ( empty( $fullLinkElements['query'] ) ) {
+			$fullLink .= '/';
 		}
 
 		return $fullLink;
