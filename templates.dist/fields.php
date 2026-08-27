@@ -358,14 +358,16 @@ if (!function_exists('renderFormField')) {
 
 			if (isRangeInputField($fieldName, $pForm, $searchCriteriaRange)) {
 				$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
-				$output .= '<div class="oo-input-wrapper" role="group" aria-label="' . esc_attr($fieldLabel) . '">';
+				// No legend: the range descriptions delivered by the API already contain the
+				// field name ("Sales price from", "Kaltmiete bis"), a group label would repeat it.
+				$output .= '<fieldset class="oo-input-group"><div class="oo-input-wrapper">';
 				foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
                     $value = 'value="' . esc_attr($pForm->getFieldValue($key, true)) . '"';
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $inputType and $requiredAttribute are controlled attribute strings
 					$output .= '<label>' . esc_html($rangeDescription) . ' ' . wp_kses_post($addition) . '<input autocomplete="off" ' . $inputType . ' ' . $requiredAttribute . ' name="' . esc_attr($key) . '" '
                         . $value . ' placeholder="' . esc_attr($rangeDescription) . '">' . $errorHtml . '</label>';
                 }
-				$output .= '</div>';
+				$output .= '</div></fieldset>';
 			} elseif ($typeCurrentInput === FieldTypes::FIELD_TYPE_DATATYPE_TINYINT) {
 				$output = '<fieldset>
 					<input type="radio" id="' . esc_attr($fieldName) . '_u" name="' . esc_attr($fieldName) . '" value=""

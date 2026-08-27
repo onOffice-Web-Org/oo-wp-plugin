@@ -78,7 +78,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 
 	if ( isRangeInputField( $input, $pForm ) ) {
-		// "from - to" fields already come with their own .oo-input-wrapper from renderFormField()
+		// "from - to" fields are self-describing ("Sales price from") and bring their own .oo-input-group
 		$line = renderFormField($input, $pForm);
 	} 
 	else {
