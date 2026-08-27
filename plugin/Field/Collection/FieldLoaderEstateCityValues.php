@@ -78,73 +78,73 @@ class FieldLoaderEstateCityValues
 
 
 	/**
-     * @return array
-     * @throws ApiClientException
-     */
-    private function getListNameCity(): array
-    {
-        $requestParams = [
-            'data' => ['ort'],
-            'listlimit' => 500,
-            'estatelanguage' => Language::getDefault(),
-        ];
+	 * @return array
+	 * @throws ApiClientException
+	 */
+	private function getListNameCity(): array
+	{
+		$requestParams = [
+			'data' => ['ort'],
+			'listlimit' => 500,
+			'estatelanguage' => Language::getDefault(),
+		];
 
-        if ($this->_pShowReferenceEstate === DataListView::HIDE_REFERENCE_ESTATE) {
-            $requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-        } elseif ($this->_pShowReferenceEstate === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
-            $requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
-        }
-        $requestParams['filter']['veroeffentlichen'][] = ['op' => '=', 'val' => 1];
+		if ($this->_pShowReferenceEstate === DataListView::HIDE_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		} elseif ($this->_pShowReferenceEstate === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+		}
+		$requestParams['filter']['veroeffentlichen'][] = ['op' => '=', 'val' => 1];
 
-        $pApiClientAction = new APIClientActionGeneric
-        ($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
-        $pApiClientAction->setParameters($requestParams);
-        $pApiClientAction->addRequestToQueue()->sendRequests();
-        
-        $result = $pApiClientAction->getResultRecords();
-        $meta = $pApiClientAction->getResultMeta();
-        $totalRecords = (int)($meta['cntabsolute'] ?? count($result));
+		$pApiClientAction = new APIClientActionGeneric
+		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+		
+		$result = $pApiClientAction->getResultRecords();
+		$meta = $pApiClientAction->getResultMeta();
+		$totalRecords = (int)($meta['cntabsolute'] ?? count($result));
 
-        // Fetch remaining pages if total records exceed the 500 listlimit
-        $additionalActions = [];
-        for ($offset = 500; $offset < $totalRecords; $offset += 500) {
-            $pageParams = $requestParams;
-            $pageParams['listoffset'] = $offset;
+		// Fetch remaining pages if total records exceed the 500 listlimit
+		$additionalActions = [];
+		for ($offset = 500; $offset < $totalRecords; $offset += 500) {
+			$pageParams = $requestParams;
+			$pageParams['listoffset'] = $offset;
 
-            $pPageAction = new APIClientActionGeneric
-            ($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
-            $pPageAction->setParameters($pageParams);
-            $pPageAction->addRequestToQueue();
-            $additionalActions[] = $pPageAction;
-        }
+			$pPageAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+			$pPageAction->setParameters($pageParams);
+			$pPageAction->addRequestToQueue();
+			$additionalActions[] = $pPageAction;
+		}
 
-        if ($additionalActions !== []) {
-            $this->_pSDKWrapper->sendRequests();
-            foreach ($additionalActions as $pPageAction) {
-                $result = array_merge($result, $pPageAction->getResultRecords());
-            }
-        }
+		if ($additionalActions !== []) {
+			$this->_pSDKWrapper->sendRequests();
+			foreach ($additionalActions as $pPageAction) {
+				$result = array_merge($result, $pPageAction->getResultRecords());
+			}
+		}
 
-        if (empty($result)) {
-            return [];
-        }
+		if (empty($result)) {
+			return [];
+		}
 
-        $listCityName = [];
-        foreach ($result as $value) {
-            if (!empty($value['elements']['ort'])) {
-                $listCityName[] = $value['elements']['ort'];
-            }
-        }
+		$listCityName = [];
+		foreach ($result as $value) {
+			if (!empty($value['elements']['ort'])) {
+				$listCityName[] = $value['elements']['ort'];
+			}
+		}
 
-        if (empty($listCityName)) {
-            return [];
-        }
-        
-        $listCityName = array_unique($listCityName);
-        sort($listCityName);
+		if (empty($listCityName)) {
+			return [];
+		}
+		
+		$listCityName = array_unique($listCityName);
+		sort($listCityName);
 
-        return array_values($listCityName);
-    }
+		return array_values($listCityName);
+	}
 
 
 	/**
