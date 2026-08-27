@@ -356,10 +356,7 @@ if (!function_exists('renderFormField')) {
 				$errorMessage = esc_html__('Please enter a valid e-mail address.', 'onoffice-for-wp-websites');
 			}
 
-			if (
-				$isRangeValue && $pForm->inRangeSearchcriteriaInfos($fieldName) &&
-				count($pForm->getSearchcriteriaRangeInfosForField($fieldName)) > 0
-			) {
+			if (isRangeInputField($fieldName, $pForm, $searchCriteriaRange)) {
 				$errorHtml = renderErrorHtml($errorMessage, $errorMessageDisplay);
 				$output .= '<div class="oo-input-wrapper" role="group" aria-label="' . esc_attr($fieldLabel) . '">';
 				foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
