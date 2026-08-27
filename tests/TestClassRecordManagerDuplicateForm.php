@@ -226,7 +226,7 @@ class TestClassRecordManagerDuplicateForm
 					 );
 
 		$this->_pWPDB->insert_id = 23;
-		$this->_pSubject->duplicateByName('list view root');
+		$this->assertTrue($this->_pSubject->duplicateByName('list view root'));
 	}
 
 
@@ -254,7 +254,7 @@ class TestClassRecordManagerDuplicateForm
 			->method( 'get_results' );
 
 		$this->_pWPDB->insert_id = 0;
-		$this->_pSubject->duplicateByName('list view root');
+		$this->assertFalse($this->_pSubject->duplicateByName('list view root'));
 	}
 
 

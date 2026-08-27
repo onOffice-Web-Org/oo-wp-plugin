@@ -149,7 +149,24 @@ class TestClassRecordManagerDuplicateListViewEstate
 				$sortByUserValueRecordOutput);
 
 		$this->_pWPDB->insert_id = 23;
-		$this->_pSubject->duplicateByIds(22);
+		$this->assertTrue($this->_pSubject->duplicateByIds(22));
+	}
+
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+
+	public function testDuplicateByIdsReturnsFalseWhenListViewNotFound()
+	{
+		$pRecordManagerReadListViewEstate = $this->getMockBuilder(RecordManagerReadListViewEstate::class)
+			->getMock();
+		$pRecordManagerReadListViewEstate->method('getRowById')->will($this->returnValue([]));
+		$this->_pContainer->set(RecordManagerReadListViewEstate::class, $pRecordManagerReadListViewEstate);
+		$pSubject = new RecordManagerDuplicateListViewEstate($this->_pWPDB, $this->_pContainer);
+
+		$this->_pWPDB->expects($this->never())->method('insert');
+		$this->assertFalse($pSubject->duplicateByIds(999));
 	}
 
 	/**
@@ -193,7 +210,7 @@ class TestClassRecordManagerDuplicateListViewEstate
 				$sortByUserValueRecordOutput);
 
 		$this->_pWPDB->insert_id = 23;
-		$this->_pSubject->duplicateByIds(22);
+		$this->assertTrue($this->_pSubject->duplicateByIds(22));
 	}
 
 
