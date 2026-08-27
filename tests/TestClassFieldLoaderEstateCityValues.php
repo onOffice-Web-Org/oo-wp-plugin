@@ -174,92 +174,92 @@ class TestClassFieldLoaderEstateCityValues
 	}
 
 	/**
-     * Tests the pagination loop when the API returns more than 500 records.
-     */
-    public function testLoadWithPagination()
-    {
-        $fieldParameters = [
-            'labels' => true,
-            'showContent' => true,
-            'showTable' => true,
-            'fieldList' => ['ort'],
-            'language' => Language::getDefault(),
-            'modules' => [onOfficeSDK::MODULE_ESTATE],
-            'realDataTypes' => true
-        ];
+	 * Tests the pagination loop when the API returns more than 500 records.
+	 */
+	public function testLoadWithPagination()
+	{
+		$fieldParameters = [
+			'labels' => true,
+			'showContent' => true,
+			'showTable' => true,
+			'fieldList' => ['ort'],
+			'language' => Language::getDefault(),
+			'modules' => [onOfficeSDK::MODULE_ESTATE],
+			'realDataTypes' => true
+		];
 
-        $estateParameters = [
-            'data' => ['ort'],
-            'listlimit' => 500,
-            'estatelanguage' => Language::getDefault(),
-            'filter' => [
-                'referenz' => [['op' => '=', 'val' => 1]],
-                'veroeffentlichen' => [['op' => '=', 'val' => 1]]
-            ]
-        ];
+		$estateParameters = [
+			'data' => ['ort'],
+			'listlimit' => 500,
+			'estatelanguage' => Language::getDefault(),
+			'filter' => [
+				'referenz' => [['op' => '=', 'val' => 1]],
+				'veroeffentlichen' => [['op' => '=', 'val' => 1]]
+			]
+		];
 
-        $pSDKWrapper = new SDKWrapperMocker();
+		$pSDKWrapper = new SDKWrapperMocker();
 
-        // Mock Fields Request
-        $pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
-            $fieldParameters, null, $this->responseField);
+		// Mock Fields Request
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
+			$fieldParameters, null, $this->responseField);
 
-        // Mock Page 1 (Offset 0, Records 1-500)
-        $pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
-            $estateParameters, null, $this->buildEstateResponse(501, 'Aachen'));
+		// Mock Page 1 (Offset 0, Records 1-500)
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
+			$estateParameters, null, $this->buildEstateResponse(501, 'Aachen'));
 
-        // Mock Page 2 (Offset 500, Records 501-1000)
-        $page2Params = $estateParameters;
-        $page2Params['listoffset'] = 500;
-        $pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
-            $page2Params, null, $this->buildEstateResponse(501, 'Zwickau'));
+		// Mock Page 2 (Offset 500, Records 501-1000)
+		$page2Params = $estateParameters;
+		$page2Params['listoffset'] = 500;
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
+			$page2Params, null, $this->buildEstateResponse(501, 'Zwickau'));
 
-        $pContainerBuilder = new ContainerBuilder;
-        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-        $pContainer = $pContainerBuilder->build();
-        $pContainer->set(SDKWrapper::class, $pSDKWrapper);
-        
-        $pFieldLoader = $pContainer->make(FieldLoaderEstateCityValues::class, ['pShowReferenceEstate' => '2']);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pContainer->set(SDKWrapper::class, $pSDKWrapper);
+		
+		$pFieldLoader = $pContainer->make(FieldLoaderEstateCityValues::class, ['pShowReferenceEstate' => '2']);
 
-        $result = iterator_to_array($pFieldLoader->load());
+		$result = iterator_to_array($pFieldLoader->load());
 
-        // The loader must successfully query both pages, extract the cities, merge, sort, and deduplicate them.
-        $this->assertEquals(['Aachen', 'Zwickau'], $result['ort']['permittedvalues']);
-    }
+		// The loader must successfully query both pages, extract the cities, merge, sort, and deduplicate them.
+		$this->assertEquals(['Aachen', 'Zwickau'], $result['ort']['permittedvalues']);
+	}
 
-    /**
-     * Helper method to generate mock estate responses with dynamic metadata.
-     * 
-     * @param int $cntabsolute
-     * @param string $cityName
-     * @return array
-     */
-    private function buildEstateResponse(int $cntabsolute, string $cityName): array
-    {
-        return [
-            "actionid" => "urn:onoffice-de-ns:smart:2.5:smartml:action:read",
-            "resourceid" => "",
-            "resourcetype" => "estate",
-            "cacheable" => true,
-            "identifier" => "",
-            "data" => [
-                "meta" => [
-                    "cntabsolute" => $cntabsolute
-                ],
-                "records" => [
-                    [
-                        "id" => "1",
-                        "type" => "",
-                        "elements" => [
-                            "ort" => $cityName
-                        ]
-                    ]
-                ]
-            ],
-            "status" => [
-                "errorcode" => 0,
-                "message" => "OK"
-            ]
-        ];
-    }
+	/**
+	 * Helper method to generate mock estate responses with dynamic metadata.
+	 * 
+	 * @param int $cntabsolute
+	 * @param string $cityName
+	 * @return array
+	 */
+	private function buildEstateResponse(int $cntabsolute, string $cityName): array
+	{
+		return [
+			"actionid" => "urn:onoffice-de-ns:smart:2.5:smartml:action:read",
+			"resourceid" => "",
+			"resourcetype" => "estate",
+			"cacheable" => true,
+			"identifier" => "",
+			"data" => [
+				"meta" => [
+					"cntabsolute" => $cntabsolute
+				],
+				"records" => [
+					[
+						"id" => "1",
+						"type" => "",
+						"elements" => [
+							"ort" => $cityName
+						]
+					]
+				]
+			],
+			"status" => [
+				"errorcode" => 0,
+				"message" => "OK"
+			]
+		];
+	}
 }
