@@ -81,7 +81,7 @@ class FieldLoaderEstateCityValues
 	 * @return array
 	 * @throws ApiClientException
 	 */
-    
+
 	private function getListNameCity(): array
 	{
 		$requestParams = [
