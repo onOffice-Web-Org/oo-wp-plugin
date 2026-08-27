@@ -73,10 +73,25 @@ class TestClassBulkDeleteRecord
 	{
 		$this->_pUserCapabilities->expects($this->exactly(2))->method('checkIfCurrentUserCan')
 			->with(UserCapabilities::RULE_EDIT_VIEW_FORM);
+		$this->_pRecordManagerDeleteForm->expects($this->exactly(2))->method('deleteByIds')
+			->withConsecutive([[13, 14]], [[11]])
+			->willReturnOnConsecutiveCalls(2, 1);
 		$this->assertSame(2, $this->_pSubject->delete($this->_pRecordManagerDeleteForm,
 			UserCapabilities::RULE_EDIT_VIEW_FORM, [13, 14]));
 		$this->assertSame(1, $this->_pSubject->delete($this->_pRecordManagerDeleteForm,
 			UserCapabilities::RULE_EDIT_VIEW_FORM, [11]));
+	}
+
+
+	public function testDeleteReturnsActualDeletedCountNotRequestedCount()
+	{
+		// Two IDs requested, but only one row actually existed/was deleted (e.g.
+		// stale ID, failed delete). BulkDeleteRecord must propagate the real
+		// count from deleteByIds(), not count($records).
+		$this->_pUserCapabilities->method('checkIfCurrentUserCan');
+		$this->_pRecordManagerDeleteForm->method('deleteByIds')->willReturn(1);
+		$this->assertSame(1, $this->_pSubject->delete($this->_pRecordManagerDeleteForm,
+			UserCapabilities::RULE_EDIT_VIEW_FORM, [13, 14]));
 	}
 
 
