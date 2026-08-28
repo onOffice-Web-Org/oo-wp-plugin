@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\SortList\SortListDataModel;
 use onOffice\WPlugin\Controller\SortList\SortListTypes;

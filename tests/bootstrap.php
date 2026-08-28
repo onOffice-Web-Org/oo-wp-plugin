@@ -9,7 +9,7 @@ use onOffice\tests\Mocks\DatabaseChangesDummy;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
 use PHPUnit\Util\ErrorHandler;
 
-use function DI\autowire;
+use function onOffice\WPlugin\Vendor\DI\autowire;
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 

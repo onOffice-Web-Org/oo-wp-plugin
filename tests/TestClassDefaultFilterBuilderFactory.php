@@ -2,7 +2,7 @@
 
 namespace onOffice\tests;
 
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;

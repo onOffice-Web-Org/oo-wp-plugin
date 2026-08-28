@@ -23,9 +23,9 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\WPlugin\Field\Collection\FieldRowConverterSearchCriteria;
 use onOffice\WPlugin\Region\RegionController;
 use WP_UnitTestCase;

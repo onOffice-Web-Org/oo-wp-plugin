@@ -39,8 +39,8 @@ use function __;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Language;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Utility\FileVersionHelper;
 

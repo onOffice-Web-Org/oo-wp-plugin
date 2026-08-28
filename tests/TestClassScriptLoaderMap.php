@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMapFactory;
 use onOffice\WPlugin\Types\MapProvider;

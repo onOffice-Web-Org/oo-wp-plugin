@@ -21,9 +21,9 @@
 
 namespace onOffice\tests;
 
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use WP_UnitTestCase;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Field\CostsCalculator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\SDKWrapper;

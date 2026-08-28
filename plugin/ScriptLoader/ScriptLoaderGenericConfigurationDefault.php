@@ -30,7 +30,7 @@ use const ONOFFICE_PLUGIN_DIR;
 use function plugins_url;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Form;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Template;
 
 /**

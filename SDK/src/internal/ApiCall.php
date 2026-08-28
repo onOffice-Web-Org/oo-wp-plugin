@@ -8,8 +8,8 @@ use onOffice\SDK\Exception\ApiCallNoActionParametersException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\internal\ApiAction;
 use onOffice\SDK\internal\Request;
-use Location\Coordinate;
-use Location\Distance\Vincenty;
+use onOffice\WPlugin\Vendor\Location\Coordinate;
+use onOffice\WPlugin\Vendor\Location\Distance\Vincenty;
 
 /**
  * @internal

@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\Renderer;
 
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\API\APIEmptyResultException;

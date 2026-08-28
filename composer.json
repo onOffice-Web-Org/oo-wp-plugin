@@ -12,7 +12,8 @@
         "phpcompatibility/php-compatibility": "*",
 		"wp-cli/i18n-command": "*",
         "ext-xdebug": "*",
-        "yoast/phpunit-polyfills": "^4.0"
+        "yoast/phpunit-polyfills": "^4.0",
+        "brianhenryie/strauss": "^0.28.0"
     },
     "prefer-stable" : true,
 	"autoload": {
@@ -35,5 +36,37 @@
         "mjaschen/phpgeo": "^4.0",
         "orchidjs/tom-select": "^2.6",
         "altcha-org/altcha": "^2.0"
+	},
+	"extra": {
+		"strauss": {
+			"target_directory": "vendor-prefixed",
+			"namespace_prefix": "onOffice\\WPlugin\\Vendor\\",
+			"classmap_prefix": "onOffice_WPlugin_Vendor_",
+			"constant_prefix": "ONOFFICE_WPLUGIN_VENDOR_",
+			"packages": [
+				"altcha-org/altcha",
+				"erusev/parsedown",
+				"laravel/serializable-closure",
+				"mjaschen/phpgeo",
+				"php-di/invoker",
+				"php-di/php-di",
+				"psr/container"
+			],
+			"exclude_from_copy": {
+				"packages": [
+					"orchidjs/tom-select",
+					"select2/select2"
+				]
+			},
+			"delete_vendor_packages": true,
+			"include_modified_date": false,
+			"include_author": false,
+			"update_call_sites": false
+		}
+	},
+	"scripts": {
+		"prefix-dependencies": "@php scripts/prefix-dependencies.php",
+		"post-install-cmd": "@prefix-dependencies",
+		"post-update-cmd": "@prefix-dependencies"
 	}
 }

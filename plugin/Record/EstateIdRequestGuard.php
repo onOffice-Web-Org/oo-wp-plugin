@@ -25,8 +25,8 @@ namespace onOffice\WPlugin\Record;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\ArrayContainerEscape;
@@ -145,8 +145,8 @@ class EstateIdRequestGuard
 	 * @param array $locales
 	 * @param int $estateId
 	 * @return array
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	private function getEstateTitleByLocales(array $locales, int $estateId): array
 	{

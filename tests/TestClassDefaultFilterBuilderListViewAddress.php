@@ -22,7 +22,7 @@
 namespace onOffice\tests;
 
 use Closure;
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddress;
