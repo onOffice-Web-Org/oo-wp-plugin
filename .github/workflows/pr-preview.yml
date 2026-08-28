@@ -171,7 +171,12 @@ jobs:
             RUN_ID=""
             for i in 1 2 3 4 5 6 7 8 9 10; do
               sleep 3
-              RUN_ID=$(gh api "repos/${OWNER}/${repo}/actions/workflows/pr-preview-upload.yml/runs?event=workflow_dispatch&branch=${branch}" \
+              # -f + --method GET lets gh URL-encode branch itself; branch
+              # names contain a literal '#' (the P#<number> tag), which
+              # breaks a hand-built query string (curl/gh treat it as the
+              # start of a URL fragment and silently drop everything after).
+              RUN_ID=$(gh api "repos/${OWNER}/${repo}/actions/workflows/pr-preview-upload.yml/runs" \
+                --method GET -f "event=workflow_dispatch" -f "branch=${branch}" \
                 --jq "[.workflow_runs[] | select(.created_at >= \"${BEFORE}\")] | sort_by(.created_at) | .[0].id // empty")
               [ -n "$RUN_ID" ] && break
             done
