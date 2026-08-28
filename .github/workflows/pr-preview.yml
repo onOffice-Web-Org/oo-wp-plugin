@@ -1,0 +1,345 @@
+name: PR Preview Coordinator (Dev Update Server)
+
+# Manually triggered with the project_number input (digits only, e.g.
+# 167871) - not derived from the ref, since github.head_ref is empty for
+# workflow_dispatch. Dispatches pr-preview-upload.yml on every repo in
+# the family with a matching P#<number> branch, then publishes a merged
+# manifest and triggers the box build once all uploads succeed.
+#
+# This file is identical in all six sibling repos, so a project touching
+# more than one of them can be dispatched from more than one place at
+# once. concurrency: below only dedupes repeats within THIS repo (GitHub
+# scopes it per-repo); cross-repo exclusivity is handled instead by the
+# "Discover sibling branches and elect coordinator" step, which lets only
+# the earliest-started active run for the project proceed.
+on:
+  workflow_dispatch:
+    inputs:
+      project_number:
+        description: "Project number from the P#<number> branch tag (digits only, e.g. 167871)"
+        required: true
+        type: string
+
+# Run title doubles as a cross-repo signal - the Actions API doesn't
+# expose workflow_dispatch inputs directly, so this is how other repos'
+# runs can tell which project a given active run is for.
+run-name: "PR Preview - P${{ inputs.project_number }}"
+
+concurrency:
+  group: pr-preview-${{ inputs.project_number }}
+  cancel-in-progress: true
+
+jobs:
+  coordinate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Determine project folder
+        id: project
+        env:
+          PROJECT_NUMBER: ${{ inputs.project_number }}
+        run: |
+          if ! echo "$PROJECT_NUMBER" | grep -qE '^[0-9]+$'; then
+            echo "::error::Input project_number '$PROJECT_NUMBER' must be a plain number (e.g. 167871) - not a branch name or 'P#...' tag."
+            exit 1
+          fi
+          echo "folder=P${PROJECT_NUMBER}" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub App token for sibling repos
+        id: sibling-app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            onoffice-classic
+            onoffice-modern
+            onoffice-pure
+            onoffice-timeless
+            oo-wp-plugin
+            oo-vue-addons
+
+      - name: Discover sibling branches and elect coordinator
+        id: discover
+        env:
+          GH_TOKEN: ${{ steps.sibling-app-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+          FOLDER: ${{ steps.project.outputs.folder }}
+          CURRENT_REPO: ${{ github.event.repository.name }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+        run: |
+          REPOS="onoffice-classic onoffice-modern onoffice-pure onoffice-timeless oo-wp-plugin oo-vue-addons"
+
+          # Repos with a branch tagged P#<number> - tells us what to
+          # dispatch and which fragments to expect later.
+          : > matched-repos.txt
+          for repo in $REPOS; do
+            BRANCHES=$(gh api "repos/${OWNER}/${repo}/branches" --paginate --jq '.[].name')
+            BRANCHES_EXIT=$?
+
+            if [ "$BRANCHES_EXIT" -ne 0 ]; then
+              echo "::error::Failed to list branches for ${repo} (gh exit ${BRANCHES_EXIT}) - aborting to avoid publishing a partial manifest."
+              exit 1
+            fi
+
+            # Two branches tagged for the same project in one repo is
+            # ambiguous (both would write the same fragment) - abort.
+            MATCHES=()
+            while IFS= read -r branch; do
+              [ -z "$branch" ] && continue
+              MATCH=$(echo "$branch" | grep -oE 'P#[0-9]+' | head -1 | tr -d '#')
+              if [ "$MATCH" = "$FOLDER" ]; then
+                MATCHES+=("$branch")
+              fi
+            done <<< "$BRANCHES"
+
+            if [ "${#MATCHES[@]}" -eq 0 ]; then
+              continue
+            fi
+
+            if [ "${#MATCHES[@]}" -gt 1 ]; then
+              echo "::error::${repo} has ${#MATCHES[@]} branches tagged for project ${FOLDER}: ${MATCHES[*]} - ambiguous, aborting."
+              exit 1
+            fi
+
+            echo "${repo} ${MATCHES[0]}" >> matched-repos.txt
+          done
+
+          if [ ! -s matched-repos.txt ]; then
+            echo "::error::No repo (including this one) has a branch tagged ${FOLDER} - nothing to do."
+            exit 1
+          fi
+
+          # Coordinator = earliest active (queued/in_progress) pr-preview.yml
+          # run anywhere for this project; every later one defers. It
+          # doesn't need to be one of the tagged repos itself, since it
+          # only orchestrates the others via the API.
+          : > active-runs.txt
+          for repo in $REPOS; do
+            RUNS=$(gh api "repos/${OWNER}/${repo}/actions/workflows/pr-preview.yml/runs?per_page=20" \
+              --jq "[.workflow_runs[] | select((.status == \"in_progress\" or .status == \"queued\") and .display_title == \"PR Preview - ${FOLDER}\")] | .[] | \"\(.created_at) \(.id) ${repo}\"")
+            RUNS_EXIT=$?
+
+            if [ "$RUNS_EXIT" -ne 0 ]; then
+              echo "::error::Failed to list pr-preview.yml runs for ${repo} (gh exit ${RUNS_EXIT}) - aborting to avoid publishing a partial manifest."
+              exit 1
+            fi
+
+            [ -n "$RUNS" ] && echo "$RUNS" >> active-runs.txt
+          done
+
+          if [ ! -s active-runs.txt ]; then
+            echo "::error::No active pr-preview.yml run found for ${FOLDER} anywhere - not even this one. This shouldn't happen; the Actions API may be lagging, try again."
+            exit 1
+          fi
+
+          read -r _ WINNER_RUN_ID WINNER_REPO < <(sort -k1,1 -k2,2n active-runs.txt | head -1)
+
+          echo "Active runs for ${FOLDER}:"
+          cat active-runs.txt
+          echo "Coordinator: ${WINNER_REPO} (run ${WINNER_RUN_ID})"
+
+          if [ "$WINNER_REPO" != "$CURRENT_REPO" ] || [ "$WINNER_RUN_ID" != "$CURRENT_RUN_ID" ]; then
+            echo "This run (${CURRENT_REPO} run ${CURRENT_RUN_ID}) defers to ${WINNER_REPO} run ${WINNER_RUN_ID} for project ${FOLDER}."
+            echo "is_leader=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "is_leader=true" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger upload workflows across all repos
+        if: steps.discover.outputs.is_leader == 'true'
+        env:
+          GH_TOKEN: ${{ steps.sibling-app-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          # Dispatch pr-preview-upload.yml per matched repo/branch and
+          # record its run id so the next step can wait on it.
+          : > sibling-runs.txt
+          while IFS=' ' read -r repo branch; do
+            [ -z "$repo" ] && continue
+            BEFORE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+            echo "Triggering upload for ${repo}@${branch}"
+
+            if ! gh api "repos/${OWNER}/${repo}/actions/workflows/pr-preview-upload.yml/dispatches" \
+              -X POST -f "ref=${branch}"; then
+              echo "::error::Failed to dispatch pr-preview-upload.yml for ${repo}@${branch} - aborting to avoid publishing a partial manifest."
+              exit 1
+            fi
+
+            RUN_ID=""
+            for i in 1 2 3 4 5 6 7 8 9 10; do
+              sleep 3
+              # -f + --method GET lets gh URL-encode branch itself; branch
+              # names contain a literal '#' (the P#<number> tag), which
+              # breaks a hand-built query string (curl/gh treat it as the
+              # start of a URL fragment and silently drop everything after).
+              RUN_ID=$(gh api "repos/${OWNER}/${repo}/actions/workflows/pr-preview-upload.yml/runs" \
+                --method GET -f "event=workflow_dispatch" -f "branch=${branch}" \
+                --jq "[.workflow_runs[] | select(.created_at >= \"${BEFORE}\")] | sort_by(.created_at) | .[0].id // empty")
+              [ -n "$RUN_ID" ] && break
+            done
+
+            if [ -z "$RUN_ID" ]; then
+              echo "::error::Could not locate the dispatched run for ${repo}@${branch} - aborting to avoid publishing a partial manifest."
+              exit 1
+            fi
+
+            echo "${repo} ${RUN_ID}" >> sibling-runs.txt
+          done < matched-repos.txt
+
+      - name: Wait for all uploads to finish
+        if: steps.discover.outputs.is_leader == 'true'
+        env:
+          GH_TOKEN: ${{ steps.sibling-app-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          # Only restart the box once every upload has succeeded - a failed
+          # or stuck one means stale/missing content.
+          FAILED=0
+          PIDS=()
+          while read -r repo run_id; do
+            [ -z "$repo" ] && continue
+            (
+              echo "Waiting for ${repo} run ${run_id}..."
+              timeout 900 gh run watch "$run_id" --repo "${OWNER}/${repo}" --exit-status
+            ) &
+            PIDS+=($!)
+          done < sibling-runs.txt
+
+          for pid in "${PIDS[@]}"; do
+            wait "$pid" || FAILED=1
+          done
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo "::error::One or more component uploads failed or timed out - not restarting the box."
+            exit 1
+          fi
+
+      - name: Set SSH Key for Dev Update Server
+        if: steps.discover.outputs.is_leader == 'true'
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
+
+      - name: Assemble and publish manifest
+        if: steps.discover.outputs.is_leader == 'true'
+        env:
+          FOLDER: ${{ steps.project.outputs.folder }}
+        run: |
+          set -e
+          # Every fragment was just confirmed by a successful upload, so any
+          # fetch failure (404 included) here is unexpected and fatal.
+          rm -f fragment-*.json
+          while read -r repo run_id; do
+            [ -z "$repo" ] && continue
+            FRAGMENT_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/manifest-fragments/${repo}.json"
+
+            set +e
+            HTTP_CODE=$(curl -s -o "fragment-${repo}.json" -w '%{http_code}' "$FRAGMENT_URL")
+            CURL_EXIT=$?
+            set -e
+
+            if [ "$CURL_EXIT" -ne 0 ] || [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+              echo "::error::Failed to fetch manifest fragment for ${repo} from ${FRAGMENT_URL} (curl exit ${CURL_EXIT}, HTTP ${HTTP_CODE})"
+              exit 1
+            fi
+          done < sibling-runs.txt
+
+          jq -s '.' fragment-*.json > manifest.json
+          echo "Assembled manifest:"
+          cat manifest.json
+
+          for attempt in 1 2 3 4 5; do
+            if rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
+              manifest.json \
+              zipupload@dev.onoffice-wp-updates.de:pr-builds/${FOLDER}/; then
+              echo "Manifest published successfully (attempt $attempt)"
+              exit 0
+            fi
+            echo "rsync failed (attempt $attempt/5), retrying..."
+            sleep "$((attempt * 3))"
+          done
+          echo "::error::Failed to publish manifest after 5 attempts"
+          exit 1
+
+      - name: Login to Hosting API
+        if: steps.discover.outputs.is_leader == 'true'
+        id: api-login
+        run: |
+          LOGIN_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.HOSTING_API_URL }}/client-login" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d '{
+              "client_id": "${{ secrets.HOSTING_API_CLIENT_ID }}",
+              "client_secret": "${{ secrets.HOSTING_API_CLIENT_SECRET }}"
+            }')
+          CURL_EXIT=$?
+
+          if [ "$CURL_EXIT" -ne 0 ]; then
+            echo "::error::curl-Transportfehler beim API Login (exit ${CURL_EXIT})"
+            exit 1
+          fi
+
+          HTTP_CODE=$(echo "$LOGIN_RESPONSE" | tail -1)
+          BODY=$(echo "$LOGIN_RESPONSE" | sed '$d')
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "::error::API Login fehlgeschlagen (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
+
+          SUCCESS=$(echo "$BODY" | jq -r '.success // empty')
+          if [ "$SUCCESS" != "true" ]; then
+            echo "::error::API Login meldete success=false oder fehlendes success-Feld"
+            exit 1
+          fi
+
+          TOKEN=$(echo "$BODY" | jq -r '.data.token')
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "::error::Kein Token in Login-Response erhalten"
+            exit 1
+          fi
+
+          echo "::add-mask::${TOKEN}"
+          echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger project box build
+        if: steps.discover.outputs.is_leader == 'true'
+        env:
+          FOLDER: ${{ steps.project.outputs.folder }}
+        run: |
+          PROJECT_NUMBER="${FOLDER#P}"
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.HOSTING_API_URL }}/test-environments/build-from-project" \
+            -H "Authorization: Bearer ${{ steps.api-login.outputs.token }}" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d "{\"project_number\": \"${PROJECT_NUMBER}\"}")
+          CURL_EXIT=$?
+
+          if [ "$CURL_EXIT" -ne 0 ]; then
+            echo "::error::curl-Transportfehler beim Box-Build (exit ${CURL_EXIT})"
+            exit 1
+          fi
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: ${HTTP_CODE}"
+          echo "Response: ${BODY}"
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "::error::Box-Build fehlgeschlagen (HTTP ${HTTP_CODE}): ${BODY}"
+            exit 1
+          fi
+
+          SUCCESS=$(echo "$BODY" | jq -r '.success // empty')
+          if [ "$SUCCESS" != "true" ]; then
+            ERROR_MSG=$(echo "$BODY" | jq -r '.error // .message // "unknown error"')
+            echo "::error::Box-Build meldete success=false: ${ERROR_MSG}"
+            exit 1
+          fi
