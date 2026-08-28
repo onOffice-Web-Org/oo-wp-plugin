@@ -197,13 +197,38 @@ jobs:
         run: |
           # Only restart the box once every upload has succeeded - a failed
           # or stuck one means stale/missing content.
+          #
+          # Polling the run status directly (instead of `gh run watch`)
+          # avoids it also trying to fetch check-run annotations every few
+          # seconds, which this token has no checks:read permission for and
+          # which floods the log with a repeating 403 warning.
+          wait_for_run() {
+            local repo="$1" run_id="$2"
+            local elapsed=0 interval=10 max=900
+            while [ "$elapsed" -lt "$max" ]; do
+              read -r status conclusion < <(gh api "repos/${OWNER}/${repo}/actions/runs/${run_id}" --jq '"\(.status) \(.conclusion)"')
+              if [ "$status" = "completed" ]; then
+                if [ "$conclusion" = "success" ]; then
+                  echo "${repo} run ${run_id}: success"
+                  return 0
+                fi
+                echo "::error::${repo} run ${run_id} finished with conclusion '${conclusion}'"
+                return 1
+              fi
+              sleep "$interval"
+              elapsed=$((elapsed + interval))
+            done
+            echo "::error::${repo} run ${run_id} did not complete within ${max}s"
+            return 1
+          }
+
           FAILED=0
           PIDS=()
           while read -r repo run_id; do
             [ -z "$repo" ] && continue
             (
               echo "Waiting for ${repo} run ${run_id}..."
-              timeout 900 gh run watch "$run_id" --repo "${OWNER}/${repo}" --exit-status
+              wait_for_run "$repo" "$run_id"
             ) &
             PIDS+=($!)
           done < sibling-runs.txt
