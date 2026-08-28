@@ -98,21 +98,21 @@ jobs:
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: "updater.json"
-          json: '{"version":"${{ needs.get-version.outputs.currentVersion }}","download_url":"https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/release.zip","requires_php":"${{ steps.readme-meta.outputs.requires_php }}","requires":"${{ steps.readme-meta.outputs.requires }}","tested":"${{ steps.readme-meta.outputs.tested }}"}'
+          json: '{"version":"${{ needs.get-version.outputs.currentVersion }}","download_url":"https://onoffice-wp-updates.de/releases/plugins/oo-wp-plugin/onoffice-for-wp-websites.zip","requires_php":"${{ steps.readme-meta.outputs.requires_php }}","requires":"${{ steps.readme-meta.outputs.requires }}","tested":"${{ steps.readme-meta.outputs.tested }}"}'
 
       - name: Upload release build
         uses: actions/upload-artifact@v4
         with:
           name: oo-wp-plugin Release Bundle
           path: |
-            release.zip
+            onoffice-for-wp-websites.zip
             updater.json
           retention-days: 7
 
-      - name: Set SSH Key for Raidboxes Server
+      - name: Set SSH Key for Update Server
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY_RAIDBOXES }}
+          ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
 
-      - name: Upload Files to Release Server
-        run: rsync -e 'ssh -o StrictHostKeyChecking=no' release.zip updater.json b13zphemyrdbxio@b13zphe.ssh.myrdbx.io:~/www/releases/plugins/oo-wp-plugin
+      - name: Upload Files to Update Server
+        run: rsync -e 'ssh -o StrictHostKeyChecking=no' onoffice-for-wp-websites.zip updater.json zipupload@onoffice-wp-updates.de:onoffice-wp-updates.de/releases/plugins/oo-wp-plugin

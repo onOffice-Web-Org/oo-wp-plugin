@@ -353,10 +353,11 @@ class EstateList
 		$estateParametersRaw['data'][] = 'virtualAddress';
 		$estateParametersRaw['data'][] = 'provisionsfrei';
 		$estateParametersRaw['data'][] = 'nutzungsart';
-
-		if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
-			$estateParametersRaw['data'] []= 'waehrung';
-		}
+		$estateParametersRaw['data'][] = 'waehrung';
+		$estateParametersRaw['data'] = array_merge(
+			$estateParametersRaw['data'],
+			$this->_pDataView->getListFieldsShowPriceOnRequest()
+		);
 
 		if ($this->getShowTotalCostsCalculator()) {
 			$fields = ['kaufpreis', 'aussen_courtage', 'bundesland', 'waehrung'];
@@ -655,7 +656,9 @@ class EstateList
 		// Route the marketing-status sequence sort through the list cache, exactly like the
 		// standard list path (getEstateParameters). When the list has been pre-warmed, the SDK
 		// serves the full record set from cache instead of hitting the API page by page.
-		$useListCache = $pListView instanceof DataListView && empty($this->_filterAddressId);
+		$useListCache = $pListView instanceof DataListView
+			&& empty($this->_filterAddressId)
+			&& $formatOutput === true;
 		$paramsListCache = $useListCache
 			? $this->getEstateListParametersForCache($formatOutput, $language)
 			: null;
@@ -684,9 +687,7 @@ class EstateList
 				if ($this->hasPriceOnRequestField()) {
 					$requestParams['data'][] = 'preisAufAnfrage';
 				}
-				if (in_array('multiParkingLot', $this->_pDataView->getFields())) {
-					$requestParams['data'][] = 'waehrung';
-				}
+				$requestParams['data'][] = 'waehrung';
 			}
 			if ($this->enableShowPriceOnRequestText() && $this->hasPriceOnRequestField() && !in_array('preisAufAnfrage', $requestParams['data'], true)) {
 				$requestParams['data'][] = 'preisAufAnfrage';
@@ -1721,7 +1722,7 @@ class EstateList
 			$result[$field]['rangeFieldDisplayMode'] = $allDisplayModes[$field] ?? 'range';
 			if (
 				in_array($field, InputVariableReaderFormatter::APPLY_THOUSAND_SEPARATOR_FIELDS) &&
-				!empty(get_option('onoffice-settings-thousand-separator'))
+				!empty(get_option('onoffice-settings-thousand-separator-custom'))
 			) {
 				$result[$field]['is-apply-thousand-separator'] = true;
 			}

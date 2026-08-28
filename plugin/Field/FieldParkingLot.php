@@ -21,12 +21,18 @@
 namespace onOffice\WPlugin\Field;
 
 use Exception;
-use NumberFormatter;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Field\PriceFormatService;
 
 class FieldParkingLot{
-    
-	
+
+	private $pPriceFormatService;
+
+	public function __construct(PriceFormatService $pPriceFormatService)
+	{
+		$this->pPriceFormatService = $pPriceFormatService;
+	}
+
 	/**
 	 * @param array $currentEstate
 	 * @param string $codeCurrency
@@ -89,11 +95,7 @@ class FieldParkingLot{
 	 */
 	public function formatPriceParking(string $str, string $locale, string $codeCurrency): string
 	{
-		$format = new NumberFormatter( $locale, NumberFormatter::CURRENCY );
-		if ( intval( $str ) == $str ) {
-			$format->setAttribute( NumberFormatter::MIN_SIGNIFICANT_DIGITS, 0 );
-		}
-		return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
+		return $this->pPriceFormatService->formatPrice((float) $str, $codeCurrency);
 	}
 
 	/**

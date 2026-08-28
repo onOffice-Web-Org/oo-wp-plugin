@@ -137,7 +137,7 @@ class TestClassFormFieldValidator
 		$_POST = [
 			'Vorname' => 'Max',
 			'anzahl_zimmer' => '5.9',
-			'wohnflaeche' => '105.4',
+			'wohnflaeche' => '105,4',
 			'anzahl_badezimmer' => '',
 			'bad' => ['wanne', 'fenster'],
 			'objekttyp' => ['reihenendhaus','stadthaus'],
