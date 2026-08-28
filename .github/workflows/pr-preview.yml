@@ -1,4 +1,4 @@
-name: PR Preview Coordinator (Dev Update Server)
+name: PR Preview | Coordinator (Dev Update Server)
 
 # Manually triggered with the project_number input (digits only, e.g.
 # 167871) - not derived from the ref, since github.head_ref is empty for
