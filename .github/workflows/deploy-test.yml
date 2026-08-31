@@ -1,11 +1,14 @@
 name: Deploy Test
 
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
 
 concurrency:
-  group: deploy-test-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  group: deploy-test-${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
   build:
