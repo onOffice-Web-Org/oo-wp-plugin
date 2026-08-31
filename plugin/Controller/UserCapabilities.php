@@ -128,34 +128,33 @@ class UserCapabilities
 	public function add_plugin_capabilities_to_roles()
 	{
 		$roles = ['administrator', 'editor'];
-		
+
 		foreach ($roles as $role_name) {
 			$role = get_role($role_name);
 			if($role) {
-				$role->add_cap(
-					self::OO_PLUGINCAP_MANAGE_FORM_OWNER,
-				);
-
-				$role->add_cap(
-					self::OO_PLUGINCAP_MANAGE_FORM_INTEREST,
-				);
-
-				$role->add_cap(
-					self::OO_PLUGINCAP_MANAGE_FORM_OWNER_LEADGENERATOR,
-				);
-				$role->add_cap(
-					self::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH,
-				);
-				$role->add_cap(
-					self::OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER,
-				);
-				$role->add_cap(
-					self::OO_PLUGINCAP_MANAGE_PLUGIN_TEMPLATES,
-				);
-				$role->add_cap(
-					self::OO_PLUGINCAP_MANAGE_VIEW_MENU,
-				);
+				$this->add_cap_once($role, self::OO_PLUGINCAP_MANAGE_FORM_OWNER);
+				$this->add_cap_once($role, self::OO_PLUGINCAP_MANAGE_FORM_INTEREST);
+				$this->add_cap_once($role, self::OO_PLUGINCAP_MANAGE_FORM_OWNER_LEADGENERATOR);
+				$this->add_cap_once($role, self::OO_PLUGINCAP_MANAGE_FORM_APPLICANTSEARCH);
+				$this->add_cap_once($role, self::OO_PLUGINCAP_MANAGE_FORM_NEWSLETTER);
+				$this->add_cap_once($role, self::OO_PLUGINCAP_MANAGE_PLUGIN_TEMPLATES);
+				$this->add_cap_once($role, self::OO_PLUGINCAP_MANAGE_VIEW_MENU);
 			}
+		}
+	}
+
+	/**
+	 * Adds the capability only when it is missing.
+	 *
+	 * This runs on every request (init). An unconditional add_cap() always
+	 * calls update_option() for wp_user_roles and its filters, even when the
+	 * value does not change. has_cap() reads the in-memory role object, so
+	 * the steady state costs no database access.
+	 */
+	private function add_cap_once(\WP_Role $role, string $cap): void
+	{
+		if (!$role->has_cap($cap)) {
+			$role->add_cap($cap);
 		}
 	}
 }
