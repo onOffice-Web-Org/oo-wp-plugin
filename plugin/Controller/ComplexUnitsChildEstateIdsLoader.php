@@ -54,7 +54,7 @@ class ComplexUnitsChildEstateIdsLoader
 	 */
 	public function loadChildEstateIds(string $parentEstateId): array
 	{
-		if ($parentEstateId === '') {
+		if ((int) $parentEstateId <= 0) {
 			return [];
 		}
 

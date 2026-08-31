@@ -65,7 +65,7 @@ class ComplexUnitsMainIdResolver
 	{
 		$result = [];
 
-		if ($parentEstateId === '') {
+		if ((int) $parentEstateId <= 0) {
 			return $result;
 		}
 

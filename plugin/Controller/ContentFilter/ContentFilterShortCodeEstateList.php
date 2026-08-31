@@ -128,6 +128,11 @@ class ContentFilterShortCodeEstateList
 			$pSortListModel = $this->_pSortListBuilder->build($pListView);
 			$pListViewWithSortParams = $this->listViewWithSortParams($pListView, $pSortListModel);
 
+			if ($pListViewWithSortParams->getListType() === DataListView::LISTVIEW_TYPE_COMPLEXUNITS
+				&& !$this->hasValidParentEstateId($pListViewWithSortParams)) {
+				return '';
+			}
+
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel, false);
 			$pListViewFilterBuilder = $this->buildFilterBuilder($pListViewWithSortParams);
 
@@ -197,6 +202,15 @@ class ContentFilterShortCodeEstateList
 		$currentLanguage = Language::getDefault();
 		$parentEstateMainIds = $pListView->getParentEstateMainIds();
 		return (string) ($parentEstateMainIds[$currentLanguage] ?? $pListView->getParentEstateId());
+	}
+
+	/**
+	 * @param DataListView $pListView
+	 * @return bool
+	 */
+	private function hasValidParentEstateId(DataListView $pListView): bool
+	{
+		return (int) $this->resolveParentEstateId($pListView) > 0;
 	}
 
 	/**
