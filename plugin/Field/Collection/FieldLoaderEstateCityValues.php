@@ -98,7 +98,7 @@ class FieldLoaderEstateCityValues
 		$requestParams['filter']['veroeffentlichen'][] = ['op' => '=', 'val' => 1];
 
 		$pApiClientAction = new APIClientActionGeneric
-		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, onOfficeSDK::MODULE_ESTATE);
 		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
 		
@@ -113,7 +113,7 @@ class FieldLoaderEstateCityValues
 			$pageParams['listoffset'] = $offset;
 
 			$pPageAction = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, onOfficeSDK::MODULE_ESTATE);
 			$pPageAction->setParameters($pageParams);
 			$pPageAction->addRequestToQueue();
 			$additionalActions[] = $pPageAction;
@@ -121,9 +121,11 @@ class FieldLoaderEstateCityValues
 
 		if ($additionalActions !== []) {
 			$this->_pSDKWrapper->sendRequests();
+			$chunks = [$result];
 			foreach ($additionalActions as $pPageAction) {
-				$result = array_merge($result, $pPageAction->getResultRecords());
+				$chunks[] = $pPageAction->getResultRecords();
 			}
+			$result = array_merge(...$chunks);
 		}
 
 		if (empty($result)) {

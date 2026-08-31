@@ -205,13 +205,13 @@ class TestClassFieldLoaderEstateCityValues
 			$fieldParameters, null, $this->responseField);
 
 		// Mock Page 1 (Offset 0, Records 1-500)
-		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, onOfficeSDK::MODULE_ESTATE, '',
 			$estateParameters, null, $this->buildEstateResponse(501, 'Aachen'));
 
 		// Mock Page 2 (Offset 500, Records 501-1000)
 		$page2Params = $estateParameters;
 		$page2Params['listoffset'] = 500;
-		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '',
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, onOfficeSDK::MODULE_ESTATE, '',
 			$page2Params, null, $this->buildEstateResponse(501, 'Zwickau'));
 
 		$pContainerBuilder = new ContainerBuilder;
