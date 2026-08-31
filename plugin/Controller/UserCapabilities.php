@@ -148,12 +148,17 @@ class UserCapabilities
 	 *
 	 * This runs on every request (init). An unconditional add_cap() always
 	 * calls update_option() for wp_user_roles and its filters, even when the
-	 * value does not change. has_cap() reads the in-memory role object, so
-	 * the steady state costs no database access.
+	 * value does not change. Reading the role object costs nothing, so the
+	 * steady state needs no database access.
+	 *
+	 * Deliberately not has_cap(): that runs the 'role_has_cap' filter, so a
+	 * plugin granting the capability at runtime would keep it from ever being
+	 * written to the database - and it would silently disappear again once
+	 * that plugin is gone. $capabilities is what add_cap() actually persists.
 	 */
 	private function add_cap_once(\WP_Role $role, string $cap): void
 	{
-		if (!$role->has_cap($cap)) {
+		if (($role->capabilities[$cap] ?? null) !== true) {
 			$role->add_cap($cap);
 		}
 	}
