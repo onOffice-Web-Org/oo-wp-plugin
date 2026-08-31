@@ -119,7 +119,7 @@ class TestClassRewriteRuleBuilder
 		$pSubject = $this->_pContainer->get(RewriteRuleBuilder::class);
 		$pSubject->addDynamicRewriteRules();
 		$this->assertSame([
-			'^(test_parent/test\-post)/([0-9]+)(-([^$]+)?)?/?$' =>
+			'^(test_parent/test\-post)/([0-9]+)(-([^/]+)?)?/?$' =>
 				'index.php?pagename=test_parent%2Ftest-post&view=$matches[1]&estate_id=$matches[2]'
 		], $wp_rewrite->extra_rules_top);
 	}
@@ -172,7 +172,7 @@ class TestClassRewriteRuleBuilder
 		$pSubject = $this->_pContainer->get(RewriteRuleBuilder::class);
 		$pSubject->addDynamicRewriteRulesForAddressDetail();
 		$this->assertSame([
-			'^(test_parent/test\-post)/([0-9]+)(-([^$]+)?)?/?$' =>
+			'^(test_parent/test\-post)/([0-9]+)(-([^/]+)?)?/?$' =>
 				'index.php?pagename=test_parent%2Ftest-post&view=$matches[1]&address_id=$matches[2]'
 		], $wp_rewrite->extra_rules_top);
 	}

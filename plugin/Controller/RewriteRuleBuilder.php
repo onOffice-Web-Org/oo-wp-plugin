@@ -76,7 +76,7 @@ class RewriteRuleBuilder
 		$this->setCanonicalUrlFromRequest($detailPageIds);
 		foreach ( $detailPageIds as $detailPageId ) {
 			$pageName = $this->_pWPPageWrapper->getPageUriByPageId( $detailPageId );
-			add_rewrite_rule( '^(' . preg_quote( $pageName ) . ')/([0-9]+)(-([^$]+)?)?/?$',
+			add_rewrite_rule( '^(' . preg_quote( $pageName ) . ')/([0-9]+)(-([^/]+)?)?/?$',
 				'index.php?pagename=' . urlencode( $pageName ) . '&view=$matches[1]&estate_id=$matches[2]', 'top' );
 		}
 	}
@@ -91,7 +91,8 @@ class RewriteRuleBuilder
 		foreach ($canonicalFilters as $filter) {
 			add_filter($filter, function($url) use ($pageIds) {
 				if (in_array(get_the_ID(), $pageIds) && isset($_SERVER['REQUEST_URI'])) {
-					$requestUri = sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI']));
+					// esc_url_raw() keeps the percent encoded octets sanitize_text_field() would strip.
+					$requestUri = esc_url_raw(wp_unslash($_SERVER['REQUEST_URI']));
 					return home_url($requestUri);
 				}
 				return $url;
@@ -110,7 +111,7 @@ class RewriteRuleBuilder
 		$detailPageIds = $this->_pDataAddressDetailViewHandler->getAddressDetailView()->getPageIdsHaveDetailShortCode();
 		foreach ( $detailPageIds as $detailPageId ) {
 			$pageName = $this->_pWPPageWrapper->getPageUriByPageId( $detailPageId );
-			add_rewrite_rule( '^(' . preg_quote( $pageName ) . ')/([0-9]+)(-([^$]+)?)?/?$',
+			add_rewrite_rule( '^(' . preg_quote( $pageName ) . ')/([0-9]+)(-([^/]+)?)?/?$',
 				'index.php?pagename=' . urlencode( $pageName ) . '&view=$matches[1]&address_id=$matches[2]', 'top' );
 		}
 	}

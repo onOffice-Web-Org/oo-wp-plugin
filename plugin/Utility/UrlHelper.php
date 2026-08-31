@@ -25,6 +25,85 @@ namespace onOffice\WPlugin\Utility;
 
 class UrlHelper
 {
+	/** Special characters WordPress would percent-encode instead of transliterating. */
+	const SPECIAL_CHARACTER_REPLACEMENTS = [
+		'¹' => '1',
+		'²' => '2',
+		'³' => '3',
+		'¼' => '1-4',
+		'½' => '1-2',
+		'¾' => '3-4',
+		'µ' => 'u',
+		'№' => 'nr',
+		'⁄' => '-',
+	];
+
+	/** Web servers may hand the path over re-encoded more than once. */
+	const MAX_DECODE_ITERATIONS = 4;
+
+	/**
+	 * Builds a slug without percent-encoded octets - a "%" in the path causes 301 loops.
+	 *
+	 * @param string $title
+	 * @param string|null $locale Locale for remove_accents(), null skips the explicit call
+	 * @return string
+	 */
+	public static function sanitizeTitleToSlug(string $title, ?string $locale = null): string
+	{
+		$title = strtr($title, self::SPECIAL_CHARACTER_REPLACEMENTS);
+
+		if ($locale !== null) {
+			$title = remove_accents($title, $locale);
+		}
+
+		return self::removePercentEncodedOctets(sanitize_title($title));
+	}
+
+	/**
+	 * @param string $slug
+	 * @return string
+	 */
+	public static function removePercentEncodedOctets(string $slug): string
+	{
+		if (strpos($slug, '%') === false) {
+			return $slug;
+		}
+
+		$slug = (string)preg_replace('/(?:%[a-fA-F0-9]{2})+/', '-', $slug);
+		$slug = (string)preg_replace('/-+/', '-', $slug);
+
+		return trim($slug, '-');
+	}
+
+	/**
+	 * Decodes a URL until it stops changing, so encoding differences do not matter.
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	public static function normalizeUrl(string $url): string
+	{
+		for ($i = 0; $i < self::MAX_DECODE_ITERATIONS; $i++) {
+			$decodedUrl = rawurldecode($url);
+			if ($decodedUrl === $url) {
+				break;
+			}
+			$url = $decodedUrl;
+		}
+
+		return untrailingslashit($url);
+	}
+
+	/**
+	 * @param string $url
+	 * @param string $otherUrl
+	 * @return bool
+	 */
+	public static function isSameLocation(string $url, string $otherUrl): bool
+	{
+		return self::normalizeUrl($url) === self::normalizeUrl($otherUrl);
+	}
+
 	/**
 	 * @param mixed $urlElements
 	 * @return string
