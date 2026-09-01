@@ -164,6 +164,15 @@ class ContentFilterShortCodeEstateList
 			}
 
 			$pEstateList->loadEstates($this->_pWPQueryWrapper->getWPQuery($pListView->getId())->get('paged', 1) ?: 1);
+			// TEMPORARY debug logging, remove once complexunits filtering is confirmed working.
+			if ($pListViewWithSortParams->getListType() === DataListView::LISTVIEW_TYPE_COMPLEXUNITS) {
+				try {
+					$debugCount = $pEstateList->getEstateOverallCount();
+				} catch (\Throwable $pDebugException) {
+					$debugCount = 'exception: ' . $pDebugException->getMessage();
+				}
+				error_log('complexunits loadEstates overallCount=' . var_export($debugCount, true)); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			}
 			$pTemplate = $this->_pTemplate
 				->withTemplateName($pListViewWithSortParams->getTemplate())
 				->withEstateList($pEstateList);
@@ -190,11 +199,17 @@ class ContentFilterShortCodeEstateList
 		}
 
 		$childEstateIds = $this->_pComplexUnitsChildEstateIdsLoader->loadChildEstateIds($parentEstateId);
+		// TEMPORARY debug logging, remove once complexunits filtering is confirmed working.
+		error_log('buildComplexUnitsFilterBuilder parentEstateId=' . $parentEstateId . ' childEstateIds=' . var_export($childEstateIds, true)); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		if ($childEstateIds === []) {
 			return null;
 		}
 
-		return new DefaultFilterBuilderPresetEstateIds($childEstateIds);
+		$pFilterBuilder = new DefaultFilterBuilderPresetEstateIds($childEstateIds);
+		// TEMPORARY debug logging, remove once complexunits filtering is confirmed working.
+		error_log('buildComplexUnitsFilterBuilder filter=' . var_export($pFilterBuilder->buildFilter(), true)); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+
+		return $pFilterBuilder;
 	}
 
 	/**
