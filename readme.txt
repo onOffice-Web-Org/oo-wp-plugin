@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 6.1
 Tested up to: 6.9.1
 Requires PHP: 8.2
-Stable tag: 6.17.1
+Stable tag: 6.18.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,36 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.18.0 (2026-08-28) =
+
+**Added**
+* Konfigurierbare Preisformatierung
+* Github Action Master
+* umstellen der url
+* support cities in different languages
+
+**Fixed**
+* fix estate search pagination
+* add pagination for mapper
+* handle additional API call exceptions in DefaultFilterBuilderListView
+* map city values in result lists
+* Interessentensuchformular fuer WP-Websites ausblenden
+* Bereinigung Boolean-Suchkriterien-Rendering
+* Preis auf Anfrage Markierte Immobilien
+* Mehrsprachigkeit im City-Select
+* **P170435:** fix-map
+* **P170435:** fix-map
+* **P170435:** fix-map
+* update unit tests workflow to include prerelease and release branches; enhance ApiCall tests for caching behavior
+
+**Maintenance**
+* Merge master for prerelease
+* purge cache after renew estate cache
+* Update dependencies
+
+**Changed**
+* defailt filter builder
 
 = 6.17.1 (2026-08-10) =
 

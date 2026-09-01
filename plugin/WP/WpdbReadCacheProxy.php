@@ -50,7 +50,7 @@ class WpdbReadCacheProxy
 		//return stripos($query, 'FOUND_ROWS') === false;  // critical (?) but overused FOUND_ROWS
 	}
 
-	public function get_row($query = null, $output = null, $y = 0)
+	public function get_row($query = null, $output = OBJECT, $y = 0)
 	{
 		$query = $query ?? $this->_wpdb->last_query;
 		if ($query === null || !$this->shouldCache($query)) {
@@ -63,7 +63,7 @@ class WpdbReadCacheProxy
 		return self::$_cache[$key];
 	}
 
-	public function get_results($query = null, $output = null)
+	public function get_results($query = null, $output = OBJECT)
 	{
 		$query = $query ?? $this->_wpdb->last_query;
 		if ($query === null || !$this->shouldCache($query)) {

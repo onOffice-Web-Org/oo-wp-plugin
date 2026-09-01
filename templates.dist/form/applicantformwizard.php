@@ -63,9 +63,9 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		$isHiddenField = $pForm->isHiddenField($input);
 		$label = wp_kses_post($pForm->getFieldLabel($input)).' '.wp_kses_post($addition);
 
-		if ( in_array( $input, array( 'kaufpreis','kaltmiete','wohnflaeche','anzahl_zimmer' ) ) ) {
-			$line = '<div class="oo-input-wrapper">';
-			$line .= renderFormField($input, $pForm).'</div>';
+		if ( isRangeInputField( $input, $pForm ) ) {
+			// "from - to" fields are self-describing ("Sales price from") and bring their own .oo-input-group
+			$line = renderFormField($input, $pForm);
 		} 
 		else {
 			if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
@@ -74,7 +74,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label contains escaped HTML and renderFormField returns escaped HTML
 				$line =	 !$isHiddenField ? '<div class="oo-multi-select"><label for="'.esc_attr($input).'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
 			} else {
-				$line = '<label>'.$label;
+				$line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label;
 				$line .= renderFormField($input, $pForm).'</span></label>';
 			}
 		}
