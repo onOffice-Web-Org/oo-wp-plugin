@@ -26,7 +26,6 @@ namespace onOffice\WPlugin\Filter;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
-use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
 
@@ -174,11 +173,9 @@ class EstateCityValuesMapper
 			$requestParams['estatelanguage'] = $language;
 		}
 
-		if ($this->_pShowReferenceEstate === DataListView::HIDE_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-		} elseif ($this->_pShowReferenceEstate === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
-		}
+		$pReferenceEstateFilterBuilder = new ReferenceEstateFilterBuilder($this->_pSDKWrapper);
+		$requestParams['filter'] = $pReferenceEstateFilterBuilder->addFilter(
+			$requestParams['filter'] ?? [], $this->_pShowReferenceEstate);
 		$requestParams['filter']['veroeffentlichen'][] = ['op' => '=', 'val' => 1];
 		if ($this->_filterId !== 0) {
 			$requestParams['filterid'] = $this->_filterId;

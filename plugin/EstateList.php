@@ -49,6 +49,7 @@ use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
+use onOffice\WPlugin\Filter\ReferenceEstateFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\ImageTypes;
@@ -572,15 +573,7 @@ class EstateList
 			];
 		}
 
-		if ($pListView->getName() === 'detail') {
-			if ($this->getViewRestrict()) {
-				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-			}
-		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
-		}
+		$requestParams = $this->addReferenceEstateFilter($requestParams, $pListView);
 
 		return $requestParams;
 	}
@@ -692,15 +685,7 @@ class EstateList
 			if ($this->enableShowPriceOnRequestText() && $this->hasPriceOnRequestField() && !in_array('preisAufAnfrage', $requestParams['data'], true)) {
 				$requestParams['data'][] = 'preisAufAnfrage';
 			}
-			if ($pListView->getName() === 'detail') {
-				if ($this->getViewRestrict()) {
-					$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-				}
-			} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
-				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-			} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
-				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
-			}
+			$requestParams = $this->addReferenceEstateFilter($requestParams, $pListView);
 
 			$requestParams += $this->addExtraParams();
 			// Geo range search parameters are not part of the listname cache key; bypass the
@@ -860,11 +845,7 @@ class EstateList
 		$requestParams['sortorder'] = $pListView->getSortorder();
 
 
-		if ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
-		}
+		$requestParams = $this->addReferenceEstateFilter($requestParams, $pListView);
 
 		if ($pListView instanceof DataListView && $pListView->getFilterId() !== 0) {
 			$requestParams['filterid'] = $pListView->getFilterId();
@@ -943,15 +924,7 @@ class EstateList
 		if ($this->enableShowPriceOnRequestText() && $this->hasPriceOnRequestField() && !in_array('preisAufAnfrage', $requestParams['data'], true)) {
 			$requestParams['data'][] = 'preisAufAnfrage';
 		}
-		if ($pListView->getName() === 'detail') {
-			if ($this->getViewRestrict()) {
-				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-			}
-		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
-		}
+		$requestParams = $this->addReferenceEstateFilter($requestParams, $pListView);
 
 		$requestParams += $this->addExtraParams();
 		if (isset($requestParams['georangesearch'])) {
@@ -969,6 +942,36 @@ class EstateList
 		$addressList = $this->_pEnvironment->getAddressList();
 		return $addressList->getAddressLink(($addressId));
 	}
+
+	/**
+	 * Adds the reference estate restriction to a request's filter.
+	 *
+	 * The detail view follows its own access restriction, every other view the
+	 * list view setting. Both end up in the same NULL-safe exclusion.
+	 *
+	 * @param array $requestParams
+	 * @param DataView $pListView
+	 * @return array
+	 */
+	private function addReferenceEstateFilter(array $requestParams, DataView $pListView): array
+	{
+		$pReferenceEstateFilterBuilder = new ReferenceEstateFilterBuilder
+			($this->_pEnvironment->getSDKWrapper());
+		$filter = $requestParams['filter'] ?? [];
+
+		if ($pListView->getName() === 'detail') {
+			if ($this->getViewRestrict()) {
+				$filter = $pReferenceEstateFilterBuilder->addHideFilter($filter);
+			}
+		} else {
+			$filter = $pReferenceEstateFilterBuilder->addFilter($filter, $this->getShowReferenceEstate());
+		}
+
+		$requestParams['filter'] = $filter;
+
+		return $requestParams;
+	}
+
 
 	/**
 	 * @return array
