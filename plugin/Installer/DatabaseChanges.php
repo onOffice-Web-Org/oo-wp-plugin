@@ -47,7 +47,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 67;
+	const MAX_VERSION = 68;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -189,6 +189,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->addUseBrokerRecipientToForms();
 			case $dbversion <= 66:
 				$this->addComplexUnitsSupportToListviews();
+			case $dbversion <= 67:
+				$this->ensureComplexUnitsListTypeEnumValue();
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
@@ -1381,12 +1383,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 */
 	private function addComplexUnitsSupportToListviews(): void
 	{
+		$this->ensureComplexUnitsListTypeEnumValue();
+
 		$prefix = $this->getPrefix();
 		$tableName = $prefix . 'oo_plugin_listviews';
-
-		$sql = "ALTER TABLE $tableName MODIFY COLUMN `list_type`
-			ENUM('default', 'reference', 'favorites', 'units', 'complexunits') NOT NULL DEFAULT 'default'";
-		$this->_pWPDB->query($sql);
 
 		$columnExistsParentEstateId = $this->_pWPDB->get_results("SHOW COLUMNS FROM $tableName LIKE 'parent_estate_id'");
 		if (empty($columnExistsParentEstateId)) {
@@ -1398,6 +1398,35 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if (empty($columnExistsParentEstateMainIds)) {
 			$sql = "ALTER TABLE $tableName ADD COLUMN `parent_estate_main_ids` TEXT NULL DEFAULT NULL";
 			$this->_pWPDB->query($sql);
+		}
+	}
+
+	/**
+	 * Idempotent: re-checks the actual list_type column definition and re-applies the ALTER
+	 * only if 'complexunits' is missing from it. Runs as its own migration step in addition to
+	 * addComplexUnitsSupportToListviews() so sites where the ALTER previously failed silently
+	 * (e.g. non-strict SQL mode swallowing the invalid enum value instead of erroring) get
+	 * another chance to apply it.
+	 *
+	 * @return void
+	 */
+	private function ensureComplexUnitsListTypeEnumValue(): void
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . 'oo_plugin_listviews';
+
+		$column = $this->_pWPDB->get_row("SHOW COLUMNS FROM $tableName LIKE 'list_type'");
+		if ($column !== null && strpos((string) $column->Type, "'complexunits'") !== false) {
+			return;
+		}
+
+		$sql = "ALTER TABLE $tableName MODIFY COLUMN `list_type`
+			ENUM('default', 'reference', 'favorites', 'units', 'complexunits') NOT NULL DEFAULT 'default'";
+		$this->_pWPDB->query($sql);
+
+		if ($this->_pWPDB->last_error !== '') {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Needed for debugging database migration issues.
+			error_log('onOffice plugin: failed to add complexunits to list_type enum: ' . $this->_pWPDB->last_error);
 		}
 	}
 }
