@@ -30,13 +30,17 @@ use onOffice\WPlugin\SDKWrapper;
 
 /**
  * Loads the ids of the child estates related to a given parent/main estate via the Enterprise
- * COMPLEX_ESTATE_UNITS object relation (same relation used by the existing detail-page "units"
- * sub-list, see EstateUnits::loadByMainEstates()). Used by the standalone "complexunits" list
- * type, which - unlike "units" - is not embedded in a detail page and therefore has no
- * page-context estate id to derive the parent from; it is given the parent estate id explicitly.
+ * estate/estateUnit object relation. Used by the standalone "complexunits" list type, which
+ * has no page context to derive the parent estate id from; it is given the id explicitly.
  */
 class ComplexUnitsChildEstateIdsLoader
 {
+	/**
+	 * onOfficeSDK::RELATION_TYPE_COMPLEX_ESTATE_UNITS relates a "complex" (Anlage) to its
+	 * estates, not a Stammobjekt-estate to its own units - it does not apply here.
+	 */
+	const RELATION_TYPE_ESTATE_UNIT = 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:estateUnit';
+
 	/** @var SDKWrapper */
 	private $_pSDKWrapper;
 
@@ -60,7 +64,7 @@ class ComplexUnitsChildEstateIdsLoader
 
 		$pAction = new APIClientActionGeneric($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
 		$pAction->setParameters([
-			'relationtype' => onOfficeSDK::RELATION_TYPE_COMPLEX_ESTATE_UNITS,
+			'relationtype' => self::RELATION_TYPE_ESTATE_UNIT,
 			'parentids' => [(int) $parentEstateId],
 		]);
 		$pAction->addRequestToQueue()->sendRequests();

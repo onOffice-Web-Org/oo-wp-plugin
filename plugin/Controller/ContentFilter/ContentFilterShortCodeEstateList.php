@@ -37,7 +37,6 @@ use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Field\UnknownFieldException;
-use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderPresetEstateIds;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
@@ -128,13 +127,17 @@ class ContentFilterShortCodeEstateList
 			$pSortListModel = $this->_pSortListBuilder->build($pListView);
 			$pListViewWithSortParams = $this->listViewWithSortParams($pListView, $pSortListModel);
 
-			if ($pListViewWithSortParams->getListType() === DataListView::LISTVIEW_TYPE_COMPLEXUNITS
-				&& !$this->hasValidParentEstateId($pListViewWithSortParams)) {
-				return '';
+			if ($pListViewWithSortParams->getListType() === DataListView::LISTVIEW_TYPE_COMPLEXUNITS) {
+				$pListViewFilterBuilder = $this->buildComplexUnitsFilterBuilder($pListViewWithSortParams);
+				if ($pListViewFilterBuilder === null) {
+					return '';
+				}
+			} else {
+				$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory
+					->buildDefaultListViewFilter($pListViewWithSortParams);
 			}
 
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel, false);
-			$pListViewFilterBuilder = $this->buildFilterBuilder($pListViewWithSortParams);
 
 			$pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
 			$pGeoSearchBuilder->setViewProperty($pListViewWithSortParams);
@@ -171,25 +174,26 @@ class ContentFilterShortCodeEstateList
 	}
 
 	/**
-	 * For the standalone "complexunits" list type, the list is not driven by a normal search
-	 * filter but by the child estates of an explicitly configured parent/main estate (see
-	 * DataListView::getParentEstateId()/getParentEstateMainIds()). All other list types keep
-	 * using the normal filter mechanism.
+	 * Resolves the parent estate's child estate ids and builds a preset-id filter for them.
+	 * Returns null when there is nothing to show (no/invalid parent estate id configured yet,
+	 * or no linked child estates) - an empty preset-id filter is intentionally never built,
+	 * since an empty "Id IN (...)" filter is not guaranteed to restrict results at all.
 	 *
 	 * @param DataListView $pListView
-	 * @return DefaultFilterBuilder
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws UnknownFieldException
+	 * @return DefaultFilterBuilderPresetEstateIds|null
 	 */
-	private function buildFilterBuilder(DataListView $pListView): DefaultFilterBuilder
+	private function buildComplexUnitsFilterBuilder(DataListView $pListView): ?DefaultFilterBuilderPresetEstateIds
 	{
-		if ($pListView->getListType() !== DataListView::LISTVIEW_TYPE_COMPLEXUNITS) {
-			return $this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
+		$parentEstateId = $this->resolveParentEstateId($pListView);
+		if ((int) $parentEstateId <= 0) {
+			return null;
 		}
 
-		$parentEstateId = $this->resolveParentEstateId($pListView);
 		$childEstateIds = $this->_pComplexUnitsChildEstateIdsLoader->loadChildEstateIds($parentEstateId);
+		if ($childEstateIds === []) {
+			return null;
+		}
+
 		return new DefaultFilterBuilderPresetEstateIds($childEstateIds);
 	}
 
@@ -202,15 +206,6 @@ class ContentFilterShortCodeEstateList
 		$currentLanguage = Language::getDefault();
 		$parentEstateMainIds = $pListView->getParentEstateMainIds();
 		return (string) ($parentEstateMainIds[$currentLanguage] ?? $pListView->getParentEstateId());
-	}
-
-	/**
-	 * @param DataListView $pListView
-	 * @return bool
-	 */
-	private function hasValidParentEstateId(DataListView $pListView): bool
-	{
-		return (int) $this->resolveParentEstateId($pListView) > 0;
 	}
 
 	/**
