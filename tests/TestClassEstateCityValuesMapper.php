@@ -62,6 +62,8 @@ class EstateCityValuesMapperSDKWrapperMocker
 class TestClassEstateCityValuesMapper
 	extends WP_UnitTestCase
 {
+	use ReferenceEstateIdsMockTrait;
+
 	/** @var EstateCityValuesMapper */
 	private $_pMapper = null;
 
@@ -169,6 +171,10 @@ class TestClassEstateCityValuesMapper
 	 */
 	public function prepare()
 	{
+		// Resolve the reference estate ids up front, so the wrapper below only
+		// records the two city lookups the assertions are about.
+		$this->warmReferenceEstateIds();
+
 		$this->_pSDKWrapper = new EstateCityValuesMapperSDKWrapperMocker();
 
 		$currentLanguageParams = [
@@ -179,7 +185,7 @@ class TestClassEstateCityValuesMapper
 			'sortorder' => 'ASC',
 			'estatelanguage' => Language::getDefault(),
 			'filter' => [
-				'referenz' => [['op' => '=', 'val' => 0]],
+				'Id' => self::expectedHideReferenceCondition(),
 				'veroeffentlichen' => [['op' => '=', 'val' => 1]]
 			]
 		];
@@ -190,7 +196,7 @@ class TestClassEstateCityValuesMapper
 			'sortby' => 'Id',
 			'sortorder' => 'ASC',
 			'filter' => [
-				'referenz' => [['op' => '=', 'val' => 0]],
+				'Id' => self::expectedHideReferenceCondition(),
 				'veroeffentlichen' => [['op' => '=', 'val' => 1]]
 			]
 		];
@@ -246,7 +252,7 @@ class TestClassEstateCityValuesMapper
 			'sortorder' => 'ASC',
 			'estatelanguage' => Language::getDefault(),
 			'filter' => [
-				'referenz' => [['op' => '=', 'val' => 0]],
+				'Id' => self::expectedHideReferenceCondition(),
 				'veroeffentlichen' => [['op' => '=', 'val' => 1]],
 			],
 			'filterid' => 23,
