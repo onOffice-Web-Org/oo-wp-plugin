@@ -6,6 +6,16 @@ name: PR Preview | Coordinator (Dev Update Server)
 # the family with a matching P#<number> branch, then publishes a merged
 # manifest and triggers the box build once all uploads succeed.
 #
+# customer_box_id is optional and only matters the first time a box is
+# created for the ticket: pass the ID of the customer box the bug was
+# reported on and the test box is cloned from that box (its content and
+# DB state) instead of the generic template box the hosting API falls
+# back to (TEMPLATE_BOX_ID_TEST). An already existing ticket box is only
+# restarted, so a box ID passed for it has no effect.
+#
+# It's the box's database ID - the one in the hosting UI URL
+# (/boxes/<id>), NOT the offset ID from its prod-<id+1000> subdomain.
+#
 # This file is identical in all six sibling repos, so a project touching
 # more than one of them can be dispatched from more than one place at
 # once. concurrency: below only dedupes repeats within THIS repo (GitHub
@@ -18,6 +28,10 @@ on:
       project_number:
         description: "Project number from the P#<number> branch tag (digits only, e.g. 167871)"
         required: true
+        type: string
+      customer_box_id:
+        description: "Optional: ID of the customer box to clone the test box from - as in the hosting UI URL /boxes/<id>, not the prod-<id+1000> subdomain. Empty = the hosting API's template box."
+        required: false
         type: string
 
 # Run title doubles as a cross-repo signal - the Actions API doesn't
@@ -38,12 +52,22 @@ jobs:
         id: project
         env:
           PROJECT_NUMBER: ${{ inputs.project_number }}
+          CUSTOMER_BOX_ID: ${{ inputs.customer_box_id }}
         run: |
           if ! echo "$PROJECT_NUMBER" | grep -qE '^[0-9]+$'; then
             echo "::error::Input project_number '$PROJECT_NUMBER' must be a plain number (e.g. 167871) - not a branch name or 'P#...' tag."
             exit 1
           fi
           echo "folder=P${PROJECT_NUMBER}" >> "$GITHUB_OUTPUT"
+
+          # Checked here rather than at the box-build call at the very end, so a
+          # typo fails before any upload runs. Empty is valid and means "let the
+          # hosting API use its own template box".
+          if [ -n "$CUSTOMER_BOX_ID" ] && ! echo "$CUSTOMER_BOX_ID" | grep -qE '^[0-9]+$'; then
+            echo "::error::Input customer_box_id '$CUSTOMER_BOX_ID' must be a plain box ID (digits only) or empty."
+            exit 1
+          fi
+          echo "customer_box_id=${CUSTOMER_BOX_ID}" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub App token for sibling repos
         id: sibling-app-token
@@ -66,6 +90,7 @@ jobs:
           GH_TOKEN: ${{ steps.sibling-app-token.outputs.token }}
           OWNER: ${{ github.repository_owner }}
           FOLDER: ${{ steps.project.outputs.folder }}
+          CUSTOMER_BOX_ID: ${{ steps.project.outputs.customer_box_id }}
           CURRENT_REPO: ${{ github.event.repository.name }}
           CURRENT_RUN_ID: ${{ github.run_id }}
         run: |
@@ -142,6 +167,13 @@ jobs:
 
           if [ "$WINNER_REPO" != "$CURRENT_REPO" ] || [ "$WINNER_RUN_ID" != "$CURRENT_RUN_ID" ]; then
             echo "This run (${CURRENT_REPO} run ${CURRENT_RUN_ID}) defers to ${WINNER_REPO} run ${WINNER_RUN_ID} for project ${FOLDER}."
+            # Only the coordinator calls the hosting API, and the Actions API
+            # doesn't expose another run's inputs - so a box ID given to a
+            # deferring run cannot be forwarded. Say it out loud instead of
+            # letting the box quietly get cloned from the template box.
+            if [ -n "$CUSTOMER_BOX_ID" ]; then
+              echo "::warning::customer_box_id=${CUSTOMER_BOX_ID} was passed to this run, but ${WINNER_REPO} run ${WINNER_RUN_ID} coordinates ${FOLDER} and only its own input is used. If ${FOLDER} has no box yet and must be cloned from box ${CUSTOMER_BOX_ID}, wait for the runs to finish and dispatch once with the box ID."
+            fi
             echo "is_leader=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -336,14 +368,26 @@ jobs:
         if: steps.discover.outputs.is_leader == 'true'
         env:
           FOLDER: ${{ steps.project.outputs.folder }}
+          CUSTOMER_BOX_ID: ${{ steps.project.outputs.customer_box_id }}
         run: |
           PROJECT_NUMBER="${FOLDER#P}"
+
+          # source_box_id is sent only when a customer box was named - leaving it
+          # out is what makes the API fall back to its template box.
+          if [ -n "$CUSTOMER_BOX_ID" ]; then
+            echo "A new box for ${FOLDER} will be cloned from customer box ${CUSTOMER_BOX_ID}."
+            PAYLOAD=$(jq -nc --arg project_number "$PROJECT_NUMBER" --argjson source_box_id "$CUSTOMER_BOX_ID" \
+              '{project_number: $project_number, source_box_id: $source_box_id}')
+          else
+            PAYLOAD=$(jq -nc --arg project_number "$PROJECT_NUMBER" '{project_number: $project_number}')
+          fi
+
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             "${{ secrets.HOSTING_API_URL }}/test-environments/build-from-project" \
             -H "Authorization: Bearer ${{ steps.api-login.outputs.token }}" \
             -H "Content-Type: application/json" \
             -H "Accept: application/json" \
-            -d "{\"project_number\": \"${PROJECT_NUMBER}\"}")
+            -d "$PAYLOAD")
           CURL_EXIT=$?
 
           if [ "$CURL_EXIT" -ne 0 ]; then
