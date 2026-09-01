@@ -24,7 +24,6 @@ namespace onOffice\WPlugin\Record;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\ComplexUnitsMainIdResolver;
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\DataView\DataListViewFactory;
 use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
@@ -152,18 +151,23 @@ class RecordManagerUpdateListViewEstate
 			return false;
 		}
 
-		$pFactory = new DataListViewFactory($pRecordManagerRead);
-		$pDataListView = $pFactory->createListViewByRow($row);
-		$pDataListView->setParentEstateId($parentEstateId);
-
 		$pDIContainerBuilder = new ContainerBuilder();
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pDIContainerBuilder->build();
 		/** @var ComplexUnitsMainIdResolver $pResolver */
 		$pResolver = $pContainer->get(ComplexUnitsMainIdResolver::class);
-		$pDataListView->setParentEstateMainIds($pResolver->resolveMainIdsByLanguage($parentEstateId));
+		$parentEstateMainIds = $pResolver->resolveMainIdsByLanguage($parentEstateId);
 
-		return $this->updateByDataListView($pDataListView);
+		// Only touch the listview's own row here (not FIELDCONFIG/PICTURETYPES/...): updateByRow()
+		// expects associative per-field rows for TABLENAME_FIELDCONFIG, which getFields() (a flat
+		// string array) does not provide - going through updateByDataListView() here would pass
+		// the existing field selection through that mismatched shape and fail.
+		return $this->updateByRow([
+			self::TABLENAME_LIST_VIEW => [
+				'parent_estate_id' => $parentEstateId,
+				'parent_estate_main_ids' => wp_json_encode($parentEstateMainIds),
+			],
+		]);
 	}
 
 	/**
