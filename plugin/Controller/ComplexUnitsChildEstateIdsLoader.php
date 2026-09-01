@@ -69,6 +69,9 @@ class ComplexUnitsChildEstateIdsLoader
 		]);
 		$pAction->addRequestToQueue()->sendRequests();
 
+		// TEMPORARY debug logging, remove once complexunits filtering is confirmed working.
+		error_log('loadChildEstateIds parentEstateId=' . $parentEstateId . ' resultStatus=' . var_export($pAction->getResultStatus(), true) . ' result=' . var_export($pAction->getResult(), true)); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+
 		if (!$pAction->getResultStatus()) {
 			return [];
 		}
@@ -79,8 +82,13 @@ class ComplexUnitsChildEstateIdsLoader
 			return [];
 		}
 
+		// TEMPORARY debug logging, remove once complexunits filtering is confirmed working.
+		error_log('loadChildEstateIds records=' . var_export($records, true)); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+
 		foreach ($records as $properties) {
 			$elements = $properties['elements'] ?? [];
+			// TEMPORARY debug logging, remove once complexunits filtering is confirmed working.
+			error_log('loadChildEstateIds elements=' . var_export($elements, true) . ' key=' . (int) $parentEstateId); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			$childIds = $elements[(int) $parentEstateId] ?? [];
 			return array_map('intval', $childIds);
 		}
