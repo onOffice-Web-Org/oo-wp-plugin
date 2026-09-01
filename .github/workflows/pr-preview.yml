@@ -30,7 +30,7 @@ on:
         required: true
         type: string
       customer_box_id:
-        description: "Optional: ID of the customer box to clone the test box from - as in the hosting UI URL /boxes/<id>, not the prod-<id+1000> subdomain. Empty = the hosting API's template box."
+        description: "optional: hier die Box ID einfügen von welcher die Testinstanz geklont werden soll"
         required: false
         type: string
 
