@@ -60,15 +60,16 @@ class RecordManagerDuplicateListViewAddress extends RecordManager
 	}
 
 	/**
-	 *
 	 * @param string $name
+	 * @return bool true if the source list view was found and successfully duplicated
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
 
-	public function duplicateByName(string $name)
+	public function duplicateByName(string $name): bool
 	{
 		$prefix = $this->_pWPDB->prefix;
+		$success = false;
 
 		/* @var $pRecordManagerReadListViewAddress RecordManagerReadListViewAddress */
 		$pRecordManagerReadListViewAddress = $this->_pContainer->get(RecordManagerReadListViewAddress::class);
@@ -115,6 +116,7 @@ class RecordManagerDuplicateListViewAddress extends RecordManager
 				$newListView
 			);
 			$duplicateListViewId = $this->_pWPDB->insert_id;
+			$success = $duplicateListViewId !== 0;
 
 			if ($duplicateListViewId !== 0) {
 				//duplicate data related oo_plugin_fieldconfig table
@@ -140,5 +142,7 @@ class RecordManagerDuplicateListViewAddress extends RecordManager
 				}
 			}
 		}
+
+		return $success;
 	}
 }

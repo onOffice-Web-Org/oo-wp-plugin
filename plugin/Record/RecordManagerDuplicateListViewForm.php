@@ -61,17 +61,18 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 	}
 
 	/**
-	 *
 	 * @param string $name
+	 * @return bool true if the source form was found and successfully duplicated
 	 *
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 * @throws UnknownFormException
 	 */
 
-	public function duplicateByName(string $name)
+	public function duplicateByName(string $name): bool
 	{
 		$prefix = $this->_pWPDB->prefix;
+		$success = false;
 
 		/* @var $pRecordManagerReadListViewEstate RecordManagerReadForm */
 		$pRecordManagerReadListViewEstate = $this->_pContainer->get(RecordManagerReadForm::class);
@@ -118,6 +119,7 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 				$newListView
 			);
 			$duplicateListViewId = $this->_pWPDB->insert_id;
+			$success = $duplicateListViewId !== 0;
 
 			if ($duplicateListViewId !== 0) {
 				//duplicate data related oo_plugin_fieldconfig table
@@ -215,6 +217,8 @@ class RecordManagerDuplicateListViewForm extends RecordManager
  				}
 			}
 		}
+
+		return $success;
 	}
 
 
