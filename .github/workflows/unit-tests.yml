@@ -53,6 +53,7 @@ jobs:
         composer install --no-interaction --prefer-dist --no-scripts
         composer update --lock
         composer prefix-dependencies
+        composer check-prefixed-imports
 
     - name: install svn
       run: sudo apt install subversion

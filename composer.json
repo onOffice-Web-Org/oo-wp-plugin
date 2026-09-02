@@ -13,7 +13,7 @@
 		"wp-cli/i18n-command": "*",
         "ext-xdebug": "*",
         "yoast/phpunit-polyfills": "^4.0",
-        "brianhenryie/strauss": "^0.28.0"
+        "brianhenryie/strauss": "0.28.0"
     },
     "prefer-stable" : true,
 	"autoload": {
@@ -66,6 +66,7 @@
 	},
 	"scripts": {
 		"prefix-dependencies": "@php scripts/prefix-dependencies.php",
+		"check-prefixed-imports": "@php scripts/check-prefixed-imports.php",
 		"post-install-cmd": "@prefix-dependencies",
 		"post-update-cmd": "@prefix-dependencies"
 	}

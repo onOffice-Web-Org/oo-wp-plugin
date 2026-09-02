@@ -24,6 +24,11 @@ dependencies are moved into `vendor-prefixed/` and rewritten to the `onOffice\WP
 * Only PHP packages are prefixed. `select2` and `tom-select` are JavaScript assets and stay in
   `vendor/`, because the plugin enqueues them by path.
 
+> `composer install --no-dev` in this repository does **not** produce a working plugin: Strauss is
+> itself a dev dependency, so `vendor-prefixed/` is never built. The prefixing step fails loudly in
+> that case instead of leaving a broken tree behind. Use `composer install` for development and
+> `make release` for a shippable artifact.
+
 ### Updating dependencies
 
 `composer update` (or `composer update <vendor>/<package>`) rebuilds `vendor-prefixed/` on its own via
@@ -38,6 +43,17 @@ A **new production dependency** has to be classified in `composer.json`:
 
 Forgetting this is not possible: `composer prefix-dependencies` aborts and names any production
 package that is in neither list.
+
+`composer check-prefixed-imports` guards the other direction: it fails if any source file still
+references a prefixed dependency under its original name. Such a reference does not necessarily
+error - it can silently bind to the copy another plugin loaded first. CI runs the check on every
+pull request.
+
+That check matters most for `SDK/`, which is a mirror of
+[onOfficeGmbH/sdk](https://github.com/onOfficeGmbH/sdk) and carries its own README, CHANGELOG and
+phpunit config. `SDK/src/internal/ApiCall.php` imports phpgeo and therefore uses the prefixed names,
+which upstream does not. A re-sync from upstream silently reverts those two imports; the check turns
+that into a failing build instead of a broken radius search.
 
 Two things to know when running it by hand:
 
