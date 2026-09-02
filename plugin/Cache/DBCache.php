@@ -180,15 +180,15 @@ class DBCache
 
 
 	/**
+	 * Deletes every entry, unconditionally.
 	 *
+	 * This used to delegate to cleanup() with a TTL of 0, which deletes
+	 * "WHERE UNIX_TIMESTAMP(cache_created) < time()". Entries written in the same
+	 * second compare equal rather than less and therefore survived - so a manual
+	 * "clear cache" left behind whatever the site had just cached.
 	 */
-
 	public function clearAll()
 	{
-		$oldTtl = $this->_options['ttl'];
-		$this->_options['ttl'] = 0;
-		$this->_options['cleanCache'] = true;
-		$this->cleanup();
-		$this->_options['ttl'] = $oldTtl;
+		$this->_pWpdb->query( "DELETE FROM {$this->_pWpdb->prefix}oo_plugin_cache" );
 	}
 }
