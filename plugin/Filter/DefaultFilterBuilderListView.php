@@ -25,7 +25,10 @@ namespace onOffice\WPlugin\Filter;
 
 use onOffice\WPlugin\Vendor\DI\DependencyException;
 use onOffice\WPlugin\Vendor\DI\NotFoundException;
+use onOffice\SDK\Exception\ApiCallFaultyResponseException;
+use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -178,15 +181,21 @@ class DefaultFilterBuilderListView
 	 */
 	private function addEstateCityFilterWhenConvertTextToSelect(array $baseFilter, array $filterableFields): array
 	{
-		if (in_array('ort', $filterableFields) && !empty($this->_pDataListView->getConvertTextToSelectForCityField())) {
-			$additionalEstateCities = [];
+		if (in_array('ort', $filterableFields)) {
 			$estateCityValue = $this->_pEnvironment->getInputVariableReader()->getFieldValue('ort');
 
 			if (!is_array($estateCityValue) || empty($estateCityValue)) {
 				return $baseFilter;
 			}
-			foreach ($estateCityValue as $value) {
-				$additionalEstateCities []= $value;
+
+			try {
+				$pEstateCityValuesMapper = new EstateCityValuesMapper(
+					null,
+					$this->_pDataListView->getShowReferenceEstate(),
+					$this->_pDataListView->getFilterId());
+				$additionalEstateCities = $pEstateCityValuesMapper->getMainLanguageCityValues($estateCityValue);
+			} catch (ApiClientException | HttpFetchNoResultException | ApiCallFaultyResponseException $e) {
+				$additionalEstateCities = $estateCityValue;
 			}
 
 			if ($additionalEstateCities !== []) {
