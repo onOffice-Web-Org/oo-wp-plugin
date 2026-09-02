@@ -43,10 +43,10 @@ $rawValues = $pEstates->getRawValues();
     </div>
 <?php } ?>
 
-<?php if (
-    (bool) $pEstates->estateIterator() == true &&
-    !empty($pEstates->estateIterator())
-) { ?>
+<?php
+$hasUnits = (bool) $pEstates->estateIterator();
+$pEstates->resetEstateIterator();
+if ($hasUnits) { ?>
     <div class="oo-complexunits">
         <h2><?php esc_html_e('Units', 'onoffice-for-wp-websites');?></h2>
         <div class="oo-complexunits-table">
