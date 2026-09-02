@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
@@ -39,7 +39,7 @@ use onOffice\WPlugin\Utility\SymmetricEncryption;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use function settings_fields;
 use function submit_button;
-use Parsedown;
+use onOffice_WPlugin_Vendor_Parsedown as Parsedown;
 /**
  *
  */

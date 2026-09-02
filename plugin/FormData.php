@@ -28,9 +28,9 @@
 
 namespace onOffice\WPlugin;
 
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Controller\InputVariableReaderParser;

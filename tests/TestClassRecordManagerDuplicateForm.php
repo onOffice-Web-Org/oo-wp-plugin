@@ -23,10 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use Exception;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewForm;

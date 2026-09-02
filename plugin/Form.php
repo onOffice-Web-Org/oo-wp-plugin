@@ -21,14 +21,14 @@
 
 namespace onOffice\WPlugin;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\WPlugin\Controller\InputVariableReaderFormatter;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
-use Parsedown;
+use onOffice_WPlugin_Vendor_Parsedown as Parsedown;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateTitleBuilder;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;

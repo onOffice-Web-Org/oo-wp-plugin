@@ -21,13 +21,13 @@
 
 namespace onOffice\WPlugin\Form;
 
-use AltchaOrg\Altcha\Altcha;
-use AltchaOrg\Altcha\Algorithm\Pbkdf2;
-use AltchaOrg\Altcha\Challenge;
-use AltchaOrg\Altcha\ChallengeParameters;
-use AltchaOrg\Altcha\Payload;
-use AltchaOrg\Altcha\Solution;
-use AltchaOrg\Altcha\VerifySolutionOptions;
+use onOffice\WPlugin\Vendor\AltchaOrg\Altcha\Altcha;
+use onOffice\WPlugin\Vendor\AltchaOrg\Altcha\Algorithm\Pbkdf2;
+use onOffice\WPlugin\Vendor\AltchaOrg\Altcha\Challenge;
+use onOffice\WPlugin\Vendor\AltchaOrg\Altcha\ChallengeParameters;
+use onOffice\WPlugin\Vendor\AltchaOrg\Altcha\Payload;
+use onOffice\WPlugin\Vendor\AltchaOrg\Altcha\Solution;
+use onOffice\WPlugin\Vendor\AltchaOrg\Altcha\VerifySolutionOptions;
 
 /**
  * ALTCHA anti-spam handler.

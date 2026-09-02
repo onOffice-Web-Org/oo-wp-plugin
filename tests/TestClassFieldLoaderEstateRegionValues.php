@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldLoaderEstateRegionValues;
 use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;

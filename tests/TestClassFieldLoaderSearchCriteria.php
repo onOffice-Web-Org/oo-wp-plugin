@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldCategoryToFieldConverter;
 use onOffice\WPlugin\Field\Collection\FieldCategoryToFieldConverterSearchCriteriaBackendNoGeo;
@@ -32,7 +32,7 @@ use onOffice\WPlugin\Field\Collection\FieldRowConverterSearchCriteria;
 use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\SDKWrapper;
 use WP_UnitTestCase;
-use function DI\autowire;
+use function onOffice\WPlugin\Vendor\DI\autowire;
 use function json_decode;
 
 

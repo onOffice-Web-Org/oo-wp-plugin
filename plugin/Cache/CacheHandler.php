@@ -38,9 +38,9 @@ use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 use onOffice\WPlugin\Region\RegionController;
-use DI\Container;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 
 
 /**

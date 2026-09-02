@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\SortList\SortListBuilder;
 use onOffice\WPlugin\Controller\SortList\SortListDropDownGenerator;
