@@ -362,6 +362,7 @@ jobs:
           echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
 
       - name: Trigger project box build
+        id: box-build
         if: steps.discover.outputs.is_leader == 'true' && steps.discover.outputs.has_wp == 'true'
         env:
           FOLDER: ${{ steps.project.outputs.folder }}
@@ -396,4 +397,32 @@ jobs:
             ERROR_MSG=$(echo "$BODY" | jq -r '.error // .message // "unknown error"')
             echo "::error::Box-Build meldete success=false: ${ERROR_MSG}"
             exit 1
+          fi
+
+          echo "box_id=$(echo "$BODY" | jq -r '.data.box_id // empty')" >> "$GITHUB_OUTPUT"
+
+      # The verification itself lives in oo-web-marketplace, where the mptest
+      # key, the project's marketplace instance and wp-website:verify are. All
+      # this side does is hand over the box id it just got back.
+      - name: Trigger test box verification
+        if: >-
+          steps.discover.outputs.is_leader == 'true'
+          && steps.discover.outputs.has_project_apps == 'true'
+          && steps.box-build.outputs.box_id != ''
+        env:
+          GH_TOKEN: ${{ steps.sibling-app-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+          PROJECT_NUMBER: ${{ inputs.project_number }}
+          BOX_ID: ${{ steps.box-build.outputs.box_id }}
+        run: |
+          # Fire and forget: that run reports its own result in its own repo,
+          # and a failed verification must not retroactively fail a box build
+          # that succeeded.
+          REF=$(gh api "repos/${OWNER}/oo-web-marketplace" --jq '.default_branch')
+
+          if ! jq -n --arg ref "$REF" --arg pn "$PROJECT_NUMBER" --arg box "$BOX_ID" \
+            '{ref: $ref, inputs: {project_number: $pn, box_id: $box}}' \
+            | gh api "repos/${OWNER}/oo-web-marketplace/actions/workflows/pr-preview-verify.yml/dispatches" \
+              -X POST --input -; then
+            echo "::warning::Could not dispatch pr-preview-verify.yml for p${PROJECT_NUMBER} (box ${BOX_ID}) - verify manually if the box should appear in the project marketplace."
           fi
