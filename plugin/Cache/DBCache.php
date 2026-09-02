@@ -69,7 +69,7 @@ class DBCache
 	{
 		$onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
 		$interval = $this->_options['ttl'];
-		if (!empty($onofficeSettingsCache) && !isset($this->_options['cleanCache'])) {
+		if (!empty($onofficeSettingsCache)) {
 			$interval = wp_get_schedules()[$onofficeSettingsCache]["interval"];
 		}
 
