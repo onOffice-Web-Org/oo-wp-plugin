@@ -6,7 +6,13 @@ name: PR Preview | Coordinator (Dev Update Server)
 # the family with a matching P#<number> branch, then publishes a merged
 # manifest and triggers the box build once all uploads succeed.
 #
-# This file is identical in all six sibling repos, so a project touching
+# The family has two kinds of member. The six WordPress repos build a
+# component and upload a manifest fragment for the box; oo-web-marketplace and
+# onmove-api instead deploy a per-project marketplace/onMove instance on the
+# mptest box. Both are discovered and dispatched identically; the Laravel two
+# simply publish no manifest fragment.
+#
+# This file is identical in all eight sibling repos, so a project touching
 # more than one of them can be dispatched from more than one place at
 # once. concurrency: below only dedupes repeats within THIS repo (GitHub
 # scopes it per-repo); cross-repo exclusivity is handled instead by the
@@ -24,6 +30,10 @@ on:
 # expose workflow_dispatch inputs directly, so this is how other repos'
 # runs can tell which project a given active run is for.
 run-name: "PR Preview - P${{ inputs.project_number }}"
+
+env:
+  WP_REPOS: "onoffice-classic onoffice-modern onoffice-pure onoffice-timeless oo-wp-plugin oo-vue-addons"
+  PROJECT_APP_REPOS: "oo-web-marketplace onmove-api"
 
 concurrency:
   group: pr-preview-${{ inputs.project_number }}
@@ -59,6 +69,8 @@ jobs:
             onoffice-timeless
             oo-wp-plugin
             oo-vue-addons
+            oo-web-marketplace
+            onmove-api
 
       - name: Discover sibling branches and elect coordinator
         id: discover
@@ -69,7 +81,7 @@ jobs:
           CURRENT_REPO: ${{ github.event.repository.name }}
           CURRENT_RUN_ID: ${{ github.run_id }}
         run: |
-          REPOS="onoffice-classic onoffice-modern onoffice-pure onoffice-timeless oo-wp-plugin oo-vue-addons"
+          REPOS="$WP_REPOS $PROJECT_APP_REPOS"
 
           # Repos with a branch tagged P#<number> - tells us what to
           # dispatch and which fragments to expect later.
@@ -109,6 +121,18 @@ jobs:
           if [ ! -s matched-repos.txt ]; then
             echo "::error::No repo (including this one) has a branch tagged ${FOLDER} - nothing to do."
             exit 1
+          fi
+
+          HAS_WP=false
+          for repo in $WP_REPOS; do
+            if grep -q "^${repo} " matched-repos.txt; then
+              HAS_WP=true
+              break
+            fi
+          done
+          echo "has_wp=${HAS_WP}" >> "$GITHUB_OUTPUT"
+          if [ "$HAS_WP" = false ]; then
+            echo "Only project-app repos matched ${FOLDER} - skipping manifest and box build."
           fi
 
           # Coordinator = earliest active (queued/in_progress) pr-preview.yml
@@ -205,6 +229,10 @@ jobs:
           wait_for_run() {
             local repo="$1" run_id="$2"
             local elapsed=0 interval=10 max=900
+            # A cold project instance runs composer install + npm ci + build
+            # for both apps on the box, and may queue behind the sibling
+            # repo's run - far past the 15 min a component upload needs.
+            case " $PROJECT_APP_REPOS " in *" $repo "*) max=5400 ;; esac
             while [ "$elapsed" -lt "$max" ]; do
               read -r status conclusion < <(gh api "repos/${OWNER}/${repo}/actions/runs/${run_id}" --jq '"\(.status) \(.conclusion)"')
               if [ "$status" = "completed" ]; then
@@ -243,13 +271,13 @@ jobs:
           fi
 
       - name: Set SSH Key for Dev Update Server
-        if: steps.discover.outputs.is_leader == 'true'
+        if: steps.discover.outputs.is_leader == 'true' && steps.discover.outputs.has_wp == 'true'
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
 
       - name: Assemble and publish manifest
-        if: steps.discover.outputs.is_leader == 'true'
+        if: steps.discover.outputs.is_leader == 'true' && steps.discover.outputs.has_wp == 'true'
         env:
           FOLDER: ${{ steps.project.outputs.folder }}
         run: |
@@ -259,6 +287,7 @@ jobs:
           rm -f fragment-*.json
           while read -r repo run_id; do
             [ -z "$repo" ] && continue
+            case " $PROJECT_APP_REPOS " in *" $repo "*) continue ;; esac
             FRAGMENT_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/manifest-fragments/${repo}.json"
 
             set +e
@@ -290,7 +319,7 @@ jobs:
           exit 1
 
       - name: Login to Hosting API
-        if: steps.discover.outputs.is_leader == 'true'
+        if: steps.discover.outputs.is_leader == 'true' && steps.discover.outputs.has_wp == 'true'
         id: api-login
         run: |
           LOGIN_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
@@ -333,7 +362,7 @@ jobs:
           echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
 
       - name: Trigger project box build
-        if: steps.discover.outputs.is_leader == 'true'
+        if: steps.discover.outputs.is_leader == 'true' && steps.discover.outputs.has_wp == 'true'
         env:
           FOLDER: ${{ steps.project.outputs.folder }}
         run: |
