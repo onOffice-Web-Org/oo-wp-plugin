@@ -4,6 +4,7 @@ namespace onOffice\WPlugin\Controller\Redirector;
 
 use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Utility\Redirector;
+use onOffice\WPlugin\Utility\UrlHelper;
 use onOffice\WPlugin\WP\WPRedirectWrapper;
 
 class EstateRedirector
@@ -47,10 +48,11 @@ class EstateRedirector
 
 		$oldUrl = $this->_redirector->getCurrentLink();
 		$sanitizeTitle = $this->_wpEstateDetailUrl->getSanitizeTitle($estateTitle);
-		$isUrlHaveTitle = strpos($oldUrl, $sanitizeTitle) !== false;
+		$isUrlHaveTitle = $sanitizeTitle !== ''
+			&& strpos(UrlHelper::normalizeUrl($oldUrl), $sanitizeTitle) !== false;
 		$newUrl = $this->_wpEstateDetailUrl->getUrlWithEstateTitle($estateId, $estateTitle, $oldUrl, $isUrlHaveTitle, $pEstateRedirection);
 
-		if ( $newUrl !== $oldUrl ) {
+		if ( ! UrlHelper::isSameLocation( $newUrl, $oldUrl ) ) {
 			$isNewUrlValid = $this->_redirector->checkNewUrlIsValid(
 				array_filter( explode( '/', $newUrl ) ),
 				array_filter( explode( '/', $oldUrl ) )

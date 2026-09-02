@@ -119,13 +119,15 @@ class EstateDetailUrl
 			return '';
 		}
 
-		$sanitizeTitle = $flag ? sanitize_title(remove_accents($title, $switchLocale)) : sanitize_title($title);
+		$sanitizeTitle = $flag
+			? UrlHelper::sanitizeTitleToSlug($title, $switchLocale)
+			: UrlHelper::sanitizeTitleToSlug($title);
 		$arrSanitizeTitle = explode('-', $sanitizeTitle);
 		if (count($arrSanitizeTitle) > self::MAXIMUM_WORD_TITLE) {
 			$sanitizeTitle = implode('-', array_splice($arrSanitizeTitle, 0, self::MAXIMUM_WORD_TITLE));
 		}
 
-		return '-' . $sanitizeTitle;
+		return $sanitizeTitle === '' ? '' : '-' . $sanitizeTitle;
 	}
 
 	/**
