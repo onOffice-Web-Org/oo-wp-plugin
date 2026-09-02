@@ -225,11 +225,27 @@ class ApiCall
 			);
 			$params = $usedParameters["parameters"];
 
-			// 1. Check in-memory cache first (catches ALL duplicate calls within this PHP request)
-			$inMemoryKey = $this->getInMemoryCacheKey($usedParameters);
-			if (isset(self::$_inMemoryCache[$inMemoryKey]))
+			// params_list_cache holds the parameters the cron warmed the list under:
+			// same list, default filter, complete record set. Look the cache up under
+			// those, so a request with an active search hits the entry at all, and let
+			// applyListCacheFiltering() below trim the full set to this page.
+			$cacheParameters = $usedParameters;
+			if (isset($params['params_list_cache']) && is_array($params['params_list_cache']))
 			{
-				$inMemoryResponse = self::$_inMemoryCache[$inMemoryKey];
+				$cacheParameters['parameters'] = $params['params_list_cache'];
+			}
+
+			// $cacheKey is shared by every page and search of one list, $requestKey is not.
+			// Duplicate detection must use $requestKey: keyed by $cacheKey, two different
+			// searches on the same list look like duplicates and the second one gets the
+			// first one's records. See TestClassApiCall.
+			$cacheKey = $this->getInMemoryCacheKey($cacheParameters);
+			$requestKey = $this->getInMemoryCacheKey($usedParameters);
+
+			// 1. Check in-memory cache first (catches ALL duplicate calls within this PHP request)
+			if (isset(self::$_inMemoryCache[$cacheKey]))
+			{
+				$inMemoryResponse = self::$_inMemoryCache[$cacheKey];
 				// Apply list-specific filtering/sorting if needed (same logic as DB cache hit)
 				if (isset($params['listname']))
 				{
@@ -239,14 +255,21 @@ class ApiCall
 				continue;
 			}
 
+			// Exact response for this request, stored after an HTTP fetch below - already trimmed.
+			if ($cacheKey !== $requestKey && isset(self::$_inMemoryCache[$requestKey]))
+			{
+				$this->_responses[$requestId] = new Response($pRequest, self::$_inMemoryCache[$requestKey]);
+				continue;
+			}
+
 			// 2. Check DB cache (existing logic for list-based caching)
-			$cachedResponse = $this->getFromCache($usedParameters);
+			$cachedResponse = $this->getFromCache($cacheParameters);
 
 			if ($cachedResponse === null)
 			{
-				if (isset($sourceRequestIdByCacheKey[$inMemoryKey]))
+				if (isset($sourceRequestIdByCacheKey[$requestKey]))
 				{
-					$sourceRequestId = $sourceRequestIdByCacheKey[$inMemoryKey];
+					$sourceRequestId = $sourceRequestIdByCacheKey[$requestKey];
 					if (!isset($duplicateRequestsBySourceRequestId[$sourceRequestId]))
 					{
 						$duplicateRequestsBySourceRequestId[$sourceRequestId] = array();
@@ -268,12 +291,12 @@ class ApiCall
 
 				$actionParameters[] = $parametersThisAction;
 				$actionParametersOrder[] = $pRequest;
-				$sourceRequestIdByCacheKey[$inMemoryKey] = $requestId;
+				$sourceRequestIdByCacheKey[$requestKey] = $requestId;
 			}
 			else
 			{
-				// Store in in-memory cache for subsequent identical calls
-				self::$_inMemoryCache[$inMemoryKey] = $cachedResponse;
+				// Untrimmed, so later pages and searches get their own slice from it.
+				self::$_inMemoryCache[$cacheKey] = $cachedResponse;
 
 				if($cachedResponse != null && isset($params['listname']))
 				{
