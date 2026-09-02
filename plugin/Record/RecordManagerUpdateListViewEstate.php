@@ -21,7 +21,10 @@
 
 namespace onOffice\WPlugin\Record;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Controller\ComplexUnitsMainIdResolver;
 use onOffice\WPlugin\DataView\DataListView;
+use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
@@ -51,6 +54,8 @@ class RecordManagerUpdateListViewEstate
 			'sortBySetting' => $pDataViewList->getSortBySetting(),
 			'sortByUserDefinedDefault' => $pDataViewList->getSortByUserDefinedDefault(),
 			'sortByUserDefinedDirection' => $pDataViewList->getSortByUserDefinedDirection(),
+			'parent_estate_id' => $pDataViewList->getParentEstateId(),
+			'parent_estate_main_ids' => wp_json_encode($pDataViewList->getParentEstateMainIds()),
 		];
 
 		$tableRow = [
@@ -123,5 +128,91 @@ class RecordManagerUpdateListViewEstate
 		}
 
 		return $result !== false;
+	}
+
+	/**
+	 * Sets the parent estate id for a "complexunits" list view and resolves + persists the
+	 * language-specific main ids for all currently active WPML languages.
+	 *
+	 * This is the internal PHP entry point other plugins (e.g. oo-vue-addons, right after
+	 * cloning a project website box) are meant to call directly, e.g.:
+	 *   (new RecordManagerUpdateListViewEstate($listviewId))->updateParentEstateId($immobilienId);
+	 * There is intentionally no REST endpoint for this in this plugin.
+	 *
+	 * @param string $parentEstateId
+	 * @return bool success
+	 */
+	public function updateParentEstateId(string $parentEstateId): bool
+	{
+		$pRecordManagerRead = new RecordManagerReadListViewEstate();
+		$row = $pRecordManagerRead->getRowById($this->getRecordId());
+
+		if (empty($row)) {
+			return false;
+		}
+
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		/** @var ComplexUnitsMainIdResolver $pResolver */
+		$pResolver = $pContainer->get(ComplexUnitsMainIdResolver::class);
+		$parentEstateMainIds = $pResolver->resolveMainIdsByLanguage($parentEstateId);
+
+		// Only touch the listview's own row here (not FIELDCONFIG/PICTURETYPES/...): updateByRow()
+		// expects associative per-field rows for TABLENAME_FIELDCONFIG, which getFields() (a flat
+		// string array) does not provide - going through updateByDataListView() here would pass
+		// the existing field selection through that mismatched shape and fail.
+		return $this->updateByRow([
+			self::TABLENAME_LIST_VIEW => [
+				'parent_estate_id' => $parentEstateId,
+				'parent_estate_main_ids' => wp_json_encode($parentEstateMainIds),
+			],
+		]);
+	}
+
+	/**
+	 * Persists the selected fields for this listview from scratch (delete + re-insert), with all
+	 * per-field display options (filterable/hidden/highlighted/availableOptions/
+	 * convertTextToSelectForCityField/rangeFieldDisplayMode) left at their default/empty value,
+	 * since they are not relevant for a plain card/table display such as complexunits.
+	 *
+	 * Intentionally NOT implemented via updateByRow(self::TABLENAME_FIELDCONFIG, ...): the row
+	 * shape updateByDataListView() currently passes for that table (a flat list of field names,
+	 * see getFields()) does not match what updateByRow() expects there (associative per-field
+	 * rows, as produced by the admin form's InputModelDBAdapterRow) - that existing code path
+	 * appears to have never been exercised with non-empty fields.
+	 *
+	 * This is the internal PHP entry point other plugins (e.g. oo-vue-addons) are meant to call
+	 * directly, e.g.:
+	 *   (new RecordManagerUpdateListViewEstate($listviewId))->updateSelectedFields($fieldNames);
+	 *
+	 * @param string[] $fieldNames
+	 * @return bool success
+	 */
+	public function updateSelectedFields(array $fieldNames): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$listviewId = $this->getRecordId();
+
+		$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG, ['listview_id' => $listviewId]);
+
+		$result = true;
+		foreach (array_values($fieldNames) as $index => $fieldName) {
+			$inserted = $pWpDb->insert($prefix.self::TABLENAME_FIELDCONFIG, [
+				'listview_id' => $listviewId,
+				'order' => $index + 1,
+				'fieldname' => $fieldName,
+				'filterable' => 0,
+				'hidden' => 0,
+				'highlighted' => 0,
+				'availableOptions' => 0,
+				'convertTextToSelectForCityField' => 0,
+				'rangeFieldDisplayMode' => '',
+			]);
+			$result = $result && ($inserted !== false);
+		}
+
+		return $result;
 	}
 }
