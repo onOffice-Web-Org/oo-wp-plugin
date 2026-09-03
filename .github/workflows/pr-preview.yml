@@ -6,6 +6,13 @@ name: PR Preview | Coordinator (Dev Update Server)
 # the family with a matching P#<number> branch, then publishes a merged
 # manifest and triggers the box build once all uploads succeed.
 #
+# supervisor_email is the onOffice address of the ticket's Betreuer. The
+# hosting API resolves it to that user account and puts it on the box, so
+# the project website is listed under their name in the hosting UI and the
+# dev-box expiry warnings go to them instead of the CI API user. It has to
+# be an address that already exists as a user there - the API rejects
+# unknown ones rather than silently falling back.
+#
 # customer_box_id is optional and only matters the first time a box is
 # created for the ticket: pass the ID of the customer box the bug was
 # reported on and the test box is cloned from that box (its content and
@@ -27,6 +34,10 @@ on:
     inputs:
       project_number:
         description: "Project number from the P#<number> branch tag (digits only, e.g. 167871)"
+        required: true
+        type: string
+      supervisor_email:
+        description: "hier die onOffice Email angeben, die als Betreuer der Projektwebseite angezeigt wird"
         required: true
         type: string
       customer_box_id:
@@ -52,6 +63,7 @@ jobs:
         id: project
         env:
           PROJECT_NUMBER: ${{ inputs.project_number }}
+          SUPERVISOR_EMAIL: ${{ inputs.supervisor_email }}
           CUSTOMER_BOX_ID: ${{ inputs.customer_box_id }}
         run: |
           if ! echo "$PROJECT_NUMBER" | grep -qE '^[0-9]+$'; then
@@ -59,6 +71,15 @@ jobs:
             exit 1
           fi
           echo "folder=P${PROJECT_NUMBER}" >> "$GITHUB_OUTPUT"
+
+          # Only the shape is checked here (and, like customer_box_id below,
+          # before any upload runs) - whether the address belongs to a
+          # hosting-UI user is the API's call when it sets the Betreuer.
+          if ! echo "$SUPERVISOR_EMAIL" | grep -qE '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$'; then
+            echo "::error::Input supervisor_email '$SUPERVISOR_EMAIL' must be an email address (e.g. vorname.nachname@onoffice.com)."
+            exit 1
+          fi
+          echo "supervisor_email=${SUPERVISOR_EMAIL}" >> "$GITHUB_OUTPUT"
 
           # Checked here rather than at the box-build call at the very end, so a
           # typo fails before any upload runs. Empty is valid and means "let the
@@ -90,6 +111,7 @@ jobs:
           GH_TOKEN: ${{ steps.sibling-app-token.outputs.token }}
           OWNER: ${{ github.repository_owner }}
           FOLDER: ${{ steps.project.outputs.folder }}
+          SUPERVISOR_EMAIL: ${{ steps.project.outputs.supervisor_email }}
           CUSTOMER_BOX_ID: ${{ steps.project.outputs.customer_box_id }}
           CURRENT_REPO: ${{ github.event.repository.name }}
           CURRENT_RUN_ID: ${{ github.run_id }}
@@ -174,6 +196,9 @@ jobs:
             if [ -n "$CUSTOMER_BOX_ID" ]; then
               echo "::warning::customer_box_id=${CUSTOMER_BOX_ID} was passed to this run, but ${WINNER_REPO} run ${WINNER_RUN_ID} coordinates ${FOLDER} and only its own input is used. If ${FOLDER} has no box yet and must be cloned from box ${CUSTOMER_BOX_ID}, wait for the runs to finish and dispatch once with the box ID."
             fi
+            # Same for the Betreuer: the box gets whichever address the
+            # coordinator was dispatched with, so this run's is dropped.
+            echo "::warning::supervisor_email=${SUPERVISOR_EMAIL} was passed to this run, but ${WINNER_REPO} run ${WINNER_RUN_ID} coordinates ${FOLDER} and only its own input is used. If the box's Betreuer has to be ${SUPERVISOR_EMAIL}, check it in the hosting UI once the runs are done."
             echo "is_leader=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -368,18 +393,21 @@ jobs:
         if: steps.discover.outputs.is_leader == 'true'
         env:
           FOLDER: ${{ steps.project.outputs.folder }}
+          SUPERVISOR_EMAIL: ${{ steps.project.outputs.supervisor_email }}
           CUSTOMER_BOX_ID: ${{ steps.project.outputs.customer_box_id }}
         run: |
           PROJECT_NUMBER="${FOLDER#P}"
+
+          echo "Betreuer of ${FOLDER}: ${SUPERVISOR_EMAIL}"
+          PAYLOAD=$(jq -nc --arg project_number "$PROJECT_NUMBER" --arg supervisor_email "$SUPERVISOR_EMAIL" \
+            '{project_number: $project_number, supervisor_email: $supervisor_email}')
 
           # source_box_id is sent only when a customer box was named - leaving it
           # out is what makes the API fall back to its template box.
           if [ -n "$CUSTOMER_BOX_ID" ]; then
             echo "A new box for ${FOLDER} will be cloned from customer box ${CUSTOMER_BOX_ID}."
-            PAYLOAD=$(jq -nc --arg project_number "$PROJECT_NUMBER" --argjson source_box_id "$CUSTOMER_BOX_ID" \
-              '{project_number: $project_number, source_box_id: $source_box_id}')
-          else
-            PAYLOAD=$(jq -nc --arg project_number "$PROJECT_NUMBER" '{project_number: $project_number}')
+            PAYLOAD=$(echo "$PAYLOAD" | jq -c --argjson source_box_id "$CUSTOMER_BOX_ID" \
+              '. + {source_box_id: $source_box_id}')
           fi
 
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
