@@ -38,6 +38,42 @@ class TestClassDBCache
 	extends WP_UnitTestCase
 {
 	/**
+	 * clearAll() used to run cleanup() with a TTL of 0, which deletes
+	 * "WHERE UNIX_TIMESTAMP(cache_created) < time()". Entries written in the same
+	 * second as the click compare equal, not less, and therefore survived a manual
+	 * "clear cache" - the exact complaint that started this investigation.
+	 */
+	public function testClearAllRemovesEntriesWrittenInTheSameSecond()
+	{
+		global $wpdb;
+		$table = $wpdb->prefix . 'oo_plugin_cache';
+		$pCache = new DBCache(['ttl' => 3600]);
+
+		$pCache->write(['parameters' => ['a' => 1]], 'first');
+		$pCache->write(['parameters' => ['b' => 2]], 'second');
+		$this->assertSame('2', $wpdb->get_var("SELECT COUNT(*) FROM $table"));
+
+		$pCache->clearAll();
+
+		$this->assertSame('0', $wpdb->get_var("SELECT COUNT(*) FROM $table"));
+	}
+
+
+	public function testClearAllRemovesEntriesRegardlessOfCacheDurationSetting()
+	{
+		global $wpdb;
+		$table = $wpdb->prefix . 'oo_plugin_cache';
+		update_option('onoffice-settings-duration-cache', 'six_hours');
+		$pCache = new DBCache(['ttl' => 3600]);
+
+		$pCache->write(['parameters' => ['c' => 3]], 'third');
+		$pCache->clearAll();
+
+		$this->assertSame('0', $wpdb->get_var("SELECT COUNT(*) FROM $table"));
+	}
+
+
+	/**
 	 * Different filters should produce different cache keys.
 	 * Before the fix, only the Id filter was included in the hash.
 	 */
