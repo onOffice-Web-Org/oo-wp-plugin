@@ -95,6 +95,9 @@ class AdminPageEstateUnitSettings
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowPriceOnRequest);
+
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
