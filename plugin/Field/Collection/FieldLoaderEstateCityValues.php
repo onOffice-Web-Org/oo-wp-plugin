@@ -28,7 +28,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIEmptyResultException;
-use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\Filter\ReferenceEstateFilterBuilder;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -90,11 +90,9 @@ class FieldLoaderEstateCityValues
 			'estatelanguage' => Language::getDefault(),
 		];
 
-		if ($this->_pShowReferenceEstate === DataListView::HIDE_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-		} elseif ($this->_pShowReferenceEstate === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
-		}
+		$pReferenceEstateFilterBuilder = new ReferenceEstateFilterBuilder($this->_pSDKWrapper);
+		$requestParams['filter'] = $pReferenceEstateFilterBuilder->addFilter(
+			$requestParams['filter'] ?? [], $this->_pShowReferenceEstate);
 		$requestParams['filter']['veroeffentlichen'][] = ['op' => '=', 'val' => 1];
 
 		$pApiClientAction = new APIClientActionGeneric

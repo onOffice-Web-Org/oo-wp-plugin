@@ -38,6 +38,7 @@ use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 use onOffice\WPlugin\Region\RegionController;
+use onOffice\WPlugin\Filter\ReferenceEstateFilterBuilder;
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -83,6 +84,7 @@ class CacheHandler
 			$pCache->clearAll();
 		}
 		RegionController::clearRegionOptionsCache();
+		ReferenceEstateFilterBuilder::resetCache();
 	}
 
 

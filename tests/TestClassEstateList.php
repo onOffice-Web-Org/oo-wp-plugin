@@ -80,6 +80,8 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 class TestClassEstateList
 	extends WP_UnitTestCase
 {
+	use ReferenceEstateIdsMockTrait;
+
 	/** @var EstateList */
 	private $_pEstateList = null;
 
@@ -907,7 +909,7 @@ class TestClassEstateList
 					'erbpacht'],
 				'filter' => [
 					'veroeffentlichen' => [['op' => '=', 'val' => 1]],
-					'referenz' => [['op' => '=', 'val' => 0]],
+					'Id' => self::expectedHideReferenceCondition(),
 				],
 				'estatelanguage' => 'ENG',
 				'outputlanguage' => 'ENG',
@@ -1106,6 +1108,10 @@ class TestClassEstateList
 
 	public function prepareEstateList()
 	{
+		// The list view hides reference estates, so the ids to exclude have to be
+		// resolved before any request parameters are built.
+		$this->warmReferenceEstateIds();
+
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 
 		$dataReadEstateFormatted = json_decode
