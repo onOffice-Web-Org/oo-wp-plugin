@@ -61,6 +61,10 @@ jobs:
           echo "::add-mask::${TOKEN}"
           echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
 
+      # auto_build=false: the deploy only copies the artifact onto the master
+      # NFS. The test master image is rebuilt from that NFS content by the
+      # scheduled `test-master:build-image` command (every 6 h), so pushes to
+      # master no longer start an image build each.
       - name: Deploy Test via Hosting API
         run: |
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
@@ -71,7 +75,7 @@ jobs:
             -F "artifact_type=plugin" \
             -F "artifact_name=onoffice-for-wp-websites" \
             -F "channel=test" \
-            -F "auto_build=true")
+            -F "auto_build=false")
 
           HTTP_CODE=$(echo "$RESPONSE" | tail -1)
           BODY=$(echo "$RESPONSE" | sed '$d')
@@ -91,5 +95,6 @@ jobs:
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "- Artifact: \`onoffice-for-wp-websites\` (plugin)" >> "$GITHUB_STEP_SUMMARY"
           echo "- Channel: \`test\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Image build: none, the test master image is rebuilt on schedule (every 6 h)" >> "$GITHUB_STEP_SUMMARY"
           echo "- Branch: \`${{ github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "- Commit: \`${{ github.sha }}\`" >> "$GITHUB_STEP_SUMMARY"
