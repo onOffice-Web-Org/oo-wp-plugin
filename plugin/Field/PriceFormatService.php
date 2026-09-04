@@ -79,6 +79,10 @@ class PriceFormatService
 	public function formatPriceField($value, string $currency = '€'): string
 	{
 		$normalized = (string) $value;
+		
+		// Decode HTML entities (like &#039;) back to their characters (like ') 
+		// before Regex extracts phantom digits.
+		$normalized = html_entity_decode($normalized, ENT_QUOTES);
 
 		$currencySymbols = ['€', '$', '£', '¥', 'CHF', 'USD', 'EUR', 'GBP', 'JPY', $currency];
 		$normalized = str_replace($currencySymbols, '', $normalized);
