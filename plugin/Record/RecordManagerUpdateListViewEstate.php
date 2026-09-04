@@ -215,4 +215,40 @@ class RecordManagerUpdateListViewEstate
 
 		return $result;
 	}
+
+	/**
+	 * Persists the selected picture types for this listview from scratch (delete + re-insert).
+	 *
+	 * Intentionally NOT implemented via updateByRow(self::TABLENAME_PICTURETYPES, ...): the row
+	 * shape updateByDataListView() currently passes for that table (a flat list of picture type
+	 * names, see getPictureTypes()) does not match what updateByRow() expects there (associative
+	 * per-row arrays for direct $wpdb->insert()) - the same pre-existing shape mismatch already
+	 * documented on updateSelectedFields() above, and likewise never exercised with non-empty data.
+	 *
+	 * This is the internal PHP entry point other plugins (e.g. oo-vue-addons, to toggle "Grundriss"
+	 * for a project website's Einheitenliste) are meant to call directly, e.g.:
+	 *   (new RecordManagerUpdateListViewEstate($listviewId))->updateSelectedPictureTypes($types);
+	 *
+	 * @param string[] $pictureTypes
+	 * @return bool success
+	 */
+	public function updateSelectedPictureTypes(array $pictureTypes): bool
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$listviewId = $this->getRecordId();
+
+		$pWpDb->delete($prefix.self::TABLENAME_PICTURETYPES, ['listview_id' => $listviewId]);
+
+		$result = true;
+		foreach (array_values($pictureTypes) as $pictureType) {
+			$inserted = $pWpDb->insert($prefix.self::TABLENAME_PICTURETYPES, [
+				'listview_id' => $listviewId,
+				'picturetype' => $pictureType,
+			]);
+			$result = $result && ($inserted !== false);
+		}
+
+		return $result;
+	}
 }
