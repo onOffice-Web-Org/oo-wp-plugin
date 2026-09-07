@@ -25,9 +25,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *  Fallback template for the standalone "complexunits" list type (list of the child estates
  *  of an explicitly configured parent/main estate). Modeled after default_units.php.
  *
- *  Table markup stays a real <table> (semantic + accessible), but is styled to be modern and
- *  responsive: below the `--stacked` breakpoint each row re-flows into a labelled card, reusing
- *  the `data-label` attribute every cell already carries. Everything here (CSS + JS) is
+ *  Renders as a CSS Grid "table" rather than a real <table> element: a single grid container
+ *  (role="table") holds two rowgroups (role="rowgroup") whose rows (role="row") and cells
+ *  (role="columnheader"/"cell") are all direct grid items via `display: contents` on the
+ *  rowgroups/rows - this keeps the accessible table semantics (a screen reader still announces
+ *  rows/columns exactly as it would for a real <table>) while letting CSS Grid handle column
+ *  sizing/alignment instead of the browser's table layout engine, and lets the same markup
+ *  collapse into a stacked card layout below the `--stacked` breakpoint by simply overriding
+ *  `display` at that breakpoint - no separate mobile markup needed. Reuses the `data-label`
+ *  attribute every cell already carries for that stacked view. Everything here (CSS + JS) is
  *  self-contained in this plugin template - no theme dependency, per the "kein theme-spezifisches"
  *  requirement.
  */
@@ -64,35 +70,99 @@ $showFloorplanColumn = in_array(ImageTypes::GROUNDPLAN, $pEstates->getDataView()
 <?php
 $hasUnits = (bool) $pEstates->estateIterator();
 $pEstates->resetEstateIterator();
-if ($hasUnits) { ?>
+if ($hasUnits) {
+    $visible_columns = [];
+    while (
+        $current_property = $pEstatesClone->estateIterator()
+
+    ) {
+        $estateId = $pEstatesClone->getCurrentEstateId();
+        if (!empty($current_property)) {
+            foreach ($current_property as $field => $value) {
+                if (in_array($field, $dont_echo)) {
+                    continue;
+                }
+                if (
+                    !(
+                        (is_numeric($value) && 0 == $value) ||
+                        $value == '0000-00-00' ||
+                        $value == '0.00' ||
+                        (is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0") || // skip negative boolean fields
+                        $value == '' ||
+                        empty($value)
+                    )
+                ) {
+                    $visible_columns [$field]= true;
+                }
+            }
+        }
+    }
+
+    $pEstates->resetEstateIterator();
+    $first_property = $pEstates->estateIterator();
+
+    // Whether the detail page is configured/published at all (the marketplace's "Detailseite
+    // aktivieren" toggle) is a site-wide setting, not something that varies estate by estate -
+    // getEstateLink() falls back to '#' identically for every row when it's off, so checking it
+    // once here (rather than per row) is enough to decide whether the whole "Details" column has
+    // anything to show at all. Computed up front (rather than only while rendering the header, as
+    // the table-based version of this template used to) so the grid's column-track list below can
+    // already account for it.
+    $showDetailsColumn = $first_property && $pEstates->getEstateLink() !== '#';
+
+    // Grid column tracks, in the exact order cells are emitted below: icon columns (Merkliste,
+    // Grundriss) and the Details column size to their content, every real data field shares the
+    // remaining space equally - this is what a real <table>'s automatic column sizing used to give
+    // us for free, so the grid container needs to be told explicitly instead.
+    $gridColumns = [];
+    if ($showFavoritesColumn) {
+        $gridColumns[] = 'auto';
+    }
+    if ($showFloorplanColumn) {
+        $gridColumns[] = 'auto';
+    }
+    if ($first_property) {
+        foreach ($first_property as $field => $value) {
+            if (in_array($field, $dont_echo) || !isset($visible_columns[$field])) {
+                continue;
+            }
+            $gridColumns[] = 'minmax(0, 1fr)';
+        }
+    }
+    if ($showDetailsColumn) {
+        $gridColumns[] = 'auto';
+    }
+    ?>
     <style>
         .oo-complexunits-table {
             overflow-x: auto;
         }
         .oo-complexunits__wrapper {
+            display: grid;
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
             font-size: 0.95em;
         }
-        .oo-complexunits__wrapper th.oo-complexunits__data,
-        .oo-complexunits__wrapper td.oo-complexunits__data {
+        .oo-complexunits__head,
+        .oo-complexunits__body,
+        .oo-complexunits__row {
+            display: contents;
+        }
+        .oo-complexunits__data {
             padding: 0.75em 1em;
             text-align: left;
             border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
-        .oo-complexunits__head th.oo-complexunits__data {
+        .oo-complexunits__head .oo-complexunits__data {
             font-weight: 600;
             border-bottom-width: 2px;
         }
-        .oo-complexunits__body tr.oo-complexunits__row:hover {
+        .oo-complexunits__row:hover .oo-complexunits__data {
             background-color: rgba(0, 0, 0, 0.03);
         }
         .oo-complexunits__data.--empty {
             color: rgba(0, 0, 0, 0.4);
         }
         .oo-complexunits__data--icon {
-            width: 1%;
             white-space: nowrap;
             text-align: center;
         }
@@ -132,14 +202,12 @@ if ($hasUnits) { ?>
             background-color: rgba(0, 0, 0, 0.65);
         }
 
-        /* Responsive stacked layout - reuses the data-label attribute already on every cell. */
+        /* Responsive stacked layout - reuses the data-label attribute every cell already carries. */
         @media (max-width: 640px) {
             .oo-complexunits__wrapper,
-            .oo-complexunits__wrapper thead,
-            .oo-complexunits__wrapper tbody,
-            .oo-complexunits__wrapper th,
-            .oo-complexunits__wrapper td,
-            .oo-complexunits__wrapper tr {
+            .oo-complexunits__head,
+            .oo-complexunits__body,
+            .oo-complexunits__row {
                 display: block;
             }
             .oo-complexunits__head {
@@ -149,23 +217,23 @@ if ($hasUnits) { ?>
                 overflow: hidden;
                 clip: rect(0 0 0 0);
             }
-            .oo-complexunits__body tr.oo-complexunits__row {
+            .oo-complexunits__body .oo-complexunits__row {
                 margin-bottom: 1em;
                 border: 1px solid rgba(0, 0, 0, 0.08);
                 border-radius: 0.5em;
                 padding: 0.25em 0;
             }
-            .oo-complexunits__wrapper td.oo-complexunits__data {
+            .oo-complexunits__data {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 gap: 1em;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             }
-            .oo-complexunits__wrapper td.oo-complexunits__data:last-child {
+            .oo-complexunits__body .oo-complexunits__row .oo-complexunits__data:last-child {
                 border-bottom: 0;
             }
-            .oo-complexunits__wrapper td.oo-complexunits__data::before {
+            .oo-complexunits__data::before {
                 content: attr(data-label);
                 font-weight: 600;
                 padding-right: 1em;
@@ -220,58 +288,20 @@ if ($hasUnits) { ?>
     <div class="oo-complexunits">
         <h2><?php esc_html_e('Units', 'onoffice-for-wp-websites');?></h2>
         <div class="oo-complexunits-table">
-            <table class="oo-complexunits__wrapper">
-                <thead class="oo-complexunits__head">
-                    <tr class="oo-complexunits__row">
+            <div class="oo-complexunits__wrapper" role="table" aria-label="<?php esc_attr_e('Units', 'onoffice-for-wp-websites'); ?>" style="grid-template-columns: <?php echo esc_attr(implode(' ', $gridColumns)); ?>;">
+                <div class="oo-complexunits__head" role="rowgroup">
+                    <div class="oo-complexunits__row" role="row">
                         <?php
-                        $visible_columns = [];
-                        while (
-                            $current_property = $pEstatesClone->estateIterator()
-
-                        ) {
-							$estateId = $pEstatesClone->getCurrentEstateId();
-                            if (!empty($current_property)) {
-                                foreach ($current_property as $field => $value) {
-                                    if (in_array($field, $dont_echo)) {
-                                        continue;
-                                    }
-                                    if (
-                                        !(
-                                            (is_numeric($value) && 0 == $value) ||
-                                            $value == '0000-00-00' ||
-                                            $value == '0.00' ||
-                                            (is_string($value) && $value !== '' && !is_numeric($value) && ($rawValues->getValueRaw($estateId)['elements'][$field] ?? null) === "0") || // skip negative boolean fields
-                                            $value == '' ||
-                                            empty($value)
-                                        )
-                                    ) {
-                                        $visible_columns [$field]= true;
-                                    }
-                                }
-                            }
-                        }
-
-                        $pEstates->resetEstateIterator();
-                        $first_property = $pEstates->estateIterator();
-
-                        // Whether the detail page is configured/published at all (the
-                        // marketplace's "Detailseite aktivieren" toggle) is a site-wide setting,
-                        // not something that varies estate by estate - getEstateLink() falls back
-                        // to '#' identically for every row when it's off, so checking it once here
-                        // (rather than per row) is enough to decide whether the whole "Details"
-                        // column has anything to show at all.
-                        $showDetailsColumn = $first_property && $pEstates->getEstateLink() !== '#';
-
                         if ($showFavoritesColumn) {
-                            echo '<th class="oo-complexunits__data oo-complexunits__data--icon">';
+                            echo '<div class="oo-complexunits__data oo-complexunits__data--icon" role="columnheader">';
                             echo '<span class="oo-visually-hidden">' . esc_html__('Watchlist', 'onoffice-for-wp-websites') . '</span>';
-                            echo '</th>';
+                            echo '</div>';
                         }
 
                         if ($showFloorplanColumn) {
-                            echo '<th class="oo-complexunits__data oo-complexunits__data--icon">';
+                            echo '<div class="oo-complexunits__data oo-complexunits__data--icon" role="columnheader">';
                             echo esc_html__('Floor plan', 'onoffice-for-wp-websites');
-                            echo '</th>';
+                            echo '</div>';
                         }
 
                         if ($first_property) {
@@ -283,26 +313,26 @@ if ($hasUnits) { ?>
                                     continue;
                                 }
 
-                                echo '<th class="oo-complexunits__data">';
+                                echo '<div class="oo-complexunits__data" role="columnheader">';
                                 echo esc_html($pEstates->getFieldLabel($field));
-                                echo '</th>';
+                                echo '</div>';
                             }
                         }
 
                         if ($showDetailsColumn) {
-                            echo '<th class="oo-complexunits__data">';
+                            echo '<div class="oo-complexunits__data" role="columnheader">';
                             echo esc_html__('Details', 'onoffice-for-wp-websites');
-                            echo '</th>';
+                            echo '</div>';
                         }
                         ?>
-                    </tr>
-                </thead>
-                <tbody class="oo-complexunits__body">
+                    </div>
+                </div>
+                <div class="oo-complexunits__body" role="rowgroup">
                     <?php
                     $pEstates->resetEstateIterator();
                     while ($current_property = $pEstates->estateIterator()) {
 						$estateId = $pEstates->getCurrentEstateId();
-                        echo '<tr class="oo-complexunits__row">';
+                        echo '<div class="oo-complexunits__row" role="row">';
 
                         if ($showFavoritesColumn) {
                             $favorizationLabel = Favorites::getFavorizationLabel() === 'Watchlist'
@@ -314,7 +344,7 @@ if ($hasUnits) { ?>
                                 (int) $estateId
                             );
 
-                            echo '<td class="oo-complexunits__data oo-complexunits__data--icon" data-label="' .
+                            echo '<div class="oo-complexunits__data oo-complexunits__data--icon" role="cell" data-label="' .
                                 esc_attr__('Watchlist', 'onoffice-for-wp-websites') . '">';
                             echo '<button type="button" data-onoffice-estateid="' .
                                 esc_attr($pEstates->getCurrentMultiLangEstateMainId()) .
@@ -322,7 +352,7 @@ if ($hasUnits) { ?>
                                 esc_attr($favorizationLabel . ' ' . $estateLabel) . '">' .
                                 '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21s-7.5-4.7-10-9C.4 8.4 2 4.5 6 4c2.2-.3 4 .8 6 3 2-2.2 3.8-3.3 6-3 4 .5 5.6 4.4 4 8-2.5 4.3-10 9-10 9z"/></svg>' .
                                 '</button>';
-                            echo '</td>';
+                            echo '</div>';
                         }
 
                         if ($showFloorplanColumn) {
@@ -330,7 +360,7 @@ if ($hasUnits) { ?>
                             $floorplanId = $floorplanIds[0] ?? null;
                             $floorplanUrl = $floorplanId !== null ? $pEstates->getEstatePictureUrl($floorplanId) : null;
 
-                            echo '<td class="oo-complexunits__data oo-complexunits__data--icon" data-label="' .
+                            echo '<div class="oo-complexunits__data oo-complexunits__data--icon" role="cell" data-label="' .
                                 esc_attr__('Floor plan', 'onoffice-for-wp-websites') . '">';
                             if (!empty($floorplanUrl)) {
                                 echo '<button type="button" class="oo-complexunits-iconbtn oo-complexunits-floorplan-btn" data-floorplan-url="' .
@@ -341,7 +371,7 @@ if ($hasUnits) { ?>
                             } else {
                                 echo '-';
                             }
-                            echo '</td>';
+                            echo '</div>';
                         }
 
                         foreach ($current_property as $field => $value):
@@ -369,13 +399,13 @@ if ($hasUnits) { ?>
                                 $class = '';
                             }
 
-                            echo '<td class="oo-complexunits__data' .
+                            echo '<div class="oo-complexunits__data' .
                                 esc_attr($class).
-                                '" data-label="' .
+                                '" role="cell" data-label="' .
                                 esc_attr($pEstates->getFieldLabel($field)) .
                                 '">';
                             echo is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value);
-                            echo '</td>';
+                            echo '</div>';
                         endforeach;
 
                         // getEstateLink() never returns an empty string - it falls back to '#' when
@@ -384,7 +414,7 @@ if ($hasUnits) { ?>
                         // vary per row, so the whole column is skipped via $showDetailsColumn
                         // (computed once, above) rather than emptying each row's cell individually.
                         if ($showDetailsColumn) {
-                            echo '<td class="oo-complexunits__data oo-complexunitslink" data-label="' .
+                            echo '<div class="oo-complexunits__data oo-complexunitslink" role="cell" data-label="' .
                                 esc_html__('Details', 'onoffice-for-wp-websites') .
                                 '">';
                             echo '<a class="oo-complexunits-btn" title="'.esc_attr__('To the unit', 'onoffice-for-wp-websites').': '.esc_attr($current_property['objekttitel']).'" href="' .
@@ -392,14 +422,14 @@ if ($hasUnits) { ?>
                                 '">' .
                                 esc_html__('To the unit', 'onoffice-for-wp-websites') .
                                 '</a>';
-                            echo '</td>';
+                            echo '</div>';
                         }
 
-                        echo '</tr>';
+                        echo '</div>';
                     }
                     ?>
-                </tbody>
-            </table>
+                </div>
+            </div>
         </div>
     </div>
     <?php if ($showFloorplanColumn) { ?>
