@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 6.1
 Tested up to: 6.9.1
 Requires PHP: 8.2
-Stable tag: 6.18.0
+Stable tag: 6.18.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,16 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.18.1 (2026-09-07) =
+
+**Fixed**
+* Preis auf Anfrage
+* clear the cache on demand and cache searched estate lists
+* fixing price on request issue and updating test
+* reverting recent changes back to json array
+* supporting units
+* trying to fix broken swiss prices
 
 = 6.18.0 (2026-08-28) =
 
