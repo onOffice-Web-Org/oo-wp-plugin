@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 6.18.0
+Version: 6.18.1-prerelease.1
 Requires PHP: 8.2
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
@@ -34,7 +34,7 @@ Domain Path: /languages
 */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-const ONOFFICE_PLUGIN_VERSION = '6.18.0';
+const ONOFFICE_PLUGIN_VERSION = '6.18.1-prerelease.1';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
 
 require __DIR__ . '/vendor/autoload.php';
@@ -163,20 +163,29 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 
 add_action('admin_init', function () use ( $pDI ) {
     // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- strpos() doesn't execute or display the value, only checks string position.
-    if ( isset($_SERVER["REQUEST_URI"]) && strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") !== false ) {
-        $onofficeSettingsCache = get_option('onoffice-settings-duration-cache');
-        $timestamp = wp_next_scheduled('oo_cache_renew');
-        if ($timestamp) {
-            wp_unschedule_event($timestamp, 'oo_cache_renew');
-        }
-
-        wp_schedule_event(time(), $onofficeSettingsCache, 'oo_cache_renew');
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_safe_redirect() validates and sanitizes the URL.
-        $location = ! empty($_SERVER['HTTP_REFERER']) ? wp_unslash($_SERVER['HTTP_REFERER']) : admin_url('admin.php?page=onoffice-settings');
-        update_option('onoffice-notice-cache-was-cleared', true);
-        wp_safe_redirect($location);
-        exit();
+    if ( !isset($_SERVER["REQUEST_URI"]) || strpos($_SERVER["REQUEST_URI"], "action=onoffice-clear-cache") === false ) {
+        return;
     }
+
+    // Clear synchronously: a single DELETE plus a few delete_transient() calls, so the
+    // cache is provably empty by the time the redirect is answered. Doing this via cron
+    // made the success notice lie for up to one cron interval (10+ minutes on hosts that
+    // set DISABLE_WP_CRON and run wp-cron from the system crontab).
+    $pDI->get(CacheHandler::class)->clear();
+
+    // Warm the cache back up out-of-band. A single event on top of the recurring
+    // 'oo_cache_renew' schedule - never unschedule the recurring one here, because
+    // wp_schedule_event() returns false for an unknown recurrence name and the event
+    // would then be gone for good.
+    // WordPress itself skips a single event whose hook is already due within 10 minutes,
+    // so repeated clicks cannot pile up renewals.
+    wp_schedule_single_event(time(), 'oo_cache_renew');
+
+    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_safe_redirect() validates and sanitizes the URL.
+    $location = ! empty($_SERVER['HTTP_REFERER']) ? wp_unslash($_SERVER['HTTP_REFERER']) : admin_url('admin.php?page=onoffice-settings');
+    update_option('onoffice-notice-cache-was-cleared', true);
+    wp_safe_redirect($location);
+    exit();
 });
 
 // phpcs:disable WordPress.Security.NonceVerification.Recommended -- WordPress core edit action check, no side effects.
