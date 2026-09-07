@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 6.18.0
+Version: 6.18.1
 Requires PHP: 8.2
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
@@ -34,15 +34,17 @@ Domain Path: /languages
 */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-const ONOFFICE_PLUGIN_VERSION = '6.18.0';
+const ONOFFICE_PLUGIN_VERSION = '6.18.1';
 define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
 
 require __DIR__ . '/vendor/autoload.php';
+// prefixed dependencies (Strauss) - keeps php-di, PSR-11 and Parsedown out of the global namespace
+require __DIR__ . '/vendor-prefixed/autoload.php';
 require plugin_dir_path( __FILE__ ) . 'oo-updater.php';
 
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Cache\CachedOutput;
 use onOffice\WPlugin\Cache\CacheHandler;

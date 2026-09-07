@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\OutputFields;

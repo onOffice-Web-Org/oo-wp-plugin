@@ -22,7 +22,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListViewAddress;
