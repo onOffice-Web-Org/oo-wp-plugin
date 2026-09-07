@@ -47,7 +47,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 66;
+	const MAX_VERSION = 68;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -187,6 +187,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->setCaptchaDefaultTrue();
 			case $dbversion <= 65:
 				$this->addUseBrokerRecipientToForms();
+			case $dbversion <= 66:
+				$this->addComplexUnitsSupportToListviews();
+			case $dbversion <= 67:
+				$this->ensureComplexUnitsListTypeEnumValue();
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
@@ -264,10 +268,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`sortby` tinytext NOT NULL,
 			`sortorder` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
 			`show_status` tinyint(1) NOT NULL DEFAULT '1',
-			`list_type` ENUM('default', 'reference', 'favorites', 'units') NOT NULL DEFAULT 'default',
+			`list_type` ENUM('default', 'reference', 'favorites', 'units', 'complexunits') NOT NULL DEFAULT 'default',
 			`template` tinytext NOT NULL,
 			`expose` tinytext,
 			`recordsPerPage` INT( 10 ) NOT NULL DEFAULT '10',
+			`parent_estate_id` VARCHAR(20) NOT NULL DEFAULT '',
+			`parent_estate_main_ids` TEXT NULL DEFAULT NULL COMMENT 'JSON map of onOffice 3-letter language code to language-specific main estate id, used by list_type=complexunits',
 			`random` tinyint(1) NOT NULL DEFAULT '0',
 			`country_active` tinyint(1) NOT NULL DEFAULT '1',
 			`zip_active` tinyint(1) NOT NULL DEFAULT '1',
@@ -1365,6 +1371,62 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if (empty($columnExists)) {
 			$sql = "ALTER TABLE $tableName ADD COLUMN use_broker_recipient tinyint(1) NOT NULL DEFAULT '0'";
 			$this->_pWPDB->query($sql);
+		}
+	}
+
+	/**
+	 * Adds DB support for the standalone "complexunits" list type (list of an arbitrary
+	 * parent estate's related child estates, addressed by a stored parent estate id
+	 * instead of the currently displayed detail page estate).
+	 *
+	 * @return void
+	 */
+	private function addComplexUnitsSupportToListviews(): void
+	{
+		$this->ensureComplexUnitsListTypeEnumValue();
+
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . 'oo_plugin_listviews';
+
+		$columnExistsParentEstateId = $this->_pWPDB->get_results("SHOW COLUMNS FROM $tableName LIKE 'parent_estate_id'");
+		if (empty($columnExistsParentEstateId)) {
+			$sql = "ALTER TABLE $tableName ADD COLUMN `parent_estate_id` VARCHAR(20) NOT NULL DEFAULT ''";
+			$this->_pWPDB->query($sql);
+		}
+
+		$columnExistsParentEstateMainIds = $this->_pWPDB->get_results("SHOW COLUMNS FROM $tableName LIKE 'parent_estate_main_ids'");
+		if (empty($columnExistsParentEstateMainIds)) {
+			$sql = "ALTER TABLE $tableName ADD COLUMN `parent_estate_main_ids` TEXT NULL DEFAULT NULL";
+			$this->_pWPDB->query($sql);
+		}
+	}
+
+	/**
+	 * Idempotent: re-checks the actual list_type column definition and re-applies the ALTER
+	 * only if 'complexunits' is missing from it. Runs as its own migration step in addition to
+	 * addComplexUnitsSupportToListviews() so sites where the ALTER previously failed silently
+	 * (e.g. non-strict SQL mode swallowing the invalid enum value instead of erroring) get
+	 * another chance to apply it.
+	 *
+	 * @return void
+	 */
+	private function ensureComplexUnitsListTypeEnumValue(): void
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . 'oo_plugin_listviews';
+
+		$column = $this->_pWPDB->get_row("SHOW COLUMNS FROM $tableName LIKE 'list_type'");
+		if ($column !== null && strpos((string) $column->Type, "'complexunits'") !== false) {
+			return;
+		}
+
+		$sql = "ALTER TABLE $tableName MODIFY COLUMN `list_type`
+			ENUM('default', 'reference', 'favorites', 'units', 'complexunits') NOT NULL DEFAULT 'default'";
+		$this->_pWPDB->query($sql);
+
+		if ($this->_pWPDB->last_error !== '') {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Needed for debugging database migration issues.
+			error_log('onOffice plugin: failed to add complexunits to list_type enum: ' . $this->_pWPDB->last_error);
 		}
 	}
 }

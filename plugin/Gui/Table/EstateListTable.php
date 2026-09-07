@@ -108,7 +108,7 @@ class EstateListTable extends ListTable
 		$pRecordRead->addColumn('list_type');
 		$pRecordRead->addColumn('name', 'shortcode');
 		$pRecordRead->addColumn('page_shortcode');
-		$pRecordRead->addWhere("`list_type` IN('default', 'reference', 'favorites')");
+		$pRecordRead->addWhere("`list_type` IN('default', 'reference', 'favorites', 'complexunits')");
 
 		$pRecord = $pRecordRead->getRecordsSortedAlphabetically();
 		$pRecord = $this->handleRecord($pRecord);

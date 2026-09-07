@@ -1,0 +1,98 @@
+<?php
+
+/**
+ *
+ *    Copyright (C) 2026 onOffice GmbH
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+declare(strict_types=1);
+
+namespace onOffice\WPlugin\Controller;
+
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\ApiClientException;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\SDKWrapper;
+
+/**
+ * Loads the ids of the child estates related to a given parent/main estate via the Enterprise
+ * estate/estateUnit object relation. Used by the standalone "complexunits" list type, which
+ * has no page context to derive the parent estate id from; it is given the id explicitly.
+ */
+class ComplexUnitsChildEstateIdsLoader
+{
+	/**
+	 * onOfficeSDK::RELATION_TYPE_COMPLEX_ESTATE_UNITS relates a "complex" (Anlage) to its
+	 * estates, not a Stammobjekt-estate to its own units - it does not apply here.
+	 */
+	const RELATION_TYPE_ESTATE_UNIT = 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:estateUnit';
+
+	/** @var SDKWrapper */
+	private $_pSDKWrapper;
+
+	/**
+	 * @param SDKWrapper $pSDKWrapper
+	 */
+	public function __construct(SDKWrapper $pSDKWrapper)
+	{
+		$this->_pSDKWrapper = $pSDKWrapper;
+	}
+
+	/**
+	 * @param string $parentEstateId onOffice internal estate id of the parent/main estate
+	 * @return int[]
+	 */
+	public function loadChildEstateIds(string $parentEstateId): array
+	{
+		if ((int) $parentEstateId <= 0) {
+			return [];
+		}
+
+		$pAction = new APIClientActionGeneric($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
+		$pAction->setParameters([
+			'relationtype' => self::RELATION_TYPE_ESTATE_UNIT,
+			'parentids' => [(int) $parentEstateId],
+		]);
+		$pAction->addRequestToQueue()->sendRequests();
+
+		// TEMPORARY debug logging, remove once complexunits filtering is confirmed working.
+		error_log('loadChildEstateIds parentEstateId=' . $parentEstateId . ' resultStatus=' . var_export($pAction->getResultStatus(), true) . ' result=' . var_export($pAction->getResult(), true)); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+
+		if (!$pAction->getResultStatus()) {
+			return [];
+		}
+
+		try {
+			$records = $pAction->getResultRecords();
+		} catch (ApiClientException $pException) {
+			return [];
+		}
+
+		// TEMPORARY debug logging, remove once complexunits filtering is confirmed working.
+		error_log('loadChildEstateIds records=' . var_export($records, true)); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+
+		foreach ($records as $properties) {
+			$elements = $properties['elements'] ?? [];
+			// TEMPORARY debug logging, remove once complexunits filtering is confirmed working.
+			error_log('loadChildEstateIds elements=' . var_export($elements, true) . ' key=' . (int) $parentEstateId); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			$childIds = $elements[(int) $parentEstateId] ?? [];
+			return array_map('intval', $childIds);
+		}
+
+		return [];
+	}
+}

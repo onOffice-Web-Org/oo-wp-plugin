@@ -661,7 +661,34 @@ class FormModelBuilderDBEstateListSettings
 		return array(
 			DataListView::LISTVIEW_TYPE_DEFAULT => __('Default', 'onoffice-for-wp-websites'),
 			DataListView::LISTVIEW_TYPE_FAVORITES => __('Favorites List', 'onoffice-for-wp-websites'),
+			DataListView::LISTVIEW_TYPE_COMPLEXUNITS => __('Complex Units', 'onoffice-for-wp-websites'),
 		);
+	}
+
+
+	/**
+	 *
+	 * The "ImmobilienID" of the parent/main estate whose related child estates (Enterprise
+	 * object relation COMPLEX_ESTATE_UNITS) this list shows. Only relevant/shown when
+	 * "Type of List" (see createInputModelListType()) is set to
+	 * DataListView::LISTVIEW_TYPE_COMPLEXUNITS - visibility of this field is toggled
+	 * client-side (see js/onoffice-listtype-complexunits-select.js). It is usually filled in
+	 * automatically by the code that set up the project website, not manually by the admin.
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelParentEstateId(): InputModelDB
+	{
+		$pInputModel = new InputModelDB(null, __('Property ID (ImmobilienID)', 'onoffice-for-wp-websites'));
+		$pInputModel->setTable('oo_plugin_listviews');
+		$pInputModel->setField('parent_estate_id');
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
+		$pInputModel->setValue($this->getValue('parent_estate_id'));
+		$pInputModel->setHintHtml(__('onOffice estate id of the parent property whose related units this list shows. Only used for the "Complex Units" list type.', 'onoffice-for-wp-websites'));
+
+		return $pInputModel;
 	}
 
 

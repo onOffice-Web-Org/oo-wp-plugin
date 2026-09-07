@@ -63,7 +63,8 @@ return (function(EstateList $pEstatesClone) {
         }
         $address = implode('<br>', $addressParts);
 
-        $estateLink = esc_url($pEstatesClone->getEstateLink());
+        $rawEstateLink = $pEstatesClone->getEstateLink();
+        $estateLink = $rawEstateLink !== '#' ? esc_url($rawEstateLink) : '';
         $reference = filter_var($currentEstateRawValue['elements']['referenz'] ?? false, FILTER_VALIDATE_BOOLEAN);
         $restrictedView = $pEstatesClone->getViewRestrict();
         if ( $reference && $restrictedView ) {
@@ -95,6 +96,19 @@ return (function(EstateList $pEstatesClone) {
     if ($estateData === []) {
         return;
     }
+
+    // ScriptLoaderMap only auto-enqueues Leaflet when the current page's raw post_content
+    // contains a literal "[oo_estate ...]" shortcode (or estate_id/address_id query vars) - see
+    // ScriptLoaderMap::markMapMaybeNeeded(). A project website's homepage embeds the
+    // "Estate-Units" block as an ACF/Gutenberg block whose shortcode lives in the block's own
+    // (JSON-encoded) attributes, not as literal shortcode text in post_content, so that detection
+    // never fires and Leaflet never loads there - leaving this inline script's `L` undefined.
+    // Enqueuing the same handles ScriptLoaderMapOsm registers directly here, right where they're
+    // actually needed, doesn't depend on that heuristic recognizing the calling context.
+    wp_enqueue_style('leaflet-style');
+    wp_enqueue_script('leaflet-script');
+    wp_enqueue_script('leaflet-script-a11y');
+    wp_enqueue_script('leaflet-script-cluster');
     ?>
     <div class="oo-map" role="region" id="<?php echo esc_attr($mapId) ?>" style="width: 100%; height: 100%;" aria-label="<?php echo esc_html__(
     'Map with properties','onoffice-for-wp-websites'); ?>"></div>

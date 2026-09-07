@@ -89,6 +89,9 @@ class DataListViewFactory
 		$pListView->setMarkedPropertiesSort($row['markedPropertiesSort']);
 		$pListView->setSortByTags($row['sortByTags']);
 		$pListView->setSortByTagsDirection($row['sortByTagsDirection']);
+		$pListView->setParentEstateId($row['parent_estate_id'] ?? '');
+		$parentEstateMainIds = json_decode($row['parent_estate_main_ids'] ?? '', true);
+		$pListView->setParentEstateMainIds(is_array($parentEstateMainIds) ? $parentEstateMainIds : []);
 
 		$geoFieldsAll = [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,

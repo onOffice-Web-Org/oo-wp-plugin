@@ -156,19 +156,23 @@ class SDKWrapper
 		$pOptionsWrapper = $this->_pWPOptionWrapper;
 		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
 		$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
+		$apiClaim = $pOptionsWrapper->getOption('onoffice-settings-apiclaim');
 		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
 			try {
 				$secretDecrypt = $this->_encrypter->decrypt($secret, ONOFFICE_CREDENTIALS_ENC_KEY);
 				$tokenDecrypt = $this->_encrypter->decrypt($token, ONOFFICE_CREDENTIALS_ENC_KEY);
+				$apiClaimDecrypt = $this->_encrypter->decrypt($apiClaim, ONOFFICE_CREDENTIALS_ENC_KEY);
 			}catch (\RuntimeException $exception){
 				$this->_pSDK->removeCacheInstances();
 				$secretDecrypt = $secret;
 				$tokenDecrypt = $token;
+				$apiClaimDecrypt = $apiClaim;
 			}
 			$secret = $secretDecrypt;
 			$token = $tokenDecrypt;
+			$apiClaim = $apiClaimDecrypt;
 		}
-		$this->_pSDK->sendRequests($token, $secret, $saveToCache);
+		$this->_pSDK->sendRequests($token, $secret, $saveToCache, $apiClaim);
 		$errors = $this->_pSDK->getErrors();
 
 		foreach ($this->_callbacksAfterSend as $handle => $callback) {
@@ -295,7 +299,7 @@ class SDKWrapper
 			 * themselves. Estates from multiple list views are merged per language key.
 			 *
 			 * @param array<string,array<int,string>> $allEstates Grouped by onOffice language code.
-			 *   Example: ['DEU' => [7407 => 'Charmante Wohnung', ...], 'ENG' => [7407 => 'Charming flat', ...]]
+			 *   Example: ['DEU' => [7407 => 'Charmante Wohnung', ...], 'ENG' => [7408 => 'Charming flat', ...]]
 			 */
 			do_action('onoffice/cache_renew/estates_ready', $allEstates);
 	 }

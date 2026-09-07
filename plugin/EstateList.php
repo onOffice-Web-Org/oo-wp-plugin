@@ -1400,7 +1400,7 @@ class EstateList
 			->getDetailView()->getPageId();
 
 		$fullLink = '#';
-		if ($pageId !== 0) {
+		if ($pageId !== 0 && $this->isPageLinkable($pageId)) {
 			$estate   = $this->_currentEstate['mainId'];
 			$title    = $this->_currentEstate['title'] ?? '';
 			$url      = get_page_link($pageId);
@@ -1413,6 +1413,31 @@ class EstateList
 		}
 
 		return $fullLink;
+	}
+
+	/**
+	 * Guards against linking to a detail page that has been unpublished (see the marketplace's
+	 * "Detailseite aktivieren" toggle, ProjectWebsiteService::pushDetailPageConfig() in
+	 * oo-vue-addons, which drafts/publishes this exact page per WPML language) - without this,
+	 * getEstateLink() kept generating a URL to a draft page (a 404 for visitors) instead of
+	 * falling back to '#' the way it already does when no detail page is configured at all.
+	 *
+	 * Resolves the *current* WPML language's own translation of $pageId first (return_original_
+	 * if_missing=true falls back to $pageId itself when no translation exists yet, or when WPML
+	 * isn't active) - only that translation's status is relevant to the link actually being
+	 * rendered right now.
+	 *
+	 * @param int $pageId
+	 * @return bool
+	 */
+	private function isPageLinkable(int $pageId): bool
+	{
+		$currentLanguagePageId = (int) apply_filters('wpml_object_id', $pageId, 'page', true);
+		if ($currentLanguagePageId > 0) {
+			$pageId = $currentLanguagePageId;
+		}
+
+		return get_post_status($pageId) === 'publish';
 	}
 
 	/**

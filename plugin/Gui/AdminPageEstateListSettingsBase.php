@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerInsertException;
@@ -60,7 +61,14 @@ abstract class AdminPageEstateListSettingsBase
 
 	public function renderContent()
 	{
-		$this->validate($this->getListViewId());
+		try {
+			$this->validate($this->getListViewId());
+		} catch (UnknownViewException $pException) {
+			echo '<div class="notice notice-error"><p>'
+				. esc_html__('This list has an unknown or unsupported type and cannot be edited on this page.', 'onoffice-for-wp-websites')
+				. '</p></div>';
+			return;
+		}
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- GET parameters for display messages, no form processing
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'empty' ) {
 			echo '<div class="notice notice-error is-dismissible"><p>'

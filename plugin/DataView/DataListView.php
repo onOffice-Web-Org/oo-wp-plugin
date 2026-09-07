@@ -64,6 +64,9 @@ class DataListView
 	/** */
 	const LISTVIEW_TYPE_UNITS = 'units';
 
+	/** Standalone list of the child estates of an explicitly configured parent estate id. */
+	const LISTVIEW_TYPE_COMPLEXUNITS = 'complexunits';
+
 	/** */
 	const SORT_BY_USER_VALUES = 'sortbyuservalues';
 
@@ -180,6 +183,12 @@ class DataListView
 
 	/** @var array */
 	private $_rangeFieldDisplayModes = [];
+
+	/** @var string onOffice estate id of the parent/main estate this list's children are loaded from (list_type=complexunits) */
+	private $_parentEstateId = '';
+
+	/** @var array Map of onOffice 3-letter language code to language-specific main estate id (list_type=complexunits) */
+	private $_parentEstateMainIds = [];
 
 	/** @var string[] */
 	private $_priceFields = [
@@ -508,4 +517,20 @@ class DataListView
 	public function setRangeFieldDisplayModes(array $modes) {
 		$this->_rangeFieldDisplayModes = $modes;
 	}
+
+	/** @return string */
+	public function getParentEstateId(): string
+		{ return $this->_parentEstateId; }
+
+	/** @param string $parentEstateId */
+	public function setParentEstateId(string $parentEstateId)
+		{ $this->_parentEstateId = $parentEstateId; }
+
+	/** @return array Map of onOffice 3-letter language code to language-specific main estate id */
+	public function getParentEstateMainIds(): array
+		{ return $this->_parentEstateMainIds; }
+
+	/** @param array $parentEstateMainIds Map of onOffice 3-letter language code to language-specific main estate id */
+	public function setParentEstateMainIds(array $parentEstateMainIds)
+		{ $this->_parentEstateMainIds = $parentEstateMainIds; }
 }
