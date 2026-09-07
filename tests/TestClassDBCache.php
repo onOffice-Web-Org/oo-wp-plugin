@@ -24,6 +24,8 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Cache\DBCache;
+use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use ReflectionMethod;
 use WP_UnitTestCase;
 
@@ -37,6 +39,17 @@ use WP_UnitTestCase;
 class TestClassDBCache
 	extends WP_UnitTestCase
 {
+	public function set_up()
+	{
+		parent::set_up();
+		global $wpdb;
+		$pDbChanges = new DatabaseChanges(new WPOptionWrapperTest(), $wpdb);
+		$getCreateQueryCache = new ReflectionMethod(DatabaseChanges::class, 'getCreateQueryCache');
+		$getCreateQueryCache->setAccessible(true);
+		$createTable = str_replace('CREATE TABLE ', 'CREATE TABLE IF NOT EXISTS ', $getCreateQueryCache->invoke($pDbChanges));
+		$wpdb->query($createTable);
+	}
+
 	/**
 	 * clearAll() used to run cleanup() with a TTL of 0, which deletes
 	 * "WHERE UNIX_TIMESTAMP(cache_created) < time()". Entries written in the same
