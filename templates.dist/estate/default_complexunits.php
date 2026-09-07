@@ -368,16 +368,26 @@ if ($hasUnits) { ?>
                             echo '</td>';
                         endforeach;
 
-                        echo '<td class="oo-complexunits__data oo-complexunitslink" data-label="' .
+                        // getEstateLink() never returns an empty string - it falls back to '#' when
+                        // no detail page is configured/published (e.g. the marketplace's
+                        // "Detailseite aktivieren" toggle is off), so !empty() was always true here
+                        // and kept rendering a live-looking link (and an unconditional, unmatched
+                        // </a>) regardless of that setting.
+                        $estateLink = $pEstates->getEstateLink();
+                        echo '<td class="oo-complexunits__data oo-complexunitslink' .
+                            ($estateLink === '#' ? ' --empty' : '') .
+                            '" data-label="' .
                             esc_html__('Details', 'onoffice-for-wp-websites') .
                             '">';
-                        if (!empty($pEstates->getEstateLink())) {
+                        if ($estateLink !== '#') {
                             echo '<a class="oo-complexunits-btn" title="'.esc_attr__('To the unit', 'onoffice-for-wp-websites').': '.esc_attr($current_property['objekttitel']).'" href="' .
-                                esc_url($pEstates->getEstateLink()) .
-                                '">';
+                                esc_url($estateLink) .
+                                '">' .
+                                esc_html__('To the unit', 'onoffice-for-wp-websites') .
+                                '</a>';
+                        } else {
+                            echo '-';
                         }
-                        echo esc_html__('To the unit', 'onoffice-for-wp-websites');
-                        echo '</a>';
                         echo '</td>';
 
                         echo '</tr>';
