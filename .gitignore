@@ -9,3 +9,7 @@ SDK/vendor
 dist/*
 !dist/.gitkeep
 onoffice-for-wp-websites.zip
+
+# Playwright test artifacts (regenerated on every run, not source)
+/playwright-report/
+/test-results/
