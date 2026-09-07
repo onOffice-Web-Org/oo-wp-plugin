@@ -254,6 +254,14 @@ if ($hasUnits) { ?>
                         $pEstates->resetEstateIterator();
                         $first_property = $pEstates->estateIterator();
 
+                        // Whether the detail page is configured/published at all (the
+                        // marketplace's "Detailseite aktivieren" toggle) is a site-wide setting,
+                        // not something that varies estate by estate - getEstateLink() falls back
+                        // to '#' identically for every row when it's off, so checking it once here
+                        // (rather than per row) is enough to decide whether the whole "Details"
+                        // column has anything to show at all.
+                        $showDetailsColumn = $first_property && $pEstates->getEstateLink() !== '#';
+
                         if ($showFavoritesColumn) {
                             echo '<th class="oo-complexunits__data oo-complexunits__data--icon">';
                             echo '<span class="oo-visually-hidden">' . esc_html__('Watchlist', 'onoffice-for-wp-websites') . '</span>';
@@ -281,9 +289,11 @@ if ($hasUnits) { ?>
                             }
                         }
 
-                        echo '<th class="oo-complexunits__data">';
-                        echo esc_html__('Details', 'onoffice-for-wp-websites');
-                        echo '</th>';
+                        if ($showDetailsColumn) {
+                            echo '<th class="oo-complexunits__data">';
+                            echo esc_html__('Details', 'onoffice-for-wp-websites');
+                            echo '</th>';
+                        }
                         ?>
                     </tr>
                 </thead>
@@ -370,25 +380,20 @@ if ($hasUnits) { ?>
 
                         // getEstateLink() never returns an empty string - it falls back to '#' when
                         // no detail page is configured/published (e.g. the marketplace's
-                        // "Detailseite aktivieren" toggle is off), so !empty() was always true here
-                        // and kept rendering a live-looking link (and an unconditional, unmatched
-                        // </a>) regardless of that setting.
-                        $estateLink = $pEstates->getEstateLink();
-                        echo '<td class="oo-complexunits__data oo-complexunitslink' .
-                            ($estateLink === '#' ? ' --empty' : '') .
-                            '" data-label="' .
-                            esc_html__('Details', 'onoffice-for-wp-websites') .
-                            '">';
-                        if ($estateLink !== '#') {
+                        // "Detailseite aktivieren" toggle is off). Whether that's the case doesn't
+                        // vary per row, so the whole column is skipped via $showDetailsColumn
+                        // (computed once, above) rather than emptying each row's cell individually.
+                        if ($showDetailsColumn) {
+                            echo '<td class="oo-complexunits__data oo-complexunitslink" data-label="' .
+                                esc_html__('Details', 'onoffice-for-wp-websites') .
+                                '">';
                             echo '<a class="oo-complexunits-btn" title="'.esc_attr__('To the unit', 'onoffice-for-wp-websites').': '.esc_attr($current_property['objekttitel']).'" href="' .
-                                esc_url($estateLink) .
+                                esc_url($pEstates->getEstateLink()) .
                                 '">' .
                                 esc_html__('To the unit', 'onoffice-for-wp-websites') .
                                 '</a>';
-                        } else {
-                            echo '-';
+                            echo '</td>';
                         }
-                        echo '</td>';
 
                         echo '</tr>';
                     }
