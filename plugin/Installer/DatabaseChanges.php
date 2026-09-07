@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use Exception;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;

@@ -21,8 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelDB;

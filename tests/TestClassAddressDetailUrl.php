@@ -24,8 +24,8 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\AddressDetailUrl;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
@@ -48,8 +48,8 @@ class TestClassAddressDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testUrlWithFolder()
 	{
@@ -63,8 +63,8 @@ class TestClassAddressDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testUrlWithGetParameter()
 	{
@@ -77,8 +77,8 @@ class TestClassAddressDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testUrlWithCustomPort()
 	{
@@ -91,8 +91,8 @@ class TestClassAddressDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testAddressDetailUrl()
 	{
@@ -107,8 +107,8 @@ class TestClassAddressDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testAddressDetailUrlNotSetOptionShowUrlAndTitle()
 	{
@@ -124,8 +124,8 @@ class TestClassAddressDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testAddressDetailUrlAndParameter()
 	{
@@ -140,8 +140,8 @@ class TestClassAddressDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testGetUrlWithFilterTrueAndEnableOptionShowTitleWithParameter()
 	{
@@ -156,8 +156,8 @@ class TestClassAddressDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testGetUrlWithFilterTrueAndEnableOptionShowTitleKeepsCustomPort()
 	{
@@ -173,8 +173,8 @@ class TestClassAddressDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testGetUrlWithFilterTrueAndDisableOptionShowTitleWithParameter()
 	{
@@ -189,8 +189,8 @@ class TestClassAddressDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testGetUrlWithFilterFalseAndDisableOptionShowTitleWithParameter()
 	{
@@ -210,8 +210,8 @@ class TestClassAddressDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testGetUrlWithFilterFalseAndEnableOptionShowTitleWithParameter()
 	{

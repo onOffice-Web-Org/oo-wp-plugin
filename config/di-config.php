@@ -73,7 +73,7 @@ use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
 use wpdb;
-use function DI\autowire;
+use function onOffice\WPlugin\Vendor\DI\autowire;
 
 
 
@@ -99,29 +99,29 @@ return [
 	WPScreenWrapper::class => autowire(WPScreenWrapperDefault::class),
 	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
 	CustomLabelRead::class => autowire()
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	CustomLabelDelete::class => autowire()
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	DefaultValueRead::class => autowire()
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	DefaultValueDelete::class => autowire()
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	DefaultValueUpdate::class => autowire()
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	DatabaseChangesInterface::class => autowire(DatabaseChanges::class)
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	RecordManagerDuplicateListViewForm::class => autowire()
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	RecordManagerDuplicateListViewAddress::class => autowire()
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	RecordManagerDuplicateListViewEstate::class => autowire()
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	RecordManagerDeleteListViewAddress::class => autowire()
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	RecordManagerDeleteListViewEstate::class => autowire()
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	RecordManagerDeleteForm::class => autowire()
-		->constructorParameter('pWPDB', \DI\get(wpdb::class)),
+		->constructorParameter('pWPDB', \onOffice\WPlugin\Vendor\DI\get(wpdb::class)),
 	AddressListEnvironment::class => autowire(AddressListEnvironmentDefault::class),
 	HTTPHeaders::class => autowire(HTTPHeadersGeneric::class),
 	SymmetricEncryption::class => autowire(SymmetricEncryptionDefault::class)

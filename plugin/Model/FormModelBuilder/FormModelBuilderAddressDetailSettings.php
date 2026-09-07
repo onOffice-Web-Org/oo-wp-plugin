@@ -22,8 +22,8 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use function __;
-use DI\NotFoundException;
-use DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Types\ImageTypes;
@@ -44,8 +44,8 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\DataView\DataListView;
-use DI\ContainerBuilder;
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
 use Exception;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
