@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
 use onOffice\WPlugin\Types\Field;
 
