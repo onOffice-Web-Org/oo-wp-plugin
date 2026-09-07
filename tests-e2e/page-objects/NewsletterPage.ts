@@ -113,7 +113,9 @@ export class NewsletterPage {
             await this.page.waitForTimeout(200);
         }
 
-        const checkboxes = activeForm.locator('input[type="checkbox"]');
+        // Das Altcha-Widget verifiziert sich selbstständig im Hintergrund - seine interne
+        // Checkbox soll von hier aus nicht angefasst werden.
+        const checkboxes = activeForm.locator('input[type="checkbox"]:not([id^="altcha-checkbox"])');
         const count = await checkboxes.count();
         for (let i = 0; i < count; i++) {
             const cb = checkboxes.nth(i);

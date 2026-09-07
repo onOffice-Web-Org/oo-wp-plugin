@@ -71,7 +71,9 @@ test.describe('Eigentümerformular: Multi-Theme Engine & Visual Regression', () 
                 test(`Visual: Snapshot on ${vp.name}`, async ({ page }) => {
                     await page.setViewportSize({ width: vp.width, height: vp.height });
                     
-                    await page.waitForTimeout(300);
+                    // Genug Zeit für Header/Banner-Reflow nach dem Viewport-Resize, bevor der
+                    // Screenshot gezogen wird - siehe contact-form.spec.ts für den Hintergrund.
+                    await page.waitForTimeout(800);
                     await ownerPage.hideOverlays();
 
                     await expect(ownerPage.form).toHaveScreenshot(`eigentuemer-standard-${theme}-${vp.name}.png`, {

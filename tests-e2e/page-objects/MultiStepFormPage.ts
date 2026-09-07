@@ -90,8 +90,18 @@ export class MultiStepFormPage {
             .or(activeForm.getByPlaceholder(/plz/i))
             .or(activeForm.getByLabel(/plz/i));
         
+        // Objektart wird standardmäßig als Karten-Buttons gerendert, aber ab >10 Optionen
+        // schaltet paged-form.js (nur in einigen Themes eingebunden) auf ein Tom-Select-Dropdown um.
         const houseBtn = activeForm.locator('button, .o-button-group__item, label').filter({ hasText: /Haus/i }).filter({ visible: true }).first();
-        await houseBtn.click({ force: true });
+        const objektartSelect = activeForm.locator('select[name="objektart"], select[data-field-name="objektart"]');
+
+        try {
+            await houseBtn.waitFor({ state: 'visible', timeout: 5000 });
+            await houseBtn.click({ force: true });
+        } catch {
+            await objektartSelect.selectOption('haus', { force: true });
+            await objektartSelect.dispatchEvent('change');
+        }
         await this.page.waitForTimeout(300);
 
         await this.typeSafe(activeForm.getByLabel(/Wohnfläche/i).or(activeForm.locator('input[name*="flaeche" i]')), data.area);
@@ -115,7 +125,9 @@ export class MultiStepFormPage {
     async fillStep4Compliance() {
         const activeForm = this.form.filter({ visible: true }).first();
         
-        const checkboxes = activeForm.locator('input[type="checkbox"]');
+        // Das Altcha-Widget verifiziert sich per "auto=onload" selbstständig im Hintergrund
+        // (unsichtbar per CSS geklippt) - seine interne Checkbox darf nicht manuell erzwungen werden.
+        const checkboxes = activeForm.locator('input[type="checkbox"]:not([id^="altcha-checkbox"])');
         const count = await checkboxes.count();
         
         for (let i = 0; i < count; i++) {
@@ -130,6 +142,15 @@ export class MultiStepFormPage {
 
     async submit() {
         const activeForm = this.form.filter({ visible: true }).first();
+
+        // ALTCHA (auto="onsubmit", das Widget selbst ist per pointer-events:none dauerhaft
+        // unklickbar) fängt den ersten Submit ab, löst die Challenge im Hintergrund und
+        // sendet das Formular danach selbst per requestSubmit() erneut ab. Es gibt hier
+        // bewusst keinen manuellen Checkbox-Klick: das würde den Verify-Handler über einen
+        // anderen Pfad triggern, ohne dass jemals der Auto-Resubmit ausgelöst wird - der
+        // Submit-Button bliebe dann dauerhaft disabled. Stattdessen wird der eigentliche
+        // Erfolgsmeldung-Check im Testfall mit ausreichend Zeit für die Proof-of-Work-Lösung
+        // versehen.
         const activeSubmitBtn = this.submitBtn.filter({ visible: true }).first();
         await activeSubmitBtn.scrollIntoViewIfNeeded();
         await activeSubmitBtn.click({ force: true });

@@ -75,8 +75,14 @@ test.describe('Kontaktformular: Multi-Theme Engine & Visual Regression', () => {
             for (const vp of VIEWPORTS) {
                 test(`Visual: Snapshot on ${vp.name}`, async ({ page }) => {
                     await page.setViewportSize({ width: vp.width, height: vp.height });
-                    
-                    await page.waitForTimeout(300);
+
+                    // Playwrights eigener Stabilitäts-Check greift nur, wenn sich zwischen zwei
+                    // Frames nichts mehr ändert - er erkennt aber nicht, ob der Header/Banner nach
+                    // dem Viewport-Resize schon fertig umgebrochen ist. Unter Last (z.B. wenn
+                    // mehrere Themes/Tests parallel laufen) reichten 300ms dafür nicht immer,
+                    // wodurch die Form-Screenshot gelegentlich um eine Zeile nach unten verschoben
+                    // und am unteren Rand abgeschnitten war.
+                    await page.waitForTimeout(800);
                     await contactPage.hideOverlays();
 
                     await expect(contactPage.form).toHaveScreenshot(`form-${theme}-${vp.name}.png`, {

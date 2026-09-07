@@ -66,7 +66,11 @@ export class InterestsFormPage {
 
     async checkAllRequiredCheckboxes(): Promise<void> {
         const activeForm = this.form.filter({ visible: true }).first();
-        const checkboxes = activeForm.locator('input[type="checkbox"]');
+
+        // Das Altcha-Widget verifiziert sich selbstständig (auto="onsubmit", pointer-events:none)
+        // im Hintergrund - seine interne Checkbox darf nicht manuell erzwungen werden, sonst
+        // bleibt der Submit-Button dauerhaft disabled.
+        const checkboxes = activeForm.locator('input[type="checkbox"]:not([id^="altcha-checkbox"])');
         const count = await checkboxes.count();
         
         for (let i = 0; i < count; i++) {

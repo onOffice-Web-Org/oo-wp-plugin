@@ -94,6 +94,9 @@ test.describe('Eigentümerformular Multi-Step: Multi-Theme Engine & Visual Regre
             test.describe('Functional Scenarios', () => {
                 
                 test('Submission: Happy Path', async () => {
+                    // Das Ausfüllen aller 4 Schritte plus die ALTCHA-Proof-of-Work-Lösung nach
+                    // dem Submit-Klick brauchen zusammen mehr als das globale 30s-Test-Timeout.
+                    test.setTimeout(60000);
                     await multiStepPage.fillStep1Contact('Owner', `happy-step-${Date.now()}@owner.de`);
                     
                     await multiStepPage.fillStep2Interests({
@@ -108,7 +111,9 @@ test.describe('Eigentümerformular Multi-Step: Multi-Theme Engine & Visual Regre
                     await multiStepPage.submit();
 
                     // Prüfen wir den erfolgreichen Antwort vom WordPress Backend
-                    await expect(multiStepPage.infoMessages).toBeVisible({ timeout: 15000 });
+                    // Grosszügiges Timeout: ALTCHA (auto="onsubmit") löst die Proof-of-Work-
+                    // Challenge erst nach diesem Klick und sendet danach automatisch erneut ab.
+                    await expect(multiStepPage.infoMessages).toBeVisible({ timeout: 30000 });
                     const msg = await multiStepPage.infoMessages.innerText();
                     expect(msg).toMatch(/Vielen Dank|Spam erkannt|erfolgreich/);
                 });

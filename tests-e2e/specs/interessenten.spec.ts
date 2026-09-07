@@ -68,7 +68,9 @@ for (const theme of THEMES) {
                 test(`Visual: Snapshot on ${vp.name}`, async ({ page }) => {
                     await page.setViewportSize({ width: vp.width, height: vp.height });
                     
-                    await page.waitForTimeout(300);
+                    // Genug Zeit für Header/Banner-Reflow nach dem Viewport-Resize, bevor der
+                    // Screenshot gezogen wird - siehe contact-form.spec.ts für den Hintergrund.
+                    await page.waitForTimeout(800);
                     await interestsPage.hideOverlays();
 
                     await expect(interestsPage.form).toHaveScreenshot(`interessenten-form-${theme}-${vp.name}.png`, {
@@ -84,6 +86,10 @@ for (const theme of THEMES) {
              */
             test.describe('Functional Scenarios', () => {
                    test('Submission: Happy Path', async ({ page }) => {
+                        // ALTCHA (auto="onsubmit") löst die Proof-of-Work-Challenge erst nach dem
+                        // Submit-Klick; das kann zusammen mit dem Ausfüllen aller Felder das
+                        // globale 30s-Test-Timeout sprengen.
+                        test.setTimeout(45000);
                         await interestsPage.acceptCookies();
 
                         const testData = {

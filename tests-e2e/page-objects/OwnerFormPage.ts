@@ -5,16 +5,13 @@ export class OwnerFormPage {
     readonly form: Locator;
     readonly submitBtn: Locator;
     readonly infoMessages: Locator;
-    readonly altchaVerified: Locator;
 
     constructor(page: Page) {
         this.page = page;
         this.form = page.locator('form, #onoffice-form-1').filter({ has: page.locator('input[name="oo_formid"]') }).first();
-        
+
         this.submitBtn = this.form.getByRole('button', { name: /Absenden/i }).or(this.form.locator('.oo-js-submit-button, button[type="submit"]'));
         this.infoMessages = page.locator('.onoffice-form-alerts, .status-message, div[class*="message"], div[class*="alert"], .c-info-messages').first();
-        
-        this.altchaVerified = this.form.locator('altcha-widget [state="verified"], .altcha-verified');
     }
 
     private async typeSafe(locator: Locator, value: string) {
@@ -95,7 +92,10 @@ export class OwnerFormPage {
         await this.typeSafe(emailInput, data.email);
         await this.typeSafe(phoneInput, data.phone);
 
-        const checkboxes = activeForm.locator('input[type="checkbox"]');
+        // Das Altcha-Widget verifiziert sich selbstständig (auto="onsubmit", pointer-events:none)
+        // im Hintergrund - seine interne Checkbox darf nicht manuell erzwungen werden, sonst
+        // bleibt der Submit-Button dauerhaft disabled.
+        const checkboxes = activeForm.locator('input[type="checkbox"]:not([id^="altcha-checkbox"])');
         const count = await checkboxes.count();
         for (let i = 0; i < count; i++) {
             const cb = checkboxes.nth(i);
@@ -108,11 +108,12 @@ export class OwnerFormPage {
 
     async submit() {
         const activeForm = this.form.filter({ visible: true }).first();
-        
-        if (await activeForm.locator('altcha-widget').isVisible()) {
-            await expect(this.altchaVerified).toBeVisible({ timeout: 20000 });
-        }
-        
+
+        // ALTCHA (auto="onsubmit", pointer-events:none) fängt den Submit selbst ab, löst die
+        // Challenge im Hintergrund und sendet das Formular danach selbst per requestSubmit()
+        // erneut ab - hier ist kein Warten auf einen Verified-Zustand nötig (der vorherige
+        // Selektor "altcha-widget [state=\"verified\"], .altcha-verified" existiert in der
+        // echten Widget-Markup nicht und schlug deshalb auf allen Themes fehl).
         const activeSubmitBtn = activeForm.locator('button:has-text("Absenden"), button[type="submit"]').or(this.submitBtn).filter({ visible: true }).first();
         await activeSubmitBtn.scrollIntoViewIfNeeded();
         await activeSubmitBtn.click({ force: true });
