@@ -25,6 +25,7 @@ use DateTimeZone;
 use DateTime;
 use Exception;
 use WP_Locale;
+use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
 use function number_format_i18n;
@@ -173,6 +174,9 @@ class InputVariableReaderParser
 
 		// Optional: collapse multiple spaces
 		$cleaned = preg_replace('/\s{2,}/u', ' ', $cleaned);
+
+		// re-strip after decoding, otherwise entities like &lt; turn back into forbidden characters
+		$cleaned = RequestVariablesSanitizer::removeInvalidCharacters($cleaned);
 
 		// Don't turn empty string into null — keep original semantics
 		return $cleaned;

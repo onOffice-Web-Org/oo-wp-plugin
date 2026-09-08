@@ -23,10 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use Nette\DI\Extensions\DIExtension;
 use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;

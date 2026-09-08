@@ -28,8 +28,8 @@
 
 namespace onOffice\WPlugin;
 
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
@@ -89,7 +89,7 @@ class SDKWrapper
 	 *
 	 */
 
-	/** @var \DI\Container Shared container instance to avoid rebuilding */
+	/** @var \onOffice\WPlugin\Vendor\DI\Container Shared container instance to avoid rebuilding */
 	private static $_pSharedContainer = null;
 
 	public function __construct(
