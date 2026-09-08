@@ -13,7 +13,9 @@ copy-files-release:
 	find * -type f \( ! -path "build/*" ! -path "vendor/bin/*" ! -path "node_modules/*" ! -path "./.*" ! -path "bin/*" ! -path "nbproject/*"  ! -path "tests/*" ! -path "documentation/*" ! -path "scripts/*" ! -iname ".*" ! -iname "Readme.md" ! -iname "phpstan.neon" ! -iname "phpstan-baseline.neon" ! -iname "phpunit.xml*" ! -iname "Makefile" ! -iname "phpcs.xml*" \) -exec install -v -D -T ./{} $(PREFIX)/{} \;
 
 composer-install-nodev:
-	cd $(PREFIX); composer install --no-dev -a
+	cd $(PREFIX); composer install --no-dev -a --no-scripts
+	php $(CURDIR)/scripts/prefix-dependencies.php $(PREFIX)
+	cd $(PREFIX); composer dump-autoload --no-dev -a --no-scripts
 	find $(PREFIX) '-type' 'l' '-exec' 'unlink' '{}' ';'
 
 release: copy-files-release composer-install-nodev

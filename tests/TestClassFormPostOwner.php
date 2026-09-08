@@ -23,10 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\InputVariableReaderConfig;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
@@ -45,7 +45,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
-use function DI\autowire;
+use function onOffice\WPlugin\Vendor\DI\autowire;
 use function json_decode;
 
 /**

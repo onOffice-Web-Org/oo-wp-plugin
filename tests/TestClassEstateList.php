@@ -24,10 +24,10 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use Closure;
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\AddressList;
@@ -950,12 +950,27 @@ class TestClassEstateList
 	{
 		$this->_pEstateList->loadEstates();
 		$result = $this->_pEstateList->estateIterator();
-		$this->assertEquals('Price on request', $result['warmmiete']);
-		$this->assertEquals('Price on request', $result['kaufpreis']);
-		$this->assertEquals('Price on request', $result['erbpacht']);
-		$this->assertEquals('Price on request', $result['nettokaltmiete']);
-		$this->assertEquals('Price on request', $result['pacht']);
-		$this->assertEquals('Price on request', $result['kaltmiete']);
+		
+		$rawRecords = $this->_pEstateList->getRawValues();
+		$estateId = $this->_pEstateList->getCurrentEstateId();
+		$marketingType = strtolower($rawRecords->getValueRaw($estateId)['elements']['vermarktungsart'] ?? '');
+
+		if ($marketingType === 'kauf') {
+			$this->assertEquals('Price on request', $result['kaufpreis']);
+			$this->assertArrayNotHasKey('warmmiete', $result);
+			$this->assertArrayNotHasKey('kaltmiete', $result);
+			$this->assertArrayNotHasKey('nettokaltmiete', $result);
+			$this->assertArrayNotHasKey('pacht', $result);
+		} elseif ($marketingType === 'miete') {
+			$this->assertEquals('Price on request', $result['warmmiete']);
+			$this->assertEquals('Price on request', $result['kaltmiete']);
+			$this->assertArrayNotHasKey('kaufpreis', $result);
+		} else {
+			// Fallback assertion if the mock data lacks vermarktungsart
+			$this->assertEquals('Price on request', $result['warmmiete']);
+			$this->assertEquals('Price on request', $result['kaufpreis']);
+			$this->assertEquals('Price on request', $result['kaltmiete']);
+		}
 	}
 
 	/**

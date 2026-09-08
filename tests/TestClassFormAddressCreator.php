@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
@@ -145,8 +145,8 @@ class TestClassFormAddressCreator
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 * @throws \onOffice\WPlugin\Field\UnknownFieldException
 	 * @covers \onOffice\WPlugin\Form\FormAddressCreator::getAddressDataForEmail
 	 *

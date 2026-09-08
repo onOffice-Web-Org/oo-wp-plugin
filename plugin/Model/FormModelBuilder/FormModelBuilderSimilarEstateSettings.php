@@ -21,9 +21,9 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
@@ -45,7 +45,7 @@ use onOffice\WPlugin\Types\ImageTypes;
 use function __;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 
 /**
  *
@@ -85,8 +85,8 @@ class FormModelBuilderSimilarEstateSettings
 	/**
 	 * @param string $pageSlug
 	 * @return FormModel
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 
 	public function generate(string $pageSlug): FormModel
