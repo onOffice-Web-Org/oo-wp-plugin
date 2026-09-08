@@ -13,7 +13,7 @@
 		"wp-cli/i18n-command": "*",
         "ext-xdebug": "*",
         "yoast/phpunit-polyfills": "^4.0",
-        "brianhenryie/strauss": "0.28.0"
+        "brianhenryie/strauss": "0.29.1"
     },
     "prefer-stable" : true,
 	"autoload": {
