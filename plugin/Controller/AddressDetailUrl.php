@@ -109,8 +109,11 @@ class AddressDetailUrl
 
 	public function getSanitizeTitle(string $title, bool $flag = false): string
 	{
-		$sanitizeTitle = $flag ? sanitize_title(remove_accents($title)) : sanitize_title($title);
-		return '-' . $sanitizeTitle;
+		$sanitizeTitle = $flag
+			? UrlHelper::sanitizeTitleToSlug($title, '')
+			: UrlHelper::sanitizeTitleToSlug($title);
+
+		return $sanitizeTitle === '' ? '' : '-' . $sanitizeTitle;
 	}
 
 	/**
