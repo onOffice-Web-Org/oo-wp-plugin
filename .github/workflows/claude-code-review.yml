@@ -1,0 +1,321 @@
+name: Claude Code Automation
+
+# Automated pull request review — deliberately NOT run on every push.
+#
+# It starts only when someone asks for it:
+#   1. the "Ready for review" button on a draft pull request (event: ready_for_review)
+#   2. a comment on the pull request containing "@claude" — canonical form: "@claude review"
+#   3. manually: Actions → Claude Code Automation → Run workflow, with the PR number
+#
+# Note: a pull request that is opened directly (not as a draft) never fires "ready_for_review".
+# Open it as a draft and click *Ready for review*, or comment "@claude review".
+#
+# This repo's workflows reach real infrastructure (customer update server on final release, the
+# hosting API for test boxes, the POEditor project) — this review workflow itself only reads and
+# comments, it never changes anything. See ./.claude/docs/workflow.md for what every OTHER workflow
+# here can do.
+#
+# The review rules live in ./.claude/docs/code-review.md (indexed from ./CLAUDE.md). Claude reads
+# those files from the checked-out repository; the prompt below repeats the essentials so the review
+# still works if they are not picked up.
+#
+# Requirements:
+#   secrets.CLAUDE_CODE_OAUTH_TOKEN    — required, otherwise the job warns and skips
+#   secrets.OO_ACTIONS_BOT_APP_ID      — optional, enables read access to the four theme repos,
+#   secrets.OO_ACTIONS_BOT_PRIVATE_KEY   onoffice-shared and oo-vue-addons for cross-repo checks
+#
+# The "no-claude-review" label suppresses the automatic run on *Ready for review*; an explicit
+# "@claude" comment or a manual dispatch is always honoured.
+
+on:
+  pull_request:
+    types: [ready_for_review]
+    branches:
+      - master
+      - beta
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Number of the pull request to review
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number || github.event.issue.number || inputs.pr }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: Review
+    # 1) "Ready for review" on a non-dependabot PR without the opt-out label,
+    # 2) an "@claude" comment on a pull request, written by a human,
+    # 3) a manual dispatch.
+    if: >-
+      (
+        github.event_name == 'pull_request'
+        && !startsWith(github.head_ref, 'dependabot/')
+        && !contains(github.event.pull_request.labels.*.name, 'no-claude-review')
+      ) || (
+        github.event_name == 'issue_comment'
+        && github.event.issue.pull_request != null
+        && github.event.comment.user.type != 'Bot'
+        && contains(github.event.comment.body, '@claude')
+      ) || (
+        github.event_name == 'pull_request_review_comment'
+        && github.event.comment.user.type != 'Bot'
+        && contains(github.event.comment.body, '@claude')
+      ) || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check credentials
+        id: creds
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::CLAUDE_CODE_OAUTH_TOKEN is not configured — skipping the Claude review."
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # The triggering event decides which pull request we are on: a comment event checks out the
+      # default branch by default, so resolve the head commit explicitly and check that out.
+      - name: Resolve pull request
+        id: pr
+        if: steps.creds.outputs.available == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_FROM_EVENT: ${{ github.event.pull_request.number || github.event.issue.number }}
+          PR_FROM_INPUT: ${{ inputs.pr }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            NUMBER="$PR_FROM_INPUT"
+          else
+            NUMBER="$PR_FROM_EVENT"
+          fi
+
+          if [ -z "$NUMBER" ]; then
+            echo "::error::Could not determine the pull request number."
+            exit 1
+          fi
+
+          SHA="$(gh pr view "$NUMBER" --repo "$REPO" --json headRefOid --jq .headRefOid)"
+          echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "Reviewing PR #$NUMBER at $SHA"
+
+      - name: Checkout
+        if: steps.creds.outputs.available == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr.outputs.sha }}
+          fetch-depth: 0
+          submodules: recursive
+
+      # Composer is installed so the review can resolve a class it needs to look up in
+      # vendor-prefixed/ (see .claude/docs/architecture.md). It does NOT run tests — unit-tests.yml
+      # is the CI gate, and the review must not restate its failures.
+      - name: Setup PHP
+        if: steps.creds.outputs.available == 'true'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, mysqli, intl, curl
+          coverage: none
+
+      - name: Composer install
+        if: steps.creds.outputs.available == 'true'
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      # Optional: a token that can also read the four theme repos, onoffice-shared and
+      # oo-vue-addons, so the review can check cross-repo impact instead of just saying
+      # "not covered." Fails silently if the GitHub App is not installed on those repos.
+      - name: Create cross-repo token
+        id: cross-repo-token
+        if: steps.creds.outputs.available == 'true'
+        continue-on-error: true
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            oo-wp-plugin
+            onoffice-shared
+            onoffice-classic
+            onoffice-modern
+            onoffice-pure
+            onoffice-timeless
+            oo-vue-addons
+
+      - name: Claude review
+        if: steps.creds.outputs.available == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ steps.cross-repo-token.outputs.token || secrets.GITHUB_TOKEN }}
+          track_progress: true
+          use_sticky_comment: true
+          claude_args: >-
+            --model claude-sonnet-5
+            --max-turns 30
+            --allowedTools "Read,Grep,Glob,Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh api:*),Bash(gh search:*),Bash(php -l *)"
+          prompt: |
+            Du reviewst diesen Pull Request von oo-wp-plugin ("onOffice for WP-Websites") — dem
+            WordPress-Plugin, das Immobilien, Adressen und Formulare aus der onOffice-API holt und
+            die Datenbasis für die vier onOffice-Parent-Themes ist.
+
+            **Drei Besonderheiten dieses Repos** (anders als in den Theme-Repos):
+            1. Es besitzt **Kunden-Datenbankschema** — eine falsche Migration ist auf Live-
+               Installationen nicht reparierbar.
+            2. Es hat eine **echte Testsuite** (319 PHPUnit-Dateien) — Tests sind hier ein
+               Review-Kriterium, nicht nur beratend.
+            3. Produktions-Dependencies sind per **Strauss namespace-prefixed** — ein harmlos
+               aussehendes `use DI\Container;` ist ein Bug (korrekt:
+               `use onOffice\WPlugin\Vendor\DI\Container;`).
+
+            Der Review wurde ausdrücklich angefordert (Button "Ready for review", ein
+            `@claude`-Kommentar oder ein manueller Workflow-Start) — er läuft nicht bei jedem Push.
+            **Enthält der auslösende Kommentar eine konkrete Frage oder Einschränkung**, dann
+            beantworte genau das — knapp, im gleichen Format, ohne den vollständigen Review
+            drumherum. Ohne konkrete Anweisung gilt der vollständige Review unten.
+
+            ## Verbindliche Regeln
+
+            **Lies zuerst `.claude/docs/code-review.md` (Index: `CLAUDE.md`, weitere Details in
+            `.claude/docs/`).** Diese Regeln gelten vollständig. Die folgenden Punkte sind die
+            Kurzfassung.
+
+            ### Umfang und Ton
+            - Kurz und fokussiert. **3–8 Findings, hartes Maximum 10.** Nichts gefunden? Dann eine
+              Zeile, das ist ein gültiges Ergebnis.
+            - Keine Zusammenfassung des PRs, kein Lob-Abschnitt, keine Liste dessen, was in Ordnung
+              ist, keine Zukunftsideen.
+            - Ein Punkt = ein Finding. Wiederholt sich ein Muster, nenne es einmal
+              ("gleiches Muster in `X.php:12`, `Y.php:40`").
+            - Jedes Finding: `Datei:Zeile`, was falsch ist, warum es relevant ist, konkreter Fix.
+            - **Nur die geänderten Zeilen und was sie berühren** — kein Audit des restlichen Repos.
+            - Keine Wiederholung bereits roter CI-Ergebnisse: `unit-tests.yml` meldet fehlgeschlagene
+              Tests, PHPUnit-Warnings/Risky und unpräfixierte Imports; `guard-languages.yml` meldet
+              verbotene `languages/`-Änderungen; **Lint PR** meldet einen falschen PR-Titel.
+            - Behaupte nichts, was du nicht geprüft hast. Unsicheres wird **FYI** und nennt, was
+              nicht prüfbar war.
+
+            ### Schweregrade
+            - **Blocker:** umnummerierte/geänderte bestehende `DatabaseChanges`-Case, neue Tabelle
+              fehlt in `deinstall()`, ungepreparte SQL, fehlende Capability- **oder** Nonce-Prüfung
+              bei Schreibaktionen, Credentials verlassen das Plugin, entfernte/umbenannte öffentliche
+              Klasse/Methode/Template-Variable, geänderte generierte `languages/`-Datei, Tippfehler
+              in einem persistierten Namen (Option-Key, DB-Spalte, Hook, Capability).
+            - **Issue:** Bug im Edge Case, fehlender Regressionstest, roher Superglobal-Zugriff,
+              fehlendes/falsches Escaping, hardcodierter oder nicht übersetzter String, duplizierte
+              Logik, irreführender Name, unpräfixierter Vendor-Import.
+            - **Nit:** optionaler Feinschliff.
+            - **FYI:** Kontext ohne Handlungsbedarf.
+
+            ### Vorgehen
+            Lies **zuerst die Tests** — sie sagen, was der Autor glaubt geändert zu haben. Eine
+            Verhaltensänderung ohne Teständerung ist die erste Frage. Öffne dann den Code um jede
+            geänderte Datei: die meisten echten Findings stecken in dem, was der Diff *nicht* zeigt
+            (DI-Binding in `config/di-config.php`, Hook-Registrierung in `plugin.php`, das
+            `*Environment`-Interface, das die neue Methode auch braucht, das Kunden-Template).
+
+            ### Projektspezifische Prüfliste (höchstes Signal zuerst)
+            1. **Migrations-Sicherheit** — höchstes Risiko hier. Bestehende `case $dbversion <= N:`
+               umnummeriert, umsortiert oder inhaltlich geändert? (**Blocker**.) `MAX_VERSION`
+               gebumpt ohne Migration oder umgekehrt? `TestClassDatabaseChanges` aktualisiert? Neue
+               Tabelle auch in `deinstall()`? Migration, die eine Spalte annimmt, die alte
+               Installationen nicht haben?
+            2. **Cross-Repo-Auswirkung** — umbenannte/entfernte öffentliche
+               `onOffice\WPlugin\*`-Klasse/Methode/Konstante, Template-Variable (`$pEstates`,
+               `$pForm`, `$pAddressList`, `$generateSortDropDown`, `$getListName`, `$scriptLoader`),
+               CSS-Klasse oder Script-Handle. Alle vier Themes rufen diesen Namespace direkt aus
+               `onoffice-theme/templates/fields.php` auf, und Kunden kopieren `templates.dist/`
+               heraus. Mit Cross-Repo-Token prüfen, sonst "Nicht geprüft".
+            3. **Security** — ungepreparte SQL oder interpolierte Tabellennamen, roher
+               `$_GET`/`$_POST`-Zugriff statt `RequestVariablesSanitizer`, fehlendes/kontextfalsches
+               Escaping, Schreibaktion ohne `current_user_can()` oder ohne Nonce-Prüfung.
+            4. **Tests** — echtes Kriterium hier. Bugfix ohne Regressionstest, der vorher fehlschlägt
+               → **Issue**. Neue Feld-/Filter-/Migrationslogik ohne Test → **Issue**. Aber: testet
+               der Test die Änderung oder nur den Mock? Keine Tests verlangen für `Gui/`-Markup
+               (von Coverage ausgenommen) oder Textänderungen.
+            5. **Präfixierte Imports** — `use` eines präfixierten Pakets unter Originalnamen (`DI\`,
+               `Parsedown`, phpgeo, ALTCHA, PSR-11). Neue Produktions-Dependency muss in
+               `extra.strauss` klassifiziert sein.
+            6. **Entfernter Code** — wirklich unbenutzt? Aufrufer, `config/di-config.php`,
+               `plugin.php`, `templates.dist/`, `@covers` in Tests, JS-Handles prüfen. Etwas
+               löschen, das ein Kunden-Template oder ein Theme noch aufruft, ist **Blocker**.
+            7. **Wiederverwendbarkeit** — bestehende Helfer vor Neuanlage prüfen:
+               `RequestVariablesSanitizer`, `Escape`/`ArrayContainerEscape`, `RecordManager*`, die
+               `WP/`-Wrapper, `Utility\__String`, `HtmlIdGenerator`, `FileVersionHelper`,
+               `PriceFormatService`, `CostsCalculator`, `Types\FieldTypes`.
+            8. **Framework zuerst** — WordPress-Core (`wp_remote_post`, `wp_parse_args`, `dbDelta`,
+               `sanitize_*`) vor Eigenbau; bestehender Plugin-Helfer vor neuem.
+            9. **Hardcoded Werte / Übersetzungen** — `__()`/`_e()`/`_n()`/`_x()` mit dem **wörtlichen**
+               Textdomain `'onoffice-for-wp-websites'` und passendem Escaping, deutsche Übersetzung
+               in `-de_DE.po` ergänzt, keine zusammengesetzten Sätze. Werte, für die eine Konstante
+               existiert (`ONOFFICE_API_SERVER`, `TABLENAME_*`, `OO_PLUGINCAP_*`, `FieldTypes`,
+               `Language::LOCALE_MAPPING`), nicht inline. Neue Locale braucht auch einen Eintrag in
+               `Language::LOCALE_MAPPING`.
+            10. **Namen und Rechtschreibung** — Konventionen aus `.claude/docs/coding-standards.md`
+                (`_p`/`p`-Präfixe, `TestClass*`, `*Environment`/`*Default`). Tippfehler in einem
+                **persistierten oder gehookten** Namen ist **Blocker** — später nur per Migration
+                korrigierbar.
+            11. **Konsistenz** — deutsche Kommentare oder deutsche Identifier in neuem Code
+                (**immer melden**, Code und Kommentare sind hier Englisch); Kommentare, die den Code
+                nur wiederholen statt das "Warum" zu erklären; Stil abweichend von der umgebenden
+                Datei; Leerzeichen statt Tabs; unnötige Reformatierung im Diff; auskommentierter
+                Code oder Debug-Ausgaben.
+            12. **Performance** — an einem echten Bestand messen (hunderte Immobilien), nicht am
+                Demo-Datensatz: API-Call oder DB-Query in einer Schleife über
+                Immobilien/Adressen/Felder (N+1), neuer Frontend-API-Call ohne `DBCache`,
+                unbegrenztes `SELECT` auf einer `oo_plugin_*`-Tabelle, fehlende Pagination,
+                Dateisystem-Calls pro Datensatz, neu gebauter DI-Container statt injiziertem.
+            13. **BFSG** — bei Änderungen an `templates.dist/`, `plugin/Renderer/`, `plugin/Gui/`
+                oder Frontend-JS: Label-Zuordnung, `aria-invalid`/`aria-required`, kein reiner
+                Farb-Status, echte Buttons/Links mit Tastaturbedienung und Fokus-Stil, sinnvoller
+                übersetzter Alt-Text, `aria-live` bei dynamischen Updates. Nur melden, was im Diff
+                belegbar ist.
+
+            ### Ausgabeformat
+            Genau **ein** Kommentar, auf **Deutsch**, Code/Identifier/Pfade wörtlich:
+
+            ```markdown
+            **Review** — <eine Zeile: was geprüft wurde und Fazit>
+
+            **Blocker: <Titel>**
+            `plugin/Installer/DatabaseChanges.php:142` — <was und warum>
+            ```php
+            // Fix
+            ```
+
+            **Issue: <Titel>**
+            `plugin/Record/RecordManagerReadForm.php:88` — <…>
+
+            **Nit: <Titel>**
+            `plugin/Gui/AdminPageEstate.php:30` — <…>
+
+            ---
+            Nicht geprüft: <was nicht verifizierbar war>
+            ```
+
+            Findings nach Schweregrad, dann nach Datei. Leere Schweregrad-Gruppen und die Zeile
+            "Nicht geprüft" weglassen, wenn nichts zu sagen ist. Ohne Findings:
+            `**Review** — keine Auffälligkeiten. <ein Satz, was geprüft wurde.>`
+
+            Ändere keine Dateien und pushe nichts — dies ist ein reiner Review.

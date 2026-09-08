@@ -12,6 +12,12 @@ ship a bugfix during a running beta test and what to watch out for is documented
 [./documentation/RELEASE.md](./documentation/RELEASE.md), together with the
 [Conventional Commits](https://www.conventionalcommits.org/) conventions.
 
+[./CLAUDE.md](./CLAUDE.md) is the index of the working instructions for Claude and other AI agents:
+repository structure, architecture, coding conventions, database migrations, testing, and the rules
+for the automated pull request review. The detailed documents live in
+[./.claude/docs/](./.claude/docs/). Translations have their own long-form document,
+[./documentation/TRANSLATIONS.md](./documentation/TRANSLATIONS.md).
+
 ## Getting Started
 
 1. Move the plugin directory into a new subdirectory inside the WordPress plugins directory (`wp-content/plugins/`)
