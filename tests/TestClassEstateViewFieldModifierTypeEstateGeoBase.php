@@ -113,6 +113,35 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 		$this->assertEquals($expectedResult, $result);
 	}
 
+	/**
+	 *
+	 */
+
+	public function testReduceRecordKeepAddressOnMissingStreet()
+	{
+		$viewFields = [GeoPosition::FIELD_GEO_POSITION, 'testField'];
+		$pViewFieldModifier = $this->generateMockObject($viewFields);
+
+		$record = [
+			'virtualAddress' => '0',
+			'objektadresse_freigeben_api' => '1',
+			'strasse' => '',
+			'hausnummer' => '13',
+			'laengengrad' => '12.3456789',
+			'breitengrad' => '34.1256789',
+		];
+
+		$expectedResult = [
+			'virtualAddress' => '0',
+			'objektadresse_freigeben_api' => '1',
+			'strasse' => '',
+			'hausnummer' => '13',
+			'laengengrad' => '12.3456789',
+			'breitengrad' => '34.1256789',
+		];
+
+		$this->assertEquals($expectedResult, $pViewFieldModifier->reduceRecord($record));
+	}
 
 	/**
 	 *
@@ -135,15 +164,8 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 		$expectedResult = [
 			'virtualAddress' => '0',
 			'objektadresse_freigeben_api' => '0',
-			'hausnummer' => '10',
-			'laengengrad' => 0,
-			'breitengrad' => 0,
 		];
 
-		$this->assertEquals($expectedResult, $pViewFieldModifier->reduceRecord($record));
-		unset($record['strasse']);
-		$record['objektadresse_freigeben_api'] = '1';
-		$expectedResult['objektadresse_freigeben_api'] = '1';
 		$this->assertEquals($expectedResult, $pViewFieldModifier->reduceRecord($record));
 	}
 

@@ -74,7 +74,7 @@ class TestClassRecordManagerDeleteForm
 			$this->equalTo('wp_test_oo_plugin_form_activityconfig'),
 			$this->equalTo('wp_oo_plugin_form_taskconfig'),
 			$this->equalTo('wp_test_oo_plugin_form_multipage_title')
-		));
+		))->willReturn(1);
 		$this->_pWpdbMock->expects($this->once())->method('prepare')
 			->with('DELETE FROM wp_test_oo_plugin_fieldconfig_form_defaults_values '
 				.'WHERE defaults_id IN (%d, %d, %d)', [1 ,2 ,3])
@@ -90,7 +90,7 @@ class TestClassRecordManagerDeleteForm
 				."WHERE form_id = '14'" ? [1, 2, 3] : [];
 		}));
 
-		$this->_pSubject->deleteByIds([13, 14, 15]);
+		$this->assertSame(3, $this->_pSubject->deleteByIds([13, 14, 15]));
 	}
 
 	/**
@@ -107,7 +107,7 @@ class TestClassRecordManagerDeleteForm
 			$this->equalTo('wp_test_oo_plugin_form_activityconfig'),
 			$this->equalTo('wp_oo_plugin_form_taskconfig'),
 			$this->equalTo('wp_test_oo_plugin_form_multipage_title')
-		));
+		))->willReturn(1);
 		$this->_pWpdbMock->expects($this->once())->method('prepare')
 			->with('DELETE FROM wp_test_oo_plugin_fieldconfig_form_translated_labels '
 				.'WHERE input_id IN (%d, %d, %d)', [1 ,2 ,3])
@@ -123,6 +123,6 @@ class TestClassRecordManagerDeleteForm
 				."WHERE form_id = '14'" ? [1, 2, 3] : [];
 			}));
 
-		$this->_pSubject->deleteByIds([13, 14, 15]);
+		$this->assertSame(3, $this->_pSubject->deleteByIds([13, 14, 15]));
 	}
 }

@@ -77,7 +77,22 @@ class TestClassRecordManagerDeleteListViewEstate
 			             [ 'wp_test_oo_plugin_fieldconfig', [ 'listview_id' => 4 ] ],
 			             [ 'wp_test_oo_plugin_picturetypes', [ 'listview_id' => 4 ] ],
 			             [ 'wp_test_oo_plugin_listview_contactperson', [ 'listview_id' => 4 ] ]
-		             );
-		$this->_pSubject->deleteByIds( [ 3, 4 ] );
+		             )
+		             ->willReturn( 1 );
+		$this->assertSame( 2, $this->_pSubject->deleteByIds( [ 3, 4 ] ) );
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testDeleteByIdsCountsOnlyRowsActuallyDeleted()
+	{
+		// Main-table delete for id 3 returns 0 (row didn't exist) -> not counted.
+		// Main-table delete for id 4 returns 1 (row existed) -> counted.
+		$this->_pWPDB->method( 'delete' )
+		             ->willReturnOnConsecutiveCalls( 0, 0, 0, 0, 1, 0, 0, 0 );
+		$this->assertSame( 1, $this->_pSubject->deleteByIds( [ 3, 4 ] ) );
 	}
 }

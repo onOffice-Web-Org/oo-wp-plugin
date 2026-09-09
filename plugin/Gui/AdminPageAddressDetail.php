@@ -23,8 +23,8 @@ namespace onOffice\WPlugin\Gui;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;

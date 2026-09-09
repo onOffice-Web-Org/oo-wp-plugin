@@ -53,14 +53,20 @@ class RecordManagerDeleteListViewAddress
 	 *
 	 */
 
-	public function deleteByIds(array $ids)
+	public function deleteByIds(array $ids): int
 	{
 		$prefix = $this->_pWPDB->prefix;
 		$pWpdb = $this->_pWPDB;
+		$deletedCount = 0;
 
 		foreach ($ids as $id) {
-			$pWpdb->delete($prefix.'oo_plugin_listviews_address', ['listview_address_id' => $id]);
+			$mainRowDeleted = $pWpdb->delete($prefix.'oo_plugin_listviews_address', ['listview_address_id' => $id]);
 			$pWpdb->delete($prefix.'oo_plugin_address_fieldconfig', ['listview_address_id' => $id]);
+			if (!empty($mainRowDeleted)) {
+				$deletedCount++;
+			}
 		}
+
+		return $deletedCount;
 	}
 }

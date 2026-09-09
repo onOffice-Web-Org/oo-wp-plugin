@@ -184,6 +184,13 @@ span.oo-searchrange {
     cursor: pointer;
 }
 
+.oo-form .oo-input-group {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+}
+
 .oo-form .oo-input-wrapper {
     display: flex;
     flex-direction: row;

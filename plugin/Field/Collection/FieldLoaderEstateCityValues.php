@@ -98,10 +98,35 @@ class FieldLoaderEstateCityValues
 		$requestParams['filter']['veroeffentlichen'][] = ['op' => '=', 'val' => 1];
 
 		$pApiClientAction = new APIClientActionGeneric
-		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, onOfficeSDK::MODULE_ESTATE);
 		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
+		
 		$result = $pApiClientAction->getResultRecords();
+		$meta = $pApiClientAction->getResultMeta();
+		$totalRecords = (int)($meta['cntabsolute'] ?? count($result));
+
+		// Fetch remaining pages if total records exceed the 500 listlimit
+		$additionalActions = [];
+		for ($offset = 500; $offset < $totalRecords; $offset += 500) {
+			$pageParams = $requestParams;
+			$pageParams['listoffset'] = $offset;
+
+			$pPageAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, onOfficeSDK::MODULE_ESTATE);
+			$pPageAction->setParameters($pageParams);
+			$pPageAction->addRequestToQueue();
+			$additionalActions[] = $pPageAction;
+		}
+
+		if ($additionalActions !== []) {
+			$this->_pSDKWrapper->sendRequests();
+			$chunks = [$result];
+			foreach ($additionalActions as $pPageAction) {
+				$chunks[] = $pPageAction->getResultRecords();
+			}
+			$result = array_merge(...$chunks);
+		}
 
 		if (empty($result)) {
 			return [];
@@ -109,7 +134,7 @@ class FieldLoaderEstateCityValues
 
 		$listCityName = [];
 		foreach ($result as $value) {
-			if(!empty($value['elements']['ort'])){
+			if (!empty($value['elements']['ort'])) {
 				$listCityName[] = $value['elements']['ort'];
 			}
 		}
@@ -117,9 +142,11 @@ class FieldLoaderEstateCityValues
 		if (empty($listCityName)) {
 			return [];
 		}
+		
+		$listCityName = array_unique($listCityName);
 		sort($listCityName);
 
-		return array_unique($listCityName);
+		return array_values($listCityName);
 	}
 
 

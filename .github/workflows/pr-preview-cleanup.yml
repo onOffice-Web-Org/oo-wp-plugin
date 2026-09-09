@@ -1,0 +1,196 @@
+name: PR Preview | Cleanup Test Box Artifact
+
+# Removes this plugin's build artifact from the update server's PR-preview
+# folder (pr-builds/P<projectNumber>/plugins/onoffice-for-wp-websites/) once its PR
+# closes. If that was the last artifact left for the project, also removes
+# the project's folder on the update server and deletes its test box via
+# the Hosting API.
+#
+# Companion to the (separate, not-yet-implemented) workflow that uploads
+# artifacts to pr-builds/P<projectNumber>/ and maintains manifest.json.
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      project_number:
+        description: "Project/ticket number (digits only, e.g. 167871) to clean up manually"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  determine-project:
+    name: Determine project number
+    runs-on: ubuntu-latest
+    outputs:
+      found: ${{ steps.project.outputs.found }}
+      number: ${{ steps.project.outputs.number }}
+    env:
+      # Falls back to the current ref when there's no pull_request context
+      # (i.e. a manual workflow_dispatch run).
+      PR_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+    steps:
+      - name: Determine project number
+        id: project
+        run: |
+          NUMBER="${{ inputs.project_number }}"
+
+          if [ -z "$NUMBER" ]; then
+            # Match pr-preview-upload.yml's extraction (P#<digits>), so both
+            # workflows always agree on which project a given branch maps to.
+            NUMBER=$(grep -oP 'P#\K\d+' <<< "$PR_HEAD_REF" | head -1)
+          fi
+
+          if [ -z "$NUMBER" ]; then
+            echo "::notice::No project number found in branch '${PR_HEAD_REF}' - nothing to clean up."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "found=true" >> "$GITHUB_OUTPUT"
+          echo "number=${NUMBER}" >> "$GITHUB_OUTPUT"
+
+  cleanup:
+    name: Remove PR-preview artifact
+    needs: determine-project
+    runs-on: ubuntu-latest
+    # Keyed by project number, not PR number: a project can span multiple
+    # branches/PRs in the same repo, and the box must only be deleted once
+    # all of them are gone. Two PRs for the same project closing back to
+    # back must run strictly serially, or they'd race unlocked on the same
+    # manifest.json read-modify-write.
+    concurrency:
+      group: pr-preview-cleanup-${{ needs.determine-project.outputs.number }}
+      cancel-in-progress: false
+    env:
+      PR_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      ARTIFACT_NAME: onoffice-for-wp-websites
+    steps:
+      - name: Set SSH Key for Dev Update Server
+        if: needs.determine-project.outputs.found == 'true'
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
+
+      - name: Remove artifact and prune manifest
+        if: needs.determine-project.outputs.found == 'true'
+        id: cleanup
+        env:
+          NUMBER: ${{ needs.determine-project.outputs.number }}
+        run: |
+          set -e
+
+          SSH_OPTS="-o StrictHostKeyChecking=no"
+          REMOTE="zipupload@dev.onoffice-wp-updates.de"
+          REMOTE_DIR="pr-builds/P${NUMBER}"
+          BASE_URL="https://dev.onoffice-wp-updates.de/pr-builds/P${NUMBER}"
+
+          # No shell access assumed on the zipupload account - all remote
+          # deletion goes through "rsync --delete" against an empty local
+          # directory instead of an ssh rm -rf.
+          EMPTY_DIR="$(mktemp -d)"
+
+          HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" "${BASE_URL}/manifest.json")
+          HTTP_CODE=$(echo "$HTTP_RESPONSE" | tail -1)
+          BODY=$(echo "$HTTP_RESPONSE" | sed '$d')
+
+          if [ "$HTTP_CODE" = "404" ]; then
+            echo "::notice::No manifest found for project P${NUMBER} - already cleaned up."
+            REMAINING=0
+          elif [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::Failed to fetch manifest for P${NUMBER} (HTTP ${HTTP_CODE})"
+            exit 1
+          else
+            echo "$BODY" | jq --arg name "$ARTIFACT_NAME" \
+              '[.[] | select(.name != $name or .type != "plugin")]' > pruned-manifest.json
+            REMAINING=$(jq 'length' pruned-manifest.json)
+
+            echo "Removing plugin artifact '${ARTIFACT_NAME}' from P${NUMBER} (${REMAINING} artifact(s) will remain)."
+            rsync -e "ssh $SSH_OPTS" -rlt --delete --mkpath "${EMPTY_DIR}/" "${REMOTE}:${REMOTE_DIR}/plugins/${ARTIFACT_NAME}/"
+
+            if [ "$REMAINING" -gt 0 ]; then
+              rsync -e "ssh $SSH_OPTS" --mkpath pruned-manifest.json "${REMOTE}:${REMOTE_DIR}/manifest.json"
+            fi
+          fi
+
+          if [ "$REMAINING" -eq 0 ]; then
+            echo "No artifacts left for P${NUMBER} - clearing project folder on update server."
+            rsync -e "ssh $SSH_OPTS" -rlt --delete --mkpath "${EMPTY_DIR}/" "${REMOTE}:${REMOTE_DIR}/"
+
+            echo "Removing now-empty project folder P${NUMBER}."
+            ssh $SSH_OPTS "${REMOTE}" "rmdir-pr-build P${NUMBER}"
+          fi
+
+          echo "remaining=${REMAINING}" >> "$GITHUB_OUTPUT"
+
+      - name: Login to Hosting API
+        if: needs.determine-project.outputs.found == 'true' && steps.cleanup.outputs.remaining == '0'
+        id: api-login
+        run: |
+          LOGIN_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.HOSTING_API_URL }}/client-login" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d '{
+              "client_id": "${{ secrets.HOSTING_API_CLIENT_ID }}",
+              "client_secret": "${{ secrets.HOSTING_API_CLIENT_SECRET }}"
+            }')
+
+          HTTP_CODE=$(echo "$LOGIN_RESPONSE" | tail -1)
+          BODY=$(echo "$LOGIN_RESPONSE" | sed '$d')
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::API Login fehlgeschlagen (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
+
+          TOKEN=$(echo "$BODY" | jq -r '.data.token')
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "::error::Kein Token in Login-Response erhalten"
+            exit 1
+          fi
+
+          echo "::add-mask::${TOKEN}"
+          echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
+
+      - name: Delete test box via Hosting API
+        if: needs.determine-project.outputs.found == 'true' && steps.cleanup.outputs.remaining == '0'
+        env:
+          NUMBER: ${{ needs.determine-project.outputs.number }}
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X DELETE \
+            "${{ secrets.HOSTING_API_URL }}/test-environments/by-project/${NUMBER}" \
+            -H "Authorization: Bearer ${{ steps.api-login.outputs.token }}" \
+            -H "Accept: application/json")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: ${HTTP_CODE}"
+          echo "Response: ${BODY}"
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::Box-Löschung fehlgeschlagen (HTTP ${HTTP_CODE}): ${BODY}"
+            exit 1
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### PR Preview Cleanup" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ needs.determine-project.outputs.found }}" = "true" ]; then
+            echo "- Project: \`P${{ needs.determine-project.outputs.number }}\`" >> "$GITHUB_STEP_SUMMARY"
+            echo "- Artifact removed: \`${ARTIFACT_NAME}\` (plugin)" >> "$GITHUB_STEP_SUMMARY"
+            echo "- Artifacts remaining: \`${{ steps.cleanup.outputs.remaining }}\`" >> "$GITHUB_STEP_SUMMARY"
+            if [ "${{ steps.cleanup.outputs.remaining }}" = "0" ]; then
+              echo "- Project folder and test box deleted." >> "$GITHUB_STEP_SUMMARY"
+            fi
+          else
+            echo "- No project number found in branch \`${PR_HEAD_REF}\` - skipped." >> "$GITHUB_STEP_SUMMARY"
+          fi

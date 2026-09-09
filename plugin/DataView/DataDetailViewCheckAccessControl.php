@@ -64,20 +64,22 @@ class DataDetailViewCheckAccessControl
 
 	public function checkRestrictAccess( int $estateId ): bool
 	{
-		$restrictAccess = $this->pDataDetailViewHandler->getDetailView()->getViewRestrict();
-
-		if ( $restrictAccess ) {
-			$pEstateDetail = $this->estateListFactory->createEstateDetail( $estateId );
-			$pEstateDetail->loadEstates();
-			$pEstateDetail->estateIterator();
-			$rawValues = $pEstateDetail->getRawValues();
-			$referenz  = $rawValues->getValueRaw( $estateId )['elements']['referenz'];
-
-			if ( $referenz === "1" ) {
-				return true;
-			}
+		if ( ! $this->pDataDetailViewHandler->getDetailView()->getViewRestrict() ) {
+			return false;
 		}
 
-		return false;
+		$pEstateDetail = $this->estateListFactory->createEstateDetail( $estateId );
+		$pEstateDetail->loadEstates();
+		$pEstateDetail->estateIterator();
+
+		// ArrayContainer::getValueRaw() returns null for every estate the API did not return:
+		// an unknown or unpublished ID, and - because getViewRestrict() also adds
+		// filter[referenz]=0 in EstateList::getEstateParameters() - a reference estate as well.
+		// Those requests are turned into a 404 by EstateIdRequestGuard::isValid() in plugin.php,
+		// so "no record" must not be reported as restricted here.
+		$estateRawValues = $pEstateDetail->getRawValues()->getValueRaw( $estateId );
+		$referenz        = $estateRawValues['elements']['referenz'] ?? null;
+
+		return $referenz === "1";
 	}
 }

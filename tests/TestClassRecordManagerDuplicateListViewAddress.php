@@ -24,10 +24,10 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use Closure;
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use Exception;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewAddress;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
@@ -129,7 +129,24 @@ class TestClassRecordManagerDuplicateListViewAddress
 			->willReturnOnConsecutiveCalls($fieldConfigRecordOutput, $fieldConfigRecordOutput);
 
 		$this->_pWPDB->insert_id = 22;
-		$this->_pSubject->duplicateByName('list view root');
+		$this->assertTrue($this->_pSubject->duplicateByName('list view root'));
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function testDuplicateByNameReturnsFalseWhenListViewNotFound()
+	{
+		$pRecordManagerReadListViewAddress = $this->getMockBuilder(RecordManagerReadListViewAddress::class)
+			->getMock();
+		$pRecordManagerReadListViewAddress->method('getRowByName')->will($this->returnValue(null));
+		$this->_pContainer->set(RecordManagerReadListViewAddress::class, $pRecordManagerReadListViewAddress);
+		$pSubject = new RecordManagerDuplicateListViewAddress($this->_pWPDB, $this->_pContainer);
+
+		$this->_pWPDB->expects($this->never())->method('insert');
+		$this->assertFalse($pSubject->duplicateByName('unknown list view'));
 	}
 
 	/**

@@ -1,29 +1,29 @@
 {
 	"parameters": {
-		"data": {
-			"0": "referenz",
-			"1": "reserviert",
-			"2": "verkauft",
-			"3": "objekttitel",
-			"4": "objektbeschreibung",
-			"5": "exclusive",
-			"6": "neu",
-			"7": "top_angebot",
-			"8": "preisreduktion",
-			"9": "courtage_frei",
-			"10": "objekt_des_tages",
-			"11": "vermarktungsart",
-			"12": "objektart",
-			"13": "preisAufAnfrage",
-			"14": "virtualAddress",
-			"15": "provisionsfrei",
-			"16": "nutzungsart",
-			"17": "waehrung",
-			"18": "kaufpreis",
-			"19": "erbpacht",
-			"21": "aussen_courtage",
-			"22": "bundesland"
-		},
+		"data": [
+			"referenz",
+			"reserviert",
+			"verkauft",
+			"objekttitel",
+			"objektbeschreibung",
+			"exclusive",
+			"neu",
+			"top_angebot",
+			"preisreduktion",
+			"courtage_frei",
+			"objekt_des_tages",
+			"vermarktungsart",
+			"objektart",
+			"preisAufAnfrage",
+			"virtualAddress",
+			"provisionsfrei",
+			"nutzungsart",
+			"waehrung",
+			"kaufpreis",
+			"erbpacht",
+			"aussen_courtage",
+			"bundesland"
+		],
 		"filter": {
 			"veroeffentlichen": [
 				{

@@ -23,10 +23,10 @@ namespace onOffice\WPlugin;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
@@ -370,7 +370,7 @@ class EstateList
 			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $energyCertificateFields);
 		}
 
-		$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
+		$estateParametersRaw['data'] = array_values(array_unique($estateParametersRaw['data']));
 
 		unset($estateParametersRaw['listname']);
 		unset($estateParametersRaw['params_list_cache']);
@@ -453,7 +453,7 @@ class EstateList
 				$this->_pApiClientAction->addRequestToQueue();
 
 				$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false, $offset, $requestLimit);
-				$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
+				$estateParametersRaw['data'] = array_values(array_unique($estateParametersRaw['data']));
 
 				$pApiClientActionRawValues = clone $this->_pApiClientAction;
 				$pApiClientActionRawValues->setParameters($estateParametersRaw);
@@ -480,7 +480,7 @@ class EstateList
 			$this->_pApiClientAction->addRequestToQueue();
 
 			$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false);
-			$estateParametersRaw['data'] = array_unique($estateParametersRaw['data']);
+			$estateParametersRaw['data'] = array_values(array_unique($estateParametersRaw['data']));
 
 			$pApiClientActionRawValues = clone $this->_pApiClientAction;
 			$pApiClientActionRawValues->setParameters($estateParametersRaw);
@@ -1204,11 +1204,18 @@ class EstateList
 
 		$recordModified = new ArrayContainerEscape($recordModified);
 
-		if ($this->hasPriceOnRequestField() && ($recordRaw['preisAufAnfrage'] ?? null) === DataListView::SHOW_PRICE_ON_REQUEST) {
+		$isPriceOnRequest = (int) ($recordRaw['preisAufAnfrage'] ?? 0) === (int) DataListView::SHOW_PRICE_ON_REQUEST;
+		if ($this->hasPriceOnRequestField() && $isPriceOnRequest) {
 			if ($this->enableShowPriceOnRequestText()) {
 				$priceFields = $this->_pDataView->getListFieldsShowPriceOnRequest();
+				
+				// Ensure the fallback computed price is also masked if utilized by the template
+				if (!in_array('calculatedPrice', $priceFields, true)) {
+					$priceFields[] = 'calculatedPrice';
+				}
+
 				foreach ($priceFields as $priceField) {
-					$this->displayTextPriceOnRequest($recordModified, $priceField);
+					$this->displayTextPriceOnRequest($recordModified, $priceField, $recordRaw);
 				}
 				$this->_totalCostsData = [];
 			}
@@ -1241,18 +1248,31 @@ class EstateList
 	}
 
 	/**
-	 * @param ArrayContainerEscape $recordModified
+	 * @param ArrayContainerEscape|array $recordModified
 	 * @param string $field
-	 */
-	private function displayTextPriceOnRequest($recordModified, $field)
+	 * @param array $recordRaw
+	*/
+	private function displayTextPriceOnRequest(&$recordModified, $field, array $recordRaw = [])
 	{
 		if (empty($recordModified[$field])) {
 			return;
 		}
-		$digitsOnly = preg_replace('/[^0-9]/', '', $recordModified[$field]);
-		if (intval($digitsOnly) === 0) {
+
+		$marketingType = strtolower($recordRaw['vermarktungsart'] ?? '');
+
+		$isRentField = in_array($field, ['kaltmiete', 'warmmiete', 'nettokaltmiete', 'pacht'], true);
+		$isSaleField = in_array($field, ['kaufpreis'], true);
+
+		// CRITICAL: Unset irrelevant fields so the theme's foreach loop skips them entirely
+		if ($marketingType === 'kauf' && $isRentField) {
+			unset($recordModified[$field]);
 			return;
 		}
+		if ($marketingType === 'miete' && $isSaleField) {
+			unset($recordModified[$field]);
+			return;
+		}
+
 		$recordModified[$field] = esc_html__('Price on request', 'onoffice-for-wp-websites');
 	}
 

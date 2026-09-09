@@ -95,7 +95,11 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		$isHiddenField = $pForm->isHiddenField($input);
 		$label = wp_kses_post($fieldLabel).' '.wp_kses_post($addition);
 
-		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
+		if (isRangeInputField($input, $pForm)) {
+			// "from - to" fields are self-describing ("Sales price from") and bring their own .oo-input-group
+			$line = renderFormField($input, $pForm);
+
+		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
 
 			$line = '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'</span></label>';
 			$line .=  renderFormField($input, $pForm).'</div>';	

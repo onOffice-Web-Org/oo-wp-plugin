@@ -1,0 +1,77 @@
+name: Merge beta into master
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: beta-flow
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+
+    env:
+      SOURCE_BRANCH: beta
+      TARGET_BRANCH: master
+
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            ${{ github.event.repository.name }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: master
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge beta into master
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git fetch origin "${SOURCE_BRANCH}" "${TARGET_BRANCH}"
+          git checkout -q -B "${TARGET_BRANCH}" "origin/${TARGET_BRANCH}"
+
+          if git merge-base --is-ancestor "origin/${SOURCE_BRANCH}" HEAD; then
+            echo "${SOURCE_BRANCH} is already contained in ${TARGET_BRANCH}, nothing to merge."
+            exit 0
+          fi
+
+          if ! git merge --no-edit --no-ff "origin/${SOURCE_BRANCH}"; then
+            echo "::error::${SOURCE_BRANCH} cannot be merged into ${TARGET_BRANCH} automatically. Resolve the conflicts in a pull request."
+            git diff --name-only --diff-filter=U
+            exit 1
+          fi
+
+          if ! git push origin "HEAD:${TARGET_BRANCH}"; then
+            echo "::error::Push rejected, ${TARGET_BRANCH} changed during the merge. Just re-run the workflow."
+            exit 1
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Beta backmerge"
+            echo ""
+            echo "\`${SOURCE_BRANCH}\` → \`${TARGET_BRANCH}\`"
+            echo ""
+            echo "A regular merge commit preserves both histories and keeps newer master changes."
+          } >> "$GITHUB_STEP_SUMMARY"

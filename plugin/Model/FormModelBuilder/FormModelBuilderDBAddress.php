@@ -36,13 +36,13 @@ use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use onOffice\WPlugin\Types\Field;
-use DI\DependencyException;
-use DI\NotFoundException;
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 /**
