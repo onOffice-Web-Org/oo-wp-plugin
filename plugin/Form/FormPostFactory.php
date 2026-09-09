@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Form;
 
-use DI\Container;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\WPlugin\FormPostApplicantSearch;
 
 class FormPostFactory

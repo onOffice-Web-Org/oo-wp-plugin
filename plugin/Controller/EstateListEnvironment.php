@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\Controller;
 
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\EstateFiles;

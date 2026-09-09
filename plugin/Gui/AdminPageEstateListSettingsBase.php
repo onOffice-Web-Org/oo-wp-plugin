@@ -36,8 +36,8 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
 use function __;
 use onOffice\WPlugin\Field\CustomLabel\Exception\CustomLabelDeleteException;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 
