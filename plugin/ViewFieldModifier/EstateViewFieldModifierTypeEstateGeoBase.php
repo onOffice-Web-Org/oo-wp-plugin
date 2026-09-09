@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\ViewFieldModifier;
 
 use onOffice\WPlugin\GeoPosition;
-use onOffice\WPlugin\Utility\__String;
 
 abstract class EstateViewFieldModifierTypeEstateGeoBase
 	implements ViewFieldModifierTypeBase
@@ -78,11 +77,11 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 			$record['hausnummer'] = $record['virtualHouseNumber'] ?? '';
 			$record['laengengrad'] = $record['virtualLongitude'] ?? .0;
 			$record['breitengrad'] = $record['virtualLatitude'] ?? .0;
-		} elseif (0 == $record['objektadresse_freigeben_api'] ||
-			__String::getNew($record['strasse'] ?? '')->isEmpty()) {
-			$record['laengengrad'] = 0;
-			$record['breitengrad'] = 0;
+		} elseif (0 == $record['objektadresse_freigeben_api']) {
+			unset($record['laengengrad']);
+			unset($record['breitengrad']);
 			unset($record['strasse']);
+			unset($record['hausnummer']);
 		}
 		return $record;
 	}
