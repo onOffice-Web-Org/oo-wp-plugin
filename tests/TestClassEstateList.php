@@ -1076,22 +1076,6 @@ class TestClassEstateList
 	}
 
 	/**
-	 * The map fetches a reduced field set, so it must not be answered from the list's cache
-	 * entry (P#150089) and must not be looked up under the parameters the cron warmed the
-	 * list with.
-	 *
-	 */
-	public function testGetEstateParametersForMapUsesItsOwnCacheKey()
-	{
-		$pReflectionMethod = new ReflectionMethod(EstateList::class, 'getEstateParametersForMap');
-		$pReflectionMethod->setAccessible(true);
-		$mapParameters = $pReflectionMethod->invokeArgs($this->_pEstateList, [1, true]);
-
-		$this->assertStringEndsWith(EstateList::MAP_CACHE_LISTNAME_MARKER, $mapParameters['listname']);
-		$this->assertArrayNotHasKey('params_list_cache', $mapParameters);
-	}
-
-	/**
 	 * The map pages in fixed batches instead of deriving its limit from the list's
 	 * cntabsolute, which truncated it to the first N records.
 	 *
@@ -1776,6 +1760,9 @@ class TestClassEstateList
 			'list request must use the plain view name as listname');
 		$this->assertNotSame($listParams['listname'], $mapParams['listname'],
 			'map and list must not collide on the same listname cache key');
+		$this->assertArrayHasKey('params_list_cache', $listParams);
+		$this->assertArrayNotHasKey('params_list_cache', $mapParams,
+			'the cron warms the list under its own field set; the map must not be looked up there');
 
 		// The marker must contain a character that sanitizeShortcodeName() strips, so no saved
 		// view name can ever equal a map cache key (collision-proof).
