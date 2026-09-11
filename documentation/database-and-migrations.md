@@ -1,6 +1,6 @@
 # Database changes and migrations
 
-Part of the oo-wp-plugin working instructions — index: [../../CLAUDE.md](../../CLAUDE.md).
+Part of the oo-wp-plugin working instructions — index: [CLAUDE.md](../CLAUDE.md).
 
 **Deleting the plugin wipes all plugin data from the database** — that is documented, intended
 behaviour (`Readme.md`, `DatabaseChanges::deinstall()`). Every change in this area affects live
@@ -9,10 +9,10 @@ customer installations that cannot be re-migrated. Treat it accordingly.
 ## The mechanism
 
 All schema and data migrations live in **one** file:
-[`plugin/Installer/DatabaseChanges.php`](../../plugin/Installer/DatabaseChanges.php).
+[`plugin/Installer/DatabaseChanges.php`](../plugin/Installer/DatabaseChanges.php).
 
 A version counter in the WordPress option `oo_plugin_db_version` is compared against
-`DatabaseChanges::MAX_VERSION` (currently **66**) and drives a **deliberate fallthrough
+`DatabaseChanges::MAX_VERSION` and drives a **deliberate fallthrough
 `switch (true)`**, so an installation at any old version replays every step up to the current one:
 
 ```php
@@ -22,9 +22,7 @@ switch (true) {
         $this->updateSortByUserDefinedDefault();
     case $dbversion <= 16:
         $this->migrationsDataSimilarEstates();
-    ...
-    case $dbversion <= 65:
-        $this->…();
+    // … one case per migration, in ascending order, the newest one last …
     default:
         $dbversion = DatabaseChanges::MAX_VERSION;
 }
@@ -63,28 +61,15 @@ Above the switch, every `dbDelta( $this->getCreateQuery…() )` call runs **unco
 
 ## Tables
 
-21 tables, all `oo_plugin_*` behind `$wpdb->prefix`, addressed only via
-`RecordManager::TABLENAME_*`:
-
-```
-oo_plugin_listviews                                oo_plugin_forms
-oo_plugin_listviews_address                        oo_plugin_form_fieldconfig
-oo_plugin_listview_contactperson                   oo_plugin_form_activityconfig
-oo_plugin_fieldconfig                              oo_plugin_form_taskconfig
-oo_plugin_address_fieldconfig                      oo_plugin_form_multipage_title
-oo_plugin_fieldconfig_form_defaults                oo_plugin_picturetypes
-oo_plugin_fieldconfig_form_defaults_values         oo_plugin_contacttypes
-oo_plugin_fieldconfig_form_customs_labels          oo_plugin_sortbyuservalues
-oo_plugin_fieldconfig_form_translated_labels       (+ cache table)
-oo_plugin_fieldconfig_estate_customs_labels
-oo_plugin_fieldconfig_estate_translated_labels
-oo_plugin_fieldconfig_address_customs_labels
-oo_plugin_fieldconfig_address_translated_labels
-```
+All tables are `oo_plugin_*` behind `$wpdb->prefix` and are addressed only through the
+`RecordManager::TABLENAME_*` constants — that list in
+[`plugin/Record/RecordManager.php`](../plugin/Record/RecordManager.php) is the authoritative one.
+The cache table is the exception: it has no constant and is created by
+`DatabaseChanges::getCreateQueryCache()`.
 
 The `*_translated_labels` tables hold per-language field label overrides. A missing label in another
 language is a **data** problem, not a `.po` problem — see
-[documentation/TRANSLATIONS.md](../../documentation/TRANSLATIONS.md).
+[TRANSLATIONS.md](TRANSLATIONS.md).
 
 ## Options
 

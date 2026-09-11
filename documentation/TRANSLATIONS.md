@@ -4,7 +4,7 @@ How translation works in this plugin, what you may change in a pull request, and
 automation.
 
 Long-form document — indexed from [../CLAUDE.md](../CLAUDE.md), and authoritative over
-[../.claude/docs/coding-standards.md](../.claude/docs/coding-standards.md#translations) wherever the
+[coding-standards.md](coding-standards.md#translations) wherever the
 two differ.
 
 ## The one rule
@@ -73,7 +73,7 @@ Rules:
 * **Never put a variable inside the string** passed to a translation function; the extractor cannot
   read it.
 * **Keep the text domain literal.** `__($text, $domain)` is invisible to `wp i18n make-pot`.
-* Strings in `templates.dist/` are translated too and use the same domain (108 occurrences today).
+* Strings in `templates.dist/` are translated too and use the same domain.
 
 After adding strings, add the German translation to
 `languages/onoffice-for-wp-websites-de_DE.po` in the same PR — that is what POEditor imports and

@@ -1,15 +1,15 @@
 # Stack and commands
 
-Part of the oo-wp-plugin working instructions — index: [../../CLAUDE.md](../../CLAUDE.md).
+Part of the oo-wp-plugin working instructions — index: [CLAUDE.md](../CLAUDE.md).
 
 ## Stack
 
 | | |
 | --- | --- |
 | PHP | `>= 8.2`, `strict_types` in newer files |
-| DI | `php-di/php-di` ^7.1 — prefixed to `onOffice\WPlugin\Vendor\DI` |
+| DI | `php-di/php-di` — prefixed to `onOffice\WPlugin\Vendor\DI` |
 | Production deps | `erusev/parsedown`, `mjaschen/phpgeo`, `altcha-org/altcha` (PHP, prefixed) · `select2/select2`, `orchidjs/tom-select` (assets, **not** prefixed) |
-| Dev deps | `phpunit/phpunit` ^9.6, `yoast/phpunit-polyfills` ^4.0, `phpstan/phpstan`, `brianhenryie/strauss` 0.28.0, `wp-cli/i18n-command`, `php-coveralls` |
+| Dev deps | `phpunit/phpunit`, `yoast/phpunit-polyfills`, `phpstan/phpstan`, `brianhenryie/strauss`, `wp-cli/i18n-command`, `php-coveralls` |
 | JS build | terser via `webpack.config.js` (no webpack bundling — it just minifies `js/*.js` → `dist/*.min.js`) |
 | Release | `semantic-release` (`.releaserc`), Conventional Commits |
 
@@ -50,7 +50,7 @@ replacing `vendor-prefixed/` with an empty autoloader.
 | `dist/*.min.js` | **generated** by `npm run build`, gitignored (only `dist/.gitkeep` is tracked). **Edit `js/`, never `dist/`.** |
 | `vendor/`, `vendor-prefixed/` | **generated** by composer/Strauss, gitignored |
 | `node_modules/` | generated |
-| `languages/*` except `-de_DE.po` | **generated** by the POEditor sync — see [documentation/TRANSLATIONS.md](../../documentation/TRANSLATIONS.md) |
+| `languages/*` except `-de_DE.po` | **generated** by the POEditor sync — see [TRANSLATIONS.md](TRANSLATIONS.md) |
 | `readme.txt` changelog, version fields in `plugin.php` / `readme.txt` / `package.json` | **generated** by semantic-release — never edit by hand |
 | `css/` | not built, enqueued as-is |
 | `onoffice-for-wp-websites.zip` | build artifact, gitignored |

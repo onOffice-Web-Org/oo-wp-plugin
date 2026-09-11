@@ -15,8 +15,8 @@ ship a bugfix during a running beta test and what to watch out for is documented
 [./CLAUDE.md](./CLAUDE.md) is the index of the working instructions for Claude and other AI agents:
 repository structure, architecture, coding conventions, database migrations, testing, and the rules
 for the automated pull request review. The detailed documents live in
-[./.claude/docs/](./.claude/docs/). Translations have their own long-form document,
-[./documentation/TRANSLATIONS.md](./documentation/TRANSLATIONS.md).
+[./documentation/](./documentation/), together with the long-form documents on building, releasing
+and translating.
 
 ## Getting Started
 

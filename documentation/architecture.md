@@ -1,10 +1,10 @@
 # Architecture
 
-Part of the oo-wp-plugin working instructions — index: [../../CLAUDE.md](../../CLAUDE.md).
+Part of the oo-wp-plugin working instructions — index: [CLAUDE.md](../CLAUDE.md).
 
 ## Bootstrap
 
-[`plugin.php`](../../plugin.php) is the only place hooks are registered. It defines the constants
+[`plugin.php`](../plugin.php) is the only place hooks are registered. It defines the constants
 (`ONOFFICE_PLUGIN_VERSION`, `ONOFFICE_PLUGIN_DIR`, `ONOFFICE_DI_CONFIG_PATH`,
 `ONOFFICE_API_SERVER`, `OO_DB_REQUEST_CACHE`), builds the DI container, wires every
 `add_action`/`add_filter`, and loads both autoloaders — `vendor/` **and** `vendor-prefixed/`.
@@ -34,11 +34,11 @@ and rewritten into the `onOffice\WPlugin\Vendor\` namespace by
 - `vendor-prefixed/` is generated and gitignored. `composer install --no-dev` does **not** produce a
   working plugin (Strauss is itself a dev dependency) — use `make release`.
 
-Full detail: [documentation/Building.md](../../documentation/Building.md).
+Full detail: [Building.md](Building.md).
 
 ## Dependency injection
 
-PHP-DI 7, one container built in `plugin.php` from [`config/di-config.php`](../../config/di-config.php);
+PHP-DI 7, one container built in `plugin.php` from [`config/di-config.php`](../config/di-config.php);
 the path is available everywhere as `ONOFFICE_DI_CONFIG_PATH`.
 
 - Prefer constructor injection and let autowiring do the work.
@@ -89,7 +89,7 @@ with the existing set, but put **new** doubles in `tests/Mocks/` — see [testin
                                              ContentFilterShortCodeRegistrator
   -> DataListViewFactory + RecordManagerRead  own DB tables: the saved view configuration
   -> Filter/DefaultFilterBuilder*             view config + request vars -> API filter
-  -> SDKWrapper -> onOffice\SDK               HTTP, cached in DBCache (TTL 3600)
+  -> SDKWrapper -> onOffice\SDK               HTTP, cached in DBCache
   -> ViewFieldModifier/*                      shape the API response for output
   -> Template.php -> templates.dist/...       or the customer's own template copy
 ```

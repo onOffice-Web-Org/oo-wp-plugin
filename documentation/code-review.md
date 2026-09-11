@@ -1,15 +1,15 @@
 # Pull request reviews
 
-Part of the oo-wp-plugin working instructions — index: [../../CLAUDE.md](../../CLAUDE.md).
+Part of the oo-wp-plugin working instructions — index: [CLAUDE.md](../CLAUDE.md).
 
 These rules apply both when a developer asks for a review locally and to the automated review in
 `.github/workflows/claude-code-review.yml`, which points at this file. They mirror the four theme
-repos' rules — [onoffice-pure's](../../../../themes/onoffice-pure/.claude/docs/code-review.md),
-which in turn mirror
-[onoffice-shared's](../../../../themes/onoffice-pure/shared/.claude/docs/code-review.md), where the
-full reasoning on where these rules come from lives — with **this repo's own checklist**, which
-differs substantially: this is the data layer, it has a real test suite, and it owns customer
-database schema.
+repos' rules — the `code-review.md` in
+[onoffice-pure](https://github.com/onOffice-Web-Org/onoffice-pure), which in turn mirrors the one in
+[onoffice-shared](https://github.com/onOffice-Web-Org/onoffice-shared), where the full reasoning on
+where these rules come from lives — with **this repo's own checklist**, which differs
+substantially: this is the data layer, it has a real test suite, and it owns customer database
+schema.
 
 The automated review is **on request, not on every push**. It starts when
 
@@ -22,6 +22,13 @@ The automated review is **on request, not on every push**. It starts when
 A pull request opened directly (not as a draft) never fires *Ready for review* — open it as a draft
 and mark it ready, or ask by comment. The label `no-claude-review` suppresses the automatic run; an
 explicit comment or a manual start is always honoured.
+
+Because this repository is public, two restrictions apply — the workflow file explains them in full:
+
+- **Pull requests from a fork are not reviewed.** The job would otherwise run the fork's code next
+  to this repository's secrets. Push the branch into this repository instead.
+- **`@claude` only starts a run for OWNER, MEMBER or COLLABORATOR.** A comment from anyone else is
+  ignored.
 
 ## The one rule
 
@@ -95,8 +102,9 @@ Highest signal first.
       method or constant, a variable exposed to templates (`$pEstates`, `$pForm`, `$pAddressList`,
       `$generateSortDropDown`, `$getListName`, `$scriptLoader`), a CSS class, or a script handle? All
       four theme repos call this plugin's namespace directly from
-      `onoffice-theme/templates/fields.php`, and customers copy `templates.dist/` out. Check with the
-      cross-repo token if available, otherwise say "Nicht geprüft". See [project.md](project.md).
+      `onoffice-theme/templates/fields.php`, and customers copy `templates.dist/` out. In the automated
+      review the sibling repositories are checked out under `cross-repo/<repo>/` — grep there. If
+      they are missing, or locally, say "Nicht geprüft". See [project.md](project.md).
 - [ ] **Security** — unprepared SQL or string-interpolated table names; a raw
       `$_GET`/`$_POST`/`$_REQUEST` read instead of `RequestVariablesSanitizer`; missing or
       context-wrong output escaping; a write action missing either `current_user_can()` or the nonce
@@ -130,7 +138,7 @@ Highest signal first.
       constant (`ONOFFICE_API_SERVER`, `TABLENAME_*`, `OO_PLUGINCAP_*`, `FieldTypes`,
       `Language::LOCALE_MAPPING`) must not be inlined. A new locale also needs an entry in
       `Language::LOCALE_MAPPING`, not just the sync allowlist. See
-      [documentation/TRANSLATIONS.md](../../documentation/TRANSLATIONS.md).
+      [TRANSLATIONS.md](TRANSLATIONS.md).
 - [ ] **Naming and spelling** — new class/method/variable names against the conventions in
       [coding-standards.md](coding-standards.md#naming) (`_p`/`p` prefixes, `TestClass*`,
       `*Environment`/`*Default`). A typo in a **persisted or hooked** name — option key, DB column,
@@ -201,7 +209,7 @@ Code Hygiene process (extended here across the customer-template and six-repo bo
 Architecture axis's duplication / layer-leakage language (a good fit for the
 `RecordManager`/`SDKWrapper`/`WP` split); the Readability axis's core framing question; **"Review the
 Tests First" as a real gate** — adopted in full here, unlike in the theme repos, because this repo
-has a 319-file PHPUnit suite; and its Security axis, also adopted in full here, because this repo
+has a real PHPUnit suite; and its Security axis, also adopted in full here, because this repo
 writes SQL, reads request variables and holds API credentials.
 
 **Not adopted:** Change Sizing (line-count thresholds, PR-splitting strategies) — migrations,

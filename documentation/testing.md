@@ -1,17 +1,17 @@
 # Testing
 
-Part of the oo-wp-plugin working instructions — index: [../../CLAUDE.md](../../CLAUDE.md).
+Part of the oo-wp-plugin working instructions — index: [CLAUDE.md](../CLAUDE.md).
 
-**Unlike the four theme repos, this one has a real test suite** — 319 test files. Tests are a review
-gate here, not advisory.
+**Unlike the four theme repos, this one has a real test suite** — several hundred `TestClass*`
+files under `tests/`. Tests are a review gate here, not advisory.
 
-PHPUnit 9.6 runs against the **real WordPress test suite** (`WP_UnitTestCase`, MySQL required), so
+PHPUnit runs against the **real WordPress test suite** (`WP_UnitTestCase`, MySQL required), so
 these are integration tests, not isolated unit tests.
 
 ## Commands
 
 ```bash
-make test-docker                        # everything, in Docker (mysql:8.0) — easiest, no local setup
+make test-docker                        # everything, in Docker — easiest, no local setup
 make test-docker tests/TestClassX.php   # one file
 ./vendor/bin/phpunit                    # local; needs scripts/install-wp-tests.sh first
 ./vendor/bin/phpunit --filter testFoo
@@ -24,8 +24,9 @@ PHPUnit.
 
 ## What CI enforces
 
-`.github/workflows/unit-tests.yml` (PHP 8.2, MySQL 5.7, on PRs to `master`/`beta`/`prerelease`/
-`release` and weekly) runs:
+`.github/workflows/unit-tests.yml` (on PRs to `master`/`beta`/`prerelease`/`release` and weekly;
+the PHP and MySQL versions it pins are in that file, and they are not the ones
+`docker-compose.test.yml` uses) runs:
 
 ```
 composer install --no-scripts && composer update --lock

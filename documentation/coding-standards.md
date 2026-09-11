@@ -1,6 +1,6 @@
 # Coding standards
 
-Part of the oo-wp-plugin working instructions — index: [../../CLAUDE.md](../../CLAUDE.md).
+Part of the oo-wp-plugin working instructions — index: [CLAUDE.md](../CLAUDE.md).
 
 **Match the surrounding file.** This codebase is old enough to have drifted; do not modernize a file
 you are only touching in one place. An unrelated reformat mixed into a diff is a review finding.
@@ -75,7 +75,7 @@ column, a hook name or a capability constant cannot be renamed later without a m
 
 ### `phpcs:ignore` — annotations without a checker
 
-There are ~259 `phpcs:ignore` annotations in the tree but **no phpcs configuration and no
+There are several hundred `phpcs:ignore` annotations in the tree but **no phpcs configuration and no
 `squizlabs`/`wp-coding-standards` dependency** — nothing evaluates them. They document intent for
 the wordpress.org review. Do not add new ones expecting a checker to honour them, and do not remove
 existing ones as "dead". If a PR adds phpcs annotations, ask whether phpcs should be wired up
@@ -102,7 +102,7 @@ concatenation; use placeholders and a `/* translators: */` comment.
 other file under `languages/` is written by automation, and `guard-languages.yml` fails the PR.
 
 Full pipeline, the two text domains, WPML, and the `Language::LOCALE_MAPPING` trap when adding a
-locale: [documentation/TRANSLATIONS.md](../../documentation/TRANSLATIONS.md).
+locale: [TRANSLATIONS.md](TRANSLATIONS.md).
 
 ## Accessibility / BFSG
 

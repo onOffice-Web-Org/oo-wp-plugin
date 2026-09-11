@@ -1,6 +1,6 @@
 # Git, CI, releases and deployment
 
-Part of the oo-wp-plugin working instructions — index: [../../CLAUDE.md](../../CLAUDE.md).
+Part of the oo-wp-plugin working instructions — index: [CLAUDE.md](../CLAUDE.md).
 
 **This repo's workflows reach real infrastructure** — customer-facing update servers, a hosting API
 that builds and restarts test boxes, and the POEditor translation project. Treat everything below
@@ -26,7 +26,9 @@ Same absolute rule as the four theme repos.
 | any mutating `gh api` call, repository/secret/branch-protection change | changes the project's rules and access |
 
 The same rule applies to the automated review in `.github/workflows/claude-code-review.yml`: **it
-reads and comments, it never changes anything.**
+reads and comments, it never changes anything.** There this is not left to the prompt — the run is
+limited to reading tools plus `gh api -X GET`, and gets the job's own token, which reaches no other
+repository. See [code-review.md](code-review.md) for why fork pull requests are refused.
 
 ## Branches
 
@@ -56,7 +58,7 @@ Three rules that cost real time when broken:
 Branch names encode the ticket: `fix/P#172629-price-on-request`. The `P#<number>` tag is also what
 ties a change to its siblings in the other five repos — see [project.md](project.md).
 
-Full checklists and troubleshooting: [documentation/RELEASE.md](../../documentation/RELEASE.md).
+Full checklists and troubleshooting: [RELEASE.md](RELEASE.md).
 
 ## Commit messages and PR titles
 
@@ -102,5 +104,5 @@ Examples: `fix(P#172629): price on request`, `feat(P#12345): add estate list fil
 `make release` copies the tree, then runs `composer install --no-dev` **plus**
 `scripts/prefix-dependencies.php` (not `vendor/bin/strauss`, because Strauss takes its project
 directory from the CWD while being only a dev dependency here). Excluded from the shipped artifact:
-`tests/`, `documentation/`, `scripts/`, `bin/`, dotfiles and dot-directories (so `.claude/` never
-ships), `Readme.md`, `CLAUDE.md`, `Makefile`, `phpstan*`, `phpunit.xml*`.
+`tests/`, `documentation/` (so the working instructions never ship), `scripts/`, `bin/`, dotfiles
+and dot-directories, `Readme.md`, `CLAUDE.md`, `Makefile`, `phpstan*`, `phpunit.xml*`.
