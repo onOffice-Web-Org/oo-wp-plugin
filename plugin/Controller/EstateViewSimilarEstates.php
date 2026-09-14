@@ -92,15 +92,24 @@ class EstateViewSimilarEstates
 	{
 		while ($pValuesCurrentEstate = $pEstateList->estateIterator
 			(EstateViewFieldModifierTypes::MODIFIER_TYPE_DETAIL_SIMILAR_ESTATES)) {
-			$this->_pFilterConfiguration->setEstateKind($pValuesCurrentEstate->getValueRaw('objektart') ?? '');
-			$marketingMethod = (string)($pValuesCurrentEstate->getValueRaw('vermarktungsart') ?? '');
+			$currentEstateId = $pEstateList->getCurrentEstateId();
+			$rawElements = $this->getRawElements($pEstateList, $currentEstateId);
+
+			// The formatted output returns objektart/vermarktungsart translated into the
+			// current language, while the API filter expects the untranslated key. Reading
+			// them from the raw record keeps the lookup working in every language.
+			$estateKind = $rawElements['objektart']
+				?? $pValuesCurrentEstate->getValueRaw('objektart') ?? '';
+			$marketingMethod = (string)($rawElements['vermarktungsart']
+				?? $pValuesCurrentEstate->getValueRaw('vermarktungsart') ?? '');
+			$this->_pFilterConfiguration->setEstateKind($estateKind);
 			$this->_pFilterConfiguration->setMarketingMethod(mb_strtolower($marketingMethod));
 			$this->_pFilterConfiguration->setStreet($pValuesCurrentEstate->getValueRaw('strasse') ?? '');
 			$this->_pFilterConfiguration->setCountry($pValuesCurrentEstate->getValueRaw('land') ?? '');
 			$this->_pFilterConfiguration->setPostalCode($pValuesCurrentEstate->getValueRaw('plz') ?? '');
 			$longitude = floatval($pValuesCurrentEstate->getValueRaw('laengengrad'));
 			$latitude = floatval($pValuesCurrentEstate->getValueRaw('breitengrad'));
-			$estateId = $pEstateList->getCurrentMultiLangEstateMainId();
+			$estateId = (int) $pEstateList->getCurrentMultiLangEstateMainId();
 
 			if ($longitude != .0 && $latitude != .0) {
 				$pGeoCoordinates = new GeoCoordinates($latitude, $longitude);
@@ -108,7 +117,10 @@ class EstateViewSimilarEstates
 			}
 
 			$pDefaultFilterBuilder = new DefaultFilterBuilderSimilarEstates($this->_pFilterConfiguration);
-			$pDefaultFilterBuilder->setExcludeIds([$estateId]);
+			// A translated estate is a record of its own, so excluding the main language id
+			// alone would let the estate appear as similar to itself in other languages.
+			$pDefaultFilterBuilder->setExcludeIds
+				(array_values(array_unique([$estateId, $currentEstateId])));
 			$pGeoRangeSearch = new GeoSearchBuilderSimilarEstates($this->_pFilterConfiguration);
 
 			$pEstateListSub = clone $this->_pEnvironment->getEstateList();
@@ -118,6 +130,24 @@ class EstateViewSimilarEstates
 			yield $estateId => $pEstateListSub;
 		}
 	}
+
+	/**
+	 *
+	 * @param EstateListBase $pEstateList
+	 * @param int $estateId
+	 * @return array
+	 *
+	 */
+
+	private function getRawElements(EstateListBase $pEstateList, int $estateId): array
+	{
+		if (!method_exists($pEstateList, 'getRawValues')) {
+			return [];
+		}
+
+		return $pEstateList->getRawValues()->getValueRaw($estateId)['elements'] ?? [];
+	}
+
 
 	/**
 	 *
