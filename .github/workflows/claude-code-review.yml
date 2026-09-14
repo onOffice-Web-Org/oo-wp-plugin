@@ -1,0 +1,255 @@
+name: Claude Code Review
+
+# Automated pull request review — deliberately NOT run on every push.
+#
+# It starts only when someone asks for it:
+#   1. the "Ready for review" button on a draft pull request (event: ready_for_review)
+#   2. a comment on the pull request containing "@claude" — canonical form: "@claude review"
+#   3. manually: Actions → Claude Code Review → Run workflow, with the PR number
+#
+# Note: a pull request that is opened directly (not as a draft) never fires "ready_for_review".
+# Open it as a draft and click *Ready for review*, or comment "@claude review".
+#
+# The review rules live in ./documentation/code-review.md (indexed from ./CLAUDE.md); the prompt
+# below only points at them, so the rules exist exactly once.
+#
+# This repo's workflows reach real infrastructure (customer update server on final release, the
+# hosting API for test boxes, the POEditor project) — this review workflow itself only reads and
+# comments, it never changes anything. See ./documentation/workflow.md for what every OTHER
+# workflow here can do.
+#
+# ── Security: this repository is public, so anyone can fork it and comment on a pull request ──
+#
+# Two rules hold this together, do not weaken either of them:
+#
+#   * The pull request trigger is "pull_request", NOT "pull_request_target". GitHub hands no
+#     secrets to a "pull_request" run from a fork, so a fork PR simply skips at the credentials
+#     check. "pull_request_target" would run the fork's PR with full access to this repo's secrets.
+#   * Fork pull requests are refused outright in "Resolve pull request". The comment triggers
+#     ("issue_comment", "pull_request_review_comment") run in the BASE repo context and therefore
+#     DO see the secrets, while checking out the PR head — and "composer install" runs
+#     scripts/prefix-dependencies.php via post-install-cmd. Checking out a fork here would execute
+#     the PR author's code next to CLAUDE_CODE_OAUTH_TOKEN. That costs us nothing: we push our own
+#     branches into this repository.
+#
+# In addition, the comment triggers only accept an "@claude" from OWNER, MEMBER or COLLABORATOR —
+# otherwise any GitHub account could start a paid run, and feed it its own instructions.
+#
+# The token for the sibling repositories is deliberately kept away from Claude: it is used only in
+# the "Check out the sibling repositories" step, and the review reads the resulting working copies
+# from disk. Claude itself runs with the job's own GITHUB_TOKEN, which cannot touch another repo.
+#
+# Requirements:
+#   secrets.CLAUDE_CODE_OAUTH_TOKEN    — required, otherwise the job warns and skips
+#   secrets.OO_ACTIONS_BOT_APP_ID      — optional, enables the read-only checkout of the four theme
+#   secrets.OO_ACTIONS_BOT_PRIVATE_KEY   repos, onoffice-shared and oo-vue-addons for cross-repo
+#                                        checks; without it the review says "Nicht geprüft"
+#
+# The "no-claude-review" label suppresses the automatic run on *Ready for review*; an explicit
+# "@claude" comment or a manual dispatch is always honoured.
+
+on:
+  pull_request:
+    types: [ready_for_review]
+    branches:
+      - master
+      - beta
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Number of the pull request to review
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number || github.event.issue.number || inputs.pr }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: Review
+    # 1) "Ready for review" on a non-dependabot PR without the opt-out label,
+    # 2) an "@claude" comment on a pull request, written by someone with write access,
+    # 3) a manual dispatch (which already requires write access).
+    if: >-
+      (
+        github.event_name == 'pull_request'
+        && !startsWith(github.head_ref, 'dependabot/')
+        && !contains(github.event.pull_request.labels.*.name, 'no-claude-review')
+      ) || (
+        github.event_name == 'issue_comment'
+        && github.event.issue.pull_request != null
+        && github.event.comment.user.type != 'Bot'
+        && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+        && contains(github.event.comment.body, '@claude')
+      ) || (
+        github.event_name == 'pull_request_review_comment'
+        && github.event.comment.user.type != 'Bot'
+        && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+        && contains(github.event.comment.body, '@claude')
+      ) || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check credentials
+        id: creds
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::CLAUDE_CODE_OAUTH_TOKEN is not configured — skipping the Claude review."
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # The triggering event decides which pull request we are on: a comment event checks out the
+      # default branch by default, so resolve the head commit explicitly and check that out.
+      # Fork pull requests are refused here — see the security note at the top of this file.
+      - name: Resolve pull request
+        id: pr
+        if: steps.creds.outputs.available == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_FROM_EVENT: ${{ github.event.pull_request.number || github.event.issue.number }}
+          PR_FROM_INPUT: ${{ inputs.pr }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            NUMBER="$PR_FROM_INPUT"
+          else
+            NUMBER="$PR_FROM_EVENT"
+          fi
+
+          if [ -z "$NUMBER" ]; then
+            echo "::error::Could not determine the pull request number."
+            exit 1
+          fi
+
+          PR_JSON="$(gh pr view "$NUMBER" --repo "$REPO" --json headRefOid,isCrossRepository)"
+
+          if [ "$(echo "$PR_JSON" | jq -r .isCrossRepository)" = "true" ]; then
+            echo "::error::Fork pull request — review disabled: the job would run code from the fork with this repository's secrets."
+            exit 1
+          fi
+
+          SHA="$(echo "$PR_JSON" | jq -r .headRefOid)"
+          echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "Reviewing PR #$NUMBER at $SHA"
+
+      - name: Checkout
+        if: steps.creds.outputs.available == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr.outputs.sha }}
+          fetch-depth: 0
+          submodules: recursive
+
+      # Composer is installed so the review can resolve a class it needs to look up in
+      # vendor-prefixed/ (see documentation/architecture.md). It does NOT run tests — unit-tests.yml
+      # is the CI gate, and the review must not restate its failures.
+      - name: Setup PHP
+        if: steps.creds.outputs.available == 'true'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, mysqli, intl, curl
+          coverage: none
+
+      - name: Composer install
+        if: steps.creds.outputs.available == 'true'
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      # Optional: a read-only token for the four theme repos, onoffice-shared and oo-vue-addons.
+      # It is scoped to "contents: read" and never reaches Claude — only the next step uses it.
+      # Fails silently if the GitHub App is not installed on those repos.
+      - name: Create cross-repo token
+        id: cross-repo-token
+        if: steps.creds.outputs.available == 'true'
+        continue-on-error: true
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          permission-contents: read
+          repositories: |
+            onoffice-shared
+            onoffice-classic
+            onoffice-modern
+            onoffice-pure
+            onoffice-timeless
+            oo-vue-addons
+
+      # Shallow working copies so the review can grep the siblings for a renamed class, template
+      # variable or script handle instead of just saying "not checked". Without them the review
+      # says "Nicht geprüft" — a missing sibling must never fail the job.
+      - name: Check out the sibling repositories
+        if: steps.creds.outputs.available == 'true' && steps.cross-repo-token.outputs.token != ''
+        continue-on-error: true
+        env:
+          CROSS_REPO_TOKEN: ${{ steps.cross-repo-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          set -uo pipefail
+          mkdir -p cross-repo
+
+          for repo in onoffice-shared onoffice-classic onoffice-modern onoffice-pure \
+                      onoffice-timeless oo-vue-addons; do
+            if git clone --depth 1 --quiet \
+                "https://x-access-token:$CROSS_REPO_TOKEN@github.com/$OWNER/$repo.git" \
+                "cross-repo/$repo"; then
+              # The clone URL, token included, is stored in .git/config — and the review reads
+              # files. Drop the git directory; nothing here needs history.
+              rm -rf "cross-repo/$repo/.git"
+            else
+              echo "::warning::Could not check out $repo — the cross-repo check will be incomplete."
+              rm -rf "cross-repo/$repo"
+            fi
+          done
+
+      - name: Claude review
+        if: steps.creds.outputs.available == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Deliberately the job's own token, not the cross-repo one: it can comment on this pull
+          # request and nothing else. The siblings are on disk, no token needed for them.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          track_progress: true
+          use_sticky_comment: true
+          claude_args: >-
+            --model claude-sonnet-5
+            --max-turns 30
+            --allowedTools "Read,Grep,Glob,Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh api -X GET:*),Bash(php -l *)"
+          prompt: |
+            Reviewe diesen Pull Request von oo-wp-plugin ("onOffice for WP-Websites") — dem
+            WordPress-Plugin, das Immobilien, Adressen und Formulare aus der onOffice-API holt und
+            die Datenbasis für die vier onOffice-Parent-Themes ist.
+
+            **Verbindlich sind die Regeln in `documentation/code-review.md` im ausgecheckten Repo:
+            lies die Datei zuerst und halte dich vollständig daran** — Umfang, Schweregrade,
+            Prüfliste und Ausgabeformat stehen dort, `CLAUDE.md` ist der Index auf die übrige Doku.
+
+            Enthält der auslösende `@claude`-Kommentar eine konkrete Frage oder Einschränkung, dann
+            beantworte genau das im gleichen Format, ohne den vollständigen Review drumherum.
+
+            Die Geschwister-Repos liegen als flache Klons unter `cross-repo/<repo>/` — prüfe
+            Cross-Repo-Auswirkungen dort mit Grep und Glob. Fehlt ein Verzeichnis, schreibe
+            "Nicht geprüft", statt zu raten. `cross-repo/` gehört nicht zum Plugin und wird nie
+            reviewt.
+
+            Antworte auf Deutsch, in genau einem Kommentar. Ändere keine Dateien und pushe nichts.
