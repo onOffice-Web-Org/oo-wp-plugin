@@ -25,6 +25,7 @@ namespace onOffice\tests;
 
 use onOffice\SDK\internal\ApiCall;
 use onOffice\SDK\internal\HttpFetch;
+use ReflectionMethod;
 use ReflectionProperty;
 use WP_UnitTestCase;
 
@@ -205,6 +206,80 @@ class TestClassApiCall
 		$pInvocation->willReturn(json_encode(['response' => ['results' => $results]]));
 
 		return $pHttpFetch;
+	}
+
+
+	/**
+	 * A list bound to a contact (shortcode attribute 'address') and a favourites list both
+	 * restrict the records with an Id filter. The estate id is not part of a record's
+	 * "elements" - it only appears there when "Id" is requested as a data field, which no
+	 * list does. The cache-side filter therefore has to fall back to the record id itself;
+	 * without that fallback the filter matches nothing and the whole list renders empty as
+	 * soon as it is served from the cache.
+	 */
+	public function testIdFilterMatchesTheRecordIdWhenItIsNotARequestedDataField()
+	{
+		$pApiCall = new ApiCall();
+		$pMethod = new ReflectionMethod(ApiCall::class, 'applyListCacheFiltering');
+		$pMethod->setAccessible(true);
+
+		$records = [
+			['id' => 101, 'elements' => ['objekttitel' => 'Haus Helmenzen']],
+			['id' => 102, 'elements' => ['objekttitel' => 'Haus Altenkirchen']],
+			['id' => 999, 'elements' => ['objekttitel' => 'Nicht verknuepft']],
+		];
+
+		$cachedResponse = [
+			'data' => ['records' => $records, 'meta' => ['cntabsolute' => 3]],
+			'raw' => ['data' => ['records' => $records]],
+			'types' => ['objekttitel' => 'varchar'],
+		];
+
+		$filtered = $pMethod->invoke($pApiCall, $cachedResponse, [
+			'listname' => 'immobilien',
+			'formatoutput' => true,
+			'outputlanguage' => 'DEU',
+			'listlimit' => 500,
+			'listoffset' => 0,
+			'filter' => ['Id' => [['op' => 'IN', 'val' => [101, 102]]]],
+		]);
+
+		$this->assertSame([101, 102], $this->recordIds($filtered),
+			'an Id filter must keep the estates it names and drop only the others');
+	}
+
+
+	/**
+	 * The same lookup with "Id" present in the records must keep working, so a list that
+	 * does request the field is not filtered differently.
+	 */
+	public function testIdFilterStillUsesTheElementValueWhenTheFieldWasRequested()
+	{
+		$pApiCall = new ApiCall();
+		$pMethod = new ReflectionMethod(ApiCall::class, 'applyListCacheFiltering');
+		$pMethod->setAccessible(true);
+
+		$records = [
+			['id' => 101, 'elements' => ['Id' => '101', 'objekttitel' => 'Haus Helmenzen']],
+			['id' => 999, 'elements' => ['Id' => '999', 'objekttitel' => 'Nicht verknuepft']],
+		];
+
+		$cachedResponse = [
+			'data' => ['records' => $records, 'meta' => ['cntabsolute' => 2]],
+			'raw' => ['data' => ['records' => $records]],
+			'types' => ['objekttitel' => 'varchar'],
+		];
+
+		$filtered = $pMethod->invoke($pApiCall, $cachedResponse, [
+			'listname' => 'immobilien',
+			'formatoutput' => true,
+			'outputlanguage' => 'DEU',
+			'listlimit' => 500,
+			'listoffset' => 0,
+			'filter' => ['Id' => [['op' => 'IN', 'val' => [101]]]],
+		]);
+
+		$this->assertSame([101], $this->recordIds($filtered));
 	}
 
 

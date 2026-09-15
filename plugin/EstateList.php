@@ -339,11 +339,14 @@ class EstateList
 	 */
 	private function loadRecords(int $currentPage)
 	{
+		// Same ordering constraint as loadRecordsForMap(): getEstateParameters() flushes the
+		// request queue for a contact-bound list, so both parameter sets are built first.
 		$estateParameters = $this->getEstateParameters($currentPage, $this->_formatOutput);
+		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
+
 		$this->_pApiClientAction->setParameters($estateParameters);
 		$this->_pApiClientAction->addRequestToQueue();
 
-		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'][] = 'vermarktungsart';
 		$estateParametersRaw['data'][] = 'objektart';
@@ -441,11 +444,20 @@ class EstateList
 		$offset = 0;
 
 		do {
+			// Both parameter sets are built before anything is queued. getEstateParameters()
+			// sends requests of its own when the list is bound to a contact (shortcode
+			// attribute 'address'): fetchEstatesForAddressIds() and collectCountEstates()
+			// both call sendRequests(), which flushes whatever is already queued. Building
+			// the raw parameters after the formatted request was queued therefore split the
+			// two into separate send cycles, so _records and _recordsRaw could come from
+			// different cache generations. estateIterator() then found no raw record for an
+			// estate, left showGoogleMap unset and the theme dropped that estate's pin -
+			// while the list, which is loaded separately, still showed the estate.
 			$estateParameters = $this->getEstateParametersForMap($currentPage, $this->_formatOutput, $offset);
+			$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false, $offset);
+
 			$this->_pApiClientAction->setParameters($estateParameters);
 			$this->_pApiClientAction->addRequestToQueue();
-
-			$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false, $offset);
 
 			$pApiClientActionRawValues = clone $this->_pApiClientAction;
 			$pApiClientActionRawValues->setParameters($estateParametersRaw);
@@ -1120,11 +1132,17 @@ class EstateList
 		}
 
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
+			// The formatted record carries showGoogleMap too (getEstateParametersForMap()
+			// requests it for both the formatted and the raw map query). Fall back to it when
+			// the raw record is missing, so the decision is still made on a value the API
+			// returned instead of leaving showGoogleMap unset - which the map templates read
+			// as "do not show" and which silently drops the estate's pin.
+			$recordRawMap = $recordRaw !== [] ? $recordRaw : $recordElements;
 
-			if (isset($recordRaw['showGoogleMap']) && ($recordRaw['showGoogleMap'] === '0' || $recordRaw['showGoogleMap'] === 0 || $recordRaw['showGoogleMap'] === false)) {
+			if (isset($recordRawMap['showGoogleMap']) && ($recordRawMap['showGoogleMap'] === '0' || $recordRawMap['showGoogleMap'] === 0 || $recordRawMap['showGoogleMap'] === false)) {
 				$recordModified['showGoogleMap'] = false;
 			}
-			elseif (isset($recordRaw['showGoogleMap']) && ($recordRaw['showGoogleMap'] === '1' || $recordRaw['showGoogleMap'] === 1 || $recordRaw['showGoogleMap'] === true)) {
+			elseif (isset($recordRawMap['showGoogleMap']) && ($recordRawMap['showGoogleMap'] === '1' || $recordRawMap['showGoogleMap'] === 1 || $recordRawMap['showGoogleMap'] === true)) {
 				$recordModified['showGoogleMap'] = true;
 			}
 		}
