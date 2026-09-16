@@ -119,7 +119,6 @@ class FormPostOwner
 		$this->_pFormData = $pFormData;
 
 		$recipient = $this->determineRecipient($pDataFormConfiguration);
-		$supervisor = $this->determineSupervisor($pDataFormConfiguration, $recipient);
 
 		$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
@@ -131,6 +130,7 @@ class FormPostOwner
 
 		try {
 			if ( $pDataFormConfiguration->getCreateOwner() ) {
+				$supervisor = $this->determineSupervisor($pDataFormConfiguration, $recipient);
 				$checkDuplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
 				$contactType = $pDataFormConfiguration->getContactType();
 				$enableCreateTask = $pDataFormConfiguration->getEnableCreateTask();
@@ -188,18 +188,13 @@ class FormPostOwner
 	}
 
 	/**
-	 * Returns the advisor to enter as supervisor ("Betreuer") of the created estate and
-	 * address as ['id' => …, 'username' => …], or [] when that doesn't apply.
+	 * Returns the advisor to enter as supervisor ("Betreuer") of the created estate and address,
+	 * or [] when that doesn't apply.
 	 *
-	 * Deliberately tied to the resolved broker recipient: the advisor is only identifiable
-	 * because the form sits on their address detail page, which is exactly the condition
-	 * getBrokerRecipient() checks. A set _recipientAddressId is the marker that this actually
-	 * happened - without it $recipient is just the address configured in the backend, which
-	 * must not be turned into a supervisor.
-	 *
-	 * An advisor is only known by their address record here, so the email is used as the anchor
-	 * to the user account - see FormAddressCreator::getUserByEmail(), which also explains why
-	 * both the id and the user name are needed.
+	 * Deliberately tied to the resolved broker recipient: a set _recipientAddressId is the
+	 * marker that getBrokerRecipient() actually identified an advisor from the address detail
+	 * page the form sits on. Without it $recipient is just the address configured in the
+	 * backend, which must not be turned into a supervisor.
 	 *
 	 * Non-fatal by design, like assignEstateContactBroker(): a supervisor that cannot be
 	 * resolved must not stop the estate, the address or the email from being created.
@@ -213,8 +208,7 @@ class FormPostOwner
 		DataFormConfigurationOwner $pDataFormConfiguration, string $recipient): array
 	{
 		if (!$pDataFormConfiguration->getAssignBrokerAsSupervisor() ||
-			$this->_recipientAddressId === null ||
-			$recipient === '') {
+			$this->_recipientAddressId === null) {
 			return [];
 		}
 
@@ -223,9 +217,6 @@ class FormPostOwner
 				->getUserByEmail($recipient);
 
 			if ($supervisor === []) {
-				// Common enough to be worth a log line: the advisor exists as an address but has
-				// no user account carrying the same email, so there is nothing to put in either
-				// supervisor field.
 				error_log('onOffice: no onOffice user matches the advisor email ' . $recipient
 					. ' - no supervisor was set');
 			}
@@ -454,11 +445,9 @@ class FormPostOwner
 	 * @throws ApiClientException
 	 */
 
-	private function createEstate(array $estateData, string $supervisorUserId = ''): int
+	private function createEstate(array $estateData, string $supervisorUserId): int
 	{
 		if ($supervisorUserId !== '') {
-			// The estate's supervisor field takes the numeric user id, unlike the address field
-			// which takes the user name - see FormAddressCreator::getUserByEmail().
 			// Only added to the request, not to $estateData - the caller passes that array on to
 			// sendContactRequest(), where its keys become the email's 'estatedata' field list.
 			$estateData['benutzer'] = $supervisorUserId;

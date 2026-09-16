@@ -274,19 +274,12 @@ class FormAddressCreator
 	}
 
 	/**
-	 * Resolves an onOffice user by email and returns ['id' => …, 'username' => …], or [] when
-	 * nothing matches.
-	 *
-	 * An advisor is only known by their address record here - and an address id is not a user
-	 * id. The email is the only anchor the two records share, so it is matched against the user
-	 * list. Compared case-insensitively because the two records are maintained separately.
+	 * Resolves an onOffice user by email, matched case-insensitively because address and user
+	 * record are maintained separately.
 	 *
 	 * Both representations are returned because the two supervisor fields disagree on which one
 	 * they want: the address field 'Benutzer' takes the user name, the estate field 'benutzer'
-	 * takes the numeric user id. That is the same asymmetry
-	 * getSupervisorUsernameByEstateId() works around when it reads an id off an estate and
-	 * converts it before writing it to an address.
-	 *
+	 * the numeric user id - the same asymmetry getSupervisorUsernameByEstateId() works around.
 	 * Callers treat [] as "leave the supervisor alone" rather than as an error.
 	 *
 	 * @param string $email
@@ -306,21 +299,18 @@ class FormAddressCreator
 
 		$pApiClientAction->addRequestToQueue();
 		$this->_pSDKWrapper->sendRequests();
-		$result = $pApiClientAction->getResultRecords();
 
-		$userResult = array_values(array_filter($result, function($item) use ($email) {
-			return isset($item['elements']['email'], $item['elements']['username']) &&
-				strcasecmp($item['elements']['email'], $email) === 0;
-		}));
-
-		if ($userResult === []) {
-			return [];
+		foreach ($pApiClientAction->getResultRecords() as $user) {
+			if (isset($user['elements']['email'], $user['elements']['username']) &&
+				strcasecmp($user['elements']['email'], $email) === 0) {
+				return [
+					'id' => (string)$user['id'],
+					'username' => (string)$user['elements']['username'],
+				];
+			}
 		}
 
-		return [
-			'id' => (string)($userResult[0]['elements']['id'] ?? $userResult[0]['id'] ?? ''),
-			'username' => (string)$userResult[0]['elements']['username'],
-		];
+		return [];
 	}
 
 	/**
