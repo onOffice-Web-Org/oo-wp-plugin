@@ -1704,7 +1704,7 @@ msgstr "Navegación de entradas"
 
 #: 
 msgid "Postal Code"
-msgstr "Postal code"
+msgstr "Código postal"
 
 #: 
 msgid "Postal code"
@@ -2174,7 +2174,7 @@ msgstr "Campos especiales"
 
 #: 
 msgid "standard"
-msgstr "estándar"
+msgstr "Estándar"
 
 #: 
 msgid "Standard Sort"
