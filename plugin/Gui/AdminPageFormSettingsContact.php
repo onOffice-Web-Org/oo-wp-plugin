@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
+use onOffice\WPlugin\Form\AltchaHandler;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
@@ -123,6 +124,13 @@ class AdminPageFormSettingsContact
 		if (in_array($this->getType(), [Form::TYPE_OWNER, Form::TYPE_INTEREST], true)) {
 			$pInputModelUseBrokerRecipient = $pFormModelBuilder->createInputModelUseBrokerRecipient();
 			$pFormModelFormSpecific->addInputModel($pInputModelUseBrokerRecipient);
+		}
+		// Exclusive to the onOffice themes: only there is the owner form placed on an address
+		// detail page, which is what makes the advisor identifiable in the first place. Reuses
+		// AltchaHandler's theme list - that list should eventually move somewhere neutral.
+		if ($this->getType() === Form::TYPE_OWNER && AltchaHandler::isSupportedTheme()) {
+			$pInputModelAssignBrokerAsSupervisor = $pFormModelBuilder->createInputModelAssignBrokerAsSupervisor();
+			$pFormModelFormSpecific->addInputModel($pInputModelAssignBrokerAsSupervisor);
 		}
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);

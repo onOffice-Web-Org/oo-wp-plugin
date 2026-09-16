@@ -119,6 +119,7 @@ class FormPostOwner
 		$this->_pFormData = $pFormData;
 
 		$recipient = $this->determineRecipient($pDataFormConfiguration);
+		$supervisor = $this->determineSupervisor($pDataFormConfiguration, $recipient);
 
 		$pWPQuery = $this->_pFormPostOwnerConfiguration->getWPQueryWrapper()->getWPQuery();
 		$estateId = $pWPQuery->get('estate_id', null);
@@ -139,11 +140,12 @@ class FormPostOwner
 					$latestAddressIdOnEnterPrise = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
 				}
 				$addressId  = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
-					->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType, $estateId);
+					->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType, $estateId,
+						$supervisor['username'] ?? '');
 				$this->_messageDuplicateAddressData = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
 					->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 				$estateData = $this->getEstateData();
-				$estateId   = $this->createEstate( $estateData );
+				$estateId   = $this->createEstate( $estateData, $supervisor['id'] ?? '' );
 				if (!empty($pDataFormConfiguration->getSubject())) {
 					$subject = $this->generateCustomEmailSubject($pDataFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pDataFormConfiguration->getInputs());
 				}
@@ -183,6 +185,58 @@ class FormPostOwner
 		}
 
 		return $recipient;
+	}
+
+	/**
+	 * Returns the advisor to enter as supervisor ("Betreuer") of the created estate and
+	 * address as ['id' => …, 'username' => …], or [] when that doesn't apply.
+	 *
+	 * Deliberately tied to the resolved broker recipient: the advisor is only identifiable
+	 * because the form sits on their address detail page, which is exactly the condition
+	 * getBrokerRecipient() checks. A set _recipientAddressId is the marker that this actually
+	 * happened - without it $recipient is just the address configured in the backend, which
+	 * must not be turned into a supervisor.
+	 *
+	 * An advisor is only known by their address record here, so the email is used as the anchor
+	 * to the user account - see FormAddressCreator::getUserByEmail(), which also explains why
+	 * both the id and the user name are needed.
+	 *
+	 * Non-fatal by design, like assignEstateContactBroker(): a supervisor that cannot be
+	 * resolved must not stop the estate, the address or the email from being created.
+	 *
+	 * @param DataFormConfigurationOwner $pDataFormConfiguration
+	 * @param string $recipient
+	 * @return array empty, or ['id' => string, 'username' => string]
+	 */
+
+	private function determineSupervisor(
+		DataFormConfigurationOwner $pDataFormConfiguration, string $recipient): array
+	{
+		if (!$pDataFormConfiguration->getAssignBrokerAsSupervisor() ||
+			$this->_recipientAddressId === null ||
+			$recipient === '') {
+			return [];
+		}
+
+		try {
+			$supervisor = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
+				->getUserByEmail($recipient);
+
+			if ($supervisor === []) {
+				// Common enough to be worth a log line: the advisor exists as an address but has
+				// no user account carrying the same email, so there is nothing to put in either
+				// supervisor field.
+				error_log('onOffice: no onOffice user matches the advisor email ' . $recipient
+					. ' - no supervisor was set');
+			}
+
+			return $supervisor;
+		} catch (ApiClientException $pException) {
+			// ApiClientException doesn't set a message via getMessage() (its constructor doesn't
+			// pass one to the parent) - the actual API error details are only in __toString().
+			error_log('onOffice: could not resolve the supervisor for the owner form: ' . $pException);
+			return [];
+		}
 	}
 
 	/**
@@ -394,13 +448,22 @@ class FormPostOwner
 	/**
 	 *
 	 * @param array $estateData
+	 * @param string $supervisorUserId
 	 * @return int
 	 * @throws API\APIEmptyResultException
 	 * @throws ApiClientException
 	 */
 
-	private function createEstate(array $estateData): int
+	private function createEstate(array $estateData, string $supervisorUserId = ''): int
 	{
+		if ($supervisorUserId !== '') {
+			// The estate's supervisor field takes the numeric user id, unlike the address field
+			// which takes the user name - see FormAddressCreator::getUserByEmail().
+			// Only added to the request, not to $estateData - the caller passes that array on to
+			// sendContactRequest(), where its keys become the email's 'estatedata' field list.
+			$estateData['benutzer'] = $supervisorUserId;
+		}
+
 		$requestParams = ['data' => $estateData];
 		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
 

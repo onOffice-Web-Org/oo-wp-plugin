@@ -30,7 +30,11 @@ use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\InputVariableReaderConfig;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
+use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
+use onOffice\WPlugin\DataView\DataAddressDetailView;
+use onOffice\WPlugin\DataView\DataAddressDetailViewHandler;
+use onOffice\WPlugin\Factory\AddressListFactory;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
@@ -659,7 +663,7 @@ class TestClassFormPostOwner
 	 *
 	 */
 
-	private function prepareMockerForContactSuccess()
+	private function prepareMockerForContactSuccess(string $recipient = 'test@my-onoffice.com')
 	{
 		$parameters = [
 			'addressdata' => [
@@ -675,7 +679,7 @@ class TestClassFormPostOwner
 			'referrer' => '/test/page/1',
 			'formtype' => 'owner',
 			'estatedata' => ['objektart','objekttyp','energieausweistyp','wohnflaeche','kabel_sat_tv'],
-			'recipient' => 'test@my-onoffice.com'
+			'recipient' => $recipient
 		];
 
 		$response = [
@@ -712,6 +716,255 @@ class TestClassFormPostOwner
 	/**
 	 *
 	 * @return DataFormConfigurationOwner
+	 *
+	 */
+
+	public function testInitialCheckAssignsBrokerAsSupervisor()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'ArtDaten' => 'Eigentümer',
+			'Telefon1' => '0815 234567890',
+			'objektart' => 'haus',
+			'objekttyp' => 'stadthaus',
+			'energieausweistyp' => 'Bedarfsausweis',
+			'wohnflaeche' => 800,
+			'kabel_sat_tv' => 'y',
+			'message' => 'Hello! I am interested in selling my property!',
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
+		];
+
+		$this->prepareBrokerDetailPage(4711, 'advisor@my-onoffice.com');
+		$this->prepareMockerForUserList('advisor@my-onoffice.com', 'advisorUser', 3);
+		$this->prepareMockerForAddressCreationSuccessWithSupervisor('advisorUser');
+		$this->prepareMockerForEstateCreationSuccessWithSupervisor('3');
+		$this->prepareMockerForRelationSuccess();
+		$this->prepareMockerForContactBrokerRelationSuccess(4711);
+		$this->prepareMockerForContactBrokerAddressIds([4711]);
+		$this->prepareMockerForContactSuccess('advisor@my-onoffice.com');
+
+		$pDataFormConfiguration = $this->getDataFormConfiguration();
+		$pDataFormConfiguration->setUseBrokerRecipient(true);
+		$pDataFormConfiguration->setAssignBrokerAsSupervisor(true);
+
+		// rebuilt so the AddressListFactory mock set above is injected
+		$pFormPostOwner = $this->_pContainer->make(FormPostOwner::class);
+		$pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
+		$pFormData = $pFormPostOwner->getFormDataInstance('test', 5);
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+
+		// the estate's supervisor field takes the user id, the address' one the user name
+		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
+		$this->assertStringContainsString('"benutzer":"3"', $requests,
+			'the advisor must be set as supervisor of the created estate');
+		$this->assertStringContainsString('"Benutzer":"advisorUser"', $requests,
+			'the advisor must be set as supervisor of the created address');
+	}
+
+
+	/**
+	 * The advisor is only identifiable because the form sits on their address detail page, so
+	 * that page has to exist (option), be the one requested (query var) and resolve to an
+	 * address carrying an email.
+	 *
+	 * @param int $addressId
+	 * @param string $email
+	 */
+
+	private function prepareBrokerDetailPage(int $addressId, string $email)
+	{
+		$pDataAddressDetailView = new DataAddressDetailView();
+		$pDataAddressDetailView->setPageId(13);
+		update_option(DataAddressDetailViewHandler::DEFAULT_ADDRESS_VIEW_OPTION_KEY,
+			$pDataAddressDetailView);
+
+		$GLOBALS['wp_query']->query_vars['address_id'] = $addressId;
+
+		$pAddressList = $this->getMockBuilder(AddressList::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['loadAddressesById', 'getAddressById'])
+			->getMock();
+		$pAddressList->method('getAddressById')->willReturn(['Email' => $email]);
+
+		$pAddressListFactory = $this->getMockBuilder(AddressListFactory::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['createAddressDetail'])
+			->getMock();
+		$pAddressListFactory->method('createAddressDetail')->willReturn($pAddressList);
+
+		$this->_pContainer->set(AddressListFactory::class, $pAddressListFactory);
+	}
+
+
+	/**
+	 * @param string $email
+	 * @param string $userName
+	 * @param int $userId
+	 */
+
+	private function prepareMockerForUserList(string $email, string $userName, int $userId)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:get',
+			'resourceid' => '',
+			'resourcetype' => 'users',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => $userId, 'type' => '', 'elements' =>
+						['id' => $userId, 'username' => $userName, 'email' => $email]],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '',
+			[], null, $response);
+	}
+
+
+	/**
+	 * @param string $userName
+	 */
+
+	private function prepareMockerForAddressCreationSuccessWithSupervisor(string $userName)
+	{
+		$parameters = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'ArtDaten' => ['Eigentümer'],
+			'phone' => '0815 234567890',
+			'checkDuplicate' => false,
+			'DSGVOStatus' => 'speicherungzugestimmt',
+			'Benutzer' => $userName,
+		];
+
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
+			'resourceid' => '',
+			'resourcetype' => 'address',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					0 => ['id' => 281, 'type' => 'address', 'elements' => []],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'address',
+			'', $parameters, null, $response);
+	}
+
+
+	/**
+	 * @param string $userId
+	 */
+
+	private function prepareMockerForEstateCreationSuccessWithSupervisor(string $userId)
+	{
+		$parameters = [
+			'data' => [
+				'objektart' => 'haus',
+				'objekttyp' => 'stadthaus',
+				'energieausweistyp' => 'Bedarfsausweis',
+				'wohnflaeche' => 800.0,
+				'kabel_sat_tv' => true,
+				'benutzer' => $userId,
+			],
+		];
+
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
+			'resourceid' => '',
+			'resourcetype' => 'estate',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					0 => ['id' => 5590, 'type' => 'estate', 'elements' => []],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'estate',
+			'', $parameters, null, $response);
+	}
+
+
+	/**
+	 * @param int $addressId
+	 */
+
+	private function prepareMockerForContactBrokerRelationSuccess(int $addressId)
+	{
+		$parameters = [
+			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
+			'parentid' => 5590,
+			'childid' => $addressId,
+		];
+
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
+			'resourceid' => '',
+			'resourcetype' => 'relation',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'relation',
+			'', $parameters, null, $response);
+	}
+
+
+	/**
+	 * Returns exactly the advisor, so no other contact-broker relation has to be removed.
+	 *
+	 * @param array $addressIds
+	 */
+
+	private function prepareMockerForContactBrokerAddressIds(array $addressIds)
+	{
+		$parameters = [
+			'parentids' => [5590],
+			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
+		];
+
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:get',
+			'resourceid' => '',
+			'resourcetype' => 'idsfromrelation',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					0 => ['id' => 0, 'type' => '', 'elements' => [5590 => $addressIds]],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET,
+			'idsfromrelation', '', $parameters, null, $response);
+	}
+
+
+	/**
 	 *
 	 */
 

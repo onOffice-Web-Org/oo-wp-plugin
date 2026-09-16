@@ -218,6 +218,76 @@ class TestClassFormAddressCreator
 		$this->assertEquals(1, $result);
 	}
 
+
+	/**
+	 * An explicitly resolved supervisor - the advisor whose detail page the form sits on - is
+	 * used as is. Neither the estate read nor the user lookup is mocked on purpose: if the
+	 * estate's supervisor were still consulted, the unmocked request would fail the test.
+	 */
+
+	public function testCreateOrCompleteAddressWithExplicitSupervisor()
+	{
+		$this->configureSDKWrapperMockerForAddressCreationWithSupervisor(1);
+
+		$pFormData = $this->createFormData();
+		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, ['Admin'], 1, 'testUserName');
+		$this->assertEquals(1, $result);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetUserByEmail()
+	{
+		$this->configureSDKWrapperMockerForUserList();
+
+		// matched case-insensitively - address and user record are maintained separately
+		$expectation = ['id' => '3', 'username' => 'testUserName'];
+		$this->assertEquals($expectation, $this->_pSubject->getUserByEmail('Advisor@My-onOffice.com'));
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetUserByEmailUnknownEmailReturnsEmptyArray()
+	{
+		$this->configureSDKWrapperMockerForUserList();
+
+		$this->assertEquals([], $this->_pSubject->getUserByEmail('nobody@my-onoffice.com'));
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function configureSDKWrapperMockerForUserList()
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:get',
+			'resourceid' => '',
+			'resourcetype' => 'users',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => 2, 'type' => '', 'elements' =>
+						['id' => 2, 'username' => 'otherUserName', 'email' => 'other@my-onoffice.com']],
+					['id' => 3, 'type' => '', 'elements' =>
+						['id' => 3, 'username' => 'testUserName', 'email' => 'advisor@my-onoffice.com']],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '', [], null, $response);
+	}
+
 		/**
 	 *
 	 */

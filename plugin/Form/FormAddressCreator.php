@@ -69,6 +69,7 @@ class FormAddressCreator
 	 * @param bool $mergeExisting
 	 * @param array $contactType
 	 * @param int|null $estateId
+	 * @param string $supervisorUserName supervisor to set, overriding the one derived from $estateId
 	 * @return int the new (or updated) address ID
 	 * @throws ApiClientException
 	 * @throws UnknownFieldException
@@ -76,7 +77,8 @@ class FormAddressCreator
 	 * @throws NotFoundException
 	 */
 	public function createOrCompleteAddress(
-		FormData $pFormData, bool $mergeExisting = false, array $contactType = [], int $estateId = null): int
+		FormData $pFormData, bool $mergeExisting = false, array $contactType = [], int $estateId = null,
+		string $supervisorUserName = ''): int
 	{
 		$requestParams = $this->getAddressDataForApiCall($pFormData);
 		$requestParams['checkDuplicate'] = $mergeExisting;
@@ -100,7 +102,11 @@ class FormAddressCreator
 		if ( key_exists( 'newsletter', $requestParams ) ) {
 			unset( $requestParams['newsletter'] );
 		}
-		if (!empty($estateId)) {
+		if ($supervisorUserName !== '') {
+			// An explicitly resolved supervisor - the advisor whose detail page the form sits on -
+			// takes precedence over the one inherited from the estate the form was embedded on.
+			$requestParams['Benutzer'] = $supervisorUserName;
+		} elseif (!empty($estateId)) {
 			$userName = $this->getSupervisorUsernameByEstateId($estateId);
 			if (!empty($userName)) {
 				$requestParams['Benutzer'] = $userName;
@@ -265,6 +271,56 @@ class FormAddressCreator
 		} else {
 			return '';
 		}
+	}
+
+	/**
+	 * Resolves an onOffice user by email and returns ['id' => …, 'username' => …], or [] when
+	 * nothing matches.
+	 *
+	 * An advisor is only known by their address record here - and an address id is not a user
+	 * id. The email is the only anchor the two records share, so it is matched against the user
+	 * list. Compared case-insensitively because the two records are maintained separately.
+	 *
+	 * Both representations are returned because the two supervisor fields disagree on which one
+	 * they want: the address field 'Benutzer' takes the user name, the estate field 'benutzer'
+	 * takes the numeric user id. That is the same asymmetry
+	 * getSupervisorUsernameByEstateId() works around when it reads an id off an estate and
+	 * converts it before writing it to an address.
+	 *
+	 * Callers treat [] as "leave the supervisor alone" rather than as an error.
+	 *
+	 * @param string $email
+	 * @return array empty, or ['id' => string, 'username' => string]
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function getUserByEmail(string $email): array
+	{
+		if ($email === '') {
+			return [];
+		}
+
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
+
+		$pApiClientAction->addRequestToQueue();
+		$this->_pSDKWrapper->sendRequests();
+		$result = $pApiClientAction->getResultRecords();
+
+		$userResult = array_values(array_filter($result, function($item) use ($email) {
+			return isset($item['elements']['email'], $item['elements']['username']) &&
+				strcasecmp($item['elements']['email'], $email) === 0;
+		}));
+
+		if ($userResult === []) {
+			return [];
+		}
+
+		return [
+			'id' => (string)($userResult[0]['elements']['id'] ?? $userResult[0]['id'] ?? ''),
+			'username' => (string)$userResult[0]['elements']['username'],
+		];
 	}
 
 	/**

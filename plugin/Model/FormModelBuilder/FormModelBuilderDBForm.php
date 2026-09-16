@@ -436,6 +436,22 @@ class FormModelBuilderDBForm
 
 	/**
 	 * @return InputModelDB
+	 * @throws Exception
+	 */
+	public function createInputModelAssignBrokerAsSupervisor(): InputModelDB
+	{
+		$hint = __('In addition to being set as the estate\'s contact person, the address the form is embedded on is also entered as supervisor of both the created estate and the created address. Requires the option above and an onOffice theme.', 'onoffice-for-wp-websites');
+		$labelAssignBrokerAsSupervisor = __('Also set this address as supervisor', 'onoffice-for-wp-websites')
+			. ' <span class="dashicons dashicons-editor-help oo-field-hint" tabindex="0" title="' . esc_attr($hint) . '"></span>';
+		$selectedValue = $this->getValue('assign_broker_as_supervisor', false);
+		$pInputModelAssignBrokerAsSupervisor = $this->generateGenericCheckbox($labelAssignBrokerAsSupervisor,
+			InputModelDBFactoryConfigForm::INPUT_FORM_ASSIGN_BROKER_AS_SUPERVISOR, $selectedValue);
+
+		return $pInputModelAssignBrokerAsSupervisor;
+	}
+
+	/**
+	 * @return InputModelDB
 	 */
 	public function createInputModelRecipientContactForm()
 	{
