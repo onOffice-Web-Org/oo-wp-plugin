@@ -448,10 +448,14 @@ jobs:
       # The verification itself lives in oo-web-marketplace, where the mptest
       # key, the project's marketplace instance and wp-website:verify are. All
       # this side does is hand over the box id it just got back.
+      #
+      # box_id is only ever set when the box-build step itself ran, and that
+      # one is gated on has_wp - so no further repo gate belongs here. It means
+      # the provisioning was queued, not that the box is up; build-from-project
+      # returns the id right away and the verify run does its own waiting.
       - name: Trigger test box verification
         if: >-
           steps.discover.outputs.is_leader == 'true'
-          && steps.discover.outputs.has_project_apps == 'true'
           && steps.box-build.outputs.box_id != ''
         env:
           GH_TOKEN: ${{ steps.sibling-app-token.outputs.token }}
