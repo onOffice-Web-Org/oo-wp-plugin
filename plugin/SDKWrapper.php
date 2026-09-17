@@ -156,21 +156,28 @@ class SDKWrapper
 		$pOptionsWrapper = $this->_pWPOptionWrapper;
 		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
 		$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
-		$apiClaim = $pOptionsWrapper->getOption('onoffice-settings-apiclaim');
+		$apiClaim = (string) $pOptionsWrapper->getOption('onoffice-settings-apiclaim', '');
 		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
 			try {
-				$secretDecrypt = $this->_encrypter->decrypt($secret, ONOFFICE_CREDENTIALS_ENC_KEY);
-				$tokenDecrypt = $this->_encrypter->decrypt($token, ONOFFICE_CREDENTIALS_ENC_KEY);
-				$apiClaimDecrypt = $this->_encrypter->decrypt($apiClaim, ONOFFICE_CREDENTIALS_ENC_KEY);
-			}catch (\RuntimeException $exception){
+				$secret = $this->_encrypter->decrypt($secret, ONOFFICE_CREDENTIALS_ENC_KEY);
+				$token = $this->_encrypter->decrypt($token, ONOFFICE_CREDENTIALS_ENC_KEY);
+			} catch (\RuntimeException $exception) {
 				$this->_pSDK->removeCacheInstances();
-				$secretDecrypt = $secret;
-				$tokenDecrypt = $token;
-				$apiClaimDecrypt = $apiClaim;
+				$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
+				$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
 			}
-			$secret = $secretDecrypt;
-			$token = $tokenDecrypt;
-			$apiClaim = $apiClaimDecrypt;
+
+			// An empty claim is the normal case - installations without an
+			// Extended Claim store nothing here, and decrypt('') always throws.
+			// Kept out of the try above so a broken claim cannot drag token and
+			// secret back to their still-encrypted values.
+			if ($apiClaim !== '') {
+				try {
+					$apiClaim = $this->_encrypter->decrypt($apiClaim, ONOFFICE_CREDENTIALS_ENC_KEY);
+				} catch (\RuntimeException $exception) {
+					// leave the raw value; a broken claim must not invalidate token/secret
+				}
+			}
 		}
 		$this->_pSDK->sendRequests($token, $secret, $saveToCache, $apiClaim);
 		$errors = $this->_pSDK->getErrors();
