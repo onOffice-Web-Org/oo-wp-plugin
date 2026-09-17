@@ -42,6 +42,13 @@ class onOfficeSDK
 	/** Owner of estate (estate = parent record, address = child record) */
 	const RELATION_TYPE_ESTATE_ADDRESS_OWNER = 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:address:owner';
 
+	/**
+	 * Supervisor ("Betreuer") of an address (user = parent record, address = child record).
+	 * Unlike the address field 'Benutzer', this relation is additive and can be set on an address
+	 * that already exists - which is what the owner form needs after a duplicate match.
+	 */
+	const RELATION_TYPE_USER_ADDRESS_OFFICER = 'urn:onoffice-de-ns:smart:2.5:relationTypes:user:address:officer';
+
 	/** @var ApiCall */
 	private $apiCall = null;
 

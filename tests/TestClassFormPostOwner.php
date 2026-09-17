@@ -739,7 +739,9 @@ class TestClassFormPostOwner
 		$this->prepareBrokerDetailPage(4711, 'advisor@my-onoffice.com');
 		$this->prepareMockerForUserList('advisor@my-onoffice.com', 'advisorUser', 3);
 		$this->prepareMockerForAddressCreationSuccessWithSupervisor('advisorUser');
-		$this->prepareMockerForEstateCreationSuccessWithSupervisor('3');
+		$this->prepareMockerForAddressSupervisorRelationSuccess('3', 281);
+		$this->prepareMockerForEstateCreationSuccess();
+		$this->prepareMockerForEstateSupervisorSuccess(5590, '3');
 		$this->prepareMockerForRelationSuccess();
 		$this->prepareMockerForContactBrokerRelationSuccess(4711);
 		$this->prepareMockerForContactBrokerAddressIds([4711]);
@@ -762,6 +764,19 @@ class TestClassFormPostOwner
 			'the advisor must be set as supervisor of the created estate');
 		$this->assertStringContainsString('"Benutzer":"advisorUser"', $requests,
 			'the advisor must be set as supervisor of the created address');
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_USER_ADDRESS_OFFICER, $requests,
+			'the advisor must also be related to the address, which is what reaches an address '
+				. 'that was matched as a duplicate');
+		// the supervisor is set after the estate exists, never as part of its creation: an API
+		// user that cannot write the field would otherwise break the whole form
+		$estateCreateRequests = array_values(array_filter($this->_pSDKWrapperMocker->getRequestArray(),
+			function (string $request): bool {
+				return strpos($request, onOfficeSDK::ACTION_ID_CREATE) !== false &&
+					strpos($request, '"estate"') !== false;
+			}));
+		$this->assertCount(1, $estateCreateRequests);
+		$this->assertStringNotContainsString('benutzer', $estateCreateRequests[0],
+			'the estate must be created without the supervisor field');
 	}
 
 
@@ -865,39 +880,65 @@ class TestClassFormPostOwner
 
 
 	/**
+	 * The advisor as an additional supervisor of the address, set by relation so that an address
+	 * matched as a duplicate gets it too.
+	 *
 	 * @param string $userId
+	 * @param int $addressId
 	 */
 
-	private function prepareMockerForEstateCreationSuccessWithSupervisor(string $userId)
+	private function prepareMockerForAddressSupervisorRelationSuccess(string $userId, int $addressId)
 	{
 		$parameters = [
-			'data' => [
-				'objektart' => 'haus',
-				'objekttyp' => 'stadthaus',
-				'energieausweistyp' => 'Bedarfsausweis',
-				'wohnflaeche' => 800.0,
-				'kabel_sat_tv' => true,
-				'benutzer' => $userId,
-			],
+			'relationtype' => onOfficeSDK::RELATION_TYPE_USER_ADDRESS_OFFICER,
+			'parentid' => $userId,
+			'childid' => $addressId,
 		];
 
 		$response = [
 			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
 			'resourceid' => '',
+			'resourcetype' => 'relation',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'relation',
+			'', $parameters, null, $response);
+	}
+
+
+	/**
+	 * @param int $estateId
+	 * @param string $userId
+	 */
+
+	private function prepareMockerForEstateSupervisorSuccess(int $estateId, string $userId)
+	{
+		$parameters = ['data' => ['benutzer' => $userId]];
+
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:modify',
+			'resourceid' => (string) $estateId,
 			'resourcetype' => 'estate',
 			'cacheable' => false,
 			'identifier' => '',
 			'data' => [
 				'meta' => ['cntabsolute' => null],
 				'records' => [
-					0 => ['id' => 5590, 'type' => 'estate', 'elements' => []],
+					0 => ['id' => $estateId, 'type' => 'estate', 'elements' => []],
 				],
 			],
 			'status' => ['errorcode' => 0, 'message' => 'OK'],
 		];
 
-		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'estate',
-			'', $parameters, null, $response);
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_MODIFY, 'estate',
+			(string) $estateId, $parameters, null, $response);
 	}
 
 

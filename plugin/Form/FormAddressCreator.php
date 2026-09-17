@@ -69,7 +69,8 @@ class FormAddressCreator
 	 * @param bool $mergeExisting
 	 * @param array $contactType
 	 * @param int|null $estateId
-	 * @param string $supervisorUserName supervisor to set, overriding the one derived from $estateId
+	 * @param array $supervisor supervisor to set, overriding the one derived from $estateId;
+	 *        empty, or ['id' => string, 'username' => string] as returned by getUserByEmail()
 	 * @return int the new (or updated) address ID
 	 * @throws ApiClientException
 	 * @throws UnknownFieldException
@@ -78,7 +79,7 @@ class FormAddressCreator
 	 */
 	public function createOrCompleteAddress(
 		FormData $pFormData, bool $mergeExisting = false, array $contactType = [], int $estateId = null,
-		string $supervisorUserName = ''): int
+		array $supervisor = []): int
 	{
 		$requestParams = $this->getAddressDataForApiCall($pFormData);
 		$requestParams['checkDuplicate'] = $mergeExisting;
@@ -102,10 +103,10 @@ class FormAddressCreator
 		if ( key_exists( 'newsletter', $requestParams ) ) {
 			unset( $requestParams['newsletter'] );
 		}
-		if ($supervisorUserName !== '') {
+		if ($supervisor !== []) {
 			// An explicitly resolved supervisor - the advisor whose detail page the form sits on -
 			// takes precedence over the one inherited from the estate the form was embedded on.
-			$requestParams['Benutzer'] = $supervisorUserName;
+			$requestParams['Benutzer'] = $supervisor['username'];
 		} elseif (!empty($estateId)) {
 			$userName = $this->getSupervisorUsernameByEstateId($estateId);
 			if (!empty($userName)) {
@@ -121,10 +122,59 @@ class FormAddressCreator
 		$addressId = (int)$result[0]['id'];
 
 		if ($addressId > 0) {
+			$this->assignAddressSupervisor($addressId, $supervisor['id'] ?? '');
 			return $addressId;
 		}
 		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- ApiClientException is for internal API error handling
 		throw new ApiClientException($pApiClientAction);
+	}
+
+
+	/**
+	 * Adds the advisor as an additional supervisor ("Betreuer") of the address via relation.
+	 *
+	 * The 'Benutzer' field set above only ever reaches addresses that are really created: with the
+	 * duplicate check on, the create request carries noOverrideByDuplicate, so an address matched
+	 * as a duplicate keeps the supervisor it already has. A field also holds exactly one
+	 * supervisor, whereas a record can carry several through this relation - so the advisor is
+	 * added instead of replacing the colleague who is already responsible.
+	 *
+	 * Non-fatal by design, like FormPostOwner::assignEstateContactBroker(): a supervisor that
+	 * cannot be assigned must not stop the address, the estate or the email from being created.
+	 *
+	 * @param int $addressId
+	 * @param string $supervisorUserId
+	 */
+	private function assignAddressSupervisor(int $addressId, string $supervisorUserId): void
+	{
+		if ($supervisorUserId === '') {
+			return;
+		}
+
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'relation');
+		$pApiClientAction->setParameters([
+			'relationtype' => onOfficeSDK::RELATION_TYPE_USER_ADDRESS_OFFICER,
+			'parentid' => $supervisorUserId,
+			'childid' => $addressId,
+		]);
+
+		try {
+			$pApiClientAction->addRequestToQueue();
+			$this->_pSDKWrapper->sendRequests();
+
+			if (!$pApiClientAction->getResultStatus()) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostics for a silently skipped optional step
+				error_log('onOffice: could not assign the supervisor relation for address '
+					. $addressId);
+			}
+		} catch (ApiClientException $pException) {
+			// ApiClientException doesn't set a message via getMessage() (its constructor doesn't
+			// pass one to the parent) - the actual API error details are only in __toString().
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostics for a silently skipped optional step
+			error_log('onOffice: could not assign the supervisor relation for address '
+				. $addressId . ': ' . $pException);
+		}
 	}
 
 
