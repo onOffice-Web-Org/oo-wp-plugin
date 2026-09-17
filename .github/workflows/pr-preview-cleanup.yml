@@ -1,13 +1,31 @@
-name: PR Preview | Cleanup Test Box Artifact
+name: PR Preview | Cleanup
 
-# Removes this plugin's build artifact from the update server's PR-preview
-# folder (pr-builds/P<projectNumber>/plugins/onoffice-for-wp-websites/) once its PR
-# closes. If that was the last artifact left for the project, also removes
-# the project's folder on the update server and deletes its test box via
-# the Hosting API.
+# Removes everything a project preview left behind, once the last pull request
+# for that project closes anywhere in the family.
 #
-# Companion to the (separate, not-yet-implemented) workflow that uploads
-# artifacts to pr-builds/P<projectNumber>/ and maintains manifest.json.
+# A project leaves three traces: this repo's build artifact on the update
+# server (six WordPress repos only), the WordPress test box in the hosting UI,
+# and the per-project marketplace/onMove instance on mptest.
+#
+# Pruning this repo's own artifact is bookkeeping and happens on every close.
+# Everything else is governed by one shared counter: pull requests still open
+# for the project across all eight repos. Only at zero do update-server folder,
+# box and mptest instance go - together, so nothing half-torn-down is left.
+#
+# There used to be two counters with different semantics (open PRs here,
+# manifest artifacts in the WordPress repos), and neither order ended clean at
+# the moment it fired: the box outliving the onMove instance its
+# customerAreaApiEndpoint points at, or instance and databases outliving the
+# box. With one counter, "the last PR closed" has a single answer.
+#
+# The mptest key lives only in oo-web-marketplace and onmove-api. A WordPress
+# repo therefore does not destroy the instance itself - it dispatches this same
+# workflow in oo-web-marketplace with instance_only, which does that half.
+#
+# This file is identical in all eight sibling repos. The per-repo artifact
+# name, type and folder are derived from the repo name below rather than set in
+# an env block - that is exactly how the six WordPress copies drifted apart
+# before.
 
 on:
   pull_request:
@@ -18,9 +36,18 @@ on:
         description: "Project/ticket number (digits only, e.g. 167871) to clean up manually"
         required: true
         type: string
+      instance_only:
+        description: "Only destroy the mptest instance - used when a WordPress repo hands that half over"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
+
+env:
+  WP_REPOS: "onoffice-classic onoffice-modern onoffice-pure onoffice-timeless oo-wp-plugin oo-vue-addons"
+  PROJECT_APP_REPOS: "oo-web-marketplace onmove-api"
 
 jobs:
   determine-project:
@@ -33,11 +60,12 @@ jobs:
       # Falls back to the current ref when there's no pull_request context
       # (i.e. a manual workflow_dispatch run).
       PR_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      INPUT_NUMBER: ${{ inputs.project_number }}
     steps:
       - name: Determine project number
         id: project
         run: |
-          NUMBER="${{ inputs.project_number }}"
+          NUMBER="$INPUT_NUMBER"
 
           if [ -z "$NUMBER" ]; then
             # Match pr-preview-upload.yml's extraction (P#<digits>), so both
@@ -51,36 +79,76 @@ jobs:
             exit 0
           fi
 
+          # This ends up inside a command run on the box, so refuse anything
+          # that is not a plain number.
+          if ! echo "$NUMBER" | grep -qE '^[0-9]+$'; then
+            echo "::error::Project number '${NUMBER}' must be digits only (e.g. 167871)."
+            exit 1
+          fi
+
           echo "found=true" >> "$GITHUB_OUTPUT"
           echo "number=${NUMBER}" >> "$GITHUB_OUTPUT"
 
   cleanup:
-    name: Remove PR-preview artifact
+    name: Clean up project preview
     needs: determine-project
+    if: needs.determine-project.outputs.found == 'true'
     runs-on: ubuntu-latest
-    # Keyed by project number, not PR number: a project can span multiple
-    # branches/PRs in the same repo, and the box must only be deleted once
-    # all of them are gone. Two PRs for the same project closing back to
-    # back must run strictly serially, or they'd race unlocked on the same
-    # manifest.json read-modify-write.
+    # Keyed by project number, not PR number: a project spans several branches
+    # and PRs across the family, and two of them closing back to back must not
+    # race on the same manifest.json or the same instance.
     concurrency:
       group: pr-preview-cleanup-${{ needs.determine-project.outputs.number }}
       cancel-in-progress: false
     env:
       PR_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
-      ARTIFACT_NAME: onoffice-for-wp-websites
+      NUMBER: ${{ needs.determine-project.outputs.number }}
+      INSTANCE_ONLY: ${{ inputs.instance_only == true }}
     steps:
-      - name: Set SSH Key for Dev Update Server
-        if: needs.determine-project.outputs.found == 'true'
+      - name: Identify this repo's role
+        id: role
+        env:
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          # oo-wp-plugin is the one repo whose artifact is not named after it.
+          case "$REPO" in
+            onoffice-classic|onoffice-modern|onoffice-pure|onoffice-timeless)
+              NAME="$REPO"; TYPE="theme"; DIR="themes" ;;
+            oo-wp-plugin)
+              NAME="onoffice-for-wp-websites"; TYPE="plugin"; DIR="plugins" ;;
+            oo-vue-addons)
+              NAME="$REPO"; TYPE="plugin"; DIR="plugins" ;;
+            *)
+              # The project-app repos deploy an instance instead of publishing
+              # a manifest fragment - nothing of theirs is on the update server,
+              # and only they hold the mptest key.
+              NAME=""; TYPE=""; DIR="" ;;
+          esac
+
+          if [ -n "$TYPE" ]; then
+            echo "${REPO} publishes the ${TYPE} artifact '${NAME}' and hands the mptest half over."
+            echo "is_wp=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "${REPO} publishes no build artifact and destroys the mptest instance itself."
+            echo "is_wp=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "name=${NAME}" >> "$GITHUB_OUTPUT"
+          echo "type=${TYPE}" >> "$GITHUB_OUTPUT"
+          echo "dir=${DIR}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up the update-server key
+        if: env.INSTANCE_ONLY != 'true'
         uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
 
-      - name: Remove artifact and prune manifest
-        if: needs.determine-project.outputs.found == 'true'
-        id: cleanup
+      - name: Remove this repo's artifact and prune the manifest
+        if: env.INSTANCE_ONLY != 'true' && steps.role.outputs.is_wp == 'true'
         env:
-          NUMBER: ${{ needs.determine-project.outputs.number }}
+          ARTIFACT_NAME: ${{ steps.role.outputs.name }}
+          ARTIFACT_TYPE: ${{ steps.role.outputs.type }}
+          ARTIFACT_DIR: ${{ steps.role.outputs.dir }}
         run: |
           set -e
 
@@ -99,36 +167,94 @@ jobs:
           BODY=$(echo "$HTTP_RESPONSE" | sed '$d')
 
           if [ "$HTTP_CODE" = "404" ]; then
-            echo "::notice::No manifest found for project P${NUMBER} - already cleaned up."
-            REMAINING=0
-          elif [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::notice::No manifest for P${NUMBER} - nothing of ${ARTIFACT_NAME}'s is left there."
+            exit 0
+          fi
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
             echo "::error::Failed to fetch manifest for P${NUMBER} (HTTP ${HTTP_CODE})"
             exit 1
-          else
-            echo "$BODY" | jq --arg name "$ARTIFACT_NAME" \
-              '[.[] | select(.name != $name or .type != "plugin")]' > pruned-manifest.json
-            REMAINING=$(jq 'length' pruned-manifest.json)
+          fi
 
-            echo "Removing plugin artifact '${ARTIFACT_NAME}' from P${NUMBER} (${REMAINING} artifact(s) will remain)."
-            rsync -e "ssh $SSH_OPTS" -rlt --delete --mkpath "${EMPTY_DIR}/" "${REMOTE}:${REMOTE_DIR}/plugins/${ARTIFACT_NAME}/"
+          echo "$BODY" | jq --arg name "$ARTIFACT_NAME" --arg type "$ARTIFACT_TYPE" \
+            '[.[] | select(.name != $name or .type != $type)]' > pruned-manifest.json
+          LEFT=$(jq 'length' pruned-manifest.json)
 
-            if [ "$REMAINING" -gt 0 ]; then
-              rsync -e "ssh $SSH_OPTS" --mkpath pruned-manifest.json "${REMOTE}:${REMOTE_DIR}/manifest.json"
+          echo "Removing ${ARTIFACT_TYPE} artifact '${ARTIFACT_NAME}' from P${NUMBER} (${LEFT} artifact(s) will remain)."
+          rsync -e "ssh $SSH_OPTS" -rlt --delete --mkpath "${EMPTY_DIR}/" "${REMOTE}:${REMOTE_DIR}/${ARTIFACT_DIR}/${ARTIFACT_NAME}/"
+
+          # Written back even when it is now an empty list. Whether the project
+          # folder itself goes is decided by the PR count below, not by how many
+          # artifacts happen to be left.
+          rsync -e "ssh $SSH_OPTS" --mkpath pruned-manifest.json "${REMOTE}:${REMOTE_DIR}/manifest.json"
+
+      - name: Create GitHub App token for the whole family
+        if: env.INSTANCE_ONLY != 'true'
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            onoffice-classic
+            onoffice-modern
+            onoffice-pure
+            onoffice-timeless
+            oo-wp-plugin
+            oo-vue-addons
+            oo-web-marketplace
+            onmove-api
+
+      - name: Count pull requests still open for this project
+        if: env.INSTANCE_ONLY != 'true'
+        id: remaining
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          # The PR that triggered this run is already closed and so is not in
+          # the open list any more. Anything still listed means someone is
+          # working on the same project and needs box and instance to stay up.
+          REMAINING=0
+
+          for repo in $WP_REPOS $PROJECT_APP_REPOS; do
+            REFS=$(gh api "repos/${OWNER}/${repo}/pulls?state=open&per_page=100" --paginate --jq '.[].head.ref')
+            REFS_EXIT=$?
+
+            if [ "$REFS_EXIT" -ne 0 ]; then
+              echo "::error::Failed to list open PRs for ${repo} (gh exit ${REFS_EXIT}) - refusing to tear down p${NUMBER} on an incomplete answer."
+              exit 1
             fi
-          fi
 
-          if [ "$REMAINING" -eq 0 ]; then
-            echo "No artifacts left for P${NUMBER} - clearing project folder on update server."
-            rsync -e "ssh $SSH_OPTS" -rlt --delete --mkpath "${EMPTY_DIR}/" "${REMOTE}:${REMOTE_DIR}/"
+            while IFS= read -r ref; do
+              [ -z "$ref" ] && continue
+              MATCH=$(grep -oP 'P#\K\d+' <<< "$ref" | head -1)
+              if [ "$MATCH" = "$NUMBER" ]; then
+                echo "${repo} still has an open PR on ${ref}"
+                REMAINING=$((REMAINING + 1))
+              fi
+            done <<< "$REFS"
+          done
 
-            echo "Removing now-empty project folder P${NUMBER}."
-            ssh $SSH_OPTS "${REMOTE}" "rmdir-pr-build P${NUMBER}"
-          fi
-
+          echo "Open PRs left for P${NUMBER}: ${REMAINING}"
           echo "remaining=${REMAINING}" >> "$GITHUB_OUTPUT"
 
+      - name: Clear the project folder on the update server
+        if: env.INSTANCE_ONLY != 'true' && steps.remaining.outputs.remaining == '0'
+        run: |
+          set -e
+
+          SSH_OPTS="-o StrictHostKeyChecking=no"
+          REMOTE="zipupload@dev.onoffice-wp-updates.de"
+          EMPTY_DIR="$(mktemp -d)"
+
+          echo "No PRs left for P${NUMBER} - clearing its folder on the update server."
+          rsync -e "ssh $SSH_OPTS" -rlt --delete --mkpath "${EMPTY_DIR}/" "${REMOTE}:pr-builds/P${NUMBER}/"
+          ssh $SSH_OPTS "${REMOTE}" "rmdir-pr-build P${NUMBER}"
+
       - name: Login to Hosting API
-        if: needs.determine-project.outputs.found == 'true' && steps.cleanup.outputs.remaining == '0'
+        if: env.INSTANCE_ONLY != 'true' && steps.remaining.outputs.remaining == '0'
         id: api-login
         run: |
           LOGIN_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
@@ -158,10 +284,8 @@ jobs:
           echo "::add-mask::${TOKEN}"
           echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
 
-      - name: Delete test box via Hosting API
-        if: needs.determine-project.outputs.found == 'true' && steps.cleanup.outputs.remaining == '0'
-        env:
-          NUMBER: ${{ needs.determine-project.outputs.number }}
+      - name: Delete the test box via Hosting API
+        if: env.INSTANCE_ONLY != 'true' && steps.remaining.outputs.remaining == '0'
         run: |
           RESPONSE=$(curl -s -w "\n%{http_code}" -X DELETE \
             "${{ secrets.HOSTING_API_URL }}/test-environments/by-project/${NUMBER}" \
@@ -174,23 +298,144 @@ jobs:
           echo "HTTP Status: ${HTTP_CODE}"
           echo "Response: ${BODY}"
 
+          # A project that never had a box, or whose box a previous run already
+          # removed, is a "nothing to do" - the end state is the same.
+          if [ "$HTTP_CODE" = "404" ]; then
+            echo "::notice::No test box for project ${NUMBER} - already gone."
+            exit 0
+          fi
+
           if [ "$HTTP_CODE" -ge 400 ]; then
             echo "::error::Box-Löschung fehlgeschlagen (HTTP ${HTTP_CODE}): ${BODY}"
             exit 1
           fi
 
+      # Loaded here rather than at the top: a second ssh-agent call replaces the
+      # agent, so the mptest key has to come after the update-server work is
+      # done. Covers both ways in - this repo's own teardown and the half a
+      # WordPress repo handed over.
+      - name: Set up the mptest key
+        if: >-
+          env.INSTANCE_ONLY == 'true'
+          || (steps.role.outputs.is_wp == 'false' && steps.remaining.outputs.remaining == '0')
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_IONOS }}
+
+      - name: Configure SSH for jump server
+        if: >-
+          env.INSTANCE_ONLY == 'true'
+          || (steps.role.outputs.is_wp == 'false' && steps.remaining.outputs.remaining == '0')
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          cat > ~/.ssh/config << 'EOF'
+          Host 217.154.241.45
+            StrictHostKeyChecking no
+            UserKnownHostsFile /dev/null
+
+          Host ionos-mptest
+            HostName 10.7.224.30
+            User laravel
+            ProxyJump laravel@217.154.241.45
+            StrictHostKeyChecking no
+            UserKnownHostsFile /dev/null
+          EOF
+          chmod 600 ~/.ssh/config
+
+      - name: Destroy the project instance on mptest
+        if: >-
+          env.INSTANCE_ONLY == 'true'
+          || (steps.role.outputs.is_wp == 'false' && steps.remaining.outputs.remaining == '0')
+        run: |
+          PROJECT_ID="p${NUMBER}"
+
+          # Shares pr-preview-upload.yml's lock file on purpose: a destroy must
+          # never run while a deploy is still installing into the same
+          # directory. destroy-project itself is idempotent - it drops the
+          # databases with IF EXISTS and skips a project directory that is
+          # already gone.
+          #
+          # When this run was handed the job by a WordPress repo, that repo has
+          # already established the count is zero - re-counting here would only
+          # race with it.
+          set +e
+          ssh ionos-mptest \
+            "flock -w 1800 -E 75 /tmp/deploy-project-${PROJECT_ID}.lock destroy-project ${PROJECT_ID}"
+          RC=$?
+          set -e
+
+          if [ "$RC" -eq 75 ]; then
+            echo "::error::Timed out after 30 min waiting for a deploy of ${PROJECT_ID} to release the lock on mptest."
+            exit 1
+          fi
+
+          if [ "$RC" -ne 0 ]; then
+            echo "::error::destroy-project ${PROJECT_ID} failed on mptest (exit ${RC})."
+            exit "$RC"
+          fi
+
+      - name: Hand the mptest instance over to oo-web-marketplace
+        if: env.INSTANCE_ONLY != 'true' && steps.remaining.outputs.remaining == '0' && steps.role.outputs.is_wp == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          # This repo has no mptest key. Only oo-web-marketplace and onmove-api
+          # do, so the instance half runs there. Not fire and forget: if the
+          # dispatch is lost, the instance and both databases stay up with
+          # nothing left to clean them.
+          REF=$(gh api "repos/${OWNER}/oo-web-marketplace" --jq '.default_branch')
+
+          if ! jq -n --arg ref "$REF" --arg pn "$NUMBER" \
+            '{ref: $ref, inputs: {project_number: $pn, instance_only: "true"}}' \
+            | gh api "repos/${OWNER}/oo-web-marketplace/actions/workflows/pr-preview-cleanup.yml/dispatches" \
+              -X POST --input -; then
+            echo "::error::Could not hand p${NUMBER} over to oo-web-marketplace - its mptest instance and databases are still up. Run pr-preview-cleanup.yml there by hand with project_number=${NUMBER} and instance_only=true."
+            exit 1
+          fi
+
+          echo "Handed the mptest instance for p${NUMBER} over to oo-web-marketplace."
+
       - name: Summary
         if: always()
+        env:
+          ARTIFACT_NAME: ${{ steps.role.outputs.name }}
+          ARTIFACT_TYPE: ${{ steps.role.outputs.type }}
+          IS_WP: ${{ steps.role.outputs.is_wp }}
+          REMAINING: ${{ steps.remaining.outputs.remaining }}
         run: |
-          echo "### PR Preview Cleanup" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          if [ "${{ needs.determine-project.outputs.found }}" = "true" ]; then
-            echo "- Project: \`P${{ needs.determine-project.outputs.number }}\`" >> "$GITHUB_STEP_SUMMARY"
-            echo "- Artifact removed: \`${ARTIFACT_NAME}\` (plugin)" >> "$GITHUB_STEP_SUMMARY"
-            echo "- Artifacts remaining: \`${{ steps.cleanup.outputs.remaining }}\`" >> "$GITHUB_STEP_SUMMARY"
-            if [ "${{ steps.cleanup.outputs.remaining }}" = "0" ]; then
-              echo "- Project folder and test box deleted." >> "$GITHUB_STEP_SUMMARY"
-            fi
-          else
-            echo "- No project number found in branch \`${PR_HEAD_REF}\` - skipped." >> "$GITHUB_STEP_SUMMARY"
+          if [ "$INSTANCE_ONLY" = "true" ]; then
+            {
+              echo "### PR Preview Cleanup (instance only)"
+              echo ""
+              echo "- Project: \`P${NUMBER}\`"
+              echo "- mptest instance and databases destroyed on behalf of the dispatching repo."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
           fi
+
+          {
+            echo "### PR Preview Cleanup"
+            echo ""
+            echo "- Project: \`P${NUMBER}\`"
+
+            if [ "$IS_WP" = "true" ]; then
+              echo "- Artifact removed: \`${ARTIFACT_NAME}\` (${ARTIFACT_TYPE})"
+            else
+              echo "- This repo publishes no build artifact."
+            fi
+
+            if [ -z "$REMAINING" ]; then
+              echo "- Open PRs could not be counted - nothing was torn down."
+            elif [ "$REMAINING" = "0" ]; then
+              echo "- No PRs left open anywhere in the family."
+              echo "- Update-server folder and test box removed."
+              if [ "$IS_WP" = "true" ]; then
+                echo "- mptest instance handed over to oo-web-marketplace."
+              else
+                echo "- mptest instance and databases destroyed."
+              fi
+            else
+              echo "- \`${REMAINING}\` PR(s) still open for this project - box and instance kept."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
