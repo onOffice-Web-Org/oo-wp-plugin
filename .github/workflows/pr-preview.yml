@@ -463,14 +463,19 @@ jobs:
           PROJECT_NUMBER: ${{ inputs.project_number }}
           BOX_ID: ${{ steps.box-build.outputs.box_id }}
         run: |
-          # Fire and forget: that run reports its own result in its own repo,
-          # and a failed verification must not retroactively fail a box build
-          # that succeeded.
+          # Fire and forget on the *result*: that run reports its own outcome in
+          # its own repo, and a failed verification must not retroactively fail
+          # a box build that succeeded.
+          #
+          # Not fire and forget on the dispatch itself. If this call does not
+          # land, no run exists anywhere that could report anything, and the
+          # missing verification would be invisible - so this one fails loudly.
           REF=$(gh api "repos/${OWNER}/oo-web-marketplace" --jq '.default_branch')
 
           if ! jq -n --arg ref "$REF" --arg pn "$PROJECT_NUMBER" --arg box "$BOX_ID" \
             '{ref: $ref, inputs: {project_number: $pn, box_id: $box}}' \
             | gh api "repos/${OWNER}/oo-web-marketplace/actions/workflows/pr-preview-verify.yml/dispatches" \
               -X POST --input -; then
-            echo "::warning::Could not dispatch pr-preview-verify.yml for p${PROJECT_NUMBER} (box ${BOX_ID}) - verify manually if the box should appear in the project marketplace."
+            echo "::error::Could not dispatch pr-preview-verify.yml for p${PROJECT_NUMBER} (box ${BOX_ID}) - the box was built but nothing will verify it. Start pr-preview-verify.yml in oo-web-marketplace by hand with project_number=${PROJECT_NUMBER} and box_id=${BOX_ID}."
+            exit 1
           fi
