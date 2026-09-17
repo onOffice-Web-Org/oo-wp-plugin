@@ -47,7 +47,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 66;
+	const MAX_VERSION = 67;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -187,6 +187,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->setCaptchaDefaultTrue();
 			case $dbversion <= 65:
 				$this->addUseBrokerRecipientToForms();
+			case $dbversion <= 66:
+				$this->addAssignBrokerAsSupervisorToForms();
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
@@ -332,6 +334,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`show_form_as_modal` tinyint(1) NOT NULL DEFAULT '1',
 			`display_unit_area` tinyint(1) NOT NULL DEFAULT '0',
 			`use_broker_recipient` tinyint(1) NOT NULL DEFAULT '0',
+			`assign_broker_as_supervisor` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -1364,6 +1367,23 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$columnExists = $this->_pWPDB->get_results("SHOW COLUMNS FROM $tableName LIKE 'use_broker_recipient'");
 		if (empty($columnExists)) {
 			$sql = "ALTER TABLE $tableName ADD COLUMN use_broker_recipient tinyint(1) NOT NULL DEFAULT '0'";
+			$this->_pWPDB->query($sql);
+		}
+	}
+
+	/**
+	 * Opt-in per form: assign the advisor the owner form is embedded on as supervisor
+	 * ("Betreuer") of both the created estate and the created address. Defaults to off so
+	 * existing installations keep their current behaviour.
+	 */
+
+	private function addAssignBrokerAsSupervisorToForms(): void
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . 'oo_plugin_forms';
+		$columnExists = $this->_pWPDB->get_results("SHOW COLUMNS FROM $tableName LIKE 'assign_broker_as_supervisor'");
+		if (empty($columnExists)) {
+			$sql = "ALTER TABLE $tableName ADD COLUMN assign_broker_as_supervisor tinyint(1) NOT NULL DEFAULT '0'";
 			$this->_pWPDB->query($sql);
 		}
 	}

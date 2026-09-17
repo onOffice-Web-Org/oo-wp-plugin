@@ -130,6 +130,7 @@ class FormPostOwner
 
 		try {
 			if ( $pDataFormConfiguration->getCreateOwner() ) {
+				$supervisor = $this->determineSupervisor($pDataFormConfiguration, $recipient);
 				$checkDuplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
 				$contactType = $pDataFormConfiguration->getContactType();
 				$enableCreateTask = $pDataFormConfiguration->getEnableCreateTask();
@@ -139,11 +140,13 @@ class FormPostOwner
 					$latestAddressIdOnEnterPrise = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()->getLatestAddressIdInOnOfficeEnterprise();
 				}
 				$addressId  = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
-					->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType, $estateId);
+					->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType, $estateId,
+						$supervisor);
 				$this->_messageDuplicateAddressData = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
 					->getMessageDuplicateAddressData($pFormData, $addressId, $latestAddressIdOnEnterPrise);
 				$estateData = $this->getEstateData();
 				$estateId   = $this->createEstate( $estateData );
+				$this->assignEstateSupervisor( $estateId, $supervisor['id'] ?? '' );
 				if (!empty($pDataFormConfiguration->getSubject())) {
 					$subject = $this->generateCustomEmailSubject($pDataFormConfiguration->getSubject(), $pFormData->getFieldLabelsForEmailSubject($this->getFieldsCollection()), $estateId, $pDataFormConfiguration->getInputs());
 				}
@@ -183,6 +186,53 @@ class FormPostOwner
 		}
 
 		return $recipient;
+	}
+
+	/**
+	 * Returns the advisor to enter as supervisor ("Betreuer") of the created estate and address,
+	 * or [] when that doesn't apply.
+	 *
+	 * Deliberately tied to the resolved broker recipient: a set _recipientAddressId is the
+	 * marker that getBrokerRecipient() actually identified an advisor from the address detail
+	 * page the form sits on. Without it $recipient is just the address configured in the
+	 * backend, which must not be turned into a supervisor.
+	 *
+	 * Non-fatal by design, like assignEstateContactBroker(): a supervisor that cannot be
+	 * resolved must not stop the estate, the address or the email from being created.
+	 *
+	 * @param DataFormConfigurationOwner $pDataFormConfiguration
+	 * @param string $recipient
+	 * @return array empty, or ['id' => string, 'username' => string]
+	 */
+
+	private function determineSupervisor(
+		DataFormConfigurationOwner $pDataFormConfiguration, string $recipient): array
+	{
+		if (!$pDataFormConfiguration->getAssignBrokerAsSupervisor() ||
+			$this->_recipientAddressId === null) {
+			return [];
+		}
+
+		try {
+			$supervisor = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
+				->getUserByEmail($recipient);
+
+			if ($supervisor === []) {
+				// The address id is enough to diagnose this - the advisor's email doesn't
+				// belong in the error log.
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostics for a silently skipped optional step
+				error_log('onOffice: no onOffice user matches the email of address '
+					. $this->_recipientAddressId . ' - no supervisor was set');
+			}
+
+			return $supervisor;
+		} catch (ApiClientException $pException) {
+			// ApiClientException doesn't set a message via getMessage() (its constructor doesn't
+			// pass one to the parent) - the actual API error details are only in __toString().
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostics for a silently skipped optional step
+			error_log('onOffice: could not resolve the supervisor for the owner form: ' . $pException);
+			return [];
+		}
 	}
 
 	/**
@@ -388,6 +438,50 @@ class FormPostOwner
 		if (!$pApiClientAction->getResultStatus()) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- ApiClientException is for internal API error handling
 			throw new ApiClientException($pApiClientAction);
+		}
+	}
+
+	/**
+	 * Sets the advisor as supervisor ("Betreuer") of the estate that was just created.
+	 *
+	 * Deliberately a separate modify request instead of a 'benutzer' key in the create request:
+	 * an account whose API user cannot write that field would get no record back from create
+	 * estate, APIEmptyResultException would escape analyseFormContentByPrefix() through the
+	 * finally block, and the whole form would fail instead of just the supervisor.
+	 *
+	 * Non-fatal by design, like assignEstateContactBroker(): a supervisor that cannot be assigned
+	 * must not stop the estate, the address or the email from being created.
+	 *
+	 * @param int $estateId
+	 * @param string $supervisorUserId
+	 */
+
+	private function assignEstateSupervisor(int $estateId, string $supervisorUserId): void
+	{
+		if ($supervisorUserId === '') {
+			return;
+		}
+
+		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_MODIFY,
+			'estate');
+		$pApiClientAction->setResourceId((string) $estateId);
+		$pApiClientAction->setParameters(['data' => ['benutzer' => $supervisorUserId]]);
+
+		try {
+			$pApiClientAction->addRequestToQueue();
+			$pSDKWrapper->sendRequests();
+
+			if (!$pApiClientAction->getResultStatus()) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostics for a silently skipped optional step
+				error_log('onOffice: could not assign the supervisor of estate ' . $estateId);
+			}
+		} catch (ApiClientException $pException) {
+			// ApiClientException doesn't set a message via getMessage() (its constructor doesn't
+			// pass one to the parent) - the actual API error details are only in __toString().
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostics for a silently skipped optional step
+			error_log('onOffice: could not assign the supervisor of estate ' . $estateId . ': '
+				. $pException);
 		}
 	}
 
