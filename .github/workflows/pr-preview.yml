@@ -209,6 +209,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.sibling-app-token.outputs.token }}
           OWNER: ${{ github.repository_owner }}
+          PROJECT_NUMBER: ${{ inputs.project_number }}
         run: |
           # Dispatch pr-preview-upload.yml per matched repo/branch and
           # record its run id so the next step can wait on it.
@@ -244,6 +245,55 @@ jobs:
 
             echo "${repo} ${RUN_ID}" >> sibling-runs.txt
           done < matched-repos.txt
+
+          # A project touching only the WordPress repos has no P#<number> branch
+          # in either Laravel repo, so neither was dispatched above. deploy-project
+          # does fall back to a repo's default branch, but only once it runs - and
+          # nothing would have started it. The box would then come up with its
+          # Customer Area pointing at a project instance nobody provisioned.
+          #
+          # One dispatch is enough: deploy-project installs both apps into the
+          # same project directory and resolves each repo's branch separately.
+          HAS_APP=false
+          for repo in $PROJECT_APP_REPOS; do
+            if grep -q "^${repo} " matched-repos.txt; then
+              HAS_APP=true
+              break
+            fi
+          done
+
+          if [ "$HAS_APP" = false ]; then
+            FALLBACK_REPO="oo-web-marketplace"
+            REF=$(gh api "repos/${OWNER}/${FALLBACK_REPO}" --jq '.default_branch')
+            BEFORE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+            echo "No project-app branch for P${PROJECT_NUMBER} - dispatching ${FALLBACK_REPO}@${REF} so the instance is still built."
+
+            # project_number instead of the ref: the default branch carries no
+            # P#<number> tag for pr-preview-upload.yml to read.
+            if ! jq -n --arg ref "$REF" --arg pn "$PROJECT_NUMBER" \
+              '{ref: $ref, inputs: {project_number: $pn}}' \
+              | gh api "repos/${OWNER}/${FALLBACK_REPO}/actions/workflows/pr-preview-upload.yml/dispatches" \
+                -X POST --input -; then
+              echo "::error::Failed to dispatch pr-preview-upload.yml for ${FALLBACK_REPO}@${REF} - the box would point at a project instance that was never provisioned."
+              exit 1
+            fi
+
+            RUN_ID=""
+            for i in 1 2 3 4 5 6 7 8 9 10; do
+              sleep 3
+              RUN_ID=$(gh api "repos/${OWNER}/${FALLBACK_REPO}/actions/workflows/pr-preview-upload.yml/runs" \
+                --method GET -f "event=workflow_dispatch" -f "branch=${REF}" \
+                --jq "[.workflow_runs[] | select(.created_at >= \"${BEFORE}\")] | sort_by(.created_at) | .[0].id // empty")
+              [ -n "$RUN_ID" ] && break
+            done
+
+            if [ -z "$RUN_ID" ]; then
+              echo "::error::Could not locate the dispatched run for ${FALLBACK_REPO}@${REF} - aborting rather than restarting the box against an unprovisioned instance."
+              exit 1
+            fi
+
+            echo "${FALLBACK_REPO} ${RUN_ID}" >> sibling-runs.txt
+          fi
 
       - name: Wait for all uploads to finish
         if: steps.discover.outputs.is_leader == 'true'
