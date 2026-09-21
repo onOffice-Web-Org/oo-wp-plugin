@@ -152,7 +152,9 @@ class TestClassSDKWrapper
 	{
 		$pSDKWrapper = $pAPIClientActionGeneric->getSDKWrapper();
 		$pSDK = $pSDKWrapper->getSDK();
-		$pSDK->expects($this->once())->method('removeCacheInstances');
+		// prepare() sets an encrypted token and secret and no claim - the standard
+		// configuration. Nothing may fail to decrypt, so the cache must survive.
+		$pSDK->expects($this->never())->method('removeCacheInstances');
 		$pSDK->expects($this->once())->method('getErrors')->will($this->returnValue([]));
 		$pSDK->method('getResponseArray')->with(2)
 			->will($this->returnValue(json_decode($this->_expectedResult, true)));
@@ -168,6 +170,127 @@ class TestClassSDKWrapper
 			]
 		]], $pAPIClientActionGeneric->getResultRecords());
 		return $pSDKWrapper;
+	}
+
+
+	/**
+	 * Regression test for the empty-claim bug.
+	 *
+	 * An encrypted token and secret with no Extended Claim is the standard
+	 * configuration: getOption('onoffice-settings-apiclaim') returns the false
+	 * default and decrypt('') always throws. While the claim shared one try
+	 * block with token and secret, that exception reset both to their still
+	 * encrypted values, so every API call failed and every request dropped the
+	 * cache. Credentials must arrive decrypted and the claim must stay empty.
+	 */
+
+	public function testSendRequestsDecryptsCredentialsWhenClaimIsEmpty()
+	{
+		$pSDK = $this->buildCredentialSpy($captured);
+		$pSDK->expects($this->never())->method('removeCacheInstances');
+
+		// onoffice-settings-apiclaim deliberately left unset
+		(new SDKWrapper($pSDK, $this->buildEncryptedOptions()))->sendRequests();
+
+		$this->assertSame('test-key', $captured['token']);
+		$this->assertSame('test-secret', $captured['secret']);
+		$this->assertSame('', $captured['claim']);
+	}
+
+
+	/**
+	 * A claim that is actually set still has to be decrypted - the guard skips
+	 * the empty case only.
+	 */
+
+	public function testSendRequestsDecryptsClaimWhenPresent()
+	{
+		$pSDK = $this->buildCredentialSpy($captured);
+		$pSDK->expects($this->never())->method('removeCacheInstances');
+
+		$pEncrypter = new SymmetricEncryptionDefault();
+		$pOptions = $this->buildEncryptedOptions();
+		$pOptions->addOption('onoffice-settings-apiclaim',
+			$pEncrypter->encrypt('test-claim', ONOFFICE_CREDENTIALS_ENC_KEY));
+
+		(new SDKWrapper($pSDK, $pOptions))->sendRequests();
+
+		$this->assertSame('test-key', $captured['token']);
+		$this->assertSame('test-secret', $captured['secret']);
+		$this->assertSame('test-claim', $captured['claim']);
+	}
+
+
+	/**
+	 * A claim that cannot be decrypted keeps its raw value, but must not drag
+	 * token and secret back to their encrypted form - that was the actual
+	 * damage of the shared try block. The HMAC check rejects this ciphertext
+	 * because it was signed with a different key.
+	 */
+
+	public function testSendRequestsKeepsCredentialsWhenClaimCannotBeDecrypted()
+	{
+		$pEncrypter = new SymmetricEncryptionDefault();
+		$brokenClaim = $pEncrypter->encrypt('test-claim', ONOFFICE_CREDENTIALS_ENC_KEY . 'wrong');
+
+		$pSDK = $this->buildCredentialSpy($captured);
+		$pSDK->expects($this->never())->method('removeCacheInstances');
+
+		$pOptions = $this->buildEncryptedOptions();
+		$pOptions->addOption('onoffice-settings-apiclaim', $brokenClaim);
+
+		(new SDKWrapper($pSDK, $pOptions))->sendRequests();
+
+		$this->assertSame('test-key', $captured['token']);
+		$this->assertSame('test-secret', $captured['secret']);
+		$this->assertSame($brokenClaim, $captured['claim']);
+	}
+
+
+	/**
+	 * SDK mock that records what sendRequests() was handed.
+	 *
+	 * @param array $captured filled with token, secret, saveToCache and claim
+	 * @return onOfficeSDK
+	 */
+
+	private function buildCredentialSpy(&$captured)
+	{
+		$captured = [];
+		$pSDK = $this->getMockBuilder(onOfficeSDK::class)
+			->onlyMethods(['sendRequests', 'getErrors', 'removeCacheInstances'])
+			->getMock();
+		$pSDK->method('getErrors')->will($this->returnValue([]));
+		$pSDK->expects($this->once())->method('sendRequests')
+			->willReturnCallback(function ($token, $secret, $saveToCache, $claim) use (&$captured) {
+				$captured = [
+					'token' => $token,
+					'secret' => $secret,
+					'saveToCache' => $saveToCache,
+					'claim' => $claim,
+				];
+			});
+
+		return $pSDK;
+	}
+
+
+	/**
+	 * Options holding an encrypted token and secret and no claim.
+	 *
+	 * @return WPOptionWrapperTest
+	 */
+
+	private function buildEncryptedOptions(): WPOptionWrapperTest
+	{
+		$pEncrypter = new SymmetricEncryptionDefault();
+		$pOptions = new WPOptionWrapperTest();
+		$pOptions->addOption('onoffice-settings-apikey',
+			$pEncrypter->encrypt('test-key', ONOFFICE_CREDENTIALS_ENC_KEY));
+		$pOptions->addOption('onoffice-settings-apisecret',
+			$pEncrypter->encrypt('test-secret', ONOFFICE_CREDENTIALS_ENC_KEY));
+
+		return $pOptions;
 	}
 
 

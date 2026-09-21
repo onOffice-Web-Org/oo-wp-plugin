@@ -22,6 +22,7 @@
 namespace onOffice\tests;
 
 use onOffice\WPlugin\ArrayContainer;
+use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
@@ -52,6 +53,12 @@ class EstateListMocker
 
 	/** @var array */
 	private $_estateData = [];
+
+	/** @var array */
+	private $_estateDataRaw = [];
+
+	/** @var array */
+	private $_mainLangIds = [];
 
 	/** @var int */
 	private $_currentEstateId = 0;
@@ -225,7 +232,20 @@ class EstateListMocker
 	public function getCurrentMultiLangEstateMainId(): int
 	{
 		$this->registerMethodCall(__METHOD__);
-		return $this->_currentEstateId;
+		return $this->_mainLangIds[$this->_currentEstateId] ?? $this->_currentEstateId;
+	}
+
+
+	/**
+	 *
+	 * @return ArrayContainerEscape
+	 *
+	 */
+
+	public function getRawValues(): ArrayContainerEscape
+	{
+		$this->registerMethodCall(__METHOD__);
+		return new ArrayContainerEscape($this->_estateDataRaw);
 	}
 
 
@@ -304,6 +324,32 @@ class EstateListMocker
 	public function setEstateData(array $estateData)
 	{
 		$this->_estateData = $estateData;
+	}
+
+
+	/**
+	 * The unformatted records as returned by the API, keyed by estate id.
+	 *
+	 * @param array $estateDataRaw
+	 *
+	 */
+
+	public function setEstateDataRaw(array $estateDataRaw)
+	{
+		$this->_estateDataRaw = $estateDataRaw;
+	}
+
+
+	/**
+	 * Maps a translated record id onto the id of its main language record.
+	 *
+	 * @param array $mainLangIds
+	 *
+	 */
+
+	public function setMainLangIds(array $mainLangIds)
+	{
+		$this->_mainLangIds = $mainLangIds;
 	}
 
 
