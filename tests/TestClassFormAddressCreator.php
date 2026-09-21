@@ -228,7 +228,7 @@ class TestClassFormAddressCreator
 	public function testCreateOrCompleteAddressWithExplicitSupervisor()
 	{
 		$this->configureSDKWrapperMockerForAddressCreationWithSupervisor(1);
-		$this->configureSDKWrapperMockerForSupervisorRelation('3', 1);
+		$this->configureSDKWrapperMockerForSupervisorRelation(1, '3');
 
 		$pFormData = $this->createFormData();
 		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, ['Admin'], 1,
@@ -247,7 +247,7 @@ class TestClassFormAddressCreator
 	public function testCreateOrCompleteAddressAssignsSupervisorRelationOnDuplicate()
 	{
 		$this->configureSDKWrapperMockerForDuplicateAddressWithSupervisor(1);
-		$this->configureSDKWrapperMockerForSupervisorRelation('3', 1);
+		$this->configureSDKWrapperMockerForSupervisorRelation(1, '3');
 
 		$pFormData = $this->createFormData();
 		$result = $this->_pSubject->createOrCompleteAddress($pFormData, true, ['Admin'], 1,
@@ -264,7 +264,7 @@ class TestClassFormAddressCreator
 	public function testCreateOrCompleteAddressSurvivesFailingSupervisorRelation()
 	{
 		$this->configureSDKWrapperMockerForAddressCreationWithSupervisor(1);
-		$this->configureSDKWrapperMockerForFailingSupervisorRelation('3', 1);
+		$this->configureSDKWrapperMockerForFailingSupervisorRelation(1, '3');
 
 		$pFormData = $this->createFormData();
 		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, ['Admin'], 1,
@@ -434,11 +434,11 @@ class TestClassFormAddressCreator
 	}
 
 	/**
-	 * @param string $userId
 	 * @param int $addressId
+	 * @param string $userId
 	 */
 
-	private function configureSDKWrapperMockerForSupervisorRelation(string $userId, int $addressId)
+	private function configureSDKWrapperMockerForSupervisorRelation(int $addressId, string $userId)
 	{
 		$response = [
 			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
@@ -453,15 +453,15 @@ class TestClassFormAddressCreator
 			'status' => ['errorcode' => 0, 'message' => 'OK'],
 		];
 
-		$this->addSupervisorRelationResponseToSKDWrapper($userId, $addressId, $response);
+		$this->addSupervisorRelationResponseToSKDWrapper($addressId, $userId, $response);
 	}
 
 	/**
-	 * @param string $userId
 	 * @param int $addressId
+	 * @param string $userId
 	 */
 
-	private function configureSDKWrapperMockerForFailingSupervisorRelation(string $userId, int $addressId)
+	private function configureSDKWrapperMockerForFailingSupervisorRelation(int $addressId, string $userId)
 	{
 		$response = [
 			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
@@ -473,22 +473,22 @@ class TestClassFormAddressCreator
 			'status' => ['errorcode' => 500, 'message' => 'Internal Server Error'],
 		];
 
-		$this->addSupervisorRelationResponseToSKDWrapper($userId, $addressId, $response);
+		$this->addSupervisorRelationResponseToSKDWrapper($addressId, $userId, $response);
 	}
 
 	/**
-	 * @param string $userId
-	 * @param int $addressId
+	 * @param int $addressId parent record
+	 * @param string $userId child record
 	 * @param array $response
 	 */
 
-	private function addSupervisorRelationResponseToSKDWrapper(string $userId, int $addressId,
+	private function addSupervisorRelationResponseToSKDWrapper(int $addressId, string $userId,
 		array $response)
 	{
 		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'relation', '', [
-			'relationtype' => onOfficeSDK::RELATION_TYPE_USER_ADDRESS_OFFICER,
-			'parentid' => $userId,
-			'childid' => $addressId,
+			'relationtype' => onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER,
+			'parentid' => $addressId,
+			'childid' => $userId,
 		], null, $response);
 	}
 

@@ -131,13 +131,12 @@ class FormAddressCreator
 
 
 	/**
-	 * Adds the advisor as an additional supervisor ("Betreuer") of the address via relation.
+	 * Sets the advisor as supervisor ("Betreuer") of the address via relation.
 	 *
 	 * The 'Benutzer' field set above only ever reaches addresses that are really created: with the
 	 * duplicate check on, the create request carries noOverrideByDuplicate, so an address matched
-	 * as a duplicate keeps the supervisor it already has. A field also holds exactly one
-	 * supervisor, whereas a record can carry several through this relation - so the advisor is
-	 * added instead of replacing the colleague who is already responsible.
+	 * as a duplicate keeps the supervisor it already has. The relation works on an existing record
+	 * too, which is the whole point of the option.
 	 *
 	 * Non-fatal by design, like FormPostOwner::assignEstateContactBroker(): a supervisor that
 	 * cannot be assigned must not stop the address, the estate or the email from being created.
@@ -151,12 +150,13 @@ class FormAddressCreator
 			return;
 		}
 
+		// address = parent record, user = child record - see the constant in onOfficeSDK
 		$pApiClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'relation');
 		$pApiClientAction->setParameters([
-			'relationtype' => onOfficeSDK::RELATION_TYPE_USER_ADDRESS_OFFICER,
-			'parentid' => $supervisorUserId,
-			'childid' => $addressId,
+			'relationtype' => onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER,
+			'parentid' => $addressId,
+			'childid' => $supervisorUserId,
 		]);
 
 		try {
@@ -297,6 +297,33 @@ class FormAddressCreator
 	}
 
 	/**
+	 * The 'users' resource has no filter, so every lookup reads the full user list and picks the
+	 * record itself.
+	 *
+	 * @param callable $matcher receives one user record, returns true on a match
+	 * @return array the matching record, or [] if none matches
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function findUser(callable $matcher): array
+	{
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
+
+		$pApiClientAction->addRequestToQueue();
+		$this->_pSDKWrapper->sendRequests();
+
+		foreach ($pApiClientAction->getResultRecords() as $user) {
+			if ($matcher($user)) {
+				return $user;
+			}
+		}
+
+		return [];
+	}
+
+	/**
 	 * @param string $userId
 	 * @return string
 	 * @throws ApiClientException
@@ -305,22 +332,11 @@ class FormAddressCreator
 	 */
 	private function getUserNameById(string $userId): string
 	{
-		$pApiClientAction = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
+		$user = $this->findUser(function(array $user) use ($userId): bool {
+			return $user['id'] == $userId && isset($user['elements']['username']);
+		});
 
-		$pApiClientAction->addRequestToQueue();
-		$this->_pSDKWrapper->sendRequests();
-		$result = $pApiClientAction->getResultRecords();
-
-		$userResult = array_values(array_filter($result, function($item) use ($userId) {
-			return $item['id'] == $userId && isset($item["elements"]["username"]);
-		}));
-
-		if (!empty($userResult)) {
-			return $userResult[0]["elements"]["username"];
-		} else {
-			return '';
-		}
+		return $user['elements']['username'] ?? '';
 	}
 
 	/**
@@ -344,23 +360,19 @@ class FormAddressCreator
 			return [];
 		}
 
-		$pApiClientAction = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
+		$user = $this->findUser(function(array $user) use ($email): bool {
+			return isset($user['elements']['email'], $user['elements']['username']) &&
+				strcasecmp($user['elements']['email'], $email) === 0;
+		});
 
-		$pApiClientAction->addRequestToQueue();
-		$this->_pSDKWrapper->sendRequests();
-
-		foreach ($pApiClientAction->getResultRecords() as $user) {
-			if (isset($user['elements']['email'], $user['elements']['username']) &&
-				strcasecmp($user['elements']['email'], $email) === 0) {
-				return [
-					'id' => (string)$user['id'],
-					'username' => (string)$user['elements']['username'],
-				];
-			}
+		if ($user === []) {
+			return [];
 		}
 
-		return [];
+		return [
+			'id' => (string)$user['id'],
+			'username' => (string)$user['elements']['username'],
+		];
 	}
 
 	/**

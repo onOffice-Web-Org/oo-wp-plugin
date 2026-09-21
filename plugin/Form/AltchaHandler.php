@@ -50,9 +50,6 @@ class AltchaHandler
 
     const DEFAULT_SERVER_URL = 'https://altcha.onofficeweb.com';
 
-    /** @deprecated kept for callers outside this plugin - the list lives in ThemeSupport now */
-    const SUPPORTED_THEMES = ThemeSupport::SUPPORTED_THEMES;
-
     /** @var string */
     private $_payload = '';
 
@@ -165,7 +162,7 @@ class AltchaHandler
             return false;
         }
 
-        return self::isSupportedTheme();
+        return ThemeSupport::isOnOfficeTheme();
     }
 
     /**
@@ -189,14 +186,6 @@ class AltchaHandler
         }
 
         return false;
-    }
-
-    /**
-     * Check whether the active theme is a supported onOffice WP-Websites theme.
-     */
-    public static function isSupportedTheme(): bool
-    {
-        return ThemeSupport::isOnOfficeTheme();
     }
 
     /**

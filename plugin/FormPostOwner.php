@@ -41,6 +41,7 @@ use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\ThemeSupport;
 use onOffice\WPlugin\Form\NewsletterFormPostConfiguration;
 
 /**
@@ -197,6 +198,12 @@ class FormPostOwner
 	 * page the form sits on. Without it $recipient is just the address configured in the
 	 * backend, which must not be turned into a supervisor.
 	 *
+	 * The theme is checked here and not only where the option is rendered: the checkbox is
+	 * exclusive to the onOffice themes, but the stored value survives a theme switch, and
+	 * AdminPageFormSettingsBase::save_form() only writes columns whose input model is
+	 * registered - so under a foreign theme the option could neither take effect nor be
+	 * switched off again.
+	 *
 	 * Non-fatal by design, like assignEstateContactBroker(): a supervisor that cannot be
 	 * resolved must not stop the estate, the address or the email from being created.
 	 *
@@ -209,6 +216,7 @@ class FormPostOwner
 		DataFormConfigurationOwner $pDataFormConfiguration, string $recipient): array
 	{
 		if (!$pDataFormConfiguration->getAssignBrokerAsSupervisor() ||
+			!ThemeSupport::isOnOfficeTheme() ||
 			$this->_recipientAddressId === null) {
 			return [];
 		}

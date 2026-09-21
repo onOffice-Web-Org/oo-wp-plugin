@@ -37,7 +37,7 @@ use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\WP\WpdbReadCacheProxy;
-use onOffice\WPlugin\Form\AltchaHandler;
+use onOffice\WPlugin\Utility\ThemeSupport;
 use wpdb;
 use function dbDelta;
 use function esc_sql;
@@ -1348,7 +1348,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	private function setCaptchaDefaultTrue(): void
 	{
 		// check if onOffice theme
-		if (AltchaHandler::isSupportedTheme()) {
+		if (ThemeSupport::isOnOfficeTheme()) {
 			$prefix = $this->getPrefix();
 			$tableName = $prefix . 'oo_plugin_forms';
 
