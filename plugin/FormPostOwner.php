@@ -450,12 +450,8 @@ class FormPostOwner
 	}
 
 	/**
-	 * Sets the advisor as supervisor ("Betreuer") of the estate that was just created.
-	 *
-	 * Deliberately a separate modify request instead of a 'benutzer' key in the create request:
-	 * an account whose API user cannot write that field would get no record back from create
-	 * estate, APIEmptyResultException would escape analyseFormContentByPrefix() through the
-	 * finally block, and the whole form would fail instead of just the supervisor.
+	 * Sets the advisor as supervisor ("Betreuer") of the estate that was just created, by
+	 * relation - the same way FormAddressCreator does it for the address.
 	 *
 	 * Non-fatal by design, like assignEstateContactBroker(): a supervisor that cannot be assigned
 	 * must not stop the estate, the address or the email from being created.
@@ -470,11 +466,15 @@ class FormPostOwner
 			return;
 		}
 
+		// estate = parent record, user = child record - see the constant in onOfficeSDK
 		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
-		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_MODIFY,
-			'estate');
-		$pApiClientAction->setResourceId((string) $estateId);
-		$pApiClientAction->setParameters(['data' => ['benutzer' => $supervisorUserId]]);
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE,
+			'relation');
+		$pApiClientAction->setParameters([
+			'relationtype' => onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER,
+			'parentid' => $estateId,
+			'childid' => $supervisorUserId,
+		]);
 
 		try {
 			$pApiClientAction->addRequestToQueue();

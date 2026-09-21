@@ -1914,8 +1914,8 @@ msgstr "Bis"
 msgid "Display area units in labels (m²)"
 msgstr "Flächenangaben in Beschriftungen anzeigen (m²)"
 
-msgid "Also set this address as supervisor"
-msgstr "Adresse zusätzlich als Betreuer eintragen"
+msgid "Also set contact person as supervisor"
+msgstr "Ansprechpartner zusätzlich als Betreuer eintragen"
 
-msgid "In addition to being set as the estate's contact person, the address the form is embedded on is also entered as supervisor of both the created estate and the created address. Requires the option above and an onOffice theme."
-msgstr "Die Adresse, auf deren Detailseite das Formular eingebunden ist, wird nicht nur als Ansprechpartner der Immobilie gesetzt, sondern zusätzlich als Betreuer der angelegten Immobilie und der angelegten Adresse eingetragen. Setzt die Option darüber und ein onOffice-Theme voraus."
+msgid "Assigns the contact person of this page not only as the contact, but also as the supervisor for both the created property and the created contact."
+msgstr "Trägt den Ansprechpartner dieser Seite nicht nur als Kontaktperson, sondern auch als Betreuer für die neu erstellte Immobilie und den neuen Kontakt ein."

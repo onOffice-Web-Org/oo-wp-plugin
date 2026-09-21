@@ -760,17 +760,16 @@ class TestClassFormPostOwner
 
 		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
 
-		// the estate's supervisor field takes the user id, the address' one the user name
+		// both officer relations take the user id, the address field 'Benutzer' the user name
 		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
-		$this->assertStringContainsString('"benutzer":"3"', $requests,
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER, $requests,
 			'the advisor must be set as supervisor of the created estate');
 		$this->assertStringContainsString('"Benutzer":"advisorUser"', $requests,
 			'the advisor must be set as supervisor of the created address');
 		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER, $requests,
 			'the advisor must also be related to the address, which is what reaches an address '
 				. 'that was matched as a duplicate');
-		// the supervisor is set after the estate exists, never as part of its creation: an API
-		// user that cannot write the field would otherwise break the whole form
+		// the supervisor is related after the estate exists, never as part of its creation
 		$estateCreateRequests = array_values(array_filter($this->_pSDKWrapperMocker->getRequestArray(),
 			function (string $request): bool {
 				return strpos($request, onOfficeSDK::ACTION_ID_CREATE) !== false &&
@@ -824,12 +823,12 @@ class TestClassFormPostOwner
 		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
 
 		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
-		$this->assertStringNotContainsString(onOfficeSDK::ACTION_ID_MODIFY, $requests,
-			'no estate may be modified when there is no advisor to become supervisor');
-		$this->assertStringNotContainsString('benutzer', $requests,
-			'neither supervisor field may be written');
+		$this->assertStringNotContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER,
+			$requests, 'no estate supervisor may be set when there is no advisor');
 		$this->assertStringNotContainsString(onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER,
-			$requests, 'no supervisor relation may be created');
+			$requests, 'no address supervisor may be set when there is no advisor');
+		$this->assertStringNotContainsString('Benutzer', $requests,
+			'the address supervisor field may not be written either');
 	}
 
 
@@ -1033,53 +1032,69 @@ class TestClassFormPostOwner
 
 
 	/**
-	 * @param int $estateId
-	 * @param string $userId
+	 * The advisor as supervisor of the estate, set by relation just like on the address side.
+	 *
+	 * @param int $estateId parent record
+	 * @param string $userId child record
 	 */
 
 	private function prepareMockerForEstateSupervisorSuccess(int $estateId, string $userId)
 	{
-		$parameters = ['data' => ['benutzer' => $userId]];
-
 		$response = [
-			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:modify',
-			'resourceid' => (string) $estateId,
-			'resourcetype' => 'estate',
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
+			'resourceid' => '',
+			'resourcetype' => 'relation',
 			'cacheable' => false,
 			'identifier' => '',
 			'data' => [
 				'meta' => ['cntabsolute' => null],
-				'records' => [
-					0 => ['id' => $estateId, 'type' => 'estate', 'elements' => []],
-				],
+				'records' => [],
 			],
 			'status' => ['errorcode' => 0, 'message' => 'OK'],
 		];
 
-		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_MODIFY, 'estate',
-			(string) $estateId, $parameters, null, $response);
+		$this->addEstateSupervisorRelationResponseToMocker($estateId, $userId, $response);
 	}
 
 
 	/**
-	 * @param int $estateId
-	 * @param string $userId
+	 * @param int $estateId parent record
+	 * @param string $userId child record
 	 */
 
 	private function prepareMockerForEstateSupervisorFailure(int $estateId, string $userId)
 	{
 		$response = [
-			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:modify',
-			'resourceid' => (string) $estateId,
-			'resourcetype' => 'estate',
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
+			'resourceid' => '',
+			'resourcetype' => 'relation',
 			'cacheable' => false,
 			'identifier' => '',
 			'data' => [],
 			'status' => ['errorcode' => 500, 'message' => 'Internal Server Error'],
 		];
 
-		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_MODIFY, 'estate',
-			(string) $estateId, ['data' => ['benutzer' => $userId]], null, $response);
+		$this->addEstateSupervisorRelationResponseToMocker($estateId, $userId, $response);
+	}
+
+
+	/**
+	 * @param int $estateId parent record
+	 * @param string $userId child record
+	 * @param array $response
+	 */
+
+	private function addEstateSupervisorRelationResponseToMocker(int $estateId, string $userId,
+		array $response)
+	{
+		$parameters = [
+			'relationtype' => onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER,
+			'parentid' => $estateId,
+			'childid' => $userId,
+		];
+
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'relation',
+			'', $parameters, null, $response);
 	}
 
 

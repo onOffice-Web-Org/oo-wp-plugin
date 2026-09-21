@@ -50,6 +50,9 @@ class onOfficeSDK
 	 */
 	const RELATION_TYPE_ADDRESS_USER_OFFICER = 'urn:onoffice-de-ns:smart:2.5:relationTypes:address:user:officer';
 
+	/** Officer ("Betreuer") of an estate (estate = parent record, user = child record) */
+	const RELATION_TYPE_ESTATE_USER_OFFICER = 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:user:officer';
+
 	/** @var ApiCall */
 	private $apiCall = null;
 
