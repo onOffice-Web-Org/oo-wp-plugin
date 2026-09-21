@@ -23,8 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter;
 
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelBool;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;

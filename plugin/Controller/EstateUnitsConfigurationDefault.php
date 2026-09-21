@@ -21,10 +21,10 @@
 
 namespace onOffice\WPlugin\Controller;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\SDKWrapper;

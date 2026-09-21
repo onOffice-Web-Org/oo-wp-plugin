@@ -38,14 +38,14 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
 use function __;
-use DI\DependencyException;
-use DI\NotFoundException;
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
 
 /**
  *
