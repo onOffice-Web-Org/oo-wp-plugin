@@ -66,8 +66,7 @@ class BulkDeleteRecord
 	{
 		$this->doPreChecks($capability);
 
-		$pRecordManagerDelete->deleteByIds($records);
-		return count($records);
+		return $pRecordManagerDelete->deleteByIds($records);
 	}
 
 

@@ -23,10 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use Nette\DI\Extensions\DIExtension;
 use onOffice\WPlugin\WP\WpdbReadCacheProxy;
 use wpdb;
@@ -60,15 +60,16 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 	}
 
 	/**
-	 *
 	 * @param int $id
+	 * @return bool true if the source list view was found and successfully duplicated
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
 
-	public function duplicateByIds(int $id)
+	public function duplicateByIds(int $id): bool
 	{
 		$prefix = $this->_pWPDB->prefix;
+		$success = false;
 
 		/* @var $pRecordManagerReadListViewEstate RecordManagerReadListViewEstate */
 		$pRecordManagerReadListViewEstate = $this->_pContainer->get(RecordManagerReadListViewEstate::class);
@@ -114,6 +115,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 				$newListView
 			);
 			$duplicateListViewId = $this->_pWPDB->insert_id;
+			$success = $duplicateListViewId !== 0;
 
 			if ($duplicateListViewId !== 0) {
 				//duplicate data related oo_plugin_fieldconfig table
@@ -177,5 +179,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 				}
 			}
 		}
+
+		return $success;
 	}
 }

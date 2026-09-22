@@ -23,7 +23,7 @@ namespace onOffice\WPlugin\Controller;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\API\APIEmptyResultException;
@@ -47,7 +47,7 @@ use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\Gui\AdminPageAddress;
 use onOffice\WPlugin\Utility\FileVersionHelper;
-use Parsedown;
+use onOffice_WPlugin_Vendor_Parsedown as Parsedown;
 use HTMLPurifier_Config;
 use HTMLPurifier;
 use WP_Hook;

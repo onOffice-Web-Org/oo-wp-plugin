@@ -13,6 +13,7 @@
 			"courtage_frei",
 			"objekt_des_tages",
 			"vermarktungsart",
+			"objektart",
 			"preisAufAnfrage",
 			"virtualAddress",
 			"provisionsfrei",

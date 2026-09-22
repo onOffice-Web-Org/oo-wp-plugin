@@ -23,10 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use Exception;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewForm;
@@ -226,7 +226,7 @@ class TestClassRecordManagerDuplicateForm
 					 );
 
 		$this->_pWPDB->insert_id = 23;
-		$this->_pSubject->duplicateByName('list view root');
+		$this->assertTrue($this->_pSubject->duplicateByName('list view root'));
 	}
 
 
@@ -254,7 +254,7 @@ class TestClassRecordManagerDuplicateForm
 			->method( 'get_results' );
 
 		$this->_pWPDB->insert_id = 0;
-		$this->_pSubject->duplicateByName('list view root');
+		$this->assertFalse($this->_pSubject->duplicateByName('list view root'));
 	}
 
 

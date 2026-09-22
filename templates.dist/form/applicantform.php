@@ -77,15 +77,15 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$label = wp_kses_post($pForm->getFieldLabel($input));
 
 
-	if ( in_array( $input, array( 'kaufpreis','kaltmiete','wohnflaeche','anzahl_zimmer' ) ) ) {
-		$line = '<div class="oo-input-wrapper">';
-		$line .= renderFormField($input, $pForm).'</div>';
+	if ( isRangeInputField( $input, $pForm ) ) {
+		// "from - to" fields are self-describing ("Sales price from") and bring their own .oo-input-group
+		$line = renderFormField($input, $pForm);
 	} 
 	else {
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT== $pForm->getFieldType($input)) {
 			$line =	 !$isHiddenField ? '<div class="oo-single-select"><label for="'.$input.'-ts-control"><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.' '.$addition.'</span></label>' . renderFormField($input, $pForm).'</div>' : renderFormField($input, $pForm);
 		} else {
-			$line = '<label>'.$label.' '.$addition;
+			$line = '<label><span class="oo-label-text' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.' '.$addition;
 			$line .= renderFormField($input, $pForm).'</span></label>';
 		}
 

@@ -46,13 +46,13 @@ use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\Utility\__String;
 use function __;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
-use DI\DependencyException;
-use DI\NotFoundException;
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\WPlugin\Form;
 
 /**

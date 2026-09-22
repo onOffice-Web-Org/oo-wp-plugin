@@ -23,10 +23,10 @@ namespace onOffice\WPlugin;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
@@ -76,6 +76,9 @@ class EstateList
 	 * key. '#' can never occur in a sanitized view name, so it cannot collide with a real one.
 	 */
 	const MAP_CACHE_LISTNAME_MARKER = '#map';
+
+	/** Records the map fetches per request; it pages until a response holds fewer. */
+	const MAP_BATCH_SIZE = 500;
 
 	/** @var array */
 	private $_records = [];
@@ -305,14 +308,10 @@ class EstateList
 	public function getEstateListForMap(): EstateList
 	{
 		$pEstateListForMap = clone $this;
-		$pDataViewForMap = clone $this->_pDataView;
-		$estateCount = $this->getEstateOverallCount();
-
-		if (method_exists($pDataViewForMap, 'setRecordsPerPage') && $estateCount > 0) {
-			$pDataViewForMap->setRecordsPerPage($estateCount);
-		}
-
-		$pEstateListForMap->_pDataView = $pDataViewForMap;
+		$pEstateListForMap->_pDataView = clone $this->_pDataView;
+		// No record limit is derived from getEstateOverallCount() here: that count belongs to
+		// the list query and using it as the map's listlimit truncated the map to the first N
+		// records of whatever the map query returned.
 		$pEstateListForMap->loadEstatesForMap(1);
 		$pEstateListForMap->resetEstateIterator();
 
@@ -340,13 +339,17 @@ class EstateList
 	 */
 	private function loadRecords(int $currentPage)
 	{
+		// Same ordering constraint as loadRecordsForMap(): getEstateParameters() flushes the
+		// request queue for a contact-bound list, so both parameter sets are built first.
 		$estateParameters = $this->getEstateParameters($currentPage, $this->_formatOutput);
+		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
+
 		$this->_pApiClientAction->setParameters($estateParameters);
 		$this->_pApiClientAction->addRequestToQueue();
 
-		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
 		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'][] = 'vermarktungsart';
+		$estateParametersRaw['data'][] = 'objektart';
 		if ($this->hasPriceOnRequestField()) {
 			$estateParametersRaw['data'][] = 'preisAufAnfrage';
 		}
@@ -436,50 +439,25 @@ class EstateList
 	 */
 	private function loadRecordsForMap(int $currentPage)
 	{
-		$numRecordsPerPage = $this->getRecordsPerPage();
+		$allRecords = [];
+		$allRecordsRaw = [];
+		$offset = 0;
 
-		if ($numRecordsPerPage > 500) {
-			$allRecords = [];
-			$allRecordsRaw = [];
-			$totalFetched = 0;
+		do {
+			// Both parameter sets are built before anything is queued. getEstateParameters()
+			// sends requests of its own when the list is bound to a contact (shortcode
+			// attribute 'address'): fetchEstatesForAddressIds() and collectCountEstates()
+			// both call sendRequests(), which flushes whatever is already queued. Building
+			// the raw parameters after the formatted request was queued therefore split the
+			// two into separate send cycles, so _records and _recordsRaw could come from
+			// different cache generations. estateIterator() then found no raw record for an
+			// estate, left showGoogleMap unset and the theme dropped that estate's pin -
+			// while the list, which is loaded separately, still showed the estate.
+			$estateParameters = $this->getEstateParametersForMap($currentPage, $this->_formatOutput, $offset);
+			$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false, $offset);
 
-			do {
-				$offset = $totalFetched;
-				$requestLimit = min(500, $numRecordsPerPage - $totalFetched);
-
-				$estateParameters = $this->getEstateParametersForMap($currentPage, $this->_formatOutput, $offset, $requestLimit);
-				$this->_pApiClientAction->setParameters($estateParameters);
-				$this->_pApiClientAction->addRequestToQueue();
-
-				$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false, $offset, $requestLimit);
-				$estateParametersRaw['data'] = array_values(array_unique($estateParametersRaw['data']));
-
-				$pApiClientActionRawValues = clone $this->_pApiClientAction;
-				$pApiClientActionRawValues->setParameters($estateParametersRaw);
-				$pApiClientActionRawValues->addRequestToQueue();
-
-				$this->_pEnvironment->getSDKWrapper()->sendRequests();
-
-				$records = $this->_pApiClientAction->getResultRecords();
-				$recordsRaw = $pApiClientActionRawValues->getResultRecords();
-
-				$allRecords = array_merge($allRecords, $records);
-				if (!empty($recordsRaw)) {
-					$allRecordsRaw = array_merge($allRecordsRaw, array_combine(array_column($recordsRaw, 'id'), $recordsRaw));
-				}
-
-				$totalFetched += count($records);
-			} while (count($records) == 500 && $totalFetched < $numRecordsPerPage);
-
-			$this->_records = $allRecords;
-			$this->_recordsRaw = $allRecordsRaw;
-		} else {
-			$estateParameters = $this->getEstateParametersForMap($currentPage, $this->_formatOutput);
 			$this->_pApiClientAction->setParameters($estateParameters);
 			$this->_pApiClientAction->addRequestToQueue();
-
-			$estateParametersRaw = $this->getEstateParametersForMap($currentPage, false);
-			$estateParametersRaw['data'] = array_values(array_unique($estateParametersRaw['data']));
 
 			$pApiClientActionRawValues = clone $this->_pApiClientAction;
 			$pApiClientActionRawValues->setParameters($estateParametersRaw);
@@ -487,38 +465,50 @@ class EstateList
 
 			$this->_pEnvironment->getSDKWrapper()->sendRequests();
 
-			$this->_records = $this->_pApiClientAction->getResultRecords();
+			$records = $this->_pApiClientAction->getResultRecords();
 			$recordsRaw = $pApiClientActionRawValues->getResultRecords();
-			$this->_recordsRaw = !empty($recordsRaw) ? array_combine(array_column($recordsRaw, 'id'), $recordsRaw) : [];
-		}
+
+			// += keeps the estate id as key (array_merge() would renumber the numeric ids, after
+			// which estateIterator() and getRawValues() can no longer look a record up) and it
+			// deduplicates: a cache hit answers every listoffset with the full record set.
+			$countBefore = count($allRecords);
+			if (!empty($records)) {
+				$allRecords += array_combine(array_column($records, 'id'), $records);
+			}
+			if (!empty($recordsRaw)) {
+				$allRecordsRaw += array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+			}
+
+			$offset += count($records);
+			// A random list has no listoffset, so its result cannot be paged through.
+		} while (!$this->_pDataView->getRandom()
+			&& count($records) === self::MAP_BATCH_SIZE
+			&& count($allRecords) > $countBefore);
+
+		$this->_records = $allRecords;
+		$this->_recordsRaw = $allRecordsRaw;
 	}
 
 	/**
+	 * The map has to query exactly the same estates as the list, so its parameters are the
+	 * list's parameters with only the field set, the cache key and the paging replaced.
+	 * Building the filters a second time here let them drift apart from the list: the
+	 * address binding, filterid, georangesearch, geo_search and the sorting were missing,
+	 * so the map queried a wider set and then truncated it to the wrong records.
+	 *
 	 * @param int $currentPage
 	 * @param bool $formatOutput
 	 * @param int $offset
-	 * @param int|null $requestLimit
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 * @throws UnknownViewException
 	 */
-	private function getEstateParametersForMap(int $currentPage, bool $formatOutput, int $offset = 0, ?int $requestLimit = null)
+	private function getEstateParametersForMap(int $currentPage, bool $formatOutput, int $offset = 0)
 	{
-		$language = Language::getDefault();
-		$pListView = $this->filterActiveInputFields($this->_pDataView);
-		$filter = $this->getDefaultFilterBuilder()->buildFilter();
+		$requestParams = $this->getEstateParameters($currentPage, $formatOutput);
 
-
-		$numRecordsPerPage = $this->getRecordsPerPage();
-
-		if ($requestLimit !== null && $numRecordsPerPage > 500) {
-			$listLimit = $requestLimit;
-		} else {
-			$listLimit = $numRecordsPerPage;
-		}
-
-		$mapFields = [
+		$requestParams['data'] = [
 			'breitengrad',
 			'laengengrad',
 			'objekttitel',
@@ -544,43 +534,20 @@ class EstateList
 			'showGoogleMap',
 		];
 
-		$requestParams = [
-			'data' => $mapFields,
-			'filter' => $filter,
-			'estatelanguage' => $language,
-			'outputlanguage' => $language,
-			'listlimit' => $listLimit,
-			'formatoutput' => $formatOutput,
-			'addMainLangId' => true,
-		];
+		$requestParams['listlimit'] = self::MAP_BATCH_SIZE;
+		// getEstateParameters() omits listoffset for a random list; keep it omitted there.
+		if (array_key_exists('listoffset', $requestParams)) {
+			$requestParams['listoffset'] = $offset;
+		}
 
-		if ($pListView instanceof DataListView) {
+		if (isset($requestParams['listname'])) {
 			// Own cache key for the map: it fetches only map fields, but the list cache key
 			// ignores the field set — sharing it would overwrite the list's values (P#150089).
-			$requestParams = array('listname' => $this->_pDataView->getName() . self::MAP_CACHE_LISTNAME_MARKER) + $requestParams;
+			$requestParams['listname'] = $this->_pDataView->getName() . self::MAP_CACHE_LISTNAME_MARKER;
 		}
-
-		if (!$pListView->getRandom()) {
-			if ($offset > 0 || $requestLimit !== null) {
-				$calculatedOffset = $offset;
-			} else {
-				$calculatedOffset = ($currentPage - 1) * $numRecordsPerPage;
-			}
-			$this->_currentEstatePage = $currentPage;
-			$requestParams += [
-				'listoffset' => $calculatedOffset
-			];
-		}
-
-		if ($pListView->getName() === 'detail') {
-			if ($this->getViewRestrict()) {
-				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-			}
-		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
-		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
-		}
+		// The cron warms the list under the list's own field set. Looking the map up under
+		// those parameters would answer a map request with list records.
+		unset($requestParams['params_list_cache']);
 
 		return $requestParams;
 	}
@@ -1165,11 +1132,17 @@ class EstateList
 		}
 
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
+			// The formatted record carries showGoogleMap too (getEstateParametersForMap()
+			// requests it for both the formatted and the raw map query). Fall back to it when
+			// the raw record is missing, so the decision is still made on a value the API
+			// returned instead of leaving showGoogleMap unset - which the map templates read
+			// as "do not show" and which silently drops the estate's pin.
+			$recordRawMap = $recordRaw !== [] ? $recordRaw : $recordElements;
 
-			if (isset($recordRaw['showGoogleMap']) && ($recordRaw['showGoogleMap'] === '0' || $recordRaw['showGoogleMap'] === 0 || $recordRaw['showGoogleMap'] === false)) {
+			if (isset($recordRawMap['showGoogleMap']) && ($recordRawMap['showGoogleMap'] === '0' || $recordRawMap['showGoogleMap'] === 0 || $recordRawMap['showGoogleMap'] === false)) {
 				$recordModified['showGoogleMap'] = false;
 			}
-			elseif (isset($recordRaw['showGoogleMap']) && ($recordRaw['showGoogleMap'] === '1' || $recordRaw['showGoogleMap'] === 1 || $recordRaw['showGoogleMap'] === true)) {
+			elseif (isset($recordRawMap['showGoogleMap']) && ($recordRawMap['showGoogleMap'] === '1' || $recordRawMap['showGoogleMap'] === 1 || $recordRawMap['showGoogleMap'] === true)) {
 				$recordModified['showGoogleMap'] = true;
 			}
 		}
@@ -1648,7 +1621,7 @@ class EstateList
 	 */
 	public function getCurrentMultiLangEstateMainId()
 	{
-		return $this->_currentEstate['mainId'];
+		return (int) ($this->_currentEstate['mainId'] ?? 0);
 	}
 
 	/**

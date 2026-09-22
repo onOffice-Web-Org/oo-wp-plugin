@@ -54,13 +54,14 @@ class RecordManagerDeleteForm
 	 *
 	 */
 
-	public function deleteByIds(array $ids)
+	public function deleteByIds(array $ids): int
 	{
 		$prefix = $this->_pWPDB->prefix;
 		$pWpdb = $this->_pWPDB;
+		$deletedCount = 0;
 
 		foreach ($ids as $id) {
-			$pWpdb->delete($prefix.'oo_plugin_forms', ['form_id' => $id]);
+			$mainRowDeleted = $pWpdb->delete($prefix.'oo_plugin_forms', ['form_id' => $id]);
 			$pWpdb->delete($prefix.'oo_plugin_form_fieldconfig', ['form_id' => $id]);
 			$pWpdb->delete($prefix.'oo_plugin_form_multipage_title', ['form_id' => $id]);
 
@@ -91,6 +92,11 @@ class RecordManagerDeleteForm
 			$pWpdb->delete($prefix.'oo_plugin_fieldconfig_form_defaults', ['form_id' => $id]);
 			$pWpdb->delete($prefix.'oo_plugin_fieldconfig_form_customs_labels', ['form_id' => $id]);
 			$pWpdb->delete($prefix.'oo_plugin_form_activityconfig', ['form_id' => $id]);
+			if (!empty($mainRowDeleted)) {
+				$deletedCount++;
+			}
 		}
+
+		return $deletedCount;
 	}
 }
