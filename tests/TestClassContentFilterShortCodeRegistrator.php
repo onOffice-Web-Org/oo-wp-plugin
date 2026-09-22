@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use Generator;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCode;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeBuilder;

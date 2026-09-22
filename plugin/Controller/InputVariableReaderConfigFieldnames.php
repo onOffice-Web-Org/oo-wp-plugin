@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function get_option;
 
@@ -136,8 +137,9 @@ class InputVariableReaderConfigFieldnames
 			
 			return $value;
 		}, $rawValue);
-	
-		return $processedValue;
+
+		// this path reads raw input, so strip the forbidden characters before they reach the API
+		return RequestVariablesSanitizer::removeInvalidCharacters($processedValue);
 	}
  
 

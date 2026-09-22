@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Filter;
 
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\SDK\Exception\ApiCallFaultyResponseException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;

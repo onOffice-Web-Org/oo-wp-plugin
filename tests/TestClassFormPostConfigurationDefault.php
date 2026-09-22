@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\WPlugin\Form\FormPostConfigurationDefault;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;

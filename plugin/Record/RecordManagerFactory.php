@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\Record;
 
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\Utility\__String;
 use const ONOFFICE_DI_CONFIG_PATH;

@@ -75,8 +75,8 @@ class TestClassInstaller
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testDeinstall()
 	{

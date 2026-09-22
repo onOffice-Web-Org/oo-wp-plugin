@@ -155,7 +155,7 @@ class RecordManagerReadListViewEstate
 			$result['rangeFieldDisplayModes'] = $this->getStringFieldValuesByFieldRow($fieldRows, 'rangeFieldDisplayMode');
 		}
 
-		return $result;
+		return $result ?? [];
 	}
 
 

@@ -23,11 +23,11 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use WP_UnitTestCase;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\InputModelDB;
