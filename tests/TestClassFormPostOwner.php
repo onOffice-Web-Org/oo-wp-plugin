@@ -806,7 +806,7 @@ class TestClassFormPostOwner
 		$this->prepareOnOfficeTheme();
 		$this->prepareBrokerDetailPage(4711, 'advisor@my-onoffice.com');
 		$this->prepareMockerForUnlinkedAddress(4711);
-		$this->prepareMockerForUserList('advisor@my-onoffice.com', 'advisorUser', 3);
+		$this->prepareMockerForUserByEmail('advisor@my-onoffice.com', 'advisorUser', 3);
 		$this->prepareMockerForAddressCreationSuccessWithSupervisor('advisorUser');
 		$this->prepareMockerForAddressSupervisorRelationSuccess(281, '3');
 		$this->prepareMockerForEstateCreationSuccess();
@@ -885,7 +885,7 @@ class TestClassFormPostOwner
 		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
 
 		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
-		$this->assertStringNotContainsString('"users"', $requests,
+		$this->assertStringNotContainsString('"email"', $requests,
 			'the email must not be consulted once the linked user answered');
 		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER, $requests,
 			'the linked user must become supervisor of the estate');
@@ -943,7 +943,7 @@ class TestClassFormPostOwner
 			'the linked user must become supervisor of the estate without any email');
 		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER, $requests,
 			'the linked user must become supervisor of the address without any email');
-		$this->assertStringNotContainsString('"users"', $requests,
+		$this->assertStringNotContainsString('"email"', $requests,
 			'the email fallback must not run once the linked user answered');
 	}
 
@@ -992,7 +992,7 @@ class TestClassFormPostOwner
 
 		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
 		$this->assertStringContainsString('"adrId:adressen.ID"', $requests, 'the linked user must be asked for');
-		$this->assertStringNotContainsString('"users"', $requests,
+		$this->assertStringNotContainsString('"email"', $requests,
 			'the backend recipient may not be matched against the onOffice users');
 		$this->assertStringNotContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER,
 			$requests, 'no estate supervisor may be set');
@@ -1027,8 +1027,8 @@ class TestClassFormPostOwner
 		$this->prepareOnOfficeTheme();
 		$this->prepareBrokerDetailPage(4711, 'advisor@my-onoffice.com');
 		$this->prepareMockerForUnlinkedAddress(4711);
-		// the only onOffice user carries a different email, so the fallback comes up empty too
-		$this->prepareMockerForUserList('somebody-else@my-onoffice.com', 'otherUser', 9);
+		// no user carries the advisor's email either, so step two comes up empty as well
+		$this->prepareMockerForUnknownEmail('advisor@my-onoffice.com');
 		$this->prepareMockerForAddressCreationSuccess();
 		$this->prepareMockerForEstateCreationSuccess();
 		$this->prepareMockerForRelationSuccess();
@@ -1271,40 +1271,78 @@ class TestClassFormPostOwner
 
 	private function addReadUserByAddressIdResponseToMocker(int $addressId, array $response)
 	{
+		$this->addReadUserResponseToMocker(
+			['adrId:adressen.ID' => [['op' => '=', 'val' => $addressId]]], $response);
+	}
+
+
+	/**
+	 * @param array $filter
+	 * @param array $response
+	 */
+
+	private function addReadUserResponseToMocker(array $filter, array $response)
+	{
 		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'user', '', [
 			'data' => ['Nr', 'Name'],
-			'filter' => ['adrId:adressen.ID' => [['op' => '=', 'val' => $addressId]]],
+			'filter' => $filter,
 			'listlimit' => 1,
 		], null, $response);
 	}
 
 
 	/**
+	 * The user found by the email of the advisor's address - step two of the resolution.
+	 *
 	 * @param string $email
 	 * @param string $userName
 	 * @param int $userId
 	 */
 
-	private function prepareMockerForUserList(string $email, string $userName, int $userId)
+	private function prepareMockerForUserByEmail(string $email, string $userName, int $userId)
 	{
 		$response = [
-			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:get',
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
 			'resourceid' => '',
-			'resourcetype' => 'users',
+			'resourcetype' => 'user',
 			'cacheable' => true,
 			'identifier' => '',
 			'data' => [
 				'meta' => ['cntabsolute' => null],
 				'records' => [
-					['id' => $userId, 'type' => '', 'elements' =>
-						['id' => $userId, 'username' => $userName, 'email' => $email]],
+					['id' => $userId, 'type' => 'user', 'elements' =>
+						['Nr' => $userId, 'Name' => $userName]],
 				],
 			],
 			'status' => ['errorcode' => 0, 'message' => 'OK'],
 		];
 
-		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '',
-			[], null, $response);
+		$this->addReadUserResponseToMocker(['email' => [['op' => '=', 'val' => $email]]], $response);
+	}
+
+
+	/**
+	 * No user carries this email either - step two comes up empty as well.
+	 *
+	 * @param string $email
+	 */
+
+	private function prepareMockerForUnknownEmail(string $email)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'user',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addReadUserResponseToMocker(['email' => [['op' => '=', 'val' => $email]]], $response);
 	}
 
 

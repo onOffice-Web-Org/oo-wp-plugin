@@ -297,46 +297,50 @@ class FormAddressCreator
 	}
 
 	/**
-	 * The 'users' resource has no filter, so every lookup reads the full user list and picks the
-	 * record itself.
+	 * Reads the one user matching $filter.
 	 *
-	 * @param callable $matcher receives one user record, returns true on a match
-	 * @return array the matching record, or [] if none matches
+	 * Deliberately the 'user' resource and not the 'users' list: 'users' returns only a subset of
+	 * an account's users - in the reference account one of seven - so a supervisor that exists
+	 * would silently not be found. 'user' also filters server-side instead of pulling the whole
+	 * list per form submission.
+	 *
+	 * @param array $filter as the API's 'filter' parameter: key field, value filter expressions
+	 * @return array empty, or ['id' => string, 'username' => string]
 	 * @throws ApiClientException
-	 * @throws DependencyException
-	 * @throws NotFoundException
 	 */
-	private function findUser(callable $matcher): array
+	private function readUser(array $filter): array
 	{
 		$pApiClientAction = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'user');
+		$pApiClientAction->setParameters([
+			// this resource names the two representations differently than 'users' does: 'Nr' is
+			// the user id the officer relations want, 'Name' the user name the address field wants
+			'data' => ['Nr', 'Name'],
+			'filter' => $filter,
+			'listlimit' => 1,
+		]);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
 
-		$pApiClientAction->addRequestToQueue();
-		$this->_pSDKWrapper->sendRequests();
+		$records = $pApiClientAction->getResultRecords();
 
-		foreach ($pApiClientAction->getResultRecords() as $user) {
-			if ($matcher($user)) {
-				return $user;
-			}
+		if (empty($records[0]['elements']['Name'])) {
+			return [];
 		}
 
-		return [];
+		return [
+			'id' => (string)$records[0]['id'],
+			'username' => (string)$records[0]['elements']['Name'],
+		];
 	}
 
 	/**
 	 * @param string $userId
 	 * @return string
 	 * @throws ApiClientException
-	 * @throws DependencyException
-	 * @throws NotFoundException
 	 */
 	private function getUserNameById(string $userId): string
 	{
-		$user = $this->findUser(function(array $user) use ($userId): bool {
-			return $user['id'] == $userId && isset($user['elements']['username']);
-		});
-
-		return $user['elements']['username'] ?? '';
+		return $this->readUser(['Nr' => [['op' => '=', 'val' => $userId]]])['username'] ?? '';
 	}
 
 	/**
@@ -357,46 +361,21 @@ class FormAddressCreator
 			return [];
 		}
 
-		$pApiClientAction = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'user');
-		$pApiClientAction->setParameters([
-			// the 'user' resource names the two representations differently than 'users' does:
-			// 'Nr' is the user id the estate field wants, 'Name' the user name the address field
-			// wants
-			'data' => ['Nr', 'Name'],
-			// the field is really called 'adrId:adressen.ID' - the API rejects the plain 'adrId'
-			// with "Unknown field", and in 'data' it is silently dropped instead
-			'filter' => ['adrId:adressen.ID' => [['op' => '=', 'val' => $addressId]]],
-			'listlimit' => 1,
-		]);
-		$pApiClientAction->addRequestToQueue()->sendRequests();
-
-		$records = $pApiClientAction->getResultRecords();
-
-		if (empty($records[0]['elements']['Name'])) {
-			return [];
-		}
-
-		return [
-			'id' => (string)$records[0]['id'],
-			'username' => (string)$records[0]['elements']['Name'],
-		];
+		// the field is really called 'adrId:adressen.ID' - the API rejects the plain 'adrId'
+		// with "Unknown field", and in 'data' it is silently dropped instead
+		return $this->readUser(['adrId:adressen.ID' => [['op' => '=', 'val' => $addressId]]]);
 	}
 
 	/**
-	 * Resolves an onOffice user by email, matched case-insensitively because address and user
-	 * record are maintained separately.
+	 * Resolves an onOffice user by the email of their address record.
 	 *
-	 * Both representations are returned because the two supervisor fields disagree on which one
-	 * they want: the address field 'Benutzer' takes the user name, the estate field 'benutzer'
-	 * the numeric user id - the same asymmetry getSupervisorUsernameByEstateId() works around.
-	 * Callers treat [] as "leave the supervisor alone" rather than as an error.
+	 * Only an inference - address and user record are maintained separately - so it is the
+	 * fallback behind getUserByAddressId(). Callers treat [] as "leave the supervisor alone"
+	 * rather than as an error.
 	 *
 	 * @param string $email
 	 * @return array empty, or ['id' => string, 'username' => string]
 	 * @throws ApiClientException
-	 * @throws DependencyException
-	 * @throws NotFoundException
 	 */
 	public function getUserByEmail(string $email): array
 	{
@@ -404,19 +383,7 @@ class FormAddressCreator
 			return [];
 		}
 
-		$user = $this->findUser(function(array $user) use ($email): bool {
-			return isset($user['elements']['email'], $user['elements']['username']) &&
-				strcasecmp($user['elements']['email'], $email) === 0;
-		});
-
-		if ($user === []) {
-			return [];
-		}
-
-		return [
-			'id' => (string)$user['id'],
-			'username' => (string)$user['elements']['username'],
-		];
+		return $this->readUser(['email' => [['op' => '=', 'val' => $email]]]);
 	}
 
 	/**

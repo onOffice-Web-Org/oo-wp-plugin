@@ -367,11 +367,8 @@ class TestClassFormAddressCreator
 
 	private function addReadUserByAddressIdResponseToSKDWrapper(int $addressId, array $response)
 	{
-		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'user', '', [
-			'data' => ['Nr', 'Name'],
-			'filter' => ['adrId:adressen.ID' => [['op' => '=', 'val' => $addressId]]],
-			'listlimit' => 1,
-		], null, $response);
+		$this->addReadUserResponseToSKDWrapper(
+			['adrId:adressen.ID' => [['op' => '=', 'val' => $addressId]]], $response);
 	}
 
 
@@ -381,11 +378,10 @@ class TestClassFormAddressCreator
 
 	public function testGetUserByEmail()
 	{
-		$this->configureSDKWrapperMockerForUserList();
+		$this->configureSDKWrapperMockerForUserByEmail('advisor@my-onoffice.com', 3, 'testUserName');
 
-		// matched case-insensitively - address and user record are maintained separately
 		$expectation = ['id' => '3', 'username' => 'testUserName'];
-		$this->assertEquals($expectation, $this->_pSubject->getUserByEmail('Advisor@My-onOffice.com'));
+		$this->assertEquals($expectation, $this->_pSubject->getUserByEmail('advisor@my-onoffice.com'));
 	}
 
 
@@ -395,7 +391,7 @@ class TestClassFormAddressCreator
 
 	public function testGetUserByEmailUnknownEmailReturnsEmptyArray()
 	{
-		$this->configureSDKWrapperMockerForUserList();
+		$this->configureSDKWrapperMockerForUnknownEmail('nobody@my-onoffice.com');
 
 		$this->assertEquals([], $this->_pSubject->getUserByEmail('nobody@my-onoffice.com'));
 	}
@@ -405,27 +401,61 @@ class TestClassFormAddressCreator
 	 *
 	 */
 
-	private function configureSDKWrapperMockerForUserList()
+	private function configureSDKWrapperMockerForUserByEmail(string $email, int $userId, string $userName)
 	{
 		$response = [
-			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:get',
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
 			'resourceid' => '',
-			'resourcetype' => 'users',
+			'resourcetype' => 'user',
 			'cacheable' => true,
 			'identifier' => '',
 			'data' => [
 				'meta' => ['cntabsolute' => null],
 				'records' => [
-					['id' => 2, 'type' => '', 'elements' =>
-						['id' => 2, 'username' => 'otherUserName', 'email' => 'other@my-onoffice.com']],
-					['id' => 3, 'type' => '', 'elements' =>
-						['id' => 3, 'username' => 'testUserName', 'email' => 'advisor@my-onoffice.com']],
+					['id' => $userId, 'type' => 'user', 'elements' =>
+						['Nr' => $userId, 'Name' => $userName]],
 				],
 			],
 			'status' => ['errorcode' => 0, 'message' => 'OK'],
 		];
 
-		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '', [], null, $response);
+		$this->addReadUserResponseToSKDWrapper(['email' => [['op' => '=', 'val' => $email]]], $response);
+	}
+
+	/**
+	 * @param string $email
+	 */
+
+	private function configureSDKWrapperMockerForUnknownEmail(string $email)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'user',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addReadUserResponseToSKDWrapper(['email' => [['op' => '=', 'val' => $email]]], $response);
+	}
+
+	/**
+	 * @param array $filter
+	 * @param array $response
+	 */
+
+	private function addReadUserResponseToSKDWrapper(array $filter, array $response)
+	{
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'user', '', [
+			'data' => ['Nr', 'Name'],
+			'filter' => $filter,
+			'listlimit' => 1,
+		], null, $response);
 	}
 
 		/**
@@ -625,21 +655,21 @@ class TestClassFormAddressCreator
 	private function configureSDKWrapperMockerForUserBySupervisorId(int $id)
 	{
 		$response = [
-			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:get',
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
 			'resourceid' => '',
-			'resourcetype' => 'users',
+			'resourcetype' => 'user',
 			'cacheable' => true,
 			'identifier' => '',
 			'data' => [
 				'meta' => ['cntabsolute' => null],
 				'records' => [
-					['id' => $id, 'type' => '', 'elements' => ['username' => 'testUserName']],
+					['id' => $id, 'type' => 'user', 'elements' => ['Nr' => $id, 'Name' => 'testUserName']],
 				],
 			],
 			'status' => ['errorcode' => 0, 'message' => 'OK'],
 		];
 
-		$this->readUserResponseToSKDWrapperWithSupervisorId($response);
+		$this->addReadUserResponseToSKDWrapper(['Nr' => [['op' => '=', 'val' => (string) $id]]], $response);
 	}
 
 	/**
@@ -686,11 +716,6 @@ class TestClassFormAddressCreator
 		];
 
 		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parameters, null, $response);
-	}
-
-	private function readUserResponseToSKDWrapperWithSupervisorId(array $response)
-	{
-		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '', [], null, $response);
 	}
 
 	/**
