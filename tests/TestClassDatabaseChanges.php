@@ -121,7 +121,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(67, $dbversion);
+		$this->assertEquals(DatabaseChanges::MAX_VERSION, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -215,10 +215,11 @@ class TestClassDatabaseChanges
 			->getMock();
 
 		$useBrokerRecipientColumnOutput = [(object)['Field' => 'use_broker_recipient']];
+		$assignBrokerAsSupervisorColumnOutput = [(object)['Field' => 'assign_broker_as_supervisor']];
 
-		$this->_pWPDBMock->expects($this->exactly(11))
+		$this->_pWPDBMock->expects($this->exactly(12))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput, [], $useBrokerRecipientColumnOutput);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput, [], $useBrokerRecipientColumnOutput, $assignBrokerAsSupervisorColumnOutput);
 
 		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
 			->will($this->returnValue(true));
@@ -278,10 +279,11 @@ class TestClassDatabaseChanges
 			->getMock();
 
 		$useBrokerRecipientColumnOutput = [(object)['Field' => 'use_broker_recipient']];
+		$assignBrokerAsSupervisorColumnOutput = [(object)['Field' => 'assign_broker_as_supervisor']];
 
-		$this->_pWPDBMock->expects($this->exactly(9))
+		$this->_pWPDBMock->expects($this->exactly(10))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput, [], $useBrokerRecipientColumnOutput);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput, [], $fieldListViewWithMarkedPropertiesOutput, [], $useBrokerRecipientColumnOutput, $assignBrokerAsSupervisorColumnOutput);
 
 		$this->_pWPDBMock->expects($this->once())->method('delete')
 			->will($this->returnValue(true));
@@ -296,7 +298,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(67, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(68, DatabaseChanges::MAX_VERSION);
 	}
 
 

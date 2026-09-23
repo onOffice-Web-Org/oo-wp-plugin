@@ -39,7 +39,7 @@ use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPPluginChecker;
 use onOffice\WPlugin\WP\WpdbReadCacheProxy;
-use onOffice\WPlugin\Form\AltchaHandler;
+use onOffice\WPlugin\Utility\ThemeSupport;
 use wpdb;
 use function dbDelta;
 use function esc_sql;
@@ -49,7 +49,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 67;
+	const MAX_VERSION = 68;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -191,6 +191,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->addUseBrokerRecipientToForms();
 			case $dbversion <= 66:
 				$this->repairEmptyRadioSettings();
+			case $dbversion <= 67:
+				$this->addAssignBrokerAsSupervisorToForms();
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
 		}
@@ -336,6 +338,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`show_form_as_modal` tinyint(1) NOT NULL DEFAULT '1',
 			`display_unit_area` tinyint(1) NOT NULL DEFAULT '0',
 			`use_broker_recipient` tinyint(1) NOT NULL DEFAULT '0',
+			`assign_broker_as_supervisor` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -1349,7 +1352,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	private function setCaptchaDefaultTrue(): void
 	{
 		// check if onOffice theme
-		if (AltchaHandler::isSupportedTheme()) {
+		if (ThemeSupport::isOnOfficeTheme()) {
 			$prefix = $this->getPrefix();
 			$tableName = $prefix . 'oo_plugin_forms';
 
@@ -1390,6 +1393,23 @@ class DatabaseChanges implements DatabaseChangesInterface
 			if ($this->_pWpOption->getOption($option, false) === '') {
 				$this->_pWpOption->updateOption($option, $defaultValue);
 			}
+		}
+	}
+
+	/**
+	 * Opt-in per form: assign the advisor the owner form is embedded on as supervisor
+	 * ("Betreuer") of both the created estate and the created address. Defaults to off so
+	 * existing installations keep their current behaviour.
+	 */
+
+	private function addAssignBrokerAsSupervisorToForms(): void
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . 'oo_plugin_forms';
+		$columnExists = $this->_pWPDB->get_results("SHOW COLUMNS FROM $tableName LIKE 'assign_broker_as_supervisor'");
+		if (empty($columnExists)) {
+			$sql = "ALTER TABLE $tableName ADD COLUMN assign_broker_as_supervisor tinyint(1) NOT NULL DEFAULT '0'";
+			$this->_pWPDB->query($sql);
 		}
 	}
 }

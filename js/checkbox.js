@@ -49,6 +49,14 @@ onOffice.checkboxAdmin = function() {
 				invert: true
 			}
 		],
+		// The supervisor is the address the request is sent to, so it only exists once the
+		// recipient comes from the address detail page.
+		"input[name=oopluginforms-usebrokerrecipient]": [
+			{
+				element: "input[name=oopluginforms-assignbrokerassupervisor]",
+				invert: false
+			}
+		],
 		"input[name^=oopluginformfieldconfig-hiddenfield]": [
 			{
 				element: "input[name^=oopluginformfieldconfig-required]",
