@@ -69,6 +69,8 @@ class FormAddressCreator
 	 * @param bool $mergeExisting
 	 * @param array $contactType
 	 * @param int|null $estateId
+	 * @param array $supervisor supervisor to set, overriding the one derived from $estateId;
+	 *        empty, or ['id' => string, 'username' => string] as returned by getUserByEmail()
 	 * @return int the new (or updated) address ID
 	 * @throws ApiClientException
 	 * @throws UnknownFieldException
@@ -76,7 +78,8 @@ class FormAddressCreator
 	 * @throws NotFoundException
 	 */
 	public function createOrCompleteAddress(
-		FormData $pFormData, bool $mergeExisting = false, array $contactType = [], int $estateId = null): int
+		FormData $pFormData, bool $mergeExisting = false, array $contactType = [], int $estateId = null,
+		array $supervisor = []): int
 	{
 		$requestParams = $this->getAddressDataForApiCall($pFormData);
 		$requestParams['checkDuplicate'] = $mergeExisting;
@@ -100,7 +103,11 @@ class FormAddressCreator
 		if ( key_exists( 'newsletter', $requestParams ) ) {
 			unset( $requestParams['newsletter'] );
 		}
-		if (!empty($estateId)) {
+		if ($supervisor !== []) {
+			// An explicitly resolved supervisor - the advisor whose detail page the form sits on -
+			// takes precedence over the one inherited from the estate the form was embedded on.
+			$requestParams['Benutzer'] = $supervisor['username'];
+		} elseif (!empty($estateId)) {
 			$userName = $this->getSupervisorUsernameByEstateId($estateId);
 			if (!empty($userName)) {
 				$requestParams['Benutzer'] = $userName;
@@ -115,10 +122,59 @@ class FormAddressCreator
 		$addressId = (int)$result[0]['id'];
 
 		if ($addressId > 0) {
+			$this->assignAddressSupervisor($addressId, $supervisor['id'] ?? '');
 			return $addressId;
 		}
 		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- ApiClientException is for internal API error handling
 		throw new ApiClientException($pApiClientAction);
+	}
+
+
+	/**
+	 * Sets the advisor as supervisor ("Betreuer") of the address via relation.
+	 *
+	 * The 'Benutzer' field set above only ever reaches addresses that are really created: with the
+	 * duplicate check on, the create request carries noOverrideByDuplicate, so an address matched
+	 * as a duplicate keeps the supervisor it already has. The relation works on an existing record
+	 * too, which is the whole point of the option.
+	 *
+	 * Non-fatal by design, like FormPostOwner::assignEstateContactBroker(): a supervisor that
+	 * cannot be assigned must not stop the address, the estate or the email from being created.
+	 *
+	 * @param int $addressId
+	 * @param string $supervisorUserId
+	 */
+	private function assignAddressSupervisor(int $addressId, string $supervisorUserId): void
+	{
+		if ($supervisorUserId === '') {
+			return;
+		}
+
+		// address = parent record, user = child record - see the constant in onOfficeSDK
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'relation');
+		$pApiClientAction->setParameters([
+			'relationtype' => onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER,
+			'parentid' => $addressId,
+			'childid' => $supervisorUserId,
+		]);
+
+		try {
+			$pApiClientAction->addRequestToQueue();
+			$this->_pSDKWrapper->sendRequests();
+
+			if (!$pApiClientAction->getResultStatus()) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostics for a silently skipped optional step
+				error_log('onOffice: could not assign the supervisor relation for address '
+					. $addressId);
+			}
+		} catch (ApiClientException $pException) {
+			// ApiClientException doesn't set a message via getMessage() (its constructor doesn't
+			// pass one to the parent) - the actual API error details are only in __toString().
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostics for a silently skipped optional step
+			error_log('onOffice: could not assign the supervisor relation for address '
+				. $addressId . ': ' . $pException);
+		}
 	}
 
 
@@ -241,30 +297,93 @@ class FormAddressCreator
 	}
 
 	/**
+	 * Reads the one user matching $filter.
+	 *
+	 * Deliberately the 'user' resource and not the 'users' list: 'users' returns only a subset of
+	 * an account's users - in the reference account one of seven - so a supervisor that exists
+	 * would silently not be found. 'user' also filters server-side instead of pulling the whole
+	 * list per form submission.
+	 *
+	 * @param array $filter as the API's 'filter' parameter: key field, value filter expressions
+	 * @return array empty, or ['id' => string, 'username' => string]
+	 * @throws ApiClientException
+	 */
+	private function readUser(array $filter): array
+	{
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'user');
+		$pApiClientAction->setParameters([
+			// this resource names the two representations differently than 'users' does: 'Nr' is
+			// the user id the officer relations want, 'Name' the user name the address field wants
+			'data' => ['Nr', 'Name'],
+			'filter' => $filter,
+			'listlimit' => 1,
+		]);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+
+		$records = $pApiClientAction->getResultRecords();
+
+		if (empty($records[0]['elements']['Name'])) {
+			return [];
+		}
+
+		return [
+			'id' => (string)$records[0]['id'],
+			'username' => (string)$records[0]['elements']['Name'],
+		];
+	}
+
+	/**
 	 * @param string $userId
 	 * @return string
 	 * @throws ApiClientException
-	 * @throws DependencyException
-	 * @throws NotFoundException
 	 */
 	private function getUserNameById(string $userId): string
 	{
-		$pApiClientAction = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
+		return $this->readUser(['Nr' => [['op' => '=', 'val' => $userId]]])['username'] ?? '';
+	}
 
-		$pApiClientAction->addRequestToQueue();
-		$this->_pSDKWrapper->sendRequests();
-		$result = $pApiClientAction->getResultRecords();
-
-		$userResult = array_values(array_filter($result, function($item) use ($userId) {
-			return $item['id'] == $userId && isset($item["elements"]["username"]);
-		}));
-
-		if (!empty($userResult)) {
-			return $userResult[0]["elements"]["username"];
-		} else {
-			return '';
+	/**
+	 * Resolves the onOffice user whose account carries this address record ("adrId", the linked
+	 * user address under Settings > User).
+	 *
+	 * This is the link onOffice itself maintains between a user and the address that represents
+	 * them, so it answers "which user is this address?" authoritatively - unlike getUserByEmail(),
+	 * which only infers it. Callers treat [] as "no user has this address linked".
+	 *
+	 * @param int $addressId
+	 * @return array empty, or ['id' => string, 'username' => string]
+	 * @throws ApiClientException
+	 */
+	public function getUserByAddressId(int $addressId): array
+	{
+		if ($addressId <= 0) {
+			return [];
 		}
+
+		// the field is really called 'adrId:adressen.ID' - the API rejects the plain 'adrId'
+		// with "Unknown field", and in 'data' it is silently dropped instead
+		return $this->readUser(['adrId:adressen.ID' => [['op' => '=', 'val' => $addressId]]]);
+	}
+
+	/**
+	 * Resolves an onOffice user by the email of their address record.
+	 *
+	 * Only an inference - address and user record are maintained separately - so it is the
+	 * fallback behind getUserByAddressId(). Callers treat [] as "leave the supervisor alone"
+	 * rather than as an error.
+	 *
+	 * @param string $email
+	 * @return array empty, or ['id' => string, 'username' => string]
+	 * @throws ApiClientException
+	 */
+	public function getUserByEmail(string $email): array
+	{
+		if ($email === '') {
+			return [];
+		}
+
+		return $this->readUser(['email' => [['op' => '=', 'val' => $email]]]);
 	}
 
 	/**
