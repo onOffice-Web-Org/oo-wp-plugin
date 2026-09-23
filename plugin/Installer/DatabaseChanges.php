@@ -28,11 +28,13 @@ use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use Exception;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\ImageTypes;
+use onOffice\WPlugin\Types\MapProvider;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPPluginChecker;
@@ -187,6 +189,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->setCaptchaDefaultTrue();
 			case $dbversion <= 65:
 				$this->addUseBrokerRecipientToForms();
+			case $dbversion <= 66:
+				$this->repairEmptyRadioSettings();
 			case $dbversion <= 66:
 				$this->addAssignBrokerAsSupervisorToForms();
 			default:
@@ -1368,6 +1372,27 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if (empty($columnExists)) {
 			$sql = "ALTER TABLE $tableName ADD COLUMN use_broker_recipient tinyint(1) NOT NULL DEFAULT '0'";
 			$this->_pWPDB->query($sql);
+		}
+	}
+
+	/**
+	 * Radio settings rendered without their checked state were overwritten with an empty string
+	 * on every save of the settings page (P#174525), so restore their defaults.
+	 */
+	private function repairEmptyRadioSettings(): void
+	{
+		$pWPPluginChecker = new WPPluginChecker;
+		$defaultValues = [
+			'onoffice-settings-title-and-description' => $pWPPluginChecker->isSEOPluginActive() ? 1 : 0,
+			'onoffice-pagination-paginationbyonoffice' => 0,
+			'onoffice-favorization-favButtonLabelFav' => Favorites::KEY_SETTING_FAVORIZE,
+			'onoffice-maps-mapprovider' => MapProvider::PROVIDER_DEFAULT,
+		];
+
+		foreach ($defaultValues as $option => $defaultValue) {
+			if ($this->_pWpOption->getOption($option, false) === '') {
+				$this->_pWpOption->updateOption($option, $defaultValue);
+			}
 		}
 	}
 

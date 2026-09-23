@@ -26,8 +26,10 @@ namespace onOffice\tests;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
+use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Types\ImageTypes;
+use onOffice\WPlugin\Types\MapProvider;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use onOffice\WPlugin\DataView\DataSimilarView;
@@ -119,7 +121,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(DatabaseChanges::MAX_VERSION, $dbversion);
+		$this->assertEquals(67, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -499,5 +501,52 @@ class TestClassDatabaseChanges
 		$this->assertEquals($listFieldsShowPriceOnRequest, $pDetailViewOptions->getListFieldsShowPriceOnRequest());
 
 		return $this->_createQueries;
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::repairEmptyRadioSettings
+	 */
+	public function testRepairEmptyRadioSettings()
+	{
+		global $wpdb;
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+		$this->_pDbChanges->deinstall();
+		$this->_pWpOption->addOption('oo_plugin_db_version', '66');
+		$this->_pWpOption->addOption('onoffice-settings-title-and-description', '');
+		$this->_pWpOption->addOption('onoffice-pagination-paginationbyonoffice', '');
+		$this->_pWpOption->addOption('onoffice-favorization-favButtonLabelFav', '');
+		$this->_pWpOption->addOption('onoffice-maps-mapprovider', '');
+
+		$this->_pDbChanges->install();
+
+		$this->assertSame(0, $this->_pWpOption->getOption('onoffice-settings-title-and-description'));
+		$this->assertSame(0, $this->_pWpOption->getOption('onoffice-pagination-paginationbyonoffice'));
+		$this->assertSame(Favorites::KEY_SETTING_FAVORIZE,
+			$this->_pWpOption->getOption('onoffice-favorization-favButtonLabelFav'));
+		$this->assertSame(MapProvider::PROVIDER_DEFAULT,
+			$this->_pWpOption->getOption('onoffice-maps-mapprovider'));
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::repairEmptyRadioSettings
+	 */
+	public function testRepairEmptyRadioSettingsKeepsConfiguredValues()
+	{
+		global $wpdb;
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+		$this->_pDbChanges->deinstall();
+		$this->_pWpOption->addOption('oo_plugin_db_version', '66');
+		$this->_pWpOption->addOption('onoffice-settings-title-and-description', '1');
+		$this->_pWpOption->addOption('onoffice-pagination-paginationbyonoffice', '1');
+		$this->_pWpOption->addOption('onoffice-favorization-favButtonLabelFav', '1');
+		$this->_pWpOption->addOption('onoffice-maps-mapprovider', MapProvider::GOOGLE_MAPS);
+
+		$this->_pDbChanges->install();
+
+		$this->assertSame('1', $this->_pWpOption->getOption('onoffice-settings-title-and-description'));
+		$this->assertSame('1', $this->_pWpOption->getOption('onoffice-pagination-paginationbyonoffice'));
+		$this->assertSame('1', $this->_pWpOption->getOption('onoffice-favorization-favButtonLabelFav'));
+		$this->assertSame(MapProvider::GOOGLE_MAPS,
+			$this->_pWpOption->getOption('onoffice-maps-mapprovider'));
 	}
 }

@@ -89,4 +89,38 @@ class TestClassInputFieldRadioRenderer
 		                     . '<label for="labelradio_1bkonradzusetestRenderer">Konrad Zuse</label> '
 		                     . '<p class="description">Konrad Zuse</p><br>', $output );
 	}
+
+	/**
+	 * PHP casts numeric array keys to int, the checked value is a string.
+	 */
+	public function testRenderWithNumericKeys()
+	{
+		$pSubject = new InputFieldRadioRenderer('testRenderer', []);
+		$pSubject->setValue([0 => 'First choice', 1 => 'Second choice']);
+		$pSubject->setCheckedValue('1');
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertHtmlEquals( '<input type="radio" name="testRenderer" value="0" id="labelradio_1b0testRenderer">'
+		                     . '<label for="labelradio_1b0testRenderer">First choice</label> '
+		                     . '<input type="radio" name="testRenderer" value="1" checked="checked" id="labelradio_1b1testRenderer">'
+		                     . '<label for="labelradio_1b1testRenderer">Second choice</label> ', $output );
+	}
+
+	/**
+	 * Numeric keys combined with the array form of the checked value.
+	 */
+	public function testRenderWithNumericKeysAndArrayCheckedValue()
+	{
+		$pSubject = new InputFieldRadioRenderer('testRenderer', []);
+		$pSubject->setValue([0 => 'First choice', 1 => 'Second choice']);
+		$pSubject->setCheckedValue([0]);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertHtmlEquals( '<input type="radio" name="testRenderer" value="0" checked="checked" id="labelradio_1b0testRenderer">'
+		                     . '<label for="labelradio_1b0testRenderer">First choice</label> '
+		                     . '<input type="radio" name="testRenderer" value="1" id="labelradio_1b1testRenderer">'
+		                     . '<label for="labelradio_1b1testRenderer">Second choice</label> ', $output );
+	}
 }
