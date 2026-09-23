@@ -739,7 +739,7 @@ class TestClassFormPostOwner
 
 		$this->prepareOnOfficeTheme();
 		$this->prepareBrokerDetailPage(4711, 'advisor@my-onoffice.com');
-		$this->prepareMockerForUserList('advisor@my-onoffice.com', 'advisorUser', 3);
+		$this->prepareMockerForLinkedUser(4711, 3, 'advisorUser');
 		$this->prepareMockerForAddressCreationSuccessWithSupervisor('advisorUser');
 		$this->prepareMockerForAddressSupervisorRelationSuccess(281, '3');
 		$this->prepareMockerForEstateCreationSuccess();
@@ -778,6 +778,282 @@ class TestClassFormPostOwner
 		$this->assertCount(1, $estateCreateRequests);
 		$this->assertStringNotContainsString('benutzer', $estateCreateRequests[0],
 			'the estate must be created without the supervisor field');
+	}
+
+
+	/**
+	 * Accounts that don't maintain the linked address record fall back to matching the advisor's
+	 * email - the address detail page's email against the onOffice user's.
+	 */
+
+	public function testInitialCheckFallsBackToEmailWhenNoUserIsLinked()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'ArtDaten' => 'Eigentümer',
+			'Telefon1' => '0815 234567890',
+			'objektart' => 'haus',
+			'objekttyp' => 'stadthaus',
+			'energieausweistyp' => 'Bedarfsausweis',
+			'wohnflaeche' => 800,
+			'kabel_sat_tv' => 'y',
+			'message' => 'Hello! I am interested in selling my property!',
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
+		];
+
+		$this->prepareOnOfficeTheme();
+		$this->prepareBrokerDetailPage(4711, 'advisor@my-onoffice.com');
+		$this->prepareMockerForUnlinkedAddress(4711);
+		$this->prepareMockerForUserList('advisor@my-onoffice.com', 'advisorUser', 3);
+		$this->prepareMockerForAddressCreationSuccessWithSupervisor('advisorUser');
+		$this->prepareMockerForAddressSupervisorRelationSuccess(281, '3');
+		$this->prepareMockerForEstateCreationSuccess();
+		$this->prepareMockerForEstateSupervisorSuccess(5590, '3');
+		$this->prepareMockerForRelationSuccess();
+		$this->prepareMockerForContactBrokerRelationSuccess(4711);
+		$this->prepareMockerForContactBrokerAddressIds([4711]);
+		$this->prepareMockerForContactSuccess('advisor@my-onoffice.com');
+
+		$pDataFormConfiguration = $this->getDataFormConfiguration();
+		$pDataFormConfiguration->setUseBrokerRecipient(true);
+		$pDataFormConfiguration->setAssignBrokerAsSupervisor(true);
+
+		$pFormPostOwner = $this->_pContainer->make(FormPostOwner::class);
+		$pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
+		$pFormData = $pFormPostOwner->getFormDataInstance('test', 5);
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+
+		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
+		$this->assertStringContainsString('"adrId:adressen.ID"', $requests,
+			'the linked address record must be asked for first');
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER, $requests,
+			'the advisor found by email must still become supervisor of the estate');
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER, $requests,
+			'the advisor found by email must still become supervisor of the address');
+		$this->assertStringContainsString('"Benutzer":"advisorUser"', $requests,
+			'the address supervisor field must be written as well');
+	}
+
+
+	/**
+	 * The advisor's address does have an email here, so the fallback would be allowed to run -
+	 * but the linked user already answered, so a user whose account email differs from the
+	 * address' one is still the one that gets set. The user list is deliberately not mocked: if
+	 * the email were consulted at all, the unmocked request would fail this test.
+	 */
+
+	public function testInitialCheckPrefersLinkedUserOverDivergingEmail()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'ArtDaten' => 'Eigentümer',
+			'Telefon1' => '0815 234567890',
+			'objektart' => 'haus',
+			'objekttyp' => 'stadthaus',
+			'energieausweistyp' => 'Bedarfsausweis',
+			'wohnflaeche' => 800,
+			'kabel_sat_tv' => 'y',
+			'message' => 'Hello! I am interested in selling my property!',
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
+		];
+
+		$this->prepareOnOfficeTheme();
+		$this->prepareBrokerDetailPage(4711, 'office@my-onoffice.com');
+		$this->prepareMockerForLinkedUser(4711, 3, 'advisorUser');
+		$this->prepareMockerForAddressCreationSuccessWithSupervisor('advisorUser');
+		$this->prepareMockerForAddressSupervisorRelationSuccess(281, '3');
+		$this->prepareMockerForEstateCreationSuccess();
+		$this->prepareMockerForEstateSupervisorSuccess(5590, '3');
+		$this->prepareMockerForRelationSuccess();
+		$this->prepareMockerForContactBrokerRelationSuccess(4711);
+		$this->prepareMockerForContactBrokerAddressIds([4711]);
+		$this->prepareMockerForContactSuccess('office@my-onoffice.com');
+
+		$pDataFormConfiguration = $this->getDataFormConfiguration();
+		$pDataFormConfiguration->setUseBrokerRecipient(true);
+		$pDataFormConfiguration->setAssignBrokerAsSupervisor(true);
+
+		$pFormPostOwner = $this->_pContainer->make(FormPostOwner::class);
+		$pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
+		$pFormData = $pFormPostOwner->getFormDataInstance('test', 5);
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+
+		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
+		$this->assertStringNotContainsString('"users"', $requests,
+			'the email must not be consulted once the linked user answered');
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER, $requests,
+			'the linked user must become supervisor of the estate');
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER, $requests,
+			'the linked user must become supervisor of the address');
+	}
+
+
+	/**
+	 * The linked user record answers on its own, so the advisor's address doesn't need an email.
+	 * The lead then goes to the recipient configured in the backend, but the supervisor is still
+	 * the user linked to the address the form sits on.
+	 */
+
+	public function testInitialCheckAssignsLinkedSupervisorWithoutBrokerEmail()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'ArtDaten' => 'Eigentümer',
+			'Telefon1' => '0815 234567890',
+			'objektart' => 'haus',
+			'objekttyp' => 'stadthaus',
+			'energieausweistyp' => 'Bedarfsausweis',
+			'wohnflaeche' => 800,
+			'kabel_sat_tv' => 'y',
+			'message' => 'Hello! I am interested in selling my property!',
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
+		];
+
+		$this->prepareOnOfficeTheme();
+		$this->prepareBrokerDetailPage(4711);
+		$this->prepareMockerForLinkedUser(4711, 3, 'advisorUser');
+		$this->prepareMockerForAddressCreationSuccessWithSupervisor('advisorUser');
+		$this->prepareMockerForAddressSupervisorRelationSuccess(281, '3');
+		$this->prepareMockerForEstateCreationSuccess();
+		$this->prepareMockerForEstateSupervisorSuccess(5590, '3');
+		$this->prepareMockerForRelationSuccess();
+		$this->prepareMockerForFindAddressIdByEmailNoMatch('test@my-onoffice.com');
+		$this->prepareMockerForContactSuccess();
+
+		$pDataFormConfiguration = $this->getDataFormConfiguration();
+		$pDataFormConfiguration->setUseBrokerRecipient(true);
+		$pDataFormConfiguration->setAssignBrokerAsSupervisor(true);
+
+		$pFormPostOwner = $this->_pContainer->make(FormPostOwner::class);
+		$pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
+		$pFormData = $pFormPostOwner->getFormDataInstance('test', 5);
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+
+		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER, $requests,
+			'the linked user must become supervisor of the estate without any email');
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER, $requests,
+			'the linked user must become supervisor of the address without any email');
+		$this->assertStringNotContainsString('"users"', $requests,
+			'the email fallback must not run once the linked user answered');
+	}
+
+
+	/**
+	 * Without an email on the advisor's address, $recipient is the address configured in the
+	 * backend - matching that against the users would pick a supervisor that has nothing to do
+	 * with the page the form sits on, so the fallback has to stay out of it.
+	 */
+
+	public function testInitialCheckWithoutBrokerEmailDoesNotMatchTheBackendRecipient()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'ArtDaten' => 'Eigentümer',
+			'Telefon1' => '0815 234567890',
+			'objektart' => 'haus',
+			'objekttyp' => 'stadthaus',
+			'energieausweistyp' => 'Bedarfsausweis',
+			'wohnflaeche' => 800,
+			'kabel_sat_tv' => 'y',
+			'message' => 'Hello! I am interested in selling my property!',
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
+		];
+
+		$this->prepareOnOfficeTheme();
+		$this->prepareBrokerDetailPage(4711);
+		$this->prepareMockerForUnlinkedAddress(4711);
+		$this->prepareMockerForAddressCreationSuccess();
+		$this->prepareMockerForEstateCreationSuccess();
+		$this->prepareMockerForRelationSuccess();
+		$this->prepareMockerForFindAddressIdByEmailNoMatch('test@my-onoffice.com');
+		$this->prepareMockerForContactSuccess();
+
+		$pDataFormConfiguration = $this->getDataFormConfiguration();
+		$pDataFormConfiguration->setUseBrokerRecipient(true);
+		$pDataFormConfiguration->setAssignBrokerAsSupervisor(true);
+
+		$pFormPostOwner = $this->_pContainer->make(FormPostOwner::class);
+		$pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
+		$pFormData = $pFormPostOwner->getFormDataInstance('test', 5);
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+
+		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
+		$this->assertStringContainsString('"adrId:adressen.ID"', $requests, 'the linked user must be asked for');
+		$this->assertStringNotContainsString('"users"', $requests,
+			'the backend recipient may not be matched against the onOffice users');
+		$this->assertStringNotContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER,
+			$requests, 'no estate supervisor may be set');
+		$this->assertStringNotContainsString(onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER,
+			$requests, 'no address supervisor may be set');
+	}
+
+
+	/**
+	 * The third and last step of the resolution: neither a linked address record nor a matching
+	 * email. Then no supervisor is written at all and onOffice assigns it itself - the form must
+	 * go through unchanged.
+	 */
+
+	public function testInitialCheckWithoutAnyMatchAssignsNoSupervisor()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'ArtDaten' => 'Eigentümer',
+			'Telefon1' => '0815 234567890',
+			'objektart' => 'haus',
+			'objekttyp' => 'stadthaus',
+			'energieausweistyp' => 'Bedarfsausweis',
+			'wohnflaeche' => 800,
+			'kabel_sat_tv' => 'y',
+			'message' => 'Hello! I am interested in selling my property!',
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
+		];
+
+		$this->prepareOnOfficeTheme();
+		$this->prepareBrokerDetailPage(4711, 'advisor@my-onoffice.com');
+		$this->prepareMockerForUnlinkedAddress(4711);
+		// the only onOffice user carries a different email, so the fallback comes up empty too
+		$this->prepareMockerForUserList('somebody-else@my-onoffice.com', 'otherUser', 9);
+		$this->prepareMockerForAddressCreationSuccess();
+		$this->prepareMockerForEstateCreationSuccess();
+		$this->prepareMockerForRelationSuccess();
+		$this->prepareMockerForContactBrokerRelationSuccess(4711);
+		$this->prepareMockerForContactBrokerAddressIds([4711]);
+		$this->prepareMockerForContactSuccess('advisor@my-onoffice.com');
+
+		$pDataFormConfiguration = $this->getDataFormConfiguration();
+		$pDataFormConfiguration->setUseBrokerRecipient(true);
+		$pDataFormConfiguration->setAssignBrokerAsSupervisor(true);
+
+		$pFormPostOwner = $this->_pContainer->make(FormPostOwner::class);
+		$pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
+		$pFormData = $pFormPostOwner->getFormDataInstance('test', 5);
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+
+		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
+		$this->assertStringContainsString('"adrId:adressen.ID"', $requests, 'both steps must have been tried');
+		$this->assertStringNotContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER,
+			$requests, 'no estate supervisor may be set when nothing resolved');
+		$this->assertStringNotContainsString(onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER,
+			$requests, 'no address supervisor may be set when nothing resolved');
+		$this->assertStringNotContainsString('Benutzer', $requests,
+			'the address supervisor field may not be written either');
 	}
 
 
@@ -857,7 +1133,7 @@ class TestClassFormPostOwner
 
 		$this->prepareOnOfficeTheme();
 		$this->prepareBrokerDetailPage(4711, 'advisor@my-onoffice.com');
-		$this->prepareMockerForUserList('advisor@my-onoffice.com', 'advisorUser', 3);
+		$this->prepareMockerForLinkedUser(4711, 3, 'advisorUser');
 		$this->prepareMockerForAddressCreationSuccessWithSupervisor('advisorUser');
 		$this->prepareMockerForAddressSupervisorRelationSuccess(281, '3');
 		$this->prepareMockerForEstateCreationSuccess();
@@ -900,14 +1176,13 @@ class TestClassFormPostOwner
 
 	/**
 	 * The advisor is only identifiable because the form sits on their address detail page, so
-	 * that page has to exist (option), be the one requested (query var) and resolve to an
-	 * address carrying an email.
+	 * that page has to exist (option) and be the one requested (query var).
 	 *
 	 * @param int $addressId
-	 * @param string $email
+	 * @param string $email empty for an advisor address without an email
 	 */
 
-	private function prepareBrokerDetailPage(int $addressId, string $email)
+	private function prepareBrokerDetailPage(int $addressId, string $email = '')
 	{
 		$pDataAddressDetailView = new DataAddressDetailView();
 		$pDataAddressDetailView->setPageId(13);
@@ -920,7 +1195,9 @@ class TestClassFormPostOwner
 			->disableOriginalConstructor()
 			->onlyMethods(['loadAddressesById', 'getAddressById'])
 			->getMock();
-		$pAddressList->method('getAddressById')->willReturn(['Email' => $email]);
+		// an empty email means the advisor's address carries none - the detail page is still the
+		// one the form sits on, only the lead goes to the recipient configured in the backend
+		$pAddressList->method('getAddressById')->willReturn($email === '' ? [] : ['Email' => $email]);
 
 		$pAddressListFactory = $this->getMockBuilder(AddressListFactory::class)
 			->disableOriginalConstructor()
@@ -929,6 +1206,76 @@ class TestClassFormPostOwner
 		$pAddressListFactory->method('createAddressDetail')->willReturn($pAddressList);
 
 		$this->_pContainer->set(AddressListFactory::class, $pAddressListFactory);
+	}
+
+
+	/**
+	 * The user whose account carries the address record - the primary supervisor lookup.
+	 *
+	 * @param int $addressId
+	 * @param int $userId
+	 * @param string $userName
+	 */
+
+	private function prepareMockerForLinkedUser(int $addressId, int $userId, string $userName)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'user',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => $userId, 'type' => 'user', 'elements' =>
+						['Nr' => $userId, 'Name' => $userName]],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addReadUserByAddressIdResponseToMocker($addressId, $response);
+	}
+
+
+	/**
+	 * No user has this address record linked to their account.
+	 *
+	 * @param int $addressId
+	 */
+
+	private function prepareMockerForUnlinkedAddress(int $addressId)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'user',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addReadUserByAddressIdResponseToMocker($addressId, $response);
+	}
+
+
+	/**
+	 * @param int $addressId
+	 * @param array $response
+	 */
+
+	private function addReadUserByAddressIdResponseToMocker(int $addressId, array $response)
+	{
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'user', '', [
+			'data' => ['Nr', 'Name'],
+			'filter' => ['adrId:adressen.ID' => [['op' => '=', 'val' => $addressId]]],
+			'listlimit' => 1,
+		], null, $response);
 	}
 
 

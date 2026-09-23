@@ -274,6 +274,108 @@ class TestClassFormAddressCreator
 
 
 	/**
+	 * The primary lookup: the user whose account has this address record linked to it.
+	 */
+
+	public function testGetUserByAddressId()
+	{
+		$this->configureSDKWrapperMockerForLinkedUser(4711, 3, 'testUserName');
+
+		$expectation = ['id' => '3', 'username' => 'testUserName'];
+		$this->assertEquals($expectation, $this->_pSubject->getUserByAddressId(4711));
+	}
+
+
+	/**
+	 * No user carries this address - the caller falls back to the email match.
+	 */
+
+	public function testGetUserByAddressIdWithoutLinkedUserReturnsEmptyArray()
+	{
+		$this->configureSDKWrapperMockerForLinkedUser(4711, 3, 'testUserName');
+		$this->configureSDKWrapperMockerForUnlinkedAddress(4712);
+
+		$this->assertEquals([], $this->_pSubject->getUserByAddressId(4712));
+	}
+
+
+	/**
+	 * No request is worth sending for an address that doesn't exist.
+	 */
+
+	public function testGetUserByAddressIdWithoutAddressIdReturnsEmptyArray()
+	{
+		$this->assertEquals([], $this->_pSubject->getUserByAddressId(0));
+	}
+
+
+	/**
+	 * @param int $addressId
+	 * @param int $userId
+	 * @param string $userName
+	 */
+
+	private function configureSDKWrapperMockerForLinkedUser(int $addressId, int $userId, string $userName)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'user',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => $userId, 'type' => 'user', 'elements' =>
+						['Nr' => $userId, 'Name' => $userName]],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addReadUserByAddressIdResponseToSKDWrapper($addressId, $response);
+	}
+
+
+	/**
+	 * @param int $addressId
+	 */
+
+	private function configureSDKWrapperMockerForUnlinkedAddress(int $addressId)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'user',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addReadUserByAddressIdResponseToSKDWrapper($addressId, $response);
+	}
+
+
+	/**
+	 * @param int $addressId
+	 * @param array $response
+	 */
+
+	private function addReadUserByAddressIdResponseToSKDWrapper(int $addressId, array $response)
+	{
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'user', '', [
+			'data' => ['Nr', 'Name'],
+			'filter' => ['adrId:adressen.ID' => [['op' => '=', 'val' => $addressId]]],
+			'listlimit' => 1,
+		], null, $response);
+	}
+
+
+	/**
 	 *
 	 */
 

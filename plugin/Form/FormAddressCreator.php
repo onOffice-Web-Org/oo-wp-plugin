@@ -340,6 +340,50 @@ class FormAddressCreator
 	}
 
 	/**
+	 * Resolves the onOffice user whose account carries this address record ("adrId", the linked
+	 * user address under Settings > User).
+	 *
+	 * This is the link onOffice itself maintains between a user and the address that represents
+	 * them, so it answers "which user is this address?" authoritatively - unlike getUserByEmail(),
+	 * which only infers it. Callers treat [] as "no user has this address linked".
+	 *
+	 * @param int $addressId
+	 * @return array empty, or ['id' => string, 'username' => string]
+	 * @throws ApiClientException
+	 */
+	public function getUserByAddressId(int $addressId): array
+	{
+		if ($addressId <= 0) {
+			return [];
+		}
+
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'user');
+		$pApiClientAction->setParameters([
+			// the 'user' resource names the two representations differently than 'users' does:
+			// 'Nr' is the user id the estate field wants, 'Name' the user name the address field
+			// wants
+			'data' => ['Nr', 'Name'],
+			// the field is really called 'adrId:adressen.ID' - the API rejects the plain 'adrId'
+			// with "Unknown field", and in 'data' it is silently dropped instead
+			'filter' => ['adrId:adressen.ID' => [['op' => '=', 'val' => $addressId]]],
+			'listlimit' => 1,
+		]);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+
+		$records = $pApiClientAction->getResultRecords();
+
+		if (empty($records[0]['elements']['Name'])) {
+			return [];
+		}
+
+		return [
+			'id' => (string)$records[0]['id'],
+			'username' => (string)$records[0]['elements']['Name'],
+		];
+	}
+
+	/**
 	 * Resolves an onOffice user by email, matched case-insensitively because address and user
 	 * record are maintained separately.
 	 *
