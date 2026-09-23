@@ -191,7 +191,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$this->addUseBrokerRecipientToForms();
 			case $dbversion <= 66:
 				$this->repairEmptyRadioSettings();
-			case $dbversion <= 66:
+			case $dbversion <= 67:
 				$this->addAssignBrokerAsSupervisorToForms();
 			default:
 				$dbversion = DatabaseChanges::MAX_VERSION;
