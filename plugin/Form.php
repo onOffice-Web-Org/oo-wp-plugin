@@ -38,6 +38,7 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionCountryValuesForSearchCriteria;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
@@ -120,6 +121,9 @@ class Form
 		if ($type === self::TYPE_INTEREST || $type === self::TYPE_APPLICANT_SEARCH) {
 			$pFieldBuilderShort->addFieldSupervisorForSearchCriteria($pFieldsCollection);
 		}
+
+		$this->_pContainer->get(FieldsCollectionCountryValuesForSearchCriteria::class)
+			->addCountryValues($pFieldsCollection);
 
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();
