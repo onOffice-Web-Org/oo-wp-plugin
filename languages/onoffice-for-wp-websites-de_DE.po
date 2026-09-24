@@ -1913,3 +1913,9 @@ msgstr "Bis"
 
 msgid "Display area units in labels (m²)"
 msgstr "Flächenangaben in Beschriftungen anzeigen (m²)"
+
+msgid "Also set contact person as supervisor"
+msgstr "Ansprechpartner zusätzlich als Betreuer eintragen"
+
+msgid "Assigns the contact person of this page not only as the contact, but also as the supervisor for both the created property and the created contact."
+msgstr "Trägt den Ansprechpartner dieser Seite nicht nur als Kontaktperson, sondern auch als Betreuer für die neu erstellte Immobilie und den neuen Kontakt ein."

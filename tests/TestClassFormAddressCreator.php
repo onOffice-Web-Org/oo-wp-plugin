@@ -218,6 +218,246 @@ class TestClassFormAddressCreator
 		$this->assertEquals(1, $result);
 	}
 
+
+	/**
+	 * An explicitly resolved supervisor - the advisor whose detail page the form sits on - is
+	 * used as is. Neither the estate read nor the user lookup is mocked on purpose: if the
+	 * estate's supervisor were still consulted, the unmocked request would fail the test.
+	 */
+
+	public function testCreateOrCompleteAddressWithExplicitSupervisor()
+	{
+		$this->configureSDKWrapperMockerForAddressCreationWithSupervisor(1);
+		$this->configureSDKWrapperMockerForSupervisorRelation(1, '3');
+
+		$pFormData = $this->createFormData();
+		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, ['Admin'], 1,
+			['id' => '3', 'username' => 'testUserName']);
+		$this->assertEquals(1, $result);
+	}
+
+
+	/**
+	 * The regression the supervisor relation exists for: with the duplicate check on, the create
+	 * request carries noOverrideByDuplicate, so the 'Benutzer' field never reaches an address that
+	 * was matched as a duplicate. The relation has to be created regardless - an unmocked request
+	 * would fail the test.
+	 */
+
+	public function testCreateOrCompleteAddressAssignsSupervisorRelationOnDuplicate()
+	{
+		$this->configureSDKWrapperMockerForDuplicateAddressWithSupervisor(1);
+		$this->configureSDKWrapperMockerForSupervisorRelation(1, '3');
+
+		$pFormData = $this->createFormData();
+		$result = $this->_pSubject->createOrCompleteAddress($pFormData, true, ['Admin'], 1,
+			['id' => '3', 'username' => 'testUserName']);
+		$this->assertEquals(1, $result);
+	}
+
+
+	/**
+	 * A supervisor that cannot be assigned must not stop the address from being created, so the
+	 * failing relation is swallowed - the address id is still returned.
+	 */
+
+	public function testCreateOrCompleteAddressSurvivesFailingSupervisorRelation()
+	{
+		$this->configureSDKWrapperMockerForAddressCreationWithSupervisor(1);
+		$this->configureSDKWrapperMockerForFailingSupervisorRelation(1, '3');
+
+		$pFormData = $this->createFormData();
+		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, ['Admin'], 1,
+			['id' => '3', 'username' => 'testUserName']);
+		$this->assertEquals(1, $result);
+	}
+
+
+	/**
+	 * The primary lookup: the user whose account has this address record linked to it.
+	 */
+
+	public function testGetUserByAddressId()
+	{
+		$this->configureSDKWrapperMockerForLinkedUser(4711, 3, 'testUserName');
+
+		$expectation = ['id' => '3', 'username' => 'testUserName'];
+		$this->assertEquals($expectation, $this->_pSubject->getUserByAddressId(4711));
+	}
+
+
+	/**
+	 * No user carries this address - the caller falls back to the email match.
+	 */
+
+	public function testGetUserByAddressIdWithoutLinkedUserReturnsEmptyArray()
+	{
+		$this->configureSDKWrapperMockerForLinkedUser(4711, 3, 'testUserName');
+		$this->configureSDKWrapperMockerForUnlinkedAddress(4712);
+
+		$this->assertEquals([], $this->_pSubject->getUserByAddressId(4712));
+	}
+
+
+	/**
+	 * No request is worth sending for an address that doesn't exist.
+	 */
+
+	public function testGetUserByAddressIdWithoutAddressIdReturnsEmptyArray()
+	{
+		$this->assertEquals([], $this->_pSubject->getUserByAddressId(0));
+	}
+
+
+	/**
+	 * @param int $addressId
+	 * @param int $userId
+	 * @param string $userName
+	 */
+
+	private function configureSDKWrapperMockerForLinkedUser(int $addressId, int $userId, string $userName)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'user',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => $userId, 'type' => 'user', 'elements' =>
+						['Nr' => $userId, 'Name' => $userName]],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addReadUserByAddressIdResponseToSKDWrapper($addressId, $response);
+	}
+
+
+	/**
+	 * @param int $addressId
+	 */
+
+	private function configureSDKWrapperMockerForUnlinkedAddress(int $addressId)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'user',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addReadUserByAddressIdResponseToSKDWrapper($addressId, $response);
+	}
+
+
+	/**
+	 * @param int $addressId
+	 * @param array $response
+	 */
+
+	private function addReadUserByAddressIdResponseToSKDWrapper(int $addressId, array $response)
+	{
+		$this->addReadUserResponseToSKDWrapper(
+			['adrId:adressen.ID' => [['op' => '=', 'val' => $addressId]]], $response);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetUserByEmail()
+	{
+		$this->configureSDKWrapperMockerForUserByEmail('advisor@my-onoffice.com', 3, 'testUserName');
+
+		$expectation = ['id' => '3', 'username' => 'testUserName'];
+		$this->assertEquals($expectation, $this->_pSubject->getUserByEmail('advisor@my-onoffice.com'));
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetUserByEmailUnknownEmailReturnsEmptyArray()
+	{
+		$this->configureSDKWrapperMockerForUnknownEmail('nobody@my-onoffice.com');
+
+		$this->assertEquals([], $this->_pSubject->getUserByEmail('nobody@my-onoffice.com'));
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function configureSDKWrapperMockerForUserByEmail(string $email, int $userId, string $userName)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'user',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => $userId, 'type' => 'user', 'elements' =>
+						['Nr' => $userId, 'Name' => $userName]],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addReadUserResponseToSKDWrapper(['email' => [['op' => '=', 'val' => $email]]], $response);
+	}
+
+	/**
+	 * @param string $email
+	 */
+
+	private function configureSDKWrapperMockerForUnknownEmail(string $email)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'user',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addReadUserResponseToSKDWrapper(['email' => [['op' => '=', 'val' => $email]]], $response);
+	}
+
+	/**
+	 * @param array $filter
+	 * @param array $response
+	 */
+
+	private function addReadUserResponseToSKDWrapper(array $filter, array $response)
+	{
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'user', '', [
+			'data' => ['Nr', 'Name'],
+			'filter' => $filter,
+			'listlimit' => 1,
+		], null, $response);
+	}
+
 		/**
 	 *
 	 */
@@ -292,6 +532,99 @@ class TestClassFormAddressCreator
 	}
 
 	/**
+	 * Same address creation, but with the duplicate check on - the parameters the mocker matches
+	 * on then carry noOverrideByDuplicate.
+	 *
+	 * @param int $id
+	 */
+
+	private function configureSDKWrapperMockerForDuplicateAddressWithSupervisor(int $id)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
+			'resourceid' => '',
+			'resourcetype' => 'address',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => $id, 'type' => 'address', 'elements' => []],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'address', '', [
+			'testaddressfield1varchar' => 'testValue',
+			'testaddressfield1multiselect' => ['hut','tut'],
+			'checkDuplicate' => true,
+			'noOverrideByDuplicate' => true,
+			'ArtDaten' => ['Admin'],
+			'Benutzer' => 'testUserName',
+		], null, $response);
+	}
+
+	/**
+	 * @param int $addressId
+	 * @param string $userId
+	 */
+
+	private function configureSDKWrapperMockerForSupervisorRelation(int $addressId, string $userId)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
+			'resourceid' => '',
+			'resourcetype' => 'relation',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addSupervisorRelationResponseToSKDWrapper($addressId, $userId, $response);
+	}
+
+	/**
+	 * @param int $addressId
+	 * @param string $userId
+	 */
+
+	private function configureSDKWrapperMockerForFailingSupervisorRelation(int $addressId, string $userId)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
+			'resourceid' => '',
+			'resourcetype' => 'relation',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [],
+			'status' => ['errorcode' => 500, 'message' => 'Internal Server Error'],
+		];
+
+		$this->addSupervisorRelationResponseToSKDWrapper($addressId, $userId, $response);
+	}
+
+	/**
+	 * @param int $addressId parent record
+	 * @param string $userId child record
+	 * @param array $response
+	 */
+
+	private function addSupervisorRelationResponseToSKDWrapper(int $addressId, string $userId,
+		array $response)
+	{
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'relation', '', [
+			'relationtype' => onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER,
+			'parentid' => $addressId,
+			'childid' => $userId,
+		], null, $response);
+	}
+
+	/**
 	 *
 	 */
 
@@ -322,21 +655,21 @@ class TestClassFormAddressCreator
 	private function configureSDKWrapperMockerForUserBySupervisorId(int $id)
 	{
 		$response = [
-			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:get',
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
 			'resourceid' => '',
-			'resourcetype' => 'users',
+			'resourcetype' => 'user',
 			'cacheable' => true,
 			'identifier' => '',
 			'data' => [
 				'meta' => ['cntabsolute' => null],
 				'records' => [
-					['id' => $id, 'type' => '', 'elements' => ['username' => 'testUserName']],
+					['id' => $id, 'type' => 'user', 'elements' => ['Nr' => $id, 'Name' => 'testUserName']],
 				],
 			],
 			'status' => ['errorcode' => 0, 'message' => 'OK'],
 		];
 
-		$this->readUserResponseToSKDWrapperWithSupervisorId($response);
+		$this->addReadUserResponseToSKDWrapper(['Nr' => [['op' => '=', 'val' => (string) $id]]], $response);
 	}
 
 	/**
@@ -383,11 +716,6 @@ class TestClassFormAddressCreator
 		];
 
 		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parameters, null, $response);
-	}
-
-	private function readUserResponseToSKDWrapperWithSupervisorId(array $response)
-	{
-		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '', [], null, $response);
 	}
 
 	/**
