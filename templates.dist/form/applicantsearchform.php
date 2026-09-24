@@ -70,16 +70,12 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		foreach ($pForm->getUmkreisFields() as $key => $values) {
 
 			if (in_array($values['type'], $selectTypes)) {
-				$permittedValues = $values['permittedvalues'];
-
-				echo '<select class="custom-single-select" size="1" name="'.esc_attr($key).'">';
-				echo '<option value="">'.esc_html('not specified').'</option>';
-
-				foreach ( $permittedValues as $countryCode => $countryName ) {
-					echo '<option value="'.esc_attr($countryCode).'">'
-						.esc_html($countryName).'</option>';
-				}
-
+				// Same markup as renderFieldEstateSearch() builds for the country field, so
+				// onoffice-custom-select.js turns it into a Tom Select like every other single
+				// select of the form.
+				echo '<label for="'.esc_attr($key).'-ts-control">'.esc_html($values['label']).'</label>';
+				echo '<select id="'.esc_attr($key).'" aria-hidden="true" class="custom-single-select-tom" autocomplete="off" size="1" name="'.esc_attr($key).'">';
+				printCountry($values['permittedvalues'], $pForm->getFieldValue($key, true));
 				echo '</select>';
 			} else {
 				
@@ -95,7 +91,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 	if ($input === 'regionaler_zusatz') {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label contains escaped HTML
-		 echo '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'<select class="custom-single-select" size="1" name="'.esc_attr($input).'">';
+		 echo '<label><span class="oo-label-text ' . ($displayError && $isRequired ? ' displayerror' : '') . '">'.$label.'<select class="custom-single-select-tom" aria-hidden="true" autocomplete="off" size="1" name="'.esc_attr($input).'">';
 		$pRegionController = new \onOffice\WPlugin\Region\RegionController();
 		if ($permittedValues === null) {
 			$regions = $pRegionController->getRegions();
