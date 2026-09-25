@@ -147,6 +147,23 @@ class TestClassAddressIdRequestGuard
 		$this->assertEquals($expectedUrl, $result);
 	}
 
+	public function testHreflangUrlsContainAddressId()
+	{
+		global $wp_query, $wp;
+		$wp_query->set('estate_id', 0);
+		$wp_query->set('address_id', 5);
+		$wp->request = 'makler/5';
+		$languages = [
+			'de' => ['url' => 'https://www.onoffice.de/makler/', 'default_locale' => 'de_DE'],
+			'en' => ['url' => 'https://www.onoffice.de/en/makler/', 'default_locale' => 'en_US'],
+		];
+
+		$result = apply_filters('wpml_head_langs', $languages);
+
+		$this->assertSame('https://www.onoffice.de/makler/5/', $result['de']['url']);
+		$this->assertSame('https://www.onoffice.de/en/makler/5/', $result['en']['url']);
+	}
+
 	/**
 	 *
 	 * @return Generator

@@ -387,7 +387,7 @@ $pWpmlDetailUrlFilter = function($url, $data) use ($pDI) {
 		$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
 		$pEstateDetailUrl = $pDI->get(EstateDetailUrl::class);
 		$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
-		return $pEstateIdGuard->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
+		return $pEstateIdGuard->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl, $data['default_locale'] ?? get_locale());
 	}
 
 	if (!empty($addressId)) {
@@ -395,7 +395,7 @@ $pWpmlDetailUrlFilter = function($url, $data) use ($pDI) {
 		$pAddressIdGuard = $pDI->get(AddressIdRequestGuard::class);
 		$pEstateDetailUrl = $pDI->get(AddressDetailUrl::class);
 		$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
-		return $pAddressIdGuard->createAddressDetailLinkForSwitchLanguageWPML($url, $addressId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
+		return $pAddressIdGuard->createAddressDetailLinkForSwitchLanguageWPML($url, $addressId, $pEstateDetailUrl, $oldUrl, $data['default_locale'] ?? get_locale());
 	}
 	return $url;
 };
@@ -404,6 +404,9 @@ add_filter('wpml_ls_language_url', $pWpmlDetailUrlFilter, 10, 2);
 
 // WPML builds the hreflang tags from the same language data as the switcher, but never applies wpml_ls_language_url to them
 add_filter('wpml_head_langs', function($languages) use ($pWpmlDetailUrlFilter) {
+	if (!is_array($languages)) {
+		return $languages;
+	}
 	foreach ($languages as $code => $data) {
 		$languages[$code]['url'] = $pWpmlDetailUrlFilter($data['url'], $data);
 	}

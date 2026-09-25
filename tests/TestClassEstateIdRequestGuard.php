@@ -162,6 +162,19 @@ class TestClassEstateIdRequestGuard
 		$this->assertSame('https://www.onoffice.de/en/detail/3/', $result['en']['url']);
 	}
 
+	public function testHreflangFilterIgnoresInvalidInput()
+	{
+		global $wp_query, $wp;
+		$wp_query->set('estate_id', 3);
+		$wp->request = 'detail/3';
+
+		$this->assertSame([], apply_filters('wpml_head_langs', []));
+		$this->assertNull(apply_filters('wpml_head_langs', null));
+
+		$result = apply_filters('wpml_head_langs', ['de' => ['url' => 'https://www.onoffice.de/detail/']]);
+		$this->assertSame('https://www.onoffice.de/detail/3/', $result['de']['url']);
+	}
+
 	/**
 	 *
 	 * @return Generator
