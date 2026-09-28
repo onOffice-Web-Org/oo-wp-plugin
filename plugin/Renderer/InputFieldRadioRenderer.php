@@ -77,7 +77,7 @@ class InputFieldRadioRenderer
                 if (is_array($checkedValue)) {
                     $checkedValue = $checkedValue[0] ?? '';
                 }
-                $isChecked = $key === (string)$checkedValue;
+                $isChecked = (string)$key === (string)$checkedValue;
                 echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
                     .'" value="'.esc_html($key).'"'
                     .($isChecked ? ' checked="checked" ' : '')
