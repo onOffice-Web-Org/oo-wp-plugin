@@ -841,7 +841,7 @@ msgstr "FEHLER!"
 
 #: 
 msgid "estate"
-msgstr "estate"
+msgstr "Objekt"
 
 #: 
 msgctxt "modules"
@@ -1092,7 +1092,7 @@ msgstr "https://de.onoffice.com/"
 
 #: 
 msgid "https://status.onoffice.de/"
-msgstr "https://status.onoffice.de/"
+msgstr "https://onoffice.com/status-news/"
 
 #: 
 msgid "https://wp-plugin.onoffice.com/"

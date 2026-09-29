@@ -436,6 +436,22 @@ class FormModelBuilderDBForm
 
 	/**
 	 * @return InputModelDB
+	 * @throws Exception
+	 */
+	public function createInputModelAssignBrokerAsSupervisor(): InputModelDB
+	{
+		$hint = __('Assigns the contact person of this page not only as the contact, but also as the supervisor for both the created property and the created contact.', 'onoffice-for-wp-websites');
+		$labelAssignBrokerAsSupervisor = __('Also set contact person as supervisor', 'onoffice-for-wp-websites')
+			. ' <span class="dashicons dashicons-editor-help oo-field-hint" tabindex="0" title="' . esc_attr($hint) . '"></span>';
+		$selectedValue = $this->getValue('assign_broker_as_supervisor', false);
+		$pInputModelAssignBrokerAsSupervisor = $this->generateGenericCheckbox($labelAssignBrokerAsSupervisor,
+			InputModelDBFactoryConfigForm::INPUT_FORM_ASSIGN_BROKER_AS_SUPERVISOR, $selectedValue);
+
+		return $pInputModelAssignBrokerAsSupervisor;
+	}
+
+	/**
+	 * @return InputModelDB
 	 */
 	public function createInputModelRecipientContactForm()
 	{

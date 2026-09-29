@@ -1026,6 +1026,71 @@ class TestClassEstateList
 	}
 
 	/**
+	 * The map has to query the same estates as the list. It may only differ in the field
+	 * set, the cache key and the paging — every filter and the sorting must be identical,
+	 * otherwise the map queries a wider set and its listlimit truncates it to the wrong
+	 * records.
+	 *
+	 */
+	public function testGetEstateParametersForMapMatchesTheListParameters()
+	{
+		$mayDiffer = ['data', 'listname', 'listlimit', 'listoffset', 'params_list_cache'];
+
+		$pReflectionMethodMap = new ReflectionMethod(EstateList::class, 'getEstateParametersForMap');
+		$pReflectionMethodMap->setAccessible(true);
+		$mapParameters = $pReflectionMethodMap->invokeArgs($this->_pEstateList, [1, true]);
+
+		$pReflectionMethodList = new ReflectionMethod(EstateList::class, 'getEstateParameters');
+		$pReflectionMethodList->setAccessible(true);
+		$listParameters = $pReflectionMethodList->invokeArgs($this->_pEstateList, [1, true]);
+
+		foreach ($mayDiffer as $key) {
+			unset($mapParameters[$key], $listParameters[$key]);
+		}
+
+		$this->assertEquals($listParameters, $mapParameters,
+			'map and list must query the same estates: filter, sorting, filterid and '
+			.'georangesearch have to be identical');
+	}
+
+	/**
+	 * An estate list bound to a contact (shortcode attribute 'address') restricts the list
+	 * to that contact's estates. The map has to carry the same restriction, or it shows
+	 * pins of estates that are not in the list — and misses those that are.
+	 *
+	 */
+	public function testGetEstateParametersForMapAppliesTheAddressFilter()
+	{
+		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
+			->onlyMethods(['__construct', 'fetchEstatesForAddressIds', 'getEstateIdsForContact'])
+			->getMock();
+		$pAddressDataMock->method('getEstateIdsForContact')->willReturn([15, 1051]);
+		$this->_pEnvironment->method('getAddressList')->willReturn($pAddressDataMock);
+		$this->_pEstateList->setFilterAddressId('50');
+
+		$pReflectionMethod = new ReflectionMethod(EstateList::class, 'getEstateParametersForMap');
+		$pReflectionMethod->setAccessible(true);
+		$mapParameters = $pReflectionMethod->invokeArgs($this->_pEstateList, [1, true]);
+
+		$this->assertSame([['op' => 'IN', 'val' => [15, 1051]]], $mapParameters['filter']['Id']);
+	}
+
+	/**
+	 * The map pages in fixed batches instead of deriving its limit from the list's
+	 * cntabsolute, which truncated it to the first N records.
+	 *
+	 */
+	public function testGetEstateParametersForMapPagesInFixedBatches()
+	{
+		$pReflectionMethod = new ReflectionMethod(EstateList::class, 'getEstateParametersForMap');
+		$pReflectionMethod->setAccessible(true);
+		$mapParameters = $pReflectionMethod->invokeArgs($this->_pEstateList, [1, true, EstateList::MAP_BATCH_SIZE]);
+
+		$this->assertSame(EstateList::MAP_BATCH_SIZE, $mapParameters['listlimit']);
+		$this->assertSame(EstateList::MAP_BATCH_SIZE, $mapParameters['listoffset']);
+	}
+
+	/**
 	 *
 	 */
 	public function testGetShowTotalCostsCalculator()
@@ -1695,6 +1760,9 @@ class TestClassEstateList
 			'list request must use the plain view name as listname');
 		$this->assertNotSame($listParams['listname'], $mapParams['listname'],
 			'map and list must not collide on the same listname cache key');
+		$this->assertArrayHasKey('params_list_cache', $listParams);
+		$this->assertArrayNotHasKey('params_list_cache', $mapParams,
+			'the cron warms the list under its own field set; the map must not be looked up there');
 
 		// The marker must contain a character that sanitizeShortcodeName() strips, so no saved
 		// view name can ever equal a map cache key (collision-proof).

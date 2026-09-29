@@ -28,7 +28,7 @@ use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form;
-use onOffice\WPlugin\Form\AltchaHandler;
+use onOffice\WPlugin\Utility\ThemeSupport;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Gui\Table\FormsTable;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
@@ -232,7 +232,7 @@ class AdminPageFormList
 			admin_url( 'admin.php?page=onoffice-editform' ) );
 		
 		$linkAddNewApplicantSearchForm = null;
-		if(!AltchaHandler::isSupportedTheme()) {
+		if(!ThemeSupport::isOnOfficeTheme()) {
 			$linkAddNewApplicantSearchForm = add_query_arg( $typeParam, Form::TYPE_APPLICANT_SEARCH,
 				admin_url( 'admin.php?page=onoffice-editform' ) );
 		}

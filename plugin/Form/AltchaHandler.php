@@ -28,6 +28,7 @@ use onOffice\WPlugin\Vendor\AltchaOrg\Altcha\ChallengeParameters;
 use onOffice\WPlugin\Vendor\AltchaOrg\Altcha\Payload;
 use onOffice\WPlugin\Vendor\AltchaOrg\Altcha\Solution;
 use onOffice\WPlugin\Vendor\AltchaOrg\Altcha\VerifySolutionOptions;
+use onOffice\WPlugin\Utility\ThemeSupport;
 
 /**
  * ALTCHA anti-spam handler.
@@ -48,13 +49,6 @@ class AltchaHandler
     const REPLAY_TTL = 600; // 10 minutes, should be longer than the expected time between challenge issuance and form submission
 
     const DEFAULT_SERVER_URL = 'https://altcha.onofficeweb.com';
-
-    const SUPPORTED_THEMES = [
-        'onoffice-pure',
-        'onoffice-classic',
-        'onoffice-timeless',
-        'onoffice-modern',
-    ];
 
     /** @var string */
     private $_payload = '';
@@ -168,7 +162,7 @@ class AltchaHandler
             return false;
         }
 
-        return self::isSupportedTheme();
+        return ThemeSupport::isOnOfficeTheme();
     }
 
     /**
@@ -192,15 +186,6 @@ class AltchaHandler
         }
 
         return false;
-    }
-
-    /**
-     * Check whether the active theme is a supported onOffice WP-Websites theme.
-     */
-    public static function isSupportedTheme(): bool
-    {
-        $template = wp_get_theme()->get_template();
-        return in_array($template, self::SUPPORTED_THEMES, true);
     }
 
     /**

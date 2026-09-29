@@ -76,6 +76,9 @@ class DataFormConfigurationOwner
 	/** @var bool */
 	private $_showFormAsModal = false;
 
+	/** @var bool */
+	private $_assignBrokerAsSupervisor = false;
+
 	/** @return bool */
 	public function getCheckDuplicateOnCreateAddress()
 		{ return $this->_checkDuplicateOnCreateAddress; }
@@ -115,4 +118,12 @@ class DataFormConfigurationOwner
 	/** @param bool $showFormAsModal */
 	public function setShowFormAsModal(bool $showFormAsModal)
 		{ $this->_showFormAsModal = $showFormAsModal; }
+
+	/** @return bool */
+	public function getAssignBrokerAsSupervisor(): bool
+		{ return $this->_assignBrokerAsSupervisor; }
+
+	/** @param bool $assignBrokerAsSupervisor */
+	public function setAssignBrokerAsSupervisor(bool $assignBrokerAsSupervisor)
+		{ $this->_assignBrokerAsSupervisor = $assignBrokerAsSupervisor; }
 }

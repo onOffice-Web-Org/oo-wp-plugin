@@ -67,13 +67,13 @@ msgid "## Connect your website to onOffice enterprise\n"
 "\n"
 "The [documentation website](https://wp-plugin.onoffice.com/en/) also offers detailed explanations of the features. If you encounter a problem, you can send us a message using the [support form](https://wp-plugin.onoffice.com/en/support/).\n"
 ""
-msgstr "## Conecta tu web a onOffice enterprise\n"
+msgstr "## Conecta tu sitio web a onOffice enterprise\n"
 "\n"
 "Ya estás listo para integrar todas tus propiedades inmobiliarias en la web y crear formularios que envíen datos a onOffice enterprise.\n"
 "\n"
 "Si necesitas ayuda para configurar el plugin, lee nuestro [tutorial de configuración](https://wp-plugin.onoffice.com/es/primeros-pasos/).\n"
 "\n"
-"La [web de documentación](https://wp-plugin.onoffice.com/es/) también ofrece explicaciones detalladas de las funciones. Si tienes algún problema, puedes enviarnos un mensaje a través del [formulario de soporte](https://wp-plugin.onoffice.com/en/support/).\n"
+"La [web de documentación](https://wp-plugin.onoffice.com/es/) también ofrece explicaciones detalladas de las funciones. Si tienes algún problema, puedes enviarnos un mensaje a través del [formulario de soporte](https://wp-plugin.onoffice.com/es/soporte/).\n"
 ""
 
 #. translators: 1: Count and name of parking lot
@@ -106,9 +106,9 @@ msgstr "%s (sobreescribir)"
 #: 
 msgid "%s carport"
 msgid_plural "%s carports"
-msgstr[0] "cochera %s"
-msgstr[1] "%s cocheras"
-msgstr[2] "cochera %s"
+msgstr[0] "%s carport"
+msgstr[1] "%s carports"
+msgstr[2] "%s carports"
 
 #. translators: %s is the amount of duplexes
 #: 
@@ -1100,7 +1100,7 @@ msgstr "https://de.enterprisehilfe.onoffice.com/help_entries/duplicados/?lang=es
 
 #: 
 msgid "https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en"
-msgstr "https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en"
+msgstr "https://de.enterprisehilfe.onoffice.com/help_entries/filtro-de-inmuebles/?lang=es"
 
 #. Author URI of the plugin
 #: 
@@ -1113,7 +1113,7 @@ msgstr "https://status.onoffice.de/"
 
 #: 
 msgid "https://wp-plugin.onoffice.com/"
-msgstr "https://wp-plugin.onoffice.com/"
+msgstr "https://wp-plugin.onoffice.com/es/"
 
 #: 
 msgid "https://wp-plugin.onoffice.com/en/advanced-features/markdown-labels"
@@ -1125,7 +1125,7 @@ msgstr "https://wp-plugin.onoffice.com/es/primeros-pasos/listas-de-inmuebles/"
 
 #: 
 msgid "https://wp-plugin.onoffice.com/en/support/"
-msgstr "https://wp-plugin.onoffice.com/en/support/"
+msgstr "https://wp-plugin.onoffice.com/es/soporte/"
 
 #. Plugin URI of the plugin
 #: 
@@ -1704,7 +1704,7 @@ msgstr "Navegación de entradas"
 
 #: 
 msgid "Postal Code"
-msgstr "Postal code"
+msgstr "Código postal"
 
 #: 
 msgid "Postal code"
@@ -2174,7 +2174,7 @@ msgstr "Campos especiales"
 
 #: 
 msgid "standard"
-msgstr "estándar"
+msgstr "Estándar"
 
 #: 
 msgid "Standard Sort"
