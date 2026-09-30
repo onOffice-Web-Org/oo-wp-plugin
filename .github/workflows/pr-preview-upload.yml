@@ -44,12 +44,15 @@ jobs:
         env:
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
-          PROJECT=$(echo "$BRANCH_NAME" | grep -oE 'P#[0-9]+' | head -1 | tr -d '#')
+          # Case-insensitive; the folder is normalised to an upper-case P so
+          # the paths on the update server stay the same whatever the branch
+          # happens to be called.
+          PROJECT=$(echo "$BRANCH_NAME" | grep -oiE 'p#[0-9]+' | head -1 | tr -cd '0-9')
           if [ -z "$PROJECT" ]; then
             echo "::error::Branch name '$BRANCH_NAME' does not start with a P#<number> project tag."
             exit 1
           fi
-          echo "folder=$PROJECT" >> "$GITHUB_OUTPUT"
+          echo "folder=P${PROJECT}" >> "$GITHUB_OUTPUT"
 
       - name: Set SSH Key for Dev Update Server
         uses: webfactory/ssh-agent@v0.9.0
@@ -87,7 +90,7 @@ jobs:
           ARTIFACT_URL="https://dev.onoffice-wp-updates.de/pr-builds/${FOLDER}/plugins/${ARTIFACT_NAME}/${ARTIFACT_NAME}.zip"
 
           jq -n --arg name "$ARTIFACT_NAME" --arg url "$ARTIFACT_URL" --arg type "plugin" --arg sha "$SHA" \
-            '{name: $name, type: $type, url: $url, sha: $sha}' > fragment.json
+            '{name: $name, type: $type, url: $url, sha: $sha}' > "${REPO_NAME}.json"
 
           # Unlike the old shared manifest.json, this file is uniquely ours
           # (keyed by repo name under manifest-fragments/) - no other run
@@ -95,9 +98,16 @@ jobs:
           # coordinator assembles every repo's fragment into manifest.json
           # itself, as the sole writer, once all uploads for a round finish.
           for attempt in 1 2 3 4 5; do
+            # Directory destination, exactly like the artifact upload above - never
+            # a file path. Over the restricted rrsync account a file destination
+            # cannot replace an existing file ("unlink(4) failed: Operation not
+            # permitted"), so the first run of a project succeeds and every
+            # repeat fails; --mkpath is not involved, dropping it changes
+            # nothing. The upload above overwrites its zip on every run and is
+            # fine, and it differs in exactly this one respect.
             if rsync -e 'ssh -o StrictHostKeyChecking=no' --mkpath \
-              fragment.json \
-              "zipupload@dev.onoffice-wp-updates.de:pr-builds/${FOLDER}/manifest-fragments/${REPO_NAME}.json"; then
+              "${REPO_NAME}.json" \
+              "zipupload@dev.onoffice-wp-updates.de:pr-builds/${FOLDER}/manifest-fragments/"; then
               echo "Manifest fragment written successfully (attempt $attempt)"
               exit 0
             fi

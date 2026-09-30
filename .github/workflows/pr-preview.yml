@@ -147,8 +147,11 @@ jobs:
             MATCHES=()
             while IFS= read -r branch; do
               [ -z "$branch" ] && continue
-              MATCH=$(echo "$branch" | grep -oE 'P#[0-9]+' | head -1 | tr -d '#')
-              if [ "$MATCH" = "$FOLDER" ]; then
+              # Case-insensitive, digits only: branch names are typed by hand,
+              # and a "p#" would otherwise be skipped here without a word -
+              # the preview would be built without this repo's component.
+              MATCH=$(echo "$branch" | grep -oiE 'p#[0-9]+' | head -1 | tr -cd '0-9')
+              if [ -n "$MATCH" ] && [ "P${MATCH}" = "$FOLDER" ]; then
                 MATCHES+=("$branch")
               fi
             done <<< "$BRANCHES"
