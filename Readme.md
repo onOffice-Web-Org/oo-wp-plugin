@@ -16,7 +16,42 @@ ship a bugfix during a running beta test and what to watch out for is documented
 repository structure, architecture, coding conventions, database migrations, testing, and the rules
 for the automated pull request review. The detailed documents live in
 [./documentation/](./documentation/), together with the long-form documents on building, releasing
-and translating.
+and translating. See [Working with Claude](#working-with-claude) below.
+
+## Working with Claude
+
+This repository is set up for [Claude Code](https://docs.claude.com/en/docs/claude-code), locally
+and as an automated pull request reviewer. **Setup, configuration and best practices for all
+web repositories are documented centrally on the Google Site:
+[Development › Claude Code](https://sites.google.com/onoffice.com/web-intern/development/claude-code).**
+This section only covers what is specific to this repository.
+
+| File | Purpose |
+| --- | --- |
+| [CLAUDE.md](CLAUDE.md) | Working instructions for Claude, loaded automatically at the start of every session — and the index of `documentation/` |
+| [documentation/code-review.md](documentation/code-review.md) | The pull request review rules, used by local reviews and by CI |
+| [.github/workflows/claude-code-review.yml](.github/workflows/claude-code-review.yml) | The automated pull request review |
+
+**Locally:** run `claude` in the repository root. Claude picks up `CLAUDE.md` on its own and
+finishes with this repository's QA (`make test-docker`). It does not commit, push, open pull requests or
+trigger workflows without asking first.
+
+**Pull request review** — runs on request only, not on every push:
+
+- click *Ready for review* on a draft pull request against `master` or `beta`
+- comment `@claude review` on the pull request — or `@claude` with a specific question,
+  e.g. `@claude review only the migration`
+- start it manually: Actions → *Claude Code Review* → *Run workflow*, with the PR number
+- the `no-claude-review` label suppresses the automatic run on *Ready for review*
+
+A pull request opened directly (not as a draft) never fires *Ready for review* — comment
+`@claude review` instead. The result is exactly one comment in German with 3–8 findings
+(**Blocker / Issue / Nit / FYI**); Claude does not change any files in CI.
+
+**Changing the rules:** `CLAUDE.md` and `documentation/` are edited through a pull request like
+any other code — keep `CLAUDE.md` short and put details into `documentation/`. Personal
+preferences and permissions belong in `~/.claude/CLAUDE.md` or `.claude/settings.local.json`
+(not committed); see the Google Site for what goes where.
 
 ## Getting Started
 
