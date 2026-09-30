@@ -377,7 +377,7 @@ function customFieldCallback( $pDI, $format, $limitEllipsis, $meta_key ) {
 }
 
 
-add_filter('wpml_ls_language_url', function($url, $data) use ($pDI) {
+$pWpmlDetailUrlFilter = function($url, $data) use ($pDI) {
 	$pWPQueryWrapper = $pDI->get(WPQueryWrapper::class);
 	$estateId = (int) $pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
 	$addressId = (int) $pWPQueryWrapper->getWPQuery()->get('address_id', 0);
@@ -387,7 +387,7 @@ add_filter('wpml_ls_language_url', function($url, $data) use ($pDI) {
 		$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
 		$pEstateDetailUrl = $pDI->get(EstateDetailUrl::class);
 		$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
-		return $pEstateIdGuard->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
+		return $pEstateIdGuard->createEstateDetailLinkForSwitchLanguageWPML($url, $estateId, $pEstateDetailUrl, $oldUrl, $data['default_locale'] ?? get_locale());
 	}
 
 	if (!empty($addressId)) {
@@ -395,10 +395,23 @@ add_filter('wpml_ls_language_url', function($url, $data) use ($pDI) {
 		$pAddressIdGuard = $pDI->get(AddressIdRequestGuard::class);
 		$pEstateDetailUrl = $pDI->get(AddressDetailUrl::class);
 		$oldUrl = $pDI->get(Redirector::class)->getCurrentLink();
-		return $pAddressIdGuard->createAddressDetailLinkForSwitchLanguageWPML($url, $addressId, $pEstateDetailUrl, $oldUrl, $data['default_locale']);
+		return $pAddressIdGuard->createAddressDetailLinkForSwitchLanguageWPML($url, $addressId, $pEstateDetailUrl, $oldUrl, $data['default_locale'] ?? get_locale());
 	}
 	return $url;
-}, 10, 2);
+};
+
+add_filter('wpml_ls_language_url', $pWpmlDetailUrlFilter, 10, 2);
+
+// WPML builds the hreflang tags from the same language data as the switcher, but never applies wpml_ls_language_url to them
+add_filter('wpml_head_langs', function($languages) use ($pWpmlDetailUrlFilter) {
+	if (!is_array($languages)) {
+		return $languages;
+	}
+	foreach ($languages as $code => $data) {
+		$languages[$code]['url'] = $pWpmlDetailUrlFilter($data['url'], $data);
+	}
+	return $languages;
+});
 
 register_activation_hook(__FILE__, [Installer::class, 'install']);
 register_deactivation_hook(__FILE__, [Installer::class, 'deactivate']);
