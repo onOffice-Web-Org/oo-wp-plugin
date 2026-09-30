@@ -95,7 +95,7 @@ jobs:
           if [ -z "$NUMBER" ]; then
             # Match pr-preview-upload.yml's extraction (P#<digits>), so both
             # workflows always agree on which project a given branch maps to.
-            NUMBER=$(grep -oP 'P#\K\d+' <<< "$PR_HEAD_REF" | head -1)
+            NUMBER=$(grep -oiP 'p#\K\d+' <<< "$PR_HEAD_REF" | head -1)
           fi
 
           if [ -z "$NUMBER" ]; then
@@ -252,17 +252,29 @@ jobs:
           REMAINING=0
 
           for repo in $WP_REPOS $PROJECT_APP_REPOS; do
-            REFS=$(gh api "repos/${OWNER}/${repo}/pulls?state=open&per_page=100" --paginate --jq '.[].head.ref')
-            REFS_EXIT=$?
+            # Captured with || instead of $? on the next line: the step runs under
+            # GitHub's default "bash -e", where a failing command substitution in
+            # an assignment ends the step outright - the whole check below,
+            # including the permission hint, would never run.
+            REFS_EXIT=0
+            REFS=$(gh api "repos/${OWNER}/${repo}/pulls?state=open&per_page=100" --paginate --jq '.[].head.ref') || REFS_EXIT=$?
 
             if [ "$REFS_EXIT" -ne 0 ]; then
-              echo "::error::Failed to list open PRs for ${repo} (gh exit ${REFS_EXIT}) - refusing to tear down p${NUMBER} on an incomplete answer."
+              # A 403 here reads the same whether the app lacks the Pull requests
+              # permission or has no access to this one repository. GitHub says
+              # which permission the endpoint wanted in a response header, so ask
+              # once more with headers and put that in the message - otherwise the
+              # next person is back to guessing between the two.
+              HINT=$(gh api "repos/${OWNER}/${repo}/pulls?per_page=1" --include 2>&1 \
+                | grep -i '^x-accepted-github-permissions:' | head -1 | tr -d '\r' || true)
+
+              echo "::error::Failed to list open PRs for ${repo} (gh exit ${REFS_EXIT}) - refusing to tear down p${NUMBER} on an incomplete answer. ${HINT:-no permission hint returned}"
               exit 1
             fi
 
             while IFS= read -r ref; do
               [ -z "$ref" ] && continue
-              MATCH=$(grep -oP 'P#\K\d+' <<< "$ref" | head -1)
+              MATCH=$(grep -oiP 'p#\K\d+' <<< "$ref" | head -1)
               if [ "$MATCH" = "$NUMBER" ]; then
                 echo "${repo} still has an open PR on ${ref}"
                 REMAINING=$((REMAINING + 1))
