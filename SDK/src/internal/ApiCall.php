@@ -8,8 +8,9 @@ use onOffice\SDK\Exception\ApiCallNoActionParametersException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\internal\ApiAction;
 use onOffice\SDK\internal\Request;
-use Location\Coordinate;
-use Location\Distance\Vincenty;
+// prefixed for the plugin build - a re-sync from onOfficeGmbH/sdk must re-apply this
+use onOffice\WPlugin\Vendor\Location\Coordinate;
+use onOffice\WPlugin\Vendor\Location\Distance\Vincenty;
 
 /**
  * @internal
@@ -766,10 +767,19 @@ class ApiCall
 					elseif (strtolower($op) === 'in')
 					{
 						//Objekttyp verhält sich nicht wie erwartet
-						$elVal = $itemRaw["elements"][$fieldName];
+						$elVal = $itemRaw["elements"][$fieldName] ?? null;
 						if($fieldName === "Id") {
-							$elVal = str_replace(',','',$elVal);
-							$elVal = str_replace('.','',$elVal);
+							// The estate id lives in the record itself, not in "elements" -
+							// it only shows up there when "Id" was explicitly requested as a
+							// data field, which no list does. Without this fallback an Id
+							// filter matches nothing and every record is dropped, so a list
+							// bound to a contact (shortcode attribute 'address') or a
+							// favourites list renders empty as soon as it is served from the
+							// cache.
+							if ($elVal === null || $elVal === '') {
+								$elVal = $itemRaw["id"] ?? $item["id"] ?? null;
+							}
+							$elVal = str_replace([',', '.'], '', (string) $elVal);
 						}
 
 						if(!is_array($val)) {

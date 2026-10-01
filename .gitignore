@@ -9,3 +9,4 @@ SDK/vendor
 dist/*
 !dist/.gitkeep
 onoffice-for-wp-websites.zip
+vendor-prefixed/

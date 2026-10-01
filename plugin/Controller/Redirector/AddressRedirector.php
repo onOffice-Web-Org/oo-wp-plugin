@@ -4,6 +4,7 @@ namespace onOffice\WPlugin\Controller\Redirector;
 
 use onOffice\WPlugin\Controller\AddressDetailUrl;
 use onOffice\WPlugin\Utility\Redirector;
+use onOffice\WPlugin\Utility\UrlHelper;
 use onOffice\WPlugin\WP\WPRedirectWrapper;
 
 class AddressRedirector
@@ -47,9 +48,10 @@ class AddressRedirector
 
 		$oldUrl = $this->_redirector->getCurrentLink();
 		$sanitizeTitle = $this->_wpAddressDetailUrl->getSanitizeTitle($addressTitle);
-		$isUrlHaveTitle = strpos($oldUrl, $sanitizeTitle) !== false;
+		$isUrlHaveTitle = $sanitizeTitle !== ''
+			&& strpos(UrlHelper::normalizeUrl($oldUrl), $sanitizeTitle) !== false;
 		$newUrl = $this->_wpAddressDetailUrl->getUrlWithAddressTitle($addressId, $addressTitle, $oldUrl, $isUrlHaveTitle, $pAddressRedirection);
-		if ($newUrl !== $oldUrl) {
+		if (!UrlHelper::isSameLocation($newUrl, $oldUrl)) {
 			$isNewUrlValid = $this->_redirector->checkNewUrlIsValid(
 				array_filter(explode('/', $newUrl)),
 				array_filter(explode('/', $oldUrl))

@@ -94,8 +94,6 @@ class TestClassEstateViewFieldModifierTypeDefault
 			'multiselectfield' => ['Value 1', 'Value 2', 'Value 3'],
 			'virtualAddress' => 0,
 			'objektadresse_freigeben_api' => 0,
-			'laengengrad' => 0,
-			'breitengrad' => 0,
 			'reserviert' => '1',
 			'verkauft' => '1',
 			'vermarktungsart' => 'kauf',

@@ -9,7 +9,7 @@ use onOffice\tests\Mocks\DatabaseChangesDummy;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
 use PHPUnit\Util\ErrorHandler;
 
-use function DI\autowire;
+use function onOffice\WPlugin\Vendor\DI\autowire;
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
@@ -46,6 +46,11 @@ if (PHP_VERSION_ID >= 70400) {
 		// ignore this warning to let tests pass.
 		if ($errno === E_DEPRECATED) {
 			if ($errstr === "Function ReflectionType::__toString() is deprecated") {
+				return true;
+			}
+
+			// PHP 8.4 flags pre-existing implicit-nullable signatures; would abort the bootstrap.
+			if (strpos($errstr, 'Implicitly marking parameter') !== false) {
 				return true;
 			}
 		}

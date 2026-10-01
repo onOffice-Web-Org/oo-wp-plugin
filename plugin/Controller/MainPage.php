@@ -25,7 +25,7 @@ namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\Filesystem\Filesystem;
 use onOffice\WPlugin\Language;
-use Parsedown;
+use onOffice_WPlugin_Vendor_Parsedown as Parsedown;
 
 
 /**

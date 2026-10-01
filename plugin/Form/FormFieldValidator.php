@@ -114,10 +114,33 @@ class FormFieldValidator
 		}
 
 		if ($pField->getName() === 'Email') {
-			$returnValue = str_replace(' ','',$value);
+			$mail = sanitize_email(str_replace(' ', '', $value));
+			// drop invalid addresses so the required-field check rejects the submission
+			$returnValue = is_email($mail) ? $mail : '';
 		}
 
-		return $returnValue;
+		return $this->enforceFieldLength($returnValue, $pField);
+	}
+
+
+	/**
+	 * Enforce the field length the template only advertises via maxlength.
+	 *
+	 * @param mixed $value
+	 * @param Field $pField
+	 * @return mixed
+	 *
+	 */
+
+	private function enforceFieldLength($value, Field $pField)
+	{
+		$length = $pField->getLength();
+
+		if (!is_string($value) || $length <= 0) {
+			return $value;
+		}
+
+		return mb_substr($value, 0, $length);
 	}
 
 	/**

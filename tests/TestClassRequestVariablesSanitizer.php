@@ -80,11 +80,31 @@ class TestClassRequestVariablesSanitizer
 		$value = RequestVariablesSanitizer::sanitizeFilterString('<b>abcßÖÄÜüöäüABC</b>');
 		$this->assertEquals('abcßÖÄÜüöäüABC', $value);
 
+		// double quotes are invalid and get removed, single quotes are kept as-is
 		$value = RequestVariablesSanitizer::sanitizeFilterString('"');
-		$this->assertEquals('&#34;', $value);
+		$this->assertEquals('', $value);
 
 		$value = RequestVariablesSanitizer::sanitizeFilterString('\'');
-		$this->assertEquals('&#39;', $value);
+		$this->assertEquals('\'', $value);
 
+		$value = RequestVariablesSanitizer::sanitizeFilterString(null);
+		$this->assertEquals('', $value);
+	}
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\RequestVariablesSanitizer::removeInvalidCharacters
+	 *
+	 */
+	public function testRemoveInvalidCharacters()
+	{
+		$this->assertEquals('abc', RequestVariablesSanitizer::removeInvalidCharacters('a<b>"\\|;c'));
+		$this->assertEquals(['ab', 'cd'], RequestVariablesSanitizer::removeInvalidCharacters(['a<b', 'c;d']));
+
+		// tab and line breaks survive, other control characters do not
+		$this->assertEquals("line1\nline2\t!",
+			RequestVariablesSanitizer::removeInvalidCharacters("line1\nline2\t!\x00\x07"));
+
+		$this->assertEquals(5, RequestVariablesSanitizer::removeInvalidCharacters(5));
 	}
 }

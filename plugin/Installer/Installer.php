@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use WP_Rewrite;
 use function delete_option;
@@ -87,8 +87,8 @@ class Installer
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	static public function deinstall()
 	{

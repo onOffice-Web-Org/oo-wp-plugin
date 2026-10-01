@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
@@ -119,7 +119,7 @@ class TestClassRewriteRuleBuilder
 		$pSubject = $this->_pContainer->get(RewriteRuleBuilder::class);
 		$pSubject->addDynamicRewriteRules();
 		$this->assertSame([
-			'^(test_parent/test\-post)/([0-9]+)(-([^$]+)?)?/?$' =>
+			'^(test_parent/test\-post)/([0-9]+)(-([^/]+)?)?/?$' =>
 				'index.php?pagename=test_parent%2Ftest-post&view=$matches[1]&estate_id=$matches[2]'
 		], $wp_rewrite->extra_rules_top);
 	}
@@ -172,7 +172,7 @@ class TestClassRewriteRuleBuilder
 		$pSubject = $this->_pContainer->get(RewriteRuleBuilder::class);
 		$pSubject->addDynamicRewriteRulesForAddressDetail();
 		$this->assertSame([
-			'^(test_parent/test\-post)/([0-9]+)(-([^$]+)?)?/?$' =>
+			'^(test_parent/test\-post)/([0-9]+)(-([^/]+)?)?/?$' =>
 				'index.php?pagename=test_parent%2Ftest-post&view=$matches[1]&address_id=$matches[2]'
 		], $wp_rewrite->extra_rules_top);
 	}

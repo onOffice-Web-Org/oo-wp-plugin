@@ -24,10 +24,10 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use Closure;
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use Exception;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerInsertException;
@@ -116,8 +116,8 @@ class TestClassRecordManagerDuplicateListViewEstate
 
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 
 	public function testDuplicateByIds()
@@ -149,12 +149,29 @@ class TestClassRecordManagerDuplicateListViewEstate
 				$sortByUserValueRecordOutput);
 
 		$this->_pWPDB->insert_id = 23;
-		$this->_pSubject->duplicateByIds(22);
+		$this->assertTrue($this->_pSubject->duplicateByIds(22));
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
+	 */
+
+	public function testDuplicateByIdsReturnsFalseWhenListViewNotFound()
+	{
+		$pRecordManagerReadListViewEstate = $this->getMockBuilder(RecordManagerReadListViewEstate::class)
+			->getMock();
+		$pRecordManagerReadListViewEstate->method('getRowById')->will($this->returnValue([]));
+		$this->_pContainer->set(RecordManagerReadListViewEstate::class, $pRecordManagerReadListViewEstate);
+		$pSubject = new RecordManagerDuplicateListViewEstate($this->_pWPDB, $this->_pContainer);
+
+		$this->_pWPDB->expects($this->never())->method('insert');
+		$this->assertFalse($pSubject->duplicateByIds(999));
+	}
+
+	/**
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 
 	public function testAppendCountToNameDuplicateByIds()
@@ -193,7 +210,7 @@ class TestClassRecordManagerDuplicateListViewEstate
 				$sortByUserValueRecordOutput);
 
 		$this->_pWPDB->insert_id = 23;
-		$this->_pSubject->duplicateByIds(22);
+		$this->assertTrue($this->_pSubject->duplicateByIds(22));
 	}
 
 

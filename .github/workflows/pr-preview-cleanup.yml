@@ -1,0 +1,427 @@
+name: PR Preview | Cleanup
+
+# Removes everything a project preview left behind, once the last pull request
+# for that project closes anywhere in the family: the build artifacts of the six
+# WordPress repos on the update server, the WordPress test box in the hosting
+# UI, and the per-project marketplace/onMove instance on mptest.
+#
+# All of that happens in oo-web-marketplace, whichever repo the PR closed in.
+# A closing PR only announces itself and names its artifact.
+#
+# Why everything, and not just the parts that need a key:
+#
+#   * Manifest.json is a read-modify-write, and GitHub's concurrency only
+#     serialises within one repository. Two PRs of the same project closing in
+#     different repos would otherwise both read it and the later write would
+#     drop the other's removal - while the artifact files are gone either way.
+#     The box then refuses to start at all: sync-test-artifacts.sh treats a
+#     download failure as fatal and entrypoint.sh will not boot on a half-synced
+#     wp-content.
+#   * The same split would break the counter. Each run excludes only its own,
+#     just-closed PR, so two simultaneous closes in different repos can each
+#     still see the other as open, both land on "one left" and nothing is torn
+#     down - with both PRs closed, nothing would ever retry. Serialised in one
+#     repo this cannot happen: every run is triggered by a close, so the last
+#     one to execute sees all of them closed and counts correctly.
+#   * Only the two Laravel repos hold SSH_PRIVATE_KEY_IONOS anyway.
+#
+# The hub dispatches itself when its own PR closes - one code path beats an
+# inline special case, and the run is cheap. Nothing waits on the handed-over
+# run: it reports its own outcome, and waiting would queue behind the very
+# concurrency group the announcing run still holds.
+#
+# Side effect worth knowing: the other seven repos now need nothing but
+# OO_ACTIONS_BOT_* for cleanup. Update-server key, hosting API and mptest key
+# are only ever read here.
+#
+# This file is identical in all eight sibling repos. The per-repo artifact name
+# and type are derived from the repo name below rather than set in an env block
+# - that is exactly how the six WordPress copies drifted apart before.
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      project_number:
+        description: "Project/ticket number (digits only, e.g. 167871) to clean up"
+        required: true
+        type: string
+      mode:
+        description: "hub = do the actual cleanup (the default for a manual run); pr-closed = only announce a closed PR to the hub"
+        required: false
+        default: hub
+        type: choice
+        options:
+          - hub
+          - pr-closed
+      artifact_name:
+        description: "hub mode: artifact to prune from the manifest; empty prunes nothing"
+        required: false
+        type: string
+      artifact_type:
+        description: "hub mode: theme or plugin"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  WP_REPOS: "onoffice-classic onoffice-modern onoffice-pure onoffice-timeless oo-wp-plugin oo-vue-addons"
+  PROJECT_APP_REPOS: "oo-web-marketplace onmove-api"
+  # The one repo that counts, and that touches update server, hosting API and
+  # mptest. Everything for one project is serialised by its concurrency group.
+  HUB_REPO: "oo-web-marketplace"
+
+jobs:
+  determine-project:
+    name: Determine project number
+    runs-on: ubuntu-latest
+    outputs:
+      found: ${{ steps.project.outputs.found }}
+      number: ${{ steps.project.outputs.number }}
+    env:
+      # Falls back to the current ref when there's no pull_request context
+      # (i.e. a manual workflow_dispatch run).
+      PR_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      INPUT_NUMBER: ${{ inputs.project_number }}
+    steps:
+      - name: Determine project number
+        id: project
+        run: |
+          NUMBER="$INPUT_NUMBER"
+
+          if [ -z "$NUMBER" ]; then
+            # Match pr-preview-upload.yml's extraction (P#<digits>), so both
+            # workflows always agree on which project a given branch maps to.
+            NUMBER=$(grep -oP 'P#\K\d+' <<< "$PR_HEAD_REF" | head -1)
+          fi
+
+          if [ -z "$NUMBER" ]; then
+            echo "::notice::No project number found in branch '${PR_HEAD_REF}' - nothing to clean up."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # This ends up inside a command run on the box, so refuse anything
+          # that is not a plain number.
+          if ! echo "$NUMBER" | grep -qE '^[0-9]+$'; then
+            echo "::error::Project number '${NUMBER}' must be digits only (e.g. 167871)."
+            exit 1
+          fi
+
+          echo "found=true" >> "$GITHUB_OUTPUT"
+          echo "number=${NUMBER}" >> "$GITHUB_OUTPUT"
+
+  cleanup:
+    name: Clean up project preview
+    needs: determine-project
+    if: needs.determine-project.outputs.found == 'true'
+    runs-on: ubuntu-latest
+    # Keyed by project number, not PR number. In oo-web-marketplace this is what
+    # serialises counting, the manifest and the teardown for one project - the
+    # announcing runs elsewhere hold their own repo's group and race nothing.
+    concurrency:
+      group: pr-preview-cleanup-${{ needs.determine-project.outputs.number }}
+      cancel-in-progress: false
+    env:
+      PR_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      NUMBER: ${{ needs.determine-project.outputs.number }}
+      # A pull_request event passes no inputs, so it always lands on pr-closed.
+      MODE: ${{ inputs.mode || 'pr-closed' }}
+    steps:
+      - name: Create GitHub App token for the whole family
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            onoffice-classic
+            onoffice-modern
+            onoffice-pure
+            onoffice-timeless
+            oo-wp-plugin
+            oo-vue-addons
+            oo-web-marketplace
+            onmove-api
+
+      # ----- pr-closed: announce, name the artifact, hand over -----
+
+      - name: Announce the closed PR to the hub
+        if: env.MODE == 'pr-closed'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          # oo-wp-plugin is the one repo whose artifact is not named after it.
+          # The project-app repos publish no manifest fragment at all.
+          case "$REPO" in
+            onoffice-classic|onoffice-modern|onoffice-pure|onoffice-timeless)
+              NAME="$REPO"; TYPE="theme" ;;
+            oo-wp-plugin)
+              NAME="onoffice-for-wp-websites"; TYPE="plugin" ;;
+            oo-vue-addons)
+              NAME="$REPO"; TYPE="plugin" ;;
+            *)
+              NAME=""; TYPE="" ;;
+          esac
+
+          REF=$(gh api "repos/${OWNER}/${HUB_REPO}" --jq '.default_branch')
+
+          if ! jq -n --arg ref "$REF" --arg pn "$NUMBER" --arg an "$NAME" --arg at "$TYPE" \
+            '{ref: $ref, inputs: {project_number: $pn, mode: "hub", artifact_name: $an, artifact_type: $at}}' \
+            | gh api "repos/${OWNER}/${HUB_REPO}/actions/workflows/pr-preview-cleanup.yml/dispatches" \
+              -X POST --input -; then
+            echo "::error::Could not announce p${NUMBER} to ${HUB_REPO} - artifact '${NAME:-<none>}' is still in the manifest and nothing will tear the project down. Run pr-preview-cleanup.yml there by hand with project_number=${NUMBER}."
+            exit 1
+          fi
+
+          echo "Announced p${NUMBER} to ${HUB_REPO} (artifact '${NAME:-<none>}')."
+
+      # ----- hub: prune, count, and tear down when nothing is left -----
+
+      - name: Set up the update-server key
+        if: env.MODE == 'hub'
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_UPDATE_SERVER }}
+
+      - name: Prune the announced artifact from the manifest
+        if: env.MODE == 'hub' && inputs.artifact_name != ''
+        env:
+          ARTIFACT_NAME: ${{ inputs.artifact_name }}
+          ARTIFACT_TYPE: ${{ inputs.artifact_type }}
+        run: |
+          set -e
+
+          # theme -> themes, plugin -> plugins. Derived rather than announced,
+          # so the other side has one value less to get wrong.
+          ARTIFACT_DIR="${ARTIFACT_TYPE}s"
+
+          SSH_OPTS="-o StrictHostKeyChecking=no"
+          REMOTE="zipupload@dev.onoffice-wp-updates.de"
+          REMOTE_DIR="pr-builds/P${NUMBER}"
+          BASE_URL="https://dev.onoffice-wp-updates.de/pr-builds/P${NUMBER}"
+
+          # No shell access assumed on the zipupload account - all remote
+          # deletion goes through "rsync --delete" against an empty local
+          # directory instead of an ssh rm -rf.
+          EMPTY_DIR="$(mktemp -d)"
+
+          HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" "${BASE_URL}/manifest.json")
+          HTTP_CODE=$(echo "$HTTP_RESPONSE" | tail -1)
+          BODY=$(echo "$HTTP_RESPONSE" | sed '$d')
+
+          if [ "$HTTP_CODE" = "404" ]; then
+            echo "::notice::No manifest for P${NUMBER} - nothing of ${ARTIFACT_NAME}'s is left there."
+            exit 0
+          fi
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::Failed to fetch manifest for P${NUMBER} (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
+
+          echo "$BODY" | jq --arg name "$ARTIFACT_NAME" --arg type "$ARTIFACT_TYPE" \
+            '[.[] | select(.name != $name or .type != $type)]' > pruned-manifest.json
+          LEFT=$(jq 'length' pruned-manifest.json)
+
+          echo "Removing ${ARTIFACT_TYPE} artifact '${ARTIFACT_NAME}' from P${NUMBER} (${LEFT} artifact(s) will remain)."
+          rsync -e "ssh $SSH_OPTS" -rlt --delete --mkpath "${EMPTY_DIR}/" "${REMOTE}:${REMOTE_DIR}/${ARTIFACT_DIR}/${ARTIFACT_NAME}/"
+
+          # Written back even when it is now an empty list. Whether the project
+          # folder itself goes is decided by the PR count below, not by how many
+          # artifacts happen to be left.
+          rsync -e "ssh $SSH_OPTS" --mkpath pruned-manifest.json "${REMOTE}:${REMOTE_DIR}/manifest.json"
+
+      - name: Count pull requests still open for this project
+        if: env.MODE == 'hub'
+        id: remaining
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          # Every run that gets here was triggered by a PR closing somewhere, and
+          # they are serialised by this repo's concurrency group - so the last
+          # one sees every one of those PRs closed and gets the true count. That
+          # is the whole reason counting lives here and not where the PR closed.
+          REMAINING=0
+
+          for repo in $WP_REPOS $PROJECT_APP_REPOS; do
+            REFS=$(gh api "repos/${OWNER}/${repo}/pulls?state=open&per_page=100" --paginate --jq '.[].head.ref')
+            REFS_EXIT=$?
+
+            if [ "$REFS_EXIT" -ne 0 ]; then
+              echo "::error::Failed to list open PRs for ${repo} (gh exit ${REFS_EXIT}) - refusing to tear down p${NUMBER} on an incomplete answer."
+              exit 1
+            fi
+
+            while IFS= read -r ref; do
+              [ -z "$ref" ] && continue
+              MATCH=$(grep -oP 'P#\K\d+' <<< "$ref" | head -1)
+              if [ "$MATCH" = "$NUMBER" ]; then
+                echo "${repo} still has an open PR on ${ref}"
+                REMAINING=$((REMAINING + 1))
+              fi
+            done <<< "$REFS"
+          done
+
+          echo "Open PRs left for P${NUMBER}: ${REMAINING}"
+          echo "remaining=${REMAINING}" >> "$GITHUB_OUTPUT"
+
+      - name: Clear the project folder on the update server
+        if: env.MODE == 'hub' && steps.remaining.outputs.remaining == '0'
+        run: |
+          set -e
+
+          SSH_OPTS="-o StrictHostKeyChecking=no"
+          REMOTE="zipupload@dev.onoffice-wp-updates.de"
+          EMPTY_DIR="$(mktemp -d)"
+
+          echo "No PRs left for P${NUMBER} - clearing its folder on the update server."
+          rsync -e "ssh $SSH_OPTS" -rlt --delete --mkpath "${EMPTY_DIR}/" "${REMOTE}:pr-builds/P${NUMBER}/"
+          ssh $SSH_OPTS "${REMOTE}" "rmdir-pr-build P${NUMBER}"
+
+      - name: Login to Hosting API
+        if: env.MODE == 'hub' && steps.remaining.outputs.remaining == '0'
+        id: api-login
+        run: |
+          LOGIN_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.HOSTING_API_URL }}/client-login" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d '{
+              "client_id": "${{ secrets.HOSTING_API_CLIENT_ID }}",
+              "client_secret": "${{ secrets.HOSTING_API_CLIENT_SECRET }}"
+            }')
+
+          HTTP_CODE=$(echo "$LOGIN_RESPONSE" | tail -1)
+          BODY=$(echo "$LOGIN_RESPONSE" | sed '$d')
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::API Login fehlgeschlagen (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
+
+          TOKEN=$(echo "$BODY" | jq -r '.data.token')
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "::error::Kein Token in Login-Response erhalten"
+            exit 1
+          fi
+
+          echo "::add-mask::${TOKEN}"
+          echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
+
+      - name: Delete the test box via Hosting API
+        if: env.MODE == 'hub' && steps.remaining.outputs.remaining == '0'
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X DELETE \
+            "${{ secrets.HOSTING_API_URL }}/test-environments/by-project/${NUMBER}" \
+            -H "Authorization: Bearer ${{ steps.api-login.outputs.token }}" \
+            -H "Accept: application/json")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: ${HTTP_CODE}"
+          echo "Response: ${BODY}"
+
+          # A project that never had a box, or whose box an earlier run already
+          # removed, is a "nothing to do" - the end state is the same.
+          if [ "$HTTP_CODE" = "404" ]; then
+            echo "::notice::No test box for project ${NUMBER} - already gone."
+            exit 0
+          fi
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::Box-Löschung fehlgeschlagen (HTTP ${HTTP_CODE}): ${BODY}"
+            exit 1
+          fi
+
+      # Loaded here rather than at the top: a second ssh-agent call replaces the
+      # agent, so the mptest key has to come after the update-server work.
+      - name: Set up the mptest key
+        if: env.MODE == 'hub' && steps.remaining.outputs.remaining == '0'
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_IONOS }}
+
+      - name: Configure SSH for jump server
+        if: env.MODE == 'hub' && steps.remaining.outputs.remaining == '0'
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          cat > ~/.ssh/config << 'EOF'
+          Host 217.154.241.45
+            StrictHostKeyChecking no
+            UserKnownHostsFile /dev/null
+
+          Host ionos-mptest
+            HostName 10.7.224.30
+            User laravel
+            ProxyJump laravel@217.154.241.45
+            StrictHostKeyChecking no
+            UserKnownHostsFile /dev/null
+          EOF
+          chmod 600 ~/.ssh/config
+
+      - name: Destroy the project instance on mptest
+        if: env.MODE == 'hub' && steps.remaining.outputs.remaining == '0'
+        run: |
+          PROJECT_ID="p${NUMBER}"
+
+          # Shares pr-preview-upload.yml's lock file on purpose: a destroy must
+          # never run while a deploy is still installing into the same
+          # directory. destroy-project itself is idempotent - it drops the
+          # databases with IF EXISTS and skips a project directory that is
+          # already gone, so a second run over the same project is harmless.
+          set +e
+          ssh ionos-mptest \
+            "flock -w 1800 -E 75 /tmp/deploy-project-${PROJECT_ID}.lock destroy-project ${PROJECT_ID}"
+          RC=$?
+          set -e
+
+          if [ "$RC" -eq 75 ]; then
+            echo "::error::Timed out after 30 min waiting for a deploy of ${PROJECT_ID} to release the lock on mptest."
+            exit 1
+          fi
+
+          if [ "$RC" -ne 0 ]; then
+            echo "::error::destroy-project ${PROJECT_ID} failed on mptest (exit ${RC})."
+            exit "$RC"
+          fi
+
+      - name: Summary
+        if: always()
+        env:
+          ARTIFACT_NAME: ${{ inputs.artifact_name }}
+          REMAINING: ${{ steps.remaining.outputs.remaining }}
+        run: |
+          {
+            echo "### PR Preview Cleanup (${MODE})"
+            echo ""
+            echo "- Project: \`P${NUMBER}\`"
+
+            if [ "$MODE" != "hub" ]; then
+              echo "- Closed PR announced to the hub; it does the cleanup."
+            else
+              if [ -n "$ARTIFACT_NAME" ]; then
+                echo "- Artifact pruned from the manifest: \`${ARTIFACT_NAME}\`"
+              else
+                echo "- No artifact announced - nothing to prune."
+              fi
+
+              if [ -z "$REMAINING" ]; then
+                echo "- Open PRs could not be counted - nothing was torn down."
+              elif [ "$REMAINING" = "0" ]; then
+                echo "- No PRs left open anywhere in the family."
+                echo "- Update-server folder, test box and mptest instance destroyed."
+              else
+                echo "- \`${REMAINING}\` PR(s) still open for this project - box and instance kept."
+              fi
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

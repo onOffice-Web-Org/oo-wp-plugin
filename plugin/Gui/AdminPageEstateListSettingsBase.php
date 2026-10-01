@@ -36,8 +36,8 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
 use function __;
 use onOffice\WPlugin\Field\CustomLabel\Exception\CustomLabelDeleteException;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 
@@ -136,6 +136,10 @@ abstract class AdminPageEstateListSettingsBase
 		}
 		if ($result) {
 			$this->saveCustomLabels($recordId, $row, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS);
+
+			// Allows external hooks (e.g. the nginx/Redis cache purger in the hosting infra)
+			// to react to config changes that never go through save_post/deleted_post.
+			do_action('onoffice/config_changed', $type, $action, $recordId);
 		}
 		$pResult->result = $result;
 		$pResult->record_id = $recordId;

@@ -28,6 +28,9 @@ namespace onOffice\WPlugin;
 
 class RequestVariablesSanitizer
 {
+	/** @var array characters that must never reach the onOffice API */
+	const INVALID_CHARACTERS = ['<', '>', '"', '\\', '|', ';'];
+
 	/**
 	 *
 	 * @param string $name
@@ -88,7 +91,7 @@ class RequestVariablesSanitizer
      * Sanitize Strings based on the deprecated FILTER_SANITIZE_STRING filter.
      *
      * @param $value
-     * @param array $flags
+     * @param array $flags kept for backwards compatibility, no longer evaluated
      * @return string
      */
 	public static function sanitizeFilterString($value, array $flags = []): string
@@ -96,16 +99,32 @@ class RequestVariablesSanitizer
 		if ($value === null) {
 			return '';
 		}
-		$noQuotes = in_array(FILTER_FLAG_NO_ENCODE_QUOTES, $flags);
-		$options = ($noQuotes ? ENT_NOQUOTES : ENT_QUOTES) | ENT_SUBSTITUTE;
-		$optionsDecode = ($noQuotes ? ENT_QUOTES : ENT_NOQUOTES) | ENT_SUBSTITUTE;
 
 		$value = stripslashes($value);
 		$value = wp_strip_all_tags($value);
-		$value = htmlspecialchars($value, $options);
 
-		// Fix that HTML entities are converted to entity numbers instead of entity name (e.g. ' -> &#34; and not ' -> &quote;)
-		$value = str_replace(["&quot;", "&#039;"], ["&#34;", "&#39;"], $value);
-		return html_entity_decode($value, $optionsDecode);
+		return self::removeInvalidCharacters($value);
+	}
+
+	/**
+	 * Strip characters that are not permitted in free text passed on to the API.
+	 *
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	public static function removeInvalidCharacters($value)
+	{
+		if (is_array($value)) {
+			return array_map([self::class, 'removeInvalidCharacters'], $value);
+		}
+
+		if (!is_string($value)) {
+			return $value;
+		}
+
+		$value = str_replace(self::INVALID_CHARACTERS, '', $value);
+
+		// drop control characters, keep tab and line breaks
+		return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $value);
 	}
 }

@@ -23,7 +23,7 @@ namespace onOffice\WPlugin\Gui\Table;
 
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form;
-use onOffice\WPlugin\Form\AltchaHandler;
+use onOffice\WPlugin\Utility\ThemeSupport;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 use onOffice\WPlugin\Gui\AdminPageFormList;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
@@ -238,7 +238,7 @@ class FormsTable
 
 		foreach ($formConfig as $type => $label)
 		{
-			if (AltchaHandler::isSupportedTheme() && $type === Form::TYPE_APPLICANT_SEARCH) {
+			if (ThemeSupport::isOnOfficeTheme() && $type === Form::TYPE_APPLICANT_SEARCH) {
 				continue;
 			}
 

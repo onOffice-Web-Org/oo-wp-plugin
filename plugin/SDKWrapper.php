@@ -28,8 +28,8 @@
 
 namespace onOffice\WPlugin;
 
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
@@ -89,7 +89,7 @@ class SDKWrapper
 	 *
 	 */
 
-	/** @var \DI\Container Shared container instance to avoid rebuilding */
+	/** @var \onOffice\WPlugin\Vendor\DI\Container Shared container instance to avoid rebuilding */
 	private static $_pSharedContainer = null;
 
 	public function __construct(
@@ -156,19 +156,30 @@ class SDKWrapper
 		$pOptionsWrapper = $this->_pWPOptionWrapper;
 		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
 		$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
+		$apiClaim = (string) $pOptionsWrapper->getOption('onoffice-settings-apiclaim', '');
 		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
 			try {
-				$secretDecrypt = $this->_encrypter->decrypt($secret, ONOFFICE_CREDENTIALS_ENC_KEY);
-				$tokenDecrypt = $this->_encrypter->decrypt($token, ONOFFICE_CREDENTIALS_ENC_KEY);
-			}catch (\RuntimeException $exception){
+				$secret = $this->_encrypter->decrypt($secret, ONOFFICE_CREDENTIALS_ENC_KEY);
+				$token = $this->_encrypter->decrypt($token, ONOFFICE_CREDENTIALS_ENC_KEY);
+			} catch (\RuntimeException $exception) {
 				$this->_pSDK->removeCacheInstances();
-				$secretDecrypt = $secret;
-				$tokenDecrypt = $token;
+				$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
+				$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
 			}
-			$secret = $secretDecrypt;
-			$token = $tokenDecrypt;
+
+			// An empty claim is the normal case - installations without an
+			// Extended Claim store nothing here, and decrypt('') always throws.
+			// Kept out of the try above so a broken claim cannot drag token and
+			// secret back to their still-encrypted values.
+			if ($apiClaim !== '') {
+				try {
+					$apiClaim = $this->_encrypter->decrypt($apiClaim, ONOFFICE_CREDENTIALS_ENC_KEY);
+				} catch (\RuntimeException $exception) {
+					// leave the raw value; a broken claim must not invalidate token/secret
+				}
+			}
 		}
-		$this->_pSDK->sendRequests($token, $secret, $saveToCache);
+		$this->_pSDK->sendRequests($token, $secret, $saveToCache, $apiClaim);
 		$errors = $this->_pSDK->getErrors();
 
 		foreach ($this->_callbacksAfterSend as $handle => $callback) {

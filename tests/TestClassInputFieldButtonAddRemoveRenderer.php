@@ -26,8 +26,8 @@ namespace onOffice\tests;
 use onOffice\WPlugin\Renderer\InputFieldButtonAddRemoveRenderer;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use WP_UnitTestCase;
 
 /**

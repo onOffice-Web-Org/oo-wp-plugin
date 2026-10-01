@@ -40,8 +40,8 @@ use WP_UnitTestCase;
 use onOffice\WPlugin\DataView\DataDetailView;
 use wpdb;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Types\Field;
 
 class TestClassFormModelBuilderEstateDetailSettings

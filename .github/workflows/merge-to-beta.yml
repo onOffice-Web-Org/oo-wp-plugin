@@ -1,0 +1,132 @@
+name: 🌱 Merge into beta
+
+on:
+  workflow_dispatch:
+    inputs:
+      source-branch:
+        description: Branch, dessen Stand nach beta übernommen wird
+        required: true
+        default: master
+        type: string
+      target-branch:
+        description: Ziel-Branch des Beta-Cuts
+        required: true
+        default: beta
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: merge-into-${{ inputs.target-branch }}
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+
+    env:
+      SOURCE_BRANCH: ${{ inputs.source-branch }}
+      TARGET_BRANCH: ${{ inputs.target-branch }}
+
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.OO_ACTIONS_BOT_APP_ID }}
+          private-key: ${{ secrets.OO_ACTIONS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            ${{ github.event.repository.name }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge source into beta
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SOURCE_BRANCH}" ] || [ -z "${TARGET_BRANCH}" ]; then
+            echo "::error::Source and target branch must be set."
+            exit 1
+          fi
+          if [ "${SOURCE_BRANCH}" = "${TARGET_BRANCH}" ]; then
+            echo "::error::Source and target branch must be different."
+            exit 1
+          fi
+          if ! git ls-remote --exit-code --heads origin "${SOURCE_BRANCH}" >/dev/null; then
+            echo "::error::Source branch '${SOURCE_BRANCH}' does not exist."
+            exit 1
+          fi
+
+          git fetch --tags origin "${SOURCE_BRANCH}"
+          SRC="origin/${SOURCE_BRANCH}"
+
+          # Create the target branch on the first cut instead of failing
+          if ! git ls-remote --exit-code --heads origin "${TARGET_BRANCH}" >/dev/null; then
+            echo "Target branch '${TARGET_BRANCH}' does not exist yet, creating it from ${SOURCE_BRANCH}."
+            git push origin "${SRC}:refs/heads/${TARGET_BRANCH}"
+            exit 0
+          fi
+
+          git fetch origin "${TARGET_BRANCH}"
+          git checkout -q -B "${TARGET_BRANCH}" "origin/${TARGET_BRANCH}"
+
+          # Merge commit keeps every commit of both branches, a squash would collapse them.
+          # The tree however is taken verbatim from the source, so beta ends up identical to it.
+          if git merge-base --is-ancestor "${SRC}" HEAD && git diff --quiet "${SRC}" HEAD; then
+            echo "${TARGET_BRANCH} already matches ${SOURCE_BRANCH}, nothing to merge."
+          else
+            LOST=$(git log --oneline "${SRC}..HEAD")
+            if [ -n "$LOST" ]; then
+              echo "::error::${TARGET_BRANCH} carries commits that are not in ${SOURCE_BRANCH}. The cut would roll their content back. Backmerge ${TARGET_BRANCH} into ${SOURCE_BRANCH} first, then start this workflow again."
+              echo "$LOST" | sed 's/^/  /'
+              exit 1
+            fi
+            # No "|| true": a failing merge must fail the job. -s ours cannot
+            # conflict, it only returns non-zero on a real git error.
+            git merge --no-commit --no-ff -s ours "${SRC}"
+            git read-tree -u --reset "${SRC}"
+            if git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+              git commit --no-edit -m "ci: beta cut - merge ${SOURCE_BRANCH} into ${TARGET_BRANCH}"
+            elif ! git diff --cached --quiet; then
+              # Source was already an ancestor, only the tree needed correcting
+              git commit -m "chore: sync ${TARGET_BRANCH} with ${SOURCE_BRANCH}"
+            else
+              echo "Nothing to commit, ${TARGET_BRANCH} already matches ${SOURCE_BRANCH}."
+            fi
+          fi
+
+          # The cut is only valid if both branches carry the exact same tree afterwards
+          if ! git diff --quiet "${SRC}" HEAD; then
+            echo "::error::${TARGET_BRANCH} still differs from ${SOURCE_BRANCH} after the merge."
+            git diff --name-status "${SRC}" HEAD
+            exit 1
+          fi
+
+          if ! git push origin "HEAD:${TARGET_BRANCH}"; then
+            echo "::error::Push rejected, ${TARGET_BRANCH} changed during the merge. Just re-run the workflow."
+            exit 1
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Beta cut"
+            echo ""
+            echo "\`${SOURCE_BRANCH}\` → \`${TARGET_BRANCH}\`"
+            echo ""
+            echo "Merged with a merge commit, so no commit is lost. The tree is taken from \`${SOURCE_BRANCH}\`."
+          } >> "$GITHUB_STEP_SUMMARY"

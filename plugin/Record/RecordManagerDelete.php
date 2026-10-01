@@ -30,10 +30,10 @@ namespace onOffice\WPlugin\Record;
 interface RecordManagerDelete
 {
 	/**
-	 *
 	 * @param array $ids
+	 * @return int number of records actually deleted (main table rows affected)
 	 *
 	 */
 
-	public function deleteByIds(array $ids);
+	public function deleteByIds(array $ids): int;
 }

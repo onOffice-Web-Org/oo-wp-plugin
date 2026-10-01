@@ -17,7 +17,7 @@ class Redirector
 
 		//Check pass rule and has Unique ID
 		preg_match( '/^(' . preg_quote( $pagePath,
-				'/' ) . ')\/([0-9]+)(-([^$]+)?)?\/?$/', $uri, $matches );
+				'/' ) . ')\/([0-9]+)(-([^\/]+)?)?\/?$/', $uri, $matches );
 
 		return $matches;
 	}

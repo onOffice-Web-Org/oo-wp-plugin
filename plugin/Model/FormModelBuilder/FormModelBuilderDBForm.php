@@ -21,10 +21,10 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\DependencyException;
+use onOffice\WPlugin\Vendor\DI\NotFoundException;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientCredentialsException;
@@ -432,6 +432,22 @@ class FormModelBuilderDBForm
 			InputModelDBFactoryConfigForm::INPUT_FORM_USE_BROKER_RECIPIENT, $selectedValue);
 
 		return $pInputModelUseBrokerRecipient;
+	}
+
+	/**
+	 * @return InputModelDB
+	 * @throws Exception
+	 */
+	public function createInputModelAssignBrokerAsSupervisor(): InputModelDB
+	{
+		$hint = __('Assigns the contact person of this page not only as the contact, but also as the supervisor for both the created property and the created contact.', 'onoffice-for-wp-websites');
+		$labelAssignBrokerAsSupervisor = __('Also set contact person as supervisor', 'onoffice-for-wp-websites')
+			. ' <span class="dashicons dashicons-editor-help oo-field-hint" tabindex="0" title="' . esc_attr($hint) . '"></span>';
+		$selectedValue = $this->getValue('assign_broker_as_supervisor', false);
+		$pInputModelAssignBrokerAsSupervisor = $this->generateGenericCheckbox($labelAssignBrokerAsSupervisor,
+			InputModelDBFactoryConfigForm::INPUT_FORM_ASSIGN_BROKER_AS_SUPERVISOR, $selectedValue);
+
+		return $pInputModelAssignBrokerAsSupervisor;
 	}
 
 	/**

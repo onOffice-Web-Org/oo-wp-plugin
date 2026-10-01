@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostContactConfigurationDefault;

@@ -32,10 +32,10 @@ use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Model\InputModelOption;
 use WP_UnitTestCase;
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Types\Field;
 
 class TestClassFormModelBuilderDBEstateListSettings

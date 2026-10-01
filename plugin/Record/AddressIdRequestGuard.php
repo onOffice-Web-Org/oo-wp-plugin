@@ -25,8 +25,8 @@ namespace onOffice\WPlugin\Record;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\AddressDetailUrl;
@@ -150,8 +150,8 @@ class AddressIdRequestGuard
 	 * @param array $locales
 	 * @param int $addressId
 	 * @return array
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	private function getAddressTitleByLocales(array $locales, int $addressId): array
 	{

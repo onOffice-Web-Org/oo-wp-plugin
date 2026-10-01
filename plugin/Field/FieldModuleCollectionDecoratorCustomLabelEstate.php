@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace onOffice\WPlugin\Field;
 
 use function __;
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Types\Field;

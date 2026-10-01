@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
+use onOffice\WPlugin\Vendor\DI\Container;
 use Closure;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
@@ -41,7 +41,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Filter\FilterBuilderInputVariablesFactory;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddressFactory;

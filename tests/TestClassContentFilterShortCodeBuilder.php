@@ -22,7 +22,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use Generator;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeBuilder;
 use WP_UnitTestCase;

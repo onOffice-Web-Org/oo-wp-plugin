@@ -24,8 +24,8 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
-use DI\ContainerBuilder;
+use onOffice\WPlugin\Vendor\DI\Container;
+use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
@@ -48,8 +48,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testUrlWithFolder()
 	{
@@ -63,8 +63,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testUrlWithGetParameter()
 	{
@@ -77,8 +77,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testUrlWithCustomPort()
 	{
@@ -91,8 +91,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testUrlWithTitle()
 	{
@@ -107,8 +107,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testUrlWithTitleLimitCharacter()
 	{
@@ -123,8 +123,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testUrlWithTitleNotSetOptionShowUrlAndTitle()
 	{
@@ -140,8 +140,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testUrlWithTitleAndParameter()
 	{
@@ -156,8 +156,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testGetUrlWithFilterTrueAndEnableOptionShowTitleWithParameter()
 	{
@@ -172,8 +172,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testGetUrlWithFilterTrueAndEnableOptionShowTitleKeepsCustomPort()
 	{
@@ -189,8 +189,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testGetUrlWithFilterTrueAndDisableOptionShowTitleWithParameter()
 	{
@@ -205,8 +205,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testGetUrlWithFilterFalseAndDisableOptionShowTitleWithParameter()
 	{
@@ -226,8 +226,8 @@ class TestClassEstateDetailUrl
 	}
 
 	/**
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Vendor\DI\DependencyException
+	 * @throws \onOffice\WPlugin\Vendor\DI\NotFoundException
 	 */
 	public function testGetUrlWithFilterFalseAndEnableOptionShowTitleWithParameter()
 	{
