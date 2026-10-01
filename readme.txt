@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 6.1
 Tested up to: 6.9.1
 Requires PHP: 8.2
-Stable tag: 6.19.0-prerelease.2
+Stable tag: 6.19.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,37 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 6.19.0 (2026-10-01) =
+
+**Added**
+* Github Action Testinstanzen Pullrequests
+* Github Action Testinstanzen Pullrequests small fix
+* Github Action bei Merge
+* CLAUDE.md WP-Plugin
+* Projektbasierende Instanzen verbinden
+* Vorlage Webseite mit Bug
+* WP-Plugin: Berater als Objekt- und Adressbetreuer setzen
+
+**Fixed**
+* fire onoffice/config_changed on listview/form create, update, delete, duplicate
+* incident/5827747-property-limit
+* Sonderzeichen in URLs erzeugen Weiterleitungsschleifen
+* Update PSR-11 v1 Container WP-Plugin
+* Missing validation permits invalid characters
+* Fehlende Input Wrapper
+* Ähnliche Immobilien Mehrsprachigkeit
+* Karten-Pins bei Auslandsimmobilien
+* Diskrepanz Immobilien Karte und Liste
+* Title und Meta Beschreibungen und andere Boolean-Felder
+
+**Changed**
+* Add capaibilities only once
+* WP-Plugin: Log Warnings
+
+**Maintenance**
+* sync prerelease with beta
+* update dependency installation to include Composer
 
 = 6.18.1 (2026-09-07) =
 
