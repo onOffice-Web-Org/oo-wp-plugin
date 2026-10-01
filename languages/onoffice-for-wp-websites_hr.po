@@ -1542,12 +1542,12 @@ msgstr[1] "Obrasca vlasnika"
 msgstr[2] "Obrazaca vlasnika"
 
 #: 
-msgid "Page "
-msgstr "Stranica "
-
-#: 
 msgid "Page"
 msgstr "Stranica"
+
+#: 
+msgid "Page "
+msgstr "Stranica "
 
 #. translators: %d: page number
 #: 

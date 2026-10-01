@@ -1699,14 +1699,14 @@ msgstr[1] "Formulaires du propriétaire"
 msgstr[2] "Formulaires du propriétaire"
 
 #: 
+msgid "Page"
+msgstr "Page"
+
+#: 
 msgid "Page "
 msgstr "Page\n"
 "\n"
 ""
-
-#: 
-msgid "Page"
-msgstr "Page"
 
 #. translators: %d: page number
 #: 

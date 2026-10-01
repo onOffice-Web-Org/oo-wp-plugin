@@ -1523,11 +1523,11 @@ msgstr[0] "Eigentümerformular"
 msgstr[1] "Eigentümerformulare"
 
 #: 
-msgid "Page "
+msgid "Page"
 msgstr "Seite"
 
 #: 
-msgid "Page"
+msgid "Page "
 msgstr "Seite"
 
 #. translators: %d: page number

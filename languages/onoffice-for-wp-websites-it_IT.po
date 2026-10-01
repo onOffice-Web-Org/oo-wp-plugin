@@ -1542,11 +1542,11 @@ msgstr[1] "Moduli del proprietario"
 msgstr[2] "Moduli proprietaro"
 
 #: 
-msgid "Page "
+msgid "Page"
 msgstr "Pagina"
 
 #: 
-msgid "Page"
+msgid "Page "
 msgstr "Pagina"
 
 #. translators: %d: page number

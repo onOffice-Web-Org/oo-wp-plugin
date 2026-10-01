@@ -1542,12 +1542,12 @@ msgstr[1] "Formularios de Propietario"
 msgstr[2] "Formulario de Propietario"
 
 #: 
-msgid "Page "
-msgstr "Página "
-
-#: 
 msgid "Page"
 msgstr "Página"
+
+#: 
+msgid "Page "
+msgstr "Página "
 
 #. translators: %d: page number
 #: 
