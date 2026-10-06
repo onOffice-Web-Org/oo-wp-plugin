@@ -84,7 +84,7 @@ Examples: `fix(P#172629): price on request`, `feat(P#12345): add estate list fil
 | Workflow | Trigger | Note |
 | --- | --- | --- |
 | `unit-tests.yml` | PR to `master`/`beta`/`prerelease`/`release`, push to `master`/`beta`, weekly | **the CI gate**: phpunit `--fail-on-warning --fail-on-risky --disallow-test-output` + `check-prefixed-imports`. Don't restate its failures in a review. |
-| `guard-languages.yml` | PR to `master`/`beta` | fails the PR on any `languages/…` change except `-de_DE.po`. Skipped for branches starting with `release`. |
+| `guard-languages.yml` | PR to `master`/`beta` | fails the PR on any `languages/…` change except `-de_DE.po`, or if a string used in the code has no German translation in `-de_DE.po`. Skipped for branches starting with `release`. |
 | `semantic-pull-request.yml` | `pull_request_target` | validates the PR title |
 | `claude-code-review.yml` | *Ready for review*, `@claude` comment, manual | **on request, not on every push** — see [code-review.md](code-review.md) |
 | `poeditor.yml` | push to `master` touching `-de_DE.po` | uploads to POEditor + Chat notification |

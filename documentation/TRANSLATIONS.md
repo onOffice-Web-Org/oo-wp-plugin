@@ -22,6 +22,12 @@ written by automation. The **guard-languages** workflow
 (`.github/workflows/guard-languages.yml`) fails any PR against `master` or `beta` that touches them.
 It is skipped only for branches whose name starts with `release`.
 
+The same workflow also extracts the strings of the pull request and of its base branch
+(`.github/scripts/check-translations.sh`) and fails if the pull request leaves a string used in the
+code without a German translation: a new `msgid` missing from `de_DE.po`, or an entry that was
+deleted, emptied or set back to the English `msgid` while the code still uses it. Strings that were already untranslated on the base
+branch only produce a warning.
+
 If you think a non-German translation is wrong, fix it in POEditor, not in the repository.
 
 ## The two text domains
@@ -196,7 +202,7 @@ For most work you do not need this command at all — add the string, add its Ge
 * Every user-facing string wrapped, with the literal `'onoffice-for-wp-websites'` domain, escaped
   for its output context.
 * No concatenated sentences; placeholders documented with a `translators:` comment where ambiguous.
-* German translation for every new string present in `de_DE.po`.
+* German translation for every new string present in `de_DE.po` (enforced by **guard-languages**).
 * No changes to `.mo` files, `*.pot`, or any locale other than `de_DE`.
 * A new locale also added to `Language::LOCALE_MAPPING`, not just to the sync allowlist.
 * No hardcoded language name, country code or currency symbol where a mapping or a WordPress
