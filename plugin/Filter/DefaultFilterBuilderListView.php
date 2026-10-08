@@ -72,14 +72,14 @@ class DefaultFilterBuilderListView
 	}
 
 	/**
-     * Resolves the DataListView to be used.
-     * * Returns the provided override if it is not null; otherwise, falls back 
-     * to the internal default DataListView instance.
-     *
-     * @param DataListView|null $pDataListViewOverride Optional override instance.
-     * @return DataListView The resolved DataListView instance.
-     * @throws \TypeError If no override is provided and the internal instance is not initialized.
-     */
+	 * Resolves the DataListView to be used.
+	 * * Returns the provided override if it is not null; otherwise, falls back 
+	 * to the internal default DataListView instance.
+	 *
+	 * @param DataListView|null $pDataListViewOverride Optional override instance.
+	 * @return DataListView The resolved DataListView instance.
+	 * @throws \TypeError If no override is provided and the internal instance is not initialized.
+	 */
 	public function getDataListView(?DataListView $pDataListViewOverride = null): DataListView
 	{
 		return $pDataListViewOverride ?? $this->_pDataListView;
@@ -189,10 +189,16 @@ class DefaultFilterBuilderListView
 			}
 
 			try {
+				$activeLanguage = method_exists($this->_pDataListView, 'getLanguage') 
+					? (string) $this->_pDataListView->getLanguage() 
+					: '';
+
 				$pEstateCityValuesMapper = new EstateCityValuesMapper(
 					null,
 					$this->_pDataListView->getShowReferenceEstate(),
-					$this->_pDataListView->getFilterId());
+					$this->_pDataListView->getFilterId(),
+					$activeLanguage
+				);
 				$additionalEstateCities = $pEstateCityValuesMapper->getMainLanguageCityValues($estateCityValue);
 			} catch (ApiClientException | HttpFetchNoResultException | ApiCallFaultyResponseException $e) {
 				$additionalEstateCities = $estateCityValue;
