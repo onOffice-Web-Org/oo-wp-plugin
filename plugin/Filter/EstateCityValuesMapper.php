@@ -33,11 +33,6 @@ use onOffice\WPlugin\SDKWrapper;
 /**
  * Maps localized city names (e.g. the German "Gufidaun") to the main-language
  * ort values the API can actually filter on (e.g. "Gudon").
- *
- * The onOffice API matches the `ort` filter against the MAIN-language record
- * of an estate only, regardless of the requested `estatelanguage`. The search
- * form dropdown is built from estates in the current language, so its values
- * may not match any main-language ort. This class resolves that mismatch.
  */
 class EstateCityValuesMapper
 {
@@ -50,31 +45,28 @@ class EstateCityValuesMapper
 	/** @var int */
 	private $_filterId = 0;
 
+	/** @var string */
+	private $_activeLanguage = '';
+
 	public function __construct(
 		SDKWrapper $pSDKWrapper = null,
 		string $pShowReferenceEstate = '',
-		int $filterId = 0)
-	{
+		int $filterId = 0,
+		string $activeLanguage = ''
+	) {
 		$this->_pSDKWrapper = $pSDKWrapper ?? new SDKWrapper();
 		$this->_pShowReferenceEstate = $pShowReferenceEstate;
 		$this->_filterId = $filterId;
+		$this->_activeLanguage = $activeLanguage;
 	}
 
-	/**
-	 * Expands submitted (localized) city names to the set of main-language
-	 * orts that match them. Values that cannot be mapped are kept unchanged.
-	 *
-	 * @param string[] $localizedCities
-	 * @return string[]
-	 * @throws ApiClientException
-	 */
 	public function getMainLanguageCityValues(array $localizedCities): array
 	{
 		if ($localizedCities === []) {
 			return [];
 		}
 
-		$mapping = $this->buildMapping();
+		$mapping = $this->buildMapping($localizedCities);
 		$result = [];
 
 		foreach ($localizedCities as $city) {
@@ -88,22 +80,17 @@ class EstateCityValuesMapper
 		return array_values(array_unique($result));
 	}
 
-	/**
-	 * @return array<string, string[]>  localized ort => [main-language orts]
-	 * @throws ApiClientException
-	 */
-	private function buildMapping(): array
+	private function buildMapping(array $localizedCities): array
 	{
-		[$currentLanguageRecords, $mainLanguageRecords] = $this->readEstates();
+		$currentLanguageRecords = $this->fetchEstatesByCity($localizedCities, $this->getActiveLanguage());
 
-		$mainOrtById = [];
-		foreach ($mainLanguageRecords as $record) {
-			if (isset($record['id'], $record['elements']['ort'])) {
-				$mainOrtById[$record['id']] = $record['elements']['ort'];
-			}
+		if ($currentLanguageRecords === []) {
+			return [];
 		}
 
-		$mapping = [];
+		$mainIdsToFetch = [];
+		$localizedOrtById = [];
+
 		foreach ($currentLanguageRecords as $record) {
 			$localizedOrt = $record['elements']['ort'] ?? '';
 			if ($localizedOrt === '') {
@@ -111,56 +98,72 @@ class EstateCityValuesMapper
 			}
 
 			$mainId = $record['elements']['mainLangId'] ?? $record['id'];
-			$mainOrt = $mainOrtById[$mainId] ?? $localizedOrt;
-			$mapping[$localizedOrt][$mainOrt] = $mainOrt;
+			$mainIdsToFetch[$mainId] = true;
+			$localizedOrtById[$mainId][] = $localizedOrt;
+		}
+
+		if ($mainIdsToFetch === []) {
+			return [];
+		}
+
+		$mainLanguageRecords = $this->fetchEstatesById(array_keys($mainIdsToFetch), null);
+
+		$mapping = [];
+		foreach ($mainLanguageRecords as $record) {
+			if (isset($record['id'], $record['elements']['ort'])) {
+				$mainOrt = $record['elements']['ort'];
+				$mainId = $record['id'];
+
+				if (isset($localizedOrtById[$mainId])) {
+					foreach ($localizedOrtById[$mainId] as $locOrt) {
+						$mapping[$locOrt][$mainOrt] = $mainOrt;
+					}
+				}
+			}
 		}
 
 		return array_map('array_values', $mapping);
 	}
 
-	/**
-	 * @return array{0: array, 1: array}
-	 * @throws ApiClientException
-	 */
-	private function readEstates(): array
+	private function fetchEstatesByCity(array $cities, ?string $language): array
 	{
-		$languages = [Language::getDefault(), null];
-		$actions = [];
-		foreach ($languages as $language) {
-			$actions[] = $this->queueReadEstatesAction($language);
-		}
+		$filter = ['ort' => [['op' => 'in', 'val' => $cities]]];
+		return $this->executeReadAction($language, $filter);
+	}
+
+	private function fetchEstatesById(array $ids, ?string $language): array
+	{
+		$filter = ['Id' => [['op' => 'in', 'val' => $ids]]];
+		return $this->executeReadAction($language, $filter);
+	}
+
+	private function executeReadAction(?string $language, array $additionalFilter): array
+	{
+		$pAction = $this->queueReadEstatesAction($language, 0, $additionalFilter);
 		$this->_pSDKWrapper->sendRequests();
 
-		$recordsByLanguage = [];
-		$additionalActions = [];
-		foreach ($actions as $index => $pAction) {
-			$records = $pAction->getResultRecords();
-			$recordsByLanguage[$index] = $records;
-			$total = $pAction->getResultMeta()['cntabsolute'] ?? count($records);
-			$total = is_array($total) ? ($total[0] ?? count($records)) : $total;
+		$records = $pAction->getResultRecords();
+		$total = $pAction->getResultMeta()['cntabsolute'] ?? count($records);
+		$total = is_array($total) ? ($total[0] ?? count($records)) : $total;
 
-			for ($offset = 500; $offset < (int)$total; $offset += 500) {
-				$additionalActions[$index][] = $this->queueReadEstatesAction($languages[$index], $offset);
-			}
+		$allRecords = $records;
+		$additionalActions = [];
+
+		for ($offset = 500; $offset < (int)$total; $offset += 500) {
+			$additionalActions[] = $this->queueReadEstatesAction($language, $offset, $additionalFilter);
 		}
 
 		if ($additionalActions !== []) {
 			$this->_pSDKWrapper->sendRequests();
-			foreach ($additionalActions as $index => $pageActions) {
-				foreach ($pageActions as $pAction) {
-					$recordsByLanguage[$index] = array_merge(
-						$recordsByLanguage[$index], $pAction->getResultRecords());
-				}
+			foreach ($additionalActions as $pPageAction) {
+				$allRecords = array_merge($allRecords, $pPageAction->getResultRecords());
 			}
 		}
 
-		return [$recordsByLanguage[0], $recordsByLanguage[1]];
+		return $allRecords;
 	}
 
-	/**
-	 * @param string|null $language null = main language (no estatelanguage)
-	 */
-	private function queueReadEstatesAction(?string $language, int $offset = 0): APIClientActionGeneric
+	private function queueReadEstatesAction(?string $language, int $offset = 0, array $additionalFilter = []): APIClientActionGeneric
 	{
 		$requestParams = [
 			'data' => ['ort', 'Id'],
@@ -179,7 +182,15 @@ class EstateCityValuesMapper
 		} elseif ($this->_pShowReferenceEstate === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
 		}
+
 		$requestParams['filter']['veroeffentlichen'][] = ['op' => '=', 'val' => 1];
+
+		if ($additionalFilter !== []) {
+			foreach ($additionalFilter as $key => $filterData) {
+				$requestParams['filter'][$key] = $filterData;
+			}
+		}
+
 		if ($this->_filterId !== 0) {
 			$requestParams['filterid'] = $this->_filterId;
 		}
@@ -187,9 +198,18 @@ class EstateCityValuesMapper
 			$requestParams['listoffset'] = $offset;
 		}
 
-		$pApiClientAction = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+		$pApiClientAction = new APIClientActionGeneric(
+			$this->_pSDKWrapper, 
+			onOfficeSDK::ACTION_ID_READ, 
+			'estate'
+		);
+		
 		$pApiClientAction->setParameters($requestParams);
 		return $pApiClientAction->addRequestToQueue();
+	}
+
+	private function getActiveLanguage(): string
+	{
+		return $this->_activeLanguage !== '' ? $this->_activeLanguage : Language::getDefault();
 	}
 }
