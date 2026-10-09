@@ -1,5 +1,9 @@
 # Release Process
 
+> **This automated process no longer exists.** The workflows were removed and this repository
+> only receives bug fixes; bug fix releases for wordpress.org are prepared manually. The rest of
+> this document describes the former pipeline.
+
 Releases are created by semantic-release. It runs automatically whenever something is pushed to the
 `prerelease` or `release` branch (`.github/workflows/release.yml`).
 

@@ -8,6 +8,10 @@ on top of.
 **The detailed rules live in `documentation/`. They are not loaded automatically — open the file
 that covers your task before you start.**
 
+**Maintenance mode:** this repository only receives bug fixes and has no GitHub Actions workflows
+anymore. Wherever the documentation mentions a workflow (`unit-tests.yml`, `release.yml`, the
+automated review, …), it no longer runs.
+
 **Three things make this repo different from the four theme repos:** it owns **customer database
 schema** (a bad migration is unrecoverable on live installations), it has a **real PHPUnit suite**
 (so tests are a review gate, not advisory), and its production dependencies are
@@ -59,7 +63,7 @@ the working instruction needs fixing.
   [project.md](documentation/project.md#when-you-need-another-repository).
 - **Nothing may be pushed, released or deployed without being asked** — see
   [workflow.md](documentation/workflow.md#nothing-here-may-be-triggered-without-being-asked).
-- **Finish with QA:** `make test-docker` — the same suite `unit-tests.yml` runs.
+- **Finish with QA:** `make test-docker` — there is no CI anymore, so this is the only test run.
 
 ## Do's and Don'ts
 
@@ -91,6 +95,4 @@ developer's time (**3–8, hard cap 10**), severity prefixes **Blocker / Issue /
 read first, no PR summary and no praise section, post exactly one comment in German. Highest signal
 in this repo: migration safety, cross-repo breakage, security, missing regression tests.
 
-The same rules drive the automated review in `.github/workflows/claude-code-review.yml`. It runs
-**on request, not on every push**: on *Ready for review*, on an `@claude` comment, or on a manual
-workflow start. The `no-claude-review` label suppresses the automatic run.
+There is no automated review in CI anymore; reviews run locally with the same rules.

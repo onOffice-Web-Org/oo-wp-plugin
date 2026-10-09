@@ -2,6 +2,10 @@
 
 Part of the oo-wp-plugin working instructions — index: [CLAUDE.md](../CLAUDE.md).
 
+> **All GitHub Actions workflows were removed from this repository; it only receives bug fixes.**
+> The workflow tables below describe the former setup — nothing in this repository builds,
+> releases or deploys anything anymore.
+
 **This repo's workflows reach real infrastructure** — customer-facing update servers, a hosting API
 that builds and restarts test boxes, and the POEditor translation project. Treat everything below
 with more caution than a typical WordPress plugin repo.
