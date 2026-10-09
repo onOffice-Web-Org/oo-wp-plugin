@@ -2,9 +2,11 @@
 
 Part of the oo-wp-plugin working instructions — index: [CLAUDE.md](../CLAUDE.md).
 
-> **All GitHub Actions workflows were removed from this repository; it only receives bug fixes.**
-> The workflow tables below describe the former setup — nothing in this repository builds,
-> releases or deploys anything anymore.
+> **This repository only receives bug fixes, and nothing runs automatically anymore.** Two
+> workflows remain, both started by hand: `unit-tests.yml` and `stable-release.yml` (with its build
+> job `build-release.yml`), which publishes a bug fix release to wordpress.org after an approval in
+> the *WordPress SVN* environment — see [RELEASE.md](RELEASE.md). Everything else in the tables
+> below describes the former setup.
 
 **This repo's workflows reach real infrastructure** — customer-facing update servers, a hosting API
 that builds and restarts test boxes, and the POEditor translation project. Treat everything below

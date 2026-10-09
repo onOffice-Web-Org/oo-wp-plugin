@@ -1,8 +1,8 @@
 # onOffice plugin for WordPress
 
-> **Maintenance mode:** this repository only receives bug fixes. It has no GitHub Actions
-> workflows anymore, so nothing is built, tested, reviewed or released automatically — run the
-> test suite locally with `make test-docker`.
+> **Maintenance mode:** this repository only receives bug fixes, and nothing runs automatically
+> anymore. Two workflows remain, both started by hand under Actions: *Unit tests* and
+> *Stable Release* (the wordpress.org release). Locally the test suite runs with `make test-docker`.
 
 Integrate real estates, contact forms and contact persons from the onOffice Software into your WordPress website.
 
@@ -11,9 +11,10 @@ Integrate real estates, contact forms and contact persons from the onOffice Soft
 In [./documentation/Building.md](./documentation/Building.md) you can find instructions for how to set up your development environment. There are also instructions for making a .zip file that you can upload to WordPress.
 
 Releases used to run automatically over the branches `master` → `beta` → `prerelease` →
-`release`. That pipeline was removed together with the workflows; bug fix releases for
-wordpress.org are prepared manually. [./documentation/RELEASE.md](./documentation/RELEASE.md)
-still describes the former process and the
+`release`. That pipeline was removed; bug fix releases are published to wordpress.org by hand with
+the *Stable Release* workflow. The steps are at the top of
+[./documentation/RELEASE.md](./documentation/RELEASE.md), which below them still describes the
+former process and the
 [Conventional Commits](https://www.conventionalcommits.org/) conventions.
 
 [./CLAUDE.md](./CLAUDE.md) is the index of the working instructions for Claude and other AI agents:
