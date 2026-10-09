@@ -214,8 +214,7 @@ class AdminPageEstateDetail
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
 		echo '<div class="postbox-header">' .
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- __() returns escaped localized string
-        '<h2 class="hndle ui-sortable-handle"><span>' . __( 'Fields', 'onoffice-for-wp-websites' ) . '</span></h2>
+        '<h2 class="hndle ui-sortable-handle"><span>' . esc_html__( 'Contact person fields', 'onoffice-for-wp-websites' ) . '</span></h2>
 		<label class="postbox-select-all" for="postbox-select-all-address">Alle auswählen
 			<input type="checkbox" id="postbox-select-all-address" class="oo-sortable-checkbox-master" name="postbox-select-all" onchange="ooHandleMasterCheckboxChange(event,'."'".esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS))."'".')"/>
 			</label>

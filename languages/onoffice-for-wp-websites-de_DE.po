@@ -440,6 +440,9 @@ msgstr "Ansprechpartner"
 msgid "Contact person"
 msgstr "Ansprechpartner"
 
+msgid "Contact person fields"
+msgstr "Felder Ansprechpartner"
+
 msgid "Contact person image"
 msgstr ""
 
