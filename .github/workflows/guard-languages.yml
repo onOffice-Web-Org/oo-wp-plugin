@@ -17,10 +17,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          path: head
           fetch-depth: 0
 
       - name: Detect forbidden language changes
         shell: bash
+        working-directory: head
         run: |
           set -euo pipefail
 
@@ -55,3 +57,23 @@ jobs:
           fi
 
           echo "Only allowed language change detected, ok."
+
+      - name: Checkout base
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      # PHP is preinstalled on the runner, WP-CLI only needs it to run make-pot
+      - name: Install WP-CLI
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin"
+          curl -sSLo "$RUNNER_TEMP/bin/wp" https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x "$RUNNER_TEMP/bin/wp"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      - name: Install gettext
+        run: command -v msgmerge >/dev/null || (sudo apt-get update && sudo apt-get install -y gettext)
+
+      - name: Detect missing German translations
+        run: bash head/.github/scripts/check-translations.sh head base
