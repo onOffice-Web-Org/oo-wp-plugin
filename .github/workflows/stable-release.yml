@@ -1,11 +1,9 @@
  name: Stable Release
 
  on:
+   # Manual only: start it from the release tag ("Use workflow from"), the version is read from the
+   # tag name. Pushing a tag deploys nothing by itself.
    workflow_dispatch:
-   # Deactivated automatic trigger on tags
-   push:
-     tags:
-       - 'v*'
 
  jobs:
    get-version:

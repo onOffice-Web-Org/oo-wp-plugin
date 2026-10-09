@@ -1,5 +1,26 @@
 # Release Process
 
+## Bug fix releases (current process)
+
+This repository only receives bug fixes; the automated pipeline described further down no longer
+exists. A bug fix release to wordpress.org works like this:
+
+1. Set the new version by hand in the bug fix pull request: `Version:` and
+   `ONOFFICE_PLUGIN_VERSION` in `plugin.php`, `Stable tag` and a new entry
+   `= X.Y.Z (YYYY-MM-DD) =` under `== Changelog ==` in `readme.txt`, and `package.json` /
+   `package-lock.json` (`npm version X.Y.Z --no-git-tag-version`). The version stays below 7.0.
+2. Start *Unit tests* on the branch (Actions → Unit tests → Run workflow) and merge only when it
+   passes.
+3. Tag the merge commit on `master` with `vX.Y.Z` and push the tag. The tag starts nothing by
+   itself.
+4. Start *Stable Release* (Actions → Stable Release → Run workflow) and choose the tag under
+   "Use workflow from". The build stops if `Stable tag`, the changelog entry and `Version:` do not
+   match the tag; it does not check `ONOFFICE_PLUGIN_VERSION`.
+5. Approve the deployment in the *WordPress SVN* environment. The workflow commits the build to
+   SVN trunk and copies it to `tags/X.Y.Z`.
+
+Everything below describes the former automated pipeline.
+
 Releases are created by semantic-release. It runs automatically whenever something is pushed to the
 `prerelease` or `release` branch (`.github/workflows/release.yml`).
 
