@@ -70,8 +70,7 @@ column, a hook name or a capability constant cannot be renamed later without a m
   `Controller\UserCapabilities::OO_PLUGINCAP_*`) **and** a nonce check (`WPNonceWrapper`,
   `check_admin_referer`). One without the other is a finding.
 - API credentials are stored encrypted (`Utility\SymmetricEncryption`). Never log, echo or forward
-  them. `oo-updater.php` deliberately transmits the API key to the update server — do not extend
-  that pattern to new endpoints without asking.
+  them.
 
 ### `phpcs:ignore` — annotations without a checker
 

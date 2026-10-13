@@ -1,5 +1,8 @@
 # onOffice plugin for WordPress
-![Unit tests](https://github.com/onOfficeGmbH/oo-wp-plugin/workflows/Unit%20tests/badge.svg?branch=master)
+
+> **Maintenance mode:** this repository only receives bug fixes, and nothing runs automatically
+> anymore. Two workflows remain, both started by hand under Actions: *Unit tests* and
+> *Stable Release* (the wordpress.org release). Locally the test suite runs with `make test-docker`.
 
 Integrate real estates, contact forms and contact persons from the onOffice Software into your WordPress website.
 
@@ -7,16 +10,44 @@ Integrate real estates, contact forms and contact persons from the onOffice Soft
 
 In [./documentation/Building.md](./documentation/Building.md) you can find instructions for how to set up your development environment. There are also instructions for making a .zip file that you can upload to WordPress.
 
-Releases run over the branches `master` → `beta` → `prerelease` → `release`. The full process, how to
-ship a bugfix during a running beta test and what to watch out for is documented in
-[./documentation/RELEASE.md](./documentation/RELEASE.md), together with the
+Releases used to run automatically over the branches `master` → `beta` → `prerelease` →
+`release`. That pipeline was removed; bug fix releases are published to wordpress.org by hand with
+the *Stable Release* workflow. The steps are at the top of
+[./documentation/RELEASE.md](./documentation/RELEASE.md), which below them still describes the
+former process and the
 [Conventional Commits](https://www.conventionalcommits.org/) conventions.
 
 [./CLAUDE.md](./CLAUDE.md) is the index of the working instructions for Claude and other AI agents:
 repository structure, architecture, coding conventions, database migrations, testing, and the rules
 for the automated pull request review. The detailed documents live in
 [./documentation/](./documentation/), together with the long-form documents on building, releasing
-and translating.
+and translating. See [Working with Claude](#working-with-claude) below.
+
+## Working with Claude
+
+This repository is set up for [Claude Code](https://docs.claude.com/en/docs/claude-code) for local
+use. **Setup, configuration and best practices for all
+web repositories are documented centrally on the Google Site:
+[Development › Claude Code](https://sites.google.com/onoffice.com/web-intern/development/claude-code).**
+This section only covers what is specific to this repository.
+
+| File | Purpose |
+| --- | --- |
+| [CLAUDE.md](CLAUDE.md) | Working instructions for Claude, loaded automatically at the start of every session — and the index of `documentation/` |
+| [documentation/code-review.md](documentation/code-review.md) | The pull request review rules |
+
+**Locally:** run `claude` in the repository root. Claude picks up `CLAUDE.md` on its own and
+finishes with this repository's QA (`make test-docker`). It does not commit, push, open pull requests or
+trigger workflows without asking first.
+
+**Pull request review:** there is no automated review anymore. Review bug fix pull requests by
+hand, or locally with Claude, using the rules in
+[documentation/code-review.md](documentation/code-review.md).
+
+**Changing the rules:** `CLAUDE.md` and `documentation/` are edited through a pull request like
+any other code — keep `CLAUDE.md` short and put details into `documentation/`. Personal
+preferences and permissions belong in `~/.claude/CLAUDE.md` or `.claude/settings.local.json`
+(not committed); see the Google Site for what goes where.
 
 ## Getting Started
 

@@ -28,7 +28,7 @@ composer check-prefixed-imports  # fail on unprefixed imports of prefixed packag
 # Build
 npm run build                    # js/*.js -> dist/*.min.js
 npm run i18n                     # regenerate .pot/.po/.mo — read TRANSLATIONS.md first
-make build                       # composer + npm + onoffice-for-wp-websites.zip
+make build                       # composer + npm + make release -> onoffice-for-wp-websites.zip (same tree as CI)
 PREFIX=/tmp/release/onoffice-for-wp-websites make release   # shippable tree; PREFIX must be absolute
 
 # QA

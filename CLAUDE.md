@@ -8,6 +8,11 @@ on top of.
 **The detailed rules live in `documentation/`. They are not loaded automatically — open the file
 that covers your task before you start.**
 
+**Maintenance mode:** this repository only receives bug fixes. Only two workflows remain, and both
+run only when started by hand: `unit-tests.yml` and `stable-release.yml` (the wordpress.org
+release, with its build job `build-release.yml`). Every other workflow the documentation mentions
+(`release.yml`, the automated review, …) no longer exists.
+
 **Three things make this repo different from the four theme repos:** it owns **customer database
 schema** (a bad migration is unrecoverable on live installations), it has a **real PHPUnit suite**
 (so tests are a review gate, not advisory), and its production dependencies are
@@ -59,7 +64,8 @@ the working instruction needs fixing.
   [project.md](documentation/project.md#when-you-need-another-repository).
 - **Nothing may be pushed, released or deployed without being asked** — see
   [workflow.md](documentation/workflow.md#nothing-here-may-be-triggered-without-being-asked).
-- **Finish with QA:** `make test-docker` — the same suite `unit-tests.yml` runs.
+- **Finish with QA:** `make test-docker` — the same suite `unit-tests.yml` runs, which now only
+  starts by hand.
 
 ## Do's and Don'ts
 
@@ -71,8 +77,9 @@ the working instruction needs fixing.
   (`$wpdb->prepare()`), never output unescaped, never write without both a capability *and* a nonce
   check.
 - Never edit generated files: `dist/`, `vendor/`, `vendor-prefixed/`, and everything under
-  `languages/` except `onoffice-for-wp-websites-de_DE.po`. Never hand-edit a version number or the
-  `readme.txt` changelog — semantic-release owns them.
+  `languages/` except `onoffice-for-wp-websites-de_DE.po`. Change version numbers and the
+  `readme.txt` changelog only as part of a bug fix release — see the top of
+  [RELEASE.md](documentation/RELEASE.md).
 - Don't rename or drop a public class, method or template variable (`$pEstates`, `$pForm`,
   `$pAddressList`, …) without calling it out as breaking: the four themes and every customer's own
   template copy depend on them.
@@ -91,6 +98,4 @@ developer's time (**3–8, hard cap 10**), severity prefixes **Blocker / Issue /
 read first, no PR summary and no praise section, post exactly one comment in German. Highest signal
 in this repo: migration safety, cross-repo breakage, security, missing regression tests.
 
-The same rules drive the automated review in `.github/workflows/claude-code-review.yml`. It runs
-**on request, not on every push**: on *Ready for review*, on an `@claude` comment, or on a manual
-workflow start. The `no-claude-review` label suppresses the automatic run.
+There is no automated review in CI anymore; reviews run locally with the same rules.

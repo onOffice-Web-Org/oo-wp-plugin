@@ -1522,12 +1522,12 @@ msgstr[0] "Eigenaarsformulier"
 msgstr[1] "Eigenaarsformulieren"
 
 #: 
-msgid "Page "
-msgstr "Pagina "
-
-#: 
 msgid "Page"
 msgstr "Pagina"
+
+#: 
+msgid "Page "
+msgstr "Pagina "
 
 #. translators: %d: page number
 #: 
