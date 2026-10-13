@@ -40,7 +40,6 @@ define('ONOFFICE_PLUGIN_BASENAME', plugin_basename( __FILE__ ));
 require __DIR__ . '/vendor/autoload.php';
 // prefixed dependencies (Strauss) - keeps php-di, PSR-11 and Parsedown out of the global namespace
 require __DIR__ . '/vendor-prefixed/autoload.php';
-require plugin_dir_path( __FILE__ ) . 'oo-updater.php';
 
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 

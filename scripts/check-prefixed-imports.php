@@ -12,7 +12,7 @@
  */
 
 const SCAN_DIRECTORIES = ['plugin', 'config', 'SDK', 'tests', 'templates.dist'];
-const SCAN_FILES = ['plugin.php', 'oo-updater.php'];
+const SCAN_FILES = ['plugin.php'];
 
 $root = dirname(__DIR__);
 $composer = json_decode((string) file_get_contents($root . '/composer.json'), true);
