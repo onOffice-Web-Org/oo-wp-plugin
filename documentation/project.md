@@ -19,7 +19,7 @@ review — a loop over estates that calls the API per row is a real bug here, no
 | License | plugin AGPL-3.0; `config/` and `templates.dist/` GPL-3.0 |
 | Shortcodes | `[oo_estate]` `[oo_address]` `[oo_form]` `[oo_basicdata]` `[oo_link]` |
 | Own DB tables | the `oo_plugin_*` tables behind `$wpdb->prefix`, see [database-and-migrations.md](database-and-migrations.md) |
-| Updates | self-hosted via `oo-updater.php` against `onoffice-wp-updates.de` — **not** wordpress.org |
+| Updates | wordpress.org only (slug `onoffice-for-wp-websites`) |
 
 Unlike the four theme repos, **this repo has a real test suite** (PHPUnit against the WordPress
 test suite). Tests are therefore a review gate here, not advisory — see [testing.md](testing.md).
