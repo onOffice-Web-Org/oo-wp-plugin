@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 6.1
 Tested up to: 6.9.1
 Requires PHP: 8.2
-Stable tag: 6.19.0
+Stable tag: 7.0.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,12 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 7.0.1 (2026-10-13) =
+
+**Fixed**
+* GeoPosition im Interessentenformular
+* hreflang Immobiliendetailseiten
 
 = 6.19.0 (2026-10-01) =
 
