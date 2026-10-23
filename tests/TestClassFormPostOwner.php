@@ -49,6 +49,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\Utility\ThemeSupport;
+use onOffice\tests\Mocks\EstateSupervisorLookupMocker;
 use WP_UnitTestCase;
 use function onOffice\WPlugin\Vendor\DI\autowire;
 use function json_decode;
@@ -60,6 +61,8 @@ use function json_decode;
 class TestClassFormPostOwner
 	extends WP_UnitTestCase
 {
+	use EstateSupervisorLookupMocker;
+
 	/** @var FormPostOwner */
 	private $_pFormPostOwner = null;
 
@@ -1155,6 +1158,101 @@ class TestClassFormPostOwner
 		$this->assertStringContainsString('contactaddress',
 			implode("\n", $this->_pSDKWrapperMocker->getRequestArray()),
 			'the email must still be sent when the supervisor could not be assigned');
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testInitialCheckOnEstatePageWithoutUserReadRight()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'ArtDaten' => 'Eigentümer',
+			'Telefon1' => '0815 234567890',
+			'objektart' => 'haus',
+			'objekttyp' => 'stadthaus',
+			'energieausweistyp' => 'Bedarfsausweis',
+			'wohnflaeche' => 800,
+			'kabel_sat_tv' => 'y',
+			'message' => 'Hello! I am interested in selling my property!',
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
+		];
+
+		$GLOBALS['wp_query']->query_vars['estate_id'] = 1337;
+		$this->mockEstateSupervisorLookupWithoutUserReadRight($this->_pSDKWrapperMocker, 1337, 3, 'estateUser');
+		$this->prepareMockerForAddressCreationSuccessWithSupervisor('estateUser');
+		$this->prepareMockerForEstateCreationSuccess();
+		$this->prepareMockerForRelationSuccess();
+		$this->prepareMockerForFindAddressIdByEmailNoMatch('test@my-onoffice.com');
+		$this->prepareMockerForContactSuccess();
+
+		$this->_pFormPostOwner->initialCheck($this->getDataFormConfiguration(), 5);
+		$pFormData = $this->_pFormPostOwner->getFormDataInstance('test', 5);
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
+		$this->assertStringContainsString('"Benutzer":"estateUser"', $requests);
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_ADDRESS_OWNER, $requests);
+		$this->assertStringContainsString('contactaddress', $requests);
+		$this->assertFalse($this->hasUserResourceRequest($this->_pSDKWrapperMocker));
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testInitialCheckWithAdvisorOptionWithoutUserReadRight()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'ArtDaten' => 'Eigentümer',
+			'Telefon1' => '0815 234567890',
+			'objektart' => 'haus',
+			'objekttyp' => 'stadthaus',
+			'energieausweistyp' => 'Bedarfsausweis',
+			'wohnflaeche' => 800,
+			'kabel_sat_tv' => 'y',
+			'message' => 'Hello! I am interested in selling my property!',
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_test'),
+		];
+
+		$this->prepareOnOfficeTheme();
+		$this->prepareBrokerDetailPage(4711, 'advisor@my-onoffice.com');
+		$this->addReadUserByAddressIdResponseToMocker(4711, $this->getMissingUserReadRightResponse());
+		$this->addReadUserResponseToMocker(['email' => [['op' => '=', 'val' => 'advisor@my-onoffice.com']]],
+			$this->getMissingUserReadRightResponse());
+		$this->prepareMockerForAddressCreationSuccess();
+		$this->prepareMockerForEstateCreationSuccess();
+		$this->prepareMockerForRelationSuccess();
+		$this->prepareMockerForContactBrokerRelationSuccess(4711);
+		$this->prepareMockerForContactBrokerAddressIds([4711]);
+		$this->prepareMockerForContactSuccess('advisor@my-onoffice.com');
+
+		$pDataFormConfiguration = $this->getDataFormConfiguration();
+		$pDataFormConfiguration->setUseBrokerRecipient(true);
+		$pDataFormConfiguration->setAssignBrokerAsSupervisor(true);
+
+		$pFormPostOwner = $this->_pContainer->make(FormPostOwner::class);
+		$pFormPostOwner->initialCheck($pDataFormConfiguration, 5);
+		$pFormData = $pFormPostOwner->getFormDataInstance('test', 5);
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_ADDRESS_OWNER, $requests,
+			'address and estate must still be created and related');
+		$this->assertStringContainsString('contactaddress', $requests,
+			'the email must still be sent');
+		$this->assertStringNotContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER,
+			$requests, 'no estate supervisor may be set');
+		$this->assertStringNotContainsString(onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER,
+			$requests, 'no address supervisor may be set');
 	}
 
 

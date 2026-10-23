@@ -33,6 +33,7 @@ use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\tests\Mocks\EstateSupervisorLookupMocker;
 use WP_UnitTestCase;
 
 
@@ -43,6 +44,8 @@ use WP_UnitTestCase;
 class TestClassFormAddressCreator
 	extends WP_UnitTestCase
 {
+	use EstateSupervisorLookupMocker;
+
 	/** @var FormAddressCreator */
 	private $_pSubject = null;
 
@@ -204,15 +207,39 @@ class TestClassFormAddressCreator
 	}
 
 	/**
-	 *
+	 * Must work without the right to read the 'user' resource.
 	 */
 
 	public function testCreateOrCompleteAddressWithSupervisor()
 	{
 		$this->configureSDKWrapperMockerForAddressCreationWithSupervisor(1);
-		$this->configureSDKWrapperMockerForReadEstateByEstateId(1);
-		$this->configureSDKWrapperMockerForUserBySupervisorId(3);
-		
+		$this->mockEstateSupervisorLookupWithoutUserReadRight($this->_pSDKWrapper, 1, 3, 'testUserName');
+
+		$pFormData = $this->createFormData();
+		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, ['Admin'], 1);
+		$this->assertEquals(1, $result);
+		$this->assertFalse($this->hasUserResourceRequest($this->_pSDKWrapper),
+			'the estate supervisor must be resolved without the user resource');
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testCreateOrCompleteAddressSurvivesFailingEstateSupervisorLookup()
+	{
+		$this->configureSDKWrapperMockerForAddressCreationWithContactType(1);
+		$this->readEstateResponseToSKDWrapperWithEstateId([
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'estate',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [],
+			'status' => ['errorcode' => 500, 'message' => 'Error'],
+		]);
+
 		$pFormData = $this->createFormData();
 		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, ['Admin'], 1);
 		$this->assertEquals(1, $result);
@@ -622,54 +649,6 @@ class TestClassFormAddressCreator
 			'parentid' => $addressId,
 			'childid' => $userId,
 		], null, $response);
-	}
-
-	/**
-	 *
-	 */
-
-	private function configureSDKWrapperMockerForReadEstateByEstateId(int $id)
-	{
-		$response = [
-			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
-			'resourceid' => '',
-			'resourcetype' => 'estate',
-			'cacheable' => true,
-			'identifier' => '',
-			'data' => [
-				'meta' => ['cntabsolute' => null],
-				'records' => [
-					['id' => $id, 'type' => 'estate', 'elements' => ['benutzer' => '3']],
-				],
-			],
-			'status' => ['errorcode' => 0, 'message' => 'OK'],
-		];
-
-		$this->readEstateResponseToSKDWrapperWithEstateId($response);
-	}
-
-	/**
-	 *
-	 */
-
-	private function configureSDKWrapperMockerForUserBySupervisorId(int $id)
-	{
-		$response = [
-			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
-			'resourceid' => '',
-			'resourcetype' => 'user',
-			'cacheable' => true,
-			'identifier' => '',
-			'data' => [
-				'meta' => ['cntabsolute' => null],
-				'records' => [
-					['id' => $id, 'type' => 'user', 'elements' => ['Nr' => $id, 'Name' => 'testUserName']],
-				],
-			],
-			'status' => ['errorcode' => 0, 'message' => 'OK'],
-		];
-
-		$this->addReadUserResponseToSKDWrapper(['Nr' => [['op' => '=', 'val' => (string) $id]]], $response);
 	}
 
 	/**
