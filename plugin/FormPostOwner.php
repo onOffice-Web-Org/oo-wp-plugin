@@ -279,9 +279,7 @@ class FormPostOwner
 	/**
 	 * Reads the user who has the recipient's address record linked to their account.
 	 *
-	 * Caught separately from the rest of determineSupervisor(): the 'user' resource needs rights
-	 * that reading the user list for the email match doesn't, so an account that cannot read it
-	 * has to end up in the fallback rather than without a supervisor.
+	 * Caught separately, so the email match still runs if only this lookup fails.
 	 *
 	 * @param FormAddressCreator $pFormAddressCreator
 	 * @return array empty, or ['id' => string, 'username' => string]
