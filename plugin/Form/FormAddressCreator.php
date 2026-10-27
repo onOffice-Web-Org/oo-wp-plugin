@@ -347,22 +347,35 @@ class FormAddressCreator
 	 */
 	private function getUserNameById(string $userId): string
 	{
+		return $this->findUserInList(function (array $record) use ($userId): bool {
+			return (string)$record['id'] === $userId;
+		})['username'] ?? '';
+	}
+
+	/**
+	 * Looks the user up in the 'users' list, which works without the API right "Benutzerdaten
+	 * über API auslesen" but may miss users (see readUser()).
+	 *
+	 * @param callable $matches receives a 'users' record, returns whether it is the user
+	 * @return array empty, or ['id' => string, 'username' => string]
+	 * @throws ApiClientException
+	 */
+	private function findUserInList(callable $matches): array
+	{
 		$pApiClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
+		$pApiClientAction->addRequestToQueue()->sendRequests();
 
-		$pApiClientAction->addRequestToQueue();
-		$this->_pSDKWrapper->sendRequests();
-		$result = $pApiClientAction->getResultRecords();
-
-		$userResult = array_values(array_filter($result, function($item) use ($userId) {
-			return $item['id'] == $userId && isset($item["elements"]["username"]);
-		}));
-
-		if (!empty($userResult)) {
-			return $userResult[0]["elements"]["username"];
-		} else {
-			return '';
+		foreach ($pApiClientAction->getResultRecords() as $record) {
+			if (!empty($record['elements']['username']) && $matches($record)) {
+				return [
+					'id' => (string)$record['id'],
+					'username' => (string)$record['elements']['username'],
+				];
+			}
 		}
+
+		return [];
 	}
 
 	/**
@@ -405,7 +418,13 @@ class FormAddressCreator
 			return [];
 		}
 
-		return $this->readUser(['email' => [['op' => '=', 'val' => $email]]]);
+		try {
+			return $this->readUser(['email' => [['op' => '=', 'val' => $email]]]);
+		} catch (ApiClientException $pException) {
+			return $this->findUserInList(function (array $record) use ($email): bool {
+				return strcasecmp((string)($record['elements']['email'] ?? ''), $email) === 0;
+			});
+		}
 	}
 
 	/**

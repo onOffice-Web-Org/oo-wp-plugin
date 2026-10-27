@@ -1203,7 +1203,7 @@ class TestClassFormPostOwner
 
 
 	/**
-	 *
+	 * Without the right to read the 'user' resource the advisor's email is matched in the 'users' list.
 	 */
 
 	public function testInitialCheckWithAdvisorOptionWithoutUserReadRight()
@@ -1228,8 +1228,11 @@ class TestClassFormPostOwner
 		$this->addReadUserByAddressIdResponseToMocker(4711, $this->getMissingUserReadRightResponse());
 		$this->addReadUserResponseToMocker(['email' => [['op' => '=', 'val' => 'advisor@my-onoffice.com']]],
 			$this->getMissingUserReadRightResponse());
-		$this->prepareMockerForAddressCreationSuccess();
+		$this->mockUsersList($this->_pSDKWrapperMocker, 3, 'advisorUser', 'advisor@my-onoffice.com');
+		$this->prepareMockerForAddressCreationSuccessWithSupervisor('advisorUser');
+		$this->prepareMockerForAddressSupervisorRelationSuccess(281, '3');
 		$this->prepareMockerForEstateCreationSuccess();
+		$this->prepareMockerForEstateSupervisorSuccess(5590, '3');
 		$this->prepareMockerForRelationSuccess();
 		$this->prepareMockerForContactBrokerRelationSuccess(4711);
 		$this->prepareMockerForContactBrokerAddressIds([4711]);
@@ -1249,10 +1252,10 @@ class TestClassFormPostOwner
 			'address and estate must still be created and related');
 		$this->assertStringContainsString('contactaddress', $requests,
 			'the email must still be sent');
-		$this->assertStringNotContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER,
-			$requests, 'no estate supervisor may be set');
-		$this->assertStringNotContainsString(onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER,
-			$requests, 'no address supervisor may be set');
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ESTATE_USER_OFFICER, $requests,
+			'the advisor must be set as supervisor of the created estate');
+		$this->assertStringContainsString(onOfficeSDK::RELATION_TYPE_ADDRESS_USER_OFFICER, $requests,
+			'the advisor must be set as supervisor of the created address');
 	}
 
 

@@ -425,6 +425,21 @@ class TestClassFormAddressCreator
 
 
 	/**
+	 * Without the right to read the 'user' resource the email is matched in the 'users' list.
+	 */
+
+	public function testGetUserByEmailWithoutUserReadRight()
+	{
+		$this->addReadUserResponseToSKDWrapper(['email' => [['op' => '=', 'val' => 'Advisor@my-onoffice.com']]],
+			$this->getMissingUserReadRightResponse());
+		$this->mockUsersList($this->_pSDKWrapper, 3, 'testUserName', 'advisor@my-onoffice.com');
+
+		$expectation = ['id' => '3', 'username' => 'testUserName'];
+		$this->assertEquals($expectation, $this->_pSubject->getUserByEmail('Advisor@my-onoffice.com'));
+	}
+
+
+	/**
 	 *
 	 */
 
