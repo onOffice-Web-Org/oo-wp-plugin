@@ -40,6 +40,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\tests\Mocks\EstateSupervisorLookupMocker;
 use WP_UnitTestCase;
 use function onOffice\WPlugin\Vendor\DI\autowire;
 use function json_decode;
@@ -54,6 +55,8 @@ use function json_decode;
 class TestClassFormPostInterest
 	extends WP_UnitTestCase
 {
+	use EstateSupervisorLookupMocker;
+
 	/** @var FormPostInterest */
 	private $_pFormPostInterest = null;
 
@@ -256,6 +259,45 @@ class TestClassFormPostInterest
 	 *
 	 */
 
+	public function testInitialCheckOnEstatePageWithoutUserReadRight()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'Email' => 'john@doemail.com',
+			'vermarktungsart' => 'kauf',
+			'kaufpreis__von' => '200000,00',
+			'kaufpreis__bis' => '800000,00',
+			'objekttyp' => ['reihenendhaus', 'reihenhaus'],
+			'krit_bemerkung_oeffentlich' => 'comment3',
+			'stp_anzahl__von' => '20,00',
+			'stp_anzahl__bis' => '40,00',
+			'gdprcheckbox' => 'y',
+			'onoffice_nonce' => wp_create_nonce('onoffice_form_interestform'),
+		];
+
+		$GLOBALS['wp_query']->query_vars['estate_id'] = 1337;
+		$this->mockEstateSupervisorLookupWithoutUserReadRight($this->_pSDKWrapperMocker, 1337, 3, 'testUserName');
+		$this->addApiResponseCreateAddress(true, 'testUserName');
+		$this->addApiResponseCreateSearchCriteria(true);
+		$this->addApiResponseSendMail(true);
+
+		$this->_pFormPostInterest->initialCheck($this->getNewDataFormConfigurationInterest(), 2);
+		$pFormData = $this->_pFormPostInterest->getFormDataInstance('interestform', 2);
+
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
+		$this->assertStringContainsString('"Benutzer":"testUserName"', $requests);
+		$this->assertStringContainsString('searchcriteria', $requests);
+		$this->assertStringContainsString('contactaddress', $requests);
+		$this->assertFalse($this->hasUserResourceRequest($this->_pSDKWrapperMocker));
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testUnsuccessful()
 	{
 		$pConfig = $this->getNewDataFormConfigurationInterest();
@@ -379,10 +421,11 @@ class TestClassFormPostInterest
 	/**
 	 *
 	 * @param bool $success
+	 * @param string $supervisorUserName
 	 *
 	 */
 
-	private function addApiResponseCreateAddress(bool $success)
+	private function addApiResponseCreateAddress(bool $success, string $supervisorUserName = '')
 	{
 		$parameters = [
 			'Vorname' => 'John',
@@ -391,6 +434,9 @@ class TestClassFormPostInterest
 			'checkDuplicate' => false,
 			'DSGVOStatus' => "speicherungzugestimmt"
 		];
+		if ($supervisorUserName !== '') {
+			$parameters['Benutzer'] = $supervisorUserName;
+		}
 
 		$response = [
 			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
