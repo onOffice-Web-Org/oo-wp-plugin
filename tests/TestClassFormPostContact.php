@@ -40,6 +40,8 @@ use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\WP\WPWrapper;
+use onOffice\tests\Mocks\EstateSupervisorLookupMocker;
+use WP_Query;
 use WP_UnitTestCase;
 use function onOffice\WPlugin\Vendor\DI\autowire;
 use function json_decode;
@@ -54,6 +56,8 @@ use function json_decode;
 class TestClassFormPostContact
 	extends WP_UnitTestCase
 {
+	use EstateSupervisorLookupMocker;
+
 	/** @var FormPostContact */
 	private $_pFormPostContact = null;
 
@@ -331,6 +335,33 @@ class TestClassFormPostContact
 	}
 
 	/**
+	 * @param string $userName
+	 */
+
+	private function configureSDKWrapperForCreateAddressWithSupervisor(string $userName)
+	{
+		$parameters = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'email' => 'john.doe@my-onoffice.com',
+			'Plz' => '52068',
+			'Ort' => 'Aachen',
+			'phone' => '0815/2345677',
+			'AGB_akzeptiert' => true,
+			'checkDuplicate' => false,
+			'ArtDaten' => ['Owner', 'Customer'],
+			'Benutzer' => $userName,
+		];
+
+		$responseJson = file_get_contents
+			(__DIR__.'/resources/FormPostContact/ApiResponseCreateAddress.json');
+		$response = json_decode($responseJson, true);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_CREATE, 'address', '', $parameters, null, $response);
+	}
+
+	/**
 	 *
 	 */
 	public function configureSDKWrapperForCreateTask()
@@ -466,6 +497,34 @@ class TestClassFormPostContact
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
 		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testSendWithNewAddressOnEstatePageWithoutUserReadRight()
+	{
+		// 'message' is the honeypot
+		$_POST = $this->getPostVariables();
+		unset($_POST['message'], $_POST['tmpField']);
+
+		$pWPQuery = new WP_Query();
+		$pWPQuery->query_vars['estate_id'] = 1337;
+		$this->_pContainer->get(WPQueryWrapper::class)->method('getWPQuery')->willReturn($pWPQuery);
+		$this->mockEstateSupervisorLookupWithoutUserReadRight($this->_pSDKWrapperMocker, 1337, 3, 'testUserName');
+		$this->configureSDKWrapperForCreateAddressWithSupervisor('testUserName');
+
+		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+
+		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+		$requests = implode("\n", $this->_pSDKWrapperMocker->getRequestArray());
+		$this->assertStringContainsString('"Benutzer":"testUserName"', $requests);
+		$this->assertStringContainsString('contactaddress', $requests);
+		$this->assertFalse($this->hasUserResourceRequest($this->_pSDKWrapperMocker));
 	}
 
 

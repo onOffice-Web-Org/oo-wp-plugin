@@ -269,9 +269,6 @@ class FormAddressCreator
 	/**
 	 * @param int $estateId
 	 * @return string
-	 * @throws ApiClientException
-	 * @throws DependencyException
-	 * @throws NotFoundException
 	 */
 	private function getSupervisorUsernameByEstateId(int $estateId): string
 	{
@@ -280,18 +277,24 @@ class FormAddressCreator
 			'data' => ['benutzer'],
 		];
 
-		$pApiClientAction = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+		try {
+			$pApiClientAction = new APIClientActionGeneric
+				($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 
-		$pApiClientAction->setParameters($requestParams);
-		$pApiClientAction->addRequestToQueue();
-		$this->_pSDKWrapper->sendRequests();
-		$result = $pApiClientAction->getResultRecords();
+			$pApiClientAction->setParameters($requestParams);
+			$pApiClientAction->addRequestToQueue();
+			$this->_pSDKWrapper->sendRequests();
+			$result = $pApiClientAction->getResultRecords();
 
-		if (!empty($result) && isset($result[0]["elements"]["benutzer"])) {
-			$userId = $result[0]["elements"]["benutzer"];
-			return $this->getUserNameById($userId);
-		} else {
+			if (!empty($result) && isset($result[0]["elements"]["benutzer"])) {
+				$userId = $result[0]["elements"]["benutzer"];
+				return $this->getUserNameById($userId);
+			} else {
+				return '';
+			}
+		} catch (ApiClientException $pException) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log('onOffice: could not read the supervisor of estate ' . $estateId . ': ' . $pException);
 			return '';
 		}
 	}
@@ -303,6 +306,8 @@ class FormAddressCreator
 	 * an account's users - in the reference account one of seven - so a supervisor that exists
 	 * would silently not be found. 'user' also filters server-side instead of pulling the whole
 	 * list per form submission.
+	 *
+	 * Needs the API right "Benutzerdaten über API auslesen", which is not set by default.
 	 *
 	 * @param array $filter as the API's 'filter' parameter: key field, value filter expressions
 	 * @return array empty, or ['id' => string, 'username' => string]
@@ -334,13 +339,43 @@ class FormAddressCreator
 	}
 
 	/**
+	 * 'users' instead of readUser(): works without the API right "Benutzerdaten über API auslesen".
+	 *
 	 * @param string $userId
 	 * @return string
 	 * @throws ApiClientException
 	 */
 	private function getUserNameById(string $userId): string
 	{
-		return $this->readUser(['Nr' => [['op' => '=', 'val' => $userId]]])['username'] ?? '';
+		return $this->findUserInList(function (array $record) use ($userId): bool {
+			return (string)$record['id'] === $userId;
+		})['username'] ?? '';
+	}
+
+	/**
+	 * Looks the user up in the 'users' list, which works without the API right "Benutzerdaten
+	 * über API auslesen" but may miss users (see readUser()).
+	 *
+	 * @param callable $matches receives a 'users' record, returns whether it is the user
+	 * @return array empty, or ['id' => string, 'username' => string]
+	 * @throws ApiClientException
+	 */
+	private function findUserInList(callable $matches): array
+	{
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'users');
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+
+		foreach ($pApiClientAction->getResultRecords() as $record) {
+			if (!empty($record['elements']['username']) && $matches($record)) {
+				return [
+					'id' => (string)$record['id'],
+					'username' => (string)$record['elements']['username'],
+				];
+			}
+		}
+
+		return [];
 	}
 
 	/**
@@ -383,7 +418,13 @@ class FormAddressCreator
 			return [];
 		}
 
-		return $this->readUser(['email' => [['op' => '=', 'val' => $email]]]);
+		try {
+			return $this->readUser(['email' => [['op' => '=', 'val' => $email]]]);
+		} catch (ApiClientException $pException) {
+			return $this->findUserInList(function (array $record) use ($email): bool {
+				return strcasecmp((string)($record['elements']['email'] ?? ''), $email) === 0;
+			});
+		}
 	}
 
 	/**
