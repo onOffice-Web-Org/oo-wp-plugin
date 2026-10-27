@@ -60,6 +60,28 @@ trait EstateSupervisorLookupMocker
 			'status' => ['errorcode' => 0, 'message' => 'OK'],
 		]);
 
+		$this->mockUsersList($pSDKWrapperMocker, $userId, $userName);
+
+		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'user', '', [
+			'data' => ['Nr', 'Name'],
+			'filter' => ['Nr' => [['op' => '=', 'val' => (string)$userId]]],
+			'listlimit' => 1,
+		], null, $this->getMissingUserReadRightResponse());
+	}
+
+
+	/**
+	 * The 'users' list, which needs no API right.
+	 *
+	 * @param SDKWrapperMocker $pSDKWrapperMocker
+	 * @param int $userId
+	 * @param string $userName
+	 * @param string $email
+	 */
+
+	private function mockUsersList(
+		SDKWrapperMocker $pSDKWrapperMocker, int $userId, string $userName, string $email = '')
+	{
 		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '', [], null, [
 			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:get',
 			'resourceid' => '',
@@ -69,17 +91,11 @@ trait EstateSupervisorLookupMocker
 			'data' => [
 				'meta' => ['cntabsolute' => null],
 				'records' => [
-					['id' => $userId, 'type' => '', 'elements' => ['username' => $userName]],
+					['id' => $userId, 'type' => '', 'elements' => ['username' => $userName, 'email' => $email]],
 				],
 			],
 			'status' => ['errorcode' => 0, 'message' => 'OK'],
 		]);
-
-		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'user', '', [
-			'data' => ['Nr', 'Name'],
-			'filter' => ['Nr' => [['op' => '=', 'val' => (string)$userId]]],
-			'listlimit' => 1,
-		], null, $this->getMissingUserReadRightResponse());
 	}
 
 
