@@ -368,7 +368,7 @@ class EstateList
 		}
 
 		if ($this->getShowEnergyCertificate()) {
-			$energyCertificateFields = ['energieausweistyp', 'energyClass'];
+			$energyCertificateFields = ['energieausweistyp', 'energyClass', 'energieausweistyp2', 'energyClass2'];
 			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $energyCertificateFields);
 		}
 
@@ -1370,7 +1370,7 @@ class EstateList
 
 		$values = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getPermittedvalues();
 
-		if ($field === 'energyClass') {
+		if (in_array($field, ['energyClass', 'energyClass2'], true)) {
 			$preferredOrder = ['A+', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 			usort($values, function ($a, $b) use ($preferredOrder) {
 				$posA = array_search($a, $preferredOrder);

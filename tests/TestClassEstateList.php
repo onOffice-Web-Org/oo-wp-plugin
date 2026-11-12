@@ -1176,6 +1176,7 @@ class TestClassEstateList
 	{
 		$this->_pEstateList->loadEstates();
 		$this->assertEquals(['A', 'B', 'C'], $this->_pEstateList->getPermittedValues('energyClass'));
+		$this->assertEquals(['A+', 'A', 'B'], $this->_pEstateList->getPermittedValues('energyClass2'));
 	}
  
 	/**
@@ -1809,12 +1810,15 @@ class TestClassEstateList
 			'plz',
 			'land',
 			'energyClass',
+			'energyClass2',
 			'regionaler_zusatz',
 		];
 		foreach ($fieldNames as $fieldName) {
 			$field = new Field($fieldName, 'estate', 'testLabel');
 			if ($fieldName === 'energyClass') {
 				$field->setPermittedvalues(['A', 'B', 'C']);
+			} elseif ($fieldName === 'energyClass2') {
+				$field->setPermittedvalues(['B', 'A+', 'A']);
 			}
 			$fieldsCollection->addField($field);
 		}
