@@ -38,6 +38,21 @@ use onOffice\WPlugin\Types\FieldsCollection;
 class DefaultFilterBuilderListView
 	implements DefaultFilterBuilder
 {
+	/** Price field => marketing type (vermarktungsart) an estate needs to match a search on it */
+	const PRICE_FIELD_MARKETING_TYPES = [
+		'kaufpreis' => 'kauf',
+		'kaufpreis_pro_qm' => 'kauf',
+		'erbpacht' => 'erbpacht',
+		'pacht' => 'pacht',
+		'nettokaltmiete' => 'miete',
+		'warmmiete' => 'miete',
+		'kaltmiete' => 'miete',
+		'miete_pauschal' => 'miete',
+		'saisonmiete' => 'miete',
+		'wochmietbto' => 'miete',
+		'mietpreis_pro_qm' => 'miete',
+	];
+
 	/** @var DataListView */
 	private $_pDataListView = null;
 
@@ -120,7 +135,7 @@ class DefaultFilterBuilderListView
 
 		$filter = $this->addEstateCityFilterWhenConvertTextToSelect($filter, $filterableFields);
 		$filterWithRegion = $this->addSubRegionFilter($filter, $filterableFields);
-		$filterWithRegion = $this->addRentalPurchaseFilter($filterWithRegion);
+		$filterWithRegion = $this->addRentalPurchaseFilter($filterWithRegion, $fieldFilter);
 
 		return $filterWithRegion;
 	}
@@ -239,44 +254,28 @@ class DefaultFilterBuilderListView
 	}
 
 	/**
+	 * Uses only fields every cached list holds, others would empty cached searches.
+	 *
 	 * @param array $filter
+	 * @param array $fieldFilter filter from the user's input only
 	 * @return array
 	 */
-	private function addRentalPurchaseFilter(array $filter): array
+	private function addRentalPurchaseFilter(array $filter, array $fieldFilter): array
 	{
-		$purchaseFields = ['kaufpreis', 'kaufpreis_pro_qm', 'erbpacht', 'pacht'];
-		$rentalFields = ['nettokaltmiete', 'warmmiete', 'kaltmiete', 'miete_pauschal', 'saisonmiete', 'wochmietbto', 'mietpreis_pro_qm'];
+		$searchedPriceFields = array_intersect_key(self::PRICE_FIELD_MARKETING_TYPES, $fieldFilter);
+		$marketingTypes = array_values(array_unique($searchedPriceFields));
 
-		$hasRentalInput = false;
-		$hasPurchaseInput = false;
-
-		foreach ($_GET as $key => $value) {
-			if (empty($value)) continue;
-
-			foreach ($rentalFields as $field) {
-				if ($key === $field || strpos($key, $field) === 0 || strpos($key, $field . '__') === 0) {
-					$hasRentalInput = true;
-					break;
-				}
-			}
-
-			foreach ($purchaseFields as $field) {
-				if ($key === $field || strpos($key, $field) === 0 || strpos($key, $field . '__') === 0) {
-					$hasPurchaseInput = true;
-					break;
-				}
-			}
+		// Prices of different marketing types searched together: leave the search as entered
+		if (count($marketingTypes) !== 1) {
+			return $filter;
 		}
 
-		if ($hasRentalInput && !$hasPurchaseInput) {
-			$filter['kaufpreis'][] = ['op' => '=', 'val' => '0.00'];
-			$filter['kaltmiete'][] = ['op' => '!=', 'val' => '0.00'];
+		foreach (array_keys($searchedPriceFields) as $priceField) {
+			$filter[$priceField][] = ['op' => '!=', 'val' => '0.00'];
 		}
 
-		if ($hasPurchaseInput && !$hasRentalInput) {
-			$filter['kaltmiete'][] = ['op' => '=', 'val' => '0.00'];
-			$filter['kaufpreis'][] = ['op' => '!=', 'val' => '0.00'];
-		}
+		// '' keeps estates without a marketing type, for them the price condition decides
+		$filter['vermarktungsart'][] = ['op' => 'in', 'val' => [$marketingTypes[0], '']];
 
 		return $filter;
 	}
