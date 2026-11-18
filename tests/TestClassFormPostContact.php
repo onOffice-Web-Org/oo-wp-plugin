@@ -501,10 +501,6 @@ class TestClassFormPostContact
 
 
 	/**
-	 *
-	 */
-
-	/**
 	 * Telefax1 is configured, but deactivated in onOffice (so not in the fields collection)
 	 */
 	public function testSendWithFieldInactiveInOnOffice()
