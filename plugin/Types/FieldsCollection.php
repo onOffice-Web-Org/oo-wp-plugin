@@ -71,6 +71,24 @@ class FieldsCollection implements FieldModuleCollection
 
 	/**
 	 *
+	 * Drops the names this collection doesn't know, e.g. fields deactivated in onOffice
+	 *
+	 * @param string $module
+	 * @param string[] $names
+	 * @return string[]
+	 *
+	 */
+
+	public function filterContainedFieldsByModule(string $module, array $names): array
+	{
+		return array_values(array_filter($names, function(string $name) use ($module): bool {
+			return $this->containsFieldByModule($module, $name);
+		}));
+	}
+
+
+	/**
+	 *
 	 * @return Field[]
 	 *
 	 */

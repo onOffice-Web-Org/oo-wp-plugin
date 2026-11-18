@@ -100,9 +100,7 @@ class DefaultFilterBuilderListViewAddress
 		$pFieldsCollection = new FieldsCollection();
 		$this->_pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		// fields deactivated in onOffice are no filter
-		$filterableFields = array_values(array_filter($filterableFields, function(string $field) use ($pFieldsCollection): bool {
-			return $pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ADDRESS, $field);
-		}));
+		$filterableFields = $pFieldsCollection->filterContainedFieldsByModule(onOfficeSDK::MODULE_ADDRESS, $filterableFields);
 		$filterableInputs = $this->_pCompoundFieldsFilter->mergeFields($pFieldsCollection, $filterableFields);
 		$fieldFilter = $this->_pFilterBuilderInputVars->getPostFieldsFilter($filterableInputs);
 		$filter = $this->addAddressCityFilterWhenConvertTextToSelect($fieldFilter);

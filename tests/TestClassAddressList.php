@@ -620,11 +620,30 @@ class TestClassAddressList
 	{
 		$this->loadAddressesByIdWithField('Telefon1');
 
-		foreach ($this->_pAddressList->getRows() as $pRow) {
+		$rows = $this->_pAddressList->getRows();
+		$this->assertCount(2, $rows);
+		foreach ($rows as $pRow) {
 			$this->assertFalse(isset($pRow['Telefon1']));
 			$this->assertTrue(isset($pRow['KdNr']));
 		}
 		$this->assertContains('Telefon1', $this->_pAddressList->getDataViewAddress()->getFields());
+	}
+
+	/**
+	 * Address detail templates and estate contacts read these, onOffice still delivers the value
+	 */
+	public function testGetCurrentAddressSkipsFieldInactiveInOnOffice()
+	{
+		$this->loadAddressesByIdWithField('Telefon1');
+
+		$addresses = $this->_pAddressList->getCurrentAddress();
+		$this->assertCount(2, $addresses);
+		foreach ($addresses as $address) {
+			$this->assertArrayNotHasKey('Telefon1', $address);
+			$this->assertArrayHasKey('KdNr', $address);
+		}
+		$this->assertArrayNotHasKey('Telefon1', $this->_pAddressList->getAddressById(13));
+		$this->assertSame(9, $this->_pAddressList->getAddressById(13)['KdNr']);
 	}
 
 	/**
@@ -635,9 +654,13 @@ class TestClassAddressList
 		$this->_pFieldsCollectionActive->addField(new Field('Telefon1', onOfficeSDK::MODULE_ADDRESS));
 		$this->loadAddressesByIdWithField('Telefon1');
 
-		foreach ($this->_pAddressList->getRows() as $pRow) {
+		$rows = $this->_pAddressList->getRows();
+		$this->assertCount(2, $rows);
+		foreach ($rows as $pRow) {
 			$this->assertSame('0241 123', $pRow['Telefon1']);
 		}
+		$this->assertSame(['0241 123', '0241 123'],
+			array_column($this->_pAddressList->getCurrentAddress(), 'Telefon1'));
 	}
 
 	/**

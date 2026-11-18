@@ -86,6 +86,22 @@ class TestClassFieldsCollection
 	 *
 	 */
 
+	public function testFilterContainedFieldsByModule()
+	{
+		$pCollection = new FieldsCollection();
+		$pCollection->addField(new Field('John', 'testModuleA'));
+		$pCollection->addField(new Field('Fred', 'testModuleA'));
+		$pCollection->addField(new Field('Mary', 'testModuleB'));
+		$this->assertSame(['Fred', 'John'],
+			$pCollection->filterContainedFieldsByModule('testModuleA', ['Fred', 'Mary', 'Paul', 'John']));
+		$this->assertSame([], $pCollection->filterContainedFieldsByModule('other', ['John']));
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testMerge()
 	{
 		$pCollectionMain = $this->createPrefilledFieldsCollection();
