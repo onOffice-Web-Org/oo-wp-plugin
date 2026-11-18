@@ -299,7 +299,12 @@ abstract class FormPost
 	{
 		$fields = [];
 		foreach ($hiddenFields as $field) {
-			$fields[] = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
+			try {
+				$fields[] = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
+			} catch (UnknownFieldException $pEx) {
+				// deactivated in onOffice, so it is not sent
+				continue;
+			}
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Called within form processing pipeline after nonce/reCAPTCHA verification in initialCheck().
@@ -425,8 +430,13 @@ abstract class FormPost
 				$pEstateDetail->loadEstates();
 				$replacement = $pEstateDetail->estateIterator()['objektnr_extern'] ?? '';
 			} else if (array_key_exists($field, $inputs)) {
-				$fieldObject = $this->_pFieldsCollection->getFieldByKeyUnsafe($field);
-				if ($fieldObject->getIsRangeField()) {
+				try {
+					$isRangeField = $this->_pFieldsCollection->getFieldByKeyUnsafe($field)->getIsRangeField();
+				} catch (UnknownFieldException $pEx) {
+					// deactivated in onOffice, so there is no value
+					$isRangeField = false;
+				}
+				if ($isRangeField) {
 					$replacement = trim(($values[$field . '__von'] ?? '') . ' - ' . ($values[$field . '__bis'] ?? ''), ' - ');
 				} elseif (is_array($replacement)) {
 					$replacement = implode(', ', $replacement);

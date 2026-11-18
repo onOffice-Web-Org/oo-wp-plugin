@@ -41,6 +41,7 @@ use onOffice\WPlugin\DataView\DataViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function esc_html;
@@ -580,8 +581,9 @@ implements AddressListBase
 	public function getRows(string $modifier = AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, bool $raw = false): array
 	{
 		$pAddressFieldModifier = $this->generateRecordModifier($modifier);
-		return array_map(function($values) use ($pAddressFieldModifier, $raw): ArrayContainer {
-			$valuesNew = $pAddressFieldModifier->processRecord($values);
+		$inactiveFields = array_flip($this->getInactiveFields());
+		return array_map(function($values) use ($pAddressFieldModifier, $raw, $inactiveFields): ArrayContainer {
+			$valuesNew = array_diff_key($pAddressFieldModifier->processRecord($values), $inactiveFields);
 
 			if (!empty($valuesNew['bildWebseite'])) {
 				$valuesNew['imageUrl'] = $valuesNew['bildWebseite'];
@@ -590,6 +592,25 @@ implements AddressListBase
 
 			return $this->getArrayContainerByRow($raw, $valuesNew);
 		}, $this->_addressesById);
+	}
+
+	/**
+	 * Configured fields onOffice no longer delivers (e.g. deactivated); kept in the config for reactivation.
+	 *
+	 * @return string[]
+	 */
+	private function getInactiveFields(): array
+	{
+		if (!$this->_pFieldsCollection instanceof FieldsCollection) {
+			return [];
+		}
+
+		// picture keys come from the picture settings, not from the field list
+		$fields = array_diff($this->_pDataViewAddress->getFields(), ['imageUrl', ImageTypes::BILDWEBSEITE]);
+
+		return array_values(array_filter($fields, function(string $field): bool {
+			return !$this->_pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ADDRESS, $field);
+		}));
 	}
 
 	/**
@@ -699,8 +720,14 @@ implements AddressListBase
 		if (!empty($this->getDataViewAddress()->getConvertInputTextToSelectForField())) {
 			$pBuilderShort->addFieldAddressCityValues($pFieldsCollection);
 		}
+		// fields deactivated in onOffice are not offered for search
+		$pDataViewAddress = clone $this->_pDataViewAddress;
+		$pDataViewAddress->setFilterableFields(array_values(array_filter($pDataViewAddress->getFilterableFields(),
+			function(string $field) use ($pFieldsCollection): bool {
+				return $pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ADDRESS, $field);
+			})));
 		$fieldsValues = $pFilterableFields->getVisibleFilterableFields
-			($this->_pDataViewAddress, $pFieldsCollection, new GeoPositionFieldHandlerEmpty);
+			($pDataViewAddress, $pFieldsCollection, new GeoPositionFieldHandlerEmpty);
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)

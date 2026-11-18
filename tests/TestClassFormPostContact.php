@@ -504,6 +504,30 @@ class TestClassFormPostContact
 	 *
 	 */
 
+	/**
+	 * Telefax1 is configured, but deactivated in onOffice (so not in the fields collection)
+	 */
+	public function testSendWithFieldInactiveInOnOffice()
+	{
+		$_POST = $this->getPostVariables() + ['Telefax1' => '0241/123'];
+
+		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$pDataFormConfiguration->addInput('Telefax1', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addHiddenFields('Telefax1');
+		$pDataFormConfiguration->setRequiredFields(['Vorname', 'Name', 'Email', 'Telefax1']);
+		$pDataFormConfiguration->setSubject('¡A new Contact!%%Telefax1%%');
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+
+		// the API mocks only answer requests without Telefax1
+		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+		$this->assertArrayNotHasKey('Telefax1', $pFormData->getValues());
+	}
+
+	/**
+	 *
+	 */
+
 	public function testSendWithNewAddressOnEstatePageWithoutUserReadRight()
 	{
 		// 'message' is the honeypot
