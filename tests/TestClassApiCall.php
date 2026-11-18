@@ -284,6 +284,55 @@ class TestClassApiCall
 
 
 	/**
+	 * Marketing type is read from the raw records, an empty one falls back to the price.
+	 */
+	public function testPriceSearchFiltersCachedListByMarketingType()
+	{
+		$pApiCall = new ApiCall();
+		$pMethod = new ReflectionMethod(ApiCall::class, 'applyListCacheFiltering');
+		$pMethod->setAccessible(true);
+
+		$estates = [
+			101 => ['kauf', '600000.00'],
+			102 => ['miete', '0.00'],
+			103 => ['miete', '700000.00'],
+			104 => ['', '800000.00'],
+			105 => ['kauf', '0.00'],
+			106 => ['', '0.00'],
+		];
+		$records = [];
+		$recordsRaw = [];
+		foreach ($estates as $id => [$marketingType, $price]) {
+			$records[] = ['id' => $id, 'elements' => ['kaufpreis' => $price === '0.00' ? '' : $price . ' €']];
+			$recordsRaw[] = ['id' => $id, 'elements' => ['kaufpreis' => $price, 'vermarktungsart' => $marketingType]];
+		}
+
+		$cachedResponse = [
+			'data' => ['records' => $records, 'meta' => ['cntabsolute' => count($records)]],
+			'raw' => ['data' => ['records' => $recordsRaw]],
+			'types' => ['kaufpreis' => 'float', 'vermarktungsart' => 'singleselect'],
+		];
+
+		$filtered = $pMethod->invoke($pApiCall, $cachedResponse, [
+			'listname' => 'immobilien',
+			'formatoutput' => true,
+			'outputlanguage' => 'DEU',
+			'listlimit' => 500,
+			'listoffset' => 0,
+			'filter' => [
+				'kaufpreis' => [
+					['op' => '<=', 'val' => 1000000.0],
+					['op' => '!=', 'val' => '0.00'],
+				],
+				'vermarktungsart' => [['op' => 'in', 'val' => ['kauf', '']]],
+			],
+		]);
+
+		$this->assertSame([101, 104], $this->recordIds($filtered));
+	}
+
+
+	/**
 	 * @param int[] $ids
 	 * @return array
 	 */
