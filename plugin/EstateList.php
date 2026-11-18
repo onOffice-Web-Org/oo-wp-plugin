@@ -368,7 +368,9 @@ class EstateList
 		}
 
 		if ($this->getShowEnergyCertificate()) {
-			$energyCertificateFields = ['energieausweistyp', 'energyClass', 'energieausweistyp2', 'energyClass2'];
+			$energyCertificateFields = $this->filterExistingEstateFields(
+				['energieausweistyp', 'energyClass', 'energieausweistyp2', 'energyClass2']
+			);
 			$estateParametersRaw['data'] = array_merge($estateParametersRaw['data'], $energyCertificateFields);
 		}
 
@@ -1265,6 +1267,27 @@ class EstateList
 		}
 
 		return $this->_hasPriceOnRequestField;
+	}
+
+	/**
+	 * Removes the fields the client's enterprise does not know. Requesting an unknown
+	 * field makes the API fail with error 141, which breaks the whole page.
+	 *
+	 * @param string[] $fields
+	 * @return string[]
+	 */
+	private function filterExistingEstateFields(array $fields): array
+	{
+		$pFieldnames = $this->_pEnvironment->getFieldnames();
+
+		return array_values(array_filter($fields, function (string $field) use ($pFieldnames): bool {
+			try {
+				$pFieldnames->getFieldInformation($field, onOfficeSDK::MODULE_ESTATE);
+				return true;
+			} catch (UnknownFieldException $pE) {
+				return false;
+			}
+		}));
 	}
 
 	public function custom_pre_get_document_title($title_parts_array, $recordModified)
