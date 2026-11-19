@@ -45,11 +45,9 @@ use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddressFactory;
-
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\SDK\internal\ApiAction;
 use onOffice\SDK\internal\Request;
-use PhpParser\Node\Stmt\TryCatch;
-use onOffice\WPlugin\Field\UnknownFieldException;
 
 /**
  *
@@ -217,32 +215,41 @@ class SDKWrapper
 		return $records;
 	}
 	/**
-	 * cleans Cache and create new Cache from all lists
-	 * (does not create cache for detail pages and similar objects)
-	 *
-	 */
-	 public function renewCache(string $listName = null, array $languages = null)
-	 {
-			//1 get all lists
-			//2 clean Cache
-			//3 create cache for every list
-			//3.1 for every language RecordManagerReadListViewEstate
-			$pDataListViewFactory = $this->_pContainer->get(DataListViewFactory::class);
-			$pDataListViewFactoryAddress = $this->_pContainer->get(DataListViewFactoryAddress::class);
-			$pDefaultFilterBuilderFactory = $this->_pContainer->get(DefaultFilterBuilderFactory::class);
-			$pDefaultFilterBuilderListViewAddressFactory = $this->_pContainer->get(DefaultFilterBuilderListViewAddressFactory::class);
+	* cleans Cache and create new Cache from all lists
+	* (does not create cache for detail pages and similar objects)
+	*
+	* A list whose renewal fails (e.g. because its filter was deleted in
+	* onOffice enterprise) is logged and skipped, so the remaining estate
+	* and address lists are still cached.
+	*
+	* @param string|null $listName renew only this list; null renews all lists
+	* @param array|null $languages onOffice language codes; null uses all WPML languages
+	*/
+	public function renewCache(string $listName = null, array $languages = null)
+	{
+		//1 get all lists
+		//2 clean Cache
+		//3 create cache for every list
+		//3.1 for every language RecordManagerReadListViewEstate
+		$pDataListViewFactory = $this->_pContainer->get(DataListViewFactory::class);
+		$pDataListViewFactoryAddress = $this->_pContainer->get(DataListViewFactoryAddress::class);
+		$pDefaultFilterBuilderFactory = $this->_pContainer->get(DefaultFilterBuilderFactory::class);
+		$pDefaultFilterBuilderListViewAddressFactory = $this->_pContainer->get(DefaultFilterBuilderListViewAddressFactory::class);
 
-			$languages = $this->normalizeLanguages($languages);
-			$estateLists = $this->getEstateLists($listName);
-			$addressLists = $this->getAddressLists($listName);
-			$this->_caches = [new DBCache(['ttl' => 3600])];
-			$fieldsInformation = $this->getAllFields($languages);
-			$pEstateListEnvironment = $this->createEstateListEnvironment();
+		$languages = $this->normalizeLanguages($languages);
+		$estateLists = $this->getEstateLists($listName);
+		$addressLists = $this->getAddressLists($listName);
+		$this->_caches = [new DBCache(['ttl' => 3600])];
+		$fieldsInformation = $this->getAllFields($languages);
+		$pEstateListEnvironment = $this->createEstateListEnvironment();
 
-			$allEstates = [];
+		$allEstates = [];
 
-			foreach ($this->_caches as $pCache) {
-				foreach ($estateLists as $list) {
+		foreach ($this->_caches as $pCache) {
+			foreach ($estateLists as $list) {
+				$listEstates = [];
+
+				try {
 					$pListView = $pDataListViewFactory->getListViewByName($list->name);
 					$pEstateList = new EstateList($pListView, $pEstateListEnvironment);
 
@@ -258,7 +265,7 @@ class SDKWrapper
 
 						foreach ((array)($responseRaw['data']['records'] ?? []) as $record) {
 							if (isset($record['id'])) {
-								$allEstates[$lang][(int)$record['id']] = $record['elements']['objekttitel'] ?? '';
+								$listEstates[$lang][(int)$record['id']] = $record['elements']['objekttitel'] ?? '';
 							}
 						}
 
@@ -271,8 +278,16 @@ class SDKWrapper
 						$response['types'] = $fieldsInformation['estate'];
 						$pCache->write($usedParameters,serialize($response));
 					}
+				} catch (\Throwable $pException) {
+					$this->handleListCacheError('estate', $list, $pException);
+					continue;
 				}
-				foreach ($addressLists as $list) {
+				foreach ($listEstates as $lang => $estates) {
+					$allEstates[$lang] = array_replace($allEstates[$lang] ?? [], $estates);
+				}
+			}
+			foreach ($addressLists as $list) {
+				try {
 					$pListView = $pDataListViewFactoryAddress->getListViewByName($list->name);
 					$addressList = new AddressList($pListView);
 
@@ -295,21 +310,63 @@ class SDKWrapper
 						$response['types'] = $fieldsInformation['address'];
 						$pCache->write($usedParameters,serialize($response));
 					}
+				} catch (\Throwable $pException) {
+					$this->handleListCacheError('address', $list, $pException);
+					continue;
 				}
 			}
+		}
 
-			/**
-			 * Fires after all estate list caches have been renewed.
-			 *
-			 * Allows external hooks (e.g. an nginx FastCGI cache warmer) to act on the
-			 * complete set of currently active estates without needing to parse the DB cache
-			 * themselves. Estates from multiple list views are merged per language key.
-			 *
-			 * @param array<string,array<int,string>> $allEstates Grouped by onOffice language code.
-			 *   Example: ['DEU' => [7407 => 'Charmante Wohnung', ...], 'ENG' => [7407 => 'Charming flat', ...]]
-			 */
-			do_action('onoffice/cache_renew/estates_ready', $allEstates);
-	 }
+		/**
+		 * Fires after all estate list caches have been renewed.
+		 *
+		 * Allows external hooks (e.g. an nginx FastCGI cache warmer) to act on the
+		 * complete set of currently active estates without needing to parse the DB cache
+		 * themselves. Estates from multiple list views are merged per language key.
+		 *
+		 * @param array<string,array<int,string>> $allEstates Grouped by onOffice language code.
+		 *   Example: ['DEU' => [7407 => 'Charmante Wohnung', ...], 'ENG' => [7407 => 'Charming flat', ...]]
+		 */
+		do_action('onoffice/cache_renew/estates_ready', $allEstates);
+	}
+
+	/**
+	 * Log a list whose cache could not be renewed.
+	 *
+	 * Catches \Throwable on purpose: no single list may abort the cron run,
+	 * whatever the cause. The exception class is logged so that programming
+	 * errors remain distinguishable from API errors.
+	 *
+	 * @param string $module 'estate' or 'address'
+	 * @param object $list record from getEstateLists() / getAddressLists()
+	 * @param \Throwable $pException
+	 */
+	private function handleListCacheError(string $module, object $list, \Throwable $pException): void
+	{
+		$code = $pException->getCode();
+		$message = $pException->getMessage();
+
+		// ApiClientException does not pass code/message to Exception;
+		// both are only available on the API client action
+		if ($pException instanceof ApiClientException) {
+			$pApiClientAction = $pException->getApiClientAction();
+			$code = $pApiClientAction->getErrorCode();
+			$message = (string) $pApiClientAction->getErrorMessage();
+		}
+
+		$filterId = $list->filterId ?? null;
+
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log(sprintf(
+			'onOffice: cache renewal skipped %s list "%s" (filterId: %s): %s [%s] %s',
+			$module,
+			(string)($list->name ?? ''),
+			$filterId !== null && $filterId !== '' ? $filterId : '-',
+			get_class($pException),
+			$code,
+			$message
+		));
+	}
 
 	/**
 	 * Build an estate list environment whose field list is already loaded, so that field
