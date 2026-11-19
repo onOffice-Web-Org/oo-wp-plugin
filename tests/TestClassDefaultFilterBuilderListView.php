@@ -367,4 +367,166 @@ class TestClassDefaultFilterBuilderListView
 		];
 		$this->assertEquals($expected, $pInstance->buildFilter());
 	}
+
+
+	/**
+	 * No kaltmiete condition: lists without that field returned nothing from the cache.
+	 */
+	public function testPurchasePriceSearchRestrictsByMarketingType()
+	{
+		$this->_pInputVariableReaderConfig->setValue('kaufpreis__von', '500000');
+		$pInstance = $this->buildPriceSearchInstance(['kaufpreis', 'warmmiete']);
+
+		$expected = [
+			'veroeffentlichen' => [['op' => '=', 'val' => 1]],
+			'kaufpreis' => [
+				['op' => '>=', 'val' => 500000.0],
+				['op' => '!=', 'val' => '0.00'],
+			],
+			'preisAufAnfrage' => [['op' => '!=', 'val' => 1]],
+			'vermarktungsart' => [['op' => 'in', 'val' => ['kauf', '']]],
+		];
+		$this->assertEquals($expected, $pInstance->buildFilter());
+	}
+
+
+	/**
+	 *
+	 */
+	public function testRentalPriceSearchRestrictsByMarketingType()
+	{
+		$this->_pInputVariableReaderConfig->setValue('warmmiete__bis', '1000');
+		$pInstance = $this->buildPriceSearchInstance(['kaufpreis', 'warmmiete']);
+
+		$expected = [
+			'veroeffentlichen' => [['op' => '=', 'val' => 1]],
+			'warmmiete' => [
+				['op' => '<=', 'val' => 1000.0],
+				['op' => '!=', 'val' => '0.00'],
+			],
+			'preisAufAnfrage' => [['op' => '!=', 'val' => 1]],
+			'vermarktungsart' => [['op' => 'in', 'val' => ['miete', '']]],
+		];
+		$this->assertEquals($expected, $pInstance->buildFilter());
+	}
+
+
+	/**
+	 * Lease estates usually have no purchase price.
+	 */
+	public function testLeasePriceSearchDoesNotRequireAPurchasePrice()
+	{
+		$this->_pInputVariableReaderConfig->setValue('pacht__von', '100');
+		$pInstance = $this->buildPriceSearchInstance(['kaufpreis', 'pacht']);
+
+		$expected = [
+			'veroeffentlichen' => [['op' => '=', 'val' => 1]],
+			'pacht' => [
+				['op' => '>=', 'val' => 100.0],
+				['op' => '!=', 'val' => '0.00'],
+			],
+			'preisAufAnfrage' => [['op' => '!=', 'val' => 1]],
+			'vermarktungsart' => [['op' => 'in', 'val' => ['pacht', '']]],
+		];
+		$this->assertEquals($expected, $pInstance->buildFilter());
+	}
+
+
+	/**
+	 *
+	 */
+	public function testMixedPriceSearchAddsNoMarketingTypeFilter()
+	{
+		$this->_pInputVariableReaderConfig->setValue('kaufpreis__von', '500000');
+		$this->_pInputVariableReaderConfig->setValue('warmmiete__von', '800');
+		$pInstance = $this->buildPriceSearchInstance(['kaufpreis', 'warmmiete']);
+
+		$expected = [
+			'veroeffentlichen' => [['op' => '=', 'val' => 1]],
+			'kaufpreis' => [['op' => '>=', 'val' => 500000.0]],
+			'warmmiete' => [['op' => '>=', 'val' => 800.0]],
+			'preisAufAnfrage' => [['op' => '!=', 'val' => 1]],
+		];
+		$this->assertEquals($expected, $pInstance->buildFilter());
+	}
+
+
+	/**
+	 * Only the list's own search input counts, not any price-like URL parameter.
+	 */
+	public function testPriceParameterOfNonFilterableFieldIsIgnored()
+	{
+		$_GET['kaltmiete__von'] = '1';
+		$this->_pInputVariableReaderConfig->setValue('kaltmiete__von', '1');
+		$this->_pInputVariableReaderConfig->setValue('kaufpreis__von', '500000');
+		$pInstance = $this->buildPriceSearchInstance(['kaufpreis']);
+
+		try {
+			$filter = $pInstance->buildFilter();
+		} finally {
+			unset($_GET['kaltmiete__von']);
+		}
+
+		$this->assertArrayNotHasKey('kaltmiete', $filter);
+		$this->assertEquals([['op' => 'in', 'val' => ['kauf', '']]], $filter['vermarktungsart']);
+	}
+
+
+	/**
+	 * A marketing type chosen in the form is combined, not replaced.
+	 */
+	public function testSelectedMarketingTypeIsKept()
+	{
+		$this->_pInputVariableReaderConfig->setFieldTypeByModule
+			('vermarktungsart', onOfficeSDK::MODULE_ESTATE, FieldTypes::FIELD_TYPE_MULTISELECT);
+		$this->_pInputVariableReaderConfig->setValueArray('vermarktungsart', ['miete']);
+		$this->_pInputVariableReaderConfig->setValue('kaufpreis__von', '500000');
+		$pInstance = $this->buildPriceSearchInstance(['kaufpreis'], ['vermarktungsart']);
+
+		$this->assertEquals([
+			['op' => 'in', 'val' => ['miete']],
+			['op' => 'in', 'val' => ['kauf', '']],
+		], $pInstance->buildFilter()['vermarktungsart']);
+	}
+
+
+	/**
+	 * @param string[] $priceFields filterable float fields
+	 * @param string[] $multiSelectFields filterable multiselect fields
+	 * @return DefaultFilterBuilderListView
+	 */
+	private function buildPriceSearchInstance(array $priceFields, array $multiSelectFields = []): DefaultFilterBuilderListView
+	{
+		$module = onOfficeSDK::MODULE_ESTATE;
+		$pDataListView = new DataListView(1, 'test');
+		$pDataListView->setFilterableFields(array_merge($priceFields, $multiSelectFields));
+
+		foreach ($priceFields as $field) {
+			$this->_pInputVariableReaderConfig->setFieldTypeByModule($field, $module, FieldTypes::FIELD_TYPE_FLOAT);
+		}
+
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([new Container])
+			->onlyMethods(['addFieldsAddressEstate'])
+			->getMock();
+		$pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->willReturnCallback(function (FieldsCollection $pFieldsCollection)
+			use ($pFieldsCollectionBuilderShort, $priceFields, $multiSelectFields, $module): FieldsCollectionBuilderShort
+			{
+				foreach ($priceFields as $field) {
+					$pField = new Field($field, $module);
+					$pField->setType(FieldTypes::FIELD_TYPE_FLOAT);
+					$pFieldsCollection->addField($pField);
+				}
+				foreach ($multiSelectFields as $field) {
+					$pField = new Field($field, $module);
+					$pField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+					$pFieldsCollection->addField($pField);
+				}
+
+				return $pFieldsCollectionBuilderShort;
+			});
+
+		return new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort, $this->_pEnvironment);
+	}
 }
