@@ -67,6 +67,7 @@ use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use onOffice\WPlugin\Field\UnknownFieldException;
 /**
  *
  * @url http://www.onoffice.de
@@ -1176,6 +1177,7 @@ class TestClassEstateList
 	{
 		$this->_pEstateList->loadEstates();
 		$this->assertEquals(['A', 'B', 'C'], $this->_pEstateList->getPermittedValues('energyClass'));
+		$this->assertEquals(['A+', 'A', 'B'], $this->_pEstateList->getPermittedValues('energyClass2'));
 	}
  
 	/**
@@ -1809,15 +1811,47 @@ class TestClassEstateList
 			'plz',
 			'land',
 			'energyClass',
+			'energyClass2',
 			'regionaler_zusatz',
 		];
 		foreach ($fieldNames as $fieldName) {
 			$field = new Field($fieldName, 'estate', 'testLabel');
 			if ($fieldName === 'energyClass') {
 				$field->setPermittedvalues(['A', 'B', 'C']);
+			} elseif ($fieldName === 'energyClass2') {
+				$field->setPermittedvalues(['B', 'A+', 'A']);
 			}
 			$fieldsCollection->addField($field);
 		}
 		return $fieldsCollection;
+	}
+
+	/**
+	 * Regression: a client whose enterprise does not know the fields of the second
+	 * energy certificate must not get them requested, or the API fails with error 141.
+	 */
+	public function testFilterExistingEstateFieldsSkipsUnknownFields()
+	{
+		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['getFieldInformation'])
+			->getMock();
+		$pFieldnames->method('getFieldInformation')
+			->willReturnCallback(function (string $field): array {
+				if (in_array($field, ['energieausweistyp2', 'energyClass2'], true)) {
+					throw new UnknownFieldException();
+				}
+				return [];
+			});
+		$this->_pEnvironment->method('getFieldnames')->willReturn($pFieldnames);
+
+		$filter = Closure::bind(function (array $fields): array {
+			return $this->filterExistingEstateFields($fields);
+		}, $this->_pEstateList, EstateList::class);
+
+		$this->assertSame(
+			['energieausweistyp', 'energyClass'],
+			$filter(['energieausweistyp', 'energyClass', 'energieausweistyp2', 'energyClass2'])
+		);
 	}
 }
