@@ -41,6 +41,7 @@ use onOffice\WPlugin\DataView\DataViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function esc_html;
@@ -560,7 +561,8 @@ implements AddressListBase
 	 */
 	public function getAddressById($id): array
 	{
-		return $this->_addressesById[$id] ?? [];
+		// estate contacts read this, so deactivated fields go here as well
+		return array_diff_key($this->_addressesById[$id] ?? [], array_flip($this->getInactiveFields()));
 	}
 
 	/**
@@ -580,8 +582,9 @@ implements AddressListBase
 	public function getRows(string $modifier = AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, bool $raw = false): array
 	{
 		$pAddressFieldModifier = $this->generateRecordModifier($modifier);
-		return array_map(function($values) use ($pAddressFieldModifier, $raw): ArrayContainer {
-			$valuesNew = $pAddressFieldModifier->processRecord($values);
+		$inactiveFields = array_flip($this->getInactiveFields());
+		return array_map(function($values) use ($pAddressFieldModifier, $raw, $inactiveFields): ArrayContainer {
+			$valuesNew = array_diff_key($pAddressFieldModifier->processRecord($values), $inactiveFields);
 
 			if (!empty($valuesNew['bildWebseite'])) {
 				$valuesNew['imageUrl'] = $valuesNew['bildWebseite'];
@@ -590,6 +593,34 @@ implements AddressListBase
 
 			return $this->getArrayContainerByRow($raw, $valuesNew);
 		}, $this->_addressesById);
+	}
+
+	/**
+	 * Configured fields onOffice no longer delivers (e.g. deactivated); kept in the config for reactivation.
+	 *
+	 * @return string[]
+	 */
+	private function getInactiveFields(): array
+	{
+		// picture keys come from the picture settings, not from the field list
+		$fields = array_diff($this->_pDataViewAddress->getFields(), ['imageUrl', ImageTypes::BILDWEBSEITE]);
+
+		return array_values(array_diff($fields, $this->filterActiveFields($fields)));
+	}
+
+	/**
+	 * Drops fields onOffice no longer delivers (e.g. deactivated); unfiltered before addresses are loaded.
+	 *
+	 * @param string[] $fields
+	 * @return string[]
+	 */
+	public function filterActiveFields(array $fields): array
+	{
+		if (!$this->_pFieldsCollection instanceof FieldsCollection) {
+			return $fields;
+		}
+
+		return $this->_pFieldsCollection->filterContainedFieldsByModule(onOfficeSDK::MODULE_ADDRESS, $fields);
 	}
 
 	/**
@@ -699,8 +730,12 @@ implements AddressListBase
 		if (!empty($this->getDataViewAddress()->getConvertInputTextToSelectForField())) {
 			$pBuilderShort->addFieldAddressCityValues($pFieldsCollection);
 		}
+		// fields deactivated in onOffice are not offered for search
+		$pDataViewAddress = clone $this->_pDataViewAddress;
+		$pDataViewAddress->setFilterableFields($pFieldsCollection->filterContainedFieldsByModule
+			(onOfficeSDK::MODULE_ADDRESS, $pDataViewAddress->getFilterableFields()));
 		$fieldsValues = $pFilterableFields->getVisibleFilterableFields
-			($this->_pDataViewAddress, $pFieldsCollection, new GeoPositionFieldHandlerEmpty);
+			($pDataViewAddress, $pFieldsCollection, new GeoPositionFieldHandlerEmpty);
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
@@ -926,7 +961,11 @@ implements AddressListBase
 	 */
 	public function getCurrentAddress(): array
 	{
-		return $this->_addressesById;
+		// detail templates read this, so deactivated fields go here as well
+		$inactiveFields = array_flip($this->getInactiveFields());
+		return array_map(function(array $values) use ($inactiveFields): array {
+			return array_diff_key($values, $inactiveFields);
+		}, $this->_addressesById);
 	}
 
 }

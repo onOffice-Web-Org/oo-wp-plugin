@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use onOffice\WPlugin\Vendor\DI\Container;
 use onOffice\WPlugin\Vendor\DI\ContainerBuilder;
 use Exception;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
 use onOffice\WPlugin\DataView\DataListViewAddress;
@@ -134,6 +135,33 @@ class TestClassContentFilterShortCodeAddress
 		$pConfigFilterShortCodeAddress = $this->_pContainer->get(ContentFilterShortCodeAddress::class);
 		$result = $pConfigFilterShortCodeAddress->replaceShortCodes(['view' => 'adressList-01']);
 		$this->assertEquals('I am the returned text.', $result);
+	}
+
+
+	/**
+	 * A search field deactivated in onOffice doesn't reach the paging parameters, which would log it
+	 */
+	public function testReplaceShortCodesSkipsFieldInactiveInOnOffice()
+	{
+		$pAddressList = $this->getMockBuilder(AddressList::class)->getMock();
+		$pAddressList->method('withDataListViewAddress')->willReturnSelf();
+		$pAddressList->method('filterActiveFields')->with(['Ort'])->willReturn([]);
+		$pAddressListFactory = $this->getMockBuilder(AddressListFactory::class)
+			->onlyMethods(['create'])
+			->disableOriginalConstructor()
+			->getMock();
+		$pAddressListFactory->method('create')->willReturn($pAddressList);
+		$this->_pContainer->set(AddressListFactory::class, $pAddressListFactory);
+
+		$pSearchParametersModelBuilder = $this->getMockBuilder(SearchParametersModelBuilder::class)
+			->onlyMethods(['build'])
+			->disableOriginalConstructor()
+			->getMock();
+		$pSearchParametersModelBuilder->expects($this->once())->method('build')
+			->with([], onOfficeSDK::MODULE_ADDRESS)->willReturn(new SearchParametersModel());
+		$this->_pContainer->set(SearchParametersModelBuilder::class, $pSearchParametersModelBuilder);
+
+		$this->_pContainer->get(ContentFilterShortCodeAddress::class)->replaceShortCodes(['view' => 'adressList-01']);
 	}
 
 
