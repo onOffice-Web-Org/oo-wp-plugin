@@ -237,6 +237,76 @@ class TestClassEstateList
 		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->getRawValues());
 	}
 
+	public function testLoadEstatesLoadsRawValuesMissingFromRawPage()
+	{
+		$dataReadEstateRaw = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENGRaw.json'), true);
+		$parametersRaw = $dataReadEstateRaw['parameters'];
+		$responseRaw = $dataReadEstateRaw['response'];
+		$recordsRaw = $responseRaw['data']['records'];
+
+		// The cached formatted page and the live raw page sorted equal values differently,
+		// so the raw page lacks two estates of the formatted page.
+		$responsePartial = $responseRaw;
+		$responsePartial['data']['records'] = array_slice($recordsRaw, 0, 3);
+		$responseMissing = $responseRaw;
+		$responseMissing['data']['records'] = array_slice($recordsRaw, 3);
+
+		$parametersRawWithoutGeo = $parametersRaw;
+		unset($parametersRawWithoutGeo['georangesearch']);
+		foreach ([$parametersRaw, $parametersRawWithoutGeo] as $parameters) {
+			$this->_pSDKWrapperMocker->addResponseByParameters
+				(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parameters, null, $responsePartial);
+		}
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '', [
+			'data' => $parametersRaw['data'],
+			'filter' => ['Id' => [['op' => 'IN', 'val' => [1193, 5448]]]],
+			'estatelanguage' => 'ENG',
+			'outputlanguage' => 'ENG',
+			'listlimit' => 2,
+			'formatoutput' => false,
+			'addMainLangId' => true,
+		], null, $responseMissing);
+
+		$this->_pEstateList->loadEstates();
+
+		$rawValues = $this->_pEstateList->getRawValues();
+		foreach ([15, 1051, 1082, 1193, 5448] as $estateId) {
+			$this->assertSame($estateId, $rawValues->getValueRaw($estateId)['id']);
+		}
+	}
+
+	public function testLoadEstatesKeepsListWhenLoadingMissingRawValuesFails()
+	{
+		$dataReadEstateRaw = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENGRaw.json'), true);
+		$parametersRaw = $dataReadEstateRaw['parameters'];
+		$responseRaw = $dataReadEstateRaw['response'];
+
+		$responsePartial = $responseRaw;
+		$responsePartial['data']['records'] = array_slice($responseRaw['data']['records'], 0, 3);
+
+		$parametersRawWithoutGeo = $parametersRaw;
+		unset($parametersRawWithoutGeo['georangesearch']);
+		foreach ([$parametersRaw, $parametersRawWithoutGeo] as $parameters) {
+			$this->_pSDKWrapperMocker->addResponseByParameters
+				(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parameters, null, $responsePartial);
+		}
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '', [
+			'data' => $parametersRaw['data'],
+			'filter' => ['Id' => [['op' => 'IN', 'val' => [1193, 5448]]]],
+			'estatelanguage' => 'ENG',
+			'outputlanguage' => 'ENG',
+			'listlimit' => 2,
+			'formatoutput' => false,
+			'addMainLangId' => true,
+		], null, ['status' => ['errorcode' => 500, 'message' => 'Error']]);
+
+		$this->_pEstateList->loadEstates();
+
+		$this->assertSame(15, $this->_pEstateList->getRawValues()->getValueRaw(15)['id']);
+	}
+
 
 	/**
 	 *
@@ -1217,6 +1287,17 @@ class TestClassEstateList
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstatesCostsCalculatorRaw, null, $responseReadEstatesCostsCalculatorRaw);
+		$responseReadEstatesCostsCalculatorRawEmpty = $responseReadEstatesCostsCalculatorRaw;
+		$responseReadEstatesCostsCalculatorRawEmpty['data']['records'] = [];
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '', [
+			'data' => $parametersReadEstatesCostsCalculatorRaw['data'],
+			'filter' => ['Id' => [['op' => 'IN', 'val' => [1051, 1082, 1193, 5448]]]],
+			'estatelanguage' => 'ENG',
+			'outputlanguage' => 'ENG',
+			'listlimit' => 4,
+			'formatoutput' => false,
+			'addMainLangId' => true,
+		], null, $responseReadEstatesCostsCalculatorRawEmpty);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'fields', '', $parametersGetFieldCurrency, null, $responseGetFieldCurrency);
 		$this->_pSDKWrapperMocker->addResponseByParameters
