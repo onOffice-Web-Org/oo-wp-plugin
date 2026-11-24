@@ -30,7 +30,16 @@ use onOffice\WPlugin\Pagination\ListPagination;
 // Listing ID for pagination query parameter
 $list_id = $pEstates->getDataView()->getId();
 
-$dont_echo = ['vermarktungsstatus','objekttitel'];
+$dont_echo = ['objekttitel'];
+
+// `vermarktungsstatus` is computed by the plugin from the estate's flags (sold, reserved, ...)
+// and is not an onOffice enterprise field, so getFieldLabel() only knows its raw key.
+$getUnitFieldLabel = function ($field) use ($pEstates) {
+    if ($field === 'vermarktungsstatus') {
+        return __('Status', 'onoffice-for-wp-websites');
+    }
+    return $pEstates->getFieldLabel($field);
+};
 
 $pEstatesClone = clone $pEstates;
 $pEstatesClone->resetEstateIterator();
@@ -88,7 +97,7 @@ $rawValues = $pEstates->getRawValues();
                                 }
 
                                 echo '<th class="oo-units__data">';
-                                echo esc_html($pEstates->getFieldLabel($field));
+                                echo esc_html($getUnitFieldLabel($field));
                                 echo '</th>';
                             }
                         }
@@ -133,7 +142,7 @@ $rawValues = $pEstates->getRawValues();
                             echo '<td class="oo-units__data' .
                                 esc_attr($class).
                                 '" data-label="' .
-                                esc_attr($pEstates->getFieldLabel($field)) .
+                                esc_attr($getUnitFieldLabel($field)) .
                                 '">';
                             echo is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value);
                             echo '</td>';
