@@ -429,6 +429,7 @@ class EstateList
 			$pApiClientActionMissingRaw->addRequestToQueue()->sendRequests();
 			$recordsMissingRaw = $pApiClientActionMissingRaw->getResultRecords();
 		} catch (ApiClientException | HttpFetchNoResultException $pException) {
+			error_log('onOffice: Missing raw estate values unavailable: ' . $pException->getMessage());
 			return;
 		}
 
