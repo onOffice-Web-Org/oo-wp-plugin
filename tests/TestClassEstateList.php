@@ -276,6 +276,37 @@ class TestClassEstateList
 		}
 	}
 
+	public function testLoadEstatesKeepsListWhenLoadingMissingRawValuesFails()
+	{
+		$dataReadEstateRaw = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENGRaw.json'), true);
+		$parametersRaw = $dataReadEstateRaw['parameters'];
+		$responseRaw = $dataReadEstateRaw['response'];
+
+		$responsePartial = $responseRaw;
+		$responsePartial['data']['records'] = array_slice($responseRaw['data']['records'], 0, 3);
+
+		$parametersRawWithoutGeo = $parametersRaw;
+		unset($parametersRawWithoutGeo['georangesearch']);
+		foreach ([$parametersRaw, $parametersRawWithoutGeo] as $parameters) {
+			$this->_pSDKWrapperMocker->addResponseByParameters
+				(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parameters, null, $responsePartial);
+		}
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '', [
+			'data' => $parametersRaw['data'],
+			'filter' => ['Id' => [['op' => 'IN', 'val' => [1193, 5448]]]],
+			'estatelanguage' => 'ENG',
+			'outputlanguage' => 'ENG',
+			'listlimit' => 2,
+			'formatoutput' => false,
+			'addMainLangId' => true,
+		], null, ['status' => ['errorcode' => 500, 'message' => 'Error']]);
+
+		$this->_pEstateList->loadEstates();
+
+		$this->assertSame(15, $this->_pEstateList->getRawValues()->getValueRaw(15)['id']);
+	}
+
 
 	/**
 	 *

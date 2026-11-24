@@ -402,7 +402,6 @@ class EstateList
 	 * without raw values loses its reference flag and marketing status.
 	 *
 	 * @param array $estateParametersRaw
-	 * @throws API\ApiClientException
 	 */
 	private function loadMissingRawRecords(array $estateParametersRaw)
 	{
@@ -425,9 +424,15 @@ class EstateList
 			'formatoutput' => false,
 			'addMainLangId' => true,
 		]);
-		$pApiClientActionMissingRaw->addRequestToQueue()->sendRequests();
+		// Best effort: without the extra raw values the list still renders, only without labels.
+		try {
+			$pApiClientActionMissingRaw->addRequestToQueue()->sendRequests();
+			$recordsMissingRaw = $pApiClientActionMissingRaw->getResultRecords();
+		} catch (ApiClientException | HttpFetchNoResultException $pException) {
+			return;
+		}
 
-		foreach ($pApiClientActionMissingRaw->getResultRecords() as $recordRaw) {
+		foreach ($recordsMissingRaw as $recordRaw) {
 			$this->_recordsRaw[$recordRaw['id']] = $recordRaw;
 		}
 	}
