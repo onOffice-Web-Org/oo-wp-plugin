@@ -392,6 +392,44 @@ class EstateList
 			$offset = ($currentPage - 1) * $perPage;
 			$this->_records = array_slice($this->_records, $offset, $perPage);
 		}
+
+		$this->loadMissingRawRecords($estateParametersRaw);
+	}
+
+	/**
+	 * The formatted page can come from the list cache (sorted in PHP by the SDK), the raw page
+	 * from the API. With equal sort values both pages can hold different estates, and an estate
+	 * without raw values loses its reference flag and marketing status.
+	 *
+	 * @param array $estateParametersRaw
+	 * @throws API\ApiClientException
+	 */
+	private function loadMissingRawRecords(array $estateParametersRaw)
+	{
+		$missingIds = array_values(array_diff(
+			array_column($this->_records, 'id'),
+			array_keys($this->_recordsRaw)
+		));
+
+		if ($missingIds === []) {
+			return;
+		}
+
+		$pApiClientActionMissingRaw = clone $this->_pApiClientAction;
+		$pApiClientActionMissingRaw->setParameters([
+			'data' => $estateParametersRaw['data'],
+			'filter' => ['Id' => [['op' => 'IN', 'val' => $missingIds]]],
+			'estatelanguage' => $estateParametersRaw['estatelanguage'],
+			'outputlanguage' => $estateParametersRaw['outputlanguage'],
+			'listlimit' => count($missingIds),
+			'formatoutput' => false,
+			'addMainLangId' => true,
+		]);
+		$pApiClientActionMissingRaw->addRequestToQueue()->sendRequests();
+
+		foreach ($pApiClientActionMissingRaw->getResultRecords() as $recordRaw) {
+			$this->_recordsRaw[$recordRaw['id']] = $recordRaw;
+		}
 	}
 
 	/**
