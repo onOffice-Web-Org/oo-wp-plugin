@@ -29,6 +29,8 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddress;
 use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use WP_UnitTestCase;
 
@@ -145,6 +147,34 @@ class TestClassDefaultFilterBuilderListViewAddress
 		$this->_pFilterBuilderInputVariables
 			->method('getPostFieldsFilter')
 			->willReturn(self::POST_FIELDS_FITLER);
+
+		$this->assertEquals(self::EXPECTED_RESULT, $pInstance->buildFilter());
+	}
+
+	/**
+	 * A filterable field deactivated in onOffice is no filter
+	 */
+	public function testBuildFilterSkipsFieldInactiveInOnOffice()
+	{
+		$pDataListView = new DataListViewAddress(1, 'test');
+		$pDataListView->setFilterableFields(['Plz', 'Telefon1', 'ArtDaten']);
+		$this->_pFilterBuilderInputVariables->method('getModule')->willReturn(onOfficeSDK::MODULE_ADDRESS);
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->willReturnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pFieldsCollection->addField(new Field('Plz', onOfficeSDK::MODULE_ADDRESS));
+				$pFieldsCollection->addField(new Field('ArtDaten', onOfficeSDK::MODULE_ADDRESS));
+				return $this->_pFieldsCollectionBuilderShort;
+			});
+		$this->_pFilterBuilderInputVariables->expects($this->once())
+			->method('getPostFieldsFilter')
+			->with(['Plz', 'ArtDaten'])
+			->willReturn(self::POST_FIELDS_FITLER);
+
+		$pInstance = new DefaultFilterBuilderListViewAddress
+			($pDataListView,
+				$this->_pFieldsCollectionBuilderShort,
+				new CompoundFieldsFilter(),
+				$this->_pFilterBuilderInputVariables);
 
 		$this->assertEquals(self::EXPECTED_RESULT, $pInstance->buildFilter());
 	}

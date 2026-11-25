@@ -32,6 +32,8 @@ use onOffice\WPlugin\ArrayContainer;
 use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
 use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\DataView\DataViewFilterableFields;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\FieldnamesEnvironment;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
@@ -96,6 +98,15 @@ class TestClassAddressList
 	/** @var AddressListEnvironment */
 	private $_pEnvironment = null;
 
+	/** @var SDKWrapperMocker */
+	private $_pSDKWrapper = null;
+
+	/** @var FieldsCollection fields active in onOffice */
+	private $_pFieldsCollectionActive = null;
+
+	/** @var string[] filterable fields handed to the search form */
+	private $_searchedFields = [];
+
 	/**
 	 *
 	 * @before
@@ -105,6 +116,7 @@ class TestClassAddressList
 	public function prepare()
 	{
 		$pSDKWrapper = new SDKWrapperMocker();
+		$this->_pSDKWrapper = $pSDKWrapper;
 		$response = $this->getResponseGetRows();
 		$parametersDefault = [
 			'listname' => 'default',
@@ -324,7 +336,7 @@ class TestClassAddressList
 		$module = onOfficeSDK::MODULE_ADDRESS;
 		$pMockFieldnames->method('getFieldLabel')->will($this->returnValueMap([
 			['KdNr', $module, 'Kundennummer'],
-			['phone', $module, '<Telefon>'],
+			['Telefon1', $module, '<Telefon>'],
 		]));
 
 		$pMockFieldnames->method('getFieldInformation')->will($this->returnValueMap([
@@ -341,7 +353,10 @@ class TestClassAddressList
 			->onlyMethods(['getVisibleFilterableFields'])
 			->getMock();
 		$pMockOutputFields->method('getVisibleFilterableFields')
-			->will($this->returnValue(['KdNr' => 4, 'Vorname' => null, 'Name' => 'Stefansson']));
+			->will($this->returnCallback(function(DataViewFilterableFields $pDataView): array {
+				$this->_searchedFields = $pDataView->getFilterableFields();
+				return ['KdNr' => 4, 'Vorname' => null, 'Name' => 'Stefansson'];
+			}));
 
 		$pContainerBuilder = new ContainerBuilder();
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -375,6 +390,15 @@ class TestClassAddressList
 				$pCollection->merge($pFieldsCollectionNewFields);
 				return $pFieldsCollectionBuilderMock;
 			}));
+		$pFieldsCollectionBuilderMock->method('addFieldsEstateDecoratorReadAddressBackend')
+			->will($this->returnCallback(function(FieldsCollection $pCollection)
+			use ($pFieldsCollectionBuilderMock): FieldsCollectionBuilderShort {
+				foreach (FieldModuleCollectionDecoratorReadAddress::getNewAddressFields() as $name => $row) {
+					$pCollection->addField(new Field($name, onOfficeSDK::MODULE_ADDRESS, $row['label']));
+				}
+				return $pFieldsCollectionBuilderMock;
+			}));
+		$this->_pFieldsCollectionActive = $pFieldsCollectionNewFields;
 
 		$pMockConfig->method('getFieldsCollectionBuilderShort')->willReturn($pFieldsCollectionBuilderMock);
 		$this->_pEnvironment = $pMockConfig;
@@ -473,8 +497,8 @@ class TestClassAddressList
 	{
 		$this->_pAddressList->loadAddresses();
 		$this->assertEquals('Kundennummer', $this->_pAddressList->getFieldLabel('KdNr'));
-		$this->assertEquals('&lt;Telefon&gt;', $this->_pAddressList->getFieldLabel('phone'));
-		$this->assertEquals('<Telefon>', $this->_pAddressList->getFieldLabel('phone', true));
+		$this->assertEquals('&lt;Telefon&gt;', $this->_pAddressList->getFieldLabel('Telefon1'));
+		$this->assertEquals('<Telefon>', $this->_pAddressList->getFieldLabel('Telefon1', true));
 	}
 
 
@@ -587,6 +611,102 @@ class TestClassAddressList
 		];
 
 		$this->assertEquals($expectedResult, $this->_pAddressList->getVisibleFilterableFields());
+	}
+
+	/**
+	 * A field deactivated in onOffice stays configured, but is no longer output
+	 */
+	public function testGetRowsSkipsFieldInactiveInOnOffice()
+	{
+		$this->loadAddressesByIdWithField('Telefon1');
+
+		$rows = $this->_pAddressList->getRows();
+		$this->assertCount(2, $rows);
+		foreach ($rows as $pRow) {
+			$this->assertFalse(isset($pRow['Telefon1']));
+			$this->assertTrue(isset($pRow['KdNr']));
+		}
+		$this->assertContains('Telefon1', $this->_pAddressList->getDataViewAddress()->getFields());
+	}
+
+	/**
+	 * Address detail templates and estate contacts read these, onOffice still delivers the value
+	 */
+	public function testGetCurrentAddressSkipsFieldInactiveInOnOffice()
+	{
+		$this->loadAddressesByIdWithField('Telefon1');
+
+		$addresses = $this->_pAddressList->getCurrentAddress();
+		$this->assertCount(2, $addresses);
+		foreach ($addresses as $address) {
+			$this->assertArrayNotHasKey('Telefon1', $address);
+			$this->assertArrayHasKey('KdNr', $address);
+		}
+		$this->assertArrayNotHasKey('Telefon1', $this->_pAddressList->getAddressById(13));
+		$this->assertSame(9, $this->_pAddressList->getAddressById(13)['KdNr']);
+	}
+
+	/**
+	 * Once reactivated in onOffice, the field is output again without new configuration
+	 */
+	public function testGetRowsOutputsFieldReactivatedInOnOffice()
+	{
+		$this->_pFieldsCollectionActive->addField(new Field('Telefon1', onOfficeSDK::MODULE_ADDRESS));
+		$this->loadAddressesByIdWithField('Telefon1');
+
+		$rows = $this->_pAddressList->getRows();
+		$this->assertCount(2, $rows);
+		foreach ($rows as $pRow) {
+			$this->assertSame('0241 123', $pRow['Telefon1']);
+		}
+		$this->assertSame(['0241 123', '0241 123'],
+			array_column($this->_pAddressList->getCurrentAddress(), 'Telefon1'));
+	}
+
+	/**
+	 * A filterable field deactivated in onOffice is not offered in the search form
+	 */
+	public function testGetVisibleFilterableFieldsSkipsFieldInactiveInOnOffice()
+	{
+		$this->_pAddressList->getDataViewAddress()->setFilterableFields(['KdNr', 'Telefon1', 'Name']);
+		$this->_pAddressList->loadAddresses();
+		$this->_pAddressList->getVisibleFilterableFields();
+
+		$this->assertSame(['KdNr', 'Name'], $this->_searchedFields);
+		$this->assertSame(['KdNr', 'Telefon1', 'Name'],
+			$this->_pAddressList->getDataViewAddress()->getFilterableFields());
+	}
+
+	/**
+	 * @param string $field configured in addition to the default fields
+	 */
+	private function loadAddressesByIdWithField(string $field)
+	{
+		$fields = ['Name', 'KdNr', 'Vorname', 'phone', $field];
+		$response = $this->getResponseGetRows();
+		foreach ($response['data']['records'] as $index => $record) {
+			$response['data']['records'][$index]['elements'][$field] = '0241 123';
+		}
+
+		$parameters = [
+			'recordids' => [13, 37],
+			'data' => $fields,
+			'outputlanguage' => Language::getDefault(),
+			'filter' => [],
+			'formatoutput' => true,
+		];
+		$this->_pSDKWrapper->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $response);
+
+		$parameters['data'] = array_merge($fields, [
+			'contactCategory', 'Zusatz1', 'branch', 'communityOfHeirs', 'communityOfOwners',
+			'umbrellaOrganization', 'association', 'institution', 'department', 'homepage_veroeffentlichen',
+		]);
+		$parameters['formatoutput'] = false;
+		$this->_pSDKWrapper->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'address', '', $parameters, null, $this->getResponseGetRowsRaw());
+
+		$this->_pAddressList->loadAddressesById([13, 37], $fields);
 	}
 
 

@@ -154,7 +154,7 @@ class ContentFilterShortCodeAddress implements ContentFilterShortCode
 		$pAddressList->setDefaultFilterBuilder($pListViewFilterBuilder);
 
 		$pAddressList->loadAddresses($page);
-		$this->populateWpLinkPagesArgs($pAddressListView->getFilterableFields());
+		$this->populateWpLinkPagesArgs($pAddressList->filterActiveFields($pAddressListView->getFilterableFields()));
 		$templateName = $pAddressListView->getTemplate(); // name
 		return $this->_pTemplate
 			->withTemplateName($templateName)
