@@ -364,22 +364,22 @@ class ApiCall
 	 */
 	private function applyListCacheFiltering(array $cachedResponse, array $params): array
 	{
-		if ($params["formatoutput"] == true)
+		// Filter regardless of formatoutput: raw (formatoutput=false) list requests
+		// ride the same warmed cache entry and must be trimmed too, otherwise every
+		// search returns the full, unfiltered record set.
+		if (isset($params["formatoutput"]))
 		{
 			$filter = (isset($params["filter"]) && is_array($params["filter"]))
 				? $params["filter"]
 				: [];
-			$hasGeoFilter = isset($filter['geo'][0]['loc']);
 
+			// Only data.records is required: filterRecords() synthesizes the raw
+			// records and types arrays when the warmed cache entry lacks them.
+			// A stricter guard here silently skipped filtering for such entries,
+			// returning the full unfiltered record set for every search.
 			if (
 				!isset($cachedResponse["data"]["records"]) ||
-				!is_array($cachedResponse["data"]["records"]) ||
-				(!$hasGeoFilter && (
-					!isset($cachedResponse["raw"]["data"]["records"]) ||
-					!is_array($cachedResponse["raw"]["data"]["records"]) ||
-					!isset($cachedResponse["types"]) ||
-					!is_array($cachedResponse["types"])
-				))
+				!is_array($cachedResponse["data"]["records"])
 			) {
 				return $cachedResponse;
 			}
@@ -801,7 +801,7 @@ class ApiCall
 					elseif ($op === '<=')
 					{
 						if(!array_key_exists($fieldName,$itemRaw["elements"])
-							|| $this->isBigger($val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
+							|| $this->isBigger($val, $itemRaw["elements"][$fieldName], ($fieldTypes[$fieldName] ?? (is_numeric($val) ? 'float' : 'date')))) {
 							unset($filteredArray[$index]);
 							break 2;
 						}
@@ -809,7 +809,7 @@ class ApiCall
 					elseif ($op === '>=')
 					{
 						if(!array_key_exists($fieldName,$itemRaw["elements"])
-							|| $this->isSmaller($val, $itemRaw["elements"][$fieldName], $fieldTypes[$fieldName])) {
+							|| $this->isSmaller($val, $itemRaw["elements"][$fieldName], ($fieldTypes[$fieldName] ?? (is_numeric($val) ? 'float' : 'date')))) {
 							unset($filteredArray[$index]);
 							break 2;
 						}
@@ -892,10 +892,12 @@ class ApiCall
 	private function isSmaller($filterVal, $rawValue, string $type, bool $isSmaller = true): bool
 	{
 		if($type === 'float' || $type === 'integer') {
+			// Raw values from warmed cache entries are German-formatted strings
+			// ("536.000,00 EUR", "ca. 41,92 m2"); floatval() misparses those.
 			if($isSmaller){
-				return (floatval($rawValue) < floatval($filterVal));
+				return ($this->tofloat((string)$rawValue) < $this->tofloat((string)$filterVal));
 			} else {
-				return (floatval($rawValue) > floatval($filterVal));
+				return ($this->tofloat((string)$rawValue) > $this->tofloat((string)$filterVal));
 			}
 		} else if($type === 'date') {
 			$dateVal = date_create_from_format('Y-m-d H:i:s', $filterVal); //1955-12-29

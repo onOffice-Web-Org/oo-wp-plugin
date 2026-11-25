@@ -383,41 +383,66 @@ class ApiCallTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals(3, $result['data']['records'][0]['id']);
 	}
 
-
 	/**
-	 * applyListCacheFiltering should early-return when no geo filter and raw/types missing.
+	 * Raw list requests must filter a warm cache entry just like formatted
+	 * requests do. Otherwise searches return the entire warmed list.
 	 */
-	public function testApplyListCacheFiltering_withoutGeoFilterRequiresRawTypes()
+	public function testApplyListCacheFiltering_filtersRawRequestWithoutRawTypes()
 	{
 		$apiCall = new ApiCall();
 		$response = [
 			'data' => [
-				'meta' => ['cntabsolute' => 1],
+				'meta' => ['cntabsolute' => 2],
 				'records' => [
-					[
-						'id' => 1,
-						'elements' => ['kaufpreis' => 100000],
-					],
+					['id' => 1, 'elements' => ['objektart' => 'wohnung']],
+					['id' => 2, 'elements' => ['objektart' => 'haus']],
 				],
 			],
 		];
 
 		$method = new ReflectionMethod(ApiCall::class, 'applyListCacheFiltering');
 		$method->setAccessible(true);
-
-		$params = [
-			'formatoutput' => true,
-			'filter' => ['kaufpreis' => [['op' => '=', 'val' => 100000]]],
+		$result = $method->invokeArgs($apiCall, [$response, [
+			'formatoutput' => false,
+			'filter' => ['objektart' => [['op' => 'in', 'val' => ['wohnung']]]],
 			'listlimit' => 20,
 			'listoffset' => 0,
-		];
+		]]);
 
-		$originalResponse = $response;
-		$result = $method->invokeArgs($apiCall, [$response, $params]);
-
-		$this->assertEquals($originalResponse, $result);
+		$this->assertEquals(1, $result['data']['meta']['cntabsolute']);
+		$this->assertCount(1, $result['data']['records']);
+		$this->assertEquals(1, $result['data']['records'][0]['id']);
 	}
 
+	/**
+	 * Range filters must parse formatted values retained in warm cache records.
+	 */
+	public function testApplyListCacheFiltering_filtersFormattedRangeValueWithoutTypes()
+	{
+		$apiCall = new ApiCall();
+		$response = [
+			'data' => [
+				'meta' => ['cntabsolute' => 2],
+				'records' => [
+					['id' => 1, 'elements' => ['kaufpreis' => '536.000,00 EUR']],
+					['id' => 2, 'elements' => ['kaufpreis' => '250.000,00 EUR']],
+				],
+			],
+		];
+
+		$method = new ReflectionMethod(ApiCall::class, 'applyListCacheFiltering');
+		$method->setAccessible(true);
+		$result = $method->invokeArgs($apiCall, [$response, [
+			'formatoutput' => false,
+			'filter' => ['kaufpreis' => [['op' => '>=', 'val' => 500000]]],
+			'listlimit' => 20,
+			'listoffset' => 0,
+		]]);
+
+		$this->assertEquals(1, $result['data']['meta']['cntabsolute']);
+		$this->assertCount(1, $result['data']['records']);
+		$this->assertEquals(1, $result['data']['records'][0]['id']);
+	}
 
 	/**
 	 * @param array $parameters e.g. ['listname' => 'default']
