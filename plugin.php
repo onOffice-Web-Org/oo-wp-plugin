@@ -253,7 +253,9 @@ add_action('plugins_loaded', function() {
 // "Settings" link in plugins list
 add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewController, 'pluginSettingsLink']);
 
-$pDI->get(ContentFilterShortCodeRegistrator::class)->register();
+add_action('init', function() use ($pDI) {
+	$pDI->get(ContentFilterShortCodeRegistrator::class)->register();
+});
 
 // Dynamically provide custom meta (title/description or other fields) for estate detail pages.
 // Behavior depends on the option 'onoffice-settings-title-and-description':
